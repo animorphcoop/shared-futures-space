@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/sfs
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py wait_for_db &&
+             python manage.py runserver 0.0.0.0:9000"
+    environment:
+      - DB_HOST=db_pg
+      - DB_NAME=sfs_stack_pg1
+      - DB_USER=sfs_stack_usr
+      - DB_PASS=P+!N1*SB:ImVq+0!fGPQC8F
+    depends_on:
+      - db_pg
+
+  db_pg:
+    image: postgres:12.8-alpine
+    environment:
+      - POSTGRES_DB=sfs_stack_pg1
+      - POSTGRES_USER=sfs_stack_usr
+      - POSTGRES_PASSWORD=P+!N1*SB:ImVq+0!fGPQC8F
+    volumes:
+      - /var/lib/postgres
+    ports:
+      - "127.0.0.1:6432:6432"
+    restart: always
