@@ -31,3 +31,23 @@ services:
     ports:
       - "127.0.0.1:6432:6432"
     restart: always
+
+  redis:
+    image: redis:6.2.6-alpine
+
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A sfs worker -l info
+    volumes:
+      - .:/sfs
+    environment:
+      - DB_HOST=db_pg
+      - DB_NAME=sfs_stack_pg1
+      - DB_USER=sfs_stack_usr
+      - DB_PASS=P+!N1*SB:ImVq+0!fGPQC8F
+    depends_on:
+      - db_pg
+      - redis
+      - app

@@ -1,6 +1,7 @@
 Django==3.2.8
 wagtail==2.14.1
 celery==5.1.2
+redis==3.5.3
 psycopg2==2.9.1
 django-tailwind==2.2.2
 
