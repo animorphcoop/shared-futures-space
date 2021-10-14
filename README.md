@@ -1,6 +1,8 @@
 Shared Futures Space
 Django/Wagtail + Postgres
 
+after cloning for the first time: `git-crypt unlock` (assuming your public key has been given access). see .gitattributes for the files this affects.
+
 docker-compose up --build
 
 
