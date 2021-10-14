@@ -27,8 +27,18 @@ services:
       - "127.0.0.1:6432:6432"
     restart: always
 
+  # redis-overcommit-on-host
+  redis-overcommit:
+    build: https://github.com/bkuhl/redis-overcommit-on-host.git
+    restart: 'no'
+    privileged: true
+    volumes:
+      - /proc/sys/vm:/mnt/vm
+
   redis:
     image: redis:6.2.6-alpine
+    depends_on:
+      - redis-overcommit
 
   celery:
     restart: always
