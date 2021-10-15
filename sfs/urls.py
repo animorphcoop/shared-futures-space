@@ -16,6 +16,8 @@ urlpatterns = [
 
     path('search/', search_views.search, name='search'),
 
+    path('auth/', include('allauth.urls')) # allauth
+
 ]
 
 

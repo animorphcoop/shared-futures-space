@@ -14,6 +14,7 @@ RUN apk add --update --no-cache --virtual .tmp-build-deps \
 
 # install dependencies
 # TODO: causes warning - "Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager"
+RUN apk add libffi-dev
 RUN pip install -r /sfs/requirements.txt
 
 # Solves the Warning on global/root pip but causes "Cannot start service celery: failed to create shim: OCI runtime create failed: container_linux.go:380: starting container process caused: exec: "celery": executable file not found in $PATH: unknown"
