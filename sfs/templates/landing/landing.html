@@ -5,10 +5,6 @@
 
 {% block extra_css %}
 
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
 {% endblock extra_css %}
 
 {% block content %}
@@ -16,6 +12,14 @@ Delete the line below if you're just getting started and want to remove the welc
 {% comment %}
 Delete the line below if you're just getting started and want to remove the welcome screen!
 {% endcomment %}
-{% include 'home/welcome_page.html' %}
+HOME
+<br/>
+{% if user.is_authenticated %}
+Welcome {{ user.username }}
+<br/>
+<a href='/account/logout/'>Logout</a>
+{% else %}
+<a href='/account/login/'>Login</a>
+{% endif %}
 
 {% endblock content %}

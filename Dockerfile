@@ -28,12 +28,27 @@ RUN apk del .tmp-build-deps
 
 COPY . /sfs/
 
-# create a group, user and add user to the group
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+#user variables
+ARG user=appuser
+ARG home=/home/$user
+
+# create a group, user and add user to the group using alpine
+RUN addgroup -S docker
+RUN adduser --disabled-password \
+    -g "" \
+    -h $home \
+    -G docker \
+    $user
+
+
+
 # give user:group the permissions to the directory
-RUN chown -R appuser:appgroup /sfs
+RUN chown -R $user:docker /sfs/
+RUN chmod -R 755 /sfs/
+
 # all future commands should run as the appuser user
-USER appuser
+USER $user
 
 WORKDIR /sfs
 

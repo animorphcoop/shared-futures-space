@@ -21,4 +21,3 @@ management applies to the django naming convention: https://docs.djangoproject.c
 http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html
 
 management applies to the django naming convention: https://docs.djangoproject.com/en/3.2/howto/custom-management-commands/
-
