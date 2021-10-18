@@ -9,9 +9,10 @@ services:
     volumes:
       - .:/sfs
     command: >
-      sh -c "python manage.py migrate &&
-             python manage.py wait_for_db &&
-             python manage.py runserver 0.0.0.0:9000"
+      sh -c "python3 manage.py wait_for_db &&
+             python3 manage.py makemigrations &&
+             python3 manage.py migrate &&
+             python3 manage.py runserver 0.0.0.0:9000"
     env_file:
       - app_variables.env
     depends_on:
@@ -47,8 +48,11 @@ services:
     command: celery -A sfs worker -l info
     volumes:
       - .:/sfs
-    env_file:
-      - app_variables.env
+    environment:
+      - DB_HOST=db_pg
+      - DB_NAME=sfs_stack_pg1
+      - DB_USER=sfs_stack_usr
+      - DB_PASS=P+!N1*SB:ImVq+0!fGPQC8F
     depends_on:
       - db_pg
       - redis

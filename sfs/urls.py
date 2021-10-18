@@ -17,6 +17,7 @@ urlpatterns = [
     path('search/', search_views.search, name='search'),
 
     path('account/', include('allauth.urls')),
+    path('dashboard/', include('dashboard.urls')),
 
     path('', include('landing.urls')),
 ]

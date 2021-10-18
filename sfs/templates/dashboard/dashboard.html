@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+
+{% comment %}
+Delete the line below if you're just getting started and want to remove the welcome screen!
+{% endcomment %}
+DASH
+
+{% if user.is_authenticated %}
+Welcome {{ user.username }}
+<br/>
+<a href='/account/logout/' title="Vision">Logout</a>
+{% else %}
+You should not be here!
+{% endif %}
+
+
+{% endblock content %}

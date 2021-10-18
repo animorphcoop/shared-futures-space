@@ -25,6 +25,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 INSTALLED_APPS = [
     'landing',
+    'dashboard',
     'search',
 
     'wagtail.contrib.forms',
@@ -172,6 +173,7 @@ WAGTAIL_SITE_NAME = "sfs"
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'https://dev.sharedfutures.space'
 
+
 # Redis & Celery configuration
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
@@ -184,3 +186,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+
+LOGIN_REDIRECT_URL = '/dashboard'
+LOGOUT_REDIRECT_URL = "/"
