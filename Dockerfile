@@ -4,6 +4,7 @@ FROM python:3.9-alpine
 # ensuring there's no residue in case of failure
 ENV PYTHONUNBUFFERED 1
 
+# alpine patching
 RUN apk add --update --no-cache postgresql-client jpeg-dev
 #temp postgres dependencies
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
@@ -16,24 +17,28 @@ RUN apk add libffi-dev
 ARG user=app
 ARG group=docker
 ARG home=/home/$user
-RUN addgroup -S $group && adduser -S $user -G $group
+ARG project=$home/sfs
 
-#create and copy over the code onto the container
-RUN mkdir /sfs
-COPY . /sfs/
+RUN addgroup -S $group
+RUN adduser --disabled-password \
+    -g "" \
+    -h $home \
+    -G $group \
+    $user
 
-# give user:group the permissions to the directory
-RUN chown -R $user:$group /sfs/
-RUN chmod -R 755 /sfs/
+# switch to new user
+USER $user
+
+#create directory and copy over the code onto the container
+RUN mkdir $project
+COPY . $project/
 
 # Create local environment and use as variable
-USER $user
 ENV VIRTUAL_ENV=$home/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 # install requirements
-RUN pip install -r /sfs/requirements.txt
-
+RUN pip install -r $project/requirements.txt
 
 
 # come back as root to clean up
@@ -41,9 +46,12 @@ USER root
 # no need for temp dependencies anymore
 RUN apk del .tmp-build-deps
 
+# & ensure user:group have the permissions to the directory
+RUN chown -R $user:$group $project
+RUN chmod -R 755 $project
 
-# all future commands should run as the appuser user
+# all future commands should run as the user
 USER $user
-WORKDIR /sfs
+WORKDIR $project
 
 
