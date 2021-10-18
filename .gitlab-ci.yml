@@ -10,4 +10,4 @@ pytest:
   stage: Tests
   script:
     - export PYTHONPATH="$PYTHONPATH:."
-    - pytest
+    - pytest tests/*
