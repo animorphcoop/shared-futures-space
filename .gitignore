@@ -117,4 +117,4 @@ GitHub.sublime-settings
 .history
 
 # Local settings file (for production)
-sfs/settings/.local
+sfs/settings/.local.py
