@@ -46,5 +46,3 @@ RUN apk del .tmp-build-deps
 # all future commands should run as the user in project directory
 USER $user
 WORKDIR $project
-
-

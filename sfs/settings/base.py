@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     'landing',
     'dashboard',
-    'users',
+    'userauth',
 
     'search',
     'core',
