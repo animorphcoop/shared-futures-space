@@ -26,7 +26,10 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     'landing',
     'dashboard',
+    'users',
+
     'search',
+    'core',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -50,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'core',
 
     'django.contrib.sites',
     'allauth',
@@ -177,15 +179,3 @@ BASE_URL = 'https://dev.sharedfutures.space'
 # Redis & Celery configuration
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
-
-
-SITE_ID = 1
-
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
-
-
-LOGIN_REDIRECT_URL = '/dashboard'
-LOGOUT_REDIRECT_URL = "/"

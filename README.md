@@ -8,19 +8,25 @@
 - `git-crypt unlock` 
 - (assuming your public key has been given access). See .gitattributes for the files this affects.
 
-Note:
-- EVERY TIME use RUN a NEW container is started - https://stackoverflow.com/a/41436850
-~~docker-compose run app sh -c "django-admin startapp NAME"~~
 
-INSTEAD use:
 To enter shell
 ```docker-compose exec app sh```
+
 
 To run Django-related administrative commands
 ```docker-compose exec app django-admin startapp healerapp```
 OR
 ```docker-compose exec app python3 manage.py startapp healerapp```
 
+
+Create superuser
+
+```docker-compose exec app python3 manage.py createsuperuser```
+
+Migrations
+
+```docker-compose exec app python3 manage.py makemigrations && docker-compose exec app python3 manage.py migrate```
+---
 
 - Adding management commands:
 management applies to the django naming convention: https://docs.djangoproject.com/en/3.2/howto/custom-management-commands/
