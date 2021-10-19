@@ -1,0 +1,13 @@
+image: "python:3.9.5"
+
+before_script:
+  - pip install -r requirements.txt
+
+stages:
+  - Tests
+
+pytest:
+  stage: Tests
+  script:
+    - export PYTHONPATH="$PYTHONPATH:."
+    - pytest tests/*
