@@ -6,10 +6,10 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class CustomUser(AbstractUser):
     display_name = models.CharField(verbose_name=_("Display name"),
-                                    max_length=30, help_text=_("Will be shown alongside entries"))
+                                    max_length=30, help_text=_("Will be shown alongside entries"), null=True)
     year_of_birth = models.PositiveIntegerField(verbose_name=_("Year of birth"),
-                                                validators=[MinValueValidator(1900), MaxValueValidator(2021)])
-    post_code = models.CharField(verbose_name=_("Post code"), max_length=8)
+                                                validators=[MinValueValidator(1900), MaxValueValidator(2021)], null=True)
+    post_code = models.CharField(verbose_name=_("Post code"), max_length=8, null=True)
 
     class Meta:
         ordering = ['display_name']

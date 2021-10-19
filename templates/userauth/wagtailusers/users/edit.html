@@ -1,0 +1,9 @@
+{% extends "wagtailusers/users/edit.html" %}
+
+{% block extra_fields %}
+
+    {% include "wagtailadmin/shared/field_as_li.html" with field=form.display_name %}
+    {% include "wagtailadmin/shared/field_as_li.html" with field=form.year_of_birth %}
+    {% include "wagtailadmin/shared/field_as_li.html" with field=form.post_code %}
+
+{% endblock extra_fields %}

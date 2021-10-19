@@ -16,7 +16,6 @@ import os
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -53,12 +52,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
 
 ]
 
@@ -80,7 +77,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(PROJECT_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates/userauth'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -96,7 +94,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sfs.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -128,7 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -141,7 +137,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -166,7 +161,6 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "sfs"
@@ -175,7 +169,10 @@ WAGTAIL_SITE_NAME = "sfs"
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'https://dev.sharedfutures.space'
 
-
 # Redis & Celery configuration
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+WAGTAIL_USER_EDIT_FORM = 'userauth.forms.CustomUserEditForm'
+WAGTAIL_USER_CREATION_FORM = 'userauth.forms.CustomUserCreationForm'
+WAGTAIL_USER_CUSTOM_FIELDS = ['display_name', 'year_of_birth', 'post_code']

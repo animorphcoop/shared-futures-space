@@ -118,3 +118,5 @@ GitHub.sublime-settings
 
 # Local settings file (for production)
 sfs/settings/local.py
+static/
+sfs/static/
