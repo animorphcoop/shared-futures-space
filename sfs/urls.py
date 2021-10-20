@@ -17,6 +17,9 @@ urlpatterns = [
     path('search/', search_views.search, name='search'),
 
     path('account/', include('allauth.urls')),
+    #added to catch login view and redirect to dasboard
+    # TODO: Consider rewiring redirection within Allauth
+    path('account/', include('userauth.urls')),
     path('dashboard/', include('dashboard.urls')),
 
     path('', include('landing.urls')),

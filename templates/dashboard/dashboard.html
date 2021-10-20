@@ -15,7 +15,7 @@ Delete the line below if you're just getting started and want to remove the welc
 DASH
 
 {% if user.is_authenticated %}
-Welcome {{ user.username }}
+Welcome {{ user.display_name }} born in {{ user.year_of_birth }}
 <br/>
 <a href='/account/logout/' title="Vision">Logout</a>
 {% else %}
