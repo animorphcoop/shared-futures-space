@@ -1,6 +1,9 @@
+import debug_toolbar
+
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
+
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
@@ -8,7 +11,9 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
+
 urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)),
     path('django-admin/', admin.site.urls),
 
     path('admin/', include(wagtailadmin_urls)),
@@ -17,18 +22,19 @@ urlpatterns = [
     path('search/', search_views.search, name='search'),
 
     path('account/', include('allauth.urls')),
-    #added to catch login view and redirect to dasboard
+    # added to catch login view and redirect to dasboard
     # TODO: Consider rewiring redirection within Allauth
     path('account/', include('userauth.urls')),
     path('dashboard/', include('dashboard.urls')),
 
+
     path('', include('landing.urls')),
 ]
-
 
 if settings.DEBUG:
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
@@ -38,6 +44,8 @@ urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
+
+
     path("", include(wagtail_urls)),
 
     # Alternatively, if you want Wagtail pages to be served from a subpath

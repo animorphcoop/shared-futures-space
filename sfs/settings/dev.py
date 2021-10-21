@@ -12,6 +12,18 @@ ALLOWED_HOSTS = ['*']
 # just to fix some warnings
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+INTERNAL_IPS = [
+
+    '0.0.0.0',
+
+]
+
+# Docker specific
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG
+}
+
 try:
     from .local import *
 except ImportError:

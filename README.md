@@ -23,6 +23,8 @@ Create superuser
 
 ```docker-compose exec app python3 manage.py createsuperuser```
 
+```docker-compose exec app python3 manage.py collectstatic```
+
 Migrations
 
 ```docker-compose exec app python3 manage.py makemigrations && docker-compose exec app python3 manage.py migrate```

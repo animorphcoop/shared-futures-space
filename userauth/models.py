@@ -6,6 +6,8 @@ from django.urls import reverse
 
 
 class CustomUser(AbstractUser):
+    first_name = None
+    last_name = None
     display_name = models.CharField(verbose_name=_("Display name"),
                                     max_length=30, help_text=_("Will be shown alongside entries"), null=True)
     year_of_birth = models.PositiveIntegerField(verbose_name=_("Year of birth"),
@@ -21,4 +23,4 @@ class CustomUser(AbstractUser):
         return reverse('profile')
 
     def __str__(self):
-        return f"{self.display_name}: {self.first_name} {self.last_name}"
+        return f"{self.display_name}"

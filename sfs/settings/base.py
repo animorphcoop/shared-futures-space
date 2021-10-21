@@ -57,9 +57,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
+    'debug_toolbar',
+
 ]
 
 MIDDLEWARE = [
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -69,6 +72,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 ]
 
 ROOT_URLCONF = 'sfs.urls'
@@ -176,3 +181,5 @@ CELERY_RESULT_BACKEND = "redis://redis:6379"
 WAGTAIL_USER_EDIT_FORM = 'userauth.forms.CustomUserEditForm'
 WAGTAIL_USER_CREATION_FORM = 'userauth.forms.CustomUserCreationForm'
 WAGTAIL_USER_CUSTOM_FIELDS = ['display_name', 'year_of_birth', 'post_code']
+
+
