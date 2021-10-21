@@ -7,7 +7,6 @@
 - After cloning for the first time: 
 - `git-crypt unlock` 
 - (assuming your public key has been given access). See .gitattributes for the files this affects.
-- this is also probably the solution to errors about codecs (because the encrypted version isn't necessarily valid utf-8)
 
 Note:
 - EVERY TIME use RUN a NEW container is started - https://stackoverflow.com/a/41436850
