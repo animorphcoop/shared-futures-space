@@ -7,6 +7,7 @@ from .models import CustomUser
 from .forms import CustomUserUpdateForm
 
 
+# TODO: consider redirecting to dashboard which will have a link to profile view
 def profile_view(request):
     # return redirect(views.dashboard)
     return render(request, 'account/profile.html')
