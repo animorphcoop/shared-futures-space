@@ -1,0 +1,20 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Delete account" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Delete account" %}</h1>
+
+
+<form method="post">
+    {% csrf_token %}
+    <p>Want to delete your account? {{ object.email }}</p>
+    <button type="submit">{% trans "Delete" %} &raquo;</button>
+</form>
+<br/>
+<p>{% trans "No, keep my account" %} </p>
+    <a href="/">{% trans "Return to site" %}</a>
+
+{% endblock %}
