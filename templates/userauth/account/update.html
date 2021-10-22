@@ -2,20 +2,28 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
+{% block head_title %}{% trans "Update account" %}{% endblock %}
+
+
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
 
-<p>{% blocktrans %}Already NOT have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+<h1>{% trans "Update account" %}</h1>
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-</form>
+<p>Already wanting to update your account {{ object.email }}? Then please go ahead!</p>
+
+      <form method="post" action="{% url 'account_update' object.pk %}">
+                {% csrf_token %}
+
+        {{ form.as_p }}
+  <button type="submit">{% trans "Update" %}</button>
+      </form>
+
+<div>
+  <p>Prefer to delete?</p>
+  <a href="{% url 'account_delete' object.pk %}">{% trans "Delete your account"%}</a>
+  </div>
+
+
 
 {% endblock %}

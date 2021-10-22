@@ -8,7 +8,7 @@ from .forms import CustomUserUpdateForm
 
 
 def profile_view(request):
-    #return redirect(views.dashboard)
+    # return redirect(views.dashboard)
     return render(request, 'account/profile.html')
 
 

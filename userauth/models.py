@@ -20,7 +20,7 @@ class CustomUser(AbstractUser):
 
     # to redirect to account profile page
     def get_absolute_url(self):
-        return reverse('profile')
+        return reverse('profile_view')
 
     def __str__(self):
         return f"{self.display_name}"
