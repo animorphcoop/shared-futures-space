@@ -56,3 +56,15 @@ Inspiration in regards to setting the path for venv in Dockerfile: https://pytho
 
 ```docker-compose exec app pip3 -V```
 returns /home/app/venv/lib/python3.9/site-packages/pip (python 3.9)
+
+
+---
+
+Changed directory structure to nest all apps within one dir
+https://stackoverflow.com/questions/22841764/best-practice-for-django-project-working-directory-structure
+https://github.com/Mischback/django-project-skeleton/blob/development/project_name/settings/common.py
+
+
+---: 
+Editing and deleting accounts need to be address
+current pattern : account/10/delete/
