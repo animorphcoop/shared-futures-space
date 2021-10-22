@@ -17,9 +17,9 @@ HOME
 {% if user.is_authenticated %}
 Welcome {{ user.username }}
 <br/>
-<a href='/account/logout/'>Logout</a>
+<a href="{% url 'account_logout' %}">Logout</a>
 {% else %}
-<a href='/account/login/'>Login</a>
+<a href="{% url 'account_login' %}">Login</a>
 {% endif %}
 
 {% endblock content %}

@@ -15,6 +15,7 @@ def profile_view(request):
 class CustomUserUpdateView(UpdateView):
     model = CustomUser
     form_class = CustomUserUpdateForm
+    success_url = reverse_lazy(profile_view)
 
 
 class CustomUserDeleteView(DeleteView):

@@ -17,7 +17,10 @@ DASH
 {% if user.is_authenticated %}
 Welcome {{ user.display_name }} born in {{ user.year_of_birth }}
 <br/>
-<a href='/account/logout/' title="Vision">Logout</a>
+
+<a href="{% url 'account_logout' %}">Logout</a>
+<br/>
+<a href="{% url 'account_profile' %}">Edit profile</a>
 {% else %}
 You should not be here!
 {% endif %}
