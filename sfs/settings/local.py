@@ -1,4 +1,6 @@
 # all auth details
+#import apps.userauth.views
+
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
@@ -25,7 +27,16 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
 # custom user model
 AUTH_USER_MODEL = 'userauth.CustomUser'
+
+#overriding default account
+ACCOUNT_ADAPTER = 'userauth.views.CustomAllauthAdapter'
+
+# pickle required to serialize and send EmailMultiAlternatives
+# https://docs.celeryproject.org/en/latest/userguide/calling.html#calling-serializers
+CELERY_ACCEPT_CONTENT = ['pickle']
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+
 

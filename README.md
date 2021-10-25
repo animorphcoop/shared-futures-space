@@ -69,6 +69,12 @@ https://stackoverflow.com/questions/22841764/best-practice-for-django-project-wo
 https://github.com/Mischback/django-project-skeleton/blob/development/project_name/settings/common.py
 
 
----: 
+--- 
 Editing and deleting accounts need to be address
 current pattern : account/10/delete/
+
+
+
+---
+When adding celery task, restarting its container is required.
+
