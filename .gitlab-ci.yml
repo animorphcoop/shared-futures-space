@@ -9,10 +9,10 @@ variables:
   POSTGRES_USER: sfs_stack_usr
   POSTGRES_PASSWORD: P+!N1*SB:ImVq+0!fGPQC8F  
   POSTGRES_HOST_AUTH_METHOD: trust
-  DB_HOST=db_pg
-  DB_NAME=sfs_stack_pg1
-  DB_USER=sfs_stack_usr
-  DB_PASS=P+!N1*SB:ImVq+0!fGPQC8F
+  DB_HOST: db_pg
+  DB_NAME: sfs_stack_pg1
+  DB_USER: sfs_stack_usr
+  DB_PASS: P+!N1*SB:ImVq+0!fGPQC8F
 
 before_script:
   - pip install -r requirements.txt
