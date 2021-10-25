@@ -1,6 +1,0 @@
-
-app_variables.env filter=git-crypt diff=git-crypt
-
-db_pg_variables.env filter=git-crypt diff=git-crypt
-
-sfs/settings/local.py filter=git-crypt diff=git-crypt
