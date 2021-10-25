@@ -16,6 +16,9 @@ variables:
 
 before_script:
   - pip install -r requirements.txt
+  - ./manage.py wait_for_db
+  - ./manage.py makemigrations
+  - ./manage.py migrate
 
 stages:
   - Tests
