@@ -1,6 +1,9 @@
 image:
   name: docker/compose:latest
 
+services:
+  - docker:dind
+
 stages:
   - Tests
 
