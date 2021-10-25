@@ -2,7 +2,17 @@ image:
   name: docker/compose:latest
 
 services:
-  - docker:dind
+  - name: postgres:latest
+    alias: db_pg
+
+variables:
+  POSTGRES_DB: sfs_stack_pg1
+  POSTGRES_USER: sfs_stack_usr
+  POSTGRES_PASSWORD: P+!N1*SB:ImVq+0!fGPQC8F  
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+before_script:
+  - pip install -r requirements.txt
 
 stages:
   - Tests
@@ -10,5 +20,6 @@ stages:
 pytest:
   stage: Tests
   script:
-    - docker-compose up -d
-    - docker-compose exec app "./manage.py collectstatic && pytest tests/"
+    - export PYTHONPATH="$PYTHONPATH:."
+    - ./manage.py collectstatic
+    - pytest tests/
