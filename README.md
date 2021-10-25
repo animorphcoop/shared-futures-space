@@ -31,7 +31,7 @@ http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html
 
 ---
 
-NOTE: before using in a public-facing environment, don't forget to change the default credentials! They're in `app_variables.env`, `db_pg_variables.env` and `.gitlab_ci.yml`
+**NOTE: before using in a public-facing environment, don't forget to change the default credentials! They're in `app_variables.env`, `db_pg_variables.env` and `.gitlab_ci.yml`**
 
 ---
 Occasionally, issues with spinning new containers out of existing images might occur.
