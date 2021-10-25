@@ -38,6 +38,10 @@ management applies to the django naming convention: https://docs.djangoproject.c
 http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html
 
 ---
+
+**NOTE: before using in a public-facing environment, don't forget to change the default credentials! They're in `app_variables.env`, `db_pg_variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`**
+
+---
 Occasionally, issues with spinning new containers out of existing images might occur.
 
 
@@ -65,10 +69,12 @@ https://stackoverflow.com/questions/22841764/best-practice-for-django-project-wo
 https://github.com/Mischback/django-project-skeleton/blob/development/project_name/settings/common.py
 
 
----: 
+--- 
 Editing and deleting accounts need to be address
 current pattern : account/10/delete/
 
 
+
 ---
 When adding celery task, restarting its container is required.
+
