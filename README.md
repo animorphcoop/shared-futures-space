@@ -68,3 +68,7 @@ https://github.com/Mischback/django-project-skeleton/blob/development/project_na
 ---: 
 Editing and deleting accounts need to be address
 current pattern : account/10/delete/
+
+
+---
+When adding celery task, restarting its container is required.
