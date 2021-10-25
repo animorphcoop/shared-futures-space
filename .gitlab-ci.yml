@@ -1,3 +1,5 @@
+image: python:3.9.5
+
 services:
   - name: postgres:latest
     alias: db_pg
