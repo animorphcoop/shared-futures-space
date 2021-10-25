@@ -1,6 +1,3 @@
-image:
-  name: docker/compose:latest
-
 services:
   - name: postgres:latest
     alias: db_pg
