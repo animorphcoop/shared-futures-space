@@ -1,4 +1,5 @@
 import pytest
+from django.conf import settings
 
 @pytest.fixture(scope='function')
 def test_user(db, django_user_model):
