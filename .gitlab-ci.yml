@@ -16,7 +16,6 @@ variables:
 
 before_script:
   - pip install -r requirements.txt
-  - find / -name "pytest"
   - ./manage.py wait_for_db
   - ./manage.py makemigrations
   - ./manage.py migrate
