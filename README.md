@@ -57,6 +57,8 @@ A function can likewise be annotated at declaration, including its return type:
 
 `  return A + B`
 
+(a function with no `return` returns `None`)
+
 Parametric and otherwise special types must be imported from the typing library ([docs](https://docs.python.org/3/library/typing.html)).
 These include:
 - `List[T]`, `Dict[T,S]` - lists of type T and dicts from T to S (eg. `List[int]` or `Dict[str,bool]`)
