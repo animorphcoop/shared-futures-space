@@ -45,6 +45,8 @@ an error, the type system should be used to ensure that it can't take that value
 of errors become type errors, and type errors are (hopefully) caught before runtime. This approach
 means thinking about what each variable really represents.
 
+for instance, the type of a variable that stores a string which must be one of a set of known options should not be `str` but an [Enum](https://docs.python.org/3/library/enum.html) type encompassing the set of acceptable options. That way, the type checker can be used to guarantee that it will never be set to an illegal value.
+
 #### The python type system in particular
 
 A variable can be annotated when it is declared: `a_whole_number`**`: int`**` = 42`
