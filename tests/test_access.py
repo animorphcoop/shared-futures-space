@@ -2,7 +2,6 @@
 # tests for pages being accessible or not depending on login
 
 import pytest
-from django.test import Client
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('url,is_accessible', [('/',True),
