@@ -1,3 +1,4 @@
+# pyre-strict
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.template.response import TemplateResponse
 

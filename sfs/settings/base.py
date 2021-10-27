@@ -1,3 +1,4 @@
+# pyre-strict
 """
 Django settings for sfs project.
 

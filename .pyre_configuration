@@ -3,7 +3,6 @@
     "."
   ],
   "taint_models_path": "/home/asa/.local/lib",
-  "strict": true,
   "ignore_all_errors": [
     "*/__init__.py", "*/*/__init__.py", "*/*/*/__init__.py", "*/*/*/*/__init__.py"
   ],

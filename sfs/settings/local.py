@@ -1,3 +1,4 @@
+# pyre-strict
 # all auth details
 #import apps.userauth.views
 

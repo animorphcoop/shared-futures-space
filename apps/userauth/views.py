@@ -1,3 +1,4 @@
+# pyre-strict
 from django.shortcuts import render
 from django.views.generic.edit import UpdateView, DeleteView
 from django.urls import reverse_lazy

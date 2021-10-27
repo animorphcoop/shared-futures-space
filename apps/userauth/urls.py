@@ -1,3 +1,4 @@
+# pyre-strict
 from django.conf import settings
 from django.urls import include, path
 from .views import profile_view, CustomUserUpdateView, CustomUserDeleteView

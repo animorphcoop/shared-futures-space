@@ -1,3 +1,4 @@
+# pyre-strict
 from django import forms
 from .models import CustomUser
 

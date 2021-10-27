@@ -1,3 +1,4 @@
+# pyre-strict
 """
 WSGI config for sfs project.
 
