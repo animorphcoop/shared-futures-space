@@ -95,7 +95,7 @@ TEMPLATES: List[Template] = [
             os.path.join(BASE_DIR, 'templates'),
             os.path.join(BASE_DIR, 'templates/userauth'),
         ],
-        'APP_DIRS': "True",
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
