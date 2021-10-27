@@ -37,7 +37,6 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 # install requirements
 RUN pip install -r $project/requirements.txt
 
-
 # come back as root to clean up
 USER root
 # no need for temp dependencies anymore

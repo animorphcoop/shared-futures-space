@@ -4,14 +4,17 @@ from django.template.response import TemplateResponse
 from wagtail.core.models import Page
 from wagtail.search.models import Query
 
+from django.http import HttpRequest, HttpResponse
+from typing import List
 
-def search(request):
-    search_query = request.GET.get('query', None)
-    page = request.GET.get('page', 1)
+
+def search(request: HttpRequest) -> TemplateResponse:
+    search_query: HttpResponse = request.GET.get('query', None)
+    page: HttpResponse = request.GET.get('page', 1)
 
     # Search
     if search_query:
-        search_results = Page.objects.live().search(search_query)
+        search_results: List[Page] = Page.objects.live().search(search_query)
         query = Query.get(search_query)
 
         # Record hit

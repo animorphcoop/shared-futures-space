@@ -4,14 +4,18 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 from django.utils.translation import gettext, gettext_lazy as _
 
+from typing import Tuple, Optional, Dict
+FieldsType = Tuple[Tuple[Optional[str],Dict[str,Tuple[str,...]]], ...]
 
 class CustomUserAdmin(UserAdmin):
     add_form = UserCreationForm
     form = UserChangeForm
     model = CustomUser
-    list_display = ['pk', 'email', 'display_name', 'year_of_birth', 'post_code']
-    search_fields = ('display_name', 'post_code',)
-    fieldsets = (
+    # need to override too-strict inferred type
+    list_display: Tuple[str,...] = ('pk', 'email', 'display_name', 'year_of_birth', 'post_code') # pyre-ignore[15]
+    # pyre comment suppresses an error caused by pyre's limited understanding of django
+    search_fields = ('display_name', 'post_code',) # pyre-ignore[15]
+    fieldsets: FieldsType = (
 
         (_('Personal info'), {'fields': ('email',)}),
         (None, {'fields': ('display_name', 'year_of_birth', 'post_code')
@@ -22,4 +26,5 @@ class CustomUserAdmin(UserAdmin):
 '''    add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {'fields': ('email', 'display_name', 'year_of_birth', 'post_code')}))'''
 
-admin.site.register(CustomUser, CustomUserAdmin)
+# pyre comment suppresses an error caused by pyre's limited understanding of django
+admin.site.register(CustomUser, CustomUserAdmin) # pyre-ignore[16]
