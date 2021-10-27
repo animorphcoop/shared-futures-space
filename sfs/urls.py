@@ -1,5 +1,4 @@
-
-
+# pyre-strict
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
@@ -11,9 +10,12 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
+from typing import List
 
-urlpatterns = [
-    path('django-admin/', admin.site.urls),
+
+urlpatterns: List[str] = [
+    # pyre comment suppresses an error caused by pyre's limited understanding of django
+    path('django-admin/', admin.site.urls), # pyre-ignore[16]
 
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),

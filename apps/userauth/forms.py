@@ -1,9 +1,12 @@
+# pyre-strict
 from django import forms
 from .models import CustomUser
 
 from django.utils.translation import gettext_lazy as _
 
 from wagtail.users.forms import UserEditForm, UserCreationForm
+
+from typing import Type, List
 
 '''
 Resolving the first&last name issue, reference
@@ -13,28 +16,28 @@ https://github.com/brylie/wagtail-social-network/issues/18#issuecomment-89283650
 
 
 class CustomUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(required=False, label=_("First name"))
-    last_name = forms.CharField(required=False, label=_("Last name"))
+    first_name: forms.CharField = forms.CharField(required=False, label=_("First name"))
+    last_name: forms.CharField = forms.CharField(required=False, label=_("Last name"))
 
     class Meta(UserCreationForm.Meta):
-        model = CustomUser
+        model: Type[CustomUser] = CustomUser
 
 
 class CustomUserEditForm(UserEditForm):
-    first_name = forms.CharField(required=False, label=_("First name"))
-    last_name = forms.CharField(required=False, label=_("Last name"))
+    first_name: forms.CharField = forms.CharField(required=False, label=_("First name"))
+    last_name: forms.CharField = forms.CharField(required=False, label=_("Last name"))
 
     class Meta(UserEditForm.Meta):
-        model = CustomUser
+        model: Type[CustomUser] = CustomUser
 
 
 class CustomUserUpdateForm(forms.ModelForm):
-    first_name = forms.CharField(required=False, label=_("First name"))
-    last_name = forms.CharField(required=False, label=_("Last name"))
+    first_name: forms.CharField = forms.CharField(required=False, label=_("First name"))
+    last_name: forms.CharField = forms.CharField(required=False, label=_("Last name"))
 
     class Meta:
-        model = CustomUser
-        fields = ['display_name', 'year_of_birth', 'post_code']
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['display_name', 'year_of_birth', 'post_code']
 
 
 '''

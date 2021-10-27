@@ -1,0 +1,11 @@
+{
+  "source_directories": [
+    "."
+  ],
+  "search_path": ["~/.local/lib/python3.9/site-packages"],
+  "taint_models_path": "/home/asa/.local/lib",
+  "ignore_all_errors": [
+    "*/__init__.py", "*/*/__init__.py", "*/*/*/__init__.py", "*/*/*/*/__init__.py"
+  ],
+  "exclude": [".*/tests/.*"]
+}

@@ -1,6 +1,9 @@
+# pyre-strict
 from django.urls import path
 from . import views
 
-urlpatterns = [
+from typing import List
+
+urlpatterns: List[str] = [
     path('', views.landing, name='landing'),
 ]
