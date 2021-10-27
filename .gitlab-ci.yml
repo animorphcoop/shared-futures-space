@@ -21,11 +21,10 @@ before_script:
   - ./manage.py migrate
 
 stages:
-  - TypeCheck
   - Tests
 
 pyre:
-  stage: TypeCheck
+  stage: Tests
   script:
     - pyre --search-path "/usr/local/lib/python3.9/site-packages"
 
