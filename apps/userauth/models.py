@@ -12,7 +12,7 @@ from typing import List, Optional
 class CustomUser(AbstractUser):
     first_name:None = None # pyre-ignore[15] (pyre thinks this field can't be None in the parent class)
     last_name:None = None # pyre-ignore[15]
-    display_name = models.CharField(verbose_name=_("Display name"),
+    display_name: models.CharField = models.CharField(verbose_name=_("Display name"),
                                     max_length=30, help_text=_("Will be shown alongside entries"), null=True)
     year_of_birth: models.PositiveIntegerField = models.PositiveIntegerField(verbose_name=_("Year of birth"),
                                     validators=[MinValueValidator(1900), MaxValueValidator(2021)],

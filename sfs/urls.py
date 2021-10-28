@@ -10,10 +10,11 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
-from typing import List
+from typing import List, Union
+from django.urls import URLResolver, URLPattern
 
 
-urlpatterns: List[str] = [
+urlpatterns: List[Union[URLResolver,URLPattern]] = [
     # pyre comment suppresses an error caused by pyre's limited understanding of django
     path('django-admin/', admin.site.urls), # pyre-ignore[16]
 

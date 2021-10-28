@@ -2,6 +2,7 @@
 from .base import *
 from django.conf import settings
 from typing import List, Any
+from django.core.handlers.wsgi import WSGIRequest
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG: bool = True
@@ -24,10 +25,13 @@ INTERNAL_IPS: List[str] = [
 
 ]
 
+# can't be a lambda because you can't annotate the type of lambdas. this is why I don't like python
+def toolbar_callback(x: WSGIRequest) -> bool:
+    return settings.DEBUG
 # Docker specific, type of values declared as Any because I don't know what the different settings are/can be
 DEBUG_TOOLBAR_CONFIG: Dict[str,Any] = {
     #'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG
-    "SHOW_TOOLBAR_CALLBACK": lambda x: settings.DEBUG,
+    "SHOW_TOOLBAR_CALLBACK": toolbar_callback,
 }
 
 try:
