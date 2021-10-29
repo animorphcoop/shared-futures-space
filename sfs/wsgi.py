@@ -10,9 +10,14 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 
 import os
 
+from django.conf import settings
+
 from django.core.wsgi import get_wsgi_application
 from django.core.handlers.wsgi import WSGIHandler
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sfs.settings.dev")
+if settings.DEBUG:
+  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sfs.settings.dev")
+else:
+  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sfs.settings.production")
 
 application: WSGIHandler = get_wsgi_application()
