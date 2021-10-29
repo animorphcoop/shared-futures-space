@@ -135,3 +135,8 @@ current pattern : account/10/delete/
 ---
 When adding celery task, restarting its container is required.
 
+### DEPLOYMENT
+
+to deploy:
+- replace 'sfs.settings.dev with 'sfs.settings.production' in sfs/wsgi.py and sfs/celery.py
+- set the SECRET\_KEY, INTERNAL\_IPS and ALLOWED\_HOSTS in sfs/settings/production.py
