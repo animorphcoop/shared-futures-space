@@ -15,9 +15,6 @@ from django.conf import settings
 from django.core.wsgi import get_wsgi_application
 from django.core.handlers.wsgi import WSGIHandler
 
-if settings.DEBUG:
-  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sfs.settings.dev")
-else:
-  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sfs.settings.production")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sfs.settings.settings")
 
 application: WSGIHandler = get_wsgi_application()
