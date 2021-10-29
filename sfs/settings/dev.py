@@ -18,7 +18,6 @@ ALLOWED_HOSTS: List[str] = ['*']
 # just to fix some warnings
 DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
 
-
 INTERNAL_IPS: List[str] = [
 
     '0.0.0.0',
@@ -33,6 +32,7 @@ DEBUG_TOOLBAR_CONFIG: Dict[str,Any] = {
     #'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG
     "SHOW_TOOLBAR_CALLBACK": toolbar_callback,
 }
+MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
 try:
     from .local import *

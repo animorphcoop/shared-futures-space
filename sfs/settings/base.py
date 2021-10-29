@@ -82,7 +82,6 @@ MIDDLEWARE: List[str] = [
     'django.middleware.security.SecurityMiddleware',
 
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 ]
 
