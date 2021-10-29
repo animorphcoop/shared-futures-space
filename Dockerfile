@@ -42,6 +42,10 @@ USER root
 # no need for temp dependencies anymore
 RUN apk del .tmp-build-deps
 
+# Double-check permissions
+RUN chown -R $user:$group $project
+RUN chmod -R 755 $project
+
 # all future commands should run as the user in project directory
 USER $user
 WORKDIR $project
