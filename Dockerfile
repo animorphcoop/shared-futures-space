@@ -16,12 +16,8 @@ ARG group=docker
 ARG home=/home/$user
 ARG project=$home/sfs
 
-RUN addgroup -S $group
-RUN adduser --disabled-password \
-    -g "" \
-    -h $home \
-    -G $group \
-    $user
+# server guid and user id
+RUN addgroup -g 998 $group && adduser -u 1007 -G $group -h $home -D $user
 
 # switch to new user
 USER $user
@@ -39,12 +35,9 @@ RUN pip install -r $project/requirements.txt
 
 # come back as root to clean up
 USER root
+
 # no need for temp dependencies anymore
 RUN apk del .tmp-build-deps
-
-# Double-check permissions
-RUN chown -R $user:$group $project
-RUN chmod -R 755 $project
 
 # all future commands should run as the user in project directory
 USER $user
