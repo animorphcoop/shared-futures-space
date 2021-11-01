@@ -5,6 +5,9 @@ services:
   app:
     build:
       context: .
+      args:
+        USERID: $USER_ID
+        GROUPID: $GROUP_ID
     ports:
       - "9000:9000"
     volumes:
@@ -47,6 +50,9 @@ services:
     restart: always
     build:
       context: .
+      args:
+        USERID: $USER_ID
+        GROUPID: $GROUP_ID
     command: celery -A sfs worker -l info
     volumes:
       - .:/home/app/sfs

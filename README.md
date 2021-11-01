@@ -133,10 +133,29 @@ current pattern : account/10/delete/
 
 
 ---
+
 When adding celery task, restarting its container is required.
+
+---
+
+### Mapping IPs onto Docker containers
+We need to ensure that UID and GID from the system (host) are mapped onto the container user. The containers carry over User and Group IDs as they share one kernel.
+So we need to ensure that IDs of the user and group of the host match these of the container user.
+References [1](https://medium.com/@mccode/understanding-how-uid-and-gid-work-in-docker-containers-c37a01d01cf) [2](https://blog.dbi-services.com/how-uid-mapping-works-in-docker-containers/)
+
+**Challenge: passing variables to Dockerfile via Docker compose**
+Mapping the UID and GID will change depending on the environment, we don't want to change the Dockerfile each time.
+Does look like it's challenging/dangerous to include shell in env variables, e.g. [Ref 1](https://github.com/docker/compose/pull/8078).
+Hence need to pass the user variables via CLI when building the containers.
+```USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build```
+
+
 
 ### DEPLOYMENT
 
 to deploy:
 - replace 'sfs.settings.dev with 'sfs.settings.production' in sfs/wsgi.py and sfs/celery.py
 - set the SECRET\_KEY, INTERNAL\_IPS and ALLOWED\_HOSTS in sfs/settings/production.py
+
+
+

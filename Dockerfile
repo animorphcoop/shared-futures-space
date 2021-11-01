@@ -16,8 +16,12 @@ ARG group=docker
 ARG home=/home/$user
 ARG project=$home/sfs
 
-# server guid and user id #998 is docker group but we actually need dev group
-RUN addgroup -g 1007 $group && adduser -u 1007 -G $group -h $home -D $user
+# import from docker-compose - receive the current host user and their main group IDs
+ARG USERID
+ARG GROUPID
+
+# create group and user with home directory
+RUN addgroup -g $GROUPID $group && adduser -u $USERID -G $group -h $home -D $user
 
 # switch to new user
 USER $user
