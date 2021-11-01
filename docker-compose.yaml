@@ -5,6 +5,9 @@ services:
   app:
     build:
       context: .
+      args:
+        USERID: $USER_ID
+        GROUPID: $GROUP_ID
     ports:
       - "9000:9000"
     volumes:
@@ -13,6 +16,7 @@ services:
       sh -c "python3 manage.py wait_for_db &&
              python3 manage.py makemigrations &&
              python3 manage.py migrate &&
+             python3 manage.py collectstatic --noinput &&
              python3 manage.py runserver 0.0.0.0:9000"
     env_file:
       - app_variables.env
@@ -46,6 +50,9 @@ services:
     restart: always
     build:
       context: .
+      args:
+        USERID: $USER_ID
+        GROUPID: $GROUP_ID
     command: celery -A sfs worker -l info
     volumes:
       - .:/home/app/sfs

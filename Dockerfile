@@ -16,12 +16,12 @@ ARG group=docker
 ARG home=/home/$user
 ARG project=$home/sfs
 
-RUN addgroup -S $group
-RUN adduser --disabled-password \
-    -g "" \
-    -h $home \
-    -G $group \
-    $user
+# import from docker-compose - receive the current host user and their main group IDs
+ARG USERID
+ARG GROUPID
+
+# create group and user with home directory
+RUN addgroup -g $GROUPID $group && adduser -u $USERID -G $group -h $home -D $user
 
 # switch to new user
 USER $user
@@ -39,6 +39,7 @@ RUN pip install -r $project/requirements.txt
 
 # come back as root to clean up
 USER root
+
 # no need for temp dependencies anymore
 RUN apk del .tmp-build-deps
 

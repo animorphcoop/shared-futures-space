@@ -4,6 +4,9 @@
 
 from typing import List, Optional
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY: str = 'Q%Ohhtu$DbbtCvJMaspG31Ijsx0piYLAI4gUNpyxzpRVuxaUlbn(XKW'
+
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS: List[str] = [
