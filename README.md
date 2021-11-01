@@ -158,8 +158,7 @@ Hence need to pass the user variables via CLI when building the containers.
 ### DEPLOYMENT
 
 to deploy:
-- replace 'sfs.settings.dev with 'sfs.settings.production' in sfs/wsgi.py and sfs/celery.py
-- set the SECRET\_KEY, INTERNAL\_IPS and ALLOWED\_HOSTS in sfs/settings/production.py
 
-
+- change `.dev` to `.production` in sfs/settings/settings.py
+- set `SECRET\_KEY` (to something secure, it doesn't have to be memorable since it's pretty much always automated)
 
