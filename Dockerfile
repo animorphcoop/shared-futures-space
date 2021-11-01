@@ -16,8 +16,8 @@ ARG group=docker
 ARG home=/home/$user
 ARG project=$home/sfs
 
-# server guid and user id
-RUN addgroup -g 998 $group && adduser -u 1007 -G $group -h $home -D $user
+# server guid and user id #998 is docker group but we actually need dev group
+RUN addgroup -g 1007 $group && adduser -u 1007 -G $group -h $home -D $user
 
 # switch to new user
 USER $user
