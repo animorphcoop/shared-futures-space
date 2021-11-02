@@ -7,10 +7,13 @@ test_result=$(python <<'ENDPY'
 import requests
 session = requests.Session()
 session.headers.update({'PRIVATE-TOKEN': 'ameaqjp9RMWxVtnnzTaD'})
-last_commit = session.get('https://git.coop/api/v4/projects/1108/repository/branches/staging').json()['commit']['id']
-last_commit_tests = session.get('https://git.coop/api/v4/projects/1108/repository/commits/'+str(last_commit)).json()['last_pipeline']['id']
-tests_status = session.get('https://git.coop/api/v4/projects/1108/pipelines/'+str(last_commit_tests)).json()['status']
-print(tests_status)
+try:
+  last_commit = session.get('https://git.coop/api/v4/projects/1108/repository/branches/staging').json()['commit']['id']
+  last_commit_tests = session.get('https://git.coop/api/v4/projects/1108/repository/commits/'+str(last_commit)).json()['last_pipeline']['id']
+  tests_status = session.get('https://git.coop/api/v4/projects/1108/pipelines/'+str(last_commit_tests)).json()['status']
+  print(tests_status)
+except Exception as e:
+  print('GITLAB API FAILURE, IS THE TOKEN STILL VALID?')
 ENDPY
 )
 echo "# test result: $test_result"
@@ -44,7 +47,7 @@ ssh $(whoami)@sharedfutures.webarch.net 'bash -s' <<'ENDSSH'
     git checkout staging > /dev/null
   fi
   echo "# pulling from staging"
-  git pull --no-rebase https://asa:ameaqjp9RMWxVtnnzTaD@git.coop/animorph-coop/shared-futures-space.git staging > /dev/null
+  git pull --no-rebase git@git.coop:animorph-coop/shared-futures-space.git
   if [[ $? -ne 0 ]];
   then
     echo "# FAILED TO PULL FROM STAGING"
