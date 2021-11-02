@@ -4,9 +4,17 @@ services:
   - name: postgres:latest
     alias: db_pg
 
+variables:
+  POSTGRES_DB: sfs_stack_pg1
+  POSTGRES_USER: sfs_stack_usr
+  POSTGRES_PASSWORD: testpassword
+  POSTGRES_HOST_AUTH_METHOD: trust
+  DB_HOST: db_pg
+  DB_NAME: sfs_stack_pg1
+  DB_USER: sfs_stack_usr
+  DB_PASS: testpassword
+
 before_script:
-  - . app_variable.sh # import variables defined here, conveniently the syntax is also valid sh
-  - . db_pg_variables.sh
   - pip install -r requirements.txt
   - ./manage.py wait_for_db
   - ./manage.py makemigrations
