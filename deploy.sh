@@ -50,7 +50,7 @@ ssh $(whoami)@sharedfutures.webarch.net 'bash -s' <<'ENDSSH'
   git pull --no-rebase git@git.coop:animorph-coop/shared-futures-space.git
   if [[ $? -ne 0 ]];
   then
-    echo "# FAILED TO PULL FROM STAGING"
+    echo "# FAILED TO PULL FROM STAGING (IS THE SSH KEY .ssh/id_rsa.pub STILL ALLOWED BY AN ACCOUNT WITH ACCESS TO THE REPOSITORY?)"
     echo "# RESTARTING DOCKER-COMPOSE WITHOUT DEPLOYING"
     USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose start > /dev/null
     pull_failed=1
