@@ -33,8 +33,7 @@ session.headers.update({'PRIVATE-TOKEN': 'ameaqjp9RMWxVtnnzTaD'})
 app_env = session.get('https://git.coop/api/v4/projects/1108/repository/files/app_variables.env?ref=staging')
 db_env = session.get('https://git.coop/api/v4/projects/1108/repository/files/db_pg_variables.env?ref=staging')
 local = session.get('https://git.coop/api/v4/projects/1108/repository/files/sfs%2Fsettings%2Flocal.py?ref=staging')
-ci = session.get('https://git.coop/api/v4/projects/1108/repository/files/.gitlab-ci.yml?ref=staging')
-print([f.json()['file_path'] for f in [app_env, db_env, local, ci] if (f.status_code == 200)])
+print([f.json()['file_path'] for f in [app_env, db_env, local] if (f.status_code == 200)])
 ENDPY
 )
 if [[ "$check_result" != "[]" ]];

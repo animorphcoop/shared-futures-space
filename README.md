@@ -159,6 +159,8 @@ Hence need to pass the user variables via CLI when building the containers.
 
 to deploy:
 
-- change `.dev` to `.production` in sfs/settings/settings.py
+- merge into staging
+- make sure `.dev` is changed to `.production` in sfs/settings/settings.py
 - set `SECRET\_KEY` (to something secure, it doesn't have to be memorable since it's pretty much always automated)
-
+- wait for tests to run
+- run deploy.sh locally
