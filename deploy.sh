@@ -25,27 +25,6 @@ else
   echo "# tests pass"
 fi
 
-echo "# security check to prevent public credentials being used"
-check_result=$(python <<'ENDPY'
-import requests
-session = requests.Session()
-session.headers.update({'PRIVATE-TOKEN': 'ameaqjp9RMWxVtnnzTaD'})
-app_env = session.get('https://git.coop/api/v4/projects/1108/repository/files/app_variables.env?ref=staging')
-db_env = session.get('https://git.coop/api/v4/projects/1108/repository/files/db_pg_variables.env?ref=staging')
-local = session.get('https://git.coop/api/v4/projects/1108/repository/files/sfs%2Fsettings%2Flocal.py?ref=staging')
-print([f.json()['file_path'] for f in [app_env, db_env, local] if (f.status_code == 200)])
-ENDPY
-)
-if [[ "$check_result" != "[]" ]];
-then
-  echo "# STAGING BRANCH CONTAINS DEFAULT CREDENTIAL FILES:"
-  echo "# $check_result"
-  echo "# WILL NOT DEPLOY"
-  exit
-else
-  echo "# security check passed"
-fi
-
 echo "# DEPLOY TO PRODUCTION (REALLY REAL WORLD FOR REAL)?"
 select yn in "Yes" "No"; do
     case $yn in
@@ -65,6 +44,13 @@ echo "# DEPLOYING TO PRODUCTION"
 
 ssh $(whoami)@sharedfutures.webarch.net 'bash -s' <<ENDSSH
   # The following commands run on the remote host
+  if sudo -u dev test ! -f /home/dev/sites/dev_data/app_variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/db_pg_variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/local.py;
+  then
+    echo "# COULD NOT FIND ALL REQUIRED LOCAL SETTINGS FILES"
+    echo "# wanted /home/dev/sites/dev_data/app_variables.env, db_pg_variables.env and local.py"
+    echo "# WILL NOT DEPLOY WITHOUT LOCAL SETTINGS BECAUSE DEFAULTS INCLUDE CREDENTIALS"
+    exit
+  fi
   sudo su - dev
   cd sites/dev
   echo "# stopping docker-compose"
@@ -90,6 +76,10 @@ ssh $(whoami)@sharedfutures.webarch.net 'bash -s' <<ENDSSH
     echo "# COULD NOT PULL FROM STAGING"
     echo "# DEPLOYMENT FAILED"
   else
+    echo "# installing local settings files from /home/dev/sites/dev_data/"
+    cp /home/dev/sites/dev_data/app_variables.env /home/dev/sites/dev/
+    cp /home/dev/sites/dev_data/db_pg_variables.env /home/dev/sites/dev/
+    cp /home/dev/sites/dev_data/local.py /home/dev/sites/dev/sfs/settings/
     if [[ $rebuild_required -eq 1 ]];
     then
       echo "# REBUILDING CONTAINERS (THIS MAY TAKE SOME TIME)"
