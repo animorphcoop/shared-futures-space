@@ -163,4 +163,4 @@ to deploy:
 - make sure `.dev` is changed to `.production` in sfs/settings/settings.py
 - wait for tests to run
 - run deploy.sh locally
-
+- don't forget: app\_variables.env, db\_pg\_variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
