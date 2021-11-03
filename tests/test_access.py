@@ -4,10 +4,11 @@
 import pytest
 
 @pytest.mark.django_db
-@pytest.mark.parametrize('url,is_accessible', [('/',True),
-                                               ('/account/login/',True),
-                                               ('/dashboard/',False),
-                                               ('/doesnotexist/',False)])
+@pytest.mark.parametrize('url,is_accessible', [('/', True),
+                                               ('/account/login/', True),
+                                               ('/dashboard/', False),
+                                               ('/doesnotexist/', False),
+                                               ('/search/?query=test', True)])
 def test_access_public(url, is_accessible, client):
     if is_accessible:
         assert client.get(url).status_code == 200
