@@ -191,4 +191,6 @@ WAGTAIL_USER_EDIT_FORM: str = 'userauth.forms.CustomUserEditForm'
 WAGTAIL_USER_CREATION_FORM: str = 'userauth.forms.CustomUserCreationForm'
 WAGTAIL_USER_CUSTOM_FIELDS: List[str] = ['display_name', 'year_of_birth', 'post_code']
 
-
+# urls are not strings! domain.com/page and domain.com/page/ are the same url
+APPEND_SLASH = False
+WAGTAIL_APPEND_SLASH = False

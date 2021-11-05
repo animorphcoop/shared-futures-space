@@ -8,7 +8,6 @@ from django.urls import reverse
 
 from typing import List, Optional
 
-
 class CustomUser(AbstractUser):
     first_name:None = None # pyre-ignore[15] (pyre thinks this field can't be None in the parent class)
     last_name:None = None # pyre-ignore[15]
@@ -28,3 +27,16 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.display_name}"
+
+from wagtail.users.forms import UserForm
+oldsave = UserForm.save
+def newsave(self, commit=True):
+    #print("before: "+repr(self.data))
+    #if 'is_active' not in self.data:
+    self.data = self.data.copy()
+    self.data['is_active'] = True
+    #print("after: "+repr(self.data))
+    return oldsave(self, commit=commit)
+#import wagtail
+#wagtail.users.forms.UserForm = NewUserForm
+UserForm.save = newsave

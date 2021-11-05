@@ -22,9 +22,7 @@ Welcome {{ user.display_name }} born in {{ user.year_of_birth }}
 <br/>
 <a href="{% url 'account_profile' %}">Profile view</a>
 <br/>
-{{ user.pk }}
-<br/>
-<a href="">Profile edit</a>
+<a href="{% url 'account_update' user.pk %}">Profile edit</a>
 {% else %}
 You should not be here!
 {% endif %}
