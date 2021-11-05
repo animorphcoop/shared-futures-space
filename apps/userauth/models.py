@@ -27,16 +27,3 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.display_name}"
-
-from wagtail.users.forms import UserForm
-oldsave = UserForm.save
-def newsave(self, commit=True):
-    #print("before: "+repr(self.data))
-    #if 'is_active' not in self.data:
-    self.data = self.data.copy()
-    self.data['is_active'] = True
-    #print("after: "+repr(self.data))
-    return oldsave(self, commit=commit)
-#import wagtail
-#wagtail.users.forms.UserForm = NewUserForm
-UserForm.save = newsave
