@@ -24,16 +24,17 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserEditForm(UserEditForm):
-    first_name: forms.CharField = forms.CharField(required=False, label=_("First name"))
-    last_name: forms.CharField = forms.CharField(required=False, label=_("Last name"))
+    # commented because might actually turn out to break something, same below
+    #first_name: forms.CharField = forms.CharField(required=False, label=_("First name"))
+    #last_name: forms.CharField = forms.CharField(required=False, label=_("Last name"))
 
     class Meta(UserEditForm.Meta):
         model: Type[CustomUser] = CustomUser
 
 
 class CustomUserUpdateForm(forms.ModelForm):
-    first_name: forms.CharField = forms.CharField(required=False, label=_("First name"))
-    last_name: forms.CharField = forms.CharField(required=False, label=_("Last name"))
+    #first_name: forms.CharField = forms.CharField(required=False, label=_("First name"))
+    #last_name: forms.CharField = forms.CharField(required=False, label=_("Last name"))
 
     class Meta:
         model: Type[CustomUser] = CustomUser
