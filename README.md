@@ -164,3 +164,34 @@ to deploy:
 - wait for tests to run
 - run deploy.sh locally
 - don't forget: app\_variables.env, db\_pg\_variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
+
+to use social account logins, add the following to local.py:
+
+```
+from .base import INSTALLED_APPS
+
+INSTALLED_APPS += [
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google'
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'APP': {
+            'client_id': '...',
+            'secret': '...',
+            'key': ''
+        }
+    },
+    'google': {
+        'APP': {
+            'client_id': '...',
+            'secret': '...',
+            'key': ''
+        }
+    }
+}
+
+```
+
+DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN THE GIT HISTORY
