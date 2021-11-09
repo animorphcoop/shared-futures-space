@@ -5,25 +5,35 @@
 {% block head_title %}{% trans "Update account" %}{% endblock %}
 
 
-
 {% block content %}
 
 <h1>{% trans "Update account" %}</h1>
 
+{{ user.pk }}
+{{user.display_name}}
+
 <p>Already wanting to update your account {{ object.email }}? Then please go ahead!</p>
 
-      <form method="post" action="{% url 'account_update' object.pk %}">
-                {% csrf_token %}
+<form method="post" action="{% url 'account_update' object.pk %}">
+    {% csrf_token %}
 
-        {{ form.as_p }}
-  <button type="submit">{% trans "Update" %}</button>
-      </form>
+    {% for i in form %}
+    <!--
+              {{i.name}}
+    -->
+    {% if i.name == 'display_name' %}
+    Change your name
+    {{i}}
+    {% endif %}
+    {% endfor %}
+    <!-- {{form.as_p}}-->
+    <button type="submit">{% trans "Update" %}</button>
+</form>
 
 <div>
-  <p>Prefer to delete?</p>
-  <a href="{% url 'account_delete' object.pk %}">{% trans "Delete your account"%}</a>
-  </div>
-
+    <p>Prefer to delete?</p>
+    <a href="{% url 'account_delete' object.pk %}">{% trans "Delete your account"%}</a>
+</div>
 
 
 {% endblock %}

@@ -1,11 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-MY DATA
+<!--
+COPIED account fields section "wagtailusers/users/edit.html"
+https://github.com/wagtail/wagtail/tree/main/wagtail/users/templates/wagtailusers/users
+Removed first&last name, added extra fields
+-->
+{% extends "wagtailusers/users/edit.html" %}
 
-</body>
-</html>
+
+{% block fields %}
+{% if form.separate_username_field %}
+{% include "wagtailadmin/shared/field_as_li.html" with field=form.username_field %}
+{% endif %}
+{% include "wagtailadmin/shared/field_as_li.html" with field=form.email %}
+
+{% block extra_fields %}
+{% include "wagtailadmin/shared/field_as_li.html" with field=form.display_name %}
+{% include "wagtailadmin/shared/field_as_li.html" with field=form.year_of_birth %}
+{% include "wagtailadmin/shared/field_as_li.html" with field=form.post_code %}
+{% endblock extra_fields %}
+
+{% if form.password1 %}
+{% include "wagtailadmin/shared/field_as_li.html" with field=form.password1 %}
+{% endif %}
+{% if form.password2 %}
+{% include "wagtailadmin/shared/field_as_li.html" with field=form.password2 %}
+{% endif %}
+{% endblock fields %}
+
+

@@ -16,15 +16,18 @@ from typing import Type, List, Dict, Union
 
 
 # TODO: consider redirecting to dashboard which will have a link to profile view
-def profile_view(request: HttpRequest) -> HttpResponse:
-    # return redirect(views.dashboard))
-    return render(request, 'account/profile.html')
+class CustomUserUpdateView(UpdateView):
+    model: Type[CustomUser] = CustomUser
+    form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
+    success_url: str = reverse_lazy('landing')
 
 
+'''
 class CustomUserUpdateView(UpdateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
     success_url: str = reverse_lazy(profile_view)
+'''
 
 
 class CustomUserDeleteView(DeleteView):
@@ -34,6 +37,6 @@ class CustomUserDeleteView(DeleteView):
 
 # for overriding default email send behaviour: https://stackoverflow.com/a/55965459
 class CustomAllauthAdapter(DefaultAccountAdapter):
-    def send_mail(self, template_prefix: str, email: Union[str, List[str]], context: Dict[str,str]) -> None:
+    def send_mail(self, template_prefix: str, email: Union[str, List[str]], context: Dict[str, str]) -> None:
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
