@@ -1,4 +1,4 @@
-{% extends "account/base.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
 
@@ -18,17 +18,27 @@
     {% csrf_token %}
 
     {% for i in form %}
-    <!--
-              {{i.name}}
-    -->
+
     {% if i.name == 'display_name' %}
     Change your name
     {{i}}
     {% endif %}
     {% endfor %}
-    <!-- {{form.as_p}}-->
     <button type="submit">{% trans "Update" %}</button>
 </form>
+<br/>
+<form method="post" action="{% url 'account_email' %}" class="add_email">
+    {% csrf_token %}
+    {% for i in form %}
+
+    {% if i.name == 'email' %}
+    Your email
+    {{i}}
+    {% endif %}
+    {% endfor %}
+    <button name="action_add" type="submit">{% trans "Update" %}</button>
+</form>
+
 
 <div>
     <p>Prefer to delete?</p>

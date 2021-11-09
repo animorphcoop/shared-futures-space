@@ -39,7 +39,7 @@ class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
         #fields: List[str] = ['display_name', 'year_of_birth', 'post_code']
-        fields: List[str] = ['display_name']
+        fields: List[str] = ['display_name', 'email']
 
 
 '''
