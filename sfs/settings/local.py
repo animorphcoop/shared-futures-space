@@ -8,6 +8,7 @@ from typing import List, Optional
 SECRET_KEY: str = 'Q%Ohhtu$DbbtCvJMaspG31Ijsx0piYLAI4gUNpyxzpRVuxaUlbn(XKW'
 
 SITE_ID = 1
+SITE_DOMAIN = 'sharedfutures.space'
 
 AUTHENTICATION_BACKENDS: List[str] = [
     'django.contrib.auth.backends.ModelBackend',

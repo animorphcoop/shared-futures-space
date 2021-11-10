@@ -164,7 +164,6 @@ STATICFILES_DIRS: List[str] = [
     os.path.join(PROJECT_DIR, 'static'),
 ]
 
-
 ACCOUNT_FORMS = {'signup': 'userauth.forms.CustomSignupForm'}
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
