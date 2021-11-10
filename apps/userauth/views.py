@@ -19,19 +19,19 @@ from django.dispatch import receiver
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
 
+from django.core.handlers.wsgi import WSGIRequest
 
 class CustomUserUpdateView(UpdateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
-
     success_url: str = reverse_lazy('landing')
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    # If changing the username only - need to ensure the email does not get wiped out
+    def post(self, request: WSGIRequest, *args: tuple, **kwargs: dict) -> Union[HttpResponseRedirect, CustomUserUpdateForm]:
         userpklist = list(kwargs.values())
         currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
-
         form = self.get_form()
+
         if form.is_valid():
             display_name = form.cleaned_data.get('display_name')
             if len(display_name) > 0:
@@ -45,11 +45,12 @@ class CustomUserUpdateView(UpdateView):
             return self.form_invalid(form)
 
 
-#@receiver(email_confirmed)
-#def email_added()
+#@receiver(email_added)
+#def add_user email()
 
+# Gets triggered when clicking confirm button
 @receiver(email_confirmed)
-def update_user_email(sender, request, email_address, **kwargs):
+def update_user_email(sender: type, request: WSGIRequest, email_address: EmailAddress, **kwargs: dict) -> None:
     # Once the email address is confirmed, make new email_address primary.
     # This also sets user.email to the new email address.
     # email_address is an instance of allauth.account.models.EmailAddress
