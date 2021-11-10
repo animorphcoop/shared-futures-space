@@ -9,8 +9,6 @@ from .forms import CustomUserUpdateForm
 from .tasks import send_after
 
 from allauth.account.adapter import DefaultAccountAdapter
-from allauth.account.views import EmailVerificationSentView
-from allauth.account.utils import send_email_confirmation
 
 from django.http import HttpRequest, HttpResponse
 from django.core.mail import EmailMessage
