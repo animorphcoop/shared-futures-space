@@ -48,7 +48,6 @@ class CustomSignupForm(SignupForm):
                                    help_text=_("Will be shown e.g. when commenting."))
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
-        print(type(self))
         user.display_name = self.cleaned_data['display_name'] # pyre-ignore[16] - it clearly does have this attrbute, since it works
         user.save()
         return user

@@ -7,6 +7,11 @@
 {% block content %}
     <h1>{% trans "Verify Your E-mail Address" %}</h1>
 
-    <p>{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
+    <p>{% blocktrans %}We have sent an e-mail to you for verification. If you reached this page by signing in to an account that has already been signed up but not been confirmed, the email has been resent. If you need to resend the email, sign in with the email address and password you registered. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
+
+    <form method=post>
+      {% csrf_token %}
+      <button>Resend Confirmation Email</button>
+    </form>
 
 {% endblock %}
