@@ -12,7 +12,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 
 from django.http import HttpResponseRedirect
 from django.core.mail import EmailMessage
-from typing import Type, List, Dict, Union
+from typing import Type, List, Dict, Union, Any
 
 from django.dispatch import receiver
 
@@ -21,13 +21,16 @@ from allauth.account.signals import email_confirmed
 
 from django.core.handlers.wsgi import WSGIRequest
 
+
 class CustomUserUpdateView(UpdateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
     success_url: str = reverse_lazy('landing')
 
     # If changing the username only - need to ensure the email does not get wiped out
-    def post(self, request: WSGIRequest, *args: tuple, **kwargs: dict) -> Union[HttpResponseRedirect, CustomUserUpdateForm]:
+    def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
+        HttpResponseRedirect, CustomUserUpdateForm]:
+        print(kwargs)
         userpklist = list(kwargs.values())
         currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
         form = self.get_form()
@@ -45,20 +48,21 @@ class CustomUserUpdateView(UpdateView):
             return self.form_invalid(form)
 
 
-#@receiver(email_added)
-#def add_user email()
+# @receiver(email_added)
+# def add_user email()
 
 # Gets triggered when clicking confirm button
 @receiver(email_confirmed)
-def update_user_email(sender: type, request: WSGIRequest, email_address: EmailAddress, **kwargs: dict) -> None:
+def update_user_email(request: WSGIRequest, email_address: EmailAddress,
+                      **kwargs: dict[str, Any]) -> None:
     # Once the email address is confirmed, make new email_address primary.
     # This also sets user.email to the new email address.
     # email_address is an instance of allauth.account.models.EmailAddress
     email_address.set_as_primary()
+
     # Get rid of old email addresses
     stale_addresses = EmailAddress.objects.filter(
         user=email_address.user).exclude(primary=True).delete()
-
 
 
 class CustomUserDeleteView(DeleteView):
