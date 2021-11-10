@@ -1,5 +1,5 @@
 # pyre-strict
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.views.generic.edit import UpdateView, DeleteView
 from django.urls import reverse_lazy
 
@@ -10,13 +10,9 @@ from .tasks import send_after
 
 from allauth.account.adapter import DefaultAccountAdapter
 
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponseRedirect
 from django.core.mail import EmailMessage
 from typing import Type, List, Dict, Union
-
-
-from django.views.generic.base import TemplateResponseMixin, View
-from allauth.account.views import LogoutFunctionalityMixin
 
 from django.dispatch import receiver
 
@@ -24,28 +20,44 @@ from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
 
 
-# TODO: consider redirecting to dashboard which will have a link to profile view
 class CustomUserUpdateView(UpdateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
+
     success_url: str = reverse_lazy('landing')
 
-    @receiver(email_confirmed)
-    def update_user_email(sender, request, email_address, **kwargs):
-        # Once the email address is confirmed, make new email_address primary.
-        # This also sets user.email to the new email address.
-        # email_address is an instance of allauth.account.models.EmailAddress
-        email_address.set_as_primary()
-        # Get rid of old email addresses
-        stale_addresses = EmailAddress.objects.filter(
-            user=email_address.user).exclude(primary=True).delete()
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        userpklist = list(kwargs.values())
+        currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
 
-'''
-class CustomUserUpdateView(UpdateView):
-    model: Type[CustomUser] = CustomUser
-    form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
-    success_url: str = reverse_lazy(profile_view)
-'''
+        form = self.get_form()
+        if form.is_valid():
+            display_name = form.cleaned_data.get('display_name')
+            if len(display_name) > 0:
+                currentuser.display_name = display_name
+                currentuser.email = currentuser.email
+                currentuser.save()
+                return HttpResponseRedirect(reverse_lazy('landing'))
+            else:
+                return self.form_invalid(form)
+        else:
+            return self.form_invalid(form)
+
+
+#@receiver(email_confirmed)
+#def email_added()
+
+@receiver(email_confirmed)
+def update_user_email(sender, request, email_address, **kwargs):
+    # Once the email address is confirmed, make new email_address primary.
+    # This also sets user.email to the new email address.
+    # email_address is an instance of allauth.account.models.EmailAddress
+    email_address.set_as_primary()
+    # Get rid of old email addresses
+    stale_addresses = EmailAddress.objects.filter(
+        user=email_address.user).exclude(primary=True).delete()
+
 
 
 class CustomUserDeleteView(DeleteView):
@@ -58,4 +70,3 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
     def send_mail(self, template_prefix: str, email: Union[str, List[str]], context: Dict[str, str]) -> None:
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
-
