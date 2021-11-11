@@ -1,9 +1,10 @@
 # pyre-strict
-from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.edit import UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth.decorators import login_required
 
-from .models import CustomUser
+from .models import CustomUser, UserRequest
 from .forms import CustomUserUpdateForm
 
 from .tasks import send_after
@@ -20,6 +21,7 @@ from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
 
 from django.core.handlers.wsgi import WSGIRequest
+from datetime import datetime
 
 
 class CustomUserUpdateView(UpdateView):
@@ -47,10 +49,6 @@ class CustomUserUpdateView(UpdateView):
         else:
             return self.form_invalid(form)
 
-
-# @receiver(email_added)
-# def add_user email()
-
 # Gets triggered when clicking confirm button
 @receiver(email_confirmed)
 def update_user_email(request: WSGIRequest, email_address: EmailAddress,
@@ -76,3 +74,20 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
     def send_mail(self, template_prefix: str, email: Union[str, List[str]], context: Dict[str, str]) -> None:
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
+
+@login_required
+def user_request_view(httpreq):
+    if (httpreq.method == 'POST'):
+        if (httpreq._post['kind'] not in ['make_moderator', 'change_dob', 'change_postcode', 'other']):
+            print('error: not a valid kind of request')
+        elif (len(httpreq._post['reason']) > 1000):
+            print('error: reason too long (> 1000 chars)')
+        else:
+            new_request = UserRequest(kind = httpreq._post['kind'],
+                                      reason = httpreq._post['reason'],
+                                      user = httpreq.user,
+                                      date = datetime.now())
+            new_request.save()
+        return redirect(reverse('account_update', args=[httpreq.user.id]))
+    else:
+        return render(httpreq, 'account/make_request.html')

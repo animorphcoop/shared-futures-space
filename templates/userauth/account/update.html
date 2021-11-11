@@ -41,6 +41,10 @@
 
 
 <div>
+    <p>Make a request for an admin to change other account information</p>
+    <a href="{% url 'account_request' %}">{% trans "Request a change" %}</a>
+
+<div>
     <p>Prefer to delete?</p>
     <a href="{% url 'account_delete' object.pk %}">{% trans "Delete your account"%}</a>
 </div>
