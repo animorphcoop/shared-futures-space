@@ -164,6 +164,8 @@ STATICFILES_DIRS: List[str] = [
     os.path.join(PROJECT_DIR, 'static'),
 ]
 
+ACCOUNT_FORMS = {'signup': 'userauth.forms.CustomSignupForm'}
+
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
 # JavaScript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
 # See https://docs.djangoproject.com/en/3.2/ref/contrib/staticfiles/#manifeststaticfilesstorage

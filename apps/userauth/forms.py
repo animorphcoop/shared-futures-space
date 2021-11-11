@@ -4,9 +4,12 @@ from .models import CustomUser
 
 from django.utils.translation import gettext_lazy as _
 
+from allauth.account.forms import SignupForm
+
 from wagtail.users.forms import UserEditForm, UserCreationForm
 
-from typing import Type, List
+from typing import Type, List, Any
+from django.http import HttpRequest
 
 '''
 Resolving the first&last name issue, reference
@@ -40,14 +43,11 @@ class CustomUserUpdateForm(forms.ModelForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['display_name', 'year_of_birth', 'post_code']
 
-
-'''
-TODO: Consider adding display_name and age values at the signup?
-class SignupForm(forms.Form):
+class CustomSignupForm(SignupForm):
     display_name = forms.CharField(max_length=30, label=_("Display name"),
                                    help_text=_("Will be shown e.g. when commenting."))
-
-    def signup(self, request, user):
-        user.display_name = self.cleaned_data['display_name']
+    def save(self, request: HttpRequest) -> CustomUser:
+        user = super(CustomSignupForm, self).save(request)
+        user.display_name = self.cleaned_data['display_name'] # pyre-ignore[16] - it clearly does have this attrbute, since it works
         user.save()
-'''
+        return user

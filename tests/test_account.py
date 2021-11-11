@@ -10,7 +10,7 @@ import re
 @pytest.mark.usefixtures('celery_session_worker')
 def test_create_account(client, mailoutbox):
     response = client.post('/account/signup/', {'email': 'testemail@example.com',
-                                               'username': 'testuser',
+                                               'display_name': 'testuser',
                                                'password1': 'test_password',
                                                'password2': 'test_password'})
     time.sleep(6) # ensure email has sent properly
