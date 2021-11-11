@@ -61,8 +61,9 @@ def update_user_email(request: WSGIRequest, email_address: EmailAddress,
     email_address.set_as_primary()
 
     # Get rid of old email addresses
+    # pyre-ignore[16]:
     stale_addresses = EmailAddress.objects.filter(
-        user=email_address.user).exclude(primary=True).delete()  # pyre-ignore[16]
+        user=email_address.user).exclude(primary=True).delete()
 
 
 class CustomUserDeleteView(DeleteView):
