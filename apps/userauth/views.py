@@ -11,7 +11,7 @@ from .tasks import send_after
 
 from allauth.account.adapter import DefaultAccountAdapter
 
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.core.mail import EmailMessage
 from typing import Type, List, Dict, Union, Any
 
@@ -76,16 +76,16 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
         send_after.delay(5, msg)
 
 @login_required
-def user_request_view(httpreq):
+def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
-        if (httpreq._post['kind'] not in ['make_moderator', 'change_dob', 'change_postcode', 'other']):
+        if (httpreq.POST['kind'] not in ['make_moderator', 'change_dob', 'change_postcode', 'other']):
             print('error: not a valid kind of request')
-        elif (len(httpreq._post['reason']) > 1000):
+        elif (len(httpreq.POST['reason']) > 1000):
             print('error: reason too long (> 1000 chars)')
         else:
-            new_request = UserRequest(kind = httpreq._post['kind'],
-                                      reason = httpreq._post['reason'],
-                                      user = httpreq.user,
+            new_request = UserRequest(kind = httpreq.POST['kind'],
+                                      reason = httpreq.POST['reason'],
+                                      user = httpreq.user, # pyre-ignore[16] pyre has a older version of django in mind?
                                       date = datetime.now())
             new_request.save()
         return redirect(reverse('account_update', args=[httpreq.user.id]))
