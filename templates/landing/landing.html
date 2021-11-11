@@ -17,6 +17,8 @@ HOME
 {% if user.is_authenticated %}
 Welcome {{ user.username }}
 <br/>
+<a href="{% url 'dashboard' %}">Dashboard</a>
+<br/>
 <a href="{% url 'account_logout' %}">Logout</a>
 {% else %}
 <a href="{% url 'account_login' %}">Login</a>
