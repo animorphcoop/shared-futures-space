@@ -21,7 +21,7 @@ from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
 
 from django.core.handlers.wsgi import WSGIRequest
-from datetime import datetime
+from django.utils import timezone
 
 
 class CustomUserUpdateView(UpdateView):
@@ -86,7 +86,7 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
             new_request = UserRequest(kind = httpreq.POST['kind'],
                                       reason = httpreq.POST['reason'],
                                       user = httpreq.user, # pyre-ignore[16] pyre has a older version of django in mind?
-                                      date = datetime.now())
+                                      date = timezone.now())
             new_request.save()
         return redirect(reverse('account_update', args=[httpreq.user.id]))
     else:

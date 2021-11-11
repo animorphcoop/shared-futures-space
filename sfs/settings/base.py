@@ -34,14 +34,7 @@ sys.path.append(os.path.normpath(os.path.join(BASE_DIR, 'apps')))
 # Application definition
 # add apps/ to the Python path
 
-INSTALLED_APPS: List[str] = [
-    'landing',
-    'dashboard',
-    'userauth',
-
-    'search',
-    'core',
-
+INSTALLED_APPS: List[str] = [    
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
@@ -63,6 +56,14 @@ INSTALLED_APPS: List[str] = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'landing',
+    'dashboard',
+    'userauth',
+
+    'search',
+    'core',
+
 
     'django.contrib.sites',
     'allauth',

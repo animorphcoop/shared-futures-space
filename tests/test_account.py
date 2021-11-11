@@ -5,6 +5,9 @@ import time
 import bs4
 import re
 
+from django.urls import reverse
+from userauth.models import UserRequest
+
 @pytest.mark.django_db
 @pytest.mark.usefixtures('celery_session_app')
 @pytest.mark.usefixtures('celery_session_worker')
@@ -33,3 +36,15 @@ def test_dashboard_info(client, test_user):
     welcome = bs4.BeautifulSoup(dash.content, 'html5lib').body.text
     # janky as fuck placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
     assert re.match(f'.*Welcome {test_user.display_name} born in {test_user.year_of_birth}.*', welcome, re.S)
+
+@pytest.mark.django_db
+def test_user_request_flow(client, test_user):
+    client.force_login(test_user)
+    request_form = client.get(reverse('account_request'))
+    assert request_form.status_code == 200
+    make_request = client.post(reverse('account_request'),
+                               {'kind': 'make_moderator',
+                                'reason': 'pls'})
+    assert make_request.status_code == 302
+    assert make_request.url == f'/account/{test_user.id}/update/'
+    assert len(UserRequest.objects.all()) == 1
