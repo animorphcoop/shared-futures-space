@@ -58,3 +58,14 @@ def test_user_request_flow(client, test_user, admin_client):
                                                    'request_id': user_request_id})
     assert CustomUser.objects.get(id=test_user.id).is_staff
     assert len(UserRequest.objects.all()) == 0
+
+@pytest.mark.django_db
+def test_update_flow(client, test_user):
+    client.force_login(test_user)
+    update_form = client.get(reverse('account_update'))
+    current_name = bs4.BeautifulSoup(update_form.content, features='html5lib').body.find('form', attrs={'action':reverse('account_update')}).find('input', attrs={'name':'display_name'})['value']
+    assert current_name == test_user.display_name
+    client.post(reverse('account_update'), {'display_name': 'New Name'})
+    assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
+
+    
