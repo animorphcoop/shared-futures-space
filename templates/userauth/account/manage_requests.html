@@ -1,0 +1,44 @@
+{% load i18n %}
+{% if user.is_superuser %}
+<p>{% trans 'Manage User Requests' %}</p>
+<table id=requests>
+  <tr>
+    <th>User</th>
+    <th>Request</th>
+    <th>Justification</th>
+    <th>Request Made</td>
+    <th>Action</th>
+    <th></th>
+  </tr>
+  {% for req in reqs %}
+    <form method=post>
+    {% csrf_token %}
+    <tr>
+      <td>{{ req.user.display_name }}</td>
+      <td>{{ req.kind }}</td>
+      <td>{{ req.reason }}</td>
+      <td>{{ req.date }}</td>
+      <td>
+        <input type=hidden name=request_id value="{{ req.id }}"></input>
+        {% if req.kind == "make_moderator" %}
+          <button name=accept value=accept>Make Moderator</button>
+        {% elif req.kind == "change_dob" %}
+          <button name=accept value=accept>Change Year Of Birth To:</button>
+          <input type=number name=new_dob></input>
+        {% elif req.kind == "change_postcode" %}
+          <button name=accept value=accept>Change Postcode To:</button>
+          <input type=text maxlength=8 name=new_postcode></input>
+        {% elif req.kind == "other" %}
+          <button name=accept value=accept>Mark As Done</button>
+          Don't forget to actually do it first!
+        {% endif %}
+        </button>
+      </td>
+      <td><button name=accept value=reject>Reject Request</button></td>
+    </tr>
+    </form>
+  {% endfor %}
+</table>
+{% else %}
+go away
+{% endif %}
