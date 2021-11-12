@@ -1,6 +1,6 @@
 # pyre-strict
 from django.shortcuts import redirect, render, get_object_or_404
-from django.views.generic.edit import UpdateView, DeleteView
+from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 
@@ -22,30 +22,27 @@ from allauth.account.signals import email_confirmed
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
+from django.http import HttpResponse
 
-
-class CustomUserUpdateView(UpdateView):
+class CustomUserUpdateView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
-    success_url: str = reverse_lazy('landing')
 
     # If changing the username only - need to ensure the email does not get wiped out
-    def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
-        HttpResponse, HttpResponseRedirect, CustomUserUpdateForm]:
-        print(kwargs)
-        userpklist = list(kwargs.values())
-        currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
-        form = self.get_form()
+
+    def post(self, request: WSGIRequest) -> Union[HttpResponseRedirect, CustomUserUpdateForm]:
+        currentuser = request.user # pyre-ignore[16]
+        form = CustomUserUpdateForm(request.POST)
 
         if form.is_valid():
-            display_name = form.cleaned_data.get('display_name')
+            display_name = form.cleaned_data.get('display_name') # pyre-ignore[16]
             if len(display_name) > 0:
                 currentuser.display_name = display_name
                 currentuser.email = currentuser.email
                 currentuser.save()
-                return HttpResponseRedirect(reverse_lazy('landing'))
+                return HttpResponseRedirect(reverse_lazy('account_update'))
             else:
-                return self.form_invalid(form)
+                return self.form_invalid(form) # pyre-ignore[16]
         else:
             return self.form_invalid(form)
 
@@ -64,9 +61,15 @@ def update_user_email(request: WSGIRequest, email_address: EmailAddress,
         user=email_address.user).exclude(primary=True).delete()
 
 
-class CustomUserDeleteView(DeleteView):
+class CustomUserDeleteView(TemplateView):
     model: Type[CustomUser] = CustomUser
-    success_url: str = reverse_lazy('landing')
+    success_url: str = reverse_lazy('account_update')
+    def post(self, request: WSGIRequest) -> HttpResponse:
+        if (request.POST['confirm'] == 'confirm'):
+            request.user.delete() # pyre-ignore[16]
+            return redirect('/')
+        return redirect(reverse('account_update'))
+    
 
 
 # for overriding default email send behaviour: https://stackoverflow.com/a/55965459

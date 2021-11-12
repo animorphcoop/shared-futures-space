@@ -17,7 +17,7 @@ Welcome {{ user.display_name }} born in {{ user.year_of_birth }}
 
 <a href="{% url 'account_logout' %}">Logout</a>
 <br/>
-<a href="{% url 'account_update' user.pk %}">Profile view</a>
+<a href="{% url 'account_update' %}">Profile view</a>
 
 {% if user.is_staff %}
 <br/>
