@@ -10,11 +10,11 @@
 
 <form method="post">
     {% csrf_token %}
-    <p>Want to delete your account? {{ object.email }}</p>
-    <button type="submit">{% trans "Delete" %} &raquo;</button>
+    <p>Want to delete your account? {{ user.email }}</p>
+    <button type="submit" name=confirm value=confirm>{% trans "Delete" %} &raquo;</button>
 </form>
 <br/>
 <p>{% trans "No, keep my account" %} </p>
-    <a href="/">{% trans "Return to site" %}</a>
+    <a href="{% url 'account_update' %}">{% trans "Return to site" %}</a>
 
 {% endblock %}
