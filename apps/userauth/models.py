@@ -32,8 +32,8 @@ class CustomUser(AbstractUser):
         return f"{self.display_name}"
 
 class UserRequest(models.Model):
-    kind = models.CharField(max_length=15) # one of the following, we can't put better type constraints on the db:
+    kind: models.CharField = models.CharField(max_length=15) # one of the following, we can't put better type constraints on the db:
     # make_moderator, change_postcode, change_dob, other
-    reason = models.CharField(max_length=1000)
-    date = models.DateTimeField('date/time request made')
-    user = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
+    reason: models.CharField = models.CharField(max_length=1000)
+    date: models.DateTimeField = models.DateTimeField('date/time request made')
+    user: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.CASCADE)

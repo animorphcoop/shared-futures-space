@@ -31,7 +31,7 @@ class CustomUserUpdateView(UpdateView):
 
     # If changing the username only - need to ensure the email does not get wiped out
     def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
-        HttpResponseRedirect, CustomUserUpdateForm]:
+        HttpResponse, HttpResponseRedirect, CustomUserUpdateForm]:
         print(kwargs)
         userpklist = list(kwargs.values())
         currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
@@ -96,7 +96,7 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
 def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
         if (httpreq.POST['accept'] == 'reject'):
-            UserRequest.objects.get(id=httpreq.POST['request_id']).delete()
+            UserRequest.objects.get(id=httpreq.POST['request_id']).delete() # pyre-ignore[16]
         elif (httpreq.POST['accept'] == 'accept'):
             req = UserRequest.objects.get(id=httpreq.POST['request_id'])
             usr = req.user
@@ -109,6 +109,7 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
             usr.save()
             req.delete()
     ctx = {}
-    if httpreq.user.is_superuser: # just in case the template is changed or leaks information in future
+    # just in case the template is changed or leaks information in future:
+    if httpreq.user.is_superuser: # pyre-ignore[16]
         ctx = {'reqs': UserRequest.objects.order_by('date') }
     return render(httpreq, 'account/manage_requests.html', context=ctx)

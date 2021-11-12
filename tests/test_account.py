@@ -6,7 +6,7 @@ import bs4
 import re
 
 from django.urls import reverse
-from userauth.models import UserRequest
+from userauth.models import CustomUser, UserRequest
 
 @pytest.mark.django_db
 @pytest.mark.usefixtures('celery_session_app')
@@ -38,7 +38,7 @@ def test_dashboard_info(client, test_user):
     assert re.match(f'.*Welcome {test_user.display_name} born in {test_user.year_of_birth}.*', welcome, re.S)
 
 @pytest.mark.django_db
-def test_user_request_flow(client, test_user):
+def test_user_request_flow(client, test_user, admin_client):
     client.force_login(test_user)
     request_form = client.get(reverse('account_request'))
     assert request_form.status_code == 200
@@ -48,3 +48,13 @@ def test_user_request_flow(client, test_user):
     assert make_request.status_code == 302
     assert make_request.url == f'/account/{test_user.id}/update/'
     assert len(UserRequest.objects.all()) == 1
+
+    requests_page = admin_client.get('/account/managerequests/')
+    table_rows = bs4.BeautifulSoup(requests_page.content, features='html5lib').body.find('table').tbody.find_all('tr')
+    test_row = [row for row in table_rows
+                if row.find_all('td') != [] and row.find_all('td')[0].text == test_user.display_name][0]
+    user_request_id = test_row.find_all('td')[4].form.find('input',attrs={'name':'request_id'})['value']
+    admin_client.post('/account/managerequests/', {'accept': 'accept',
+                                                   'request_id': user_request_id})
+    assert CustomUser.objects.get(id=test_user.id).is_staff
+    assert len(UserRequest.objects.all()) == 0

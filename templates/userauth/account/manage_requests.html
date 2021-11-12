@@ -8,17 +8,16 @@
     <th>Justification</th>
     <th>Request Made</td>
     <th>Action</th>
-    <th></th>
   </tr>
   {% for req in reqs %}
-    <form method=post>
-    {% csrf_token %}
     <tr>
       <td>{{ req.user.display_name }}</td>
       <td>{{ req.kind }}</td>
       <td>{{ req.reason }}</td>
       <td>{{ req.date }}</td>
       <td>
+        <form method=post>
+        {% csrf_token %}
         <input type=hidden name=request_id value="{{ req.id }}"></input>
         {% if req.kind == "make_moderator" %}
           <button name=accept value=accept>Make Moderator</button>
@@ -33,10 +32,9 @@
           Don't forget to actually do it first!
         {% endif %}
         </button>
-      </td>
-      <td><button name=accept value=reject>Reject Request</button></td>
+        <button name=accept value=reject>Reject Request</button></td>
+      </form>
     </tr>
-    </form>
   {% endfor %}
 </table>
 {% else %}
