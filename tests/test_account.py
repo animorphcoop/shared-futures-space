@@ -46,7 +46,7 @@ def test_user_request_flow(client, test_user, admin_client):
                                {'kind': 'make_moderator',
                                 'reason': 'pls'})
     assert make_request.status_code == 302
-    assert make_request.url == f'/account/{test_user.id}/update/'
+    assert make_request.url == f'/account/update/'
     assert len(UserRequest.objects.all()) == 1
 
     requests_page = admin_client.get('/account/managerequests/')

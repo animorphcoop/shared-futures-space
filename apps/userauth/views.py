@@ -91,7 +91,7 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
                                       user = httpreq.user, # pyre-ignore[16] pyre has a older version of django in mind?
                                       date = timezone.now())
             new_request.save()
-        return redirect(reverse('account_update', args=[httpreq.user.id]))
+        return redirect(reverse('account_update'))
     else:
         return render(httpreq, 'account/make_request.html')
 
