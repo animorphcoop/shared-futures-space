@@ -23,10 +23,10 @@
           <button name=accept value=accept>Make Moderator</button>
         {% elif req.kind == "change_dob" %}
           <button name=accept value=accept>Change Year Of Birth To:</button>
-          <input type=number name=new_dob></input>
+          <input type=number name=new_dob required></input>
         {% elif req.kind == "change_postcode" %}
           <button name=accept value=accept>Change Postcode To:</button>
-          <input type=text maxlength=8 name=new_postcode></input>
+          <input type=text maxlength=8 name=new_postcode required></input>
         {% elif req.kind == "other" %}
           <button name=accept value=accept>Mark As Done</button>
           Don't forget to actually do it first!
