@@ -22,6 +22,20 @@
     {% if i.name == 'display_name' %}
     Change your name
     {{i}}
+
+    {% endif %}
+    {% endfor %}
+    <button type="submit">{% trans "Update" %}</button>
+</form>
+<br/>
+<form method="post" action="{% url 'account_update' object.pk %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% for i in form %}
+
+    {% if i.name == 'avatar' %}
+    Your avatar
+    {{i}}
     {% endif %}
     {% endfor %}
     <button type="submit">{% trans "Update" %}</button>
@@ -34,6 +48,7 @@
     {% if i.name == 'email' %}
     Your email
     {{i}}
+
     {% endif %}
     {% endfor %}
     <button name="action_add" type="submit">{% trans "Update" %}</button>

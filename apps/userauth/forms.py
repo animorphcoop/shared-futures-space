@@ -42,7 +42,7 @@ class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
         #fields: List[str] = ['display_name', 'year_of_birth', 'post_code']
-        fields: List[str] = ['display_name', 'email']
+        fields: List[str] = ['display_name', 'email', 'avatar']
 
 class CustomSignupForm(SignupForm):
     display_name = forms.CharField(max_length=30, label=_("Display name"),

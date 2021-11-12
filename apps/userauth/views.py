@@ -31,21 +31,29 @@ class CustomUserUpdateView(UpdateView):
     def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
         HttpResponseRedirect, CustomUserUpdateForm]:
         print(kwargs)
+        self.object = self.get_object()
         userpklist = list(kwargs.values())
         currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
-        form = self.get_form()
+        # form = self.get_form()
+        form = CustomUserUpdateForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            display_name = form.cleaned_data.get('display_name')
-            if len(display_name) > 0:
-                currentuser.display_name = display_name
-                currentuser.email = currentuser.email
-                currentuser.save()
-                return HttpResponseRedirect(reverse_lazy('landing'))
-            else:
-                return self.form_invalid(form)
+
+        if request.FILES.get('avatar') != None:
+            avatar = request.FILES.get('avatar')
+            print('is avatar')
+            currentuser.display_name = currentuser.display_name
+            currentuser.email = currentuser.email
+            currentuser.avatar = avatar
+            currentuser.save()
+            return HttpResponseRedirect(reverse_lazy('landing'))
         else:
-            return self.form_invalid(form)
+            display_name = form.data.get('display_name')
+            currentuser.display_name = display_name
+            currentuser.email = currentuser.email
+            currentuser.avatar = currentuser.avatar
+            print('display_name')
+            currentuser.save()
+            return HttpResponseRedirect(reverse_lazy('landing'))
 
 
 # @receiver(email_added)
