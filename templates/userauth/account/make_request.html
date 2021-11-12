@@ -1,0 +1,22 @@
+
+<form method=post>
+  {% csrf_token %}
+  <p>
+    <label for=kind>
+      Kind of request
+    </label>
+    <select id=kind name=kind>
+      <option value=make_moderator>Make me a Moderator</option>
+      <option value=change_postcode>Change the postcode on my account</option>
+      <option value=change_dob>Change the year of birth on my account</option>
+      <option value=other>Other request</option>
+    </select>
+  </p>
+  <p>
+    <label for=reason>
+      Reason for your request, including the new postcode or year of birth you want or a description of the request if you selected 'Other request'<br/>
+    </label>
+    <textarea id=reason name=reason maxlength=1000></textarea>
+  </p>
+  <p><button>Submit Request</button></p>
+</form>

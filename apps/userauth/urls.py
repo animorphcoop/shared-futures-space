@@ -1,14 +1,15 @@
 # pyre-strict
 from django.conf import settings
 from django.urls import include, path, URLResolver, URLPattern
-from .views import CustomUserUpdateView, CustomUserDeleteView
+from .views import CustomUserUpdateView, CustomUserDeleteView, user_request_view, admin_request_view
 from typing import List, Union
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     #path('profile/', profile_view, name='account_profile'),
+    path('request/', user_request_view, name='account_request'),
+    path('managerequests/', admin_request_view, name='account_request_panel')
     path('update/', CustomUserUpdateView.as_view(template_name='account/update.html'), name='account_update'),
     path('delete/', CustomUserDeleteView.as_view(template_name='account/delete.html'), name='account_delete'),
-
 ]
 
 if settings.DEBUG:
