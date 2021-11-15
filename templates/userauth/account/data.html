@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Update account" %}{% endblock %}
+
+
+{% block content %}
+
+<h1>{% trans "Add relevant data to your account" %}</h1>
+
+<form method="post" action="{% url 'account_data' %}">
+    {% csrf_token %}
+    <label for=year_of_birth>Year of Birth</label>
+    <input id=year_of_birth name=year_of_birth type=text value="{{ user.year_of_birth }}"></input>
+    <br/>
+    <label for=user.post_code>Postcode</label>
+    <input id=user.post_code name=post_code type=text value="{{ user.post_code }}"></input>
+    <br/>
+    <button type="submit">{% trans "Update" %}</button>
+</form>
+<br/>
+
+<br/>
+
+
+
+{% endblock %}

@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 
 from .models import CustomUser, UserRequest
-from .forms import CustomUserUpdateForm
+from .forms import CustomUserUpdateForm, CustomUserPersonalForm
 
 from .tasks import send_after
 
@@ -27,6 +27,27 @@ from django.http import HttpResponse
 
 def profile_view(request: WSGIRequest) -> HttpResponse:
     return render(request, 'account/view.html')
+
+
+class CustomUserPersonalView(TemplateView):
+    model: Type[CustomUser] = CustomUser
+    form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
+
+    def post(self, request: WSGIRequest) -> Union[HttpResponseRedirect, CustomUserUpdateForm]:
+        currentuser = request.user  # pyre-ignore[16]
+        form = CustomUserPersonalForm(request.POST)
+        print(form)
+        if form.is_valid():
+            #year_of_birth = form.cleaned_data.get('year_of_birth')  # pyre-ignore[16]
+            #print(year_of_birth)
+            currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
+            currentuser.post_code = form.cleaned_data.get('post_code')
+            currentuser.save()
+            #return HttpResponse('<h1>Thanks</h1>')
+            return HttpResponseRedirect(reverse_lazy('dashboard'))
+        else:
+            return HttpResponse('<h1>please, enter your year of birth and your postcode</h1>')
+            #return self.form_invalid(form)  # pyre-ignore[16]
 
 
 class CustomUserUpdateView(TemplateView):
@@ -54,8 +75,6 @@ class CustomUserUpdateView(TemplateView):
             currentuser.avatar = currentuser.avatar
             currentuser.save()
             return HttpResponseRedirect(reverse_lazy('account_view'))
-
-
 
 
 # Gets triggered when clicking confirm button

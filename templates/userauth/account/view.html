@@ -6,9 +6,10 @@
 
 
 {% block content %}
+<a href="{% url 'dashboard' %}"><- Dashboard</a>
 <h1>{% trans "View your account" %}</h1>
 
-Primary key: {{ user.pk }}
+
 <br/>
 Display name: {{user.display_name}}
 <br/>
