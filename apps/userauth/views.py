@@ -27,11 +27,10 @@ from django.views.generic.detail import DetailView
 class CustomUserProfileView(DetailView):
     model: Type[CustomUser] = CustomUser
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, str]:
         context = super().get_context_data(**kwargs)
         return context
 
-# pyre-ignore[16]:
 class CustomUserUpdateView(UpdateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
@@ -40,7 +39,8 @@ class CustomUserUpdateView(UpdateView):
     # If changing the username only - need to ensure the email does not get wiped out
     def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
         HttpResponseRedirect, CustomUserUpdateForm]:
-        print(kwargs)
+
+        # pyre-ignore[16]:
         self.object = self.get_object()
         userpklist = list(kwargs.values())
         currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
