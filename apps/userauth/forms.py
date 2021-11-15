@@ -51,8 +51,9 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
+        # pyre-ignore[16]
         user.display_name = self.cleaned_data[
-            'display_name']  # pyre-ignore[16] - it clearly does have this attrbute, since it works
+            'display_name']
         user.save()
         return user
 

@@ -33,21 +33,17 @@ class CustomUserPersonalView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
-    def post(self, request: WSGIRequest) -> Union[HttpResponseRedirect, CustomUserUpdateForm]:
-        currentuser = request.user  # pyre-ignore[16]
+    def post(self, request: WSGIRequest) -> HttpResponseRedirect:
+        currentuser = request.user
         form = CustomUserPersonalForm(request.POST)
         print(form)
         if form.is_valid():
-            #year_of_birth = form.cleaned_data.get('year_of_birth')  # pyre-ignore[16]
-            #print(year_of_birth)
             currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
             currentuser.post_code = form.cleaned_data.get('post_code')
             currentuser.save()
-            #return HttpResponse('<h1>Thanks</h1>')
             return HttpResponseRedirect(reverse_lazy('dashboard'))
         else:
-            return HttpResponse('<h1>please, enter your year of birth and your postcode</h1>')
-            #return self.form_invalid(form)  # pyre-ignore[16]
+            return HttpResponseRedirect(reverse_lazy('account_data'))
 
 
 class CustomUserUpdateView(TemplateView):
@@ -58,7 +54,7 @@ class CustomUserUpdateView(TemplateView):
     def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
         HttpResponseRedirect, CustomUserUpdateForm]:
 
-        currentuser = request.user  # pyre-ignore[16]
+        currentuser = request.user
         form = CustomUserUpdateForm(request.POST, request.FILES)
 
         if request.FILES.get('avatar') != None:
