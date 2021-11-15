@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "View account" %}{% endblock %}
+
+
+{% block content %}
+<h1>{% trans "View your account" %}</h1>
+
+Primary key: {{ user.pk }}
+<br/>
+Display name: {{user.display_name}}
+<br/>
+Year of birth: {{user.year_of_birth}}
+<br/>
+Post code {{user.post_code}}
+<br/>
+Profile image:
+<br/>
+<img src="{{ user.avatar.url }}" />
+<br/>
+<hr/>
+Would you like to edit your profile?
+<a href="{% url 'account_update' %}">Profile edit</a>
+{% endblock %}

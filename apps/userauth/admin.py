@@ -17,7 +17,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
 
         (_('Personal info'), {'fields': ('email',)}),
-        (None, {'fields': ('display_name', 'year_of_birth', 'post_code')
+        (None, {'fields': ('display_name', 'year_of_birth', 'post_code', 'avatar')
                 }),
         )
 

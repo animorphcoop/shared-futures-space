@@ -20,6 +20,7 @@ class CustomUser(AbstractUser):
                                                                                          MaxValueValidator(2021)],
                                                                              null=True, blank=True)
     post_code: models.CharField = models.CharField(verbose_name=_("Post code"), max_length=8, null=True, blank=True)
+    avatar:  models.FileField = models.FileField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
 
     class Meta:
         ordering: List[str] = ['display_name']
