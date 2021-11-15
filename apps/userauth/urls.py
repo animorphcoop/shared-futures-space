@@ -5,9 +5,9 @@ from .views import CustomUserUpdateView, CustomUserDeleteView, profile_view, use
 from typing import List, Union
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path('profile/', profile_view, name='account_profile'),
     path('request/', user_request_view, name='account_request'),
     path('managerequests/', admin_request_view, name='account_request_panel'),
+    path('view/', profile_view, name='account_view'),
     path('update/', CustomUserUpdateView.as_view(template_name='account/update.html'), name='account_update'),
     path('delete/', CustomUserDeleteView.as_view(template_name='account/delete.html'), name='account_delete')
 ]

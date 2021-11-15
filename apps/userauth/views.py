@@ -25,8 +25,8 @@ from django.utils import timezone
 from django.http import HttpResponse
 
 
-def profile_view(request: WSGIRequest):
-    return render(request, 'account/profile.html')
+def profile_view(request: WSGIRequest) -> HttpResponse:
+    return render(request, 'account/view.html')
 
 
 class CustomUserUpdateView(TemplateView):
@@ -46,14 +46,14 @@ class CustomUserUpdateView(TemplateView):
             currentuser.email = currentuser.email
             currentuser.avatar = avatar
             currentuser.save()
-            return HttpResponseRedirect(reverse_lazy('account_profile'))
+            return HttpResponseRedirect(reverse_lazy('account_view'))
         else:
             display_name = form.data.get('display_name')
             currentuser.display_name = display_name
             currentuser.email = currentuser.email
             currentuser.avatar = currentuser.avatar
             currentuser.save()
-            return HttpResponseRedirect(reverse_lazy('account_profile'))
+            return HttpResponseRedirect(reverse_lazy('account_view'))
 
 
 
