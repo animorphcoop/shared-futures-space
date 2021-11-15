@@ -21,7 +21,17 @@ from allauth.account.signals import email_confirmed
 
 from django.core.handlers.wsgi import WSGIRequest
 
+from django.views.generic.detail import DetailView
 
+
+class CustomUserProfileView(DetailView):
+    model: Type[CustomUser] = CustomUser
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+# pyre-ignore[16]:
 class CustomUserUpdateView(UpdateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm

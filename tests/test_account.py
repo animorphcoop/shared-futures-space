@@ -33,3 +33,6 @@ def test_dashboard_info(client, test_user):
     welcome = bs4.BeautifulSoup(dash.content, 'html5lib').body.text
     # janky as fuck placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
     assert re.match(f'.*Welcome {test_user.display_name} born in {test_user.year_of_birth}.*', welcome, re.S)
+
+# TODO: Tests for updating account
+# TODO: Tests for removing account
