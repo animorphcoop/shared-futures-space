@@ -34,11 +34,14 @@ class CustomUserPersonalView(TemplateView):
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
     def post(self, request: WSGIRequest) -> HttpResponseRedirect:
+        # pyre-ignore[16]:
         currentuser = request.user
         form = CustomUserPersonalForm(request.POST)
         print(form)
         if form.is_valid():
+            # pyre-ignore[16]:
             currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
+            # pyre-ignore[16]:
             currentuser.post_code = form.cleaned_data.get('post_code')
             currentuser.save()
             return HttpResponseRedirect(reverse_lazy('dashboard'))
@@ -53,7 +56,7 @@ class CustomUserUpdateView(TemplateView):
     # If changing the username only - need to ensure the email does not get wiped out
     def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
         HttpResponseRedirect, CustomUserUpdateForm]:
-
+        # pyre-ignore[16]:
         currentuser = request.user
         form = CustomUserUpdateForm(request.POST, request.FILES)
 
