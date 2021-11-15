@@ -70,6 +70,9 @@ INSTALLED_APPS: List[str] = [
     'allauth.account',
     'allauth.socialaccount',
 
+    'tailwind',
+    'theme'
+
 ]
 
 MIDDLEWARE: List[str] = [
@@ -197,3 +200,5 @@ WAGTAIL_USER_CUSTOM_FIELDS: List[str] = ['display_name', 'year_of_birth', 'post_
 # urls are not strings! domain.com/page and domain.com/page/ are the same url
 APPEND_SLASH = False
 WAGTAIL_APPEND_SLASH = False
+
+TAILWIND_APP_NAME = 'theme'

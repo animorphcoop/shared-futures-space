@@ -18,7 +18,11 @@ Post code {{user.post_code}}
 <br/>
 Profile image:
 <br/>
-<img src="{{ user.avatar.url }}" />
+{% if user.avatar.url != null%}
+<img src="{{ user.avatar.url }}"/>
+{% else %}
+Don't have one yet.
+{% endif %}
 <br/>
 <hr/>
 Would you like to edit your profile?
