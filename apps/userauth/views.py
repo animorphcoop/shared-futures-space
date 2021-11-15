@@ -31,6 +31,7 @@ class CustomUserProfileView(DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
+
 class CustomUserUpdateView(UpdateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
@@ -46,7 +47,6 @@ class CustomUserUpdateView(UpdateView):
         currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
         # form = self.get_form()
         form = CustomUserUpdateForm(request.POST, request.FILES)
-
 
         if request.FILES.get('avatar') != None:
             avatar = request.FILES.get('avatar')
