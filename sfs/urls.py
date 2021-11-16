@@ -28,6 +28,7 @@ urlpatterns: List[Union[URLResolver,URLPattern]] = [
     # TODO: Consider rewiring redirection within Allauth
     path('account/', include('userauth.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('projects/', include('project.urls')),
 
 
     path('', include('landing.urls')),
