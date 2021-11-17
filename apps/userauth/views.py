@@ -41,7 +41,6 @@ class CustomUserPersonalView(TemplateView):
         if form.is_valid():
             # pyre-ignore[16]:
             currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
-            # pyre-ignore[16]:
             currentuser.post_code = form.cleaned_data.get('post_code')
             currentuser.save()
             return HttpResponseRedirect(reverse_lazy('dashboard'))
