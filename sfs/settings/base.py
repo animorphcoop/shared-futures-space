@@ -166,7 +166,7 @@ STATICFILES_FINDERS: List[str] = [
 
 STATICFILES_DIRS: List[str] = [
     os.path.join(PROJECT_DIR, 'static'),
-    os.path.join(PROJECT_DIR, 'apps/theme/static'),
+    os.path.join(BASE_DIR, 'apps/theme/static'),
 
 ]
 
