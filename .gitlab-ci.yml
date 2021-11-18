@@ -33,6 +33,6 @@ pytest:
   stage: Tests
   script:
     - export PYTHONPATH="$PYTHONPATH:."
-    - mkdir /home/app/sfs/apps/theme/static
+    - mkdir '/builds/animorph-coop/shared-futures-space/apps/theme/static'
     - ./manage.py collectstatic --noinput
     - pytest tests/
