@@ -24,7 +24,8 @@
   {% endfor %}
  </table>
  </form>
-{% else %}
+ <a href="{% url 'edit_project' object.pk %}">Edit Project</a>
+{% elif not request.user.is_anonymous %}
  <form method=post>
   {% csrf_token %}
   {% if request.user in supporters|attrmap:'user' %}
