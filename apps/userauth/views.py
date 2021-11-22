@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 
 from .models import CustomUser, UserRequest
-from .forms import CustomUserUpdateForm
+from .forms import CustomUserUpdateForm, CustomUserPersonalForm
 
 from .tasks import send_after
 
@@ -29,6 +29,25 @@ def profile_view(request: WSGIRequest) -> HttpResponse:
     return render(request, 'account/view.html')
 
 
+class CustomUserPersonalView(TemplateView):
+    model: Type[CustomUser] = CustomUser
+    form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
+
+    def post(self, request: WSGIRequest) -> HttpResponseRedirect:
+        # pyre-ignore[16]:
+        currentuser = request.user
+        form = CustomUserPersonalForm(request.POST)
+        print(form)
+        if form.is_valid():
+            # pyre-ignore[16]:
+            currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
+            currentuser.post_code = form.cleaned_data.get('post_code')
+            currentuser.save()
+            return HttpResponseRedirect(reverse_lazy('dashboard'))
+        else:
+            return HttpResponseRedirect(reverse_lazy('account_data'))
+
+
 class CustomUserUpdateView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
@@ -36,8 +55,8 @@ class CustomUserUpdateView(TemplateView):
     # If changing the username only - need to ensure the email does not get wiped out
     def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
         HttpResponseRedirect, CustomUserUpdateForm]:
-
-        currentuser = request.user  # pyre-ignore[16]
+        # pyre-ignore[16]:
+        currentuser = request.user
         form = CustomUserUpdateForm(request.POST, request.FILES)
 
         if request.FILES.get('avatar') != None:
@@ -54,8 +73,6 @@ class CustomUserUpdateView(TemplateView):
             currentuser.avatar = currentuser.avatar
             currentuser.save()
             return HttpResponseRedirect(reverse_lazy('account_view'))
-
-
 
 
 # Gets triggered when clicking confirm button

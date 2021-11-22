@@ -25,13 +25,7 @@
     {% csrf_token %}
     <label for=avatar>Change your avatar</label>
     <input id=avatar name=avatar type=file value="{{ user.avatar }}"></input>
-    {% for i in form %}
 
-    {% if i.name == 'avatar' %}
-    Your avatar
-    {{i}}
-    {% endif %}
-    {% endfor %}
     <button type="submit">{% trans "Update" %}</button>
 </form>
 <br/>
