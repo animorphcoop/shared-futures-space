@@ -2,7 +2,6 @@
 
 from django.db import models
 from userauth.models import CustomUser # pyre-ignore[21]
-import userauth
 
 class Project(models.Model):
     name = models.CharField(max_length=200)

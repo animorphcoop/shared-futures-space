@@ -18,7 +18,7 @@ class ProjectView(DetailView):
             if (0 == len(ProjectSupport.objects.filter(project=Project.objects.get(id=pk), # pyre-ignore[16]
                                                        user=request.user)) and # pyre-ignore[16]
                 0 == len(ProjectOwnership.objects.filter(project=Project.objects.get(id=pk), # pyre-ignore[16]
-                                                         user=request.user))): # pyre-ignore[16]
+                                                         user=request.user))):
                 support = ProjectSupport(project=Project.objects.get(id=pk),
                                          user=request.user)
                 support.save()
@@ -55,7 +55,7 @@ class AllProjectsView(TemplateView):
         return context
 
 class MakeProjectView(TemplateView):
-    def post(self, request: WSGIRequest) -> HttpResponse:
+    def post(self, request: WSGIRequest, **kwargs: Dict[str,Any]) -> HttpResponse:
         new_project = Project(name=request.POST['name'], description=request.POST['description'])
         new_project.save()
         ownership = ProjectOwnership(project=new_project, user=request.user) # pyre-ignore[16]
@@ -65,9 +65,9 @@ class MakeProjectView(TemplateView):
 class EditProjectView(UpdateView):
     model = Project
     fields = ['name', 'description']
-    def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
-        project = Project.objects.get(id=pk)
-        if (0 != len(ProjectOwnership.objects.filter(project=project, user=request.user))):
+    def post(self, request: WSGIRequest, pk: int, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
+        project = Project.objects.get(id=pk) # pyre-ignore[16]
+        if (0 != len(ProjectOwnership.objects.filter(project=project, user=request.user))): # pyre-ignore[16]
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'
                 and 1 < len(ProjectOwnership.objects.filter(project=project))):
                 ownership = ProjectOwnership.objects.get(project=project, user=request.user)
@@ -78,7 +78,7 @@ class EditProjectView(UpdateView):
         return redirect(reverse('view_project', args=[pk]))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
-        context['ownerships'] = ProjectOwnership.objects.filter(project=context['object'])
+        context['ownerships'] = ProjectOwnership.objects.filter(project=context['object']) # pyre-ignore[16]
         return context
 
 class DeleteMessageView(View):
