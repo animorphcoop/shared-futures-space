@@ -60,7 +60,7 @@ INSTALLED_APPS: List[str] = [
     'landing',
     'dashboard',
     'userauth',
-
+    'project',
     'search',
     'core',
 
@@ -97,6 +97,7 @@ TEMPLATES: List[Template] = [
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
             os.path.join(BASE_DIR, 'templates/userauth'),
+            os.path.join(BASE_DIR, 'templates/project'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

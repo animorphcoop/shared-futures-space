@@ -27,7 +27,8 @@ Welcome {{ user.display_name }}
 <br/>
 <a href="{% url 'account_request_panel' %}">Manage User Requests</a>
 {% endif %}
-
+<br/>
+<a href="{% url 'all_projects' %}">Projects</a>
 
 {% else %}
 You should not be here!
