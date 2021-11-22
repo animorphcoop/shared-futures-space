@@ -20,6 +20,7 @@ class CustomUser(AbstractUser):
                                                                                          MaxValueValidator(2021)],
                                                                              null=True, blank=True)
     post_code: models.CharField = models.CharField(verbose_name=_("Post code"), max_length=8, null=True, blank=True)
+    avatar:  models.FileField = models.FileField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
 
     class Meta:
         ordering: List[str] = ['display_name']
@@ -30,3 +31,10 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.display_name}"
+
+class UserRequest(models.Model):
+    kind: models.CharField = models.CharField(max_length=15) # one of the following, we can't put better type constraints on the db:
+    # make_moderator, change_postcode, change_dob, other
+    reason: models.CharField = models.CharField(max_length=1000)
+    date: models.DateTimeField = models.DateTimeField('date/time request made')
+    user: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.CASCADE)

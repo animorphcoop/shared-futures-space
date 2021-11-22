@@ -80,7 +80,7 @@ ssh $(whoami)@sharedfutures.webarch.net 'bash -s' <<ENDSSH
     cp /home/dev/sites/dev_data/app_variables.env /home/dev/sites/dev/
     cp /home/dev/sites/dev_data/db_pg_variables.env /home/dev/sites/dev/
     cp /home/dev/sites/dev_data/local.py /home/dev/sites/dev/sfs/settings/
-    cp /home/dev/sites/dev_data/settings.py /home/dev/sites/sfs/settings/
+    cp /home/dev/sites/dev_data/settings.py /home/dev/sites/dev/sfs/settings/
     if [[ $rebuild_required -eq 1 ]];
     then
       echo "# REBUILDING CONTAINERS (THIS MAY TAKE SOME TIME)"
@@ -98,15 +98,16 @@ ssh $(whoami)@sharedfutures.webarch.net 'bash -s' <<ENDSSH
       echo
       exit_code=0
       pytest tests > /dev/null || exit_code=\$?
-      if [[ \$exit_code -ne 0 ]];
-      then
-        echo "##########################"
-        echo "#   TESTS FAIL LOCALLY!"
-        echo "##########################"
-        echo "# this requires attention!"
-        echo "# test are: docker-compose exec app pytest tests"
-      else
-        echo "# TESTS SUCCEED, DEPLOYED SUCCESSFULLY"
-      fi' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh
+      exit \$exit_code' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh
+    if [[ \$? -ne 0 ]];
+    then
+      echo "##########################"
+      echo "#   TESTS FAIL LOCALLY!"
+      echo "##########################"
+      echo "# this requires attention!"
+      echo "# test are: docker-compose exec app pytest tests"
+    else
+      echo "# TESTS SUCCEED, DEPLOYED SUCCESSFULLY"
+    fi
   fi
 ENDSSH

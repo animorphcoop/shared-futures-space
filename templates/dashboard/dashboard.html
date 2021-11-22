@@ -9,18 +9,25 @@
 
 {% block content %}
 
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-DASH
+<p class="font-sans text-5xl">Dashboard</p>
 
 {% if user.is_authenticated %}
-Welcome {{ user.display_name }} born in {{ user.year_of_birth }}
+Welcome {{ user.display_name }}
+
+{% if user.year_of_birth == None or user.post_code == None %}
+<a href="{% url 'account_data' %}">Your profile misses important data, please add them in.</a>
 <br/>
+{% endif %}
 
 <a href="{% url 'account_logout' %}">Logout</a>
 <br/>
-<a href="{% url 'account_update' user.pk %}">Profile view</a>
+<a href="{% url 'account_view' %}">Profile view</a>
+
+{% if user.is_staff %}
+<br/>
+<a href="{% url 'account_request_panel' %}">Manage User Requests</a>
+{% endif %}
+
 
 {% else %}
 You should not be here!

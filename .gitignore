@@ -122,3 +122,4 @@ GitHub.sublime-settings
 # Local settings file (for production)
 static/
 sfs/static/
+apps/theme/static_src/node_modules/

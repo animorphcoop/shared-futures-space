@@ -1,16 +1,17 @@
 # pyre-strict
-from django.shortcuts import get_object_or_404
-from django.views.generic.edit import UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.shortcuts import redirect, render, get_object_or_404
+from django.views.generic.base import TemplateView
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth.decorators import login_required
 
-from .models import CustomUser
-from .forms import CustomUserUpdateForm
+from .models import CustomUser, UserRequest
+from .forms import CustomUserUpdateForm, CustomUserPersonalForm
 
 from .tasks import send_after
 
 from allauth.account.adapter import DefaultAccountAdapter
 
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.core.mail import EmailMessage
 from typing import Type, List, Dict, Union, Any
 
@@ -20,36 +21,59 @@ from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.utils import timezone
+from django.http import HttpResponse
 
 
-class CustomUserUpdateView(UpdateView):
+def profile_view(request: WSGIRequest) -> HttpResponse:
+    return render(request, 'account/view.html')
+
+
+class CustomUserPersonalView(TemplateView):
+    model: Type[CustomUser] = CustomUser
+    form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
+
+    def post(self, request: WSGIRequest) -> HttpResponseRedirect:
+        # pyre-ignore[16]:
+        currentuser = request.user
+        form = CustomUserPersonalForm(request.POST)
+        print(form)
+        if form.is_valid():
+            # pyre-ignore[16]:
+            currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
+            currentuser.post_code = form.cleaned_data.get('post_code')
+            currentuser.save()
+            return HttpResponseRedirect(reverse_lazy('dashboard'))
+        else:
+            return HttpResponseRedirect(reverse_lazy('account_data'))
+
+
+class CustomUserUpdateView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
-    success_url: str = reverse_lazy('landing')
 
     # If changing the username only - need to ensure the email does not get wiped out
     def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
         HttpResponseRedirect, CustomUserUpdateForm]:
-        print(kwargs)
-        userpklist = list(kwargs.values())
-        currentuser = get_object_or_404(CustomUser, pk=userpklist[0])
-        form = self.get_form()
+        # pyre-ignore[16]:
+        currentuser = request.user
+        form = CustomUserUpdateForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            display_name = form.cleaned_data.get('display_name')
-            if len(display_name) > 0:
-                currentuser.display_name = display_name
-                currentuser.email = currentuser.email
-                currentuser.save()
-                return HttpResponseRedirect(reverse_lazy('landing'))
-            else:
-                return self.form_invalid(form)
+        if request.FILES.get('avatar') != None:
+            avatar = request.FILES.get('avatar')
+            currentuser.display_name = currentuser.display_name
+            currentuser.email = currentuser.email
+            currentuser.avatar = avatar
+            currentuser.save()
+            return HttpResponseRedirect(reverse_lazy('account_view'))
         else:
-            return self.form_invalid(form)
+            display_name = form.data.get('display_name')
+            currentuser.display_name = display_name
+            currentuser.email = currentuser.email
+            currentuser.avatar = currentuser.avatar
+            currentuser.save()
+            return HttpResponseRedirect(reverse_lazy('account_view'))
 
-
-# @receiver(email_added)
-# def add_user email()
 
 # Gets triggered when clicking confirm button
 @receiver(email_confirmed)
@@ -66,9 +90,15 @@ def update_user_email(request: WSGIRequest, email_address: EmailAddress,
         user=email_address.user).exclude(primary=True).delete()
 
 
-class CustomUserDeleteView(DeleteView):
+class CustomUserDeleteView(TemplateView):
     model: Type[CustomUser] = CustomUser
-    success_url: str = reverse_lazy('landing')
+    success_url: str = reverse_lazy('account_update')
+
+    def post(self, request: WSGIRequest) -> HttpResponse:
+        if (request.POST['confirm'] == 'confirm'):
+            request.user.delete()  # pyre-ignore[16]
+            return redirect('/')
+        return redirect(reverse('account_update'))
 
 
 # for overriding default email send behaviour: https://stackoverflow.com/a/55965459
@@ -76,3 +106,44 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
     def send_mail(self, template_prefix: str, email: Union[str, List[str]], context: Dict[str, str]) -> None:
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
+
+
+@login_required(login_url='/account/login/')
+def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
+    if (httpreq.method == 'POST'):
+        if (httpreq.POST['kind'] not in ['make_moderator', 'change_dob', 'change_postcode', 'other']):
+            print('error: not a valid kind of request')
+        elif (len(httpreq.POST['reason']) > 1000):
+            print('error: reason too long (> 1000 chars)')
+        else:
+            new_request = UserRequest(kind=httpreq.POST['kind'],
+                                      reason=httpreq.POST['reason'],
+                                      user=httpreq.user,  # pyre-ignore[16] pyre has a older version of django in mind?
+                                      date=timezone.now())
+            new_request.save()
+        return redirect(reverse('account_update'))
+    else:
+        return render(httpreq, 'account/make_request.html')
+
+
+@login_required(login_url='/account/login/')
+def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
+    if (httpreq.method == 'POST'):
+        if (httpreq.POST['accept'] == 'reject'):
+            UserRequest.objects.get(id=httpreq.POST['request_id']).delete()  # pyre-ignore[16]
+        elif (httpreq.POST['accept'] == 'accept'):
+            req = UserRequest.objects.get(id=httpreq.POST['request_id'])
+            usr = req.user
+            if (req.kind == 'make_moderator'):
+                usr.is_staff = True
+            elif (req.kind == 'change_dob'):
+                usr.year_of_birth = httpreq.POST['new_dob'][0:4]  # take the year
+            elif (req.kind == 'change_postcode'):
+                usr.post_code = httpreq.POST['new_postcode']
+            usr.save()
+            req.delete()
+    ctx = {}
+    # just in case the template is changed or leaks information in future:
+    if httpreq.user.is_superuser:  # pyre-ignore[16]
+        ctx = {'reqs': UserRequest.objects.order_by('date')}
+    return render(httpreq, 'account/manage_requests.html', context=ctx)

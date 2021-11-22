@@ -12,10 +12,10 @@
 {% comment %}
 Delete the line below if you're just getting started and want to remove the welcome screen!
 {% endcomment %}
-HOME
+<p class="font-sans text-5xl">HOME</p>
 <br/>
 {% if user.is_authenticated %}
-Welcome {{ user.username }}
+Welcome {{ user.display_name }}
 <br/>
 <a href="{% url 'dashboard' %}">Dashboard</a>
 <br/>

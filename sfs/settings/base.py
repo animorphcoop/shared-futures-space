@@ -34,14 +34,7 @@ sys.path.append(os.path.normpath(os.path.join(BASE_DIR, 'apps')))
 # Application definition
 # add apps/ to the Python path
 
-INSTALLED_APPS: List[str] = [
-    'landing',
-    'dashboard',
-    'userauth',
-
-    'search',
-    'core',
-
+INSTALLED_APPS: List[str] = [    
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
@@ -64,10 +57,21 @@ INSTALLED_APPS: List[str] = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'landing',
+    'dashboard',
+    'userauth',
+
+    'search',
+    'core',
+
+
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
+    'tailwind',
+    'theme'
 
 ]
 
@@ -162,6 +166,8 @@ STATICFILES_FINDERS: List[str] = [
 
 STATICFILES_DIRS: List[str] = [
     os.path.join(PROJECT_DIR, 'static'),
+    os.path.join(BASE_DIR, 'apps/theme/static'),
+
 ]
 
 ACCOUNT_FORMS = {'signup': 'userauth.forms.CustomSignupForm'}
@@ -196,3 +202,5 @@ WAGTAIL_USER_CUSTOM_FIELDS: List[str] = ['display_name', 'year_of_birth', 'post_
 # urls are not strings! domain.com/page and domain.com/page/ are the same url
 APPEND_SLASH = False
 WAGTAIL_APPEND_SLASH = False
+
+TAILWIND_APP_NAME = 'theme'

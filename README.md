@@ -142,7 +142,7 @@ When adding celery task, restarting its container is required.
 
 ---
 
-### Mapping IPs onto Docker containers
+#### Mapping IPs onto Docker containers
 We need to ensure that UID and GID from the system (host) are mapped onto the container user. The containers carry over User and Group IDs as they share one kernel.
 So we need to ensure that IDs of the user and group of the host match these of the container user.
 References [1](https://medium.com/@mccode/understanding-how-uid-and-gid-work-in-docker-containers-c37a01d01cf) [2](https://blog.dbi-services.com/how-uid-mapping-works-in-docker-containers/)
@@ -154,6 +154,18 @@ Hence need to pass the user variables via CLI when building the containers.
 ```USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build```
 
 
+
+---
+
+#### Tailwind
+Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/installation.html)
+- After pulling need to execute npm install once as node_modules are in gitignore:
+```docker-compose exec app python3 manage.py tailwind install```
+- Then run in a separate terminal session to listen for changes.
+```docker-compose exec app python3 manage.py tailwind start```
+
+
+---
 
 ### DEPLOYMENT
 
@@ -196,8 +208,3 @@ SOCIALACCOUNT_PROVIDERS = {
 
 DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN THE GIT HISTORY
 
-
-Profile template links
-
-http://0.0.0.0:9000/account/1/update/
-http://0.0.0.0:9000/account/email/
