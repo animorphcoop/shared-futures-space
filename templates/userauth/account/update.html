@@ -9,9 +9,6 @@
 
 <h1>{% trans "Update account" %}</h1>
 
-{{ user.pk }}
-{{user.display_name}}
-
 <p>Already wanting to update your account {{ object.email }}? Then please go ahead!</p>
 
 <form method="post" action="{% url 'account_update' %}">
