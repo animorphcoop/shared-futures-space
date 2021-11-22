@@ -123,3 +123,8 @@ GitHub.sublime-settings
 static/
 sfs/static/
 apps/theme/static_src/node_modules/
+
+# migrations files
+**/migrations/*.py
+**/migrations/*.pyc
+!**/migrations/__init__.py
