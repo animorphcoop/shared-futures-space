@@ -1,9 +1,11 @@
 
+{% if not request.user.is_anonymous %}
 <form method=post>
  {% csrf_token %}
  <button name=to_view value={% if viewing == 'mine' %}all>View All{% else %}mine>View My Projects{% endif %}</button>
 </form>
-<table id=pprojects>
+{% endif %}
+<table id=projects>
  <tr>
   <th>Project Name</th>
   <th></th>
@@ -15,3 +17,4 @@
    </tr>
  {% endfor %}
 </table>
+<a href="{% url 'new_project' %}">
