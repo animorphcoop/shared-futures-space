@@ -17,4 +17,6 @@
    </tr>
  {% endfor %}
 </table>
-<a href="{% url 'new_project' %}">
+{% if not request.user.is_anonymous %}
+ <a href="{% url 'new_project' %}">Propose a new project</a>
+{% endif %}
