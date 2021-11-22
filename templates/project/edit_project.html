@@ -1,0 +1,22 @@
+{% load custom_filters %}
+{% if request.user in ownerships|attrmap:'user' %}
+<form method=post>
+ {% csrf_token %}
+ <p>
+  <label for=name>Project Name:</label>
+  <input type=text name=name id=name value="{{object.name}}"></input>
+ </p>
+ <p>
+  <label for=description>Project Description:</label>
+  <textarea name=description id=description>{{object.description}}</textarea>
+ </p>
+ <button>Update Project</button>
+ {% if ownerships|length > 1 %}
+  <button name=abdicate value=abdicate>Rescind Ownership</button>
+ {% else %}
+  <p>As you are the only owner of this project, you cannot rescind ownership<p>
+ {% endif %}
+</form>
+{% else %}
+you are not authorised to edit this project
+{% endif %}

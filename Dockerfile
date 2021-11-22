@@ -10,6 +10,9 @@ RUN apk add --update --no-cache --virtual .tmp-build-deps \
     gcc libc-dev linux-headers postgresql-dev musl-dev zlib zlib-dev
 RUN apk add libffi-dev
 
+# NPM
+RUN apk add --update --no-cache npm
+
 # app user variables
 ARG user=app
 ARG group=docker

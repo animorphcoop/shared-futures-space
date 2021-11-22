@@ -142,7 +142,7 @@ When adding celery task, restarting its container is required.
 
 ---
 
-### Mapping IPs onto Docker containers
+#### Mapping IPs onto Docker containers
 We need to ensure that UID and GID from the system (host) are mapped onto the container user. The containers carry over User and Group IDs as they share one kernel.
 So we need to ensure that IDs of the user and group of the host match these of the container user.
 References [1](https://medium.com/@mccode/understanding-how-uid-and-gid-work-in-docker-containers-c37a01d01cf) [2](https://blog.dbi-services.com/how-uid-mapping-works-in-docker-containers/)
@@ -155,10 +155,56 @@ Hence need to pass the user variables via CLI when building the containers.
 
 
 
+---
+
+#### Tailwind
+Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/installation.html)
+- After pulling need to execute npm install once as node_modules are in gitignore:
+```docker-compose exec app python3 manage.py tailwind install```
+- Then run in a separate terminal session to listen for changes.
+```docker-compose exec app python3 manage.py tailwind start```
+
+
+---
+
 ### DEPLOYMENT
 
 to deploy:
 
-- change `.dev` to `.production` in sfs/settings/settings.py
-- set `SECRET\_KEY` (to something secure, it doesn't have to be memorable since it's pretty much always automated)
+- merge into staging
+- make sure `.dev` is changed to `.production` in sfs/settings/settings.py
+- wait for tests to run
+- run deploy.sh locally
+- don't forget: app\_variables.env, db\_pg\_variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
+
+to use social account logins, add the following to local.py:
+
+```
+from .base import INSTALLED_APPS
+
+INSTALLED_APPS += [
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google'
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'APP': {
+            'client_id': '...',
+            'secret': '...',
+            'key': ''
+        }
+    },
+    'google': {
+        'APP': {
+            'client_id': '...',
+            'secret': '...',
+            'key': ''
+        }
+    }
+}
+
+```
+
+DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN THE GIT HISTORY
 

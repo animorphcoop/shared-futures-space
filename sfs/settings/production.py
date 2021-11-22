@@ -17,6 +17,8 @@ ALLOWED_HOSTS: List[str] = ['dev.sharedfutures.space', 'sharedfutures.space', '1
 # just to fix some warnings, becomes relevant in next django version apparently
 DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
 
+# needed for oauth
+ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
 
 try:
     from .local import *

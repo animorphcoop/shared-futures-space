@@ -8,6 +8,7 @@ from typing import List, Optional
 SECRET_KEY: str = 'Q%Ohhtu$DbbtCvJMaspG31Ijsx0piYLAI4gUNpyxzpRVuxaUlbn(XKW'
 
 SITE_ID = 1
+SITE_DOMAIN = 'sharedfutures.space'
 
 AUTHENTICATION_BACKENDS: List[str] = [
     'django.contrib.auth.backends.ModelBackend',
@@ -16,14 +17,16 @@ AUTHENTICATION_BACKENDS: List[str] = [
 
 
 LOGIN_REDIRECT_URL: str = '/dashboard/'
-LOGOUT_REDIRECT_URL: str = "/"
+LOGOUT_REDIRECT_URL: str = '/'
+LOGIN_URL: str = '/account/login/'
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL: Optional[str] = LOGIN_REDIRECT_URL
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL: Optional[str] = None
 
 ACCOUNT_AUTHENTICATION_METHOD: str = 'email'
 ACCOUNT_EMAIL_REQUIRED: bool = True
 ACCOUNT_EMAIL_VERIFICATION: str = 'mandatory'
-ACCOUNTS_USERNAME_REQUIRED: bool = False
+ACCOUNT_USERNAME_REQUIRED: bool = False
+ACCOUNT_UNIQUE_EMAIL = True
 
 EMAIL_HOST: str = 'mail.webarch.net'
 EMAIL_PORT: int = 465

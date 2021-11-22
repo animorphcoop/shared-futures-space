@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "View account" %}{% endblock %}
+
+
+{% block content %}
+<a href="{% url 'dashboard' %}"><- Dashboard</a>
+<h1>{% trans "View your account" %}</h1>
+
+<p class="font-sans text-5xl bg">View</p>
+<br/>
+Display name: {{user.display_name}}
+<br/>
+Year of birth: {{user.year_of_birth}}
+<br/>
+Post code {{user.post_code}}
+<br/>
+Profile image:
+<br/>
+{% if user.avatar.url != null%}
+<img src="{{ user.avatar.url }}"/>
+{% else %}
+Don't have one yet.
+{% endif %}
+<br/>
+<hr/>
+Would you like to edit your profile?
+<a href="{% url 'account_update' %}">Profile edit</a>
+{% endblock %}
