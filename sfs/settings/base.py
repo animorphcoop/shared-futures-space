@@ -59,8 +59,8 @@ INSTALLED_APPS: List[str] = [
 
     'landing',
     'dashboard',
-    'project',
     'userauth',
+    'project',
     'search',
     'core',
 
