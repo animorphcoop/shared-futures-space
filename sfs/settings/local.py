@@ -41,11 +41,10 @@ AUTH_USER_MODEL: str = 'userauth.CustomUser'
 
 #overriding default account
 ACCOUNT_ADAPTER: str = 'userauth.views.CustomAllauthAdapter'
+SOCIALACCOUNT_ADAPTER = 'userauth.adapters.CustomSocialAccountAdapter'
 
 # pickle required to serialize and send EmailMultiAlternatives
 # https://docs.celeryproject.org/en/latest/userguide/calling.html#calling-serializers
 CELERY_ACCEPT_CONTENT: List[str] = ['pickle']
 CELERY_TASK_SERIALIZER: str = 'pickle'
 CELERY_RESULT_SERIALIZER: str = 'pickle'
-
-
