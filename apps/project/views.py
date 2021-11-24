@@ -16,6 +16,7 @@ class ProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
         if (request.POST['form'] == 'give_support'):
+            # you can't support your own project or support a project more than once
             if (0 == len(ProjectSupport.objects.filter(project=Project.objects.get(id=pk), # pyre-ignore[16]
                                                        user=request.user)) and # pyre-ignore[16]
                 0 == len(ProjectOwnership.objects.filter(project=Project.objects.get(id=pk), # pyre-ignore[16]
@@ -38,8 +39,8 @@ class ProjectView(DetailView):
         context = super().get_context_data(**kwargs)
         context['owners'] = ProjectOwnership.objects.filter(project=context['object'].pk) # pyre-ignore[16]
         context['supporters'] = ProjectSupport.objects.filter(project=context['object'].pk) # pyre-ignore[16]
-        #if (self.request.user in context['owners']):
-        context['messages'] = ProjectMessage.objects.filter(project=context['object'].pk) # pyre-ignore[16]
+        if (self.request.user in [ownership.user for ownership in context['owners']]): # pyre-ignore[16]
+            context['messages'] = ProjectMessage.objects.filter(project=context['object'].pk) # pyre-ignore[16]
         return context
 
 class AllProjectsView(TemplateView):
@@ -75,9 +76,10 @@ class EditProjectView(UpdateView):
                 and 1 < len(ProjectOwnership.objects.filter(project=project))):
                 ownership = ProjectOwnership.objects.get(project=project, user=request.user)
                 ownership.delete()
-            project.name = request.POST['name']
-            project.description = request.POST['description']
-            project.save()
+            else:
+                project.name = request.POST['name']
+                project.description = request.POST['description']
+                project.save()
         return redirect(reverse('view_project', args=[pk]))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
