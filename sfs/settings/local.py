@@ -48,3 +48,30 @@ SOCIALACCOUNT_ADAPTER = 'userauth.adapters.CustomSocialAccountAdapter'
 CELERY_ACCEPT_CONTENT: List[str] = ['pickle']
 CELERY_TASK_SERIALIZER: str = 'pickle'
 CELERY_RESULT_SERIALIZER: str = 'pickle'
+
+#
+from .base import INSTALLED_APPS
+
+INSTALLED_APPS += [
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google'
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'APP': {
+            'client_id': '859293604779855',
+            'secret': '1bfdb6d39f61f7ced097634b84610b26',
+            'key': ''
+        }
+    },
+    'google': {
+        'APP': {
+            'client_id': '961383502349-qjmt77m2n1pm9s8fqr3rp2fgcdoot3qc.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
+
+

@@ -39,7 +39,7 @@ class ProjectView(DetailView):
         context = super().get_context_data(**kwargs)
         context['owners'] = ProjectOwnership.objects.filter(project=context['object'].pk) # pyre-ignore[16]
         context['supporters'] = ProjectSupport.objects.filter(project=context['object'].pk) # pyre-ignore[16]
-        if (self.request.user in [ownership.user for ownership in context['owners']]):
+        if (self.request.user in [ownership.user for ownership in context['owners']]): # pyre-ignore[16]
             context['messages'] = ProjectMessage.objects.filter(project=context['object'].pk) # pyre-ignore[16]
         return context
 

@@ -33,7 +33,7 @@ class CustomUserPersonalView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
-    def post(self, request: WSGIRequest) -> HttpResponseRedirect:
+    def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         # pyre-ignore[16]:
         currentuser = request.user
         form = CustomUserPersonalForm(request.POST)
@@ -131,10 +131,10 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
     ctx = {}
     # just in case the template is changed or leaks information in future:
     if httpreq.user.is_superuser:  # pyre-ignore[16]
-        ctx = {'reqs': UserRequest.objects.order_by('date')}
+        ctx = {'reqs': UserRequest.objects.order_by('date')} # pyre-ignore[16]
         if (httpreq.method == 'POST'):
             if (httpreq.POST['accept'] == 'reject'):
-                UserRequest.objects.get(id=httpreq.POST['request_id']).delete()  # pyre-ignore[16]
+                UserRequest.objects.get(id=httpreq.POST['request_id']).delete()
             elif (httpreq.POST['accept'] == 'accept'):
                 req = UserRequest.objects.get(id=httpreq.POST['request_id'])
                 usr = req.user
