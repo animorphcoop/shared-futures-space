@@ -76,9 +76,10 @@ class EditProjectView(UpdateView):
                 and 1 < len(ProjectOwnership.objects.filter(project=project))):
                 ownership = ProjectOwnership.objects.get(project=project, user=request.user)
                 ownership.delete()
-            project.name = request.POST['name']
-            project.description = request.POST['description']
-            project.save()
+            else:
+                project.name = request.POST['name']
+                project.description = request.POST['description']
+                project.save()
         return redirect(reverse('view_project', args=[pk]))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
