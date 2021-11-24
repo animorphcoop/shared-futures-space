@@ -27,7 +27,7 @@ module.exports = {
          * Adjust the following line to match your project structure.
          */
         '../../templates/**/*.html',
-        
+
         /* 
          * Templates in other django apps (BASE_DIR/<any_app_name>/templates).
          * Adjust the following line to match your project structure.
@@ -52,7 +52,7 @@ module.exports = {
     ],
     darkMode: false, // or 'media' or 'class'
     theme: {
-           colors: {
+        colors: {
             transparent: 'transparent',
             current: 'currentColor',
             white: {
@@ -89,6 +89,15 @@ module.exports = {
             },
         },
         extend: {},
+        fontFamily: {
+            'light': ['SofiaPro_Light', 'sans-serif'],
+            'regular': ['SofiaPro_Regular', 'sans-serif'],
+            'semibold': ['SofiaPro_SemiBold', 'sans-serif'],
+        },
+                    fontSize: {
+                '26': ['1.3em', '1.25em'],
+                '43': ['2.15em', '1.255em'],
+            },
     },
     variants: {
         extend: {},
