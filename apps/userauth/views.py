@@ -125,25 +125,24 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     else:
         return render(httpreq, 'account/make_request.html')
 
-
 @login_required(login_url='/account/login/')
 def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
-    if (httpreq.method == 'POST'):
-        if (httpreq.POST['accept'] == 'reject'):
-            UserRequest.objects.get(id=httpreq.POST['request_id']).delete()  # pyre-ignore[16]
-        elif (httpreq.POST['accept'] == 'accept'):
-            req = UserRequest.objects.get(id=httpreq.POST['request_id'])
-            usr = req.user
-            if (req.kind == 'make_moderator'):
-                usr.is_staff = True
-            elif (req.kind == 'change_dob'):
-                usr.year_of_birth = httpreq.POST['new_dob'][0:4]  # take the year
-            elif (req.kind == 'change_postcode'):
-                usr.post_code = httpreq.POST['new_postcode']
-            usr.save()
-            req.delete()
     ctx = {}
     # just in case the template is changed or leaks information in future:
     if httpreq.user.is_superuser:  # pyre-ignore[16]
         ctx = {'reqs': UserRequest.objects.order_by('date')}
+        if (httpreq.method == 'POST'):
+            if (httpreq.POST['accept'] == 'reject'):
+                UserRequest.objects.get(id=httpreq.POST['request_id']).delete()  # pyre-ignore[16]
+            elif (httpreq.POST['accept'] == 'accept'):
+                req = UserRequest.objects.get(id=httpreq.POST['request_id'])
+                usr = req.user
+                if (req.kind == 'make_moderator'):
+                    usr.is_staff = True
+                elif (req.kind == 'change_dob'):
+                    usr.year_of_birth = httpreq.POST['new_dob'][0:4]  # take the year
+                elif (req.kind == 'change_postcode'):
+                    usr.post_code = httpreq.POST['new_postcode']
+                usr.save()
+                req.delete()
     return render(httpreq, 'account/manage_requests.html', context=ctx)
