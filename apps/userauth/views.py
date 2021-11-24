@@ -37,8 +37,9 @@ class CustomUserPersonalView(TemplateView):
         # pyre-ignore[16]:
         currentuser = request.user
         form = CustomUserPersonalForm(request.POST)
-        print(form)
-        if form.is_valid():
+        if currentuser.year_of_birth is not None:
+            return HttpResponse("You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
+        elif form.is_valid():
             # pyre-ignore[16]:
             currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
             currentuser.post_code = form.cleaned_data.get('post_code')
