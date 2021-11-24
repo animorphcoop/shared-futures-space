@@ -1,6 +1,6 @@
 # use this file to toggle between dev and production settings
 
 try:
-  from .production import *
+  from .dev import *
 except ImportError:
   pass

@@ -33,6 +33,7 @@ module.exports = {
          * Adjust the following line to match your project structure.
          */
         '../../**/templates/**/*.html',
+        '../../../templates/**/*.html',
 
         /**
          * JS: If you use Tailwind CSS in JavaScript, uncomment the following lines and make sure
@@ -51,6 +52,42 @@ module.exports = {
     ],
     darkMode: false, // or 'media' or 'class'
     theme: {
+           colors: {
+            transparent: 'transparent',
+            current: 'currentColor',
+            white: {
+                DEFAULT: '#FFFFFF',
+            },
+            morph: {
+                lightest: '#eaebff',
+                light: '#999EFF',
+                DEFAULT: '#4E56FF',
+            },
+            morphalt: {
+                DEFAULT: '#E0F3AA',
+                dark: '#A4B87E',
+            },
+            gray: {
+                lightest: '#DCDCDC',
+                light: '#9C9C9C',
+                DEFAULT: 'rgba(0, 0, 0, 0.5)', //#777777
+            },
+            black: {
+                DEFAULT: '#000000',
+            },
+            train: {
+                DEFAULT: '#F2D7C4', //#E0F3AA
+                dark: '#C69E82', //#A4B87E
+            },
+            build: {
+                DEFAULT: '#BAD3E1',
+                dark: '#829CAA',
+            },
+            heal: {
+                DEFAULT: '#AFDFD4',
+                dark: '#77A69B',
+            },
+        },
         extend: {},
     },
     variants: {

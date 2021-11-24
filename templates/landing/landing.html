@@ -12,7 +12,11 @@
 {% comment %}
 Delete the line below if you're just getting started and want to remove the welcome screen!
 {% endcomment %}
-<p class="font-sans text-5xl">HOME</p>
+<div class="flex flex-col justify-center items-center bg-morphalt">
+
+<p class="font-serif text-5xl text-heal">HOME</p>
+</div>
+
 <br/>
 {% if user.is_authenticated %}
 Welcome {{ user.display_name }}
