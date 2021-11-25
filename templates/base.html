@@ -28,60 +28,7 @@
 
 {% wagtailuserbar %}
 
-<div class="relative h-32 w-32 ...">
-  <div class="absolute left-6 top-6 h-32 w-32 ">
-                  <h1 class="text-43 font-semibold text-morph pb-12 uppercase">SF</h1>
-  </div>
-</div>
-
-<div class="relative h-32 w-32 ...">
-  <div class="absolute inset-y-0 right-0 w-16 ...">
-      <a class="mr-5 hover:text-gray-900" href="{% url 'dashboard' %}">Dashboard </a>
-      <a class="mr-5 hover:text-gray-900" href="{% url 'dashboard' %}">Dashboard </a>
-  </div>
-</div>
-
-<header class="text-gray-600 body-font">
-    <div
-            class="
-      container
-      mx-auto
-      flex flex-wrap
-      p-5
-      flex-col
-      md:flex-row
-      items-center
-    "
-    >
-        <nav
-                class="md:ml-auto flex flex-wrap items-center text-base justify-center"
-        >
-            <span class="ml-3 text-morph text-43 font-regular lowercase max-w-3xl">Shared Futures Space</span>
-            <a class="mr-5 hover:text-gray-900" href="{% url 'dashboard' %}">Dashboard </a>
-            <a class="mr-5 hover:text-gray-900" href="{% url 'dashboard' %}">Dashboard</a>
-            <a class="mr-5 hover:text-gray-900" href="{% url 'dashboard' %}">Dashboard</a>
-        </nav>
-    </div>
-</header>
-<div
-        class="
-    container
-    w-full
-    p-20
-    m-4
-    mx-auto
-    my-16
-    text-center
-    bg-white
-    border-2 border-gray-300 border-dashed
-    h-96
-    rounded-xl
-  "
->
-    <p class="mt-20 italic text-gray-500 text-md">{% block content %}{% endblock %}</p>
-</div>
-
-
+{% block content %}{% endblock %}
 {# Global javascript #}
 <script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 

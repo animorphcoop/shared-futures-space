@@ -9,29 +9,24 @@
 
 {% block content %}
 
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
+<div class="w-full">
+    <div class="flex items-stretch">
 
-<div class="flex flex-col justify-center items-center bg-morphalt">
-        <h3 class="uppercase tracking-widest text-base font-semibold text-gray">Home</h3></div>
-
-<br/>
-        <!-- Strapline -->
-        <div class="bottom-4 w-full max-width absolute">
-          <p class="px-6 sm:px-12 lg:px-24 text-morph text-43 font-regular lowercase sm:mb-20 max-w-3xl">We create next&nbsp;generation
-            software to&nbsp;enhance human&nbsp;potential</p>
+        <div class="relative h-32 w-32 ...">
+            <div class="absolute left-6 top-6 h-32 w-32 ">
+                <h1 class="text-43 font-semibold text-morph pb-12 uppercase">SF</h1>
+            </div>
         </div>
 
-{% if user.is_authenticated %}
-Welcome {{ user.display_name }}
-<br/>
-<a href="{% url 'dashboard' %}">Dashboard</a>
-<br/>
-<a href="{% url 'account_logout' %}">Logout</a>
-{% else %}
-<p class="font-semibold text-black"><a href="{% url 'account_login' %}">Login</a></p>
+        <div class="h-32 w-32">
+            <div class="absolute inset-y-0 right-6 top-6">
+                <a class="mr-5 hover:text-gray-900 uppercase block" href="{% url 'account_signup' %}">Sign Up </a>
+                <a class="mr-5 hover:text-gray-900 uppercase block" href="{% url 'account_login' %}">Log in </a>
+                <a class="mr-5 hover:text-gray-900 uppercase block" href="">Guest </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-{% endif %}
 
 {% endblock content %}
