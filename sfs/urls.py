@@ -27,7 +27,7 @@ urlpatterns: List[Union[URLResolver,URLPattern]] = [
     # added to catch login view and redirect to dasboard
     # TODO: Consider rewiring redirection within Allauth
     path('account/', include('userauth.urls')),
-    path('dashboard/', include('dashboard.urls')),
+    path('dashboard/', include('dashboard.urls'), name='dashboard'),
     path('projects/', include('project.urls')),
 
 
