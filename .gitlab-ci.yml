@@ -33,5 +33,5 @@ pytest:
   stage: Tests
   script:
     - export PYTHONPATH="$PYTHONPATH:."
-    - ./manage.py collectstatic --no-post-process --noinput
+    - ./manage.py collectstatic --noinput
     - pytest tests/
