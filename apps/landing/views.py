@@ -9,7 +9,7 @@ from typing import Union
 
 
 def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
-    if request.user.is_authenticated:
+    if request.user.is_authenticated: # pyre-ignore[16]
         return HttpResponseRedirect(reverse('dashboard'))
     else:
         return render(request, 'landing/landing.html')

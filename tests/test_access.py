@@ -16,7 +16,7 @@ def test_access_public(url, is_accessible, client):
         assert client.get(url).status_code != 200
 
 @pytest.mark.django_db
-@pytest.mark.parametrize('url,is_accessible', [('/', True),
+@pytest.mark.parametrize('url,is_accessible', [('/', False),
                                                ('/dashboard/', True),
                                                ('/doesnotexist/', False)])
 def test_access_logged_in(url, is_accessible, test_user, client):

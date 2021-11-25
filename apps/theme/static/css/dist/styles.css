@@ -815,8 +815,37 @@ select {
   position: absolute;
 }
 
+.relative {
+  position: relative;
+}
+
+.inset-y-0 {
+  top: 0px;
+  bottom: 0px;
+}
+
 .bottom-4 {
   bottom: 1rem;
+}
+
+.left-0 {
+  left: 0px;
+}
+
+.top-0 {
+  top: 0px;
+}
+
+.left-6 {
+  left: 1.5rem;
+}
+
+.top-6 {
+  top: 1.5rem;
+}
+
+.right-0 {
+  right: 0px;
 }
 
 .z-10 {
@@ -897,12 +926,24 @@ select {
   height: 24rem;
 }
 
+.h-32 {
+  height: 8rem;
+}
+
 .w-full {
   width: 100%;
 }
 
 .w-auto {
   width: auto;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
+.w-16 {
+  width: 4rem;
 }
 
 .max-w-3xl {
@@ -974,6 +1015,10 @@ select {
 
 .pl-10 {
   padding-left: 2.5rem;
+}
+
+.pb-12 {
+  padding-bottom: 3rem;
 }
 
 .text-center {
