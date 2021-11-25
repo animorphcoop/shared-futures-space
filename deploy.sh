@@ -42,7 +42,7 @@ done
 
 echo "# DEPLOYING TO PRODUCTION"
 
-ssh $(whoami)@sharedfutures.webarch.net 'bash -s' <<ENDSSH
+ssh $1@sharedfutures.webarch.net 'bash -s' <<ENDSSH
   # The following commands run on the remote host
   if sudo -u dev test ! -f /home/dev/sites/dev_data/app_variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/db_pg_variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/local.py || sudo -u dev test ! -f /home/dev/sites/dev_data/settings.py;
   then
