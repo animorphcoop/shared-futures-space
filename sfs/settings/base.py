@@ -119,6 +119,7 @@ WSGI_APPLICATION: str = 'sfs.wsgi.application'
 DATABASES: Dict[str, Dict[str,Optional[str]]] = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        # these are in app_variables.env:
         'HOST': os.environ.get('DB_HOST'),
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
@@ -201,6 +202,7 @@ WAGTAIL_USER_CREATION_FORM: str = 'userauth.forms.CustomUserCreationForm'
 WAGTAIL_USER_CUSTOM_FIELDS: List[str] = ['display_name', 'year_of_birth', 'post_code']
 
 # urls are not strings! domain.com/page and domain.com/page/ are the same url
+# unfortunately these settings don't seem to work, so urls are in fact strings for our purposes until we can figure out why :(
 APPEND_SLASH = False
 WAGTAIL_APPEND_SLASH = False
 

@@ -1,10 +1,11 @@
+# pyre-strict
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 from django.utils.translation import gettext, gettext_lazy as _
 
-from typing import Tuple
+from typing import Tuple, Dict, Optional
 
 class CustomUserAdmin(UserAdmin):
     add_form = UserCreationForm
@@ -14,16 +15,10 @@ class CustomUserAdmin(UserAdmin):
     list_display: Tuple[str,...] = ('pk', 'email', 'display_name', 'year_of_birth', 'post_code') # pyre-ignore[15]
     # pyre comment suppresses an error caused by pyre's limited understanding of django
     search_fields = ('display_name', 'post_code',) # pyre-ignore[15]
-    fieldsets = (
-
+    fieldsets: Tuple[Tuple[Optional[str],Dict[str,Tuple[str, ...]]], ...] = (
         (_('Personal info'), {'fields': ('email',)}),
-        (None, {'fields': ('display_name', 'year_of_birth', 'post_code', 'avatar')
-                }),
+        (None, {'fields': ('display_name', 'year_of_birth', 'post_code', 'avatar')}),
         )
-
-
-'''    add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('email', 'display_name', 'year_of_birth', 'post_code')}))'''
 
 # pyre comment suppresses an error caused by pyre's limited understanding of django
 admin.site.register(CustomUser, CustomUserAdmin) # pyre-ignore[16]
