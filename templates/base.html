@@ -22,6 +22,9 @@
     {# Override this in templates to add extra stylesheets #}
     {% endblock %}
     {% tailwind_css %}
+    <!--TODO: COPY TO STATIC FILES-->
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+
 </head>
 
 <body class="{% block body_class %}{% endblock %}">

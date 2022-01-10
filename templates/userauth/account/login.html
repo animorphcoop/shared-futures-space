@@ -3,6 +3,8 @@
 {% load i18n %}
 {% load account socialaccount %}
 
+{% load widget_tweaks %}
+
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block content %}
@@ -13,16 +15,16 @@
 
 {% if socialaccount_providers %}
 <p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+    of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+    for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
 
 <div class="socialaccount_ballot">
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
+    <ul class="socialaccount_providers">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+    </ul>
 
-  <div class="login-or">{% trans 'or' %}</div>
+    <div class="login-or">{% trans 'or' %}</div>
 
 </div>
 
@@ -30,27 +32,32 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
 
 {% else %}
 <p>{% blocktrans %}If you have not created an account yet, then please NOT
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
 {% endif %}
 
 <form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
+    {% csrf_token %}
 
-<!--
-  {{ form.login }}
-  {{ form.password }}
--->
+    {% render_field form.login hx-post="/check_username/" hx-trigger="keyup delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML"%}
+    <!--  {{ form.login }}
+      {{ form.password }}-->
+    <div id="email-feedback" class="hidden">
 
-  {% for field in form %}
-    {{ field.name }}
-  {% endfor %}
 
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+            </div>
+
+
+        {{form.password}}
+
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+            type="submit">{% trans "Sign In" %}
+    </button>
+
+
 </form>
-
+    <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
 {% endblock %}

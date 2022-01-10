@@ -29,7 +29,7 @@ class CustomUser(AbstractUser):
         return reverse('profile_view')
 
     def __str__(self) -> str:
-        return f"{self.display_name}"
+        return f"{self.email}"
 
 # a request sent by a user to the admins for a change to their account
 class UserRequest(models.Model):

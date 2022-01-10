@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 
 from .models import CustomUser, UserRequest
 from .forms import CustomUserUpdateForm, CustomUserPersonalForm
@@ -38,7 +39,8 @@ class CustomUserPersonalView(TemplateView):
         currentuser = request.user
         form = CustomUserPersonalForm(request.POST)
         if currentuser.year_of_birth is not None:
-            return HttpResponse("You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
+            return HttpResponse(
+                "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         elif form.is_valid():
             # pyre-ignore[16]:
             currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
@@ -47,6 +49,24 @@ class CustomUserPersonalView(TemplateView):
             return HttpResponseRedirect(reverse_lazy('dashboard'))
         else:
             return HttpResponseRedirect(reverse_lazy('account_data'))
+
+
+'''
+class CustomUserLoginView(TemplateView):
+    model: Type[CustomUser] = CustomUser
+
+    # form_class: Type[CustomUserLoginForm] = CustomUserLoginForm
+
+    def check_username(request: WSGIRequest) -> HttpResponse:
+        usermail = request.POST.getlist('login')[0]
+        #print(usermail)
+        #print(get_user_model().objects.all())
+        #print(get_user_model().objects.filter(email=usermail).exists())
+        if (get_user_model().objects.filter(email=usermail).exists()):
+            return HttpResponse("Please enter your password")
+        else:
+            return HttpResponse("Such an address does not exist")
+'''
 
 
 class CustomUserUpdateView(TemplateView):
@@ -126,12 +146,13 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     else:
         return render(httpreq, 'account/make_request.html')
 
+
 @login_required(login_url='/account/login/')
 def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
     ctx = {}
     # just in case the template is changed or leaks information in future:
     if httpreq.user.is_superuser:  # pyre-ignore[16]
-        ctx = {'reqs': UserRequest.objects.order_by('date')} # pyre-ignore[16]
+        ctx = {'reqs': UserRequest.objects.order_by('date')}  # pyre-ignore[16]
         if (httpreq.method == 'POST'):
             if (httpreq.POST['accept'] == 'reject'):
                 UserRequest.objects.get(id=httpreq.POST['request_id']).delete()
@@ -147,3 +168,12 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
                 usr.save()
                 req.delete()
     return render(httpreq, 'account/manage_requests.html', context=ctx)
+
+
+# helper for inspecting db whether user exists
+def check_email(request: WSGIRequest) -> HttpResponse:
+    usermail = request.POST.getlist('login')[0]
+    if (get_user_model().objects.filter(email=usermail).exists()):
+        return HttpResponse("<div id='email-feedback' class='block'>Please enter your password</div>")
+    else:
+        return HttpResponse("<div id='email-feedback' class='block'>Such an address does not exist</div>")

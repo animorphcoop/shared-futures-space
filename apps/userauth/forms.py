@@ -4,7 +4,7 @@ from .models import CustomUser
 
 from django.utils.translation import gettext_lazy as _
 
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm, LoginForm
 
 from wagtail.users.forms import UserEditForm, UserCreationForm
 
@@ -43,9 +43,16 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
-        user.display_name = self.cleaned_data['display_name'] # pyre-ignore[16]
+        user.display_name = self.cleaned_data['display_name']  # pyre-ignore[16]
         user.save()
         return user
+
+
+'''
+class CustomUserLoginForm(LoginForm):
+    class Meta(LoginForm.Meta):
+        model: Type[CustomUser] = CustomUser
+'''
 
 
 class CustomUserPersonalForm(forms.ModelForm):

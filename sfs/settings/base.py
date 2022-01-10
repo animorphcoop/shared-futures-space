@@ -49,7 +49,6 @@ INSTALLED_APPS: List[str] = [
 
     'modelcluster',
     'taggit',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -70,13 +69,17 @@ INSTALLED_APPS: List[str] = [
     'allauth.account',
     'allauth.socialaccount',
 
-    'django_htmx',
+
     'tailwind',
-    'theme'
+    'theme',
+    'widget_tweaks',
+
+    'django_htmx',
 
 ]
 
 MIDDLEWARE: List[str] = [
+
 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -87,6 +90,7 @@ MIDDLEWARE: List[str] = [
     'django.middleware.security.SecurityMiddleware',
 
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+
     'django_htmx.middleware.HtmxMiddleware',
 
 ]
