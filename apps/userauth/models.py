@@ -21,6 +21,8 @@ class CustomUser(AbstractUser):
     post_code: models.CharField = models.CharField(verbose_name=_("Post code"), max_length=8, null=True, blank=True)
     avatar:  models.FileField = models.FileField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
 
+    editor: models.BooleanField = models.BooleanField(default=False) # is this user an editor
+
     class Meta:
         ordering: List[str] = ['display_name']
 
