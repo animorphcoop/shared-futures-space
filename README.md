@@ -163,6 +163,8 @@ Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/i
 ```docker-compose exec app python3 manage.py tailwind install```
 - Then run in a separate terminal session to listen for changes.
 ```docker-compose exec app python3 manage.py tailwind start```
+- To build for production.
+```docker-compose exec app python3 manage.py tailwind build```
 
 
 ---
