@@ -1,7 +1,4 @@
 # pyre-strict
-# all auth details
-#import apps.userauth.views
-
 from typing import List, Optional
 from .base import INSTALLED_APPS
 
@@ -21,6 +18,8 @@ AUTHENTICATION_BACKENDS: List[str] = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# !!!!! SECURITY WARNING !!!!!
+# these are our actual creds, they MUST be changed on the relevant accounts before publishing the repo
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'APP': {
@@ -39,7 +38,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGIN_REDIRECT_URL: str = '/dashboard/'
-LOGOUT_REDIRECT_URL: str = "/"
+LOGOUT_REDIRECT_URL: str = '/'
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL: Optional[str] = LOGIN_REDIRECT_URL
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL: Optional[str] = None
 
@@ -48,6 +47,8 @@ ACCOUNT_EMAIL_REQUIRED: bool = True
 ACCOUNT_EMAIL_VERIFICATION: str = 'mandatory'
 ACCOUNT_USERNAME_REQUIRED: bool = False
 
+# !!!!! SECURITY WARNING !!!!!
+# these are our actual creds, they MUST be changed on the relevant accounts before publishing the repo
 EMAIL_HOST: str = 'mail.webarch.net'
 EMAIL_PORT: int = 465
 EMAIL_HOST_USER: str = 'sfs_mailer@animorph.coop'

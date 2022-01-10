@@ -27,7 +27,7 @@ class ProjectView(DetailView):
         elif (request.POST['form'] == 'remove_support'):
             supports = ProjectSupport.objects.filter(project=Project.objects.get(id=pk),
                                                      user=request.user)
-            for support in supports:
+            for support in supports: # there should only be one, but no need to assume that
                 support.delete()
         elif (request.POST['form'] == 'message'):
             msg = ProjectMessage(project=Project.objects.get(id=pk),
@@ -44,10 +44,11 @@ class ProjectView(DetailView):
         return context
 
 class AllProjectsView(TemplateView):
-    def post(self, request: WSGIRequest) -> HttpResponse:
+    def post(self, request: WSGIRequest) -> HttpResponse: # needed to receive post with to_view as mentioned in get_context_data below
         return super().get(request)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
+        # TODO?: actual search of projects?
         if ('to_view' in self.request.POST and self.request.POST['to_view'] == 'mine'): # pyre-ignore[16]
             context['projects'] = [ownership.project for ownership in
                                    ProjectOwnership.objects.filter(user=self.request.user)] # pyre-ignore[16]
@@ -68,12 +69,12 @@ class EditProjectView(UpdateView):
     model = Project
     fields = ['name', 'description']
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
-        return login_required(super().get)(*args, **kwargs)
+        return login_required(super().get)(*args, **kwargs) # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
     def post(self, request: WSGIRequest, pk: int, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
         project = Project.objects.get(id=pk) # pyre-ignore[16]
         if (0 != len(ProjectOwnership.objects.filter(project=project, user=request.user))): # pyre-ignore[16]
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'
-                and 1 < len(ProjectOwnership.objects.filter(project=project))):
+                and 1 < len(ProjectOwnership.objects.filter(project=project))): # can relinquish ownership only if project won't be orphaned as a result
                 ownership = ProjectOwnership.objects.get(project=project, user=request.user)
                 ownership.delete()
             else:

@@ -15,7 +15,7 @@ class ProjectSupport(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
 
-class ProjectMessage(models.Model):
+class ProjectMessage(models.Model): # a message sent to the owners of a project, eg "I'll support this if ..."
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     message = models.CharField(max_length=2000)
     user_from = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)

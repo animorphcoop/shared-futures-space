@@ -29,7 +29,6 @@ def toolbar_callback(x: WSGIRequest) -> bool:
     return settings.DEBUG
 # Docker specific, type of values declared as Any because I don't know what the different settings are/can be
 DEBUG_TOOLBAR_CONFIG: Dict[str,Any] = {
-    #'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG
     "SHOW_TOOLBAR_CALLBACK": toolbar_callback,
 }
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
