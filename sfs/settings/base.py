@@ -70,6 +70,7 @@ INSTALLED_APPS: List[str] = [
     'allauth.account',
     'allauth.socialaccount',
 
+    'django_htmx',
     'tailwind',
     'theme'
 
@@ -86,6 +87,7 @@ MIDDLEWARE: List[str] = [
     'django.middleware.security.SecurityMiddleware',
 
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 
 ]
 

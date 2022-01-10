@@ -1,9 +1,9 @@
-Django==3.2.8
-wagtail==2.14.2
+Django==3.2.10
+wagtail==2.15.1
 celery==5.1.2
 redis==3.5.3
 psycopg2==2.9.1
-django-tailwind==2.2.2
+django-tailwind==3.0.1
 django-allauth==0.45.0
 pytest==6.2.5
 django-debug-toolbar==3.2.2
@@ -12,3 +12,4 @@ pytest-celery==0.0.0
 pyre-check==0.9.6
 django-stubs==1.9.0
 coverage==6.1.1
+django-htmx==1.6.0
