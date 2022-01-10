@@ -36,7 +36,7 @@ class CustomUser(AbstractUser):
 # a request sent by a user to the admins for a change to their account
 class UserRequest(models.Model):
     kind: models.CharField = models.CharField(max_length=15) # one of the following, we can't put better type constraints on the db:
-    # make_moderator, change_postcode, change_dob, other
+    # make_editor, change_postcode, change_dob, other
     reason: models.CharField = models.CharField(max_length=1000)
     date: models.DateTimeField = models.DateTimeField('date/time request made')
     user: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
