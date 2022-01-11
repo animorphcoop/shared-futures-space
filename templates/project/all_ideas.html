@@ -1,0 +1,15 @@
+<table id=ideas>
+ <tr>
+  <th>Idea</th>
+  <th></th>
+ </tr>
+ {% for idea in ideas %}
+   <tr>
+    <td>{{ idea.name }}</td>
+    <td><a href={% url 'view_idea' idea.pk %}>View Idea</a></td>
+   </tr>
+ {% endfor %}
+</table>
+{% if not request.user.is_anonymous %}
+ <a href="{% url 'new_idea' %}">Propose a new idea</a>
+{% endif %}

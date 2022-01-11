@@ -1,0 +1,19 @@
+{% load custom_filters %}
+<h3>Idea: {{object.name}}</h3>
+<p>proposed by: {{object.proposed}}</p>
+<p>supported by: {{supporters|attrmap:'user'|join:', '}}</p>
+<hr>
+<p>{{object.description}}</p>
+<hr>
+{% if request.user == object.proposed %}
+ <a href="{% url 'edit_idea' object.pk %}">Edit Idea</a>
+{% elif not request.user.is_anonymous %}
+ <form method=post>
+  {% csrf_token %}
+  {% if request.user in supporters|attrmap:'user' %}
+   <button name=action value=remove_support>remove support</button>
+  {% else %}
+   <button name=action value=give_support>give support</button>
+  {% endif %}
+ </form>
+{% endif %}
