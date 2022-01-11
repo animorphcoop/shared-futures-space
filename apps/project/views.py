@@ -43,7 +43,7 @@ class AllIdeasView(TemplateView):
 
 class MakeIdeaView(TemplateView):
     def post(self, request: WSGIRequest, **kwargs: Dict[str,Any]) -> HttpResponse:
-        new_idea = Idea(name=request.POST['name'], description=request.POST['description'], proposed=request.user)
+        new_idea = Idea(name=request.POST['name'], description=request.POST['description'], proposed=request.user) # pyre-ignore[16]
         new_idea.save()
         new_support = IdeaSupport(idea=new_idea, user=request.user)
         new_support.save()
