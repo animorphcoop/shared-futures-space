@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from .models import Idea, IdeaSupport, Project, ProjectMessage, ProjectOwnership, ProjectSupport
+from .models import Idea, IdeaSupport, Project, ProjectOwnership, ProjectSupport
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -84,18 +84,11 @@ class ProjectView(DetailView):
                                                      user=request.user)
             for support in supports: # there should only be one, but no need to assume that
                 support.delete()
-        elif (request.POST['form'] == 'message'):
-            msg = ProjectMessage(project=Project.objects.get(id=pk),
-                                 message=request.POST['msg'],
-                                 user_from=request.user)
-            msg.save()
         return super().get(request, pk)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['owners'] = ProjectOwnership.objects.filter(project=context['object'].pk) # pyre-ignore[16]
         context['supporters'] = ProjectSupport.objects.filter(project=context['object'].pk) # pyre-ignore[16]
-        if (self.request.user in [ownership.user for ownership in context['owners']]): # pyre-ignore[16]
-            context['messages'] = ProjectMessage.objects.filter(project=context['object'].pk) # pyre-ignore[16]
         return context
 
 class AllProjectsView(TemplateView):
@@ -141,11 +134,3 @@ class EditProjectView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['ownerships'] = ProjectOwnership.objects.filter(project=context['object']) # pyre-ignore[16]
         return context
-
-class DeleteMessageView(View):
-    def post(self, request: WSGIRequest) -> HttpResponse:
-        msg = ProjectMessage.objects.get(pk=request.POST['target']) # pyre-ignore[16]
-        if (request.user in [ownership.user for ownership in # pyre-ignore[16]
-                             ProjectOwnership.objects.filter(project=msg.project)]): # pyre-ignore[16]
-            msg.delete()
-        return redirect(reverse('view_project', args=[msg.project.id]))

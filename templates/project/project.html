@@ -7,23 +7,6 @@
 <p>{{object.description}}</p>
 <hr>
 {% if request.user in owners|attrmap:'user' %}
- <form method=post action="{% url 'delete_message' %}">
- {% csrf_token %}
- <table>
-  <tr>
-   <th>From</th>
-   <th>Message</th>
-   <th></th>
-  </tr>
-  {% for message in messages %}
-   <tr>
-    <td>{{message.user_from.display_name}}</td>
-    <td>{{message.message}}</td>
-    <td><button name=target value={{message.id}}>Delete</button></td>
-   </tr>
-  {% endfor %}
- </table>
- </form>
  <a href="{% url 'edit_project' object.pk %}">Edit Project</a>
 {% elif not request.user.is_anonymous %}
  <form method=post>
@@ -35,11 +18,3 @@
   {% endif %}
  </form>
 {% endif %}
-<form method=post>
- {% csrf_token %}
- <p>
-  <label for=msg>Message Owner(s):</label>
-  <textarea id=msg name=msg maxlength=2000></textarea>
- </p>
- <button name=form value=message>submit</button>
-</form>
