@@ -75,13 +75,13 @@ class EditIdeaView(UpdateView):
 def replace_idea_with_project(idea: Idea) -> None:
     new_project = Project(name = idea.name, description = idea.description)
     new_project.save()
-    for support in IdeaSupport.objects.filter(idea=idea):
+    for support in IdeaSupport.objects.filter(idea=idea): # pyre-ignore[16]
         new_ownership = ProjectMembership(project = new_project, user = support.user, owner = True)
         new_ownership.save()
         support.delete()
     idea.delete()
     # TODO: message involved users to tell them this has happened
-    return new_project.id
+    return new_project.id # pyre-ignore[16] ("Project has no attribute id")
 
 # ---
 
@@ -93,7 +93,7 @@ class ProjectView(DetailView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['owners'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True) # pyre-ignore[16]
-        context['members'] = ProjectMembership.objects.filter(project=context['object'].pk) # pyre-ignore[16]
+        context['members'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
 class AllProjectsView(TemplateView):
