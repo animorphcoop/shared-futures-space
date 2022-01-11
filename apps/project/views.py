@@ -7,9 +7,10 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.conf import settings
 from django.urls import reverse
 
-from .models import Idea, IdeaSupport, Project, ProjectOwnership, ProjectSupport
+from .models import Idea, IdeaSupport, Project, ProjectMembership, ProjectSupport
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -22,6 +23,10 @@ class IdeaView(DetailView):
                 support = IdeaSupport(idea=Idea.objects.get(id=pk),
                                       user=request.user)
                 support.save()
+                # TODO: is this the only place support can be given? if not, need to check elsewhere as well
+                if (len(IdeaSupport.objects.filter(idea=Idea.objects.get(id=pk))) >= settings.PROJECT_REQUIRED_SUPPORTERS):
+                    new_project_id = replace_idea_with_project(Idea.objects.get(id=pk))
+                    return redirect(reverse('view_project', args=[new_project_id]))
         elif (request.POST['action'] == 'remove_support'):
             # can't remove support from your own idea (because you wouldn't be able to return it through the intended interface)
             if (request.user != Idea.objects.get(id=pk).proposed):
@@ -67,28 +72,28 @@ class EditIdeaView(UpdateView):
 
 # ---
 
+def replace_idea_with_project(idea: Idea) -> None:
+    new_project = Project(name = idea.name, description = idea.description)
+    new_project.save()
+    for support in IdeaSupport.objects.filter(idea=idea):
+        new_ownership = ProjectMembership(project = new_project, user = support.user, owner = True)
+        new_ownership.save()
+        support.delete()
+    idea.delete()
+    # TODO: message involved users to tell them this has happened
+    return new_project.id
+
+# ---
+
 class ProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
-        if (request.POST['form'] == 'give_support'):
-            # you can't support your own project or support a project more than once
-            if (0 == len(ProjectSupport.objects.filter(project=Project.objects.get(id=pk), # pyre-ignore[16]
-                                                       user=request.user)) and # pyre-ignore[16]
-                0 == len(ProjectOwnership.objects.filter(project=Project.objects.get(id=pk), # pyre-ignore[16]
-                                                         user=request.user))):
-                support = ProjectSupport(project=Project.objects.get(id=pk),
-                                         user=request.user)
-                support.save()
-        elif (request.POST['form'] == 'remove_support'):
-            supports = ProjectSupport.objects.filter(project=Project.objects.get(id=pk),
-                                                     user=request.user)
-            for support in supports: # there should only be one, but no need to assume that
-                support.delete()
+        # TODO: request to join and leave. the last owner should be unable to leave and orphan the project without shutting it down first
         return super().get(request, pk)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
-        context['owners'] = ProjectOwnership.objects.filter(project=context['object'].pk) # pyre-ignore[16]
-        context['supporters'] = ProjectSupport.objects.filter(project=context['object'].pk) # pyre-ignore[16]
+        context['owners'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True) # pyre-ignore[16]
+        context['members'] = ProjectMembership.objects.filter(project=context['object'].pk) # pyre-ignore[16]
         return context
 
 class AllProjectsView(TemplateView):
@@ -99,19 +104,11 @@ class AllProjectsView(TemplateView):
         # TODO?: actual search of projects?
         if ('to_view' in self.request.POST and self.request.POST['to_view'] == 'mine'): # pyre-ignore[16]
             context['projects'] = [ownership.project for ownership in
-                                   ProjectOwnership.objects.filter(user=self.request.user)] # pyre-ignore[16]
+                                   ProjectMembership.objects.filter(user=self.request.user)] # pyre-ignore[16]
             context['viewing'] = 'mine'
         else:
             context['projects'] = Project.objects.all() # pyre-ignore[16]
         return context
-
-class MakeProjectView(TemplateView):
-    def post(self, request: WSGIRequest, **kwargs: Dict[str,Any]) -> HttpResponse:
-        new_project = Project(name=request.POST['name'], description=request.POST['description'])
-        new_project.save()
-        ownership = ProjectOwnership(project=new_project, user=request.user) # pyre-ignore[16]
-        ownership.save()
-        return redirect(reverse('all_projects'))
 
 class EditProjectView(UpdateView):
     model = Project
@@ -120,17 +117,12 @@ class EditProjectView(UpdateView):
         return login_required(super().get)(*args, **kwargs) # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
     def post(self, request: WSGIRequest, pk: int, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
         project = Project.objects.get(id=pk) # pyre-ignore[16]
-        if (0 != len(ProjectOwnership.objects.filter(project=project, user=request.user))): # pyre-ignore[16]
-            if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'
-                and 1 < len(ProjectOwnership.objects.filter(project=project))): # can relinquish ownership only if project won't be orphaned as a result
-                ownership = ProjectOwnership.objects.get(project=project, user=request.user)
-                ownership.delete()
-            else:
-                project.name = request.POST['name']
-                project.description = request.POST['description']
-                project.save()
+        if (ProjectMembership.objects.get(project=project, user=request.user).owner == True): # pyre-ignore[16]
+            project.name = request.POST['name']
+            project.description = request.POST['description']
+            project.save()
         return redirect(reverse('view_project', args=[pk]))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
-        context['ownerships'] = ProjectOwnership.objects.filter(project=context['object']) # pyre-ignore[16]
+        context['ownerships'] = ProjectMembership.objects.filter(project=context['object'], owner = True) # pyre-ignore[16]
         return context

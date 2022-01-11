@@ -18,9 +18,10 @@ class Project(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=2000)
 
-class ProjectOwnership(models.Model):
+class ProjectMembership(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
+    owner = models.BooleanField(default = False)
 
 class ProjectSupport(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)

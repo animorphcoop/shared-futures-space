@@ -2,19 +2,20 @@
 {% load custom_filters %}
 <h3>Project: {{object.name}}</h3>
 <p>owned by: {{owners|attrmap:'user'|join:', '}}</p>
-<p>supported by: {{supporters|attrmap:'user'|join:', '}}</p>
+<p>members: {{members|attrmap:'user'|join:', '}}</p>
 <hr>
 <p>{{object.description}}</p>
 <hr>
 {% if request.user in owners|attrmap:'user' %}
  <a href="{% url 'edit_project' object.pk %}">Edit Project</a>
 {% elif not request.user.is_anonymous %}
+ <p><b>WARNING: NOT IMPLEMENTED</b></p>
  <form method=post>
   {% csrf_token %}
-  {% if request.user in supporters|attrmap:'user' %}
-   <button name=form value=remove_support>remove support</button>
+  {% if request.user in members|attrmap:'user' %}
+   <button name=form value=remove_support>leave project</button>
   {% else %}
-   <button name=form value=give_support>give support</button>
+   <button name=form value=give_support>request to join project</button>
   {% endif %}
  </form>
 {% endif %}
