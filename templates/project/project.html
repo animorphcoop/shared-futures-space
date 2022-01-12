@@ -8,7 +8,8 @@
 <p>{{object.description}}</p>
 <hr>
 {% if request.user in owners|attrmap:'user' %}
- <a href="{% url 'edit_project' object.pk %}">Edit Project</a>
+ <p><a href="{% url 'edit_project' object.pk %}">Edit Project</a></p>
+ <p><a href="{% url 'manage_project' object.pk %}">Manage Project</a></p>
 {% elif not request.user.is_anonymous %}
  <form method=post>
   {% csrf_token %}

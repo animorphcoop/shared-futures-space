@@ -1,6 +1,6 @@
 {% load custom_filters %}
 {% if request.user in ownerships|attrmap:'user' %}
- <table>
+ <table id=members>
   <tr>
    <th>Member</th>
    <th>Status</th>

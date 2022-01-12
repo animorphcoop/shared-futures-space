@@ -64,7 +64,25 @@ def test_project_membership(client, test_user, other_test_user, test_project):
                                                                   'abdicate': 'abdicate'}) # should be rejected
     assert ProjectMembership.objects.get(user=other_test_user, project=test_project).owner == True
 
-
+def test_project_management(client, test_user, other_test_user, test_project):
+    membership = ProjectMembership(user=test_user, project=test_project, owner=True, champion=False)
+    other_membership = ProjectMembership(user=other_test_user, project=test_project, owner=False, champion=True)
+    membership.save()
+    other_membership.save()
+    client.force_login(test_user)
+    management_page = client.get(reverse('manage_project', args=[test_project.id]))
+    management_page_html = bs4.BeautifulSoup(management_page.content, features='html5lib')
+    members = management_page_html.find('table', attrs={'id':'members'}).tbody.find_all('tr')[1:] # drop the headings row
+    assert len(members) == 2
+    client.force_login(other_test_user)
+    client.post(reverse('manage_project', args=[test_project.id]), {'membership': other_membership.id,
+                                                                    'action': 'remove_championship'}) # should be rejected
+    assert ProjectMembership.objects.get(user=other_test_user, project=test_project).champion
+    client.force_login(test_user)
+    client.post(reverse('manage_project', args=[test_project.id]), {'membership': other_membership.id,
+                                                                    'action': 'remove_championship'}) # should be accepted
+    assert not ProjectMembership.objects.get(user=other_test_user, project=test_project).champion
+    
 
 
 

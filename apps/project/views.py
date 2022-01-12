@@ -141,8 +141,9 @@ class EditProjectView(UpdateView):
 class ManageProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
-        membership = ProjectMembership.objects.get(id=request.POST['membership'])
-        if (ProjectMembership.objects.get(user=request.user, project=Project.objects.get(id=pk)).owner == True # security checks
+        membership = ProjectMembership.objects.get(id=request.POST['membership']) # pyre-ignore[16]
+        # security checks
+        if (ProjectMembership.objects.get(user=request.user, project=Project.objects.get(id=pk)).owner == True # pyre-ignore[16]
             and membership.project == Project.objects.get(id=pk)): # since the form takes any uid
             print(request.POST['action'])
             print(membership.champion)
