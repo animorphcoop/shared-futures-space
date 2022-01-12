@@ -88,7 +88,11 @@ def replace_idea_with_project(idea: Idea) -> None:
 class ProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
-        # TODO: request to join and leave. the last owner should be unable to leave and orphan the project without shutting it down first
+        # TODO: request to join and leave.
+        if (request.POST['action'] == 'leave'):
+            membership = ProjectMembership.objects.get(user=request.user, project=Project.objects.get(id=pk))
+            if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
+                membership.delete()
         return super().get(request, pk)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
@@ -118,6 +122,12 @@ class EditProjectView(UpdateView):
     def post(self, request: WSGIRequest, pk: int, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
         project = Project.objects.get(id=pk) # pyre-ignore[16]
         if (ProjectMembership.objects.get(project=project, user=request.user).owner == True): # pyre-ignore[16]
+            if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'):
+                ownerships = ProjectMembership.objects.filter(project=project, owner=True)
+                if (len(ownerships) >= 2): # won't be orphaning the project (TODO: allow projects to be shut down, in which case they can be orphaned)
+                    my_membership = ProjectMembership.objects.get(project=project, user=request.user, owner=True)
+                    my_membership.owner = False
+                    my_membership.save()
             project.name = request.POST['name']
             project.description = request.POST['description']
             project.save()
