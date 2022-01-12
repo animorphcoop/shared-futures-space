@@ -90,7 +90,7 @@ class ProjectView(DetailView):
     def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
         # TODO: request to join and leave.
         if (request.POST['action'] == 'leave'):
-            membership = ProjectMembership.objects.get(user=request.user, project=Project.objects.get(id=pk))
+            membership = ProjectMembership.objects.get(user=request.user, project=Project.objects.get(id=pk)) # pyre-ignore[16]
             if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
                 membership.delete()
         return super().get(request, pk)
