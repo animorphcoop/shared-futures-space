@@ -1,7 +1,7 @@
 # pyre-strict
 
 from django.urls import path, URLResolver, URLPattern
-from .views import AllIdeasView, IdeaView, MakeIdeaView, EditIdeaView, AllProjectsView, ProjectView, EditProjectView
+from .views import AllIdeasView, IdeaView, MakeIdeaView, EditIdeaView, AllProjectsView, ProjectView, EditProjectView, ManageProjectView
 from django.contrib.auth.decorators import login_required
 from typing import List, Union
 
@@ -15,4 +15,5 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('projects/', AllProjectsView.as_view(template_name='all_projects.html'), name='all_projects'),
     path('projects/view/<int:pk>/', ProjectView.as_view(template_name='project.html'), name='view_project'),
     path('projects/edit/<int:pk>/', login_required(EditProjectView.as_view(template_name='edit_project.html')), name='edit_project'),
+    path('projects/manage/<int:pk>/', login_required(ManageProjectView.as_view(template_name='manage_project.html')), name='manage_project'),
 ]

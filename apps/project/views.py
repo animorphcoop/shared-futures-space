@@ -137,3 +137,27 @@ class EditProjectView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['ownerships'] = ProjectMembership.objects.filter(project=context['object'], owner = True) # pyre-ignore[16]
         return context
+
+class ManageProjectView(DetailView):
+    model = Project
+    def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
+        membership = ProjectMembership.objects.get(id=request.POST['membership'])
+        if (ProjectMembership.objects.get(user=request.user, project=Project.objects.get(id=pk)).owner == True # security checks
+            and membership.project == Project.objects.get(id=pk)): # since the form takes any uid
+            print(request.POST['action'])
+            print(membership.champion)
+            if (request.POST['action'] == 'offer_ownership'):
+                1 # TODO: do that. waiting on messaging system.
+                # don't forget to validate that they aren't an owner already, since it is possible to send the message for arbitrary uids and it might have some kind of scam value?
+            elif (request.POST['action'] == 'offer_championship'):
+                2 # TODO: ditto
+            elif (request.POST['action'] == 'remove_championship'):
+                membership.champion = False
+            membership.save()
+            print(membership.champion)
+        return self.get(request,pk)
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        context = super().get_context_data(**kwargs)
+        context['ownerships'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True) # pyre-ignore[16]
+        context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
+        return context
