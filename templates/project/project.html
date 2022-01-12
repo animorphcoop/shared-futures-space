@@ -1,8 +1,9 @@
 
 {% load custom_filters %}
 <h3>Project: {{object.name}}</h3>
-<p>owned by: {{owners|attrmap:'user'|join:', '}}</p>
-<p>members: {{members|attrmap:'user'|join:', '}}</p>
+<p>owners: {{owners|attrmap:'user'|join:', '}}</p>
+<p>champions: {{champions|attrmap:'user'|join:', '}}</p>
+<p>all members: {{members|attrmap:'user'|join:', '}}</p>
 <hr>
 <p>{{object.description}}</p>
 <hr>

@@ -22,7 +22,4 @@ class ProjectMembership(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
     owner = models.BooleanField(default = False)
-
-class ProjectSupport(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    user = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
+    champion = models.BooleanField(default = False)

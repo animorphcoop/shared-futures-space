@@ -10,7 +10,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 from django.urls import reverse
 
-from .models import Idea, IdeaSupport, Project, ProjectMembership, ProjectSupport
+from .models import Idea, IdeaSupport, Project, ProjectMembership
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -97,6 +97,7 @@ class ProjectView(DetailView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['owners'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True) # pyre-ignore[16]
+        context['champions'] = ProjectMembership.objects.filter(project=context['object'].pk, champion = True)
         context['members'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
