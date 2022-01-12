@@ -22,16 +22,22 @@
     {# Override this in templates to add extra stylesheets #}
     {% endblock %}
     {% tailwind_css %}
+
     <!--TODO: COPY TO STATIC FILES-->
     <script src="https://unpkg.com/htmx.org@1.6.1"></script>
 
 </head>
 
-<body class="{% block body_class %}{% endblock %}">
+<body class="mx-4">
+
+{% include "partials/nav.html" %}
 
 {% wagtailuserbar %}
 
-{% block content %}{% endblock %}
+{% block content %}
+
+{% endblock %}
+
 {# Global javascript #}
 <script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 

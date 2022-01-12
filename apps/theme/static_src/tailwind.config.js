@@ -89,16 +89,18 @@ module.exports = {
                     dark: '#77A69B',
                 },
             },
+            fontSize: {
+                '26': ['1.3em', '1.25em'],
+                '43': ['2.15em', '1.255em'],
+            },
         },
+
         fontFamily: {
             'light': ['SofiaPro_Light', 'sans-serif'],
             'regular': ['SofiaPro_Regular', 'sans-serif'],
             'semibold': ['SofiaPro_SemiBold', 'sans-serif'],
         },
-        fontSize: {
-            '26': ['1.3em', '1.25em'],
-            '43': ['2.15em', '1.255em'],
-        },
+
     },
     variants: {
         extend: {},

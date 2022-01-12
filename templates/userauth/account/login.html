@@ -9,31 +9,15 @@
 
 {% block content %}
 
-<h1>{% trans "Sign In" %}</h1>
+<p class="text-2xl">{% trans "Sign In" %}</p>
 
 {% get_providers as socialaccount_providers %}
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-    of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-    for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+<p class="text-lg">
+    Please log in to engage with other community members, access your profile and messages.
+</p>
 
-<div class="socialaccount_ballot">
 
-    <ul class="socialaccount_providers">
-        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-    </ul>
-
-    <div class="login-or">{% trans 'or' %}</div>
-
-</div>
-
-{% include "socialaccount/snippets/login_extra.html" %}
-
-{% else %}
-<p>{% blocktrans %}If you have not created an account yet, then please NOT
-    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-{% endif %}
 
 <div class="w-full max-w-xs">
     <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="POST" action="{% url 'account_login' %}">
@@ -43,10 +27,11 @@
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Email
             </label>
-            {% render_field form.login class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" hx-post="/check_username/" hx-trigger="keyup delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" %}
+            {% render_field form.login class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" hx-post="/check_email/" hx-trigger="keyup delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" %}
+           <div id="email-feedback" class="hidden"></div>
         </div>
 
-    <div id="email-feedback" class="hidden"></div>
+
 
 
             <div class="mb-6">
@@ -71,7 +56,32 @@
 
 
 </form>
+</div>
+<div>
+    <p class="text-lg">You can also use Social Media accounts to log in:</p>
+        <div class="socialaccount_ballot">
 
+        <ul class="">
+            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+        </ul>
+
+    </div>
+
+
+    {% include "socialaccount/snippets/login_extra.html" %}
+
+
+    <p class="text-lg">If you haven't got an account yet, make sure to <a href="{{ signup_url }}" class="underline text-2xl font-semibold">create one</a>!
+</p>
 
 </div>
+
+<style>
+    .correct {
+        color: green;
+    }
+    .incorrect {
+        color: red;
+    }
+</style>
 {% endblock %}
