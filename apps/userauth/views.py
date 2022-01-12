@@ -174,6 +174,6 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
 def check_email(request: WSGIRequest) -> HttpResponse:
     usermail = request.POST.getlist('login')[0]
     if (get_user_model().objects.filter(email=usermail).exists()):
-        return HttpResponse("<span id='email-feedback' class='correct'>Please enter your password.</span>")
+        return HttpResponse("<span id='email-feedback' class='text-correct'>Please enter your password.</span>")
     else:
-        return HttpResponse("<span id='email-feedback' class='incorrect'>Such an address does not exist.</span>")
+        return HttpResponse("<span id='email-feedback' class='text-incorrect'>Such an address does not exist.</span>")

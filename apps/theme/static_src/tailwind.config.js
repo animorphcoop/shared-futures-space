@@ -88,6 +88,8 @@ module.exports = {
                     DEFAULT: '#AFDFD4',
                     dark: '#77A69B',
                 },
+                correct: '#228b22',
+                incorrect:'#fe2712',
             },
             fontSize: {
                 '26': ['1.3em', '1.25em'],

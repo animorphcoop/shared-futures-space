@@ -615,51 +615,21 @@ select {
   bottom: 0px;
 }
 
-.left-4 {
-  left: 1rem;
-}
-
 .top-4 {
   top: 1rem;
-}
-
-.right-4 {
-  right: 1rem;
 }
 
 .right-0 {
   right: 0px;
 }
 
-.m-2 {
-  margin: 0.5rem;
-}
-
-.-m-2 {
-  margin: -0.5rem;
-}
-
-.-m-4 {
-  margin: -1rem;
-}
-
-.-m-3 {
-  margin: -0.75rem;
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.mx-2 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
+}
+
+.-mb-8 {
+  margin-bottom: -2rem;
 }
 
 .mr-5 {
@@ -684,22 +654,6 @@ select {
 
 .mt-2 {
   margin-top: 0.5rem;
-}
-
-.-mb-2 {
-  margin-bottom: -0.5rem;
-}
-
-.-mb-6 {
-  margin-bottom: -1.5rem;
-}
-
-.-mb-12 {
-  margin-bottom: -3rem;
-}
-
-.-mb-8 {
-  margin-bottom: -2rem;
 }
 
 .block {
@@ -830,10 +784,6 @@ select {
   padding-bottom: 2rem;
 }
 
-.pt-28 {
-  padding-top: 7rem;
-}
-
 .align-baseline {
   vertical-align: baseline;
 }
@@ -842,18 +792,9 @@ select {
   font-family: SofiaPro_SemiBold, sans-serif;
 }
 
-.font-light {
-  font-family: SofiaPro_Light, sans-serif;
-}
-
 .text-5xl {
   font-size: 3rem;
   line-height: 1;
-}
-
-.text-43 {
-  font-size: 2.15em;
-  line-height: 1.255em;
 }
 
 .text-2xl {
@@ -861,19 +802,14 @@ select {
   line-height: 2rem;
 }
 
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .font-semibold {
@@ -882,10 +818,6 @@ select {
 
 .font-bold {
   font-weight: 700;
-}
-
-.font-light {
-  font-weight: 300;
 }
 
 .uppercase {
@@ -918,6 +850,16 @@ select {
 .text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
+.text-incorrect {
+  --tw-text-opacity: 1;
+  color: rgb(254 39 18 / var(--tw-text-opacity));
+}
+
+.text-correct {
+  --tw-text-opacity: 1;
+  color: rgb(34 139 34 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -961,8 +903,3 @@ select {
   outline-offset: 2px;
 }
 
-@media (min-width: 640px) {
-  .sm\:pt-44 {
-    padding-top: 11rem;
-  }
-}

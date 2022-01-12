@@ -73,15 +73,16 @@
 
     <p class="text-lg">If you haven't got an account yet, make sure to <a href="{{ signup_url }}" class="underline text-2xl font-semibold">create one</a>!
 </p>
-
 </div>
 
+
+<!--Styles passed from views are not dynamically applied to tailwind
+Tailwind classes are active only if applied to existing html element
+-->
+    <p class="text-incorrect">incorrect</p>
+    <p class="text-correct">correct</p>
+
 <style>
-    .correct {
-        color: green;
-    }
-    .incorrect {
-        color: red;
-    }
+
 </style>
 {% endblock %}
