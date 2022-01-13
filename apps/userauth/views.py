@@ -112,16 +112,16 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
 @login_required(login_url='/account/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
-        if (httpreq.POST['kind'] not in ['make_editor', 'change_dob', 'change_postcode', 'other']):
-            print('error: not a valid kind of request')
-        elif (len(httpreq.POST['reason']) > 1000):
-            print('error: reason too long (> 1000 chars)')
-        else:
-            new_request = UserRequest(kind=httpreq.POST['kind'],
+        #if (httpreq.POST['kind'] not in ['make_editor', 'change_dob', 'change_postcode', 'other']):
+        #    print('error: not a valid kind of request')
+        #elif (len(httpreq.POST['reason']) > 1000):
+        #    print('error: reason too long (> 1000 chars)')
+        #else:
+        new_request = UserRequest(kind=httpreq.POST['kind'],
                                       reason=httpreq.POST['reason'],
                                       user=httpreq.user,  # pyre-ignore[16] pyre has a older version of django in mind?
                                       date=timezone.now())
-            new_request.save()
+        new_request.save()
         return redirect(reverse('account_update'))
     else:
         return render(httpreq, 'account/make_request.html')
