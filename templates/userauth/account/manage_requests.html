@@ -19,8 +19,8 @@
         <form method=post>
         {% csrf_token %}
         <input type=hidden name=request_id value="{{ req.id }}"></input>
-        {% if req.kind == "make_moderator" %}
-          <button name=accept value=accept>Make Moderator</button>
+        {% if req.kind == "make_editor" %}
+          <button name=accept value=accept>Make Editor</button>
         {% elif req.kind == "change_dob" %}
           <button name=accept value=accept>Change Year Of Birth To:</button>
           <input type=number name=new_dob required></input>

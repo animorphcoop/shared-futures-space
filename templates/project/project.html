@@ -1,45 +1,23 @@
 
 {% load custom_filters %}
 <h3>Project: {{object.name}}</h3>
-<p>owned by: {{owners|attrmap:'user'|join:', '}}</p>
-<p>supported by: {{supporters|attrmap:'user'|join:', '}}</p>
+<p>owners: {{owners|attrmap:'user'|join:', '}}</p>
+<p>champions: {{champions|attrmap:'user'|join:', '}}</p>
+<p>all members: {{members|attrmap:'user'|join:', '}}</p>
 <hr>
 <p>{{object.description}}</p>
 <hr>
 {% if request.user in owners|attrmap:'user' %}
- <form method=post action="{% url 'delete_message' %}">
- {% csrf_token %}
- <table>
-  <tr>
-   <th>From</th>
-   <th>Message</th>
-   <th></th>
-  </tr>
-  {% for message in messages %}
-   <tr>
-    <td>{{message.user_from.display_name}}</td>
-    <td>{{message.message}}</td>
-    <td><button name=target value={{message.id}}>Delete</button></td>
-   </tr>
-  {% endfor %}
- </table>
- </form>
- <a href="{% url 'edit_project' object.pk %}">Edit Project</a>
+ <p><a href="{% url 'edit_project' object.pk %}">Edit Project</a></p>
+ <p><a href="{% url 'manage_project' object.pk %}">Manage Project</a></p>
 {% elif not request.user.is_anonymous %}
  <form method=post>
   {% csrf_token %}
-  {% if request.user in supporters|attrmap:'user' %}
-   <button name=form value=remove_support>remove support</button>
+  {% if request.user in members|attrmap:'user' %}
+   <button name=action value=leave>leave project</button>
   {% else %}
-   <button name=form value=give_support>give support</button>
+   <p><b>WARNING: NOT IMPLEMENTED (would use messaging system, messaging owner group with a secure link that allows owners to give you membership)</b></p>
+   <button name=action value=request_join>request to join project</button>
   {% endif %}
  </form>
 {% endif %}
-<form method=post>
- {% csrf_token %}
- <p>
-  <label for=msg>Message Owner(s):</label>
-  <textarea id=msg name=msg maxlength=2000></textarea>
- </p>
- <button name=form value=message>submit</button>
-</form>

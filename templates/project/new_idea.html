@@ -1,13 +1,12 @@
-
 <form method=post>
  {% csrf_token %}
  <p>
-  <label for=name>Project Name:</label>
+  <label for=name>Idea Name:</label>
   <input id=name name=name type=text maxlength=200/>
  </p>
  <p>
-  <label for=description>Project Description</label>
+  <label for=description>Idea Description</label>
   <textarea id=description name=description maxlength=2000></textarea>
  </p>
- <p><button>Suggest Project</button></p>
+ <p><button>Suggest Idea</button></p>
 </form>

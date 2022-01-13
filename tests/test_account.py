@@ -46,7 +46,7 @@ def test_user_request_flow(client, test_user, admin_client):
     request_form = client.get(reverse('account_request'))
     assert request_form.status_code == 200
     make_request = client.post(reverse('account_request'),
-                               {'kind': 'make_moderator',
+                               {'kind': 'make_editor',
                                 'reason': 'pls'})
     assert make_request.status_code == 302
     assert make_request.url == f'/account/update/'
@@ -59,7 +59,7 @@ def test_user_request_flow(client, test_user, admin_client):
     user_request_id = test_row.find_all('td')[4].form.find('input', attrs={'name': 'request_id'})['value']
     admin_client.post('/account/managerequests/', {'accept': 'accept',
                                                    'request_id': user_request_id})
-    assert CustomUser.objects.get(id=test_user.id).is_staff
+    assert CustomUser.objects.get(id=test_user.id).editor
     assert len(UserRequest.objects.all()) == 0
 
 

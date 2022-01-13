@@ -20,6 +20,9 @@ DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
 # needed for oauth
 ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
 
+# number of supporters required for an idea to become a project
+PROJECT_REQUIRED_SUPPORTERS = 5
+
 try:
     from .local import *
 except ImportError:
