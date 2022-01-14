@@ -34,12 +34,12 @@ def test_idea_view(client, test_idea):
 
 def test_idea_edit(client, test_user, test_idea):
     test_idea.proposed = test_user
-    attempt_logged_out = client.get(reverse('edit_idea', args=[test_idea.id]))
+    attempt_logged_out = client.get(reverse('edit_idea', args=[test_idea.slug]))
     assert attempt_logged_out.status_code == 302
     client.force_login(test_user)
-    attempt_logged_in = client.get(reverse('edit_idea', args=[test_idea.id]))
+    attempt_logged_in = client.get(reverse('edit_idea', args=[test_idea.slug]))
     assert attempt_logged_in.status_code == 200
-    client.post(reverse('edit_idea', args=[test_idea.id]), {'action': 'update',
+    client.post(reverse('edit_idea', args=[test_idea.slug]), {'action': 'update',
                                                             'name': 'new edited name',
                                                             'description': 'new edited description'})
     assert Idea.objects.get(pk=test_idea.id).name == 'new edited name'

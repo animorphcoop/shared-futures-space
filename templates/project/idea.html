@@ -6,7 +6,7 @@
 <p>{{object.description}}</p>
 <hr>
 {% if request.user == object.proposed %}
- <a href="{% url 'edit_idea' object.pk %}">Edit Idea</a>
+ <a href="{% url 'edit_idea' object.slug %}">Edit Idea</a>
 {% elif not request.user.is_anonymous %}
  <form method=post>
   {% csrf_token %}
