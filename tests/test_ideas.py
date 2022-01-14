@@ -4,7 +4,8 @@ import pytest
 import bs4
 
 from django.urls import reverse
-from project.models import Idea, IdeaSupport
+from django.conf import settings
+from project.models import Idea, IdeaSupport, Project
 
 @pytest.mark.django_db
 def test_idea_create(client, test_user):
@@ -43,3 +44,23 @@ def test_idea_edit(client, test_user, test_idea):
                                                             'name': 'new edited name',
                                                             'description': 'new edited description'})
     assert Idea.objects.get(pk=test_idea.id).name == 'new edited name'
+
+def test_idea_support(client, test_user, other_test_user, test_idea):
+    client.force_login(test_user)
+    client.post(reverse('view_idea', args=[test_idea.slug]), {'action': 'give_support'})
+    assert len(IdeaSupport.objects.filter(idea = test_idea)) == 1
+    client.post(reverse('view_idea', args=[test_idea.slug]), {'action': 'give_support'})
+    assert len(IdeaSupport.objects.filter(idea = test_idea)) == 1 # doesn't add more than one support from one person
+    client.post(reverse('view_idea', args=[test_idea.slug]), {'action': 'remove_support'})
+    assert len(IdeaSupport.objects.filter(idea = test_idea)) == 0 # successfully removes support
+    for i in range(1, settings.PROJECT_REQUIRED_SUPPORTERS):
+        s = IdeaSupport(user = other_test_user, idea = test_idea) # force create extra dummy supports all from one user
+        s.save()
+    client.post(reverse('view_idea', args=[test_idea.slug]), {'action': 'give_support'})
+    assert len(IdeaSupport.objects.filter(idea=test_idea.id)) == 0
+    assert len(Idea.objects.filter(id=test_idea.id)) == 0
+    assert len(Project.objects.filter(slug=test_idea.slug)) == 1
+
+
+    
+    
