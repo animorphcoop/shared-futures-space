@@ -15,26 +15,27 @@ from typing import Dict, List, Any
 
 class IdeaView(DetailView):
     model = Idea
-    def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        this_idea = Idea.objects.get(slug=slug) # pyre-ignore[16]
         if (request.POST['action'] == 'give_support'):
-            # can't suppport one idea more than once
-            if (0 == len(IdeaSupport.objects.filter(idea=Idea.objects.get(id=pk), # pyre-ignore[16]
+            # can't support one idea more than once
+            if (0 == len(IdeaSupport.objects.filter(idea=this_idea, # pyre-ignore[16]
                                                     user=request.user))): # pyre-ignore[16]
-                support = IdeaSupport(idea=Idea.objects.get(id=pk),
+                support = IdeaSupport(idea=this_idea,
                                       user=request.user)
                 support.save()
                 # TODO: is this the only place support can be given? if not, need to check elsewhere as well
-                if (len(IdeaSupport.objects.filter(idea=Idea.objects.get(id=pk))) >= settings.PROJECT_REQUIRED_SUPPORTERS):
-                    new_project_id = replace_idea_with_project(Idea.objects.get(id=pk))
+                if (len(IdeaSupport.objects.filter(idea=Idea.objects.get(slug=slug))) >= settings.PROJECT_REQUIRED_SUPPORTERS):
+                    new_project_id = replace_idea_with_project(Idea.objects.get(slug=slug))
                     return redirect(reverse('view_project', args=[new_project_id]))
         elif (request.POST['action'] == 'remove_support'):
             # can't remove support from your own idea (because you wouldn't be able to return it through the intended interface)
-            if (request.user != Idea.objects.get(id=pk).proposed):
-                supports = IdeaSupport.objects.filter(idea=Idea.objects.get(id=pk),
+            if (request.user != this_idea.proposed_by):
+                supports = IdeaSupport.objects.filter(idea=this_idea,
                                                       user=request.user)
                 for support in supports: # there should only be one, but no need to assume that
                     support.delete()
-        return super().get(request, pk)
+        return super().get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['supporters'] = IdeaSupport.objects.filter(idea=context['object'].pk) # pyre-ignore[16]
@@ -47,8 +48,8 @@ class AllIdeasView(TemplateView):
         return context
 
 class MakeIdeaView(TemplateView):
-    def post(self, request: WSGIRequest, **kwargs: Dict[str,Any]) -> HttpResponse:
-        new_idea = Idea(name=request.POST['name'], description=request.POST['description'], proposed=request.user) # pyre-ignore[16]
+    def post(self, request: WSGIRequest, **kwargs: Dict[str,Any]) -> HttpResponse:        
+        new_idea = Idea(name=request.POST['name'], description=request.POST['description'], proposed_by=request.user, slug="") # pyre-ignore[16]
         new_idea.save()
         new_support = IdeaSupport(idea=new_idea, user=request.user)
         new_support.save()
@@ -59,8 +60,8 @@ class EditIdeaView(UpdateView):
     fields = ['name', 'description']
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
         return login_required(super().get)(*args, **kwargs) # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
-    def post(self, request: WSGIRequest, pk: int, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
-        idea = Idea.objects.get(id=pk) # pyre-ignore[16]
+    def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
+        idea = Idea.objects.get(slug=slug) # pyre-ignore[16]
         if request.POST['action'] == 'update':
             idea.name = request.POST['name']
             idea.description = request.POST['description']
@@ -68,12 +69,12 @@ class EditIdeaView(UpdateView):
         elif request.POST['action'] == 'delete':
             idea.delete()
             return redirect(reverse('all_ideas'))
-        return redirect(reverse('view_idea', args=[pk]))
+        return redirect(reverse('view_idea', args=[slug]))
 
 # ---
 
 def replace_idea_with_project(idea: Idea) -> None:
-    new_project = Project(name = idea.name, description = idea.description)
+    new_project = Project(name = idea.name, description = idea.description, slug = idea.slug)
     new_project.save()
     for support in IdeaSupport.objects.filter(idea=idea): # pyre-ignore[16]
         new_ownership = ProjectMembership(project = new_project, user = support.user, owner = True)
@@ -87,13 +88,13 @@ def replace_idea_with_project(idea: Idea) -> None:
 
 class ProjectView(DetailView):
     model = Project
-    def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         # TODO: request to join and leave.
         if (request.POST['action'] == 'leave'):
-            membership = ProjectMembership.objects.get(user=request.user, project=Project.objects.get(id=pk)) # pyre-ignore[16]
+            membership = ProjectMembership.objects.get(user=request.user, project=Project.objects.get(slug=slug)) # pyre-ignore[16]
             if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
                 membership.delete()
-        return super().get(request, pk)
+        return super().get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['owners'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True) # pyre-ignore[16]
@@ -120,8 +121,8 @@ class EditProjectView(UpdateView):
     fields = ['name', 'description']
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
         return login_required(super().get)(*args, **kwargs) # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
-    def post(self, request: WSGIRequest, pk: int, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
-        project = Project.objects.get(id=pk) # pyre-ignore[16]
+    def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
+        project = Project.objects.get(slug=slug) # pyre-ignore[16]
         if (ProjectMembership.objects.get(project=project, user=request.user).owner == True): # pyre-ignore[16]
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'):
                 ownerships = ProjectMembership.objects.filter(project=project, owner=True)
@@ -132,7 +133,7 @@ class EditProjectView(UpdateView):
             project.name = request.POST['name']
             project.description = request.POST['description']
             project.save()
-        return redirect(reverse('view_project', args=[pk]))
+        return redirect(reverse('view_project', args=[slug]))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['ownerships'] = ProjectMembership.objects.filter(project=context['object'], owner = True) # pyre-ignore[16]
@@ -140,11 +141,11 @@ class EditProjectView(UpdateView):
 
 class ManageProjectView(DetailView):
     model = Project
-    def post(self, request: WSGIRequest, pk: int) -> HttpResponse:
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         membership = ProjectMembership.objects.get(id=request.POST['membership']) # pyre-ignore[16]
         # security checks
-        if (ProjectMembership.objects.get(user=request.user, project=Project.objects.get(id=pk)).owner == True # pyre-ignore[16]
-            and membership.project == Project.objects.get(id=pk)): # since the form takes any uid
+        if (ProjectMembership.objects.get(user=request.user, project=Project.objects.get(slug=slug)).owner == True # pyre-ignore[16]
+            and membership.project == Project.objects.get(slug=slug)): # since the form takes any uid
             print(request.POST['action'])
             print(membership.champion)
             if (request.POST['action'] == 'offer_ownership'):
@@ -156,7 +157,7 @@ class ManageProjectView(DetailView):
                 membership.champion = False
             membership.save()
             print(membership.champion)
-        return self.get(request,pk)
+        return self.get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['ownerships'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True) # pyre-ignore[16]

@@ -6,7 +6,7 @@
  {% for idea in ideas %}
    <tr>
     <td>{{ idea.name }}</td>
-    <td><a href={% url 'view_idea' idea.pk %}>View Idea</a></td>
+    <td><a href={% url 'view_idea' idea.slug %}>View Idea</a></td>
    </tr>
  {% endfor %}
 </table>

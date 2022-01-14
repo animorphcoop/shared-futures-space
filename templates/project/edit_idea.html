@@ -1,4 +1,4 @@
-{% if request.user == object.proposed %}
+{% if request.user == object.proposed_by %}
 <form method=post>
  {% csrf_token %}
  <p>
