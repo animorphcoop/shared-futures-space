@@ -16,7 +16,7 @@ from typing import Dict, List, Any
 class IdeaView(DetailView):
     model = Idea
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        this_idea = Idea.objects.get(slug=slug)
+        this_idea = Idea.objects.get(slug=slug) # pyre-ignore[16]
         if (request.POST['action'] == 'give_support'):
             # can't support one idea more than once
             if (0 == len(IdeaSupport.objects.filter(idea=this_idea, # pyre-ignore[16]
