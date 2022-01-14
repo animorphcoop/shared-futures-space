@@ -9,7 +9,7 @@ class Idea(models.Model):
     slug = models.CharField(max_length=100, default='')
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=2000)
-    proposed = models.ForeignKey('userauth.CustomUser', null=True, on_delete=models.SET_NULL) # null=true means nullable
+    proposed_by = models.ForeignKey('userauth.CustomUser', null=True, on_delete=models.SET_NULL) # null=true means nullable
     def save(self, *args, **kwargs):
         if (self.slug == ''):
             self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8)

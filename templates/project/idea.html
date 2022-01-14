@@ -1,6 +1,6 @@
 {% load custom_filters %}
 <h3>Idea: {{object.name}}</h3>
-<p>proposed by: {{object.proposed}}</p>
+<p>proposed by: {{object.proposed_by}}</p>
 <p>supported by: {{supporters|attrmap:'user'|join:', '}}</p>
 <hr>
 <p>{{object.description}}</p>

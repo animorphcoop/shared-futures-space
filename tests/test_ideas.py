@@ -33,7 +33,7 @@ def test_idea_view(client, test_idea):
     assert single_idea_html.find('h3').text == f"Idea: {test_idea.name}"
 
 def test_idea_edit(client, test_user, test_idea):
-    test_idea.proposed = test_user
+    test_idea.proposed_by = test_user
     attempt_logged_out = client.get(reverse('edit_idea', args=[test_idea.slug]))
     assert attempt_logged_out.status_code == 302
     client.force_login(test_user)

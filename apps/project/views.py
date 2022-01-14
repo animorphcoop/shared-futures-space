@@ -30,7 +30,7 @@ class IdeaView(DetailView):
                     return redirect(reverse('view_project', args=[new_project_id]))
         elif (request.POST['action'] == 'remove_support'):
             # can't remove support from your own idea (because you wouldn't be able to return it through the intended interface)
-            if (request.user != this_idea.proposed):
+            if (request.user != this_idea.proposed_by):
                 supports = IdeaSupport.objects.filter(idea=this_idea,
                                                       user=request.user)
                 for support in supports: # there should only be one, but no need to assume that
@@ -49,7 +49,7 @@ class AllIdeasView(TemplateView):
 
 class MakeIdeaView(TemplateView):
     def post(self, request: WSGIRequest, **kwargs: Dict[str,Any]) -> HttpResponse:        
-        new_idea = Idea(name=request.POST['name'], description=request.POST['description'], proposed=request.user, slug="") # pyre-ignore[16]
+        new_idea = Idea(name=request.POST['name'], description=request.POST['description'], proposed_by=request.user, slug="") # pyre-ignore[16]
         new_idea.save()
         new_support = IdeaSupport(idea=new_idea, user=request.user)
         new_support.save()
