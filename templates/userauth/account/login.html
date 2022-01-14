@@ -27,7 +27,7 @@
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Email
             </label>
-            {% render_field form.login class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" hx-post="/check_email/" hx-trigger="keyup[testFunction()] delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" %}
+            {% render_field form.login hx-post="/check_email/" hx-trigger="keyup[username_length(target.value)] delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
            <div id="email-feedback" class="hidden"></div>
         </div>
 
@@ -38,7 +38,7 @@
             <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
                 Password
             </label>
-            {% render_field form.password class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+            {% render_field form.password disabled="true" id="pass" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
         </div>
 
     {% if redirect_field_value %}
@@ -46,7 +46,7 @@
     {% endif %}
 
         <div class="flex items-center justify-between">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            <button id="login-button" disabled class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
                     type="submit">{% trans "Sign In" %}
             </button>
             <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
@@ -83,9 +83,45 @@ Tailwind classes are active only if applied to existing html element
 <p class="text-correct">correct</p>
 
 <script>
-    function testFunction() {
-        console.log('called')
-        return true
+    function username_length(input) {
+            const passElem = document.getElementById("pass")
+            //console.log(document.getElementById("email-feedback").classList.value)
+            if (input.length > 5){
+                checkActive()
+                return true
+            }
+            else {
+                if (!passElem.hasAttribute("disabled")){
+                    passElem.setAttribute("disabled", "true")
+                    document.getElementById("login-button").disabled = true
+                    document.getElementById("login-button").classList.add('cursor-not-allowed')
+                }
+
+                return false
+            }
+
+    }
+
+    function checkActive() {
+        setTimeout(() => {
+            const emailElem = document.getElementById("email-feedback").classList.value
+            const r = /^text-correct$/;
+            if (r.test(emailElem)) {
+                document.getElementById("login-button").disabled = false
+                document.getElementById("login-button").classList.remove('cursor-not-allowed')
+                document.getElementById("pass").removeAttribute("disabled")
+            }
+        }, 600)
+    }
+
+    function checkLength(input) {
+        console.log(input)
+        if (input.length > 5) {
+            console.log('wtf')
+            //passElem.removeAttribute("disabled")
+            return true
+            //TODO: Write logic for email to be verified and if class is 'correct' then unblock password, while password length unblocks the button
+        }
     }
 
 

@@ -11,7 +11,7 @@ from search import views as search_views
 
 from typing import List, Union
 from django.urls import URLResolver, URLPattern
-from userauth.views import check_email # pyre-ignore[16]
+from userauth.views import check_email # pyre-ignore[21]
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     # pyre comment suppresses an error caused by pyre's limited understanding of django

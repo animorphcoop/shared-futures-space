@@ -692,6 +692,10 @@ select {
   max-width: 20rem;
 }
 
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
 .appearance-none {
   -webkit-appearance: none;
      -moz-appearance: none;
