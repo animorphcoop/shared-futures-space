@@ -60,3 +60,10 @@ class CustomUserPersonalForm(forms.ModelForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['year_of_birth', 'post_code']
+
+
+class CustomLoginForm(LoginForm):
+
+    error_messages = {
+        "email_password_mismatch": "Your password does not match, try again."
+    }

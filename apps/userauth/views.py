@@ -1,4 +1,5 @@
 # pyre-strict
+from allauth.utils import get_form_class
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
@@ -6,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
 from .models import CustomUser, UserRequest
-from .forms import CustomUserUpdateForm, CustomUserPersonalForm
+from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm
 
 from .tasks import send_after
 
@@ -20,6 +21,7 @@ from django.dispatch import receiver
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
+from allauth.account.views import LoginView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
@@ -177,3 +179,11 @@ def check_email(request: WSGIRequest) -> HttpResponse:
         return HttpResponse("<span id='email-feedback' class='text-correct'>Please enter your password.</span>")
     else:
         return HttpResponse("<span id='email-feedback' class='text-incorrect'>Such an address does not exist.</span>")
+
+
+class CustomLoginView(LoginView):
+    print("ok")
+    form_class = CustomLoginForm
+
+
+login = CustomLoginView.as_view()
