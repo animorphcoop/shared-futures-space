@@ -11,6 +11,7 @@ from django.conf import settings
 from django.urls import reverse
 
 from .models import Idea, IdeaSupport, Project, ProjectMembership
+from messaging.models import Chat # pyre-ignore[21]
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -74,7 +75,9 @@ class EditIdeaView(UpdateView):
 # ---
 
 def replace_idea_with_project(idea: Idea) -> None:
-    new_project = Project(name = idea.name, description = idea.description, slug = idea.slug)
+    new_chat = Chat()
+    new_chat.save()
+    new_project = Project(name = idea.name, description = idea.description, slug = idea.slug, chat = new_chat)
     new_project.save()
     for support in IdeaSupport.objects.filter(idea=idea): # pyre-ignore[16]
         new_ownership = ProjectMembership(project = new_project, user = support.user, owner = True)
@@ -163,3 +166,9 @@ class ManageProjectView(DetailView):
         context['ownerships'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True) # pyre-ignore[16]
         context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
+
+class ProjectChatView(TemplateView):
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        if ('from' in kwargs):
+            print(kwargs['from'])
+        return super().get_context_data(**kwargs)

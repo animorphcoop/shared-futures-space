@@ -60,6 +60,7 @@ INSTALLED_APPS: List[str] = [
     'landing',
     'dashboard',
     'userauth',
+    'messaging',
     'project',
     'search',
     'core',

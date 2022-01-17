@@ -10,7 +10,7 @@ class Message(models.Model):
     sender = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL)
     text = models.CharField(max_length = 2000)
     # snippet =
-    chat = models.ForeignKey(Chat, on_delete = models.CASCADE)
+    chat = models.ForeignKey('messaging.Chat', on_delete = models.CASCADE)
 
 class Chat(models.Model):
     uuid = models.UUIDField(default = uuid4, editable = False)
