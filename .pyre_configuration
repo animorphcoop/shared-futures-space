@@ -7,5 +7,5 @@
   "ignore_all_errors": [
     "*/__init__.py", "*/*/__init__.py", "*/*/*/__init__.py", "*/*/*/*/__init__.py"
   ],
-  "exclude": [".*/tests/.*"]
+  "exclude": [".*/tests/.*", ".*/migrations/.*"]
 }
