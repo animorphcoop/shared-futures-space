@@ -5,9 +5,10 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
+from django.db.models.fields import CharField
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from datetime import datetime
+from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
 
@@ -75,7 +76,7 @@ class EditIdeaView(UpdateView):
 
 # ---
 
-def replace_idea_with_project(idea: Idea) -> None:
+def replace_idea_with_project(idea: Idea) -> CharField:
     new_chat = Chat()
     new_chat.save()
     new_project = Project(name = idea.name, description = idea.description, slug = idea.slug, chat = new_chat)
@@ -86,7 +87,7 @@ def replace_idea_with_project(idea: Idea) -> None:
         support.delete()
     idea.delete()
     # TODO: message involved users to tell them this has happened
-    return new_project.slug # pyre-ignore[16] ("Project has no attribute slug")
+    return new_project.slug
 
 # ---
 
@@ -167,31 +168,32 @@ class ManageProjectView(DetailView):
 
 class ProjectChatView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        project = Project.objects.get(slug=slug)
-        if (request.user in [membership.user for membership in ProjectMembership.objects.filter(project=project)]):
-            new_msg = Message(timestamp=datetime.now(), sender=request.user, text=request.POST['message'], chat=project.chat)
+        project = Project.objects.get(slug=slug) # pyre-ignore[16]
+        if (request.user in [membership.user for membership in ProjectMembership.objects.filter(project=project)]): # pyre-ignore[16]
+            new_msg = Message(timestamp=timezone.now(), sender=request.user, text=request.POST['message'], chat=project.chat)
             new_msg.save()
         if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
             return redirect(reverse('project_chat', args=[slug]) + '?from=0') # drop to current position in chat if not there already after sending a message
         else:
             return super().get(request, slug=slug)
         # return redirect(reverse('project_chat', args=[slug]))
-    def get_context_data(self, **kwargs) -> Dict[str,Any]:
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(slug=kwargs['slug'])
-        project = Project.objects.get(slug=kwargs['slug'])
+        project = Project.objects.get(slug=kwargs['slug']) # pyre-ignore[16]
         msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieve
-        if ('from' in self.request.GET and self.request.GET['from'].isdigit()):
+        if ('from' in self.request.GET and self.request.GET['from'].isdigit()): # pyre-ignore[16]
             msg_from = int(self.request.GET['from'])
         if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
             msg_no = int(self.request.GET['interval'])
         messages = Message.objects.filter(chat=project.chat).order_by('timestamp')
+        context['project'] = project
         context['messages'] = messages[max(0,len(messages) - (msg_no + msg_from)) : len(messages) - msg_from]
         context['more_back'] = msg_no + msg_from < len(messages)
         context['interval'] = msg_no
         context['from'] = msg_from
         context['back_from'] = int(min(msg_from + (msg_no/2), len(messages)))
         context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
-        context['members'] = [membership.user for membership in ProjectMembership.objects.filter(project=project)]
+        context['members'] = [membership.user for membership in ProjectMembership.objects.filter(project=project)] # pyre-ignore[16]
         return context
 
 

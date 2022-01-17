@@ -7,6 +7,7 @@
 <hr>
 <p>{{object.description}}</p>
 <hr>
+<p><a> href="{% url 'project_chat' object.slug %}">Project Chat</a></p>
 {% if request.user in owners|attrmap:'user' %}
  <p><a href="{% url 'edit_project' object.slug %}">Edit Project</a></p>
  <p><a href="{% url 'manage_project' object.slug %}">Manage Project</a></p>
