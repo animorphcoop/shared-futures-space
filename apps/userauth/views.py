@@ -181,6 +181,10 @@ def check_email(request: WSGIRequest) -> HttpResponse:
         return HttpResponse("<span id='email-feedback' class='text-incorrect'>Such an address does not exist.</span>")
 
 
+def empty(request: WSGIRequest) -> HttpResponse:
+    pass
+
+
 class CustomLoginView(LoginView):
     print("ok")
     form_class = CustomLoginForm

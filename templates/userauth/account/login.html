@@ -26,22 +26,23 @@
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Email
             </label>
-            {% render_field form.login hx-post="/check_email/" hx-trigger="keyup[username_length(target.value)] delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            {% render_field form.login hx-post="/check_email/" hx-trigger="keyup[usernameLength(target.value)] delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
             <div id="email-feedback" class="hidden"></div>
         </div>
 
 
         <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
                 Password
             </label>
-            {% render_field form.password disabled="true" id="pass" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+            {% render_field form.password disabled="true" id="password-input" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
         </div>
 
         {% if form.errors %}
 
+
         {% for key, value in form.errors.items %}
-        {{value}}
+        <p id="password-error"> {{value}}</p>
 
         {% endfor %}
 
@@ -58,9 +59,7 @@
             </button>
             <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
                href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-
         </div>
-
 
     </form>
 </div>
@@ -87,48 +86,58 @@
 
 <!--Styles passed from views are not dynamically applied to tailwind
 Tailwind classes are active only if applied to existing html element
+//TODO: sort out the hidden declaration, find way to include in config so gets added to the styles sheet
 -->
-<p class="text-incorrect">incorrect</p>
-<p class="text-correct">correct</p>
+<div class="hidden">
+    <span class="text-incorrect ">incorrect</span>
+    <span class="text-correct opacity-0">correct</span>
+</div>
+
+<!--onmounted directive when template loads-->
+<div x-init=isThereError()></div>
 
 <script>
-    function username_length(input) {
-        const passElem = document.getElementById("pass")
-        //console.log(document.getElementById("email-feedback").classList.value)
-        if (input.length > 5) {
-            checkActive()
+
+    /*only if the username input field is 5+ chars we send request to django to check if it's valid.*/
+    function usernameLength(input) {
+        if (input.length >= 5) {
+            checkEmailFeedback()
             return true
         } else {
+            const passElem = document.getElementById("password-input")
+            /*see if the password input field is disabled first*/
             if (!passElem.hasAttribute("disabled")) {
                 passElem.setAttribute("disabled", "true")
                 document.getElementById("login-button").disabled = true
                 document.getElementById("login-button").classList.add('cursor-not-allowed')
             }
-
             return false
         }
-
     }
 
-    function checkActive() {
+    /*is email feedback correct and should we be able to enter password and send it out?*/
+    function checkEmailFeedback() {
         setTimeout(() => {
             const emailElem = document.getElementById("email-feedback").classList.value
             const r = /^text-correct$/;
             if (r.test(emailElem)) {
                 document.getElementById("login-button").disabled = false
                 document.getElementById("login-button").classList.remove('cursor-not-allowed')
-                document.getElementById("pass").removeAttribute("disabled")
+                document.getElementById("password-input").removeAttribute("disabled")
+            } else {
+                /*user had entered correct email but started changing it into an incorrect one*/
+                usernameLength('')
             }
         }, 600)
     }
 
-    function checkLength(input) {
-        console.log(input)
-        if (input.length > 5) {
-            console.log('wtf')
-            //passElem.removeAttribute("disabled")
-            return true
-            //TODO: Write logic for email to be verified and if class is 'correct' then unblock password, while password length unblocks the button
+    /*if user had entered correct email but wrong password, they template is reloaded with their address, need to change default state and allow them to type password*/
+    function isThereError() {
+        const errorContent = document.getElementById("password-error")
+        if (errorContent) {
+            document.getElementById("login-button").disabled = false
+            document.getElementById("login-button").classList.remove('cursor-not-allowed')
+            document.getElementById("password-input").removeAttribute("disabled")
         }
     }
 
