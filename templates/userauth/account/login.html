@@ -7,11 +7,12 @@
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
+{% get_providers as socialaccount_providers %}
+
 {% block content %}
 
 <p class="text-2xl">{% trans "Sign In" %}</p>
 
-{% get_providers as socialaccount_providers %}
 
 <p class="text-lg">
     Please log in to engage with other community members, access your profile and messages.

@@ -1,40 +1,145 @@
 {% extends "account/base.html" %}
-
 {% load i18n %}
+{% load account socialaccount %}
+
+{% load widget_tweaks %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
+{% get_providers as socialaccount_providers %}
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
+<p class="text-2xl">{% trans "Sign Up" %}</p>
 
-<p>{% blocktrans %}Already NOT have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+<p class="text-lg">
+    Please create an account to engage with other community members, access your profile and messages.
+</p>
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+<div class="w-full max-w-xs">
+    <form method="post" action="{% url 'account_signup' %}" id="signup_form"
+          class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
 
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Email
+            </label>
+            <!--hx-post="/check_email/" hx-trigger="keyup[usernameLength(target.value)] delay:500ms"hx-target="#email-feedback" hx-swap="outerHTML" -->
+            {% render_field form.email hx-post="/check_email/" hx-trigger="keyup[usernameLength(target.value)] delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+                    <div id="email-feedback" class=""></div>
+
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Display Name
+            </label>
+            {% render_field form.display_name class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <div id="name-feedback" class="hidden"></div>
+        </div>
+
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Password
+            </label>
+            {% render_field form.password1 id="password-input1" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Password
+            </label>
+            {% render_field form.password2 id="password-input2" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+        </div>
+                {% if form.non_field_errors %}
+        LOOL
+                <div class="-mt-8">
+                        {% for error in form.non_field_errors %}
+                        <span id="password-error" class="text-incorrect">{{error}}</span>
+                        {% endfor %}
+                </div>
+
+                {% endif %}
+
+
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+        {% endif %}
+
+        <div class="flex items-center justify-between">
+            <button id="signup-button"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
+                    type="submit">{% trans "Sign Up" %}
+            </button>
+            <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+               href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+        </div>
+
+    </form>
+</div>
+
+
+<!--
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+</form>
+-->
+
+
+<p class="text-lg">You can also use Social Media accounts to log in:</p>
 <div class="socialaccount_ballot">
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
-
-  <div class="login-or">{% trans 'or' %}</div>
+    <ul class="">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+    </ul>
 
 </div>
 
+
 {% include "socialaccount/snippets/login_extra.html" %}
 
-{% endif %}
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-</form>
+If you already have an account <a href="{{ login_url }}" class="underline text-2xl font-semibold">sign in here</a>.
+
+<script>
+
+    /*only if the username input field is 5+ chars we send request to django to check if it's valid.*/
+    function usernameLength(input) {
+        console.log('WTF')
+        if (input.length >= 5) {
+            //checkEmailFeedback()
+            return true
+        } else {
+            /*const passElem = document.getElementById("password-input1")
+            /!*see if the password input field is disabled first*!/
+            if (!passElem.hasAttribute("disabled")) {
+                console.log('NEIN apologies')
+                return false
+            }*/
+            return false
+        }
+
+    }
+
+    /*is email feedback correct and should we be able to enter password and send it out?*/
+    function checkEmailFeedback() {
+        setTimeout(() => {
+            const emailElem = document.getElementById("email-feedback").classList.value
+            const r = /^text-correct$/;
+            if (r.test(emailElem)) {
+                console.log('buyakasha')
+            } else {
+                /*user had entered correct email but started changing it into an incorrect one*/
+                console.log('NEIN')
+                //usernameLength('')
+            }
+        }, 600)
+    }
+
+</script>
 
 {% endblock %}
