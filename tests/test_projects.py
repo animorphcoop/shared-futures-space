@@ -45,7 +45,7 @@ def test_project_membership(client, test_user, other_test_user, test_project):
     other_ownership.save()
     project_page_owner = client.get(reverse('view_project', args=[test_project.slug]))
     project_page_owner_html = bs4.BeautifulSoup(project_page_owner.content, features='html5lib')
-    edit_link = project_page_owner_html.find('a')
+    edit_link = project_page_owner_html.find_all('a')[1]
     assert edit_link.text == 'Edit Project'
     edit_page = client.get(reverse('edit_project', args=[test_project.slug]))
     edit_page_html = bs4.BeautifulSoup(edit_page.content, features='html5lib')

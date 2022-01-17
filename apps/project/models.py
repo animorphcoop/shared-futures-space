@@ -24,8 +24,10 @@ class IdeaSupport(models.Model):
 
 # ---
 
-def new_chat() -> None: # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
-    Chat.objects.create()
+def new_chat() -> int: # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
+    c = Chat()
+    c.save()
+    return c.id
 
 class Project(models.Model):
     slug = models.CharField(max_length=100, default='')
