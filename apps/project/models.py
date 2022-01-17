@@ -24,7 +24,7 @@ class IdeaSupport(models.Model):
 
 # ---
 
-def new_chat(): # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
+def new_chat() -> None: # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
     Chat.objects.create()
 
 class Project(models.Model):
