@@ -169,13 +169,19 @@ class ManageProjectView(DetailView):
 class ProjectChatView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         project = Project.objects.get(slug=slug) # pyre-ignore[16]
-        if (request.user in [membership.user for membership in ProjectMembership.objects.filter(project=project)]): # pyre-ignore[16]
+        msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieve
+        if ('from' in self.request.GET and self.request.GET['from'].isdigit()): # pyre-ignore[16]
+            msg_from = int(self.request.GET['from'])
+        if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
+            msg_no = int(self.request.GET['interval'])
+        if (request.user in [membership.user for membership in ProjectMembership.objects.filter(project=project)] # pyre-ignore[16]
+            and 'message' in request.POST):
             new_msg = Message(timestamp=timezone.now(), sender=request.user, text=request.POST['message'], chat=project.chat)
             new_msg.save()
         if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
-            return redirect(reverse('project_chat', args=[slug]) + '?from=0') # drop to current position in chat if not there already after sending a message
-        else:
-            return super().get(request, slug=slug)
+            msg_from = 0 # drop to current position in chat if not there already after sending a message
+        # redirect so reloading the page doesn't resend the message
+        return redirect(reverse('project_chat', args=[slug]) + '?interval=' + str(msg_no) + '&from=' + str(msg_from))
         # return redirect(reverse('project_chat', args=[slug]))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(slug=kwargs['slug'])
