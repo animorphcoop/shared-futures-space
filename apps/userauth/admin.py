@@ -12,7 +12,7 @@ class CustomUserAdmin(UserAdmin):
     form = UserChangeForm
     model = CustomUser
     # need to override too-strict inferred type
-    list_display: Tuple[str,...] = ('pk', 'email', 'display_name', 'year_of_birth', 'post_code') # pyre-ignore[15]
+    list_display: Tuple[str,...] = ('pk', 'email', 'display_name', 'year_of_birth', 'post_code')
     # pyre comment suppresses an error caused by pyre's limited understanding of django
     search_fields = ('display_name', 'post_code',) # pyre-ignore[15]
     fieldsets: Tuple[Tuple[Optional[str],Dict[str,Tuple[str, ...]]], ...] = (
