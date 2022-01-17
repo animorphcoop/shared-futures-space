@@ -21,6 +21,8 @@ class CustomUser(AbstractUser):
     post_code: models.CharField = models.CharField(verbose_name=_("Post code"), max_length=8, null=True, blank=True)
     avatar:  models.FileField = models.FileField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
 
+    editor: models.BooleanField = models.BooleanField(default=False) # is this user an editor
+
     class Meta:
         ordering: List[str] = ['display_name']
 
@@ -33,8 +35,12 @@ class CustomUser(AbstractUser):
 
 # a request sent by a user to the admins for a change to their account
 class UserRequest(models.Model):
-    kind: models.CharField = models.CharField(max_length=15) # one of the following, we can't put better type constraints on the db:
-    # make_moderator, change_postcode, change_dob, other
+    class Kind(models.TextChoices):
+        OTHER = 'other', 'other'
+        MAKE_EDITOR = 'make_editor', 'make_editor'
+        CHANGE_POSTCODE = 'change_postcode', 'change_postcode'
+        CHANGE_DOB = 'change_dob', 'change_dob'
+    kind: models.CharField = models.CharField(max_length=15, choices = Kind.choices)
     reason: models.CharField = models.CharField(max_length=1000)
     date: models.DateTimeField = models.DateTimeField('date/time request made')
     user: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.CASCADE)

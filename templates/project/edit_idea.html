@@ -1,0 +1,19 @@
+{% if request.user == object.proposed_by %}
+<form method=post>
+ {% csrf_token %}
+ <p>
+  <label for=name>Idea Name:</label>
+  <input type=text name=name id=name value="{{object.name}}"></input>
+ </p>
+ <p>
+  <label for=description>Idea Description:</label>
+  <textarea name=description id=description>{{object.description}}</textarea>
+ </p>
+ <p><b>WARNING: editing an idea will rescind all support and message supporters to check whether they support the new version!</b></p>
+ <p><b>DOUBLE WARNING: this is not yet implemented!</b></p>
+ <button name="action" value="update">Update Idea</button>
+ <button name="action" value="delete">Delete Idea</button>
+</form>
+{% else %}
+you are not authorised to edit this idea
+{% endif %}

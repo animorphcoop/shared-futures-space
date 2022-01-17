@@ -1,4 +1,3 @@
-
 {% if not request.user.is_anonymous %}
 <form method=post>
  {% csrf_token %}
@@ -13,10 +12,7 @@
  {% for project in projects %}
    <tr>
     <td>{{ project.name }}</td>
-    <td><a href={% url 'view_project' project.id %}>View Project</a></td>
+    <td><a href={% url 'view_project' project.slug %}>View Project</a></td>
    </tr>
  {% endfor %}
 </table>
-{% if not request.user.is_anonymous %}
- <a href="{% url 'new_project' %}">Propose a new project</a>
-{% endif %}

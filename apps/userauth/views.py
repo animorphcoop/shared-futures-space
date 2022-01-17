@@ -134,16 +134,16 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
 @login_required(login_url='/account/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
-        if (httpreq.POST['kind'] not in ['make_moderator', 'change_dob', 'change_postcode', 'other']):
-            print('error: not a valid kind of request')
-        elif (len(httpreq.POST['reason']) > 1000):
-            print('error: reason too long (> 1000 chars)')
-        else:
-            new_request = UserRequest(kind=httpreq.POST['kind'],
+        #if (httpreq.POST['kind'] not in ['make_editor', 'change_dob', 'change_postcode', 'other']):
+        #    print('error: not a valid kind of request')
+        #elif (len(httpreq.POST['reason']) > 1000):
+        #    print('error: reason too long (> 1000 chars)')
+        #else:
+        new_request = UserRequest(kind=httpreq.POST['kind'],
                                       reason=httpreq.POST['reason'],
                                       user=httpreq.user,  # pyre-ignore[16] pyre has a older version of django in mind?
                                       date=timezone.now())
-            new_request.save()
+        new_request.save()
         return redirect(reverse('account_update'))
     else:
         return render(httpreq, 'account/make_request.html')
@@ -161,8 +161,8 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
             elif (httpreq.POST['accept'] == 'accept'):
                 req = UserRequest.objects.get(id=httpreq.POST['request_id'])
                 usr = req.user
-                if (req.kind == 'make_moderator'):
-                    usr.is_staff = True
+                if (req.kind == 'make_editor'):
+                    usr.editor = True
                 elif (req.kind == 'change_dob'):
                     usr.year_of_birth = httpreq.POST['new_dob'][0:4]  # take the year
                 elif (req.kind == 'change_postcode'):
