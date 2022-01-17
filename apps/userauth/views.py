@@ -155,6 +155,7 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
 
 
 # helper for inspecting db whether user exists
+# TODO: Add more validation e.g. to lower case
 def check_email(request: WSGIRequest) -> HttpResponse:
     if request.POST.getlist('login'):
         user_mail = request.POST.getlist('login')[0]
@@ -180,6 +181,7 @@ def check_email(request: WSGIRequest) -> HttpResponse:
         return HttpResponse("Failed to retrieve or process the address, please refresh the page")
 
 
+# TODO: Add more validation e.g. to lower case
 def check_display_name(request: WSGIRequest) -> HttpResponse:
     if request.POST.getlist('display_name'):
         display_name = request.POST.getlist('display_name')[0]

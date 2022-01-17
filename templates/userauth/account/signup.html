@@ -14,21 +14,22 @@
     Please create an account to engage with other community members, access your profile and messages.
 </p>
 
-<div class="w-full max-w-xs">
-    <form method="post" action="{% url 'account_signup' %}" id="signup_form"
+<!--TODO: PRINTING ERRORS IN THE FORM if unsuccessfully processed-->
+<div x-data="{ fieldCount: 0 }" id="wrapper" class="w-full max-w-xs">
+    <form x-on:keyup.tab="fieldCount++" method="post" action="{% url 'account_signup' %}" id="signup_form"
           class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         {% csrf_token %}
 
-        <div class="mb-4">
+        <div x-on:click="fieldCount++" class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Email
             </label>
             {% render_field form.email hx-post="/check_email/" hx-trigger="keyup[emailLength(target.value)] delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-                    <div id="email-feedback" class=""></div>
+            <div id="email-feedback" class=""></div>
 
         </div>
 
-        <div class="mb-4">
+        <div x-on:click="fieldCount++" class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Display Name
             </label>
@@ -36,28 +37,30 @@
             <div id="name-feedback" class=""></div>
         </div>
 
-
-        <div class="mb-6">
+        <!--
+        TODO: Validation for password mismatch
+        -->
+        <div x-on:click="fieldCount++" class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Password
             </label>
             {% render_field form.password1 id="password-input1" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
         </div>
-        <div class="mb-6">
+        <div x-on:click="fieldCount++" class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2">
-                Password
+                Repeat password
             </label>
             {% render_field form.password2 id="password-input2" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
         </div>
-                {% if form.non_field_errors %}
+        {% if form.non_field_errors %}
 
-                <div class="-mt-8">
-                        {% for error in form.non_field_errors %}
-                        <span id="password-error" class="text-incorrect">{{error}}</span>
-                        {% endfor %}
-                </div>
+        <div class="-mt-8">
+            {% for error in form.non_field_errors %}
+            <span id="password-error" class="text-incorrect">{{error}}</span>
+            {% endfor %}
+        </div>
 
-                {% endif %}
+        {% endif %}
 
 
         {% if redirect_field_value %}
@@ -65,7 +68,9 @@
         {% endif %}
 
         <div class="flex items-center justify-between">
-            <button id="signup-button"
+            <!--CATCH issues on client side - comment below-->
+            <button :disabled="fieldCount<4"
+                    id="signup-button"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
                     type="submit">{% trans "Sign Up" %}
             </button>
@@ -74,6 +79,8 @@
         </div>
 
     </form>
+    <!--TODO: Logic for updating the button using counter - CANNOT let people submit if either email or display name are incorrect-->
+    <span x-text="fieldCount"></span>
 </div>
 
 
@@ -92,6 +99,9 @@
 
 If you already have an account <a href="{{ login_url }}" class="underline text-2xl font-semibold">sign in here</a>.
 
+<!--onmounted directive when template loads-->
+<div x-init=isThereError()></div>
+
 <script>
 
     /*only if the email input field is 5+ chars we send request to django to check if it's valid.*/
@@ -105,12 +115,17 @@ If you already have an account <a href="{{ login_url }}" class="underline text-2
 
     }
 
-    function nameLength(input){
-           if (input.length >= 2) {
+    function nameLength(input) {
+        if (input.length >= 2) {
             return true
         } else {
-               console.log('your input is too short')
-           }
+            console.log('your input is too short')
+        }
+    }
+
+    //TODO: On refresh trigger re-checking value in email and display name
+    function isThereError() {
+
     }
 
 </script>
