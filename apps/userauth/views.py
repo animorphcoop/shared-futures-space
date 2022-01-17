@@ -157,24 +157,42 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
 # helper for inspecting db whether user exists
 def check_email(request: WSGIRequest) -> HttpResponse:
     if request.POST.getlist('login'):
-        usermail = request.POST.getlist('login')[0]
-        if (get_user_model().objects.filter(email=usermail).exists()):
+        user_mail = request.POST.getlist('login')[0]
+        if (get_user_model().objects.filter(email=user_mail).exists()):
             return HttpResponse("<span id='email-feedback' class='text-correct'>Please enter your password.</span>")
         else:
             return HttpResponse(
                 "<span id='email-feedback' class='text-incorrect'>Such an address does not exist.</span>")
     elif request.POST.getlist('email'):
-        usermail = request.POST.getlist('email')[0]
-        if (get_user_model().objects.filter(email=usermail).exists()):
-            return HttpResponse("<span id='email-feedback' class='text-incorrect'>Such an address already exists. Please choose a different one.</span>")
+        user_mail = request.POST.getlist('email')[0]
+        # TODO: Better email validation might be needed!
+        if ("@" not in user_mail or "." not in user_mail):
+            return HttpResponse(
+                "<span id='email-feedback' class='text-incorrect'>Please make sure you enter an email address.</span>")
         else:
-            return HttpResponse("<span id='email-feedback' class='text-correct'>Please enter your preferred password.</span>")
+            if (get_user_model().objects.filter(email=user_mail).exists()):
+                return HttpResponse(
+                    "<span id='email-feedback' class='text-incorrect'>This address is in use, please choose a different one.</span>")
+            else:
+                return HttpResponse(
+                    "<span id='email-feedback' class='text-correct'>The e-mail address is not being used.</span>")
+    else:
+        return HttpResponse("Failed to retrieve or process the address, please refresh the page")
+
+
+def check_display_name(request: WSGIRequest) -> HttpResponse:
+    if request.POST.getlist('display_name'):
+        display_name = request.POST.getlist('display_name')[0]
+        if (get_user_model().objects.filter(display_name=display_name).exists()):
+            return HttpResponse(
+                "<span id='name-feedback' class='text-incorrect'>This name is in use, please choose a different one.</span>")
+        else:
+            return HttpResponse(
+                "<span id='name-feedback' class='text-correct'>The name is not being used.</span>")
 
     else:
-        return HttpResponse("Failed to retrieve the email")
-
+        return HttpResponse("Failed to retrieve or process the name, please refresh the page")
 
 
 class CustomLoginView(LoginView):
-
     form_class: Type[CustomLoginForm] = CustomLoginForm
