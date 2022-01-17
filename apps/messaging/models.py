@@ -9,6 +9,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField()
     sender = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL)
     text = models.CharField(max_length = 2000)
+    reply_to = models.ForeignKey('messaging.Message', null=True, on_delete = models.SET_NULL)
     # snippet =
     chat = models.ForeignKey('messaging.Chat', on_delete = models.CASCADE)
 
