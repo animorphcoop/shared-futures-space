@@ -3,12 +3,12 @@ from django.conf import settings
 from django.urls import include, path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
 from .views import CustomUserUpdateView, CustomUserDeleteView, profile_view, user_request_view, admin_request_view, \
-    CustomUserPersonalView, login
+    CustomUserPersonalView, CustomLoginView
 from typing import List, Union
 
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path('login/', login, name='account_login'),
+    path('login/', CustomLoginView.as_view(), name='account_login'),
     #path("signup/", signup, name="account_signup"),
     path('request/', login_required(user_request_view), name='account_request'),
     path('managerequests/', login_required(admin_request_view), name='account_request_panel'),

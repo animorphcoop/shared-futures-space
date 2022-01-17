@@ -53,24 +53,6 @@ class CustomUserPersonalView(TemplateView):
             return HttpResponseRedirect(reverse_lazy('account_data'))
 
 
-'''
-class CustomUserLoginView(TemplateView):
-    model: Type[CustomUser] = CustomUser
-
-    # form_class: Type[CustomUserLoginForm] = CustomUserLoginForm
-
-    def check_username(request: WSGIRequest) -> HttpResponse:
-        usermail = request.POST.getlist('login')[0]
-        #print(usermail)
-        #print(get_user_model().objects.all())
-        #print(get_user_model().objects.filter(email=usermail).exists())
-        if (get_user_model().objects.filter(email=usermail).exists()):
-            return HttpResponse("Please enter your password")
-        else:
-            return HttpResponse("Such an address does not exist")
-'''
-
-
 class CustomUserUpdateView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
@@ -134,15 +116,15 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
 @login_required(login_url='/account/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
-        #if (httpreq.POST['kind'] not in ['make_editor', 'change_dob', 'change_postcode', 'other']):
+        # if (httpreq.POST['kind'] not in ['make_editor', 'change_dob', 'change_postcode', 'other']):
         #    print('error: not a valid kind of request')
-        #elif (len(httpreq.POST['reason']) > 1000):
+        # elif (len(httpreq.POST['reason']) > 1000):
         #    print('error: reason too long (> 1000 chars)')
-        #else:
+        # else:
         new_request = UserRequest(kind=httpreq.POST['kind'],
-                                      reason=httpreq.POST['reason'],
-                                      user=httpreq.user,  # pyre-ignore[16] pyre has a older version of django in mind?
-                                      date=timezone.now())
+                                  reason=httpreq.POST['reason'],
+                                  user=httpreq.user,  # pyre-ignore[16] pyre has a older version of django in mind?
+                                  date=timezone.now())
         new_request.save()
         return redirect(reverse('account_update'))
     else:
@@ -181,13 +163,6 @@ def check_email(request: WSGIRequest) -> HttpResponse:
         return HttpResponse("<span id='email-feedback' class='text-incorrect'>Such an address does not exist.</span>")
 
 
-def empty(request: WSGIRequest) -> HttpResponse:
-    pass
-
-
 class CustomLoginView(LoginView):
-    print("ok")
-    form_class = CustomLoginForm
 
-
-login = CustomLoginView.as_view()
+    form_class: Type[CustomLoginForm] = CustomLoginForm
