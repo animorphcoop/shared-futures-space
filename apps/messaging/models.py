@@ -1,6 +1,5 @@
 # pyre-strict
 
-from userauth.models import CustomUser # pyre-ignore[21]
 from django.db import models
 from uuid import uuid4
 
