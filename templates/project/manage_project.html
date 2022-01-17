@@ -13,7 +13,7 @@
     <tr>
      <td>{{membership.user.display_name}}</td>
      <td>{% if membership.owner %}Owner{% endif %} {% if membership.champion %}Champion{% endif %}</td>
-     <td>{{membership.champion}}
+     <td>
       <button name=action value={% if membership.champion %}remove_championship>remove championship{% else %}offer_championship>offer championship{% endif %}</button>
       {% if not membership.owner %}<button name=action value=offer_ownership>offer ownership</button>{% endif %}
     </tr>

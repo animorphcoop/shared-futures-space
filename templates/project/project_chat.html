@@ -1,0 +1,23 @@
+<h3>Project Chat</h3>
+{% if more_back %}
+  <a href="{% url 'project_chat' slug %}?interval={{interval}}&from={{back_from}}">Earlier Messages</a>
+{% endif %}
+<div id=chat>
+ {% for message in messages %}
+  <div class=message><b>{{message.sender.display_name}}: </b>{{message.text}}</div>
+ {% endfor %}
+</div>
+{% if from != 0 %}
+ <a href="{% url 'project_chat' slug %}?interval={{interval}}&from={{forward_from}}">Later Messages</a>
+{% endif %}
+{% if request.user.is_anonymous %}
+ (you must sign in to contribute)
+{% elif request.user not in members %}
+ (you must be a member of this project to contribute)
+{% else %}
+ <form method=POST>
+  {% csrf_token %}
+  <textarea name=message></textarea>
+  <button>send</button>
+ </form>
+{% endif %}

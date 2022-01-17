@@ -7,11 +7,12 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from datetime import datetime
 from django.conf import settings
 from django.urls import reverse
 
 from .models import Idea, IdeaSupport, Project, ProjectMembership
-from messaging.models import Chat # pyre-ignore[21]
+from messaging.models import Chat, Message # pyre-ignore[21]
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -27,8 +28,8 @@ class IdeaView(DetailView):
                 support.save()
                 # TODO: is this the only place support can be given? if not, need to check elsewhere as well
                 if (len(IdeaSupport.objects.filter(idea=Idea.objects.get(slug=slug))) >= settings.PROJECT_REQUIRED_SUPPORTERS):
-                    new_project_id = replace_idea_with_project(Idea.objects.get(slug=slug))
-                    return redirect(reverse('view_project', args=[new_project_id]))
+                    new_project_slug = replace_idea_with_project(Idea.objects.get(slug=slug))
+                    return redirect(reverse('view_project', args=[new_project_slug]))
         elif (request.POST['action'] == 'remove_support'):
             # can't remove support from your own idea (because you wouldn't be able to return it through the intended interface)
             if (request.user != this_idea.proposed_by):
@@ -85,7 +86,7 @@ def replace_idea_with_project(idea: Idea) -> None:
         support.delete()
     idea.delete()
     # TODO: message involved users to tell them this has happened
-    return new_project.id # pyre-ignore[16] ("Project has no attribute id")
+    return new_project.slug # pyre-ignore[16] ("Project has no attribute slug")
 
 # ---
 
@@ -149,8 +150,6 @@ class ManageProjectView(DetailView):
         # security checks
         if (ProjectMembership.objects.get(user=request.user, project=Project.objects.get(slug=slug)).owner == True # pyre-ignore[16]
             and membership.project == Project.objects.get(slug=slug)): # since the form takes any uid
-            print(request.POST['action'])
-            print(membership.champion)
             if (request.POST['action'] == 'offer_ownership'):
                 1 # TODO: do that. waiting on messaging system.
                 # don't forget to validate that they aren't an owner already, since it is possible to send the message for arbitrary uids and it might have some kind of scam value?
@@ -159,7 +158,6 @@ class ManageProjectView(DetailView):
             elif (request.POST['action'] == 'remove_championship'):
                 membership.champion = False
             membership.save()
-            print(membership.champion)
         return self.get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
@@ -168,7 +166,38 @@ class ManageProjectView(DetailView):
         return context
 
 class ProjectChatView(TemplateView):
-    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        if ('from' in kwargs):
-            print(kwargs['from'])
-        return super().get_context_data(**kwargs)
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        project = Project.objects.get(slug=slug)
+        if (request.user in [membership.user for membership in ProjectMembership.objects.filter(project=project)]):
+            new_msg = Message(timestamp=datetime.now(), sender=request.user, text=request.POST['message'], chat=project.chat)
+            new_msg.save()
+        if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
+            return redirect(reverse('project_chat', args=[slug]) + '?from=0') # drop to current position in chat if not there already after sending a message
+        else:
+            return super().get(request, slug=slug)
+        # return redirect(reverse('project_chat', args=[slug]))
+    def get_context_data(self, **kwargs) -> Dict[str,Any]:
+        context = super().get_context_data(slug=kwargs['slug'])
+        project = Project.objects.get(slug=kwargs['slug'])
+        msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieve
+        if ('from' in self.request.GET and self.request.GET['from'].isdigit()):
+            msg_from = int(self.request.GET['from'])
+        if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
+            msg_no = int(self.request.GET['interval'])
+        messages = Message.objects.filter(chat=project.chat).order_by('timestamp')
+        context['messages'] = messages[max(0,len(messages) - (msg_no + msg_from)) : len(messages) - msg_from]
+        context['more_back'] = msg_no + msg_from < len(messages)
+        context['interval'] = msg_no
+        context['from'] = msg_from
+        context['back_from'] = int(min(msg_from + (msg_no/2), len(messages)))
+        context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
+        context['members'] = [membership.user for membership in ProjectMembership.objects.filter(project=project)]
+        return context
+
+
+
+
+
+
+
+
