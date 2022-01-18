@@ -8,12 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.fields import CharField
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
 
 from .models import Idea, IdeaSupport, Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
+from messaging.views import ChatView
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -166,40 +166,20 @@ class ManageProjectView(DetailView):
         context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
-class ProjectChatView(TemplateView):
+class ProjectChatView(ChatView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         project = Project.objects.get(slug=slug) # pyre-ignore[16]
-        msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieve
-        if ('from' in self.request.GET and self.request.GET['from'].isdigit()): # pyre-ignore[16]
-            msg_from = int(self.request.GET['from'])
-        if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
-            msg_no = int(self.request.GET['interval'])
-        if (request.user in [membership.user for membership in ProjectMembership.objects.filter(project=project)] # pyre-ignore[16]
-            and 'message' in request.POST):
-            new_msg = Message(timestamp=timezone.now(), sender=request.user, text=request.POST['message'], chat=project.chat)
-            new_msg.save()
-        if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
-            msg_from = 0 # drop to current position in chat if not there already after sending a message
-        # redirect so reloading the page doesn't resend the message
-        return redirect(reverse('project_chat', args=[slug]) + '?interval=' + str(msg_no) + '&from=' + str(msg_from))
-        # return redirect(reverse('project_chat', args=[slug]))
+        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]),
+                            members = [membership.user for membership # pyre-ignore[16]
+                                       in ProjectMembership.objects.filter(project=project)])
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        context = super().get_context_data(slug=kwargs['slug'])
         project = Project.objects.get(slug=kwargs['slug']) # pyre-ignore[16]
-        msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieve
-        if ('from' in self.request.GET and self.request.GET['from'].isdigit()): # pyre-ignore[16]
-            msg_from = int(self.request.GET['from'])
-        if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
-            msg_no = int(self.request.GET['interval'])
-        messages = Message.objects.filter(chat=project.chat).order_by('timestamp')
+        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]),
+                                           members = [membership.user for membership # pyre-ignore[16]
+                                                      in ProjectMembership.objects.filter(project=project)])
         context['project'] = project
-        context['messages'] = messages[max(0,len(messages) - (msg_no + msg_from)) : len(messages) - msg_from]
-        context['more_back'] = msg_no + msg_from < len(messages)
-        context['interval'] = msg_no
-        context['from'] = msg_from
-        context['back_from'] = int(min(msg_from + (msg_no/2), len(messages)))
-        context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
-        context['members'] = [membership.user for membership in ProjectMembership.objects.filter(project=project)] # pyre-ignore[16]
+        context['user_anonymous_message'] = '(you must sign in to contribute)'
+        context['not_member_message'] = '(you must be a member of this project to contribute)'
         return context
 
 

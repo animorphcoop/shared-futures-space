@@ -3,11 +3,12 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
+from django.dispatch import receiver
 
 from .models import CustomUser, UserRequest
 from .forms import CustomUserUpdateForm, CustomUserPersonalForm
-
 from .tasks import send_after
+from messaging.views import ChatView
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -15,11 +16,8 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.core.mail import EmailMessage
 from typing import Type, List, Dict, Union, Any
 
-from django.dispatch import receiver
-
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
-
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
 from django.http import HttpResponse
@@ -147,3 +145,7 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
                 usr.save()
                 req.delete()
     return render(httpreq, 'account/manage_requests.html', context=ctx)
+
+#class UserChatView(ChatView):
+
+
