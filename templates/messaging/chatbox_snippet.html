@@ -3,7 +3,7 @@
 {% endif %}
 <div id=chat>
  {% for message in messages %}
-  <div class=message><b>{{message.sender.display_name}}: </b>{{message.text}}</div>
+  <div class=message><b>{% if message.sender != request.user %}<a href="{% url 'user_chat' message.sender.uuid %}">{{message.sender.display_name}}</a>{% else %}{{message.sender.display_name}}{% endif %}: </b>{{message.text}}</div>
  {% endfor %}
 </div>
 {% if from != 0 %}

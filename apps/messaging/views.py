@@ -31,7 +31,7 @@ class ChatView(TemplateView):
         # redirect so reloading the page doesn't resend the message
         return redirect(url + '?interval=' + str(msg_no) + '&from=' + str(msg_from))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        context = super().get_context_data(slug=kwargs['slug'])
+        context = super().get_context_data(**kwargs)
         msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieve
         if ('from' in self.request.GET and self.request.GET['from'].isdigit()): # pyre-ignore[16]
             msg_from = int(self.request.GET['from'])

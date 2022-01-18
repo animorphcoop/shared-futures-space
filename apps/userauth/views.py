@@ -4,8 +4,9 @@ from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.dispatch import receiver
+from django.db.models import Q
 
-from .models import CustomUser, UserRequest
+from .models import CustomUser, UserRequest, UserPair
 from .forms import CustomUserUpdateForm, CustomUserPersonalForm
 from .tasks import send_after
 from messaging.views import ChatView
@@ -21,6 +22,7 @@ from allauth.account.signals import email_confirmed
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
 from django.http import HttpResponse
+from uuid import UUID
 
 
 def profile_view(request: WSGIRequest) -> HttpResponse:
@@ -146,6 +148,29 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
                 req.delete()
     return render(httpreq, 'account/manage_requests.html', context=ctx)
 
-#class UserChatView(ChatView):
+class UserChatView(ChatView):
+    def post(self, request: WSGIRequest, other_uuid: UUID) -> HttpResponse:
+        [user1, user2] = sorted([request.user.uuid, other_uuid])
+        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
+                                                  user2=CustomUser.objects.get(uuid=user2))
+        return super().post(request, chat = userpair.chat, url = reverse('user_chat', args=[other_uuid]),
+                            members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']])
+        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
+                                                  user2=CustomUser.objects.get(uuid=user2))
+        context = super().get_context_data(chat = userpair.chat, url = reverse('user_chat', args=[kwargs['other_uuid']]),
+                                           members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
+        context['other_user'] = CustomUser.objects.get(uuid=kwargs['other_uuid'])
+        # due to the page being login_required, there should never be anonymous users seeing the page
+        # due to request.user being in members, there should never be non-members seeing the page
+        return context
 
-
+class UserAllChatsView(TemplateView):
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        context = super().get_context_data(**kwargs)
+        context['users_with_chats'] = ([pair.user2 for pair in # in the case that a chat with yourself exists, ~Q... avoids retrieving it 
+                                        UserPair.objects.filter(~Q(user2=self.request.user), user1 = self.request.user)]
+                                     + [pair.user1 for pair in
+                                        UserPair.objects.filter(~Q(user1=self.request.user), user2 = self.request.user)])
+        return context

@@ -2,8 +2,9 @@
 from django.conf import settings
 from django.urls import include, path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
-from .views import CustomUserUpdateView, CustomUserDeleteView, profile_view, user_request_view, admin_request_view, CustomUserPersonalView
+from .views import CustomUserUpdateView, CustomUserDeleteView, profile_view, user_request_view, admin_request_view, CustomUserPersonalView, UserChatView, UserAllChatsView
 from typing import List, Union
+from uuid import UUID
 
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
@@ -12,7 +13,9 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('view/', login_required(profile_view), name='account_view'),
     path('data/', login_required(CustomUserPersonalView.as_view(template_name='account/data.html')), name='account_data'),
     path('update/', login_required(CustomUserUpdateView.as_view(template_name='account/update.html')), name='account_update'),
-    path('delete/', login_required(CustomUserDeleteView.as_view(template_name='account/delete.html')), name='account_delete')
+    path('delete/', login_required(CustomUserDeleteView.as_view(template_name='account/delete.html')), name='account_delete'),
+    path('chat/', login_required(UserAllChatsView.as_view(template_name='account/all_user_chats.html')), name='all_chats'),
+    path('chat/<uuid:other_uuid>', login_required(UserChatView.as_view(template_name='account/user_chat.html')), name='user_chat'),
 ]
 
 if settings.DEBUG:
