@@ -13,7 +13,7 @@ from django.urls import reverse
 
 from .models import Idea, IdeaSupport, Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
-from messaging.views import ChatView
+from messaging.views import ChatView # pyre-ignore[21]
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -166,17 +166,17 @@ class ManageProjectView(DetailView):
         context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
-class ProjectChatView(ChatView):
+class ProjectChatView(ChatView): # pyre-ignore[11] - thinks ChatView isn't a type
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         project = Project.objects.get(slug=slug) # pyre-ignore[16]
-        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]),
-                            members = [membership.user for membership # pyre-ignore[16]
-                                       in ProjectMembership.objects.filter(project=project)])
+        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]), # pyre-ignore[16]
+                            members = [membership.user for membership
+                                       in ProjectMembership.objects.filter(project=project)]) # pyre-ignore[16]
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         project = Project.objects.get(slug=kwargs['slug']) # pyre-ignore[16]
-        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]),
-                                           members = [membership.user for membership # pyre-ignore[16]
-                                                      in ProjectMembership.objects.filter(project=project)])
+        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]), # pyre-ignore[16]
+                                           members = [membership.user for membership
+                                                      in ProjectMembership.objects.filter(project=project)]) # pyre-ignore[16]
         context['project'] = project
         context['user_anonymous_message'] = '(you must sign in to contribute)'
         context['not_member_message'] = '(you must be a member of this project to contribute)'

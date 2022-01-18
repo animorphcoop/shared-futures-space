@@ -9,7 +9,7 @@ from django.db.models import Q
 from .models import CustomUser, UserRequest, UserPair
 from .forms import CustomUserUpdateForm, CustomUserPersonalForm
 from .tasks import send_after
-from messaging.views import ChatView
+from messaging.views import ChatView # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -148,18 +148,18 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
                 req.delete()
     return render(httpreq, 'account/manage_requests.html', context=ctx)
 
-class UserChatView(ChatView):
+class UserChatView(ChatView): # pyre-ignore[11]
     def post(self, request: WSGIRequest, other_uuid: UUID) -> HttpResponse:
-        [user1, user2] = sorted([request.user.uuid, other_uuid])
-        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
+        [user1, user2] = sorted([request.user.uuid, other_uuid]) # pyre-ignore[16]
+        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1), # pyre-ignore[16]
                                                   user2=CustomUser.objects.get(uuid=user2))
-        return super().post(request, chat = userpair.chat, url = reverse('user_chat', args=[other_uuid]),
+        return super().post(request, chat = userpair.chat, url = reverse('user_chat', args=[other_uuid]), # pyre-ignore[16]
                             members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']])
-        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
+        [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']]) # pyre-ignore[16]
+        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1), # pyre-ignore[16]
                                                   user2=CustomUser.objects.get(uuid=user2))
-        context = super().get_context_data(chat = userpair.chat, url = reverse('user_chat', args=[kwargs['other_uuid']]),
+        context = super().get_context_data(chat = userpair.chat, url = reverse('user_chat', args=[kwargs['other_uuid']]), # pyre-ignore
                                            members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
         context['other_user'] = CustomUser.objects.get(uuid=kwargs['other_uuid'])
         # due to the page being login_required, there should never be anonymous users seeing the page
@@ -170,7 +170,7 @@ class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['users_with_chats'] = ([pair.user2 for pair in # in the case that a chat with yourself exists, ~Q... avoids retrieving it 
-                                        UserPair.objects.filter(~Q(user2=self.request.user), user1 = self.request.user)]
+                                        UserPair.objects.filter(~Q(user2=self.request.user), user1 = self.request.user)] # pyre-ignore[16]
                                      + [pair.user1 for pair in
                                         UserPair.objects.filter(~Q(user1=self.request.user), user2 = self.request.user)])
         return context

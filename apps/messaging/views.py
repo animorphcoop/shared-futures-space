@@ -2,7 +2,7 @@
 
 from django.views.generic.base import TemplateView
 from django.core.handlers.wsgi import WSGIRequest
-from userauth.models import CustomUser
+from userauth.models import CustomUser # pyre-ignore[21]
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from typing import Dict, List, Any
@@ -17,14 +17,14 @@ from .models import Chat, Message
 # your get_context_data should define user__anonymous_message and not_member_message in context
 
 class ChatView(TemplateView):
-    def post(self, request: WSGIRequest, chat: Chat, members: List[CustomUser], url: str) -> HttpResponse:
+    def post(self, request: WSGIRequest, chat: Chat, members: List[CustomUser], url: str) -> HttpResponse: # pyre-ignore[11] - says CustomUser isn't defined as a type?
         msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieve
         if ('from' in self.request.GET and self.request.GET['from'].isdigit()): # pyre-ignore[16]
             msg_from = int(self.request.GET['from'])
         if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
             msg_no = int(self.request.GET['interval'])
         if (request.user in members and 'message' in request.POST):
-            new_msg = Message(timestamp=timezone.now(), sender=request.user, text=request.POST['message'], chat=chat)
+            new_msg = Message(timestamp=timezone.now(), sender=request.user, text=request.POST['message'], chat=chat) # pyre-ignore[16]
             new_msg.save()
         if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
             msg_from = 0 # drop to current position in chat if not there already after sending a message
@@ -37,7 +37,7 @@ class ChatView(TemplateView):
             msg_from = int(self.request.GET['from'])
         if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
             msg_no = int(self.request.GET['interval'])
-        messages = Message.objects.filter(chat=kwargs['chat']).order_by('timestamp')
+        messages = Message.objects.filter(chat=kwargs['chat']).order_by('timestamp') # pyre-ignore[16]
         context['user_anonymous_message'] = '(you are not logged in)'
         context['not_member_message'] = '(you are not a member of this chat)'
         context['messages'] = messages[max(0,len(messages) - (msg_no + msg_from)) : len(messages) - msg_from]

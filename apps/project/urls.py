@@ -16,5 +16,5 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('projects/view/<str:slug>/', ProjectView.as_view(template_name='project.html'), name='view_project'),
     path('projects/edit/<str:slug>/', login_required(EditProjectView.as_view(template_name='edit_project.html')), name='edit_project'),
     path('projects/manage/<str:slug>/', login_required(ManageProjectView.as_view(template_name='manage_project.html')), name='manage_project'),
-    path('projects/chat/<str:slug>/', ProjectChatView.as_view(template_name='project_chat.html'), name='project_chat'),
+    path('projects/chat/<str:slug>/', ProjectChatView.as_view(template_name='project_chat.html'), name='project_chat'), # pyre-ignore[16] - doesn't realise that it inherits as_view from TemplateView
 ]
