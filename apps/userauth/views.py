@@ -176,7 +176,7 @@ def check_email(request: WSGIRequest) -> HttpResponse:
                     "<span id='email-feedback' class='text-incorrect'>This address is in use, please choose a different one.</span>")
             else:
                 return HttpResponse(
-                    "<span id='email-feedback' class='text-correct'>The e-mail address is not being used.</span>")
+                    "<span id='email-feedback' class='text-correct'>This e-mail address is available.</span>")
     else:
         return HttpResponse("Failed to retrieve or process the address, please refresh the page")
 
