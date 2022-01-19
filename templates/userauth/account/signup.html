@@ -55,13 +55,20 @@
                 Password
             </label>
             {% render_field form.password1 id="password-input1" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="password-feedback1" class="text-incorrect"></span>
+
         </div>
+
         <div x-on:click="fieldCount++" class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Repeat password
             </label>
-            {% render_field form.password2 id="password-input2" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+            {% render_field form.password2 onfocusout="comparePasswords()" id="password-input2" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+                <span id="password-feedback2" class="text-incorrect"></span>
         </div>
+
+
+
         {% if form.non_field_errors %}
 
         <div class="-mt-8">
@@ -130,9 +137,9 @@ If you already have an account <a href="{{ login_url }}" class="underline text-2
 
     }
 
+    //CHECK EMAILS
     function compareEmails() {
         const emailFeedback2 = document.getElementById("email-feedback2")
-        const emailFeedback2Styles = emailFeedback2.classList.value
         const correctClass = 'text-correct'
         const incorrectClass = 'text-incorrect'
 
@@ -146,11 +153,36 @@ If you already have an account <a href="{{ login_url }}" class="underline text-2
             emailFeedback2.classList.value = correctClass
             document.getElementById("email-feedback2").innerText = "Thank you for entering matching emails."
         }
+    }
 
 
-        //console.log(
+    // CHECK PASSWORDS
+    function comparePasswords() {
+        //console.log(document.getElementById("password-input1").value)
+        const passwordFeedback2 = document.getElementById("password-feedback2")
+
+        const signUpButton = document.getElementById("signup-button")
+        const correctClass = 'text-correct'
+        const incorrectClass = 'text-incorrect'
+
+        console.log(document.getElementById("password-input1").value)
+        console.log(document.getElementById("password-input2").value)
+
+        // compare email input values
+        if (document.getElementById("password-input1").value !== document.getElementById("password-input2").value) {
+            passwordFeedback2.classList.value = incorrectClass
+            passwordFeedback2.innerText = "Sorry, passwords do not match."
+            signUpButton.disabled = true
+            signUpButton.classList.add('cursor-not-allowed')
+        } else {
+            passwordFeedback2.classList.value = correctClass
+            passwordFeedback2.innerText = "Thank you, passwords do match."
+            signUpButton.disabled = false
+            signUpButton.classList.remove('cursor-not-allowed')
+        }
 
     }
+
 
 </script>
 
