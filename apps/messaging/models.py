@@ -1,15 +1,16 @@
 # pyre-strict
 
+from django.utils import timezone
 from django.db import models
 from uuid import uuid4
 
 class Message(models.Model):
     uuid = models.UUIDField(default = uuid4, editable = False)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(default=timezone.now)
     sender = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL)
-    text = models.CharField(max_length = 2000)
+    text = models.CharField(max_length = 2000, default = '')
+    snippet = models.CharField(max_length = 2000, default = '')
     reply_to = models.ForeignKey('messaging.Message', null=True, on_delete = models.SET_NULL)
-    snippet = models.CharField(max_length = 200, default = 'messaging/user_message_snippet.html')
     chat = models.ForeignKey('messaging.Chat', on_delete = models.CASCADE)
 
 class Chat(models.Model):

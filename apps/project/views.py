@@ -13,6 +13,7 @@ from django.urls import reverse
 
 from .models import Idea, IdeaSupport, Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
+from userauth.util import system_user, get_userpair
 from messaging.views import ChatView # pyre-ignore[21]
 from typing import Dict, List, Any
 
@@ -147,13 +148,15 @@ class EditProjectView(UpdateView):
 class ManageProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        project = Project.objects.get(slug=slug)
         membership = ProjectMembership.objects.get(id=request.POST['membership']) # pyre-ignore[16]
         # security checks
-        if (ProjectMembership.objects.get(user=request.user, project=Project.objects.get(slug=slug)).owner == True # pyre-ignore[16]
+        if (ProjectMembership.objects.get(user=request.user, project=project).owner == True # pyre-ignore[16]
             and membership.project == Project.objects.get(slug=slug)): # since the form takes any uid
             if (request.POST['action'] == 'offer_ownership'):
-                1 # TODO: do that. waiting on messaging system.
-                # don't forget to validate that they aren't an owner already, since it is possible to send the message for arbitrary uids and it might have some kind of scam value?
+                if not membership.owner: # not an owner already
+                    Message.objects.create(sender=system_user, snippet=request.user.display_name + ' has offered you ownership of ' + project.name + '. <button>accept</button><button>decline</button>',
+                                           chat=get_userpair(request.user, membership.user).chat)
             elif (request.POST['action'] == 'offer_championship'):
                 2 # TODO: ditto
             elif (request.POST['action'] == 'remove_championship'):
