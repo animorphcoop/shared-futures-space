@@ -14,6 +14,7 @@ from userauth.models import CustomUser, UserRequest
 @pytest.mark.usefixtures('celery_session_worker')
 def test_create_account(client, mailoutbox):
     response = client.post('/account/signup/', {'email': 'testemail@example.com',
+                                                'email2': 'testemail@example.com',
                                                 'display_name': 'testuser',
                                                 'password1': 'test_password',
                                                 'password2': 'test_password'})
