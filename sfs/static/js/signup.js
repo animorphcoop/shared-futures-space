@@ -54,7 +54,6 @@ function comparePasswords() {
     setTimeout(() => {
         const passwordFeedback = document.getElementById("password-feedback1")
         const passwordFeedback2 = document.getElementById("password-feedback2")
-        const signUpButton = document.getElementById("signup-button")
         const correctClass = 'text-correct'
         const incorrectClass = 'text-incorrect'
 
@@ -74,15 +73,16 @@ function comparePasswords() {
             else if (passwordOne !== passwordTwo) {
                 passwordFeedback2.classList.value = incorrectClass
                 passwordFeedback2.innerText = "Sorry, passwords do not match."
-                signUpButton.disabled = true
-                signUpButton.classList.add('cursor-not-allowed')
+                //signUpButton.disabled = true
+                //signUpButton.classList.add('cursor-not-allowed')
             } else {
                 passwordFeedback2.classList.value = correctClass
                 passwordFeedback2.innerText = "Thank you, passwords do match."
-                signUpButton.disabled = false
-                signUpButton.classList.remove('cursor-not-allowed')
+                //signUpButton.disabled = false
+                //signUpButton.classList.remove('cursor-not-allowed')
             }
         }
+        evaluateButton()
     }, 500)
 }
 
@@ -161,4 +161,28 @@ function scorePassword(pass) {
     score += (pass.length - 6) * 3;
 
     return parseInt(score);
+}
+
+function evaluateButton(){
+    let feedbacks = []
+    feedbacks.push(
+        document.getElementById("email-feedback").classList,
+        document.getElementById("email-feedback2").classList,
+        document.getElementById("name-feedback").classList,
+        document.getElementById("password-feedback1").classList,
+        document.getElementById("password-feedback2").classList,
+        )
+
+    const incorrectFields = feedbacks.filter(checkIfCorrect)
+    if (incorrectFields.length === 0){
+        const signUpButton = document.getElementById("signup-button")
+        signUpButton.disabled = false
+        signUpButton.classList.remove('cursor-not-allowed')
+    }
+
+
+}
+
+function checkIfCorrect(value, index, array) {
+    return /^text-incorrect$/.test(value)
 }
