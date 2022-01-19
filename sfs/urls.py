@@ -13,7 +13,6 @@ from search import views as search_views
 from typing import List, Union
 from django.urls import URLResolver, URLPattern
 
-
 urlpatterns: List[Union[URLResolver,URLPattern]] = [
     # pyre comment suppresses an error caused by pyre's limited understanding of django
     path('django-admin/', admin.site.urls), # pyre-ignore[16]

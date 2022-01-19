@@ -47,4 +47,5 @@ class ChatView(TemplateView):
         context['back_from'] = int(min(msg_from + (msg_no/2), len(messages)))
         context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
         context['members'] = kwargs['members']
+        context['system_user'] = CustomUser.objects.get(id=0, display_name='SYSTEM USER')
         return context
