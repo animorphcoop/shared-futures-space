@@ -167,7 +167,7 @@ def check_email(request: WSGIRequest) -> HttpResponse:
     elif request.POST.getlist('email'):
         user_mail = request.POST.getlist('email')[0]
         # TODO: Better email validation might be needed!
-        if ("@" not in user_mail or "." not in user_mail):
+        if ("@" not in user_mail or "." not in user_mail) or ("@" == user_mail[-1] or "." == user_mail[-1]):
             return HttpResponse(
                 "<span id='email-feedback' class='text-incorrect'>Please make sure you enter an email address.</span>")
         else:
@@ -185,12 +185,15 @@ def check_email(request: WSGIRequest) -> HttpResponse:
 def check_display_name(request: WSGIRequest) -> HttpResponse:
     if request.POST.getlist('display_name'):
         display_name = request.POST.getlist('display_name')[0]
-        if (get_user_model().objects.filter(display_name=display_name).exists()):
+        if len(display_name) < 2:
+            return HttpResponse(
+                "<span id='name-feedback' class='text-incorrect'>Please enter a name at least 2 characters long.</span>")
+        elif get_user_model().objects.filter(display_name=display_name).exists():
             return HttpResponse(
                 "<span id='name-feedback' class='text-incorrect'>This name is in use, please choose a different one.</span>")
         else:
             return HttpResponse(
-                "<span id='name-feedback' class='text-correct'>The name is not being used.</span>")
+                "<span id='name-feedback' class='text-correct'>The name is available.</span>")
 
     else:
         return HttpResponse("Failed to retrieve or process the name, please refresh the page")

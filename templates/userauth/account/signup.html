@@ -106,21 +106,13 @@ If you already have an account <a href="{{ login_url }}" class="underline text-2
 
     /*only if the email input field is 5+ chars we send request to django to check if it's valid.*/
     function emailLength(input) {
-        if (input.length >= 5) {
-            return true
-        } else {
-
-            return false
-        }
+        return input.length >= 5
 
     }
 
     function nameLength(input) {
-        if (input.length >= 2) {
-            return true
-        } else {
-            console.log('your input is too short')
-        }
+        return input.length >= 2
+
     }
 
     //TODO: On refresh trigger re-checking value in email and display name
