@@ -67,3 +67,5 @@ class CustomLoginForm(LoginForm):
     error_messages = {
         "email_password_mismatch": "Your password does not match, try again."
     }
+
+#class CustomLoginForm(LoginForm):

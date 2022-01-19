@@ -178,7 +178,9 @@ STATICFILES_DIRS: List[str] = [
 
 ]
 
+# Account
 ACCOUNT_FORMS = {'signup': 'userauth.forms.CustomSignupForm'}
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
 # JavaScript / CSS assets being served from cache (e.g. after a Wagtail upgrade).

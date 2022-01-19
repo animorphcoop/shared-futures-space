@@ -24,10 +24,20 @@
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Email
             </label>
-            {% render_field form.email hx-post="/check_email/" hx-trigger="keyup[emailLength(target.value)] delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            {% render_field form.email hx-post="/check_email/" hx-trigger="keyup[emailLength(target.value)] delay:500ms" hx-target="#email-feedback" id="email-input" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
             <div id="email-feedback" class=""></div>
 
         </div>
+
+                <div x-on:click="fieldCount++" class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Email confirmation
+            </label>
+            {% render_field form.email2 onfocusout="compareEmails()" id="email-input2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <div id="email-feedback2" class="text-incorrect"></div>
+
+        </div>
+
 
         <div x-on:click="fieldCount++" class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">
@@ -117,6 +127,28 @@ If you already have an account <a href="{{ login_url }}" class="underline text-2
 
     //TODO: On refresh trigger re-checking value in email and display name
     function isThereError() {
+
+    }
+
+    function compareEmails() {
+        const emailFeedback2 = document.getElementById("email-feedback2")
+        const emailFeedback2Styles = emailFeedback2.classList.value
+        const correctClass = 'text-correct'
+        const incorrectClass = 'text-incorrect'
+
+        // compare email input values
+        if (document.getElementById("email-input").value !== document.getElementById("email-input2").value) {
+            emailFeedback2.classList.value = incorrectClass
+            document.getElementById("email-feedback2").innerText = "Sorry, e-mails do not match."
+
+        }
+        else {
+            emailFeedback2.classList.value = correctClass
+            document.getElementById("email-feedback2").innerText = "Thank you for entering matching emails."
+        }
+
+
+        //console.log(
 
     }
 
