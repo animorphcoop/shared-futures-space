@@ -15,6 +15,7 @@ from .models import Idea, IdeaSupport, Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from messaging.views import ChatView # pyre-ignore[21]
+from action.models import Action
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -155,7 +156,8 @@ class ManageProjectView(DetailView):
             and membership.project == Project.objects.get(slug=slug)): # since the form takes any uid
             if (request.POST['action'] == 'offer_ownership'):
                 if not membership.owner: # not an owner already
-                    Message.objects.create(sender=get_system_user(), snippet=request.user.display_name + ' has offered you ownership of ' + project.name + '. <button>accept</button><button>decline</button>',
+                    action = Action.objects.create(creator=request.user, receiver=membership.user, kind='become_owner', param_project=project)
+                    Message.objects.create(sender=get_system_user(), snippet=f'{request.user.display_name} has offered you ownership of {project.name}. <form method=POST action="'+reverse('do_action')+'">{% csrf_token %}'+f'<input type=hidden name=action_id value={action.uuid}></input><button name=choice value=accept>accept</button><button name=choice value=delete>decline</button></form>',
                                            chat=get_userpair(request.user, membership.user).chat)
             elif (request.POST['action'] == 'offer_championship'):
                 2 # TODO: ditto

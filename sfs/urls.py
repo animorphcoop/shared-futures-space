@@ -28,6 +28,7 @@ urlpatterns: List[Union[URLResolver,URLPattern]] = [
     path('account/', include('userauth.urls')),
     path('dashboard/', include('dashboard.urls'), name='dashboard'),
     path('projects/', include('project.urls')),
+    path('action/', include('action.urls')),
 
 
     path('', include('landing.urls')),

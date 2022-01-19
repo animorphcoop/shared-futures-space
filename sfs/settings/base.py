@@ -61,6 +61,7 @@ INSTALLED_APPS: List[str] = [
     'dashboard',
     'userauth',
     'messaging',
+    'action',
     'project',
     'search',
     'core',

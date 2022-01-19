@@ -1,10 +1,14 @@
 # pyre-strict
 
 from django.db import models
+from project.models import Project
 from uuid import uuid4
 
 class Action(models.Model):
-    uuid = models.UUIDField(defualt=uuid4)
-    creator = models.ForeignKey('userauth.CustomUser', on_delete = models.CASCADE)
-    receiver = models.ForeignKey('userauth.CustomUser', on_delete = models.CASCADE)
-    kind = models.CharField # TODO: this should have constraints on what it can be
+    uuid = models.UUIDField(default=uuid4)
+    creator = models.ForeignKey('userauth.CustomUser', on_delete = models.CASCADE, related_name='creator')
+    receiver = models.ForeignKey('userauth.CustomUser', on_delete = models.CASCADE, related_name='receiver')
+    kind = models.CharField(max_length = 200) # TODO: this should have constraints on what it can be
+
+    # the following entries are optional parameters that some kinds of action need
+    param_project = models.ForeignKey('project.Project', null = True, on_delete = models.CASCADE)
