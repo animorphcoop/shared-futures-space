@@ -3,7 +3,7 @@
 from django.views.generic.base import TemplateView
 from django.core.handlers.wsgi import WSGIRequest
 from userauth.models import CustomUser # pyre-ignore[21]
-from userauth.util import system_user
+from userauth.util import get_system_user # pyre-ignore[21]
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from typing import Dict, List, Any
@@ -47,5 +47,5 @@ class ChatView(TemplateView):
         context['back_from'] = int(min(msg_from + (msg_no/2), len(messages)))
         context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
         context['members'] = kwargs['members']
-        context['system_user'] = system_user
+        context['system_user'] = get_system_user()
         return context

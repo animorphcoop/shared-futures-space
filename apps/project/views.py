@@ -13,7 +13,7 @@ from django.urls import reverse
 
 from .models import Idea, IdeaSupport, Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
-from userauth.util import system_user, get_userpair # pyre-ignore[21]
+from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from messaging.views import ChatView # pyre-ignore[21]
 from typing import Dict, List, Any
 
@@ -155,7 +155,7 @@ class ManageProjectView(DetailView):
             and membership.project == Project.objects.get(slug=slug)): # since the form takes any uid
             if (request.POST['action'] == 'offer_ownership'):
                 if not membership.owner: # not an owner already
-                    Message.objects.create(sender=system_user, snippet=request.user.display_name + ' has offered you ownership of ' + project.name + '. <button>accept</button><button>decline</button>',
+                    Message.objects.create(sender=get_system_user(), snippet=request.user.display_name + ' has offered you ownership of ' + project.name + '. <button>accept</button><button>decline</button>',
                                            chat=get_userpair(request.user, membership.user).chat)
             elif (request.POST['action'] == 'offer_championship'):
                 2 # TODO: ditto
