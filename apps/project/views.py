@@ -13,7 +13,7 @@ from django.urls import reverse
 
 from .models import Idea, IdeaSupport, Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
-from userauth.util import system_user, get_userpair
+from userauth.util import system_user, get_userpair # pyre-ignore[21]
 from messaging.views import ChatView # pyre-ignore[21]
 from typing import Dict, List, Any
 
@@ -148,7 +148,7 @@ class EditProjectView(UpdateView):
 class ManageProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        project = Project.objects.get(slug=slug)
+        project = Project.objects.get(slug=slug) # pyre-ignore[16]
         membership = ProjectMembership.objects.get(id=request.POST['membership']) # pyre-ignore[16]
         # security checks
         if (ProjectMembership.objects.get(user=request.user, project=project).owner == True # pyre-ignore[16]

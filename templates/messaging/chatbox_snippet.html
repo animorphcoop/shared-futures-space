@@ -1,5 +1,5 @@
 {% if more_back %}
-  <a href="{% url 'project_chat' slug %}?interval={{interval}}&from={{back_from}}">Earlier Messages</a>
+  <a href="{{request.path}}?interval={{interval}}&from={{back_from}}">Earlier Messages</a>
 {% endif %}
 <div id=chat>
  {% for message in messages %}
@@ -11,7 +11,7 @@
  {% endfor %}
 </div>
 {% if from != 0 %}
- <a href="{% url 'project_chat' slug %}?interval={{interval}}&from={{forward_from}}">Later Messages</a>
+ <a href="{{request.path}}?interval={{interval}}&from={{forward_from}}">Later Messages</a>
 {% endif %}
 {% if request.user.is_anonymous %}
   {{user_anonymous_message}}

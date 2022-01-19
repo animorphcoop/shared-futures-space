@@ -9,4 +9,5 @@ class UserauthConfig(AppConfig):
     def ready(self) -> None:
         if 'runserver' in sys.argv:
             from .models import CustomUser
-            CustomUser.objects.get_or_create(id=0, display_name = 'SYSTEM USER') # the user that sends system messages
+            # the user that sends system messages
+            CustomUser.objects.get_or_create(id=0, display_name = 'SYSTEM USER') #pyre-ignore[16]

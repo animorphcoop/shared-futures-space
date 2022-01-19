@@ -15,7 +15,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('update/', login_required(CustomUserUpdateView.as_view(template_name='account/update.html')), name='account_update'),
     path('delete/', login_required(CustomUserDeleteView.as_view(template_name='account/delete.html')), name='account_delete'),
     path('chat/', login_required(UserAllChatsView.as_view(template_name='account/all_user_chats.html')), name='all_chats'),
-    path('chat/<uuid:other_uuid>', login_required(UserChatView.as_view(template_name='account/user_chat.html')), name='user_chat'), # pyre-ignore[16]
+    path('chat/<uuid:other_uuid>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')), name='user_chat'), # pyre-ignore[16]
 ]
 
 if settings.DEBUG:
