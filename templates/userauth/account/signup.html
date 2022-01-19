@@ -1,4 +1,5 @@
 {% extends "account/base.html" %}
+{% load static %}
 {% load i18n %}
 {% load account socialaccount %}
 
@@ -15,54 +16,52 @@
 </p>
 
 <!--TODO: PRINTING ERRORS IN THE FORM if unsuccessfully processed-->
-<div x-data="{ fieldCount: 0 }" id="wrapper" class="w-full max-w-xs">
-    <form x-on:keyup.tab="fieldCount++" method="post" action="{% url 'account_signup' %}" id="signup_form"
+<div id="wrapper" class="w-full max-w-xs">
+    <form method="post" action="{% url 'account_signup' %}" id="signup_form"
           class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         {% csrf_token %}
 
-        <div x-on:click="fieldCount++" class="mb-4">
+        <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Email
             </label>
             {% render_field form.email hx-post="/check_email/" hx-trigger="keyup[emailLength(target.value)] delay:500ms" hx-target="#email-feedback" onfocusout="compareEmails()" id="email-input" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-            <div id="email-feedback" class=""></div>
+            <span id="email-feedback" class=""></span>
 
         </div>
 
-                <div x-on:click="fieldCount++" class="mb-4">
+        <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Email confirmation
             </label>
             {% render_field form.email2 onfocusout="compareEmails()" id="email-input2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-            <div id="email-feedback2" class="text-incorrect"></div>
+            <span id="email-feedback2" class="text-incorrect"></span>
 
         </div>
 
 
-        <div x-on:click="fieldCount++" class="mb-4">
+        <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Display Name
             </label>
-            {% render_field form.display_name hx-post="/check_display_name/" hx-trigger="keyup[nameLength(target.value)] delay:500ms" hx-target="#name-feedback" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-            <div id="name-feedback" class=""></div>
+            {% render_field form.display_name placeholder="You will be known as" hx-post="/check_display_name/" hx-trigger="keyup[nameLength()] delay:500ms" hx-target="#name-feedback" hx-swap="outerHTML" onfocusout="nameLength()" id="display-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="name-feedback" class=""></span>
         </div>
 
-        <!--
-        TODO: Validation for password mismatch
-        -->
-        <div x-on:click="fieldCount++" class="mb-6">
+
+        <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Password
             </label>
-            {% render_field form.password1 id="password-input1" onfocusout="passwordFeedback()" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+            {% render_field form.password1 id="password-input1" onfocusout="passwordFeedback()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
             <span id="password-feedback1" class="text-incorrect"></span>
         </div>
 
-        <div x-on:click="fieldCount++" class="mb-6">
+        <div class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2">
                 Repeat password
             </label>
-            {% render_field form.password2 onfocusout="comparePasswords()" id="password-input2" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+            {% render_field form.password2 onfocusout="comparePasswords()" id="password-input2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
                 <span id="password-feedback2" class="text-incorrect"></span>
         </div>
 
@@ -85,7 +84,7 @@
 
         <div class="flex items-center justify-between">
             <!--CATCH issues on client side - comment below-->
-            <button :disabled="fieldCount<4"
+            <button disabled
                     id="signup-button"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
                     type="submit">{% trans "Sign Up" %}
@@ -95,8 +94,8 @@
         </div>
 
     </form>
-    <!--TODO: Logic for updating the button using counter - CANNOT let people submit if either email or display name are incorrect-->
-    <span x-text="fieldCount"></span>
+
+
 </div>
 
 
@@ -115,174 +114,13 @@
 
 If you already have an account <a href="{{ login_url }}" class="underline text-2xl font-semibold">sign in here</a>.
 
-<!--onmounted directive when template loads-->
-<div x-init=isThereError()></div>
-
-<script>
-
-    /*only if the email input field is 5+ chars we send request to django to check if it's valid.*/
-    function emailLength(input) {
-        return input.length >= 5
-
-    }
-
-    function nameLength(input) {
-        return input.length >= 2
-
-    }
-
-    //TODO: On refresh trigger re-checking value in email and display name
-    function isThereError() {
-
-    }
-
-    //CHECK EMAILS
-    function compareEmails() {
-        setTimeout(() => {
-            const emailFeedback = document.getElementById("email-feedback")
-            const emailFeedback2 = document.getElementById("email-feedback2")
-            const correctClass = 'text-correct'
-            const incorrectClass = 'text-incorrect'
-
-            const emailOne = document.getElementById("email-input").value
-            const emailTwo = document.getElementById("email-input2").value
 
 
-            if (emailOne.length !== 0 && emailTwo.length !== 0) {
+{% block scripts %}
 
-                // check if the first email is correct
-                if (/^text-incorrect$/.test(emailFeedback.classList)) {
-                    emailFeedback2.innerText = "Please enter a correct email above first."
-                    emailFeedback2.classList.value = incorrectClass
-                }
-                // compare email input values
-                else if (emailOne !== emailTwo) {
-                    emailFeedback2.classList.value = incorrectClass
-                    document.getElementById("email-feedback2").innerText = "Sorry, e-mails do not match."
-
-                } else {
-                    emailFeedback2.classList.value = correctClass
-                    document.getElementById("email-feedback2").innerText = "Thank you for entering matching emails."
-                }
-            }
-        }, 750)
-
-    }
-
-    // CHECK PASSWORDS
-    function comparePasswords() {
-        setTimeout(() => {
-            const passwordFeedback = document.getElementById("password-feedback1")
-            const passwordFeedback2 = document.getElementById("password-feedback2")
-            const signUpButton = document.getElementById("signup-button")
-            const correctClass = 'text-correct'
-            const incorrectClass = 'text-incorrect'
-
-            const passwordOne = document.getElementById("password-input1").value
-            const passwordTwo = document.getElementById("password-input2").value
-
-            // check if one of the passwords is not empty
-            if (passwordOne.length !== 0 && passwordTwo.length !== 0) {
-
-                // check if the first email is correct
-                if (/^text-incorrect$/.test(passwordFeedback.classList)) {
-                    passwordFeedback2.classList.value = incorrectClass
-
-                    passwordFeedback2.innerText = "Please enter a secure password above first."
-                }
-                // compare email input values
-                else if (passwordOne !== passwordTwo) {
-                    passwordFeedback2.classList.value = incorrectClass
-                    passwordFeedback2.innerText = "Sorry, passwords do not match."
-                    signUpButton.disabled = true
-                    signUpButton.classList.add('cursor-not-allowed')
-                } else {
-                    passwordFeedback2.classList.value = correctClass
-                    passwordFeedback2.innerText = "Thank you, passwords do match."
-                    signUpButton.disabled = false
-                    signUpButton.classList.remove('cursor-not-allowed')
-                }
-            }
-        }, 500)
-    }
-
-    function passwordFeedback() {
-
-        let passwordFeedback = document.getElementById("password-feedback1")
-        const passwordEntered = document.getElementById("password-input1").value
-
-        if (passwordEntered.length < 1)
-            return
+    <script src="{% static 'js/signup.js' %}"></script>
+{% endblock %}
 
 
-        const passwordQuality = checkPasswordQuality(passwordEntered)
-        const correctClass = 'text-correct'
-        const incorrectClass = 'text-incorrect'
-
-        if (passwordQuality.includes("Secure")) {
-            passwordFeedback.innerText = `${passwordQuality} password, well done!`
-            passwordFeedback.classList.value = correctClass
-        } else if (passwordQuality.includes("Good")) {
-            passwordFeedback.innerText = `${passwordQuality} password, thank you.`
-            passwordFeedback.classList.value = correctClass
-
-        } else if (passwordQuality.includes("Weak")) {
-            passwordFeedback.innerText = `${passwordQuality} password, spicy it up please!`
-            passwordFeedback.classList.value = incorrectClass
-
-        } else {
-            passwordFeedback.innerText = `${passwordQuality} password, improve it please!`
-            passwordFeedback.classList.value = incorrectClass
-
-        }
-
-        comparePasswords()
-
-    }
-
-    function checkPasswordQuality(pass) {
-
-        console.log(pass)
-        const score = scorePassword(pass);
-        console.log(score)
-
-        if (score > 80)
-            return "Secure"
-        else if (score > 60)
-            return "Good"
-        else if (score >= 30)
-            return "Weak"
-        else
-            return "Tragic"
-    }
-
-
-    /*
-    * Used
-    * https://stackoverflow.com/questions/948172/password-strength-meter#comment120524342_11268104
-    * */
-    function scorePassword(pass) {
-        let score = 0;
-
-        // variation range
-        score += new Set(pass.split("")).size * 1;
-
-        // shuffle score - bonus for messing things up. 0 score for playing with upper/lowercase.
-        const charCodes = pass.split('').map(x => x.toLowerCase().charCodeAt(0));
-        for (let i = 1; i < charCodes.length; i++) {
-            const dist = Math.abs(charCodes[i - 1] - charCodes[i]);
-            if (dist > 60)
-                score += 15;
-            else if (dist > 1)
-                score += 5;
-        }
-
-        // bonus for length
-        score += (pass.length - 6) * 3;
-
-        return parseInt(score);
-    }
-
-</script>
 
 {% endblock %}
