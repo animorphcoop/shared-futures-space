@@ -1,18 +1,18 @@
 # pyre-strict
 
-from userauth.util import get_system_user, get_userpair
+from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from django.core.handlers.wsgi import WSGIRequest
-from project.models import ProjectMembership
+from project.models import ProjectMembership # pyre-ignore[21]
 from django.http import HttpResponse
-from messaging.models import Message
-from messaging.util import send_system_message
+from messaging.models import Message # pyre-ignore[21]
+from messaging.util import send_system_message # pyre-ignore[21]
 from django.utils.html import escape
-from action.models import Action
+from action.models import Action # pyre-ignore[21]
 
 def invoke_action_view(request: WSGIRequest) -> HttpResponse:
     if request.method == 'POST':
         action = Action.objects.get(uuid=request.POST['action_id'], result__isnull = True) # find only actions that haven't run yet
-        if (action.receiver == request.user):
+        if (action.receiver == request.user): # pyre-ignore[16]
             if (request.POST['choice'] == 'invoke'):
                 invoke_action(action)
                 return HttpResponse("action completed (TODO: redirect? how will this be invoked?)")
@@ -26,10 +26,9 @@ def invoke_action_view(request: WSGIRequest) -> HttpResponse:
             return HttpResponse("action rescinded")
         else:
             return HttpResponse("you do not have the right to invoke this action")
-    else:
-        return HttpResponse("the one-time action view expects a POST request (if this doesn't make sense to you, you probably shouldn't be here")
+    return HttpResponse("the one-time action view expects a POST request (if this doesn't make sense to you, you probably shouldn't be here")
 
-def invoke_action(action) -> None:
+def invoke_action(action: Action) -> None: # pyre-ignore[11]
     if (action.kind == 'become_owner'):
         membership = ProjectMembership.objects.get(user=action.receiver, project=action.param_project)
         if not membership.owner:

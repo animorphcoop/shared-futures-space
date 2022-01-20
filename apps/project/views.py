@@ -15,8 +15,8 @@ from .models import Idea, IdeaSupport, Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from messaging.views import ChatView # pyre-ignore[21]
-from action.util import send_offer
-from action.models import Action
+from action.util import send_offer # pyre-ignore[21]
+from action.models import Action # pyre-ignore[21]
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):

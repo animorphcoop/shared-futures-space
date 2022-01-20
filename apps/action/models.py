@@ -1,7 +1,7 @@
 # pyre-strict
 
 from django.db import models
-from project.models import Project
+from project.models import Project # pyre-ignore[21]
 from uuid import uuid4
 
 class Action(models.Model):

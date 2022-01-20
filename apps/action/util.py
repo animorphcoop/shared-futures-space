@@ -1,9 +1,9 @@
 # pye-strict
 
-from userauth.util import get_system_user, get_userpair
-from messaging.util import send_system_message
+from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
+from messaging.util import send_system_message # pyre-ignore[21]
 from django.utils.html import escape
-from messaging.models import Message
+from messaging.models import Message # pyre-ignore[21]
 from django.urls import reverse
 from .models import Action
 
