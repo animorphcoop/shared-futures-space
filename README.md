@@ -212,8 +212,21 @@ SOCIALACCOUNT_PROVIDERS = {
 
 ---
 
-Tailwind
+TypeScript
+
+
+- Example of application
+
+When in *templates/userauth/account/ts*
+
+Run tsc to compile ts into js, then needs to collect static
+
+```tsc sign-up.ts --strict --outDir ../../../ts_output/js```
+
+
 
 ---
 DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN THE GIT HISTORY
+
+
 
