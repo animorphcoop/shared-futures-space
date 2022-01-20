@@ -34,7 +34,7 @@ def invoke_action(action: Action) -> None: # pyre-ignore[11]
         if not membership.owner:
             membership.owner = True
             membership.save()
-            send_system_message(action.receiver, action.param_project, 'new_owner',
+            send_system_message(action.param_project.chat, 'new_owner',
                                 context_user_a = action.creator, context_user_b = action.receiver)
     action.result = 'invoked'
     action.save()

@@ -139,7 +139,7 @@ class EditProjectView(UpdateView):
                     my_membership = ProjectMembership.objects.get(project=project, user=request.user, owner=True)
                     my_membership.owner = False
                     my_membership.save()
-                    send_system_message(request.user, project, 'lost_ownership', context_user_a = request.user)
+                    send_system_message(project.chat, 'lost_ownership', context_user_a = request.user)
             project.name = request.POST['name']
             project.description = request.POST['description']
             project.save()
