@@ -17,6 +17,7 @@ from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from messaging.views import ChatView # pyre-ignore[21]
 from action.util import send_offer # pyre-ignore[21]
 from action.models import Action # pyre-ignore[21]
+from messaging.util import send_system_message # pyre-ignore[21]
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -138,6 +139,7 @@ class EditProjectView(UpdateView):
                     my_membership = ProjectMembership.objects.get(project=project, user=request.user, owner=True)
                     my_membership.owner = False
                     my_membership.save()
+                    send_system_message(request.user, project, 'lost_ownership', context_user_a = request.user)
             project.name = request.POST['name']
             project.description = request.POST['description']
             project.save()

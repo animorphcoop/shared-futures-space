@@ -16,6 +16,7 @@ def send_system_message(user_from: CustomUser, to: Union[CustomUser,Project], ki
     Message.objects.create(sender = get_system_user(), text='',
                            snippet = {'offer_of_ownership': 'messaging/system_messages/offer_of_ownership.html',
                                       'new_owner': 'messaging/system_messages/new_owner.html',
+                                      'lost_ownership': 'messaging/system_messages/lost_ownership.html',
                                       }[kind],
                            chat=get_userpair(user_from, to).chat if type(to)==CustomUser else to.chat,
                            context_action = context_action,
