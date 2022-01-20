@@ -9,6 +9,7 @@ class Action(models.Model):
     creator = models.ForeignKey('userauth.CustomUser', on_delete = models.CASCADE, related_name='creator')
     receiver = models.ForeignKey('userauth.CustomUser', on_delete = models.CASCADE, related_name='receiver')
     kind = models.CharField(max_length = 200) # TODO: this should have constraints on what it can be
+    result = models.CharField(max_length = 10, null = True) # once set, describes what happened - 'invoked', 'rejected' or 'rescinded'
 
     # the following entries are optional parameters that some kinds of action need
     param_project = models.ForeignKey('project.Project', null = True, on_delete = models.CASCADE)

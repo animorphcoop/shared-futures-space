@@ -5,17 +5,25 @@ from django.core.handlers.wsgi import WSGIRequest
 from project.models import ProjectMembership
 from django.http import HttpResponse
 from messaging.models import Message
+from messaging.util import send_system_message
+from django.utils.html import escape
 from action.models import Action
 
 def invoke_action_view(request: WSGIRequest) -> HttpResponse:
     if request.method == 'POST':
-        action = Action.objects.get(uuid=request.POST['action_id'])
+        action = Action.objects.get(uuid=request.POST['action_id'], result__isnull = True) # find only actions that haven't run yet
         if (action.receiver == request.user):
             if (request.POST['choice'] == 'invoke'):
                 invoke_action(action)
-            else:
-                action.delete()
-            return HttpResponse("action completed (TODO: redirect? how will this be invoked?)")
+                return HttpResponse("action completed (TODO: redirect? how will this be invoked?)")
+            elif (request.POST['choice'] == 'reject'):
+                action.result = 'rejected'
+                action.save()
+                return HttpResponse("action rejected (TODO: redirect? how will this be invoked?)")
+        elif (action.creator == request.user and request.POST['choice'] == 'retract'):
+            action.result = 'rescinded'
+            action.save()
+            return HttpResponse("action rescinded")
         else:
             return HttpResponse("you do not have the right to invoke this action")
     else:
@@ -27,10 +35,7 @@ def invoke_action(action) -> None:
         if not membership.owner:
             membership.owner = True
             membership.save()
-            Message.objects.create(sender=get_system_user(), chat=action.param_project.chat,
-                                   snippet='<i>'+action.receiver.display_name + ' became an owner (invited by '
-                                   + action.creator.display_name + ')</i>')
-            Message.objects.create(sender=get_system_user(), chat=get_userpair(action.creator, action.receiver).chat,
-                                   snippet='<i>'+action.receiver.display_name + ' accepted ' + action.creator.display_name
-                                   + "'s offer to be an owner of " + action.param_project)
-    action.delete()
+            send_system_message(action.receiver, action.param_project, 'new_owner',
+                                context_user_a = action.creator, context_user_b = action.receiver)
+    action.result = 'invoked'
+    action.save()
