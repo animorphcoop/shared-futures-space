@@ -14,17 +14,22 @@ function emailLength(textInput) {
 }
 function nameLength() {
     var inputValue = document.getElementById("display-input").value;
+    var result = false;
     if (inputValue.length < 2) {
         var nameFeedback = document.getElementById("name-feedback");
         if (nameFeedback != null) {
             nameFeedback.innerText = "Please enter a name at least 2 characters long.";
             nameFeedback.classList.value = incorrectClass;
         }
-        return false;
+        result = false;
     }
     else {
-        return true;
+        result = true;
     }
+    setTimeout(function () {
+        evaluateButton();
+    }, 500);
+    return result;
 }
 //CHECK EMAILS
 function compareEmails() {
@@ -53,6 +58,7 @@ function compareEmails() {
                 }
             }
         }
+        evaluateButton();
     }, 750);
 }
 // CHECK PASSWORDS
@@ -76,14 +82,10 @@ function comparePasswords() {
                 else if (passwordOne !== passwordTwo) {
                     passwordFeedbackClasses2.value = incorrectClass;
                     passwordFeedback2.innerText = "Sorry, passwords do not match.";
-                    //signUpButton.disabled = true
-                    //signUpButton.classList.add('cursor-not-allowed')
                 }
                 else {
                     passwordFeedbackClasses2.value = correctClass;
                     passwordFeedback2.innerText = "Thank you, passwords do match.";
-                    //signUpButton.disabled = false
-                    //signUpButton.classList.remove('cursor-not-allowed')
                 }
             }
         }
@@ -127,12 +129,16 @@ function evaluateButton() {
         feedbacks.push(String(emailClasses1.classList), String(emailClasses2.classList), String(nameClasses.classList), String(passClasses1.classList), String(passClasses2.classList));
     }
     var incorrectFields = feedbacks.filter(checkIfIncorrect);
+    var signUpButton = document.getElementById("signup-button");
     if (incorrectFields.length === 0) {
-        var signUpButton = document.getElementById("signup-button");
         if (signUpButton != null) {
             signUpButton.disabled = false;
             signUpButton.classList.remove('cursor-not-allowed');
         }
+    }
+    else {
+        signUpButton.disabled = true;
+        signUpButton.classList.add('cursor-not-allowed');
     }
 }
 /*

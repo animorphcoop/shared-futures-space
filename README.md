@@ -214,6 +214,10 @@ SOCIALACCOUNT_PROVIDERS = {
 
 TypeScript
 
+Make sure you have typescript installed globally for local development
+
+```npm install -g typescript```
+
 
 - Example of application
 

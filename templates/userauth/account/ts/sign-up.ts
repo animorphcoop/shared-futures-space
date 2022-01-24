@@ -20,16 +20,22 @@ function emailLength(textInput: string) {
 
 function nameLength(): boolean {
     const inputValue: string = (<HTMLInputElement>document.getElementById("display-input")).value;
+    let result: boolean = false
     if (inputValue.length < 2) {
         const nameFeedback: HTMLElement | null = document.getElementById("name-feedback")
         if (nameFeedback != null) {
             nameFeedback.innerText = "Please enter a name at least 2 characters long."
             nameFeedback.classList.value = incorrectClass
         }
-        return false
+        result = false
     } else {
-        return true
+        result = true
     }
+    //TODO: Button can be evaluated before the response from the server arrives
+    setTimeout(() => {
+        evaluateButton()
+    }, 500)
+    return result
 }
 
 //CHECK EMAILS
@@ -64,6 +70,7 @@ function compareEmails() {
                 }
             }
         }
+        evaluateButton()
     }, 750)
 }
 
@@ -96,13 +103,9 @@ function comparePasswords() {
                 else if (passwordOne !== passwordTwo) {
                     passwordFeedbackClasses2.value = incorrectClass
                     passwordFeedback2.innerText = "Sorry, passwords do not match."
-                    //signUpButton.disabled = true
-                    //signUpButton.classList.add('cursor-not-allowed')
                 } else {
                     passwordFeedbackClasses2.value = correctClass
                     passwordFeedback2.innerText = "Thank you, passwords do match."
-                    //signUpButton.disabled = false
-                    //signUpButton.classList.remove('cursor-not-allowed')
                 }
             }
         }
@@ -164,13 +167,17 @@ function evaluateButton() {
     }
 
     const incorrectFields = feedbacks.filter(checkIfIncorrect)
+    const signUpButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("signup-button")
     if (incorrectFields.length === 0) {
-        const signUpButton : HTMLButtonElement = <HTMLButtonElement>document.getElementById("signup-button")
         if (signUpButton != null) {
+
             signUpButton.disabled = false
             signUpButton.classList.remove('cursor-not-allowed')
         }
 
+    } else {
+        signUpButton.disabled = true
+        signUpButton.classList.add('cursor-not-allowed')
     }
 }
 
