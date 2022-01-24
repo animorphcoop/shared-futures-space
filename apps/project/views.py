@@ -88,9 +88,10 @@ def replace_idea_with_project(idea: Idea) -> CharField:
     for support in IdeaSupport.objects.filter(idea=idea): # pyre-ignore[16]
         new_ownership = ProjectMembership(project = new_project, user = support.user, owner = True)
         new_ownership.save()
+        send_system_message(get_userpair(get_system_user(), support.user).chat, 'idea_became_project', context_project = new_project)
+        send_system_message(new_project.chat, 'new_owner', context_user_a = support.user)
         support.delete()
     idea.delete()
-    # TODO: message involved users to tell them this has happened
     return new_project.slug
 
 # ---
@@ -98,11 +99,16 @@ def replace_idea_with_project(idea: Idea) -> CharField:
 class ProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        # TODO: request to join and leave.
+        project = Project.objects.get(slug=slug)
         if (request.POST['action'] == 'leave'):
-            membership = ProjectMembership.objects.get(user=request.user, project=Project.objects.get(slug=slug)) # pyre-ignore[16]
+            membership = ProjectMembership.objects.get(user=request.user, project=project) # pyre-ignore[16]
             if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
                 membership.delete()
+                send_system_message(project.chat, 'left_project', context_project = project, context_user_a = request.user)
+        if (request.POST['action'] == 'join'):
+            if len(ProjectMembership.objects.filter(user=request.user, project=project)) == 0:
+                ProjectMembership.objects.create(user=request.user, project=project, owner=False, champion=False)
+                send_system_message(project.chat, 'joined_project', context_project = project, context_user_a = request.user)
         return super().get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
@@ -161,9 +167,13 @@ class ManageProjectView(DetailView):
                 if not membership.owner: # not an owner already
                     send_offer(request.user, membership.user, 'become_owner', param_project = project)
             elif (request.POST['action'] == 'offer_championship'):
-                2 # TODO: ditto
+                if not membership.champion:
+                    send_offer(request.user, membership.user, 'become_champion', param_project = project)
             elif (request.POST['action'] == 'remove_championship'):
-                membership.champion = False
+                if membership.champion:
+                    membership.champion = False
+                    send_system_message(project.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
+                    send_system_message(get_userpair(request.user, membership.user).chat, 'lost_championship_notification', context_user_a = request.user, context_project = membership.project)
             membership.save()
         return self.get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:

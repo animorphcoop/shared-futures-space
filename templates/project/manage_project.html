@@ -14,7 +14,7 @@
      <td>{{membership.user.display_name}}</td>
      <td>{% if membership.owner %}Owner{% endif %} {% if membership.champion %}Champion{% endif %}</td>
      <td>
-      <button name=action value={% if membership.champion %}remove_championship>remove championship{% else %}offer_championship>offer championship{% endif %}</button>
+      {% if membership.champion %}<button name=action value=remove_championship>remove championship</button>{% elif request.user != membership.user %}<button name=action value=offer_championship>offer championship</button>{% endif %}
       {% if not membership.owner %}<button name=action value=offer_ownership>offer ownership</button>{% endif %}
     </tr>
     </form>

@@ -35,6 +35,13 @@ def invoke_action(action: Action) -> None: # pyre-ignore[11]
             membership.owner = True
             membership.save()
             send_system_message(action.param_project.chat, 'new_owner',
-                                context_user_a = action.creator, context_user_b = action.receiver)
+                                context_user_a = action.receiver, context_user_b = action.creator)
+    elif (action.kind == 'become_champion'):
+        membership = ProjectMembership.objects.get(user=action.receiver, project=action.param_project)
+        if not membership.champion:
+            membership.champion = True
+            membership.save()
+            send_system_message(action.param_project.chat, 'new_champion',
+                                context_user_a = action.receiver, context_user_b = action.creator)
     action.result = 'invoked'
     action.save()

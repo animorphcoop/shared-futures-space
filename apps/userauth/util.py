@@ -3,7 +3,7 @@
 from .models import CustomUser, UserPair
 
 def get_system_user() -> CustomUser:
-    return CustomUser.objects.get_or_create(id=0, display_name='SYSTEM USER')[0] # pyre-ignore[16]
+    return CustomUser.objects.get_or_create(id=0, display_name='notifications')[0] # pyre-ignore[16]
 
 def get_userpair(usera: CustomUser, userb: CustomUser) -> UserPair:
     if (usera.uuid < userb.uuid):
