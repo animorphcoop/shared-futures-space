@@ -12,7 +12,6 @@
   <button name=choice value=invoke>Accept</button>
   <button name=choice value=reject>Reject</button>
  {% elif request.user.id == message.context_action.creator.id %}
-  {{message.context_action.receiver}}{{message.context_action.creator}}{{request.user}}
   you offered {{message.context_action.receiver.display_name}} championship of {{message.context_action.param_project.name}}.
   <button name=choice value=retract>Retract</button>
  {% endif %}
