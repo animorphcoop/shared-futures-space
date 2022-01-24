@@ -99,7 +99,7 @@ def replace_idea_with_project(idea: Idea) -> CharField:
 class ProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        project = Project.objects.get(slug=slug)
+        project = Project.objects.get(slug=slug) # pyre-ignore[16]
         if (request.POST['action'] == 'leave'):
             membership = ProjectMembership.objects.get(user=request.user, project=project) # pyre-ignore[16]
             if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
