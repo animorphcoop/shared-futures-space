@@ -94,7 +94,6 @@ def test_project_management(client, test_user, other_test_user, test_project):
     client.post(reverse('manage_project', args=[test_project.slug]), {'membership': other_membership.id,
                                                                       'action': 'remove_championship'}) # should be accepted
     assert not ProjectMembership.objects.get(user=other_test_user, project=test_project).champion
-    
 
 
 
@@ -104,6 +103,3 @@ def test_project_management(client, test_user, other_test_user, test_project):
 
 
 
-
-
-    

@@ -6,6 +6,7 @@ import bs4
 from django.urls import reverse
 from django.conf import settings
 from project.models import Idea, IdeaSupport, Project
+from messaging.util import get_system_user
 
 @pytest.mark.django_db
 def test_idea_create(client, test_user):
@@ -60,6 +61,8 @@ def test_idea_support(client, test_user, other_test_user, test_idea):
     assert len(IdeaSupport.objects.filter(idea=test_idea.id)) == 0
     assert len(Idea.objects.filter(id=test_idea.id)) == 0
     assert len(Project.objects.filter(slug=test_idea.slug)) == 1
+    notifications = client.get(reverse('user_chat', args=[get_system_user().uuid]))
+    assert 'the idea you supported, '+test_idea.name+', has reached its threshold of supporters and become a project.' in str(notifications.content)
 
 
     
