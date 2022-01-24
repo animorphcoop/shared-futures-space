@@ -157,6 +157,8 @@ def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
 # helper for inspecting db whether user exists
 # TODO: Add more validation e.g. to lower case
 def check_email(request: WSGIRequest) -> HttpResponse:
+    # print(request.META.get('HTTP_REFERER'))
+    print(request.META.get('HTTP_REFERER').rsplit('/', 2)[1])
     if request.POST.getlist('login'):
         user_mail = request.POST.getlist('login')[0]
         if (get_user_model().objects.filter(email=user_mail).exists()):
@@ -171,12 +173,21 @@ def check_email(request: WSGIRequest) -> HttpResponse:
             return HttpResponse(
                 "<span id='email-feedback' class='text-incorrect'>Please make sure you enter an email address.</span>")
         else:
-            if (get_user_model().objects.filter(email=user_mail).exists()):
-                return HttpResponse(
-                    "<span id='email-feedback' class='text-incorrect'>This address is in use, please choose a different one.</span>")
-            else:
-                return HttpResponse(
-                    "<span id='email-feedback' class='text-correct'>This e-mail address is available.</span>")
+            request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
+            if request_source_url == "signup":
+                if get_user_model().objects.filter(email=user_mail).exists():
+                    return HttpResponse(
+                        "<span id='email-feedback' class='text-incorrect'>This address is in use, please choose a different one.</span>")
+                else:
+                    return HttpResponse(
+                        "<span id='email-feedback' class='text-correct'>This e-mail address is available.</span>")
+            elif request_source_url == "reset":
+                if get_user_model().objects.filter(email=user_mail).exists():
+                    return HttpResponse(
+                        "<span id='email-feedback' class='text-correct'>This address exists in our records, you can request the reset by pressing the button.</span>")
+                else:
+                    return HttpResponse(
+                        "<span id='email-feedback' class='text-incorrect'>Sorry, this address does not exist in our records.</span>")
     else:
         return HttpResponse("Failed to retrieve or process the address, please refresh the page")
 

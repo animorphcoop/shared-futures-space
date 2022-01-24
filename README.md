@@ -168,6 +168,9 @@ Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/i
 
 Notes:
 Styles passed dynamically from views are not automatically applied to tailwind classes (which are exported as static classes at the time of save/build). So even if the classes are on the list in tailwind.confg.js, but they are not used by any html element at the time of running the app you cannot refer to them.
+
+
+
 ---
 
 #### TypeScript
@@ -177,7 +180,9 @@ Styles passed dynamically from views are not automatically applied to tailwind c
 ```npm install -g typescript```
 
 - Then, each time you want to rebuild js files after changing typescript ones, you can run
+
 ```./ts_generate_js.sh```
+
 from the repo's root directory (run `chmod +x ts_generate_js.sh` if file not executable)
 
 
