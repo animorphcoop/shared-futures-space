@@ -26,6 +26,7 @@ function nameLength() {
     else {
         result = true;
     }
+    //TODO: Button can be evaluated before the response from the server arrives
     setTimeout(function () {
         evaluateButton();
     }, 500);
