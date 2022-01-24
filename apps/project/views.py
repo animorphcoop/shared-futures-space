@@ -73,6 +73,10 @@ class EditIdeaView(UpdateView):
             idea.name = request.POST['name']
             idea.description = request.POST['description']
             idea.save()
+            for support in IdeaSupport.objects.filter(idea=idea): # pyre-ignore[16]
+                if support.user != request.user: # pyre-ignore[16]
+                    send_system_message(get_userpair(get_system_user(), support.user).chat, 'idea_edited', context_idea = idea)
+                    support.delete()
         elif request.POST['action'] == 'delete':
             idea.delete()
             return redirect(reverse('all_ideas'))
