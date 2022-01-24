@@ -25,7 +25,7 @@ INTERNAL_IPS: List[str] = [
 ]
 
 # number of supporters required for an idea to become a project
-PROJECT_REQUIRED_SUPPORTERS = 3
+PROJECT_REQUIRED_SUPPORTERS = 2
 
 # can't be a lambda because you can't annotate the type of lambdas. this is why I don't like python
 def toolbar_callback(x: WSGIRequest) -> bool:

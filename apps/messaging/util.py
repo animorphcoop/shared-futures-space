@@ -7,6 +7,7 @@ from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from userauth.models import CustomUser # pyre-ignore[21]
 from project.models import Idea, Project # pyre-ignore[21]
 from action.models import Action # pyre-ignore[21]
+from uuid import UUID
 
 
 from typing import Union, Optional
@@ -27,6 +28,7 @@ def send_system_message(chat: Chat, kind: str, # pyre-ignore[11]
                                       'left_project': 'messaging/system_messages/left_project.html',
                                       'joined_project': 'messaging/system_messages/joined_project.html',
                                       'idea_edited': 'messaging/system_messages/idea_edited.html',
+                                      'user_request': 'messaging/system_messages/user_request.html',
                                       }[kind],
                            chat=chat,
                            context_action = context_action,
@@ -34,3 +36,6 @@ def send_system_message(chat: Chat, kind: str, # pyre-ignore[11]
                            context_idea = context_idea,
                            context_user_a = context_user_a,
                            context_user_b = context_user_b)
+
+def get_requests_chat() -> Chat:
+    return Chat.objects.get_or_create(uuid=UUID('00000000-0000-0000-0000-000000000000'))[0]

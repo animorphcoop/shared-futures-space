@@ -13,3 +13,4 @@ class Action(models.Model):
 
     # the following entries are optional parameters that some kinds of action need
     param_project = models.ForeignKey('project.Project', null = True, on_delete = models.CASCADE)
+    param_str = models.CharField(max_length = 2000, null = True)

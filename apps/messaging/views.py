@@ -14,7 +14,7 @@ from .models import Chat, Message
 #   a list of users called 'members' which is the people allowed to post in the chat
 #   a Chat called 'chat'
 #   a str called 'url'
-# your get_context_data should define user__anonymous_message and not_member_message in context
+# your get_context_data should define user_anonymous_message and not_member_message in context
 
 class ChatView(TemplateView):
     def post(self, request: WSGIRequest, chat: Chat, members: List[CustomUser], url: str) -> HttpResponse: # pyre-ignore[11] - says CustomUser isn't defined as a type?
