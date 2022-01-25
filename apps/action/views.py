@@ -52,7 +52,6 @@ def invoke_action(action: Action) -> None: # pyre-ignore[11]
         #elif (action.kind == 'user_request_change_postcode'):
         #    pass # ...
         send_system_message(get_userpair(get_system_user(), action.creator).chat, 'request_accepted', context_action = action)
-    print(action.kind)
     action.result = 'invoked'
     action.save()
 
