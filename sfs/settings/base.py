@@ -203,6 +203,9 @@ WAGTAILSEARCH_BACKENDS = {
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL: str = 'https://dev.sharedfutures.space'
 
+# for @login_required
+LOGIN_URL = '/account/login/'
+
 # Redis & Celery configuration
 CELERY_BROKER_URL: str = "redis://redis:6379"
 CELERY_RESULT_BACKEND: str = "redis://redis:6379"
