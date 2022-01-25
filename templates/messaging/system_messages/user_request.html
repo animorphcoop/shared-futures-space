@@ -1,4 +1,4 @@
-<b>{{message.context_action.creator}} made a request: </b>{{message.context_action.kind}}<b>, because: </b>{{message.context_action.param_str}}.
+<b>{{message.context_action.creator.display_name}} made a request: </b>{{message.context_action.kind}}<b>, because: </b>{{message.context_action.param_str}}.
 {% if message.context_action.result == 'invoked' %}
  [accepted]
 {% elif message.context_action.result == 'rejected' %}
