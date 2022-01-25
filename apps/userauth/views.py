@@ -126,7 +126,7 @@ class AdminRequestView(ChatView): # pyre-ignore[11]
     def post(self, request: WSGIRequest) -> HttpResponse:
         return super().post(request, members=[], chat=get_requests_chat, url=reverse('account_request_panel')) # pyre-ignore[16]
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        if self.request.user.is_superuser:
+        if self.request.user.is_superuser: # pyre-ignore[16]
             context = super().get_context_data(members=[], chat=get_requests_chat(), url=reverse('account_request_panel')) # pyre-ignore[16]
             context['user_anonynous_message'] = ''
             context['not_member_message'] = ''
