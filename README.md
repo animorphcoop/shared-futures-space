@@ -166,6 +166,21 @@ Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/i
 - To build for production.
 ```docker-compose exec app python3 manage.py tailwind build```
 
+Notes:
+Styles passed dynamically from views are not automatically applied to tailwind classes (which are exported as static classes at the time of save/build). So even if the classes are on the list in tailwind.confg.js, but they are not used by any html element at the time of running the app you cannot refer to them.
+---
+
+#### TypeScript
+
+- Make sure you have typescript installed globally for local development
+
+```npm install -g typescript```
+
+- Then, each time you want to rebuild js files after changing typescript ones, you can run
+```./ts_generate_js.sh```
+from the repo's root directory (run `chmod +x ts_generate_js.sh` if file not executable)
+
+
 
 ---
 
@@ -208,5 +223,10 @@ SOCIALACCOUNT_PROVIDERS = {
 
 ```
 
+
+
+---
 DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN THE GIT HISTORY
+
+
 

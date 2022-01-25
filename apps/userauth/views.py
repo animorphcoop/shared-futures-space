@@ -1,13 +1,15 @@
 # pyre-strict
+from allauth.utils import get_form_class
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.dispatch import receiver
 from django.db.models import Q
-
 from .models import CustomUser, UserPair
-from .forms import CustomUserUpdateForm, CustomUserPersonalForm
+from django.contrib.auth import get_user_model
+from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm
+
 from .tasks import send_after
 from messaging.views import ChatView # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat # pyre-ignore[21]
@@ -21,6 +23,8 @@ from typing import Type, List, Dict, Union, Any
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
+from allauth.account.views import LoginView
+
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
 from django.http import HttpResponse
@@ -40,7 +44,8 @@ class CustomUserPersonalView(TemplateView):
         currentuser = request.user
         form = CustomUserPersonalForm(request.POST)
         if currentuser.year_of_birth is not None:
-            return HttpResponse("You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
+            return HttpResponse(
+                "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         elif form.is_valid():
             # pyre-ignore[16]:
             currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
@@ -110,7 +115,6 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
 
-
 @login_required(login_url='/account/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
@@ -133,7 +137,6 @@ class AdminRequestView(ChatView): # pyre-ignore[11]
             return context
         else:
             return {}
-
 
 class UserChatView(ChatView):
     def post(self, request: WSGIRequest, other_uuid: UUID) -> HttpResponse:
@@ -161,3 +164,51 @@ class UserAllChatsView(TemplateView):
                                      + [pair.user1 for pair in
                                         UserPair.objects.filter(~Q(user1=self.request.user), user2 = self.request.user)])
         return context
+
+# helper for inspecting db whether user exists
+# TODO: Add more validation e.g. to lower case
+def check_email(request: WSGIRequest) -> HttpResponse:
+    if request.POST.getlist('login'):
+        user_mail = request.POST.getlist('login')[0]
+        if (get_user_model().objects.filter(email=user_mail).exists()):
+            return HttpResponse("<span id='email-feedback' class='text-correct'>Please enter your password.</span>")
+        else:
+            return HttpResponse(
+                "<span id='email-feedback' class='text-incorrect'>Such an address does not exist.</span>")
+    elif request.POST.getlist('email'):
+        user_mail = request.POST.getlist('email')[0]
+        # TODO: Better email validation might be needed!
+        if ("@" not in user_mail or "." not in user_mail) or ("@" == user_mail[-1] or "." == user_mail[-1]):
+            return HttpResponse(
+                "<span id='email-feedback' class='text-incorrect'>Please make sure you enter an email address.</span>")
+        else:
+            if (get_user_model().objects.filter(email=user_mail).exists()):
+                return HttpResponse(
+                    "<span id='email-feedback' class='text-incorrect'>This address is in use, please choose a different one.</span>")
+            else:
+                return HttpResponse(
+                    "<span id='email-feedback' class='text-correct'>This e-mail address is available.</span>")
+    else:
+        return HttpResponse("Failed to retrieve or process the address, please refresh the page")
+
+
+# TODO: Add more validation e.g. to lower case
+def check_display_name(request: WSGIRequest) -> HttpResponse:
+    if request.POST.getlist('display_name'):
+        display_name = request.POST.getlist('display_name')[0]
+        if len(display_name) < 2:
+            return HttpResponse(
+                "<span id='name-feedback' class='text-incorrect'>Please enter a name at least 2 characters long.</span>")
+        elif get_user_model().objects.filter(display_name=display_name).exists():
+            return HttpResponse(
+                "<span id='name-feedback' class='text-incorrect'>This name is in use, please choose a different one.</span>")
+        else:
+            return HttpResponse(
+                "<span id='name-feedback' class='text-correct'>The name is available.</span>")
+
+    else:
+        return HttpResponse("Failed to retrieve or process the name, please refresh the page")
+
+
+class CustomLoginView(LoginView):
+    form_class: Type[CustomLoginForm] = CustomLoginForm

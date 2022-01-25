@@ -35,7 +35,7 @@ class CustomUser(AbstractUser):
         return reverse('profile_view')
 
     def __str__(self) -> str:
-        return f"{self.display_name}"
+        return f"{self.email}"
 
 def new_chat() -> int: # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
     c = Chat()

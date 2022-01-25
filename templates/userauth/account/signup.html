@@ -1,40 +1,126 @@
 {% extends "account/base.html" %}
-
+{% load static %}
 {% load i18n %}
+{% load account socialaccount %}
+
+{% load widget_tweaks %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
+{% get_providers as socialaccount_providers %}
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
+<p class="text-2xl">{% trans "Sign Up" %}</p>
 
-<p>{% blocktrans %}Already NOT have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+<p class="text-lg">
+    Please create an account to engage with other community members, access your profile and messages.
+</p>
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+<!--TODO: PRINTING ERRORS IN THE FORM if unsuccessfully processed-->
+<div id="wrapper" class="w-full max-w-xs">
+    <form method="post" action="{% url 'account_signup' %}" id="signup_form"
+          class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
 
-<div class="socialaccount_ballot">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Email
+            </label>
+            {% render_field form.email hx-post="/check_email/" hx-trigger="keyup[emailLength(target.value)] delay:500ms" hx-target="#email-feedback" onfocusout="compareEmails()" id="email-input" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="email-feedback" class=""></span>
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
+        </div>
 
-  <div class="login-or">{% trans 'or' %}</div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Email confirmation
+            </label>
+            {% render_field form.email2 onfocusout="compareEmails()" id="email-input2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="email-feedback2" class="text-incorrect"></span>
+
+        </div>
+
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Display Name
+            </label>
+            {% render_field form.display_name placeholder="You will be known as" hx-post="/check_display_name/" hx-trigger="keyup[nameLength()] delay:500ms" hx-target="#name-feedback" hx-swap="outerHTML" onfocusout="nameLength()" id="display-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="name-feedback" class=""></span>
+        </div>
+
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Password
+            </label>
+            {% render_field form.password1 id="password-input1" onfocusout="passwordFeedback()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="password-feedback1" class="text-incorrect"></span>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Repeat password
+            </label>
+            {% render_field form.password2 onfocusout="comparePasswords()" id="password-input2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+                <span id="password-feedback2" class="text-incorrect"></span>
+        </div>
+
+
+
+        {% if form.non_field_errors %}
+
+        <div class="-mt-8">
+            {% for error in form.non_field_errors %}
+            <span id="password-error" class="text-incorrect">{{error}}</span>
+            {% endfor %}
+        </div>
+
+        {% endif %}
+
+
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+        {% endif %}
+
+        <div class="flex items-center justify-between">
+            <!--CATCH issues on client side - comment below-->
+            <button disabled
+                    id="signup-button"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
+                    type="submit">{% trans "Sign Up" %}
+            </button>
+            <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+               href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+        </div>
+
+    </form>
+
 
 </div>
 
+
+<p class="text-lg">You can also use Social Media accounts to log in:</p>
+<div class="socialaccount_ballot">
+
+    <ul class="">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+    </ul>
+
+</div>
+
+
 {% include "socialaccount/snippets/login_extra.html" %}
 
-{% endif %}
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-</form>
+If you already have an account <a href="{{ login_url }}" class="underline text-2xl font-semibold">sign in here</a>.
+
+
+
+{% block scripts %}
+
+    <script src="{% static 'js/sign-up.js' %}"></script>
+{% endblock %}
+
+
 
 {% endblock %}
