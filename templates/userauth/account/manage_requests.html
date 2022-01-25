@@ -1,42 +1,6 @@
-{% load i18n %}
 {% if user.is_superuser %}
-<p>{% trans 'Manage User Requests' %}</p>
-<table id=requests>
-  <tr>
-    <th>User</th>
-    <th>Request</th>
-    <th>Justification</th>
-    <th>Request Made</td>
-    <th>Action</th>
-  </tr>
-  {% for req in reqs %}
-    <tr>
-      <td>{{ req.user.display_name }}</td>
-      <td>{{ req.kind }}</td>
-      <td>{{ req.reason }}</td>
-      <td>{{ req.date }}</td>
-      <td>
-        <form method=post>
-        {% csrf_token %}
-        <input type=hidden name=request_id value="{{ req.id }}"></input>
-        {% if req.kind == "make_editor" %}
-          <button name=accept value=accept>Make Editor</button>
-        {% elif req.kind == "change_dob" %}
-          <button name=accept value=accept>Change Year Of Birth To:</button>
-          <input type=number name=new_dob required></input>
-        {% elif req.kind == "change_postcode" %}
-          <button name=accept value=accept>Change Postcode To:</button>
-          <input type=text maxlength=8 name=new_postcode required></input>
-        {% elif req.kind == "other" %}
-          <button name=accept value=accept>Mark As Done</button>
-          Don't forget to actually do it first!
-        {% endif %}
-        </button>
-        <button name=accept value=reject formnovalidate>Reject Request</button></td>
-      </form>
-    </tr>
-  {% endfor %}
-</table>
+ <h3>Manage User Requests</h3>
+ {% include 'messaging/chatbox_snippet.html' %}
 {% else %}
-go away
+ go away
 {% endif %}

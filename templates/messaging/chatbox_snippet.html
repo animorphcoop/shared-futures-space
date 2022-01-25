@@ -1,0 +1,26 @@
+{% if more_back %}
+  <a href="{{request.path}}?interval={{interval}}&from={{back_from}}">Earlier Messages</a>
+{% endif %}
+<div id=chat>
+ {% for message in messages %}
+  {% if message.sender == system_user %}
+    {% include 'messaging/system_message_snippet.html' %}
+  {% else %}
+    {% include 'messaging/user_message_snippet.html' %}
+  {% endif %}
+ {% endfor %}
+</div>
+{% if from != 0 %}
+ <a href="{{request.path}}?interval={{interval}}&from={{forward_from}}">Later Messages</a>
+{% endif %}
+{% if request.user.is_anonymous %}
+  {{user_anonymous_message}}
+{% elif request.user not in members %}
+  {{not_member_message}}
+{% else %}
+ <form method=POST>
+  {% csrf_token %}
+  <textarea name=message></textarea>
+  <button>send</button>
+ </form>
+{% endif %}

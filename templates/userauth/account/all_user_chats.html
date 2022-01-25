@@ -1,0 +1,4 @@
+<h3>Open Chats</h3>
+{% for user in users_with_chats %}
+  <p><a href="{% url 'user_chat' user.uuid %}">{{user.display_name}}</a></p>
+{% endfor %}
