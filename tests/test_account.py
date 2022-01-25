@@ -6,8 +6,9 @@ import bs4
 import re
 
 from django.urls import reverse
-from userauth.models import CustomUser, UserRequest
+from userauth.models import CustomUser
 from action.models import Action
+from userauth.util import get_system_user
 
 
 @pytest.mark.django_db
@@ -53,15 +54,13 @@ def test_user_request_flow(client, test_user, admin_client):
     assert make_request.url == f'/account/update/'
     assert len(Action.objects.filter(kind='user_request_make_editor')) == 1
 
-    #requests_page = admin_client.get('/account/managerequests/')
-    #table_rows = bs4.BeautifulSoup(requests_page.content, features='html5lib').body.find('table').tbody.find_all('tr')
-    #test_row = [row for row in table_rows
-    #            if row.find_all('td') != [] and row.find_all('td')[0].text == test_user.display_name][0]
-    #user_request_id = test_row.find_all('td')[4].form.find('input', attrs={'name': 'request_id'})['value']
-    #admin_client.post('/account/managerequests/', {'accept': 'accept',
-    #                                               'request_id': user_request_id})
-    #assert CustomUser.objects.get(id=test_user.id).editor
-    #assert len(UserRequest.objects.all()) == 0
+    requests_page = admin_client.get('/account/managerequests/')
+    requests_html = bs4.BeautifulSoup(requests_page.content, 'html5lib')
+    assert test_user.display_name + ' made a request: user_request_make_editor, because: pls' in requests_html.text
+    action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
+    admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
+    messages = client.get(reverse('user_chat', args=[get_system_user().uuid]))
+    assert 'your request to become an editor has been granted' in str(messages.content)
 
 
 @pytest.mark.django_db

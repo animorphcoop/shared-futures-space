@@ -37,18 +37,6 @@ class CustomUser(AbstractUser):
     def __str__(self) -> str:
         return f"{self.display_name}"
 
-# a request sent by a user to the admins for a change to their account
-class UserRequest(models.Model):
-    class Kind(models.TextChoices):
-        OTHER = 'other', 'other'
-        MAKE_EDITOR = 'make_editor', 'make_editor'
-        CHANGE_POSTCODE = 'change_postcode', 'change_postcode'
-        CHANGE_DOB = 'change_dob', 'change_dob'
-    kind: models.CharField = models.CharField(max_length=15, choices = Kind.choices)
-    reason: models.CharField = models.CharField(max_length=1000)
-    date: models.DateTimeField = models.DateTimeField('date/time request made')
-    user: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
-
 def new_chat() -> int: # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
     c = Chat()
     c.save()

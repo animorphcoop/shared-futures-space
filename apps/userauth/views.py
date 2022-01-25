@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.dispatch import receiver
 from django.db.models import Q
 
-from .models import CustomUser, UserRequest, UserPair
+from .models import CustomUser, UserPair
 from .forms import CustomUserUpdateForm, CustomUserPersonalForm
 from .tasks import send_after
 from messaging.views import ChatView # pyre-ignore[21]
@@ -114,7 +114,7 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
 @login_required(login_url='/account/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
-        new_request = Action.objects.create(creator=httpreq.user, receiver=httpreq.user, # pyre-ignore[16]
+        new_request = Action.objects.create(creator=httpreq.user, receiver=None, # pyre-ignore[16]
                                             kind='user_request_' + httpreq.POST['kind'],
                                             param_str=httpreq.POST['reason'])
         send_system_message(get_requests_chat(), 'user_request', context_action = new_request)
@@ -122,34 +122,17 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     else:
         return render(httpreq, 'account/make_request.html')
 
-#@login_required(login_url='/account/login/')
-#def admin_request_view(httpreq: WSGIRequest) -> HttpResponse:
-#    ctx = {}
-#    # just in case the template is changed or leaks information in future:
-#    if httpreq.user.is_superuser:
-#        ctx = {'reqs': UserRequest.objects.order_by('date')}
-#        if (httpreq.method == 'POST'):
-#            if (httpreq.POST['accept'] == 'reject'):
-#            elif (httpreq.POST['accept'] == 'accept'):
-#                req = UserRequest.objects.get(id=httpreq.POST['request_id'])
-#                usr = req.user
-#                if (req.kind == 'make_editor'):
-#                    usr.editor = True
-#                    usr.year_of_birth = httpreq.POST['new_dob'][0:4]  # take the year
-#                elif (req.kind == 'change_postcode'):
-#                    usr.post_code = httpreq.POST['new_postcode']
-#                usr.save()
-#                req.delete()
-#    return render(httpreq, 'account/manage_requests.html', context=ctx)
-
 class AdminRequestView(ChatView): # pyre-ignore[11]
     def post(self, request: WSGIRequest) -> HttpResponse:
         return super().post(request, members=[], chat=get_requests_chat, url=reverse('account_request_panel')) # pyre-ignore[16]
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        context = super().get_context_data(members=[], chat=get_requests_chat(), url=reverse('account_request_panel')) # pyre-ignore[16]
-        context['user_anonynous_message'] = ''
-        context['not_member_message'] = ''
-        return context
+        if self.request.user.is_superuser:
+            context = super().get_context_data(members=[], chat=get_requests_chat(), url=reverse('account_request_panel')) # pyre-ignore[16]
+            context['user_anonynous_message'] = ''
+            context['not_member_message'] = ''
+            return context
+        else:
+            return {}
 
 
 class UserChatView(ChatView):

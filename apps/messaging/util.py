@@ -29,6 +29,8 @@ def send_system_message(chat: Chat, kind: str, # pyre-ignore[11]
                                       'joined_project': 'messaging/system_messages/joined_project.html',
                                       'idea_edited': 'messaging/system_messages/idea_edited.html',
                                       'user_request': 'messaging/system_messages/user_request.html',
+                                      'request_accepted': 'messaging/system_messages/request_accepted.html',
+                                      'request_rejected': 'messaging/system_messages/request_rejected.html',
                                       }[kind],
                            chat=chat,
                            context_action = context_action,
