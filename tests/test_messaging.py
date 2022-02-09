@@ -90,6 +90,15 @@ def test_direct_chat_interface(client, test_user, other_test_user):
     for i in range(5,10):
         assert 'test message ' + str(i) not in chat_page_html.text
 
+def test_direct_chat_listing(client, test_user, other_test_user):
+    from userauth.util import get_userpair
+    client.force_login(test_user)
+    listing = client.get(reverse('all_chats'))
+    assert 'Open Chats' in str(listing.content)
+    assert other_test_user.display_name not in str(listing.content)
+    get_userpair(test_user, other_test_user)
+    listing = client.get(reverse('all_chats'))
+    assert other_test_user.display_name in str(listing.content)
 
 
 

@@ -30,8 +30,12 @@ def test_project_edit(client, test_user, test_project):
 def test_project_membership(client, test_user, other_test_user, test_project):
     # non-owner members
     client.force_login(test_user)
-    membership = ProjectMembership(user=test_user, project=test_project, owner=False)
-    membership.save()
+    project_page = client.get(reverse('view_project', args=[test_project.slug]))
+    project_page_html = bs4.BeautifulSoup(project_page.content, features='html5lib')
+    join_button = project_page_html.find('button')
+    assert join_button.text == 'join project'
+    client.post(reverse('view_project', args=[test_project.slug]), {'action': 'join'})
+    assert len(ProjectMembership.objects.filter(user=test_user, project=test_project)) == 1
     project_page_member = client.get(reverse('view_project', args=[test_project.slug]))
     project_page_member_html = bs4.BeautifulSoup(project_page_member.content, features='html5lib')
     leave_button = project_page_member_html.find('button')

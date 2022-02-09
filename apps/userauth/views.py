@@ -43,7 +43,7 @@ class CustomUserPersonalView(TemplateView):
         # pyre-ignore[16]:
         currentuser = request.user
         form = CustomUserPersonalForm(request.POST)
-        if currentuser.year_of_birth is not None:
+        if currentuser.year_of_birth is not None or currentuser.post_code is not None:
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         elif form.is_valid():
@@ -68,19 +68,11 @@ class CustomUserUpdateView(TemplateView):
         form = CustomUserUpdateForm(request.POST, request.FILES)
 
         if request.FILES.get('avatar') != None:
-            avatar = request.FILES.get('avatar')
-            currentuser.display_name = currentuser.display_name
-            currentuser.email = currentuser.email
-            currentuser.avatar = avatar
-            currentuser.save()
-            return HttpResponseRedirect(reverse_lazy('account_view'))
+            currentuser.avatar = request.FILES.get('avatar')
         else:
-            display_name = form.data.get('display_name')
-            currentuser.display_name = display_name
-            currentuser.email = currentuser.email
-            currentuser.avatar = currentuser.avatar
-            currentuser.save()
-            return HttpResponseRedirect(reverse_lazy('account_view'))
+            currentuser.display_name = form.data.get('display_name')
+        currentuser.save()
+        return HttpResponseRedirect(reverse_lazy('account_view'))
 
 
 # Gets triggered when clicking confirm button

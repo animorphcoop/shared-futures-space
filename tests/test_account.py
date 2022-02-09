@@ -9,6 +9,7 @@ from django.urls import reverse
 from userauth.models import CustomUser
 from action.models import Action
 from userauth.util import get_system_user
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 @pytest.mark.django_db
@@ -41,6 +42,25 @@ def test_dashboard_info(client, test_user):
     welcome = bs4.BeautifulSoup(dash.content, 'html5lib').body.text
     # janky as fuck placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
     assert re.match(f'.*Welcome {test_user.display_name}', welcome, re.S)
+    assert 'Your profile misses important data, please add them in' not in welcome
+    test_user.year_of_birth = None
+    test_user.post_code = None
+    test_user.save()
+    dash = client.get('/dashboard/')
+    assert 'Your profile misses important data, please add them in' in str(dash.content)
+
+
+def test_data_add(client, test_user):
+    test_user.year_of_birth = None
+    test_user.post_code = None
+    test_user.save()
+    client.force_login(test_user)
+    client.post(reverse('account_data'), {'year_of_birth': 1997, 'post_code': 'ABC123'})
+    assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
+    assert CustomUser.objects.get(id=test_user.id).post_code == 'ABC123'
+    client.post(reverse('account_data'), {'year_of_birth': 2001, 'post_code': 'XYZ999'})
+    assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
+    assert CustomUser.objects.get(id=test_user.id).post_code == 'ABC123'
 
 
 @pytest.mark.django_db
@@ -73,6 +93,14 @@ def test_update_flow(client, test_user):
     assert current_name == test_user.display_name
     client.post(reverse('account_update'), {'display_name': 'New Name'})
     assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
+    avatar = SimpleUploadedFile("file.mp4", b"file_content", content_type="video/mp4")
+    client.post(reverse('account_update'), {'avatar': avatar})
+    assert CustomUser.objects.get(id=test_user.id).avatar.read() == avatar.file.getvalue()
 
-# TODO: Tests for removing account
+def test_delete_account(client, test_user):
+    client.force_login(test_user)
+    delete_page = client.get(reverse('account_delete'))
+    assert 'Want to delete your account' in str(delete_page.content)
+    client.post(reverse('account_delete'), {'confirm': 'confirm'})
+    assert len(CustomUser.objects.filter(id=test_user.id)) == 0
 
