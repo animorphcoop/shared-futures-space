@@ -30,6 +30,8 @@ from django.utils import timezone
 from django.http import HttpResponse
 from uuid import UUID
 
+import magic
+
 
 def profile_view(request: WSGIRequest) -> HttpResponse:
     return render(request, 'account/view.html')
@@ -68,7 +70,13 @@ class CustomUserUpdateView(TemplateView):
         form = CustomUserUpdateForm(request.POST, request.FILES)
 
         if request.FILES.get('avatar') != None:
-            currentuser.avatar = request.FILES.get('avatar')
+            new_avatar = request.FILES.get('avatar')
+            declared_content_type = new_avatar.content_type
+            actual_content_type = magic.from_buffer(new_avatar.file.read(2048), mime=True)
+            if declared_content_type == actual_content_type and declared_content_type in ['image/png', 'image/jpeg', 'image/bmp']: # safe types that browsers will (should) never interpret as active. extend if you like, but make sure the format cannot be active (looking at you SVG)
+                currentuser.avatar = request.FILES.get('avatar')
+            else:
+                print('error: invalid avatar (declared content type '+declared_content_type+', actual content type: '+actual_content_type+')')
         else:
             currentuser.display_name = form.data.get('display_name')
         currentuser.save()

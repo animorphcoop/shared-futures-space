@@ -93,7 +93,10 @@ def test_update_flow(client, test_user):
     assert current_name == test_user.display_name
     client.post(reverse('account_update'), {'display_name': 'New Name'})
     assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
-    avatar = SimpleUploadedFile("file.mp4", b"file_content", content_type="video/mp4")
+    # http://web.archive.org/web/20111224041840/http://www.techsupportteam.org/forum/digital-imaging-photography/1892-worlds-smallest-valid-jpeg.html
+    # needs to be valid because avatar upload only accepts valid images in png, jpg or bmp
+    smallest_jpg = b"\xFF\xD8\xFF\xE0\x00\x10\x4A\x46\x49\x46\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xFF\xDB\x00\x43\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xC2\x00\x0B\x08\x00\x01\x00\x01\x01\x01\x11\x00\xFF\xC4\x00\x14\x10\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xDA\x00\x08\x01\x01\x00\x01\x3F\x10"
+    avatar = SimpleUploadedFile("file.jpg", smallest_jpg, content_type="image/jpeg")
     client.post(reverse('account_update'), {'avatar': avatar})
     assert CustomUser.objects.get(id=test_user.id).avatar.read() == avatar.file.getvalue()
 
