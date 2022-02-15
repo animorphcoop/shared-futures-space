@@ -10,6 +10,7 @@
 <h1>{% trans "View your account" %}</h1>
 
 <p class="font-sans text-5xl bg">View</p>
+{% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
 <br/>
 Display name: {{user.display_name}}
 <br/>
