@@ -26,6 +26,7 @@ class CustomUser(AbstractUser):
     avatar:  models.FileField = models.FileField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
 
     editor: models.BooleanField = models.BooleanField(default=False) # is this user an editor
+    organisation: models.BooleanField = models.BooleanField(default=False) # is this an organisation's account
 
     class Meta:
         ordering: List[str] = ['display_name']
