@@ -40,10 +40,12 @@ class CustomUserUpdateForm(forms.ModelForm):
 class CustomSignupForm(SignupForm):
     display_name = forms.CharField(max_length=30, label=_("Display name"),
                                    help_text=_("Will be shown e.g. when commenting."))
+    organisation = forms.BooleanField(required=False, label="organisation")
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
-        user.display_name = self.cleaned_data['display_name']  # pyre-ignore[16]
+        user.display_name = self.cleaned_data['display_name'] # pyre-ignore[16]
+        user.organisation = self.cleaned_data['organisation']
         user.save()
         return user
 
