@@ -12,7 +12,3 @@ def attrmap(value: Iterable[T], arg: str) -> List[T]:
         return [getattr(item, arg) for item in value]
     else:
         return []
-
-@register.simple_tag(takes_context = True, name = 'include_text')
-def include_text(context: Dict[str,Any], text: str) -> HttpResponse:
-    return template.Template(text).render(context=context)
