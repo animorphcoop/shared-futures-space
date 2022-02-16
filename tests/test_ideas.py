@@ -6,7 +6,8 @@ import bs4
 from django.urls import reverse
 from django.conf import settings
 from project.models import Idea, IdeaSupport, Project
-from messaging.util import get_system_user
+from messaging.util import get_system_user, get_userpair
+from messaging.models import Message, Chat
 
 @pytest.mark.django_db
 def test_idea_create(client, test_user):
@@ -34,8 +35,9 @@ def test_idea_view(client, test_idea):
     single_idea_html = bs4.BeautifulSoup(single_idea_view.content, features='html5lib')
     assert single_idea_html.find('h3').text == f"Idea: {test_idea.name}"
 
-def test_idea_edit(client, test_user, test_idea):
+def test_idea_edit(client, test_user, other_test_user, test_idea):
     test_idea.proposed_by = test_user
+    IdeaSupport.objects.create(user=other_test_user, idea=test_idea) # doing it this way guaranteed not to invoke any change to project
     attempt_logged_out = client.get(reverse('edit_idea', args=[test_idea.slug]))
     assert attempt_logged_out.status_code == 302
     client.force_login(test_user)
@@ -45,6 +47,9 @@ def test_idea_edit(client, test_user, test_idea):
                                                             'name': 'new edited name',
                                                             'description': 'new edited description'})
     assert Idea.objects.get(pk=test_idea.id).name == 'new edited name'
+    msgs = Message.objects.filter(chat=get_userpair(get_system_user(), other_test_user).chat)
+    assert len(msgs) == 1
+    assert msgs[0].context_idea == test_idea
 
 def test_idea_support(client, test_user, other_test_user, test_idea):
     client.force_login(test_user)
