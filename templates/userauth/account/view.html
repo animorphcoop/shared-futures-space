@@ -2,31 +2,33 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "View account" %}{% endblock %}
 
 
 {% block content %}
-<a href="{% url 'dashboard' %}"><- Dashboard</a>
-<h1>{% trans "View your account" %}</h1>
+<a href="{% url 'dashboard' %}">Back to Dashboard</a>
 
-<p class="font-sans text-5xl bg">View</p>
+<p class="font-sans text-5xl bg">Your account</p>
 {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
-<br/>
-Display name: {{user.display_name}}
-<br/>
-Year of birth: {{user.year_of_birth}}
-<br/>
-Post code {{user.post_code}}
-<br/>
-Profile image:
-<br/>
-{% if user.avatar.url != null%}
-<img src="{{ user.avatar.url }}"/>
-{% else %}
-Don't have one yet.
-{% endif %}
-<br/>
+<div id="profile-data">
+    <br/>
+    Display name: {{user.display_name}}
+    <br/>
+    Year of birth: {{user.year_of_birth}}
+    <br/>
+    Post code {{user.post_code}}
+    <br/>
+    Profile image:
+    <br/>
+    {% if user.avatar.url != null%}
+    <img src="{{ user.avatar.url }}"/>
+    {% else %}
+    Don't have one yet.
+    {% endif %}
+    <br/>
+</div>
 <hr/>
 Would you like to edit your profile?
+<button class="btn btn-blue" hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Yes please</button>
+
 <a href="{% url 'account_update' %}">Profile edit</a>
 {% endblock %}
