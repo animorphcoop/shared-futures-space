@@ -1,44 +1,48 @@
-
 <section>
-<h1>Update account</h1>
+    <h1>Update account</h1>
 
-<form method="post" action="{% url 'account_update' %}">
-    {% csrf_token %}
-    <label for=display_name>Change your display name</label>
-    <input id=display_name name=display_name type=text value="{{ user.display_name }}">
-    <button type="submit">Update</button>
-</form>
-<br/>
-<form method="post" action="{% url 'account_update' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for=avatar>Change your avatar</label>
-    <input id=avatar name=avatar type=file value="{{ user.avatar }}">
+    <form hx-put="{% url 'account_update' %}" hx-target="#profile-view" hx-swap="innerHTML">
+        {% csrf_token %}
+        <label for=display_name>Change your display name</label>
+        <input id=display_name name=display_name type=text value="{{ user.display_name }}">
 
-    <button type="submit">Update</button>
-</form>
-<br/>
+        <br/><br/>
 
-<form method="post" action="{% url 'account_email' %}" class="add_email">
-    {% csrf_token %}
-    <label for=email>Your Email</label>
-    <input id=email name=email type=text value="{{ user.email }}">
-    <button name="action_add" type="submit">Update</button>
-</form>
+        <label for=avatar>TODO: Change your avatar</label>
+        <p>SELECTION WINDOW </p>
+        <button id="avatar" name="avatar">SELECT</button>
+
+        <br/><br/>
+                <label for=email>Your Email</label>
+        <input id=email name=email type=text value="{{ user.email }}">
+        <br/>
+        <button type="submit">Update</button>
+
+            <div>
+        <p>Make a request for an admin to change other account information</p>
+        <a href="{% url 'account_request' %}">Request a change</a>
+    </div>
+
+    <div>
+        <p>Connect a social media profile to your account</p>
+        <a href="/account/social/connections/">Connect a social account<a>
+    </div>
+
+    <div>
+        <p>Prefer to delete?</p>
+        <a href="{% url 'account_delete' %}">Delete your account</a>
+    </div>
+    </form>
+    <br/>
+
+<!--    <form method="post" action="{% url 'account_email' %}" class="add_email">
+        {% csrf_token %}
+        <label for=email>Your Email</label>
+        <input id=email name=email type=text value="{{ user.email }}">
+        <button name="action_add" type="submit">Update</button>
+    </form>
+-->
 
 
-<div>
-    <p>Make a request for an admin to change other account information</p>
-    <a href="{% url 'account_request' %}">Request a change</a>
-</div>
-
-<div>
-    <p>Connect a social media profile to your account</p>
-    <a href="/account/social/connections/">Connect a social account<a>
-</div>
-
-<div>
-    <p>Prefer to delete?</p>
-    <a href="{% url 'account_delete' %}">Delete your account</a>
-</div>
 
 </section>

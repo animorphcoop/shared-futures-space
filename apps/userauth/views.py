@@ -1,5 +1,6 @@
 # pyre-strict
 from allauth.utils import get_form_class
+from django.http.request import QueryDict
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
@@ -63,12 +64,39 @@ class CustomUserUpdateView(TemplateView):
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
 
     # If changing the username only - need to ensure the email does not get wiped out
-    def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
-        HttpResponseRedirect, CustomUserUpdateForm]:
+    def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
+        HttpResponse, HttpResponse]:
+        print('POSTING')
+
         # pyre-ignore[16]:
         currentuser = request.user
-        form = CustomUserUpdateForm(request.POST, request.FILES)
+        data = QueryDict(request.body).dict()
+        print(currentuser.email)
+        current_email = currentuser.email
+        new_email = data.get('email')
 
+        print(data)
+        form = CustomUserUpdateForm(data, instance=currentuser)
+        if form.is_valid():
+            #print(form)
+            print(data.get('email'))
+
+            currentuser.display_name = data.get('display_name')
+
+            if current_email != new_email:
+                print('trying to change email')
+                add_email_address(request, new_email)
+            else:
+                print('the same')
+            currentuser.email = current_email
+            currentuser.save()
+            return profile_view(request)
+
+        else:
+            return HttpResponse("Failed to retrieve or process the change, please refresh the page")
+
+        '''
+        form = CustomUserUpdateForm(request.POST, request.FILES)
         if request.FILES.get('avatar') != None:
             new_avatar = request.FILES.get('avatar')
             declared_content_type = new_avatar.content_type
@@ -80,9 +108,16 @@ class CustomUserUpdateView(TemplateView):
                 print(
                     'error: invalid avatar (declared content type ' + declared_content_type + ', actual content type: ' + actual_content_type + ')')
         else:
-            currentuser.display_name = form.data.get('display_name')
-        currentuser.save()
-        return HttpResponseRedirect(reverse_lazy('account_view'))
+        '''
+        #currentuser.display_name = QueryDict(request.body).dict().get('display_name')
+        #currentuser.save()
+        #return HttpResponseRedirect(reverse_lazy('account_view'))
+
+
+def add_email_address(request, new_email):
+    # Add a new email address for the user, and send email confirmation.
+    # Old email will remain the primary until the new one is confirmed.
+    return EmailAddress.objects.add_email(request, request.user, new_email, confirm=True)
 
 
 # Gets triggered when clicking confirm button
