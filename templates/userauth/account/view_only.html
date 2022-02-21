@@ -3,19 +3,20 @@
 {% load i18n %}
 
 
-
 {% block content %}
 <a href="{% url 'dashboard' %}">Back to Dashboard</a>
 
-<p class="font-sans text-5xl bg">Your account</p>
+<p class="font-sans text-5xl bg">{{user.display_name}} profile</p>
 {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
 <div id="profile-data">
     <br/>
-    Display name: {{user.display_name}}
+    {{user.display_name}}, born in {{user.year_of_birth}}
     <br/>
-    Year of birth: {{user.year_of_birth}}
-    <br/>
-    Post code {{user.post_code}}
+    {% if user.post_code != null%}
+    Living at Post code {{user.post_code}}
+    {% else %}
+    Don't have one yet.
+    {% endif %}
     <br/>
     Profile image:
     <br/>
@@ -27,7 +28,5 @@
     <br/>
 </div>
 <hr/>
-
-<button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile</button>
 
 {% endblock %}

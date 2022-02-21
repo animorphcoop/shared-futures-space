@@ -3,7 +3,7 @@ from django.conf import settings
 from django.urls import include, path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
 from .views import CustomUserUpdateView, CustomUserDeleteView, profile_view, user_request_view, AdminRequestView, \
-    CustomUserPersonalView, CustomLoginView, UserChatView, UserAllChatsView
+    CustomUserPersonalView, CustomLoginView, UserChatView, UserAllChatsView, user_detail
 from typing import List, Union
 from uuid import UUID
 
@@ -13,7 +13,9 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     #path("signup/", signup, name="account_signup"),
     path('request/', login_required(user_request_view), name='account_request'),
     path('managerequests/', login_required(AdminRequestView.as_view(template_name='account/manage_requests.html')), name='account_request_panel'),  # pyre-ignore[16]
-    path('view/', login_required(profile_view), name='account_view'),
+    path('', login_required(profile_view), name='account_view'),
+    path('<int:pk>/', user_detail, name='user_detail'),
+
     path('data/', login_required(CustomUserPersonalView.as_view(template_name='account/data.html')), name='account_data'),
     path('update/', login_required(CustomUserUpdateView.as_view(template_name='account/update.html')), name='account_update'),
     path('delete/', login_required(CustomUserDeleteView.as_view(template_name='account/delete.html')), name='account_delete'),
