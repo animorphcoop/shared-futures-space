@@ -1,6 +1,7 @@
 # pyre-strict
 from django import template
-from typing import Iterable, List, Any, TypeVar
+from django.http import HttpResponse
+from typing import Iterable, List, Any, TypeVar, Dict
 
 register = template.Library()
 

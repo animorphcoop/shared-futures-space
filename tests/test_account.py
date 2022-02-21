@@ -6,7 +6,10 @@ import bs4
 import re
 
 from django.urls import reverse
-from userauth.models import CustomUser, UserRequest
+from userauth.models import CustomUser
+from action.models import Action
+from userauth.util import get_system_user
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 @pytest.mark.django_db
@@ -39,6 +42,25 @@ def test_dashboard_info(client, test_user):
     welcome = bs4.BeautifulSoup(dash.content, 'html5lib').body.text
     # janky as fuck placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
     assert re.match(f'.*Welcome {test_user.display_name}', welcome, re.S)
+    assert 'Your profile misses important data, please add them in' not in welcome
+    test_user.year_of_birth = None
+    test_user.post_code = None
+    test_user.save()
+    dash = client.get('/dashboard/')
+    assert 'Your profile misses important data, please add them in' in str(dash.content)
+
+
+def test_data_add(client, test_user):
+    test_user.year_of_birth = None
+    test_user.post_code = None
+    test_user.save()
+    client.force_login(test_user)
+    client.post(reverse('account_data'), {'year_of_birth': 1997, 'post_code': 'ABC123'})
+    assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
+    assert CustomUser.objects.get(id=test_user.id).post_code == 'ABC123'
+    client.post(reverse('account_data'), {'year_of_birth': 2001, 'post_code': 'XYZ999'})
+    assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
+    assert CustomUser.objects.get(id=test_user.id).post_code == 'ABC123'
 
 
 @pytest.mark.django_db
@@ -51,17 +73,15 @@ def test_user_request_flow(client, test_user, admin_client):
                                 'reason': 'pls'})
     assert make_request.status_code == 302
     assert make_request.url == f'/account/update/'
-    assert len(UserRequest.objects.all()) == 1
+    assert len(Action.objects.filter(kind='user_request_make_editor')) == 1
 
     requests_page = admin_client.get('/account/managerequests/')
-    table_rows = bs4.BeautifulSoup(requests_page.content, features='html5lib').body.find('table').tbody.find_all('tr')
-    test_row = [row for row in table_rows
-                if row.find_all('td') != [] and row.find_all('td')[0].text == test_user.display_name][0]
-    user_request_id = test_row.find_all('td')[4].form.find('input', attrs={'name': 'request_id'})['value']
-    admin_client.post('/account/managerequests/', {'accept': 'accept',
-                                                   'request_id': user_request_id})
-    assert CustomUser.objects.get(id=test_user.id).editor
-    assert len(UserRequest.objects.all()) == 0
+    requests_html = bs4.BeautifulSoup(requests_page.content, 'html5lib')
+    assert test_user.display_name + ' made a request: user_request_make_editor, because: pls' in requests_html.text
+    action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
+    admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
+    messages = client.get(reverse('user_chat', args=[get_system_user().uuid]))
+    assert 'your request to become an editor has been granted' in str(messages.content)
 
 
 @pytest.mark.django_db
@@ -73,6 +93,17 @@ def test_update_flow(client, test_user):
     assert current_name == test_user.display_name
     client.post(reverse('account_update'), {'display_name': 'New Name'})
     assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
+    # http://web.archive.org/web/20111224041840/http://www.techsupportteam.org/forum/digital-imaging-photography/1892-worlds-smallest-valid-jpeg.html
+    # needs to be valid because avatar upload only accepts valid images in png, jpg or bmp
+    smallest_jpg = b"\xFF\xD8\xFF\xE0\x00\x10\x4A\x46\x49\x46\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xFF\xDB\x00\x43\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xC2\x00\x0B\x08\x00\x01\x00\x01\x01\x01\x11\x00\xFF\xC4\x00\x14\x10\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xDA\x00\x08\x01\x01\x00\x01\x3F\x10"
+    avatar = SimpleUploadedFile("file.jpg", smallest_jpg, content_type="image/jpeg")
+    client.post(reverse('account_update'), {'avatar': avatar})
+    assert CustomUser.objects.get(id=test_user.id).avatar.read() == avatar.file.getvalue()
 
-# TODO: Tests for removing account
+def test_delete_account(client, test_user):
+    client.force_login(test_user)
+    delete_page = client.get(reverse('account_delete'))
+    assert 'Want to delete your account' in str(delete_page.content)
+    client.post(reverse('account_delete'), {'confirm': 'confirm'})
+    assert len(CustomUser.objects.filter(id=test_user.id)) == 0
 

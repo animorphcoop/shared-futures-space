@@ -7,6 +7,7 @@
 <hr>
 <p>{{object.description}}</p>
 <hr>
+<p><a href="{% url 'project_chat' object.slug %}">Project Chat</a></p>
 {% if request.user in owners|attrmap:'user' %}
  <p><a href="{% url 'edit_project' object.slug %}">Edit Project</a></p>
  <p><a href="{% url 'manage_project' object.slug %}">Manage Project</a></p>
@@ -16,8 +17,7 @@
   {% if request.user in members|attrmap:'user' %}
    <button name=action value=leave>leave project</button>
   {% else %}
-   <p><b>WARNING: NOT IMPLEMENTED (would use messaging system, messaging owner group with a secure link that allows owners to give you membership)</b></p>
-   <button name=action value=request_join>request to join project</button>
+   <button name=action value=join>join project</button>
   {% endif %}
  </form>
 {% endif %}

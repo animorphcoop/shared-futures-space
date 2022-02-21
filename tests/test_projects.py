@@ -30,14 +30,20 @@ def test_project_edit(client, test_user, test_project):
 def test_project_membership(client, test_user, other_test_user, test_project):
     # non-owner members
     client.force_login(test_user)
-    membership = ProjectMembership(user=test_user, project=test_project, owner=False)
-    membership.save()
+    project_page = client.get(reverse('view_project', args=[test_project.slug]))
+    project_page_html = bs4.BeautifulSoup(project_page.content, features='html5lib')
+    join_button = project_page_html.find('button')
+    assert join_button.text == 'join project'
+    client.post(reverse('view_project', args=[test_project.slug]), {'action': 'join'})
+    assert len(ProjectMembership.objects.filter(user=test_user, project=test_project)) == 1
     project_page_member = client.get(reverse('view_project', args=[test_project.slug]))
     project_page_member_html = bs4.BeautifulSoup(project_page_member.content, features='html5lib')
     leave_button = project_page_member_html.find('button')
     assert leave_button.text == 'leave project'
     client.post(reverse('view_project', args=[test_project.slug]), {'action': 'leave'})
     assert len(ProjectMembership.objects.filter(user=test_user, project=test_project)) == 0
+    chat_page = client.get(reverse('project_chat', args=[test_project.slug]))
+    assert test_user.display_name + ' left this project' in str(chat_page.content)
     # owners
     ownership = ProjectMembership(user=test_user, project=test_project, owner=True)
     other_ownership = ProjectMembership(user=other_test_user, project=test_project, owner=True)
@@ -45,16 +51,18 @@ def test_project_membership(client, test_user, other_test_user, test_project):
     other_ownership.save()
     project_page_owner = client.get(reverse('view_project', args=[test_project.slug]))
     project_page_owner_html = bs4.BeautifulSoup(project_page_owner.content, features='html5lib')
-    edit_link = project_page_owner_html.find('a')
+    edit_link = project_page_owner_html.find_all('a')[1]
     assert edit_link.text == 'Edit Project'
     edit_page = client.get(reverse('edit_project', args=[test_project.slug]))
     edit_page_html = bs4.BeautifulSoup(edit_page.content, features='html5lib')
     abdicate_button = edit_page_html.find('button', attrs={'name': 'abdicate'})
     assert abdicate_button.text == 'Rescind Ownership'
     client.post(reverse('edit_project', args=[test_project.slug]), {'name': test_project.name,
-                                                                  'description': test_project.description,
-                                                                  'abdicate': 'abdicate'})
+                                                                    'description': test_project.description,
+                                                                    'abdicate': 'abdicate'})
     assert ProjectMembership.objects.get(user=test_user, project=test_project).owner == False
+    chat_page = client.get(reverse('project_chat', args=[test_project.slug]))
+    assert test_user.display_name + ' is no longer an owner of this project' in str(chat_page.content)
     client.force_login(other_test_user)
     edit_page_last_owner = client.get(reverse('edit_project', args=[test_project.slug]))
     edit_page_last_owner_html = bs4.BeautifulSoup(edit_page_last_owner.content, features='html5lib')
@@ -66,7 +74,7 @@ def test_project_membership(client, test_user, other_test_user, test_project):
 
 def test_project_management(client, test_user, other_test_user, test_project):
     membership = ProjectMembership(user=test_user, project=test_project, owner=True, champion=False)
-    other_membership = ProjectMembership(user=other_test_user, project=test_project, owner=False, champion=True)
+    other_membership = ProjectMembership(user=other_test_user, project=test_project, owner=False, champion=False)
     membership.save()
     other_membership.save()
     client.force_login(test_user)
@@ -74,15 +82,22 @@ def test_project_management(client, test_user, other_test_user, test_project):
     management_page_html = bs4.BeautifulSoup(management_page.content, features='html5lib')
     members = management_page_html.find('table', attrs={'id':'members'}).tbody.find_all('tr')[1:] # drop the headings row
     assert len(members) == 2
-    client.force_login(other_test_user)
     client.post(reverse('manage_project', args=[test_project.slug]), {'membership': other_membership.id,
-                                                                    'action': 'remove_championship'}) # should be rejected
+                                                                      'action': 'offer_championship'})
+    client.force_login(other_test_user)
+    user_chat = client.get(reverse('user_chat', args=[test_user.uuid]))
+    user_chat_html = bs4.BeautifulSoup(user_chat.content, features='html5lib')
+    action_id = user_chat_html.find('input', attrs={'type':'hidden', 'name':'action_id'})['value']
+    client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
+    assert ProjectMembership.objects.get(user=other_test_user, project=test_project).champion
+
+    client.post(reverse('manage_project', args=[test_project.slug]), {'membership': other_membership.id,
+                                                                      'action': 'remove_championship'}) # should be rejected
     assert ProjectMembership.objects.get(user=other_test_user, project=test_project).champion
     client.force_login(test_user)
     client.post(reverse('manage_project', args=[test_project.slug]), {'membership': other_membership.id,
-                                                                    'action': 'remove_championship'}) # should be accepted
+                                                                      'action': 'remove_championship'}) # should be accepted
     assert not ProjectMembership.objects.get(user=other_test_user, project=test_project).champion
-    
 
 
 
@@ -92,6 +107,3 @@ def test_project_management(client, test_user, other_test_user, test_project):
 
 
 
-
-
-    

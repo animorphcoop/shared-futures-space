@@ -5,12 +5,19 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
+from django.db.models.fields import CharField
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.conf import settings
 from django.urls import reverse
 
 from .models import Idea, IdeaSupport, Project, ProjectMembership
+from messaging.models import Chat, Message # pyre-ignore[21]
+from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
+from messaging.views import ChatView # pyre-ignore[21]
+from action.util import send_offer # pyre-ignore[21]
+from action.models import Action # pyre-ignore[21]
+from messaging.util import send_system_message # pyre-ignore[21]
 from typing import Dict, List, Any
 
 class IdeaView(DetailView):
@@ -26,8 +33,8 @@ class IdeaView(DetailView):
                 support.save()
                 # TODO: is this the only place support can be given? if not, need to check elsewhere as well
                 if (len(IdeaSupport.objects.filter(idea=Idea.objects.get(slug=slug))) >= settings.PROJECT_REQUIRED_SUPPORTERS):
-                    new_project_id = replace_idea_with_project(Idea.objects.get(slug=slug))
-                    return redirect(reverse('view_project', args=[new_project_id]))
+                    new_project_slug = replace_idea_with_project(Idea.objects.get(slug=slug))
+                    return redirect(reverse('view_project', args=[new_project_slug]))
         elif (request.POST['action'] == 'remove_support'):
             # can't remove support from your own idea (because you wouldn't be able to return it through the intended interface)
             if (request.user != this_idea.proposed_by):
@@ -66,6 +73,10 @@ class EditIdeaView(UpdateView):
             idea.name = request.POST['name']
             idea.description = request.POST['description']
             idea.save()
+            for support in IdeaSupport.objects.filter(idea=idea): # pyre-ignore[16]
+                if support.user != request.user: # pyre-ignore[16]
+                    send_system_message(get_userpair(get_system_user(), support.user).chat, 'idea_edited', context_idea = idea)
+                    support.delete()
         elif request.POST['action'] == 'delete':
             idea.delete()
             return redirect(reverse('all_ideas'))
@@ -73,27 +84,35 @@ class EditIdeaView(UpdateView):
 
 # ---
 
-def replace_idea_with_project(idea: Idea) -> None:
-    new_project = Project(name = idea.name, description = idea.description, slug = idea.slug)
+def replace_idea_with_project(idea: Idea) -> CharField:
+    new_chat = Chat()
+    new_chat.save()
+    new_project = Project(name = idea.name, description = idea.description, slug = idea.slug, chat = new_chat)
     new_project.save()
     for support in IdeaSupport.objects.filter(idea=idea): # pyre-ignore[16]
         new_ownership = ProjectMembership(project = new_project, user = support.user, owner = True)
         new_ownership.save()
+        send_system_message(get_userpair(get_system_user(), support.user).chat, 'idea_became_project', context_project = new_project)
+        send_system_message(new_project.chat, 'new_owner', context_user_a = support.user)
         support.delete()
     idea.delete()
-    # TODO: message involved users to tell them this has happened
-    return new_project.id # pyre-ignore[16] ("Project has no attribute id")
+    return new_project.slug
 
 # ---
 
 class ProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        # TODO: request to join and leave.
+        project = Project.objects.get(slug=slug) # pyre-ignore[16]
         if (request.POST['action'] == 'leave'):
-            membership = ProjectMembership.objects.get(user=request.user, project=Project.objects.get(slug=slug)) # pyre-ignore[16]
+            membership = ProjectMembership.objects.get(user=request.user, project=project) # pyre-ignore[16]
             if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
                 membership.delete()
+                send_system_message(project.chat, 'left_project', context_project = project, context_user_a = request.user)
+        if (request.POST['action'] == 'join'):
+            if len(ProjectMembership.objects.filter(user=request.user, project=project)) == 0:
+                ProjectMembership.objects.create(user=request.user, project=project, owner=False, champion=False)
+                send_system_message(project.chat, 'joined_project', context_project = project, context_user_a = request.user)
         return super().get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
@@ -130,6 +149,7 @@ class EditProjectView(UpdateView):
                     my_membership = ProjectMembership.objects.get(project=project, user=request.user, owner=True)
                     my_membership.owner = False
                     my_membership.save()
+                    send_system_message(project.chat, 'lost_ownership', context_user_a = request.user)
             project.name = request.POST['name']
             project.description = request.POST['description']
             project.save()
@@ -142,24 +162,50 @@ class EditProjectView(UpdateView):
 class ManageProjectView(DetailView):
     model = Project
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        project = Project.objects.get(slug=slug) # pyre-ignore[16]
         membership = ProjectMembership.objects.get(id=request.POST['membership']) # pyre-ignore[16]
         # security checks
-        if (ProjectMembership.objects.get(user=request.user, project=Project.objects.get(slug=slug)).owner == True # pyre-ignore[16]
+        if (ProjectMembership.objects.get(user=request.user, project=project).owner == True # pyre-ignore[16]
             and membership.project == Project.objects.get(slug=slug)): # since the form takes any uid
-            print(request.POST['action'])
-            print(membership.champion)
             if (request.POST['action'] == 'offer_ownership'):
-                1 # TODO: do that. waiting on messaging system.
-                # don't forget to validate that they aren't an owner already, since it is possible to send the message for arbitrary uids and it might have some kind of scam value?
+                if not membership.owner: # not an owner already
+                    send_offer(request.user, membership.user, 'become_owner', param_project = project)
             elif (request.POST['action'] == 'offer_championship'):
-                2 # TODO: ditto
+                if not membership.champion:
+                    send_offer(request.user, membership.user, 'become_champion', param_project = project)
             elif (request.POST['action'] == 'remove_championship'):
-                membership.champion = False
+                if membership.champion:
+                    membership.champion = False
+                    send_system_message(project.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
+                    send_system_message(get_userpair(request.user, membership.user).chat, 'lost_championship_notification', context_user_a = request.user, context_project = membership.project)
             membership.save()
-            print(membership.champion)
         return self.get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['ownerships'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True) # pyre-ignore[16]
         context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
+
+class ProjectChatView(ChatView): # pyre-ignore[11] - thinks ChatView isn't a type
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        project = Project.objects.get(slug=slug) # pyre-ignore[16]
+        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]), # pyre-ignore[16]
+                            members = [membership.user for membership
+                                       in ProjectMembership.objects.filter(project=project)]) # pyre-ignore[16]
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        project = Project.objects.get(slug=kwargs['slug']) # pyre-ignore[16]
+        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]), # pyre-ignore[16]
+                                           members = [membership.user for membership
+                                                      in ProjectMembership.objects.filter(project=project)]) # pyre-ignore[16]
+        context['project'] = project
+        context['user_anonymous_message'] = '(you must sign in to contribute)'
+        context['not_member_message'] = '(you must be a member of this project to contribute)'
+        return context
+
+
+
+
+
+
+
+
