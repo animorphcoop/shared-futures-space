@@ -23,6 +23,7 @@ before_script:
 
 stages:
   - Tests
+  - Deploy
 
 pyre:
   stage: Tests
@@ -35,3 +36,12 @@ pytest:
     - export PYTHONPATH="$PYTHONPATH:."
     - ./manage.py collectstatic --noinput
     - pytest tests/
+
+deploy:
+  stage: Deploy
+  rules:
+    - if $CI_COMMIT_BRANCH == "production"
+      when: manual
+  script:
+    - echo "deploying..."
+    - echo "just kidding"
