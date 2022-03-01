@@ -53,8 +53,8 @@ deploy:
     - echo $PROD_SERVER_USER
     - echo $PROD_SERVER_PASS
     - echo "\
-    -   hello\
-    -   world" | echo
+       hello\
+       world" | echo
 #    - sshpass -p "$PROD_SERVER_PASS" ssh $PROD_SERVER_USER@sharedfutures.webarch.net 'bash -s' <<ENDSSH
 #    -  whoami
 #    - ENDSSH
