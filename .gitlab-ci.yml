@@ -50,6 +50,8 @@ deploy:
   script:
     - apt-get update
     - apt-get install sshpass
+    - echo $PROD_SERVER_USER
+    - echo $PROD_SERVER_PASS
     - sshpass -p $PROD_SERVER_PASS ssh $PROD_SERVER_USER@sharedfutures.webarch.net 'bash -s' <<ENDSSH
     -  whoami
     - ENDSSH
