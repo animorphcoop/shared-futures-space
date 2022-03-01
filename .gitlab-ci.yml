@@ -52,9 +52,9 @@ deploy:
     - apt-get install sshpass
     - echo $PROD_SERVER_USER
     - echo $PROD_SERVER_PASS
-    - sh <<TESTBLOCK
-        echo hi
-        echo hello
+    - sh <<TESTBLOCK\n
+        echo hi\n
+        echo hello\n
       TESTBLOCK
 #    - sshpass -p "$PROD_SERVER_PASS" ssh $PROD_SERVER_USER@sharedfutures.webarch.net 'bash -s' <<ENDSSH
 #    -  whoami
