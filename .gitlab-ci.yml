@@ -38,12 +38,17 @@ pytest:
     - pytest tests/
 
 deploy:
+  variables:
+    PROD_SERVER_USER: "asa"
+    PROD_SERVER_PASS: "wrong password"
   stage: Deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
-    - if: '"1"=="1"'
+    - if: '$CI_COMMIT_BRANCH == "cd"'
       when: manual
   script:
-    - echo "deploying..."
-    - echo "just kidding"
+    - apt-get install sshpass
+    - sshpass -p $PROD_USER_PASS ssh $PROD_SERVER_USER@sharedfutures.webarch.net 'bash -s' <<ENDSSH
+    -  whoami
+    - ENDSSH
