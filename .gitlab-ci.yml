@@ -40,8 +40,8 @@ pytest:
 deploy:
   stage: Deploy
   rules:
-    - if $CI_COMMIT_BRANCH == "production"
-      when: manual
+    - if: '$CI_COMMIT_BRANCH == "production"'
+      when: never
   script:
     - echo "deploying..."
     - echo "just kidding"
