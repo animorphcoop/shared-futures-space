@@ -42,6 +42,7 @@ deploy:
   variables:
     SSH_PRIVATE_KEY: "fake key"
     SSH_KNOWN_HOSTS: "i don't know nuthin"
+    SSH_PASSWORD: "password for provided key"
   rules:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
@@ -51,7 +52,7 @@ deploy:
     - echo $SSH_PRIVATE_KEY #  remove obviously
     - echo $SSH_KNOWN_HOSTS
     - eval $(ssh-agent -s)
-    - echo -e "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - echo -e "$SSH_PRIVATE_KEY" | tr -d '\r' | SSH_ASKPASS=$SSH_PASSWORD ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
