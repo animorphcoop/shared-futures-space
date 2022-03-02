@@ -57,7 +57,7 @@ deploy:
     - chmod 644 ~/.ssh/known_hosts
     - echo $(whoami)
     - ssh asa@sharedfutures.webarch.net
-      "echo $(whoami); # testing when $() are evaluated
+      "echo $(whoami);
        echo '# DEPLOYING';
        sudo su - dev;
        cd sites/dev;
