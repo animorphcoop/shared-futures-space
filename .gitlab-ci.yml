@@ -53,8 +53,8 @@ deploy:
     - echo $SSH_KNOWN_HOSTS
     - eval $(ssh-agent -s)
     - echo "$SSH_PASSWORD" > ./print_pass
-    - chmod +x ./print_pass
-    - echo -e "$SSH_PRIVATE_KEY" | tr -d '\r' | SSH_ASKPASS=./print_pass ssh-add - > /dev/null
+    - chmod +x ./print_pass # https://stackoverflow.com/questions/38354773/how-to-pass-an-ssh-key-passphrase-via-environment-variable
+    - echo -e "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=":0.0" SSH_ASKPASS=./print_pass setsid ssh-add - < /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
