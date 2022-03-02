@@ -57,8 +57,8 @@ deploy:
     - chmod 644 ~/.ssh/known_hosts
     - ssh asa@sharedfutures.webarch.net
       "echo '# DEPLOYING';
-       (sudo su - dev;
-       whoami);
+       sudo su - dev &&
+       whoami &&
        cd ~/sites/dev;
        echo '# stopping docker-compose';
        USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop;
