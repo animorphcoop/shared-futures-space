@@ -41,7 +41,7 @@ deploy:
   stage: Deploy
   variables:
     SSH_PRIVATE_KEY: "fake key"
-    SSH_KNOWN HOSTS: "i don't know nuthin"
+    SSH_KNOWN_HOSTS: "i don't know nuthin"
   rules:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
