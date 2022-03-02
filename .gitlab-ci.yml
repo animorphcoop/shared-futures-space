@@ -38,24 +38,24 @@ pytest:
     - pytest tests/
 
 deploy:
-  variables:
-    PROD_SERVER_USER: "asa"
-    PROD_SERVER_PASS: "wrong password"
   stage: Deploy
+  variables:
+    SSH_PRIVATE_KEY: "fake key"
+    SSH_KNOWN HOSTS: "i don't know nuthin"
   rules:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
     - if: '$CI_COMMIT_BRANCH == "cd"'
       when: manual
   script:
-    - apt-get update
-    - apt-get install sshpass
-    - echo $PROD_SERVER_USER
-    - echo $PROD_SERVER_PASS
-    - sh <<TESTBLOCK\n
-        echo hi\n
-        echo hello\n
-      TESTBLOCK
-#    - sshpass -p "$PROD_SERVER_PASS" ssh $PROD_SERVER_USER@sharedfutures.webarch.net 'bash -s' <<ENDSSH
-#    -  whoami
-#    - ENDSSH
+    - echo $SSH_PRIVATE_KEY # remove obviously
+    - echo $SSH_KNOWN_HOSTS
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - ssh asa@sharedfutures.webarch.net
+      "echo '=== deploying... ===';
+       echo 'just kidding';"
