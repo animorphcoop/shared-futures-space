@@ -57,13 +57,15 @@ deploy:
     - chmod 644 ~/.ssh/known_hosts
     - echo $(whoami)
     - ssh asa@sharedfutures.webarch.net
-      "echo $(whoami);
+      "echo \$(whoami);
        echo '# DEPLOYING';
        sudo su - dev;
-       cd sites/dev;
+       pwd;
+       whoami;
+       cd ~/sites/dev;
        echo '# stopping docker-compose';
-       USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose stop;
-       if [[ \"$(git rev-parse --abrev-ref HEAD)\" != \"staging\" ]];
+       USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop;
+       if [[ \"\$(git rev-parse --abrev-ref HEAD)\" != \"staging\" ]];
        then
          echo '# checking out staging';
          git checkout staging;
