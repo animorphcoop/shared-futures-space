@@ -48,7 +48,7 @@ deploy:
     - if: '$CI_COMMIT_BRANCH == "cd"'
       when: manual
   script:
-    - echo $SSH_PRIVATE_KEY # remove obviously
+    - echo $SSH_PRIVATE_KEY #  remove obviously
     - echo $SSH_KNOWN_HOSTS
     - eval $(ssh-agent -s)
     - echo -e "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
