@@ -39,10 +39,6 @@ pytest:
 
 deploy:
   stage: Deploy
-  variables:
-    SSH_PRIVATE_KEY: "fake key"
-    SSH_KNOWN_HOSTS: "i don't know nuthin"
-    SSH_PASSWORD: "password for provided key"
   rules:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
