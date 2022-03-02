@@ -52,7 +52,9 @@ deploy:
     - echo $SSH_PRIVATE_KEY #  remove obviously
     - echo $SSH_KNOWN_HOSTS
     - eval $(ssh-agent -s)
-    - echo -e "$SSH_PRIVATE_KEY" | tr -d '\r' | SSH_ASKPASS=$SSH_PASSWORD ssh-add - > /dev/null
+    - echo "$SSH_PASSWORD" > ./print_pass
+    - chmod +x ./print_pass
+    - echo -e "$SSH_PRIVATE_KEY" | tr -d '\r' | SSH_ASKPASS=./print_pass ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
