@@ -74,6 +74,7 @@ INSTALLED_APPS: List[str] = [
 
     'tailwind',
     'theme',
+    'django_browser_reload',
     'widget_tweaks',
 
     'django_htmx',
@@ -94,6 +95,8 @@ MIDDLEWARE: List[str] = [
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 
     'django_htmx.middleware.HtmxMiddleware',
+
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
 
