@@ -100,7 +100,7 @@ deploy:
            exit_code=0\n
            pytest tests > /dev/null || exit_code=\$?\n
            exit \$exit_code' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
-         if [[ \$? -ne 0 ]]];\n
+         if [[ \$? -ne 0 ]];\n
          then\n
            echo '########################'\n
            echo '#  TESTS FAIL LOCALLY!'\n
