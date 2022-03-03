@@ -95,7 +95,7 @@ deploy:
          echo '# collecting static files'\n
          echo '\n
            python3 manage.py collectstatic --noinput > /dev/null\n
-           echo '# running tests locally (may take a minute)'\n
+           echo \'# running tests locally (may take a minute)\'\n
            echo\n
            exit_code=0\n
            pytest tests > /dev/null || exit_code=\$?\n
