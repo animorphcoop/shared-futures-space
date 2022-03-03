@@ -66,7 +66,7 @@ deploy:
          git checkout staging\n
        fi\n
        echo '# pulling from staging'\n
-       git stash
+       git stash\n
        git pull --no-rebase git@git.coop:animorph-coop/shared-futures-space.git\n
        if [[ \$? -ne 0 ]];\n
        then\n
@@ -92,12 +92,12 @@ deploy:
          echo '# restarting docker-compose'\n
          USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start\n
          echo '# collecting static files'\n
-         echo '
-           python3 manage.py collectstatic --noinput > /dev/null
-           echo '# running tests locally (may take a minute)'
-           echo
-           exit_code=0
-           pytest tests > /dev/null || exit_code=\$?
+         echo '\n
+           python3 manage.py collectstatic --noinput > /dev/null\n
+           echo '# running tests locally (may take a minute)'\n
+           echo\n
+           exit_code=0\n
+           pytest tests > /dev/null || exit_code=\$?\n
            exit \$exit_code' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
          if [[ \$? -ne 0 ]]];\n
          then\n
