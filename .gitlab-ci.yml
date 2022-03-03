@@ -58,13 +58,57 @@ deploy:
     - echo -e
       "echo '# DEPLOYING'\n
        cd ~/sites/dev\n
-       echo \$(git rev-parse --abbrev-ref HEAD)\n
        echo '# stopping docker-compose'\n
        USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop\n
        if [[ \"\$(git rev-parse --abbrev-ref HEAD)\" != \"staging\" ]];\n
        then\n
          echo '# checking out staging'\n
          git checkout staging\n
+       fi\n
+       echo '# pulling from staging'\n
+       git pull --no-rebase git@git.coop:animorph-coop/shared-futures-space.git\n
+       if [[ \$? -ne 0 ]];\n
+       then\n
+         echo '# FAILED TO PULL FROM STAGING (IS THE SSH KEY .ssh/id_rsa.pub STILL ALLOWED BY AN ACCOUNT WITH ACCESS TO THE REPOSITORY?)'\n
+         echo '# RESTARTING DOCKER_COMPOSE WITHOUT DEPLOYING'\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start\n
+         pull_failed=1\n
+       else\n
+         pull_failed=0\n
+       fi\n
+       if [[ \$pull_failed -eq 1 ]];\n
+         echo '# COULD NOT PULL FROM STAGING'\n
+         echo '# DEPLOYMENT FAILED'\n
+       else\n
+         local_files_path='/home/dev/sites/dev_data'\n
+         echo '# installing local settings files from ' \$local_files_path\n
+         cp \$local_files_path/app_variables.env /home/dev/sites/dev/\n
+         cp \$local_files_path/db_pg_variables.env /home/dev/sites/dev/\n
+         cp \$local_files_path/local.py /home/dev/sites/dev/sfs/settings/\n
+         cp \$local_files_path/settings.py /home/dev/sites/dev/sfs/settings/\n
+
+         echo '# REBUILDING CONTAINERS (MAY TAKE SOME TIME)'\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build\n
+         echo '# restarting docker-compose'\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start\n
+         echo '# collecting static files'\n
+         echo '
+           python3 manage.py collectstatic --noinput > /dev/null
+           echo "# running tests locally (may take a minute)"
+           echo
+           exit_code=0
+           pytest tests > /dev/null || exit_code=\$?
+           exit \$exit_code' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
+         if [[ \$? -ne 0 ]]];\n
+         then\n
+           echo '########################'\n
+           echo '#  TESTS FAIL LOCALLY!'\n
+           echo '########################'\n
+           echo '# this requires attention!'\n
+           echo '# tests are: docker-cmpose exec app pytest tests/'\n
+         else\n
+           echo '# TESTS SUCCEED, DEPLOYED SUCCESSFULLY'\n
+         fi
        fi" > deploy_script
     - scp deploy_script asa@sharedfutures.webarch.net:/home/asa/deploy_script
     - ssh asa@sharedfutures.webarch.net sudo cp /home/asa/deploy_script /home/dev/deploy_script
