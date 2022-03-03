@@ -91,7 +91,8 @@ deploy:
          echo '# REBUILDING CONTAINERS (MAY TAKE SOME TIME)'\n
          USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build > /dev/null\n
          echo '# restarting docker-compose'\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start > /dev/null\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start\n
+         docker ps\n
          echo '# collecting static files'\n
          echo 'python3 manage.py collectstatic --noinput\n' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
          echo \"# running tests locally (may take a minute)\"\n
