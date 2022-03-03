@@ -86,7 +86,6 @@ deploy:
          cp \$local_files_path/db_pg_variables.env /home/dev/sites/dev/\n
          cp \$local_files_path/local.py /home/dev/sites/dev/sfs/settings/\n
          cp \$local_files_path/settings.py /home/dev/sites/dev/sfs/settings/\n
-
          echo '# REBUILDING CONTAINERS (MAY TAKE SOME TIME)'\n
          USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build\n
          echo '# restarting docker-compose'\n
