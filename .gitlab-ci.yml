@@ -78,6 +78,7 @@ deploy:
          pull_failed=0\n
        fi\n
        if [[ \$pull_failed -eq 1 ]];\n
+       then\n
          echo '# COULD NOT PULL FROM STAGING'\n
          echo '# DEPLOYMENT FAILED'\n
        else\n
