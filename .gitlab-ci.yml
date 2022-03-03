@@ -55,8 +55,7 @@ deploy:
     - chmod 700 ~/.ssh
     - echo -e "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - ssh asa@sharedfutures.webarch.net
-      sudo su dev -c
+    - echo
       "echo '# DEPLOYING';
        whoami;
        cd ~/sites/dev;
@@ -66,4 +65,5 @@ deploy:
        then
          echo '# checking out staging';
          git checkout staging;
-       fi;"
+       fi;" > deploy_script
+    - ssh asa@sharedfutures.webarch.net sudo su dev -c "\"`cat deploy_script`\""
