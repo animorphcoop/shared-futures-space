@@ -93,7 +93,7 @@ deploy:
          echo '# collecting static files'\n
          echo '
            python3 manage.py collectstatic --noinput > /dev/null
-           echo "# running tests locally (may take a minute)"
+           echo '# running tests locally (may take a minute)'
            echo
            exit_code=0
            pytest tests > /dev/null || exit_code=\$?
@@ -114,3 +114,4 @@ deploy:
     - ssh asa@sharedfutures.webarch.net sudo chmod a+x /home/dev/deploy_script
     - ssh asa@sharedfutures.webarch.net sudo chown dev /home/dev/deploy_script
     - ssh asa@sharedfutures.webarch.net sudo su - dev -c "/home/dev/deploy_script"
+v
