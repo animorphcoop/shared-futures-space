@@ -105,7 +105,7 @@ deploy:
            echo '#  TESTS FAIL LOCALLY!'\n
            echo '########################'\n
            echo '# this requires attention!'\n
-           echo '# tests are: docker-cmpose exec app pytest tests/'\n
+           echo '# tests are - docker-compose exec app pytest tests/'\n
          else\n
            echo '# TESTS SUCCEED, DEPLOYED SUCCESSFULLY'\n
          fi
