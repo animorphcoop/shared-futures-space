@@ -57,8 +57,8 @@ deploy:
     - chmod 644 ~/.ssh/known_hosts
     - echo -e
       "echo '# DEPLOYING'\n
-       echo \$(git rev-parse --abrev-ref HEAD)\n
        cd ~/sites/dev\n
+       echo \$(git rev-parse --abrev-ref HEAD)\n
        echo '# stopping docker-compose'\n
        USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop\n
        if [[ \"\$(git rev-parse --abrev-ref HEAD)\" != \"staging\" ]];\n
