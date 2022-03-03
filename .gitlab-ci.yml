@@ -66,6 +66,7 @@ deploy:
          git checkout staging\n
        fi\n
        echo '# pulling from staging'\n
+       git stash # so it won't complain about changes we made by overwriting settings files
        git pull --no-rebase git@git.coop:animorph-coop/shared-futures-space.git\n
        if [[ \$? -ne 0 ]];\n
        then\n
