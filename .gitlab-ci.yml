@@ -93,13 +93,12 @@ deploy:
          echo '# restarting docker-compose'\n
          USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start > /dev/null\n
          echo '# collecting static files'\n
-         echo 'echo hi\n
-           python3 manage.py collectstatic --noinput\n
-           echo \"# running tests locally (may take a minute)\"\n
-           echo\n
-           exit_code=0\n
-           pytest tests > /dev/null || exit_code=\$?\n
-           exit \$exit_code' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
+         echo 'python3 manage.py collectstatic --noinput\n' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
+         echo \"# running tests locally (may take a minute)\"\n
+         echo\n
+         echo 'exit_code=0\n
+               pytest tests || exit_code=\$?\n
+               exit \$exit_code' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
          if [[ \$? -ne 0 ]];\n
          then\n
            echo '########################'\n
