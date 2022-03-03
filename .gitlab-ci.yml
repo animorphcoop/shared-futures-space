@@ -38,7 +38,7 @@ pytest:
     - pytest tests/
 
 deploy:
-  stage: Deploy
+  stage: Tests # change to Deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
@@ -66,4 +66,6 @@ deploy:
          echo '# checking out staging';
          git checkout staging;
        fi;" > deploy_script
-    - ssh asa@sharedfutures.webarch.net sudo su dev -c "\"`cat deploy_script`\""
+    - scp deploy_script asa@sharedfutures.webarch.net:/home/asa/deploy_script
+    - ssh asa@sharedfutures.webarch.net chmod +ax /home/asa/deploy_script
+    - ssh asa@sharedfutures.webarch.net sudo su - dev -c "/home/asa/deploy_script"
