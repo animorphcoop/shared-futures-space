@@ -58,10 +58,10 @@ deploy:
     - echo -e
       "echo '# DEPLOYING'\n
        cd ~/sites/dev\n
-       echo \$(git rev-parse --abrev-ref HEAD)\n
+       echo \$(git rev-parse --abbrev-ref HEAD)\n
        echo '# stopping docker-compose'\n
        USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop\n
-       if [[ \"\$(git rev-parse --abrev-ref HEAD)\" != \"staging\" ]];\n
+       if [[ \"\$(git rev-parse --abbrev-ref HEAD)\" != \"staging\" ]];\n
        then\n
          echo '# checking out staging'\n
          git checkout staging\n
