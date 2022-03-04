@@ -89,6 +89,8 @@ deploy:
          cp \$local_files_path/local.py /home/dev/sites/dev/sfs/settings/\n
          cp \$local_files_path/settings.py /home/dev/sites/dev/sfs/settings/\n
          echo '# REBUILDING CONTAINERS (MAY TAKE SOME TIME)'\n
+         docker stop \$(docker ps -aq) > /dev/null
+         docker system prune -a > /dev/null
          USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build > /dev/null\n
          echo '# restarting docker-compose'\n
          USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start\n
@@ -107,6 +109,7 @@ deploy:
            echo '########################'\n
            echo '# this requires attention!'\n
            echo '# tests are - docker-compose exec app pytest tests/'\n
+           exit 1\n
          else\n
            echo '# TESTS SUCCEED, DEPLOYED SUCCESSFULLY'\n
          fi
