@@ -43,8 +43,6 @@ deploy:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
   script:
-    - echo $SSH_PRIVATE_KEY #  remove obviously
-    - echo $SSH_KNOWN_HOSTS
     - eval $(ssh-agent -s)
     - echo "echo $SSH_PASSWORD" > ./print_pass
     - chmod +x ./print_pass # https://stackoverflow.com/questions/38354773/how-to-pass-an-ssh-key-passphrase-via-environment-variable
