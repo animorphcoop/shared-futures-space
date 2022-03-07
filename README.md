@@ -8,11 +8,6 @@ Since [Commit 6e3c8b4a](https://git.coop/animorph-coop/shared-futures-space/-/co
 *Originally:*
 ```docker-compose up --build```
 
-- After cloning for the first time: 
-- `git-crypt unlock` 
-- (assuming your public key has been given access). See .gitattributes for the files this affects.
-
-
 To enter shell
 ```docker-compose exec app sh```
 
@@ -190,8 +185,8 @@ to deploy:
 
 - merge into staging
 - make sure `.dev` is changed to `.production` in sfs/settings/settings.py
-- wait for tests to run
-- run deploy.sh locally
+- merge staging into production (you cannot push diretly to production, it will only allow merges)
+- go into the pipeline for that merge and run the 'deploy' job
 - don't forget: app\_variables.env, db\_pg\_variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
 
 to use social account logins, add the following to local.py:
