@@ -38,7 +38,7 @@ pytest:
     - pytest tests/
 
 deploy:
-  stage: Tests # change to Deploy
+  stage: Deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
