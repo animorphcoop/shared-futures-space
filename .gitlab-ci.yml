@@ -92,7 +92,7 @@ deploy:
          USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose rm -f\n
          USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build\n
          echo '# restarting docker-compose'\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose up -d\n
          docker ps\n
          echo '# collecting static files'\n
          echo 'python3 manage.py collectstatic --noinput\n' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
