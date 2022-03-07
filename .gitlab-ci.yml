@@ -89,18 +89,17 @@ deploy:
          cp \$local_files_path/local.py /home/dev/sites/dev/sfs/settings/\n
          cp \$local_files_path/settings.py /home/dev/sites/dev/sfs/settings/\n
          echo '# REBUILDING CONTAINERS (MAY TAKE SOME TIME)'\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose rm -f\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose rm -f > /dev/null\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build > /dev/null\n
          echo '# restarting docker-compose'\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose up -d\n
-         docker ps\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose up -d > /dev/null\n
          echo '# collecting static files'\n
-         echo 'python3 manage.py collectstatic --noinput\n' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
+         echo 'python3 manage.py collectstatic --noinput\n' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh > /dev/null\n
          echo \"# running tests locally (may take a minute)\"\n
          echo\n
          echo 'exit_code=0\n
                pytest tests || exit_code=\$?\n
-               exit \$exit_code' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh\n
+               exit \$exit_code' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh > /dev/null\n
          if [[ \$? -ne 0 ]];\n
          then\n
            echo '########################'\n
