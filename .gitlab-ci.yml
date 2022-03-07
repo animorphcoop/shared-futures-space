@@ -42,8 +42,6 @@ deploy:
   rules:
     - if: '$CI_COMMIT_BRANCH == "production"'
       when: manual
-    - if: '$CI_COMMIT_BRANCH == "cd"'
-      when: manual
   script:
     - echo $SSH_PRIVATE_KEY #  remove obviously
     - echo $SSH_KNOWN_HOSTS
