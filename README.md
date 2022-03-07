@@ -184,8 +184,7 @@ from the repo's root directory (run `chmod +x ts_generate_js.sh` if file not exe
 to deploy:
 
 - merge into staging
-- make sure `.dev` is changed to `.production` in sfs/settings/settings.py
-- merge staging into production (you cannot push diretly to production, it will only allow merges)
+- merge staging into production (you cannot push directly to production, it will only allow merges)
 - go into the pipeline for that merge and run the 'deploy' job
 - don't forget: app\_variables.env, db\_pg\_variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
 
