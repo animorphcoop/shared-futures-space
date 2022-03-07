@@ -59,20 +59,20 @@ deploy:
       "echo '# DEPLOYING'\n
        cd ~/sites/dev\n
        echo '# stopping docker-compose'\n
-       USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop > /dev/null\n
+       USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop > /dev/null 2>./deploy_stderr.log\n
        if [[ \"\$(git rev-parse --abbrev-ref HEAD)\" != \"staging\" ]];\n
        then\n
          echo '# checking out staging'\n
-         git checkout staging\n
+         git checkout staging > /dev/null\n
        fi\n
        echo '# pulling from staging'\n
        git stash > /dev/null\n
-       git pull --no-rebase git@git.coop:animorph-coop/shared-futures-space.git > /dev/null\n
+       git pull --no-rebase git@git.coop:animorph-coop/shared-futures-space.git > /dev/null 2>>./deploy_stderr.log\n
        if [[ \$? -ne 0 ]];\n
        then\n
          echo '# FAILED TO PULL FROM STAGING (IS THE SSH KEY .ssh/id_rsa.pub STILL ALLOWED BY AN ACCOUNT WITH ACCESS TO THE REPOSITORY?)'\n
          echo '# RESTARTING DOCKER_COMPOSE WITHOUT DEPLOYING'\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start > /dev/null\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose start > /dev/null 2>./deploy_stderr.log\n
          pull_failed=1\n
        else\n
          pull_failed=0\n
@@ -89,10 +89,10 @@ deploy:
          cp \$local_files_path/local.py /home/dev/sites/dev/sfs/settings/\n
          cp \$local_files_path/settings.py /home/dev/sites/dev/sfs/settings/\n
          echo '# REBUILDING CONTAINERS (MAY TAKE SOME TIME)'\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose rm -f > /dev/null\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build > /dev/null\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose rm -f > /dev/null 2>>./deploy_stderr.log\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose build > /dev/null 2>>./deploy_stderr.log\n
          echo '# restarting docker-compose'\n
-         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose up -d > /dev/null\n
+         USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose up -d > /dev/null 2>>./deploy_stderr.log\n
          echo '# collecting static files'\n
          echo 'python3 manage.py collectstatic --noinput\n' | USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose exec -T app sh > /dev/null\n
          echo \"# running tests locally (may take a minute)\"\n
