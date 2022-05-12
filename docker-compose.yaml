@@ -56,10 +56,6 @@ services:
     command: celery -A sfs worker -l info
     volumes:
       - .:/home/app/sfs
-    environment:
-      - DB_HOST=db_pg
-      - DB_NAME=sfs_stack_pg1
-      - DB_USER=sfs_stack_usr
     depends_on:
       - db_pg
       - redis
