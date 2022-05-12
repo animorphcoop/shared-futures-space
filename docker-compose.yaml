@@ -60,7 +60,6 @@ services:
       - DB_HOST=db_pg
       - DB_NAME=sfs_stack_pg1
       - DB_USER=sfs_stack_usr
-      - DB_PASS=P+!N1*SB:ImVq+0!fGPQC8F
     depends_on:
       - db_pg
       - redis
