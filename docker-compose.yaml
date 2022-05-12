@@ -19,14 +19,14 @@ services:
              python3 manage.py collectstatic --noinput &&
              python3 manage.py runserver 0.0.0.0:9000"
     env_file:
-      - app_variables.env
+      - variables.env
     depends_on:
       - db_pg
 
   db_pg:
     image: postgres:12.8-alpine
     env_file:
-      - db_pg_variables.env
+      - variables.env
     volumes:
       - /var/lib/postgres
     ports:
