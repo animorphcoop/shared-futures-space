@@ -95,7 +95,7 @@ http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html
 
 ---
 
-**NOTE: before using in a public-facing environment, don't forget to change the default credentials! They're in `app_variables.env`, `db_pg_variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`**
+**NOTE: before using in a public-facing environment, don't forget to change the default credentials! They're in `variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`**
 
 ---
 Occasionally, issues with spinning new containers out of existing images might occur.
@@ -172,6 +172,14 @@ from the repo's root directory (run `chmod +x ts_generate_js.sh` if file not exe
 
 ---
 
+### RUNNING LOCALLY
+
+to run locally:
+- make a local copy of the desired branch, probably development or production
+- optionally in `sfs/settngs/local.py` make any desired settings changes
+- optionally in `sfs/settings/settings.py` change `.dev` to `.production` or vice versa if desired to use development or production mode (affects things like the debug tools). 
+- run ```USER_ID=`id -u` GROUP_ID=`id -g` docker-compose up``` in the local copy directory
+
 ### DEPLOYMENT
 
 to deploy:
@@ -179,7 +187,8 @@ to deploy:
 - merge into staging
 - merge staging into production (you cannot push directly to production, it will only allow merges)
 - go into the pipeline for that merge and run the 'deploy' job
-- don't forget: app\_variables.env, db\_pg\_variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
+- don't forget: variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
+- **conversely, if setting up a new deployment situation don't forget to set the password in variables.env to something new!**
 
 to use social account logins, add the following to local.py:
 

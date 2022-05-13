@@ -18,8 +18,8 @@ variables:
 before_script:
   - pip install -r requirements.txt
   - ./manage.py wait_for_db
-  - ./manage.py makemigrations
-  - ./manage.py migrate
+  - ./manage.py makemigrations --no-input
+  - ./manage.py migrate --no-input
 
 stages:
   - Tests
@@ -80,8 +80,7 @@ deploy:
        else\n
          local_files_path='/home/dev/sites/dev_data'\n
          echo '# installing local settings files from ' \$local_files_path\n
-         cp \$local_files_path/app_variables.env /home/dev/sites/dev/\n
-         cp \$local_files_path/db_pg_variables.env /home/dev/sites/dev/\n
+         cp \$local_files_path/variables.env /home/dev/sites/dev/\n
          cp \$local_files_path/local.py /home/dev/sites/dev/sfs/settings/\n
          cp \$local_files_path/settings.py /home/dev/sites/dev/sfs/settings/\n
          echo '# restarting docker-compose'\n
