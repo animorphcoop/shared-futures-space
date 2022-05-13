@@ -13,7 +13,7 @@ services:
     volumes:
       - .:/home/app/sfs
     command: >
-        sh -c "python3 manage.py wait_for_db --no-input &&
+        sh -c "python3 manage.py wait_for_db&&
              python3 manage.py makemigrations --no-input &&
              python3 manage.py migrate --no-input &&
              python3 manage.py collectstatic --noinput &&
