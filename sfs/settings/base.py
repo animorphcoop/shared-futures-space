@@ -162,7 +162,7 @@ TIME_ZONE: str = 'UTC'
 
 USE_I18N: bool = True
 
-USE_L10N: bool = True
+# USE_L10N: bool = True # defaults to true, setting it explicitly raises a warning
 
 USE_TZ: bool = True
 

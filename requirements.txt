@@ -1,5 +1,5 @@
-Django==3.2.10
-wagtail==2.15.1
+Django==4.0.6
+wagtail==3.0.1 # latest, significantly later than the first that supports django 4
 celery==5.1.2
 redis==3.5.3
 psycopg2==2.9.1
