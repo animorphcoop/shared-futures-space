@@ -12,8 +12,8 @@ pyre-check==0.9.15
 django-stubs==1.12.0
 coverage==6.4.2
 django-widget-tweaks==1.4.12
-# updated the above and it works
-# haven't updated the below
-django-htmx==1.7.0
 python-magic==0.4.25
+# updated the above and it works
+django-htmx==1.12.0
+# haven't updated the below
 django-allauth==0.45.0 # when updating this, need to check the socialaccount effects
