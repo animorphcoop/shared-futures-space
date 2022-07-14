@@ -1,5 +1,5 @@
 Django==4.0.6
-wagtail==3.0.1 # latest, significantly later than the first that supports django 4
+wagtail==3.0.1
 celery==5.2.7
 redis==4.3.4
 psycopg2==2.9.3
@@ -13,7 +13,5 @@ django-stubs==1.12.0
 coverage==6.4.2
 django-widget-tweaks==1.4.12
 python-magic==0.4.25
-# updated the above and it works
 django-htmx==1.12.0
-# haven't updated the below
-django-allauth==0.45.0 # when updating this, need to check the socialaccount effects
+django-allauth==0.51.0
