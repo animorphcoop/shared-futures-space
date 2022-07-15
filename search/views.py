@@ -1,5 +1,5 @@
 # pyre-strict
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator, Page
 from django.template.response import TemplateResponse
 
 from wagtail.core.models import Page
@@ -12,7 +12,7 @@ from typing import List, Any
 def search(request: HttpRequest) -> TemplateResponse:
     search_query: str = request.GET.get('query', '')
     page: str = request.GET.get('page', '1')
-    search_results_page: paginator.Page[Any] = Page.objects.none()
+    search_results_page: Page[Any] = Page.objects.none()
 
     # Search
     if search_query: # the empty string is falsy

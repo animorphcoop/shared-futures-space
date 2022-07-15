@@ -15,7 +15,7 @@ class Idea(models.Model):
     proposed_by: models.ForeignKey = models.ForeignKey('userauth.CustomUser', null=True, on_delete=models.SET_NULL) # null=true means nullable
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''):
-            self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[6,8,16] thinks CharField can't be used as a str
+            self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[16]
         return super().save(*args, **kwargs)
 
 class IdeaSupport(models.Model):
@@ -36,7 +36,7 @@ class Project(models.Model):
     chat: models.ForeignKey = models.ForeignKey('messaging.Chat', null = True, on_delete = models.SET_NULL, default=new_chat) # I'm guessing that if for some reason a chat is deleted, that means we want to purge it and replace it with a new one
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''): # shouldn't happen because created from ideas with existing slugs, but just in case
-            self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[6,8,16] same
+            self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[16] same
         return super().save(*args, **kwargs)
 
 class ProjectMembership(models.Model):

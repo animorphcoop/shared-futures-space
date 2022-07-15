@@ -13,7 +13,7 @@ from typing import List, Optional, Any, Dict
 
 
 class CustomUser(AbstractUser):
-    uuid = models.UUIDField(default = uuid4, editable = False)
+    uuid: models.UUIDField = models.UUIDField(default = uuid4, editable = False)
     first_name: None = None
     last_name: None = None
     display_name: models.CharField = models.CharField(verbose_name=_("Display name"),
@@ -46,7 +46,7 @@ def new_chat() -> int: # required because a plain Chat.objects.create or a lambd
 class UserPair(models.Model):
     user1: models.ForeignKey = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name = 'first_user')
     user2: models.ForeignKey = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name = 'second_user')
-    chat = models.ForeignKey('messaging.Chat', null = True, on_delete = models.SET_NULL, default=new_chat) # I'm guessing that if for some reason a chat is deleted, that means we want to purge it and replace it with a new one
+    chat: models.ForeignKey = models.ForeignKey('messaging.Chat', null = True, on_delete = models.SET_NULL, default=new_chat) # I'm guessing that if for some reason a chat is deleted, that means we want to purge it and replace it with a new one
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         # ensure that there won't be two UserPairs created for one pair of users
         if self.user1.uuid > self.user2.uuid:
