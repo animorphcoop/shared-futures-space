@@ -42,7 +42,7 @@ class CustomUserPersonalView(TemplateView):
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
-        currentuser = request.user
+        currentuser: CustomUser = request.user # pyre-ignore[9] doesn't know how customuser works?
         form = CustomUserPersonalForm(request.POST)
         if currentuser.year_of_birth is not None or currentuser.post_code is not None:
             return HttpResponse(

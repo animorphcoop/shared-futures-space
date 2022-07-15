@@ -13,7 +13,7 @@ from typing import List, Any
 def search(request: HttpRequest) -> TemplateResponse:
     search_query: str = request.GET.get('query', '')
     page: str = request.GET.get('page', '1')
-    search_results_page: PaginatorPage[Any] = Page.objects.none()
+    search_results_page: PaginatorPage = Page.objects.none() # pyre-ignore[24]
 
     # Search
     if search_query: # the empty string is falsy
