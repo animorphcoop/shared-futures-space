@@ -20,7 +20,7 @@ from action.models import Action # pyre-ignore[21]
 from messaging.util import send_system_message # pyre-ignore[21]
 from typing import Dict, List, Any
 
-class IdeaView(DetailView):
+class IdeaView(DetailView): # pyre-ignore[24] apparently pyre doesn't understand inheritence?
     model = Idea
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         this_idea = Idea.objects.get(slug=slug)
@@ -62,11 +62,12 @@ class MakeIdeaView(TemplateView):
         new_support.save()
         return redirect(reverse('all_ideas'))
 
-class EditIdeaView(UpdateView):
+class EditIdeaView(UpdateView): # pyre-ignore[24]
     model = Idea
     fields = ['name', 'description']
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
-        return login_required(super().get)(*args, **kwargs) # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
+        # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
+        return login_required(super().get)(*args, **kwargs) # pyre-ignore[6] destructuring not understood by pyre
     def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
         idea = Idea.objects.get(slug=slug)
         if request.POST['action'] == 'update':
@@ -84,7 +85,7 @@ class EditIdeaView(UpdateView):
 
 # ---
 
-def replace_idea_with_project(idea: Idea) -> CharField:
+def replace_idea_with_project(idea: Idea) -> CharField: # pyre-ignore[24]
     new_chat = Chat()
     new_chat.save()
     new_project = Project(name = idea.name, description = idea.description, slug = idea.slug, chat = new_chat)
@@ -100,7 +101,7 @@ def replace_idea_with_project(idea: Idea) -> CharField:
 
 # ---
 
-class ProjectView(DetailView):
+class ProjectView(DetailView): # pyre-ignore[24]
     model = Project
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         project = Project.objects.get(slug=slug)
@@ -135,11 +136,12 @@ class AllProjectsView(TemplateView):
             context['projects'] = Project.objects.all()
         return context
 
-class EditProjectView(UpdateView):
+class EditProjectView(UpdateView): # pyre-ignore[24]
     model = Project
     fields = ['name', 'description']
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
-        return login_required(super().get)(*args, **kwargs) # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
+         # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
+        return login_required(super().get)(*args, **kwargs) # pyre-ignore[6]
     def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
         project = Project.objects.get(slug=slug)
         if (ProjectMembership.objects.get(project=project, user=request.user).owner == True):
@@ -159,7 +161,7 @@ class EditProjectView(UpdateView):
         context['ownerships'] = ProjectMembership.objects.filter(project=context['object'], owner = True)
         return context
 
-class ManageProjectView(DetailView):
+class ManageProjectView(DetailView): # pyre-ignore[24]
     model = Project
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         project = Project.objects.get(slug=slug)
@@ -189,12 +191,12 @@ class ManageProjectView(DetailView):
 class ProjectChatView(ChatView): # pyre-ignore[11] - thinks ChatView isn't a type
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         project = Project.objects.get(slug=slug)
-        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]),
+        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]), # pyre-ignore[16] doesn't know the contingent type of super(), thinks it's just 'object'
                             members = [membership.user for membership
                                        in ProjectMembership.objects.filter(project=project)])
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         project = Project.objects.get(slug=kwargs['slug'])
-        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]),
+        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]), # pyre-ignore[16]
                                            members = [membership.user for membership
                                                       in ProjectMembership.objects.filter(project=project)])
         context['project'] = project
