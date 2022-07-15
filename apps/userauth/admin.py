@@ -5,11 +5,11 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 from django.utils.translation import gettext, gettext_lazy as _
 
-from typing import Tuple, Dict, Optional, Type, Any
+from typing import Tuple, Dict, Optional, Type
 
 class CustomUserAdmin(UserAdmin):
-    add_form: Type[UserCreationForm[Any]] = UserCreationForm
-    form: Type[UserChangeForm[Any]] = UserChangeForm
+    add_form: Type[UserCreationForm] = UserCreationForm # pyre-ignore[24]
+    form: Type[UserChangeForm] = UserChangeForm # pyre-ignore[24]
     model = CustomUser
     # need to override too-strict inferred type
     list_display: Tuple[str,...] = ('pk', 'email', 'display_name', 'year_of_birth', 'post_code')
