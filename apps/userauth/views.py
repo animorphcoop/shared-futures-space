@@ -42,7 +42,7 @@ class CustomUserPersonalView(TemplateView):
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
-        currentuser: CustomUser = request.user
+        currentuser = request.user
         form = CustomUserPersonalForm(request.POST)
         if currentuser.year_of_birth is not None or currentuser.post_code is not None:
             return HttpResponse(
@@ -66,12 +66,12 @@ class CustomUserUpdateView(TemplateView):
         currentuser = request.user
         form = CustomUserUpdateForm(request.POST, request.FILES)
 
-        if request.FILES.get('avatar') != None:
+        if request.FILES.get('avatar'):
             new_avatar = request.FILES.get('avatar')
             declared_content_type = new_avatar.content_type
             actual_content_type = magic.from_buffer(new_avatar.file.read(2048), mime=True)
             if declared_content_type == actual_content_type and declared_content_type in ['image/png', 'image/jpeg', 'image/bmp']: # safe types that browsers will (should) never interpret as active. extend if you like, but make sure the format cannot be active (looking at you SVG)
-                currentuser.avatar = request.FILES.get('avatar')
+                currentuser.avatar = new_avatar
             else:
                 print('error: invalid avatar (declared content type '+declared_content_type+', actual content type: '+actual_content_type+')')
         else:

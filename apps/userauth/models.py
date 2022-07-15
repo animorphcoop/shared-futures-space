@@ -53,5 +53,5 @@ class UserPair(models.Model):
             swp = self.user1.uuid
             self.user1.uuid = self.user2.uuid
             self.user2.uuid = swp
-        return super().save(*args, **kwargs)
+        return super().save(*args, **kwargs) # pyre-ignore[6] destructuring arguments
 

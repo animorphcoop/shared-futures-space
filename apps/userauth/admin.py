@@ -8,8 +8,8 @@ from django.utils.translation import gettext, gettext_lazy as _
 from typing import Tuple, Dict, Optional, Type
 
 class CustomUserAdmin(UserAdmin):
-    add_form: Type[UserCreationForm] = UserCreationForm
-    form: Type[UserChangeForm] = UserChangeForm
+    add_form: Type[UserCreationForm[Any]] = UserCreationForm
+    form: Type[UserChangeForm[Any]] = UserChangeForm
     model = CustomUser
     # need to override too-strict inferred type
     list_display: Tuple[str,...] = ('pk', 'email', 'display_name', 'year_of_birth', 'post_code')
