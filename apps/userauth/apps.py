@@ -10,4 +10,4 @@ class UserauthConfig(AppConfig):
         if 'runserver' in sys.argv:
             from .models import CustomUser
             # the user that sends system messages
-            CustomUser.objects.get_or_create(id=0, display_name = 'notifications') #pyre-ignore[16]
+            CustomUser.objects.get_or_create(id=0, display_name = 'notifications')

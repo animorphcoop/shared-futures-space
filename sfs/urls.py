@@ -15,7 +15,7 @@ from userauth.views import check_email, check_display_name # pyre-ignore[21]
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     # pyre comment suppresses an error caused by pyre's limited understanding of django
-    path('django-admin/', admin.site.urls),  # pyre-ignore[16]
+    path('django-admin/', admin.site.urls),
 
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),

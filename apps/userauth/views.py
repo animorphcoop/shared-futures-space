@@ -43,7 +43,7 @@ class CustomUserPersonalView(TemplateView):
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         # pyre-ignore[16]:
-        currentuser = request.user
+        currentuser: CustomUser = request.user
         form = CustomUserPersonalForm(request.POST)
         if currentuser.year_of_birth is not None or currentuser.post_code is not None:
             return HttpResponse(
@@ -93,7 +93,6 @@ def update_user_email(request: WSGIRequest, email_address: EmailAddress,
     email_address.set_as_primary()
 
     # Get rid of old email addresses
-    # pyre-ignore[16]:
     stale_addresses = EmailAddress.objects.filter(
         user=email_address.user).exclude(primary=True).delete()
 
@@ -104,7 +103,7 @@ class CustomUserDeleteView(TemplateView):
 
     def post(self, request: WSGIRequest) -> HttpResponse:
         if (request.POST['confirm'] == 'confirm'):
-            request.user.delete()  # pyre-ignore[16]
+            request.user.delete()
             return redirect('/')
         return redirect(reverse('account_update'))
 
@@ -118,7 +117,7 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
 @login_required(login_url='/account/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
-        new_request = Action.objects.create(creator=httpreq.user, receiver=None, # pyre-ignore[16]
+        new_request = Action.objects.create(creator=httpreq.user, receiver=None,
                                             kind='user_request_' + httpreq.POST['kind'],
                                             param_str=httpreq.POST['reason'])
         send_system_message(get_requests_chat(), 'user_request', context_action = new_request)
@@ -141,13 +140,13 @@ class AdminRequestView(ChatView): # pyre-ignore[11]
 class UserChatView(ChatView):
     def post(self, request: WSGIRequest, other_uuid: UUID) -> HttpResponse:
         [user1, user2] = sorted([request.user.uuid, other_uuid]) # pyre-ignore[16]
-        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1), # pyre-ignore[16]
+        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
                                                   user2=CustomUser.objects.get(uuid=user2))
         return super().post(request, chat = userpair.chat, url = reverse('user_chat', args=[other_uuid]), # pyre-ignore[16]
                             members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']]) # pyre-ignore[16]
-        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1), # pyre-ignore[16]
+        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
                                                   user2=CustomUser.objects.get(uuid=user2))
         context = super().get_context_data(chat = userpair.chat, url = reverse('user_chat', args=[kwargs['other_uuid']]), # pyre-ignore
                                            members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
@@ -160,7 +159,7 @@ class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         context['users_with_chats'] = ([pair.user2 for pair in # in the case that a chat with yourself exists, ~Q... avoids retrieving it 
-                                        UserPair.objects.filter(~Q(user2=self.request.user), user1 = self.request.user)] # pyre-ignore[16]
+                                        UserPair.objects.filter(~Q(user2=self.request.user), user1 = self.request.user)]
                                      + [pair.user1 for pair in
                                         UserPair.objects.filter(~Q(user1=self.request.user), user2 = self.request.user)])
         return context
