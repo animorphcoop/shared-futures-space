@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 from django.utils.translation import gettext, gettext_lazy as _
 
-from typing import Tuple, Dict, Optional, Type
+from typing import Tuple, Dict, Optional, Type, Any
 
 class CustomUserAdmin(UserAdmin):
     add_form: Type[UserCreationForm[Any]] = UserCreationForm
