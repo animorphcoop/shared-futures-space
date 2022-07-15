@@ -66,16 +66,16 @@ class CustomUserUpdateView(TemplateView):
         currentuser = request.user
         form = CustomUserUpdateForm(request.POST, request.FILES)
 
-        if request.FILES.get('avatar'):
+        if request.FILES.get('avatar') is not None:
             new_avatar = request.FILES.get('avatar')
-            declared_content_type = new_avatar.content_type
-            actual_content_type = magic.from_buffer(new_avatar.file.read(2048), mime=True)
+            declared_content_type = new_avatar.content_type # pyre-ignore[16] static analysis doesn't realise new_avatar can't be None
+            actual_content_type = magic.from_buffer(new_avatar.file.read(2048), mime=True) # pyre-ignore[16]
             if declared_content_type == actual_content_type and declared_content_type in ['image/png', 'image/jpeg', 'image/bmp']: # safe types that browsers will (should) never interpret as active. extend if you like, but make sure the format cannot be active (looking at you SVG)
-                currentuser.avatar = new_avatar
+                currentuser.avatar = new_avatar # pyre-ignore[16] doesn't know the actual type of currentuser
             else:
                 print('error: invalid avatar (declared content type '+declared_content_type+', actual content type: '+actual_content_type+')')
         else:
-            currentuser.display_name = form.data.get('display_name')
+            currentuser.display_name = form.data.get('display_name') # pyre-ignore[16]
         currentuser.save()
         return HttpResponseRedirect(reverse_lazy('account_view'))
 
