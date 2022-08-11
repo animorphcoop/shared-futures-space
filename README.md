@@ -5,9 +5,6 @@
 Since [Commit 6e3c8b4a](https://git.coop/animorph-coop/shared-futures-space/-/commit/6e3c8b4a6e5893e3a00379ba383c7c0cead397d0)
 ```USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build```
 
-*Originally:*
-```docker-compose up --build```
-
 To enter shell
 ```docker-compose exec app sh```
 
@@ -31,7 +28,7 @@ Migrations
 Running Tests
 ```
 $ docker-compose exec app pytest tests
-$ pyre
+$ docker-compose exec app pyre
 ```
 (they'll also run automatically on gitlab after a push)
 
