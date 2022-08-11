@@ -43,15 +43,15 @@ class CustomUserPersonalView(TemplateView):
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
-        currentuser: CustomUser = request.user  # pyre-ignore[9] doesn't know how customuser works?
+        current_user: CustomUser = request.user  # pyre-ignore[9]
         form = CustomUserPersonalForm(request.POST)
-        if currentuser.year_of_birth is not None or currentuser.post_code is not None:
+        if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         elif form.is_valid():
-            currentuser.year_of_birth = form.cleaned_data.get('year_of_birth')
-            currentuser.post_code = form.cleaned_data.get('post_code')
-            currentuser.save()
+            current_user.year_of_birth = form.cleaned_data.get('year_of_birth')
+            current_user.post_code = form.cleaned_data.get('post_code')
+            current_user.save()
             return HttpResponseRedirect(reverse_lazy('dashboard'))
         else:
             return HttpResponseRedirect(reverse_lazy('account_data'))
@@ -64,31 +64,29 @@ class CustomUserUpdateView(TemplateView):
     # If changing the username only - need to ensure the email does not get wiped out
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
         HttpResponse, HttpResponse]:
-        print('POSTING')
 
-        # pyre-ignore[16]:
-        currentuser = request.user
+        current_user = request.user
         print(request.body)
         data = QueryDict(request.body).dict()
 
         print(data)
-        form = CustomUserUpdateForm(data, instance=currentuser)
-        print('form coming out')
+        form = CustomUserUpdateForm(data, instance=current_user)
+
         print(form)
         if form.is_valid():
-            # print(data.get('email'))
-            current_email = currentuser.email
-            new_email = data.get('email')
 
-            currentuser.display_name = data.get('display_name')
+            current_email = current_user.email  # pyre-ignore[16]
+            new_email: Union[str, list[object], None] = data.get('email')
+
+            current_user.display_name = data.get('display_name')  # pyre-ignore[16]
 
             if current_email != new_email:
                 print('trying to change email')
                 add_email_address(request, new_email)
             else:
                 print('the same email')
-            currentuser.email = current_email
-            currentuser.save()
+            current_user.email = current_email  # pyre-ignore[16]
+            current_user.save()
             return profile_view(request)
 
         else:
@@ -97,36 +95,30 @@ class CustomUserUpdateView(TemplateView):
             return HttpResponse("Failed to retrieve or process the change, please refresh the page")
 
 
-def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
-    HttpResponseRedirect, CustomUserUpdateForm]:
-    currentuser = request.user
+def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[HttpResponse, HttpResponse]:
+    current_user = request.user
     data = QueryDict(request.body).dict()
-    print(currentuser.email)
-    current_email = currentuser.email
+    current_email = current_user.email  # pyre-ignore[16]
     new_email = data.get('email')
-
-    print(data)
-    form = CustomUserUpdateForm(data, instance=currentuser)
+    form = CustomUserUpdateForm(data, instance=current_user)
     if form.is_valid():
-        # print(form)
-        print(data.get('email'))
 
-        currentuser.display_name = data.get('display_name')
+        current_user.display_name = data.get('display_name')  # pyre-ignore[16]
 
         if current_email != new_email:
             print('trying to change email')
             add_email_address(request, new_email)
         else:
             print('the same')
-        currentuser.email = current_email
-        currentuser.save()
+        current_user.email = current_email  # pyre-ignore[16]
+        current_user.save()
         return profile_view(request)
 
     else:
         return HttpResponse("Failed to retrieve or process the change, please refresh the page")
 
 
-def add_email_address(request, new_email):
+def add_email_address(request: WSGIRequest, new_email: Union[str, list[object], None]) -> None:
     # Add a new email address for the user, and send email confirmation.
     # Old email will remain the primary until the new one is confirmed.
     return EmailAddress.objects.add_email(request, request.user, new_email, confirm=True)
@@ -179,14 +171,17 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
 
 class AdminRequestView(ChatView):  # pyre-ignore[11]
     def post(self, request: WSGIRequest) -> HttpResponse:
+        # pyre-ignore[16]:
         return super().post(request, members=[], chat=get_requests_chat,
-                            url=reverse('account_request_panel'))  # pyre-ignore[16]
+                            url=reverse('account_request_panel'))
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        if self.request.user.is_superuser:  # pyre-ignore[16]
+        # pyre-ignore[16]:
+        if self.request.user.is_superuser:
+            # pyre-ignore[16]:
             context = super().get_context_data(members=[], chat=get_requests_chat(),
-                                               url=reverse('account_request_panel'))  # pyre-ignore[16]
-            context['user_anonynous_message'] = ''
+                                               url=reverse('account_request_panel'))
+            context['user_anonymous_message'] = ''
             context['not_member_message'] = ''
             return context
         else:
@@ -205,8 +200,8 @@ class UserChatView(ChatView):
         [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']])  # pyre-ignore[16]
         userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
                                                      user2=CustomUser.objects.get(uuid=user2))
+        # pyre-ignore[16]:
         context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[kwargs['other_uuid']]),
-                                           # pyre-ignore
                                            members=[CustomUser.objects.get(uuid=user1),
                                                     CustomUser.objects.get(uuid=user2)])
         context['other_user'] = CustomUser.objects.get(uuid=kwargs['other_uuid'])
@@ -219,16 +214,16 @@ class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['users_with_chats'] = (
-                    [pair.user2 for pair in  # in the case that a chat with yourself exists, ~Q... avoids retrieving it
-                     UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user)]
-                    + [pair.user1 for pair in
-                       UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user)])
+                [pair.user2 for pair in  # in the case that a chat with yourself exists, ~Q... avoids retrieving it
+                 UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user)]
+                + [pair.user1 for pair in
+                   UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user)])
         return context
 
 
 # helper for inspecting db whether user exists
 # TODO: Add more validation e.g. to lower case
-def check_email(request: WSGIRequest) -> Any:  # should be HttpResponse?
+def check_email(request: WSGIRequest) -> Union[None, HttpResponse]:  # should be HttpResponse?
     # print(request.META.get('HTTP_REFERER'))
     print(request.META.get('HTTP_REFERER').rsplit('/', 2)[1])
     if request.POST.getlist('login'):
@@ -261,7 +256,7 @@ def check_email(request: WSGIRequest) -> Any:  # should be HttpResponse?
                     return HttpResponse(
                         "<span id='email-feedback' class='text-incorrect'>Sorry, this address does not exist in our records.</span>")
     else:
-        return HttpResponse("Failed to retrieve or process the address, please refresh the page")
+        return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
 
 
 # TODO: Add more validation e.g. to lower case

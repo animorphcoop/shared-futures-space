@@ -26,10 +26,12 @@ Migrations
 
 Running Tests
 ```
-$ docker-compose exec app pytest tests
-$ docker-compose exec app pyre
+docker-compose exec app pytest tests
+docker-compose exec app pyre
 ```
 (they'll also run automatically on gitlab after a push)
+
+(to run a specific py.test, e.g. `docker-compose exec app pytest tests/test_account.py`)
 
 ---
 
