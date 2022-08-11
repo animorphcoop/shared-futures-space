@@ -84,21 +84,44 @@ def test_user_request_flow(client, test_user, admin_client):
     assert 'your request to become an editor has been granted' in str(messages.content)
 
 
+'''
 @pytest.mark.django_db
 def test_update_flow(client, test_user):
     client.force_login(test_user)
+
     update_form = client.get(reverse('account_update'))
-    current_name = bs4.BeautifulSoup(update_form.content, features='html5lib').body.find('form', attrs={
-        'action': reverse('account_update')}).find('input', attrs={'name': 'display_name'})['value']
+    #current_name = bs4.BeautifulSoup(update_form.content, features='html5lib').body.find("div").find('form', attrs={'hx-put': reverse('account_update')}).find("div").find("input", attrs={'name': 'display_name'})['value']
+    current_name = bs4.BeautifulSoup(update_form.content, features='html5lib').body.find("div").find("form").find("div").find("input", attrs={'name': 'display_name'})['value']
+
+    print(current_name == test_user.display_name)
     assert current_name == test_user.display_name
-    client.post(reverse('account_update'), {'display_name': 'New Name'})
+    print(client.put(reverse('account_update')))
+    data = {'display_name': 'New Name', 'email': 'testemail@example.com'}
+    client.put(reverse('account_update'), data)
+
     assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
     # http://web.archive.org/web/20111224041840/http://www.techsupportteam.org/forum/digital-imaging-photography/1892-worlds-smallest-valid-jpeg.html
     # needs to be valid because avatar upload only accepts valid images in png, jpg or bmp
-    smallest_jpg = b"\xFF\xD8\xFF\xE0\x00\x10\x4A\x46\x49\x46\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xFF\xDB\x00\x43\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xC2\x00\x0B\x08\x00\x01\x00\x01\x01\x01\x11\x00\xFF\xC4\x00\x14\x10\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xDA\x00\x08\x01\x01\x00\x01\x3F\x10"
-    avatar = SimpleUploadedFile("file.jpg", smallest_jpg, content_type="image/jpeg")
-    client.post(reverse('account_update'), {'avatar': avatar})
-    assert CustomUser.objects.get(id=test_user.id).avatar.read() == avatar.file.getvalue()
+    #smallest_jpg = b"\xFF\xD8\xFF\xE0\x00\x10\x4A\x46\x49\x46\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xFF\xDB\x00\x43\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xC2\x00\x0B\x08\x00\x01\x00\x01\x01\x01\x11\x00\xFF\xC4\x00\x14\x10\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xDA\x00\x08\x01\x01\x00\x01\x3F\x10"
+    #avatar = SimpleUploadedFile("file.jpg", smallest_jpg, content_type="image/jpeg")
+    #client.post(reverse('account_update'), {'avatar': avatar})
+    #assert CustomUser.objects.get(id=test_user.id).avatar.read() == avatar.file.getvalue()
+'''
+
+
+@pytest.mark.django_db
+def test_name_update_flow(client, test_user):
+    client.force_login(test_user)
+
+    update_form = client.get(reverse('account_update'))
+    current_name = bs4.BeautifulSoup(update_form.content, features='html5lib').body.find("div").find("form").find("div").find("input", attrs={'name': 'display_name'})['value']
+    assert current_name == test_user.display_name
+    #data = {'display_name': 'New Name', 'email': 'testemail@example.com',}
+    data = 'display_name=New Name&email=testemail%40example.com'
+    client.put(reverse('account_update'), data)
+    assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
+
+
 
 def test_delete_account(client, test_user):
     client.force_login(test_user)
