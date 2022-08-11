@@ -8,7 +8,6 @@ Since [Commit 6e3c8b4a](https://git.coop/animorph-coop/shared-futures-space/-/co
 To enter shell
 ```docker-compose exec app sh```
 
-
 To run Django-related administrative commands
 ```docker-compose exec app django-admin startapp healerapp```
 OR

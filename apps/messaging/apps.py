@@ -11,4 +11,4 @@ class MessagingConfig(AppConfig):
         if 'runserver' in sys.argv:
             from .models import Chat
             # the chat where requests for account changes go
-            Chat.objects.get_or_create(id=0, uuid=UUID('00000000-0000-0000-0000-000000000000')) #pyre-ignore[16]
+            Chat.objects.get_or_create(id=0, uuid=UUID('00000000-0000-0000-0000-000000000000'))
