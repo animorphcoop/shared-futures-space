@@ -1,5 +1,6 @@
 # pyre-strict
 from allauth.utils import get_form_class
+from django.http.request import QueryDict
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
@@ -11,9 +12,9 @@ from django.contrib.auth import get_user_model
 from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm
 
 from .tasks import send_after
-from messaging.views import ChatView # pyre-ignore[21]
-from messaging.util import send_system_message, get_requests_chat # pyre-ignore[21]
-from action.models import Action # pyre-ignore[21]
+from messaging.views import ChatView  # pyre-ignore[21]
+from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
+from action.models import Action  # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -63,24 +64,60 @@ class CustomUserUpdateView(TemplateView):
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
 
     # If changing the username only - need to ensure the email does not get wiped out
-    def post(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
-        HttpResponseRedirect, CustomUserUpdateForm]:
+    def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
+        HttpResponse, HttpResponse]:
+        print('POSTING')
+
         # pyre-ignore[16]:
         currentuser = request.user
-        form = CustomUserUpdateForm(request.POST, request.FILES)
+        data = QueryDict(request.body).dict()
+        print(currentuser.email)
+        current_email = currentuser.email
+        new_email = data.get('email')
 
+        print(data)
+        form = CustomUserUpdateForm(data, instance=currentuser)
+        if form.is_valid():
+            #print(form)
+            print(data.get('email'))
+
+            currentuser.display_name = data.get('display_name')
+
+            if current_email != new_email:
+                print('trying to change email')
+                add_email_address(request, new_email)
+            else:
+                print('the same')
+            currentuser.email = current_email
+            currentuser.save()
+            return profile_view(request)
+
+        else:
+            return HttpResponse("Failed to retrieve or process the change, please refresh the page")
+
+        '''
+        form = CustomUserUpdateForm(request.POST, request.FILES)
         if request.FILES.get('avatar') != None:
             new_avatar = request.FILES.get('avatar')
             declared_content_type = new_avatar.content_type
             actual_content_type = magic.from_buffer(new_avatar.file.read(2048), mime=True)
-            if declared_content_type == actual_content_type and declared_content_type in ['image/png', 'image/jpeg', 'image/bmp']: # safe types that browsers will (should) never interpret as active. extend if you like, but make sure the format cannot be active (looking at you SVG)
+            if declared_content_type == actual_content_type and declared_content_type in ['image/png', 'image/jpeg',
+                                                                                          'image/bmp']:  # safe types that browsers will (should) never interpret as active. extend if you like, but make sure the format cannot be active (looking at you SVG)
                 currentuser.avatar = request.FILES.get('avatar')
             else:
-                print('error: invalid avatar (declared content type '+declared_content_type+', actual content type: '+actual_content_type+')')
+                print(
+                    'error: invalid avatar (declared content type ' + declared_content_type + ', actual content type: ' + actual_content_type + ')')
         else:
-            currentuser.display_name = form.data.get('display_name')
-        currentuser.save()
-        return HttpResponseRedirect(reverse_lazy('account_view'))
+        '''
+        #currentuser.display_name = QueryDict(request.body).dict().get('display_name')
+        #currentuser.save()
+        #return HttpResponseRedirect(reverse_lazy('account_view'))
+
+
+def add_email_address(request, new_email):
+    # Add a new email address for the user, and send email confirmation.
+    # Old email will remain the primary until the new one is confirmed.
+    return EmailAddress.objects.add_email(request, request.user, new_email, confirm=True)
 
 
 # Gets triggered when clicking confirm button
@@ -106,7 +143,7 @@ class CustomUserDeleteView(TemplateView):
         if (request.POST['confirm'] == 'confirm'):
             request.user.delete()  # pyre-ignore[16]
             return redirect('/')
-        return redirect(reverse('account_update'))
+        return redirect(reverse('account_view'))
 
 
 # for overriding default email send behaviour: https://stackoverflow.com/a/55965459
@@ -115,59 +152,73 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
 
+
 @login_required(login_url='/account/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
-        new_request = Action.objects.create(creator=httpreq.user, receiver=None, # pyre-ignore[16]
+        new_request = Action.objects.create(creator=httpreq.user, receiver=None,  # pyre-ignore[16]
                                             kind='user_request_' + httpreq.POST['kind'],
                                             param_str=httpreq.POST['reason'])
-        send_system_message(get_requests_chat(), 'user_request', context_action = new_request)
+        send_system_message(get_requests_chat(), 'user_request', context_action=new_request)
         return redirect(reverse('account_update'))
     else:
         return render(httpreq, 'account/make_request.html')
 
-class AdminRequestView(ChatView): # pyre-ignore[11]
+
+class AdminRequestView(ChatView):  # pyre-ignore[11]
     def post(self, request: WSGIRequest) -> HttpResponse:
-        return super().post(request, members=[], chat=get_requests_chat, url=reverse('account_request_panel')) # pyre-ignore[16]
-    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        if self.request.user.is_superuser: # pyre-ignore[16]
-            context = super().get_context_data(members=[], chat=get_requests_chat(), url=reverse('account_request_panel')) # pyre-ignore[16]
+        return super().post(request, members=[], chat=get_requests_chat,
+                            url=reverse('account_request_panel'))  # pyre-ignore[16]
+
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        if self.request.user.is_superuser:  # pyre-ignore[16]
+            context = super().get_context_data(members=[], chat=get_requests_chat(),
+                                               url=reverse('account_request_panel'))  # pyre-ignore[16]
             context['user_anonynous_message'] = ''
             context['not_member_message'] = ''
             return context
         else:
             return {}
 
+
 class UserChatView(ChatView):
     def post(self, request: WSGIRequest, other_uuid: UUID) -> HttpResponse:
-        [user1, user2] = sorted([request.user.uuid, other_uuid]) # pyre-ignore[16]
-        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1), # pyre-ignore[16]
-                                                  user2=CustomUser.objects.get(uuid=user2))
-        return super().post(request, chat = userpair.chat, url = reverse('user_chat', args=[other_uuid]), # pyre-ignore[16]
-                            members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
-    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']]) # pyre-ignore[16]
-        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1), # pyre-ignore[16]
-                                                  user2=CustomUser.objects.get(uuid=user2))
-        context = super().get_context_data(chat = userpair.chat, url = reverse('user_chat', args=[kwargs['other_uuid']]), # pyre-ignore
-                                           members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
+        [user1, user2] = sorted([request.user.uuid, other_uuid])  # pyre-ignore[16]
+        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),  # pyre-ignore[16]
+                                                     user2=CustomUser.objects.get(uuid=user2))
+        return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[other_uuid]),  # pyre-ignore[16]
+                            members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
+
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']])  # pyre-ignore[16]
+        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),  # pyre-ignore[16]
+                                                     user2=CustomUser.objects.get(uuid=user2))
+        context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[kwargs['other_uuid']]),
+                                           # pyre-ignore
+                                           members=[CustomUser.objects.get(uuid=user1),
+                                                    CustomUser.objects.get(uuid=user2)])
         context['other_user'] = CustomUser.objects.get(uuid=kwargs['other_uuid'])
         # due to the page being login_required, there should never be anonymous users seeing the page
         # due to request.user being in members, there should never be non-members seeing the page
         return context
 
+
 class UserAllChatsView(TemplateView):
-    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['users_with_chats'] = ([pair.user2 for pair in # in the case that a chat with yourself exists, ~Q... avoids retrieving it 
-                                        UserPair.objects.filter(~Q(user2=self.request.user), user1 = self.request.user)] # pyre-ignore[16]
-                                     + [pair.user1 for pair in
-                                        UserPair.objects.filter(~Q(user1=self.request.user), user2 = self.request.user)])
+        context['users_with_chats'] = (
+                [pair.user2 for pair in  # in the case that a chat with yourself exists, ~Q... avoids retrieving it
+                 UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user)]  # pyre-ignore[16]
+                + [pair.user1 for pair in
+                   UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user)])
         return context
+
 
 # helper for inspecting db whether user exists
 # TODO: Add more validation e.g. to lower case
-def check_email(request: WSGIRequest) -> HttpResponse:
+def check_email(request: WSGIRequest) -> Any:  # should be HttpResponse?
+    # print(request.META.get('HTTP_REFERER'))
+    print(request.META.get('HTTP_REFERER').rsplit('/', 2)[1])
     if request.POST.getlist('login'):
         user_mail = request.POST.getlist('login')[0]
         if (get_user_model().objects.filter(email=user_mail).exists()):
@@ -177,17 +228,26 @@ def check_email(request: WSGIRequest) -> HttpResponse:
                 "<span id='email-feedback' class='text-incorrect'>Such an address does not exist.</span>")
     elif request.POST.getlist('email'):
         user_mail = request.POST.getlist('email')[0]
-        # TODO: Better email validation might be needed!
+        # TODO: Better email validation needed!
         if ("@" not in user_mail or "." not in user_mail) or ("@" == user_mail[-1] or "." == user_mail[-1]):
             return HttpResponse(
                 "<span id='email-feedback' class='text-incorrect'>Please make sure you enter an email address.</span>")
         else:
-            if (get_user_model().objects.filter(email=user_mail).exists()):
-                return HttpResponse(
-                    "<span id='email-feedback' class='text-incorrect'>This address is in use, please choose a different one.</span>")
-            else:
-                return HttpResponse(
-                    "<span id='email-feedback' class='text-correct'>This e-mail address is available.</span>")
+            request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
+            if request_source_url == "signup":
+                if get_user_model().objects.filter(email=user_mail).exists():
+                    return HttpResponse(
+                        "<span id='email-feedback' class='text-incorrect'>This address is in use, please choose a different one.</span>")
+                else:
+                    return HttpResponse(
+                        "<span id='email-feedback' class='text-correct'>This e-mail address is available.</span>")
+            elif request_source_url == "reset":
+                if get_user_model().objects.filter(email=user_mail).exists():
+                    return HttpResponse(
+                        "<span id='email-feedback' class='text-correct'>This address exists in our records, you can request the reset by pressing the button.</span>")
+                else:
+                    return HttpResponse(
+                        "<span id='email-feedback' class='text-incorrect'>Sorry, this address does not exist in our records.</span>")
     else:
         return HttpResponse("Failed to retrieve or process the address, please refresh the page")
 
@@ -212,3 +272,9 @@ def check_display_name(request: WSGIRequest) -> HttpResponse:
 
 class CustomLoginView(LoginView):
     form_class: Type[CustomLoginForm] = CustomLoginForm
+
+
+def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:
+    user = get_object_or_404(CustomUser, pk=pk)
+    context = {'user': user}
+    return render(request, 'account/view_only.html', context)

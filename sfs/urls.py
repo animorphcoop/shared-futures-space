@@ -1,5 +1,6 @@
 # pyre-strict
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 from django.contrib import admin
 
@@ -26,14 +27,14 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('projects/', include('project.urls')),
     path('action/', include('action.urls')),
 
+    path("__reload__/", include("django_browser_reload.urls")),
+
     path('', include('landing.urls')),
 ]
 
 htmx_urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('check_email/', check_email, name='check_email'),
     path('check_display_name/', check_display_name, name='check_display_name'),
-
-
 ]
 
 urlpatterns += htmx_urlpatterns

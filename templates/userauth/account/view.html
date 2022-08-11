@@ -1,32 +1,56 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
-{% block head_title %}{% trans "View account" %}{% endblock %}
-
 
 {% block content %}
-<a href="{% url 'dashboard' %}"><- Dashboard</a>
-<h1>{% trans "View your account" %}</h1>
+<section id="profile-view">
 
-<p class="font-sans text-5xl bg">View</p>
-{% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
-<br/>
-Display name: {{user.display_name}}
-<br/>
-Year of birth: {{user.year_of_birth}}
-<br/>
-Post code {{user.post_code}}
-<br/>
-Profile image:
-<br/>
-{% if user.avatar.url != null%}
-<img src="{{ user.avatar.url }}"/>
-{% else %}
-Don't have one yet.
-{% endif %}
-<br/>
-<hr/>
-Would you like to edit your profile?
-<a href="{% url 'account_update' %}">Profile edit</a>
+
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+
+
+    <p class="font-sans text-5xl bg">Your account</p>
+    {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
+    <div id="profile-data" class="w-1/2 bg-green-100 rounded-lg shadow p-4">
+
+        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+            <span class="text-sm text-grey-600 basis-1/2">Display name:</span>
+            <span class="text-lg font-semibold basis-1/2">{{user.display_name}}</span>
+        </div>
+
+
+        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+            <span class="text-sm text-grey-600 basis-1/2">Year of birth:</span>
+            <span class="text-lg font-semibold basis-1/2">{{user.year_of_birth}}</span>
+        </div>
+
+        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+            <span class="text-sm text-grey-600 basis-1/2">Post code:</span>
+            <span class="text-lg font-semibold basis-1/2">{{user.post_code}}</span>
+        </div>
+
+
+        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+
+            <span class="text-sm text-grey-600 basis-1/2">Profile image:</span>
+            {% if user.avatar.url != null%}
+            <span class="text-lg font-semibold basis-1/2"><img src="{{ user.avatar.url }}"/></span>
+            {% else %}
+            <span class="text-lg font-semibold basis-1/2">Don't have one yet.</span>
+            {% endif %}
+        </div>
+
+        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+            <span class="text-sm text-grey-600 basis-1/2">E-mail:</span>
+            <span class="text-lg font-semibold basis-1/2">{{user.email}}</span>
+        </div>
+
+
+        <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile
+        </button>
+
+    </div>
+    <hr/>
+
+</section>
 {% endblock %}
