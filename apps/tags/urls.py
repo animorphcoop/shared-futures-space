@@ -6,5 +6,6 @@ from typing import List, Union
 from django.urls import URLResolver, URLPattern
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path('', views.resource, name='tags'),
+    path('', views.all_tags, name='alltags'),
+    path('<str:tag_name>', views.tag, name='tag')
 ]
