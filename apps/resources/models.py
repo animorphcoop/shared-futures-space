@@ -27,7 +27,7 @@ class Resource(models.Model):
         return f"{self.title}"
 
     class Meta:
-       # template = "resources/resources.html"
+        #app_label = 'IDIOT'
         verbose_name = "Resource"
-        verbose_name_plural = "Resources"
+        #verbose_name_plural = "Resources"
 

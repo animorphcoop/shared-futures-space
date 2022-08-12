@@ -9,6 +9,13 @@
 
 {% block content %}
 
+<input class="form-control" type="search"
+       name="search" placeholder="Begin Typing To Search Users..."
+       hx-post="/resource_search"
+       hx-trigger="keyup changed delay:500ms, search"
+       hx-target="#search-results"
+       hx-indicator=".htmx-indicator">
+
 {% for resource in Resources %}
 <div class="pb-4">
     <div class="w-full mb-10">

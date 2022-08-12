@@ -13,6 +13,8 @@ from search import views as search_views
 from typing import List, Union
 from django.urls import URLResolver, URLPattern
 from userauth.views import check_email, check_display_name # pyre-ignore[21]
+from resources.views import resource_search # pyre-ignore[21]
+
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     # pyre comment suppresses an error caused by pyre's limited understanding of django
@@ -36,6 +38,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
 htmx_urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('check_email/', check_email, name='check_email'),
     path('check_display_name/', check_display_name, name='check_display_name'),
+    path('resource_search/', resource_search, name='resource_check')
 ]
 
 urlpatterns += htmx_urlpatterns
