@@ -8,25 +8,26 @@
 {% endblock extra_css %}
 
 {% block content %}
+<section>
 
-<input class="form-control" type="search"
-       name="search" placeholder="Begin Typing To Search Users..."
-       hx-post="/resource_search"
-       hx-trigger="keyup changed delay:500ms, search"
-       hx-target="#search-results"
-       hx-indicator=".htmx-indicator">
-
-{% for resource in Resources %}
-<div class="pb-4">
-    <div class="w-full mb-10">
-        <p class="text-sm text-gray-600 text-center px-5">{{ resource.title }}</p>
+    {% include 'resources/partials/search.html' %}
+</section>
+<section>
+    <div id="results" class="hidden">
+        ok
+        {% include 'resources/partials/search-results.html' %}
     </div>
-    <div class="w-full">
-        <p class="text-md text-indigo-500 font-bold text-center">{{ resource.content }}</p>
+    <div id="initial" class="">
+        {% include 'resources/partials/list.html' %}
     </div>
-</div>
 
-{% endfor %}
+</section>
+
+
+{% block scripts %}
+
+<script src="{% static 'js/resources.js' %}"></script>
+{% endblock scripts %}
 
 {% endblock content %}
 

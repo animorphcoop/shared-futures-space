@@ -38,7 +38,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
 htmx_urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('check_email/', check_email, name='check_email'),
     path('check_display_name/', check_display_name, name='check_display_name'),
-    path('resource_search/', resource_search, name='resource_check')
+    path('resource_search/', resource_search, name='resource_search')
 ]
 
 urlpatterns += htmx_urlpatterns
