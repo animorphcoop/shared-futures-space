@@ -29,6 +29,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
 
     path("__reload__/", include("django_browser_reload.urls")),
 
+    path('resources/', include('resources.urls')),
     path('', include('landing.urls')),
 ]
 

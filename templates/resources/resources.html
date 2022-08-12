@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+
+{% for resource in Resources %}
+<div class="pb-4">
+    <div class="w-full mb-10">
+        <p class="text-sm text-gray-600 text-center px-5">{{ resource.title }}</p>
+    </div>
+    <div class="w-full">
+        <p class="text-md text-indigo-500 font-bold text-center">{{ resource.content }}</p>
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock content %}
+
+
