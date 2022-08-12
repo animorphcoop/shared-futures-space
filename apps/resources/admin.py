@@ -11,6 +11,6 @@ class ResourceAdmin(ModelAdmin):
     menu_order = 290
     add_to_settings_menu = False
     exclude_from_explorer = False
-    list_display = ("title", "content")
+    list_display = ("title", "content")  # pyre-ignore[15]
     search_fields = ("title", "content")
 
