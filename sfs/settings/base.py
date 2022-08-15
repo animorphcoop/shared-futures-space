@@ -65,6 +65,7 @@ INSTALLED_APPS: List[str] = [
     'action',
     'project',
     'resources',
+    'casestudy',
     'tags',
     'search',
     'core',
