@@ -3,9 +3,6 @@ from wagtail.snippets.models import register_snippet
 
 from uuid import uuid4
 
-
-
-#@register_snippet
 class Resource(models.Model):
     uuid: models.UUIDField = models.UUIDField(
         default = uuid4, editable = False
