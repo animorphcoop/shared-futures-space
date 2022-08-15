@@ -37,6 +37,8 @@ sys.path.append(os.path.normpath(os.path.join(BASE_DIR, 'apps')))
 INSTALLED_APPS: List[str] = [    
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
+    'wagtail.contrib.modeladmin',
+
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',

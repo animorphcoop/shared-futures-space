@@ -5,7 +5,7 @@ from uuid import uuid4
 
 
 
-@register_snippet
+#@register_snippet
 class Resource(models.Model):
     uuid: models.UUIDField = models.UUIDField(
         default = uuid4, editable = False
