@@ -1,8 +1,8 @@
 from django.db import models
 from wagtail.snippets.models import register_snippet
 
-from project.models import Project # pyre-ignore[21]
-from resources.models import Resource # pyre-ignore[21]
+#from project.models import Project # pyre-ignore[21]
+#from resources.models import Resource # pyre-ignore[21]
 from uuid import uuid4
 
 
@@ -28,9 +28,9 @@ class Tag(models.Model):
         verbose_name_plural = "Tags"
 
 class ProjectTag(models.Model):
-    project: models.ForeignKey = models.ForeignKey(Project, on_delete = models.CASCADE)
+    project: models.ForeignKey = models.ForeignKey('project.Project', on_delete = models.CASCADE)
     tag: models.ForeignKey = models.ForeignKey(Tag, on_delete = models.CASCADE)
 
 class ResourceTag(models.Model):
-    resource: models.ForeignKey = models.ForeignKey(Resource, on_delete = models.CASCADE)
+    resource: models.ForeignKey = models.ForeignKey('resources.Resource', on_delete = models.CASCADE)
     tag: models.ForeignKey = models.ForeignKey(Tag, on_delete = models.CASCADE)
