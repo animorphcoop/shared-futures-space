@@ -1,8 +1,8 @@
 from django.db import models
 from wagtail.snippets.models import register_snippet
 
-from project.models import Project
-from resources.models import Resource
+from project.models import Project # pyre-ignore[21]
+from resources.models import Resource # pyre-ignore[21]
 from uuid import uuid4
 
 

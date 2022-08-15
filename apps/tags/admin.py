@@ -11,6 +11,6 @@ class TagAdmin(ModelAdmin):
     menu_order = 290
     add_to_settings_menu = False
     exclude_from_explorer = False
-    list_display = ("name",)  # pyre-ignore[15]
+    list_display = ("name",)
     search_fields = ("name",)
 
