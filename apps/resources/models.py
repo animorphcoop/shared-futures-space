@@ -1,10 +1,18 @@
-from django.db import models
+# pyre-strict
 
-from tags.models import Tag, ResourceTag # pyre-ignore[21]
+from django.db import models
+from modelcluster.models import ClusterableModel
+
+from modelcluster.fields import ParentalKey
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from taggit.models import TaggedItemBase
 
 from uuid import uuid4
 
-class Resource(models.Model):
+class ResourceTag(TaggedItemBase):
+    content_object = ParentalKey('resources.Resource', on_delete=models.CASCADE, related_name='tagged_items')
+
+class Resource(ClusterableModel):
     uuid: models.UUIDField = models.UUIDField(
         default = uuid4, editable = False
     )
@@ -21,25 +29,7 @@ class Resource(models.Model):
         null=False,
     )
 
-    tags: models.TextField = models.TextField(
-        # purely for the wagtail form
-        # overriden 'save()' takes the data, uses it and removes it
-        max_length=150,
-        blank=True,
-        null=False
-    )
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs) # do this first because can't save the resourcetags that reference it until it itself is saved
-        tagnames = map(str.strip, self.tags.split(','))
-        ResourceTag.objects.filter(resource=self).delete()
-        for name in tagnames:
-            try:
-                target_tag = Tag.objects.get(name=name)
-            except Tag.DoesNotExist:
-                target_tag = Tag.objects.create(name=name)
-            ResourceTag.objects.create(tag=target_tag, resource=self)
-
+    tags = ClusterTaggableManager(through=ResourceTag, blank=True)
 
     def __str__(self):
         return f"{self.title}"

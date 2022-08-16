@@ -1,12 +1,21 @@
+# pyre-strict
+
 from django.db import models
+from modelcluster.models import ClusterableModel
+
+from modelcluster.fields import ParentalKey
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from taggit.models import TaggedItemBase
+
 from apps.streams import blocks
 from wagtail.core.fields import StreamField
 from wagtail.admin.edit_handlers import StreamFieldPanel
 
 
+class CaseStudyTag(TaggedItemBase):
+    content_object = ParentalKey('casestudy.CaseStudy', on_delete=models.CASCADE, related_name='tagged_items')
 
-
-class CaseStudy(models.Model):
+class CaseStudy(ClusterableModel):
 
     title = models.TextField(
         max_length=500,
@@ -35,6 +44,7 @@ class CaseStudy(models.Model):
         StreamFieldPanel("body"),
     ]
 
+    tags = ClusterTaggableManager(through=CaseStudyTag, blank=True)
 
     class Meta:
         verbose_name = "Case Study"
