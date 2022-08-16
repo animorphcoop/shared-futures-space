@@ -1,5 +1,7 @@
 from django.db import models
 
+from tags.models import Tag, ResourceTag # pyre-ignore[21]
+
 from uuid import uuid4
 
 class Resource(models.Model):
@@ -18,6 +20,26 @@ class Resource(models.Model):
         blank=False,
         null=False,
     )
+
+    tags: models.TextField = models.TextField(
+        # purely for the wagtail form
+        # overriden 'save()' takes the data, uses it and removes it
+        max_length=150,
+        blank=True,
+        null=False
+    )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs) # do this first because can't save the resourcetags that reference it until it itself is saved
+        tagnames = map(str.strip, self.tags.split(','))
+        ResourceTag.objects.filter(resource=self).delete()
+        for name in tagnames:
+            try:
+                target_tag = Tag.objects.get(name=name)
+            except Tag.DoesNotExist:
+                target_tag = Tag.objects.create(name=name)
+            ResourceTag.objects.create(tag=target_tag, resource=self)
+
 
     def __str__(self):
         return f"{self.title}"
