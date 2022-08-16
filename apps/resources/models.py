@@ -1,7 +1,7 @@
 from django.db import models
 from wagtail.snippets.models import register_snippet
 
-from tags.models import Tag, ResourceTag
+from tags.models import Tag, ResourceTag # pyre-ignore[21]
 
 from uuid import uuid4
 
