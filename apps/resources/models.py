@@ -36,20 +36,10 @@ class Resource(ClusterableModel):
     )
     def __str__(self):
         return f"{self.title}"
-    class Meta:
-        #app_label = 'IDIOT'
-        verbose_name = "Resource"
-        verbose_name_plural = "Resources"
 
 
 class HowTo(Resource):
-
-    body : models.TextField = models.TextField(
-        max_length=1000,
-        blank=False,
-        null=False,
-    )
-
+    
     tags = ClusterTaggableManager(through=HowToTag, blank=True)
 
     class Meta:
