@@ -1,18 +1,44 @@
-<div class="w-full -mb-8">
-    <div class="flex items-stretch">
+{% load static %}
+<section>
+    <header id="header" class="w-full absolute pointer-events-auto z-10">
+        <div onclick="navToggle()" class="flex w-16 h-16 absolute right-6">
 
-        <div class="relative h-32 w-32 ...">
-            <div class="absolute top-4 h-32 w-32 ">
-                <h1 class="text-5xl font-semibold text-morph pb-12 uppercase">SF</h1>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="mb-3 w-auto text-black fill-current">
+                <path class="cls-1" d="M0,5V0H32V5ZM32,32V27H0v5Zm0-13.5v-5H0v5Z"/>
+            </svg>
         </div>
+    </header>
 
-        <div class="h-32 w-32">
-            <div class="absolute inset-y-0 right-0 top-4">
-                <a class="mr-5 hover:text-gray-900 uppercase block" href="{% url 'account_signup' %}">Sign Up </a>
-                <a class="mr-5 hover:text-gray-900 uppercase block" href="{% url 'account_login' %}">Log in </a>
-                <a class="mr-5 hover:text-gray-900 uppercase block" href="">Guest </a>
+    <div id="menu" class="hidden bg-black px-6 pt-12 w-screen h-screen fixed overflow-hidden z-20">
+        <header class="flex w-full justify-between items-center">
+
+            <div onclick="navToggle()" class="flex w-16 h-16 absolute right-6">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 32"
+                     class="h-8 mb-3 w-auto text-white fill-current">
+                    <polygon class="cls-1"
+                             points="22.33 16 36.98 32 30.21 32 18.81 19.55 7.41 32 0.63 32 15.28 16 0.61 0 7.4 0 18.81 12.45 30.22 0 37 0 22.33 16"/>
+                </svg>
             </div>
-        </div>
+
+            <nav class="text-43 font-semibold w-1/2 leading-8 ">
+                <ul class="pb-6">
+                    <li ref="heal" class="heal-page text-heal pb-8">
+                        <a href="{% url 'account_logout' %}">Logout</a>
+
+
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
     </div>
-</div>
+
+
+    {% block scripts %}
+
+    <script src="{% static 'js/nav.js' %}"></script>
+    {% endblock scripts %}
+
+    <!---->
+
+</section>

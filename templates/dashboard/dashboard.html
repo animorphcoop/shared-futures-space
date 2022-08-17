@@ -9,17 +9,17 @@
 
 {% block content %}
 
-<p class="font-sans text-5xl">Dashboard</p>
+<p class="font-sans text-2xl">Welcome {{ user.display_name }}🐠</p>
 
-{% if user.is_authenticated %}
-Welcome {{ user.display_name }}
+<img src="{% static 'images/mobius.gif' %}" alt="mobius temp" class="w-full mt-12">
+
+<!--
 
 {% if user.year_of_birth == None or user.post_code == None %}
 <a href="{% url 'account_data' %}">Your profile misses important data, please add them in.</a>
 <br/>
-{% endif %}
+{% endif %}-->
 
-<a href="{% url 'account_logout' %}">Logout</a>
 <br/>
 <a href="{% url 'account_view' %}">Profile view</a>
 
@@ -34,9 +34,7 @@ Welcome {{ user.display_name }}
 <br/>
 <a href="{% url 'all_projects' %}">Projects</a>
 
-{% else %}
-You should not be here!
-{% endif %}
+
 
 
 {% endblock content %}
