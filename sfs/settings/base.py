@@ -1,3 +1,4 @@
+
 # pyre-strict
 """
 Django settings for sfs project.
@@ -65,7 +66,6 @@ INSTALLED_APPS: List[str] = [
     'action',
     'project',
     'resources',
-    'casestudy',
     'search',
     'core',
 
