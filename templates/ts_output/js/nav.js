@@ -1,8 +1,14 @@
 "use strict";
-var head = document.getElementById('header');
+var mainNavLink = document.getElementById('burger');
 var nav = document.getElementById('menu');
+var subNav = document.getElementById('dropdownNav');
+console.log(subNav);
 // Toggle menu
 function navToggle() {
-    head.classList.toggle('hidden');
+    mainNavLink.classList.toggle('hidden');
     nav.classList.toggle('hidden');
+}
+// Toggle Submenu
+function subNavToggle() {
+    subNav.classList.toggle('hidden');
 }

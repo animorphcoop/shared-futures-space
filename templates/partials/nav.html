@@ -1,7 +1,7 @@
 {% load static %}
-<section>
-    <header id="header" class="w-full absolute pointer-events-auto z-10">
-        <div onclick="navToggle()" class="flex w-16 h-16 absolute right-6">
+<section class="overflow-hidden">
+    <header id="burger" class="w-full absolute pointer-events-auto z-10">
+        <div onclick="navToggle()" class="flex w-12 h-12 absolute right-6">
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="mb-3 w-auto text-black fill-current">
                 <path class="cls-1" d="M0,5V0H32V5ZM32,32V27H0v5Zm0-13.5v-5H0v5Z"/>
@@ -9,23 +9,78 @@
         </div>
     </header>
 
-    <div id="menu" class="hidden bg-black px-6 pt-12 w-screen h-screen fixed overflow-hidden z-20">
-        <header class="flex w-full justify-between items-center">
-
-            <div onclick="navToggle()" class="flex w-16 h-16 absolute right-6">
+    <div id="menu" class="hidden bg-black w-screen h-screen fixed z-20">
+             <div onclick="navToggle()" class="flex w-12 h-12 absolute right-6">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 32"
-                     class="h-8 mb-3 w-auto text-white fill-current">
+                     class="mb-3 w-auto text-white fill-current">
                     <polygon class="cls-1"
                              points="22.33 16 36.98 32 30.21 32 18.81 19.55 7.41 32 0.63 32 15.28 16 0.61 0 7.4 0 18.81 12.45 30.22 0 37 0 22.33 16"/>
                 </svg>
             </div>
 
-            <nav class="text-43 font-semibold w-1/2 leading-8 ">
+        <header class="flex w-full justify-between items-center">
+
+
+
+            <nav class="text-43 font-semibold w-1/2 leading-8">
                 <ul class="pb-6">
-                    <li ref="heal" class="heal-page text-heal pb-8">
+                    <li class="heal-page text-heal pb-8">
+                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="heal-page text-heal pb-8">
+                        <button onclick="subNavToggle()"  id="dropdownNavLink" data-dropdown-toggle="dropdownNavbar"
+                                class="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0 font-medium flex items-center justify-between w-full md:w-auto">
+                            Springs
+                            <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                      clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div id="dropdownNav"
+                             class="hidden bg-white text-base z-15 list-none divide-y divide-gray-100 rounded shadow my-4 w-44">
+                            <ul class="py-1" aria-labelledby="dropdownLargeButton">
+                                <li>
+                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">North
+                                        Belfast</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">East
+                                        Belfast</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">West
+                                        Belfast</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">South
+                                        Belfast</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Derry
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Donegal
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </li>
+                    <li class="heal-page text-heal pb-8">
+                        <a href="{% url 'account_logout' %}">Messages</a>
+                    </li>
+                    <li class="heal-page text-heal pb-8">
+                        <a href="{% url 'resources' %}">Resources</a>
+                    </li>
+                     <li class="heal-page text-heal pb-8">
+                        <a href="{% url 'account_logout' %}">Profile</a>
+                    </li>
+                    <li class="heal-page text-heal pb-8">
                         <a href="{% url 'account_logout' %}">Logout</a>
-
-
                     </li>
                 </ul>
             </nav>
