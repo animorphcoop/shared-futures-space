@@ -2,13 +2,12 @@
 var mainNavLink = document.getElementById('burger');
 var nav = document.getElementById('menu');
 var subNav = document.getElementById('dropdownNav');
-console.log(subNav);
 // Toggle menu
 function navToggle() {
-    mainNavLink.classList.toggle('hidden');
-    nav.classList.toggle('hidden');
+    mainNavLink === null || mainNavLink === void 0 ? void 0 : mainNavLink.classList.toggle('hidden');
+    nav === null || nav === void 0 ? void 0 : nav.classList.toggle('hidden');
 }
 // Toggle Submenu
 function subNavToggle() {
-    subNav.classList.toggle('hidden');
+    subNav === null || subNav === void 0 ? void 0 : subNav.classList.toggle('hidden');
 }

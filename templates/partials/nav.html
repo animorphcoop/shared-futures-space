@@ -22,16 +22,16 @@
 
 
 
-            <nav class="text-43 font-semibold w-1/2 leading-8">
+            <nav class="text-43 font-semibold w-full leading-8">
                 <ul class="pb-6">
                     <li class="heal-page text-heal pb-8">
                         <a href="{% url 'dashboard' %}">Dashboard</a>
                     </li>
                     <li class="heal-page text-heal pb-8">
                         <button onclick="subNavToggle()"  id="dropdownNavLink" data-dropdown-toggle="dropdownNavbar"
-                                class="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0 font-medium flex items-center justify-between w-full md:w-auto">
+                                class="heal-page text-heal flex items-center justify-between w-full">
                             Springs
-                            <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20"
+                            <svg class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 20 20"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                       d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -40,35 +40,34 @@
                         </button>
                         <!-- Dropdown menu -->
                         <div id="dropdownNav"
-                             class="hidden bg-white text-base z-15 list-none divide-y divide-gray-100 rounded shadow my-4 w-44">
-                            <ul class="py-1" aria-labelledby="dropdownLargeButton">
+                             class="hidden bg-white text-base mt-2 list-none rounded shadow">
+                            <ul class="" aria-labelledby="dropdownLargeButton">
                                 <li>
-                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">North
+                                    <a href="#" class="text-sm text-morph block px-4 py-2">North
                                         Belfast</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">East
+                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">East
                                         Belfast</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">West
+                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">West
                                         Belfast</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">South
+                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">South
                                         Belfast</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Derry
+                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">Derry
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Donegal
+                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">Donegal
                                     </a>
                                 </li>
                             </ul>
                         </div>
-
                     </li>
                     <li class="heal-page text-heal pb-8">
                         <a href="{% url 'account_logout' %}">Messages</a>
