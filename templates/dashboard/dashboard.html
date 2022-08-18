@@ -19,7 +19,9 @@
 <a href="{% url 'account_data' %}">Your profile misses important data, please add them in.</a>
 <br/>
 {% endif %}-->
-
+    <div id="initial" class="">
+        {% include 'dashboard/partials/location.html' %}
+    </div>
 <br/>
 <a href="{% url 'account_view' %}">Profile view</a>
 
@@ -35,6 +37,6 @@
 <a href="{% url 'all_projects' %}">Projects</a>
 
 
-
+<script src="{% static 'js/dashboard.js' %}"></script>
 
 {% endblock content %}
