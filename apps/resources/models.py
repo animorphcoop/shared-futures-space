@@ -59,7 +59,6 @@ class CaseStudy(Resource):
     # could be a streamfield
     body = StreamField([
         ("body_text", blocks.RichTextSimpleBlock()),
-
     ], null=True, blank=True)
 
     content_panels = [
