@@ -2,20 +2,70 @@ getWeather()
 
 // Find info
 function getWeather() {
-    fetch('http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/350347?res=3hourly&key=1e0c30fb-cec9-497a-a29b-66b9f5a537a2').then(response => {
+    fetch('https://api.openweathermap.org/data/2.5/weather?q=Belfast,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef').then(response => {
         return response.json()
     }).then(data => {
             console.log(data)
-            console.log(typeof data)
-            console.log(Object.keys(data))
-            let keys = []
+            let filteredData = []
+            filteredData.push(filterLoop(data, "main"))
+            filteredData.push(filterLoop(data, "weather"))
+            return filteredData
+        }
+    ).then(filtered => {
+        let selected = []
+        selected.push(kelvinToCelsius(filterLoop(filtered[0], "temp")))
+        selected.push(filterLoop(filtered[1][0], "main"))
 
-            for (let key in data) {
+        console.log(selected)
+    })
+
+}
+
+function kelvinToCelsius(kelvinTemp){
+    return Math.round((parseFloat(kelvinTemp) - 273.15) * 10) / 10
+}
+
+function filterLoop(objectToReduce, keySearched) {
+    for (let [key, value] of Object.entries(objectToReduce)) {
+        if (key.includes(keySearched)) {
+            return value
+        }
+
+    }
+}
+
+/*
+
+        const preferenceRank = Object.fromEntries(
+            Object.entries(data).map(([key, { rank }]) => [rank, key])
+        )
+*/
+
+/*
+            let mainWeatherData = []
+            let weatherType = []
+            for (let [key, value] of Object.entries(data)) {
+                //console.log(key, value);
+                if (key.includes("main")) {
+                    mainWeatherData.push(value)
+                } else if (key.includes("weather")) {
+                    weatherType.push(value)
+                }
+            }
+
+            console.log(mainWeatherData)
+            console.log(weatherType)
+*/
+
+/*            let keys = []
+
+            for (let [key, value] in data) {
+                console.log(key, value)
                 if (data.hasOwnProperty(key)) {
                     keys.push(key)
                 }
-            }
-            console.log(Object.values(data[keys[0]]))
+            }*/
+/*            console.log(Object.values(data[keys[0]]))
             const locationData = Object.values(data[keys[0]])
             console.log(typeof locationData)
             let dataEntries = []
@@ -23,10 +73,10 @@ function getWeather() {
                 dataEntries.push(entry)
             })
             const specificData = dataEntries[1]
-            /*   specificData.forEach(item => {
+            /!*   specificData.forEach(item => {
                  console.log(item)
              })
-             */
+             *!/
             console.log(typeof specificData)
             let forecast = []
             for (let [key, value] of Object.entries(specificData)) {
@@ -99,8 +149,4 @@ function getWeather() {
             }
             console.log(`weather type is ${weatherType}`)
             console.log(`temperature is ${temperature}`)
-            // go figure https://hub.animorph.coop/f/243136
-        }
-    )
-
-}
+           */
