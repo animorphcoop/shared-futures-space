@@ -47,7 +47,7 @@ class Project(ClusterableModel):
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''): # shouldn't happen because created from ideas with existing slugs, but just in case
             self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[16] same
-        return super().save(*args, **kwargs) # pyre-ignore[6]
+        return super().save(*args, **kwargs)
 
 class ProjectMembership(models.Model):
     project: models.ForeignKey = models.ForeignKey(Project, on_delete=models.CASCADE)

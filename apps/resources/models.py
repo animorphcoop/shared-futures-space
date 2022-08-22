@@ -34,7 +34,7 @@ class Resource(ClusterableModel):
         blank=False,
         null=False,
     )
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.title}"
 
 
@@ -49,7 +49,7 @@ class HowTo(Resource):
 
 class CaseStudy(Resource):
 
-    case_study_image = models.ForeignKey(
+    case_study_image: models.ForeignKey = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
         blank=False,
