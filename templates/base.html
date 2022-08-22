@@ -20,6 +20,7 @@
 
     {% block extra_css %}
     {# Override this in templates to add extra stylesheets #}
+
     {% endblock %}
     {% tailwind_css %}
 
@@ -31,6 +32,7 @@
 
 
 </head>
+<script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
 <body class="">
 
@@ -43,16 +45,16 @@
 {% endblock %}
 
 {# Global javascript #}
-<script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
 {% block extra_js %}
 {# Override this in templates to add extra javascript #}
 {% endblock %}
 
-    <script>
-      document.body.addEventListener('htmx:configRequest', (event) => {
-        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-      })
-    </script>
 </body>
+
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    })
+</script>
 </html>

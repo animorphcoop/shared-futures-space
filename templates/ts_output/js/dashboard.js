@@ -41,27 +41,64 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 const weather = await parseData()
 
 console.log(weather)*/
-function retireveData() {
-    apiService('https://api.openweathermap.org/data/2.5/weather?q=London,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef').then(function (data) {
+//TODO: Potentially look into geocoding requests to get more precise measurement
+var endpointDerry = 'https:api.openweathermap.org/data/2.5/weather?q=Derry,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
+var endpointDungloe = 'https:api.openweathermap.org/data/2.5/weather?q=Dungloe,IE&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
+var endpointBelfast = 'https://api.openweathermap.org/data/2.5/weather?q=Belfast,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
+var backupWeatherIcon = 'https://openweathermap.org/img/wn/01d@2x.png';
+var weatherTypes = {
+    'clear sky': 'https://openweathermap.org/img/wn/01d@2x.png',
+    'few clouds': 'https://openweathermap.org/img/wn/02d@2x.png',
+    'overcast clouds': 'https://openweathermap.org/img/wn/02d@2x.png',
+    'scattered clouds': 'https://openweathermap.org/img/wn/03d@2x.png',
+    'broken clouds': 'https://openweathermap.org/img/wn/04d@2x.png',
+    'shower rain': 'https://openweathermap.org/img/wn/09d@2x.png',
+    'rain': 'https://openweathermap.org/img/wn/10d@2x.png',
+    'thunderstorm': 'https://openweathermap.org/img/wn/11d@2x.png',
+    'snow': 'https://openweathermap.org/img/wn/13d@2x.png',
+    'mist': 'https://openweathermap.org/img/wn/50d@2x.png'
+};
+// TODO: Based on Postcode / location
+function retrieveData() {
+    apiService(endpointBelfast).then(function (data) {
         if (data) {
-            console.log("result is ".concat(data));
             return data;
         }
         else {
-            console.log('no luck');
+            console.log('no luck retrieving weather data');
         }
     });
-    return apiService('https://api.openweathermap.org/data/2.5/weather?q=London,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef');
+    return apiService(endpointBelfast);
+}
+function mapWeatherType(weatherDescription) {
+    var currentWeatherIcon = findWeatherIcon(weatherDescription);
+    var weatherIconHolder = document.getElementById("weather-icon");
+    //const {'clear sky': imgUrl} = weatherTypes
+    weatherIconHolder.src = currentWeatherIcon;
+}
+function findWeatherIcon(currentWeather) {
+    var imgUrl = '';
+    for (var _i = 0, _a = Object.entries(weatherTypes); _i < _a.length; _i++) {
+        var _b = _a[_i], key = _b[0], value = _b[1];
+        if (currentWeather.match(key)) {
+            imgUrl = value;
+        }
+    }
+    if (imgUrl == "")
+        imgUrl = backupWeatherIcon;
+    console.log("assigned ".concat(imgUrl));
+    return imgUrl;
 }
 function getWeather() {
     return __awaiter(this, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, retireveData()];
+                case 0: return [4 /*yield*/, retrieveData()];
                 case 1:
                     response = _a.sent();
-                    return [2 /*return*/, getWeatherDetails(response).toString().split(',').join(' ')];
+                    console.log("returning ".concat(getWeatherDetails(response), " temperature"));
+                    return [2 /*return*/, getWeatherDetails(response).toString()];
             }
         });
     });
@@ -73,11 +110,13 @@ function getWeatherDetails(toProcess) {
     filteredData.push(filterLoop(toProcess, "weather"));
     //document.getElementById('dash-weather').innerHTML = kelvinToCelsius(filterLoop(filteredData[0], "temp")).ToString()
     //return kelvinToCelsius(filterLoop(filteredData[0], whichOne))
-    var selected = [];
-    selected.push(kelvinToCelsius(filterLoop(filteredData[0], "temp")).toString() + '°');
-    selected.push(filterLoop(filteredData[1][0], "main"));
-    console.log(selected[0]);
-    return selected;
+    //let selected = []
+    //selected.push(kelvinToCelsius(filterLoop(filteredData[0], "temp")).toString()+'°')
+    //selected.push(filterLoop(filteredData[1][0], "main"))
+    //selected.push(filterLoop(filteredData[1][0], "description"))
+    //return selected
+    mapWeatherType(filterLoop(filteredData[1][0], "description").toString());
+    return kelvinToCelsius(filterLoop(filteredData[0], "temp")).toString() + '°';
 }
 function apiService(endpoint) {
     return fetch(endpoint)
@@ -94,28 +133,6 @@ function handleResponse(response) {
         return response.json();
     }
 }
-// Find info
-/*function getWeather() {
-    fetch('https://api.openweathermap.org/data/2.5/weather?q=Belfast,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef').then(response => {
-        return response.json()
-    }).then(data => {
-            console.log(data)
-            let filteredData = []
-            filteredData.push(filterLoop(data, "main"))
-            filteredData.push(filterLoop(data, "weather"))
-            return filteredData
-        }
-    ).then(filtered => {
-        let selected = []
-        selected.push(kelvinToCelsius(filterLoop(filtered[0], "temp")))
-        selected.push(filterLoop(filtered[1][0], "main"))
-
-        console.log(selected)
-        return selected
-        //RETURN TO TEMPLATE
-    })
-
-}*/
 function kelvinToCelsius(kelvinTemp) {
     return Math.round((parseFloat(kelvinTemp) - 273.15) * 10) / 10;
 }

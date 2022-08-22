@@ -1,5 +1,5 @@
 {% load static %}
-<div x-init="console.log('I\'m being initialized!')" class="flex flex-row items-center w-full bg-gray-200 h-12">
+<div x-init="console.log('I\'m being initialized!')" class="flex flex-row items-center w-full h-12">
 
     <div class="inline-flex w-1/3 px-2">
   <img src="{% static 'images/dashboard/dashboard_location_pin_icon.png' %}" alt="location pin" class="h-6">
@@ -8,6 +8,7 @@
   </div>
     <div id="dash-weather" class="inline-flex w-1/3 px-2">
         <span x-text="await getWeather"></span>
+        <img src="" alt="icon pending" id="weather-icon" class="h-8 w-auto">
     </div>
     <div class="inline-flex w-1/3 px-2">
         <span class="text-sm uppercase">2 Credits left</span>
