@@ -13,17 +13,17 @@ from userauth.models import CustomUser, UserPair # pyre-ignore[21]
 from project.models import Project, ProjectMembership # pyre-ignore[21]
 from messaging.models import Message # pyre-ignore[21]
 
-data = {'Resources':
-           {'How To': [{'title': 'test how to 1', 'summary': 'this resource helps you to do something', 'tags': ['resource', 'useful']},
-                      {'title': 'test how to 2', 'summary': 'this resource points you to an external project', 'tags': ['resource', 'organisation']}],
-            'Case Study': [{'title': 'test case study 1', 'summary': 'a case study of studying cases', 'image': 'ignore/example1.webp', 'body': 'body <b>texttt</b>', 'tags': ['case study', 'not useful']}]},
-        'Users': [{'display name': 'test_asa', 'email': 'fake@email.com', 'year of birth': 1999, 'postcode': 'BT17 OLE', 'editor': False, 'organisation': False, 'password': 'P@ssword!'},
-                  {'display name': 'some person', 'email': 'other@email.com', 'year of birth': 1987, 'postcode': 'BT17 OLF', 'editor': True, 'organisation': False, 'password': 'P@ssword!'}],
-        'Projects': [{'name': 'test project A', 'description': 'a project to do A', 'tags': ['project', 'A']},
-                     {'name': 'test project B', 'description': 'a project that will do B', 'tags': ['project', 'B']}],
-        'Relations':
-            {'Project Membership': [{'Project': 'test project A', 'User': 'test_asa', 'owner': False, 'champion': True}],
-             'User Chat' : [{'user1': 'test_asa', 'user2': 'some person'}]}}
+#data = {'Resources':
+#           {'How To': [{'title': 'test how to 1', 'summary': 'this resource helps you to do something', 'tags': ['resource', 'useful']},
+#                      {'title': 'test how to 2', 'summary': 'this resource points you to an external project', 'tags': ['resource', 'organisation']}],
+#            'Case Study': [{'title': 'test case study 1', 'summary': 'a case study of studying cases', 'image': 'ignore/example1.webp', 'body': 'body <b>texttt</b>', 'tags': ['case study', 'not useful']}]},
+#        'Users': [{'display name': 'test_asa', 'email': 'fake@email.com', 'year of birth': 1999, 'postcode': 'BT17 OLE', 'editor': False, 'organisation': False, 'password': 'P@ssword!'},
+#                  {'display name': 'some person', 'email': 'other@email.com', 'year of birth': 1987, 'postcode': 'BT17 OLF', 'editor': True, 'organisation': False, 'password': 'P@ssword!'}],
+#        'Projects': [{'name': 'test project A', 'description': 'a project to do A', 'tags': ['project', 'A']},
+#                     {'name': 'test project B', 'description': 'a project that will do B', 'tags': ['project', 'B']}],
+#        'Relations':
+#            {'Project Membership': [{'Project': 'test project A', 'User': 'test_asa', 'owner': False, 'champion': True}],
+#             'User Chat' : [{'user1': 'test_asa', 'user2': 'some person'}]}}
 
 def add_resources(resource_data):
     for new_howto_data in resource_data['How To']:
@@ -63,10 +63,11 @@ def add_relations(relations_data):
         ProjectMembership.objects.get_or_create(project = Project.objects.get(name = projectmembership_data['Project']),
                                                 user = CustomUser.objects.get(display_name = projectmembership_data['User']),
                                                 owner = projectmembership_data['owner'], champion = projectmembership_data['champion'])[0]
+        Message.objects.create(sender = CustomUser.objects.get(display_name = projectmembership_data['User']), text = 'hello! :)', chat = Project.objects.get(name = projectmembership_data['Project']).chat)
     for userchat_data in relations_data['User Chat']:
         pair = UserPair.objects.get_or_create(user1 = CustomUser.objects.get(display_name = userchat_data['user1']),
                                               user2 = CustomUser.objects.get(display_name = userchat_data['user2']))[0]
-        Message.objects.create(sender = CustomUser.objects.get(display_name = projectmembership_data['User']), text = 'hello! :)', chat = pair.chat)
+        Message.objects.create(sender = CustomUser.objects.get(display_name = userchat_data['user1']), text = 'hello! :)', chat = pair.chat)
 
 class Command(BaseCommand):
     help = 'import data'
@@ -75,15 +76,15 @@ class Command(BaseCommand):
         parser.add_argument('datafile', nargs='?', type=str, default='upload_conf.json')
 
     def handle(self, *args, **options):
-        #try:
-        #    f = open(options['datafile'])
-        #    try:
-        #        data = json.load(f)
-        #    except:
-        #        print('could not parse valid json from ' + options['datafile'])
-        #    f.close()
-        #except:
-        #    print('could not read from file: ' + options['datafile'])
+        try:
+            f = open(options['datafile'])
+            try:
+                data = json.load(f)
+            except:
+                print('could not parse valid json from ' + options['datafile'])
+            f.close()
+        except:
+            print('could not read from file: ' + options['datafile'])
 
         add_resources(data['Resources'])
         add_users(data['Users'])
