@@ -1,10 +1,10 @@
 "use strict";
-var visible = 'block';
-var hidden = 'hidden';
-var initial = document.getElementById("initial");
-var results = document.getElementById("results");
-var searchbar = document.getElementById("searchbar");
-var flipped = false;
+const visible = 'block';
+const hidden = 'hidden';
+const initial = document.getElementById("initial");
+const results = document.getElementById("results");
+const searchbar = document.getElementById("searchbar");
+let flipped = false;
 searchbar.addEventListener('input', function (evt) {
     if (searchbar.value.length > 2) {
         searching(true);

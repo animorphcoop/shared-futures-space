@@ -40,11 +40,13 @@ function retrieveData() {
     return apiService(endpointBelfast)
 }
 
-function mapWeatherType(weatherDescription) {
+function mapWeatherType(weatherDescription: string) {
     const currentWeatherIcon = findWeatherIcon(weatherDescription)
-    const weatherIconHolder = document.getElementById("weather-icon");
+    const weatherIconHolder = <HTMLImageElement>document.getElementById("weather-icon")
+    if (weatherIconHolder) weatherIconHolder.src = currentWeatherIcon
     //const {'clear sky': imgUrl} = weatherTypes
-    weatherIconHolder.src = currentWeatherIcon
+
+
 }
 
 function findWeatherIcon(currentWeather) {

@@ -1,7 +1,7 @@
 "use strict";
-var mainNavLink = document.getElementById('burger');
-var nav = document.getElementById('menu');
-var subNav = document.getElementById('dropdownNav');
+const mainNavLink = document.getElementById('burger');
+const nav = document.getElementById('menu');
+const subNav = document.getElementById('dropdownNav');
 // Toggle menu
 function navToggle() {
     mainNavLink === null || mainNavLink === void 0 ? void 0 : mainNavLink.classList.toggle('hidden');
