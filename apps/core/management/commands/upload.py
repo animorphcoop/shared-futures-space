@@ -64,7 +64,8 @@ def add_relations(relations_data):
                                                 user = CustomUser.objects.get(display_name = projectmembership_data['User']),
                                                 owner = projectmembership_data['owner'], champion = projectmembership_data['champion'])[0]
     for userchat_data in relations_data['User Chat']:
-        pair = UserPair.objects.get_or_create(user1 = userchat_data['user1'], user2 = userchat_data['user2'])[0]
+        pair = UserPair.objects.get_or_create(user1 = CustomUser.objects.get(display_name = userchat_data['user1']),
+                                              user2 = CustomUser.objects.get(display_name = userchat_data['user2']))[0]
         Message.objects.create(sender = CustomUser.objects.get(display_name = projectmembership_data['User']), text = 'hello! :)', chat = pair.chat)
 
 class Command(BaseCommand):
