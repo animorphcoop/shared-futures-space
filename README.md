@@ -33,6 +33,12 @@ docker-compose exec app pyre
 
 (to run a specific py.test, e.g. `docker-compose exec app pytest tests/test_account.py`)
 
+Uploading Data
+```
+docker-compose exec app ./manage.py upload [filename.json]
+```
+put data from [filename.json] in the db. filename defaults to `upload_conf.json`, which contains some default debugging data.
+
 ---
 
 ### Using Static Typing
