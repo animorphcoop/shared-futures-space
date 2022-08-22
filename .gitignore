@@ -128,3 +128,8 @@ apps/theme/static_src/node_modules/
 **/migrations/*.py
 **/migrations/*.pyc
 !**/migrations/__init__.py
+
+
+# ignore
+ignore
+ignore/*
