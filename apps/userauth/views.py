@@ -15,6 +15,7 @@ from .tasks import send_after
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
+from area.models import PostCode # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -50,7 +51,7 @@ class CustomUserPersonalView(TemplateView):
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         elif form.is_valid():
             current_user.year_of_birth = form.cleaned_data.get('year_of_birth')
-            current_user.post_code = form.cleaned_data.get('post_code')
+            current_user.post_code = PostCode.objects.get_or_create(code = form.cleaned_data.get('post_code')) # TODO!! deal with different way sof writing same code
             current_user.save()
             return HttpResponseRedirect(reverse_lazy('dashboard'))
         else:
@@ -220,10 +221,9 @@ class UserAllChatsView(TemplateView):
                    UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user)])
         return context
 
-
 # helper for inspecting db whether user exists
 # TODO: Add more validation e.g. to lower case
-def check_email(request: WSGIRequest) -> Union[None, HttpResponse]:  # should be HttpResponse?
+def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse?
     # print(request.META.get('HTTP_REFERER'))
     print(request.META.get('HTTP_REFERER').rsplit('/', 2)[1])
     if request.POST.getlist('login'):
@@ -255,6 +255,8 @@ def check_email(request: WSGIRequest) -> Union[None, HttpResponse]:  # should be
                 else:
                     return HttpResponse(
                         "<span id='email-feedback' class='text-incorrect'>Sorry, this address does not exist in our records.</span>")
+            else:
+                return HttpResponse("<h2>Unrecognised referrer: " + request_source_url + "</h2>")
     else:
         return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
 
