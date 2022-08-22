@@ -12,6 +12,7 @@ def resource(request: HttpRequest) -> HttpResponse:
 
 #TODO: search-results template to be merged with list template as they duplicate styles (or export styles)
 def resource_search(request: HttpRequest) -> HttpResponse:
+    print('searchin')
     search_text = request.POST.get('search')
     results = Resource.objects.filter(content__icontains=search_text) #TODO: better query needed
     context = {'results': results}
