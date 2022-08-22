@@ -29,15 +29,25 @@ const weatherTypes = {
 
 // TODO: Based on Postcode / location
 function retrieveData() {
-    apiService(endpointBelfast).then(data => {
-        if (data) {
-            return data
-        } else {
-            console.log('no luck retrieving weather data')
-        }
+    try {
+        apiService(endpointBelfast).then(data => {
+            if (data) {
+                return data
+            } else {
+                console.log("No luck retrieving weather data")
+            }
 
-    })
-    return apiService(endpointBelfast)
+        })
+        return apiService(endpointBelfast)
+    } catch (error) {
+        let errorMessage = "Failed to connect to weather API"
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        console.log(errorMessage);
+
+
+    }
 }
 
 function mapWeatherType(weatherDescription: string) {
@@ -49,7 +59,7 @@ function mapWeatherType(weatherDescription: string) {
 
 }
 
-function findWeatherIcon(currentWeather) {
+function findWeatherIcon(currentWeather: string) {
     let imgUrl = ''
     for (let [key, value] of Object.entries(weatherTypes)) {
         if (currentWeather.match(key)) {
@@ -71,34 +81,30 @@ async function getWeather() {
 }
 
 
-function getWeatherDetails(toProcess) {
-    console.log(toProcess)
+function getWeatherDetails(toProcess: object) {
     let filteredData = []
-    filteredData.push(filterLoop(toProcess, "main"))
-    filteredData.push(filterLoop(toProcess, "weather"))
-    //document.getElementById('dash-weather').innerHTML = kelvinToCelsius(filterLoop(filteredData[0], "temp")).ToString()
-    //return kelvinToCelsius(filterLoop(filteredData[0], whichOne))
-    //let selected = []
-    //selected.push(kelvinToCelsius(filterLoop(filteredData[0], "temp")).toString()+'°')
-    //selected.push(filterLoop(filteredData[1][0], "main"))
-    //selected.push(filterLoop(filteredData[1][0], "description"))
-    //return selected
 
-    mapWeatherType(filterLoop(filteredData[1][0], "description").toString())
-    return kelvinToCelsius(filterLoop(filteredData[0], "temp")).toString() + '°'
+    filteredData.push(filterLoop(toProcess, "weather"))
+    filteredData.push(filterLoop(toProcess, "main"))
+
+    //issue with parsing data - interface convoluted to describe
+    // @ts-ignore
+    mapWeatherType(filterLoop(filteredData[0][0], "description").toString())
+    // @ts-ignore
+    return kelvinToCelsius(filterLoop(filteredData[1], "temp")).toString() + '°'
 
 
 }
 
 
-function apiService(endpoint) {
+function apiService(endpoint: string) {
     return fetch(endpoint)
         .then(handleResponse)
         .catch(error => console.log(error));
 }
 
 
-function handleResponse(response) {
+function handleResponse(response: any) {
     if (response.status === 204) {
         return "";
     } else if (response.status === 404) {
@@ -109,11 +115,11 @@ function handleResponse(response) {
 }
 
 
-function kelvinToCelsius(kelvinTemp) {
+function kelvinToCelsius(kelvinTemp: string) {
     return Math.round((parseFloat(kelvinTemp) - 273.15) * 10) / 10
 }
 
-function filterLoop(objectToReduce, keySearched) {
+function filterLoop(objectToReduce: any, keySearched: string) {
     for (let [key, value] of Object.entries(objectToReduce)) {
         if (key.includes(keySearched)) {
             return value

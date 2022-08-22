@@ -24,15 +24,24 @@ const weatherTypes = {
 };
 // TODO: Based on Postcode / location
 function retrieveData() {
-    apiService(endpointBelfast).then(data => {
-        if (data) {
-            return data;
+    try {
+        apiService(endpointBelfast).then(data => {
+            if (data) {
+                return data;
+            }
+            else {
+                console.log("No luck retrieving weather data");
+            }
+        });
+        return apiService(endpointBelfast);
+    }
+    catch (error) {
+        let errorMessage = "Failed to connect to weather API";
+        if (error instanceof Error) {
+            errorMessage = error.message;
         }
-        else {
-            console.log('no luck retrieving weather data');
-        }
-    });
-    return apiService(endpointBelfast);
+        console.log(errorMessage);
+    }
 }
 function mapWeatherType(weatherDescription) {
     const currentWeatherIcon = findWeatherIcon(weatherDescription);
@@ -59,19 +68,14 @@ async function getWeather() {
     return getWeatherDetails(response).toString();
 }
 function getWeatherDetails(toProcess) {
-    console.log(toProcess);
     let filteredData = [];
-    filteredData.push(filterLoop(toProcess, "main"));
     filteredData.push(filterLoop(toProcess, "weather"));
-    //document.getElementById('dash-weather').innerHTML = kelvinToCelsius(filterLoop(filteredData[0], "temp")).ToString()
-    //return kelvinToCelsius(filterLoop(filteredData[0], whichOne))
-    //let selected = []
-    //selected.push(kelvinToCelsius(filterLoop(filteredData[0], "temp")).toString()+'°')
-    //selected.push(filterLoop(filteredData[1][0], "main"))
-    //selected.push(filterLoop(filteredData[1][0], "description"))
-    //return selected
-    mapWeatherType(filterLoop(filteredData[1][0], "description").toString());
-    return kelvinToCelsius(filterLoop(filteredData[0], "temp")).toString() + '°';
+    filteredData.push(filterLoop(toProcess, "main"));
+    //issue with parsing data - interface convoluted to describe
+    // @ts-ignore
+    mapWeatherType(filterLoop(filteredData[0][0], "description").toString());
+    // @ts-ignore
+    return kelvinToCelsius(filterLoop(filteredData[1], "temp")).toString() + '°';
 }
 function apiService(endpoint) {
     return fetch(endpoint)
