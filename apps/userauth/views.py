@@ -15,6 +15,7 @@ from .tasks import send_after
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
+from area.models import PostCode # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -50,7 +51,7 @@ class CustomUserPersonalView(TemplateView):
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         elif form.is_valid():
             current_user.year_of_birth = form.cleaned_data.get('year_of_birth')
-            current_user.post_code = form.cleaned_data.get('post_code')
+            current_user.post_code = PostCode.objects.get_or_create(code = form.cleaned_data.get('post_code')) # TODO!! deal with different way sof writing same code
             current_user.save()
             return HttpResponseRedirect(reverse_lazy('dashboard'))
         else:
