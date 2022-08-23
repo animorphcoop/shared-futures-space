@@ -49,13 +49,16 @@ class CustomUserPersonalView(TemplateView):
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
-        elif form.is_valid():
-            current_user.year_of_birth = form.cleaned_data.get('year_of_birth')
-            current_user.post_code = PostCode.objects.get_or_create(code = form.cleaned_data.get('post_code')) # TODO!! deal with different way sof writing same code
-            current_user.save()
-            return HttpResponseRedirect(reverse_lazy('dashboard'))
         else:
-            return HttpResponseRedirect(reverse_lazy('account_data'))
+            try:
+                form.full_clean()
+                print(form.cleaned_data)
+                current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
+                current_user.post_code = PostCode.objects.get_or_create(code = form.cleaned_data.get('post_code'))[0]
+                current_user.save()
+                return HttpResponseRedirect(reverse_lazy('dashboard'))
+            except:
+                return HttpResponseRedirect(reverse_lazy('account_data'))
 
 
 class CustomUserUpdateView(TemplateView):
