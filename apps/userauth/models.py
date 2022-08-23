@@ -7,8 +7,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 from uuid import uuid4
 
-from messaging.models import Chat  # pyre-ignore[21]
-from area.models import PostCode
+from messaging.models import Chat # pyre-ignore[21]
+from area.models import PostCode # pyre-ignore[21]
 
 from typing import List, Optional, Any, Dict
 
