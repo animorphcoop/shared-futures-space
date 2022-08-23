@@ -104,8 +104,8 @@ deploy:
            echo '# TESTS SUCCEED, DEPLOYED SUCCESSFULLY'\n
          fi
        fi" > deploy_script
-    - scp deploy_script asa@sharedfutures.webarch.net:/home/asa/deploy_script
-    - ssh asa@sharedfutures.webarch.net sudo cp /home/asa/deploy_script /home/dev/deploy_script
-    - ssh asa@sharedfutures.webarch.net sudo chmod a+x /home/dev/deploy_script
-    - ssh asa@sharedfutures.webarch.net sudo chown dev /home/dev/deploy_script
-    - ssh asa@sharedfutures.webarch.net sudo su - dev -c "/home/dev/deploy_script"
+    - scp deploy_script sz@sharedfutures.webarch.net:/home/sz/deploy_script
+    - ssh sz@sharedfutures.webarch.net sudo cp /home/sz/deploy_script /home/dev/deploy_script
+    - ssh sz@sharedfutures.webarch.net sudo chmod a+x /home/dev/deploy_script
+    - ssh sz@sharedfutures.webarch.net sudo chown dev /home/dev/deploy_script
+    - ssh sz@sharedfutures.webarch.net sudo su - dev -c "/home/dev/deploy_script"
