@@ -1,4 +1,5 @@
 {
+ "Areas": {"Colin": ["BT17 0LE", "BT17 0LF"]},
  "Resources":
   {
    "How To": [{"title": "test how to 1", "summary": "this resource helps you to do something", "tags": ["resource", "useful"]},

@@ -12,7 +12,7 @@ from resources.models import HowTo, CaseStudy # pyre-ignore[21]
 from userauth.models import CustomUser, UserPair # pyre-ignore[21]
 from project.models import Project, ProjectMembership # pyre-ignore[21]
 from messaging.models import Message # pyre-ignore[21]
-from area.models import PostCode # pyre-ignore[21]
+from area.models import PostCode, Area # pyre-ignore[21]
 
 #data = {'Resources':
 #           {'How To': [{'title': 'test how to 1', 'summary': 'this resource helps you to do something', 'tags': ['resource', 'useful']},
@@ -59,6 +59,12 @@ def add_users(users_data):
         eml = EmailAddress.objects.get_or_create(email = user_data['email'], verified = True, primary = True, user = new_user)[0]
         eml.save()
 
+def add_areas(areas_data):
+    for area_name in areas_data:
+        this_area = Area.objects.get_or_create(name = area_name)[0]
+        for postcode in areas_data[area_name]:
+            PostCode.objects.get_or_create(code = postcode, area = this_area)
+
 def add_relations(relations_data):
     for projectmembership_data in relations_data['Project Membership']:
         ProjectMembership.objects.get_or_create(project = Project.objects.get(name = projectmembership_data['Project']),
@@ -87,6 +93,7 @@ class Command(BaseCommand):
         except:
             print('could not read from file: ' + options['datafile'])
 
+        add_areas(data['Areas'])
         add_resources(data['Resources'])
         add_users(data['Users'])
         add_projects(data['Projects'])
