@@ -224,10 +224,9 @@ class UserAllChatsView(TemplateView):
                    UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user)])
         return context
 
-
 # helper for inspecting db whether user exists
 # TODO: Add more validation e.g. to lower case
-def check_email(request: WSGIRequest) -> Union[None, HttpResponse]:  # should be HttpResponse?
+def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse?
     # print(request.META.get('HTTP_REFERER'))
     print(request.META.get('HTTP_REFERER').rsplit('/', 2)[1])
     if request.POST.getlist('login'):
@@ -259,6 +258,8 @@ def check_email(request: WSGIRequest) -> Union[None, HttpResponse]:  # should be
                 else:
                     return HttpResponse(
                         "<span id='email-feedback' class='text-incorrect'>Sorry, this address does not exist in our records.</span>")
+            else:
+                return HttpResponse("<h2>Unrecognised referrer: " + request_source_url + "</h2>")
     else:
         return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
 
