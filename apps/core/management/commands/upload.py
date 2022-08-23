@@ -12,13 +12,14 @@ from resources.models import HowTo, CaseStudy # pyre-ignore[21]
 from userauth.models import CustomUser, UserPair # pyre-ignore[21]
 from project.models import Project, ProjectMembership # pyre-ignore[21]
 from messaging.models import Message # pyre-ignore[21]
+from area.models import PostCode # pyre-ignore[21]
 
 #data = {'Resources':
 #           {'How To': [{'title': 'test how to 1', 'summary': 'this resource helps you to do something', 'tags': ['resource', 'useful']},
 #                      {'title': 'test how to 2', 'summary': 'this resource points you to an external project', 'tags': ['resource', 'organisation']}],
 #            'Case Study': [{'title': 'test case study 1', 'summary': 'a case study of studying cases', 'image': 'ignore/example1.webp', 'body': 'body <b>texttt</b>', 'tags': ['case study', 'not useful']}]},
-#        'Users': [{'display name': 'test_asa', 'email': 'fake@email.com', 'year of birth': 1999, 'postcode': 'BT17 OLE', 'editor': False, 'organisation': False, 'password': 'P@ssword!'},
-#                  {'display name': 'some person', 'email': 'other@email.com', 'year of birth': 1987, 'postcode': 'BT17 OLF', 'editor': True, 'organisation': False, 'password': 'P@ssword!'}],
+#        'Users': [{'display name': 'test_asa', 'email': 'fake@email.com', 'year of birth': 1999, 'postcode': 'BT17 0LE', 'editor': False, 'organisation': False, 'password': 'P@ssword!'},
+#                  {'display name': 'some person', 'email': 'other@email.com', 'year of birth': 1987, 'postcode': 'BT17 0LF', 'editor': True, 'organisation': False, 'password': 'P@ssword!'}],
 #        'Projects': [{'name': 'test project A', 'description': 'a project to do A', 'tags': ['project', 'A']},
 #                     {'name': 'test project B', 'description': 'a project that will do B', 'tags': ['project', 'B']}],
 #        'Relations':
@@ -51,7 +52,7 @@ def add_projects(projects_data):
 def add_users(users_data):
     for user_data in users_data:
         new_user = CustomUser.objects.get_or_create(display_name = user_data['display name'], email = user_data['email'], year_of_birth = user_data['year of birth'],
-                                                    post_code = user_data['postcode'], editor = user_data['editor'], organisation = user_data['organisation'],
+                                                    post_code = PostCode.objects.get_or_create(code = user_data['postcode'])[0], editor = user_data['editor'], organisation = user_data['organisation'],
                                                     username = user_data['display name'])[0]
         new_user.set_password(user_data['password'])
         new_user.save()

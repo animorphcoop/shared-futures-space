@@ -25,7 +25,7 @@
 
         <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
             <span class="text-sm text-grey-600 basis-1/2">Post code:</span>
-            <span class="text-lg font-semibold basis-1/2">{{user.post_code}}</span>
+            <span class="text-lg font-semibold basis-1/2">{{ user.post_code.code }} ({{ user.post_code.area.name|default:'unknown area' }})</span>
         </div>
 
 

@@ -56,12 +56,22 @@ class CustomUserLoginForm(LoginForm):
         model: Type[CustomUser] = CustomUser
 '''
 
+# test
+class CustomUserPersonalForm(forms.Form):
+    date_of_birth = forms.IntegerField()
+    post_code = forms.CharField(max_length = 8)
+    def is_valid(self, *args, **kwargs):
+        print(self.date_of_birth.clean())
+        print(kwargs)
+        v = super().is_valid(*args, **kwargs)
+        print(self.errors)
+        return v
 
-class CustomUserPersonalForm(forms.ModelForm):
-    # used once to set these, thereafter you have to message an admin to change them
-    class Meta:
-        model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['year_of_birth', 'post_code']
+#class CustomUserPersonalForm(forms.ModelForm):
+#    # used once to set these, thereafter you have to message an admin to change them
+#    class Meta:
+#        model: Type[CustomUser] = CustomUser
+#        fields: List[str] = ['year_of_birth', 'post_code']
 
 
 class CustomLoginForm(LoginForm):
