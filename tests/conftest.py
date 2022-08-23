@@ -2,14 +2,16 @@ import pytest
 from django.conf import settings
 
 from project.models import Project, Idea
+from area.models import PostCode, Area
 
 # a user account to use during testing
 @pytest.fixture(scope='function')
 def test_user(db, django_user_model):
-    return django_user_model.objects.create_user(username='test_user', email='test_user@email.com', password='test_password', display_name = 'Test User', year_of_birth = 1999, post_code = "AB123CD")
+    
+    return django_user_model.objects.create_user(username='test_user', email='test_user@email.com', password='test_password', display_name = 'Test User', year_of_birth = 1999, post_code = PostCode.objects.create(code="AB123CD"))
 @pytest.fixture(scope='function')
 def other_test_user(db, django_user_model):
-    return django_user_model.objects.create_user(username='other_test_user', email='other_test_user@email.com', password='other_test_password', display_name = 'Other Test User', year_of_birth = 1998, post_code = "PSTCDE")
+    return django_user_model.objects.create_user(username='other_test_user', email='other_test_user@email.com', password='other_test_password', display_name = 'Other Test User', year_of_birth = 1998, post_code = PostCode.objects.create(code = "PS7C0DE"))
 
 # items to use during testing
 @pytest.fixture(scope='function')
