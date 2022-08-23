@@ -1,3 +1,4 @@
+
 # pyre-strict
 """
 Django settings for sfs project.
@@ -37,6 +38,8 @@ sys.path.append(os.path.normpath(os.path.join(BASE_DIR, 'apps')))
 INSTALLED_APPS: List[str] = [    
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
+    'wagtail.contrib.modeladmin',
+
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -58,10 +61,12 @@ INSTALLED_APPS: List[str] = [
 
     'landing',
     'dashboard',
+    'area',
     'userauth',
     'messaging',
     'action',
     'project',
+    'resources',
     'search',
     'core',
 
@@ -74,6 +79,7 @@ INSTALLED_APPS: List[str] = [
 
     'tailwind',
     'theme',
+    'django_browser_reload',
     'widget_tweaks',
 
     'django_htmx',
@@ -94,6 +100,8 @@ MIDDLEWARE: List[str] = [
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 
     'django_htmx.middleware.HtmxMiddleware',
+
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
 
@@ -162,7 +170,7 @@ TIME_ZONE: str = 'UTC'
 
 USE_I18N: bool = True
 
-USE_L10N: bool = True
+# USE_L10N: bool = True # defaults to true, setting it explicitly raises a warning
 
 USE_TZ: bool = True
 

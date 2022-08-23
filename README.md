@@ -5,12 +5,8 @@
 Since [Commit 6e3c8b4a](https://git.coop/animorph-coop/shared-futures-space/-/commit/6e3c8b4a6e5893e3a00379ba383c7c0cead397d0)
 ```USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build```
 
-*Originally:*
-```docker-compose up --build```
-
 To enter shell
 ```docker-compose exec app sh```
-
 
 To run Django-related administrative commands
 ```docker-compose exec app django-admin startapp healerapp```
@@ -30,10 +26,18 @@ Migrations
 
 Running Tests
 ```
-$ docker-compose exec app pytest tests
-$ pyre
+docker-compose exec app pytest tests
+docker-compose exec app pyre
 ```
 (they'll also run automatically on gitlab after a push)
+
+(to run a specific py.test, e.g. `docker-compose exec app pytest tests/test_account.py`)
+
+Uploading Data
+```
+docker-compose exec app ./manage.py upload [filename.json]
+```
+put data from [filename.json] in the db. filename defaults to `upload_conf.json`, which contains some default debugging data.
 
 ---
 
@@ -95,7 +99,7 @@ http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html
 
 ---
 
-**NOTE: before using in a public-facing environment, don't forget to change the default credentials! They're in `app_variables.env`, `db_pg_variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`**
+**NOTE: before using in a public-facing environment, don't forget to change the default credentials! They're in `variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`**
 
 ---
 Occasionally, issues with spinning new containers out of existing images might occur.
@@ -156,6 +160,9 @@ Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/i
 
 Notes:
 Styles passed dynamically from views are not automatically applied to tailwind classes (which are exported as static classes at the time of save/build). So even if the classes are on the list in tailwind.confg.js, but they are not used by any html element at the time of running the app you cannot refer to them.
+
+
+
 ---
 
 #### TypeScript
@@ -165,12 +172,22 @@ Styles passed dynamically from views are not automatically applied to tailwind c
 ```npm install -g typescript```
 
 - Then, each time you want to rebuild js files after changing typescript ones, you can run
+
 ```./ts_generate_js.sh```
+
 from the repo's root directory (run `chmod +x ts_generate_js.sh` if file not executable)
 
 
 
 ---
+
+### RUNNING LOCALLY
+
+to run locally:
+- make a local copy of the desired branch, probably development or production
+- optionally in `sfs/settngs/local.py` make any desired settings changes
+- optionally in `sfs/settings/settings.py` change `.dev` to `.production` or vice versa if desired to use development or production mode (affects things like the debug tools). 
+- run ```USER_ID=`id -u` GROUP_ID=`id -g` docker-compose up``` in the local copy directory
 
 ### DEPLOYMENT
 
@@ -179,7 +196,8 @@ to deploy:
 - merge into staging
 - merge staging into production (you cannot push directly to production, it will only allow merges)
 - go into the pipeline for that merge and run the 'deploy' job
-- don't forget: app\_variables.env, db\_pg\_variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
+- don't forget: variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
+- **conversely, if setting up a new deployment situation don't forget to set the password in variables.env to something new!**
 
 to use social account logins, add the following to local.py:
 

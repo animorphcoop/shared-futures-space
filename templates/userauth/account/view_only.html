@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+
+{% block content %}
+<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+
+<p class="font-sans text-5xl bg">{{user.display_name}} profile</p>
+{% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
+<div id="profile-data">
+    <br/>
+    {{user.display_name}}, born in {{user.year_of_birth}}
+    <br/>
+    {% if user.post_code != null%}
+    Living at Post code {{user.post_code}}
+    {% else %}
+    Don't have one yet.
+    {% endif %}
+    <br/>
+    Profile image:
+    <br/>
+    {% if user.avatar.url != null%}
+    <img src="{{ user.avatar.url }}"/>
+    {% else %}
+    Don't have one yet.
+    {% endif %}
+    <br/>
+</div>
+<hr/>
+
+{% endblock %}

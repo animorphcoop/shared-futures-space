@@ -15,7 +15,7 @@
     <input id=year_of_birth name=year_of_birth type=text value="{{ user.year_of_birth }}"></input>
     <br/>
     <label for=user.post_code>Postcode</label>
-    <input id=user.post_code name=post_code type=text value="{{ user.post_code }}"></input>
+    <input id=user.post_code name=post_code type=text value="{{ user.post_code.code }}"></input>
     <br/>
     <button type="submit">{% trans "Update" %}</button>
 </form>

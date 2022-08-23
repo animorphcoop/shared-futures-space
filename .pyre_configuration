@@ -1,9 +1,9 @@
 {
+  "site_package_search_strategy": "all",
   "source_directories": [
     "."
   ],
-  "search_path": ["~/.local/lib/python3.9/site-packages"],
-  "taint_models_path": "/home/asa/.local/lib",
+  "taint_models_path": "/home/app/venv/lib/pyre_check/taint",
   "ignore_all_errors": [
     "*/__init__.py", "*/*/__init__.py", "*/*/*/__init__.py", "*/*/*/*/__init__.py"
   ],

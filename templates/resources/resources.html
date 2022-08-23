@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+<section>
+
+    {% include 'resources/partials/search.html' %}
+</section>
+<section>
+    <div id="results" class="hidden">
+        {% include 'resources/partials/search-results.html' %}
+    </div>
+    <div id="initial" class="">
+        {% include 'resources/partials/list.html' %}
+    </div>
+
+</section>
+
+
+{% block scripts %}
+
+<script src="{% static 'js/resources.js' %}"></script>
+{% endblock scripts %}
+
+{% endblock content %}
+
+

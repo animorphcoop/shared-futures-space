@@ -1,54 +1,112 @@
-{% extends "base.html" %}
+<section>
+    <h1>Update account</h1>
 
-{% load i18n %}
+    <div id="profile-data" class="w-1/2 bg-green-100 rounded-lg shadow p-4">
+        <form hx-put="{% url 'account_update' %}" hx-target="#profile-view" hx-swap="innerHTML">
+            {% csrf_token %}
 
-{% block head_title %}{% trans "Update account" %}{% endblock %}
-
-
-{% block content %}
-
-<h1>{% trans "Update account" %}</h1>
-
-<p>Already wanting to update your account {{ object.email }}? Then please go ahead!</p>
-
-<form method="post" action="{% url 'account_update' %}">
-    {% csrf_token %}
-    <label for=display_name>Change your display name</label>
-    <input id=display_name name=display_name type=text value="{{ user.display_name }}"></input>
-    <button type="submit">{% trans "Update" %}</button>
-</form>
-<br/>
-<form method="post" action="{% url 'account_update' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for=avatar>Change your avatar</label>
-    <input id=avatar name=avatar type=file value="{{ user.avatar }}"></input>
-
-    <button type="submit">{% trans "Update" %}</button>
-</form>
-<br/>
-
-<form method="post" action="{% url 'account_email' %}" class="add_email">
-    {% csrf_token %}
-    <label for=email>Your Email</label>
-    <input id=email name=email type=text value="{{ user.email }}"></input>
-    <button name="action_add" type="submit">{% trans "Update" %}</button>
-</form>
+            <div class="flex-row bg-white rounded-sm shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+                <label for=display_name class="text-sm text-grey-600 basis-1/2">New display name:</label>
+                <input id=display_name name=display_name type=text value="{{ user.display_name }}">
+            </div>
 
 
-<div>
-    <p>Make a request for an admin to change other account information</p>
-    <a href="{% url 'account_request' %}">{% trans "Request a change" %}</a>
-</div>
+            <!--AVATAR + MODAL-->
+            <div x-data="{ open: false }">
+                <div class="flex-row rounded-sm shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+                    <button type="button"
+                            class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                            @click="open = true">
+                        Choose avatar
+                    </button>
+                </div>
 
-<div>
-    <p>Connect a social media profile to your account</p>
-    <a href="/account/social/connections/">{% trans "Connect a social account" %}<a>
-</div>
+                <div x-show="open">
+                    <div class="modal fade fixed top-0 left-0 w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+                         id="exampleModalCenteredScrollable" tabindex="-1"
+                         aria-labelledby="exampleModalCenteredScrollable" aria-modal="true" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable relative w-auto pointer-events-none">
+                            <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+                                <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+                                    <h5 class="text-xl font-medium leading-normal text-gray-800"
+                                        id="exampleModalCenteredScrollableLabel">
+                                        Modal title
+                                    </h5>
+                                    <button type="button"
+                                            class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body relative p-4">
+                                    <p>This is some placeholder content to show a vertically centered modal. We've added
+                                        some extra copy here to show how vertically centering the modal works when
+                                        combined with scrollable modals. We also use some repeated line breaks to
+                                        quickly extend the height of the content, thereby triggering the scrolling. When
+                                        content becomes longer than the predefined max-height of modal, content will be
+                                        cropped and scrollable within the modal.</p>
 
-<div>
-    <p>Prefer to delete?</p>
-    <a href="{% url 'account_delete' %}">{% trans "Delete your account"%}</a>
-</div>
+                                </div>
+                                <div
+                                        class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                                    <button type="button" @click="open = false"
+                                            class="inline-block px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
+                                    >
+                                        Close
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--
+                        <label for=avatar>TODO: Change your avatar</label>
+                        <p>SELECTION WINDOW </p>
+                        <button id="avatar" name="avatar">SELECT</button>
+                -->
+
+                <!--END        AVATAR + MODAL-->
 
 
-{% endblock %}
+                <div class="flex-row bg-white rounded-sm shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+
+                    <label for=email>Your Email</label>
+                    <input id=email name=email type=text value="{{ user.email }}">
+                </div>
+                <div class="flex-row bg-white rounded-sm shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+
+                    <button type="submit"
+                            class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    >Update
+                    </button>
+                </div>
+                <div class="flex-row bg-white rounded-sm shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+                    <p>Make a request for an admin to change other account information</p>
+                    <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                            hx-get="{% url 'account_request' %}"> Request a change
+                    </button>
+
+
+                </div>
+
+                <div class="flex-row bg-white rounded-sm shadow p-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform pb-4 ">
+                    <p class="pb-2">Connect a social media profile to your account</p>
+                    <a href="/account/social/connections/"
+                       class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    > Connect a social account
+                    </a>
+                </div>
+
+                <div class="flex-row bg-white rounded-sm shadow p-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform pb-4 ">
+                    <p class="pb-2">Prefer to delete?</p>
+                    <a href="{% url 'account_delete' %}"
+                       class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    > Delete your account
+                    </a>
+                </div>
+
+        </form>
+    </div>
+    <br/>
+
+
+</section>

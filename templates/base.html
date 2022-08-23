@@ -20,6 +20,7 @@
 
     {% block extra_css %}
     {# Override this in templates to add extra stylesheets #}
+
     {% endblock %}
     {% tailwind_css %}
 
@@ -27,11 +28,13 @@
     <script src="https://unpkg.com/htmx.org@1.6.1"></script>
 
     <!--Alpine JS-->
-    <script defer src="https://unpkg.com/alpinejs@3.8.1/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 
 </head>
+<script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
-<body class="mx-4">
+<body class="">
 
 {% include "partials/nav.html" %}
 
@@ -42,12 +45,16 @@
 {% endblock %}
 
 {# Global javascript #}
-<script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
 {% block extra_js %}
 {# Override this in templates to add extra javascript #}
 {% endblock %}
 
-
 </body>
+
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    })
+</script>
 </html>

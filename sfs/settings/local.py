@@ -23,8 +23,8 @@ AUTHENTICATION_BACKENDS: List[str] = [
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'APP': {
-            'client_id': '859293604779855',
-            'secret': '1bfdb6d39f61f7ced097634b84610b26',
+            'client_id': '780510723095271',
+            'secret': '28cd8f0f9c8bfaae6dd4a732c56fa8e6',
             'key': ''
         }
     },
