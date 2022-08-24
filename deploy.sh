@@ -1,9 +1,14 @@
 #!/bin/bash
 
-# current issue: collectstatic /home/app/sfs/static vs /home/app/sfs/sfs/static
+target_server="sharedfutures.webarch.net"
+target_user="dev"
+target_dir="/home/dev/sites/dev"
+target_data_dir="/home/dev/sites/dev_data"
+
+echo "# DEPLOY SCRIPT II"
 
 echo "# ensuring tests are passing"
-test_result=$(python <<'ENDPY'
+test_result=$(python3 <<'ENDPY'
 import requests
 session = requests.Session()
 session.headers.update({'PRIVATE-TOKEN': 'ameaqjp9RMWxVtnnzTaD'})
@@ -32,7 +37,7 @@ select yn in "Yes" "No"; do
         No ) echo "  # CANCELLED"; exit;;
     esac
 done
-echo "# REQUIRES REBUILD OF CONTAINERS?"
+echo "# REQUIRES REBUILD OF CONTAINERS? (THIS WOULD ERASE THE DATABASE)"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) echo "# WILL REBUILD CONTAINERS"; rebuild_required=1; break;;
@@ -42,17 +47,17 @@ done
 
 echo "# DEPLOYING TO PRODUCTION"
 
-ssh $1@sharedfutures.webarch.net 'bash -s' <<ENDSSH
+ssh $target_server 'bash -s' <<ENDSSH
   # The following commands run on the remote host
-  if sudo -u dev test ! -f /home/dev/sites/dev_data/app_variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/db_pg_variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/local.py || sudo -u dev test ! -f /home/dev/sites/dev_data/settings.py;
+  if sudo -u $target_user test ! -f $target_data_dir/variables.env || sudo -u $target_user test ! -f $target_data_dir/local.py || sudo -u $target_user test ! -f $target_data_dir/settings.py;
   then
     echo "# COULD NOT FIND ALL REQUIRED LOCAL SETTINGS FILES"
-    echo "# wanted /home/dev/sites/dev_data/app_variables.env, db_pg_variables.env and local.py"
+    echo "# wanted $target_data_dir/variables.env, local.py and settings.py"
     echo "# WILL NOT DEPLOY WITHOUT LOCAL SETTINGS BECAUSE DEFAULTS INCLUDE CREDENTIALS"
     exit
   fi
-  sudo su - dev
-  cd sites/dev
+  sudo su - $target_user
+  cd $target_dir
   echo "# stopping docker-compose"
   USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop > /dev/null
   if [[ "\$(git rev-parse --abbrev-ref HEAD)" != "staging" ]];
@@ -77,10 +82,9 @@ ssh $1@sharedfutures.webarch.net 'bash -s' <<ENDSSH
     echo "# DEPLOYMENT FAILED"
   else
     echo "# installing local settings files from /home/dev/sites/dev_data/"
-    cp /home/dev/sites/dev_data/app_variables.env /home/dev/sites/dev/
-    cp /home/dev/sites/dev_data/db_pg_variables.env /home/dev/sites/dev/
-    cp /home/dev/sites/dev_data/local.py /home/dev/sites/dev/sfs/settings/
-    cp /home/dev/sites/dev_data/settings.py /home/dev/sites/dev/sfs/settings/
+    cp $target_data_dir/variables.env $target_dir
+    cp $target_data_dir/local.py $target_dir/sfs/settings/
+    cp $target_data_dir/settings.py $target_dir/sfs/settings/
     if [[ $rebuild_required -eq 1 ]];
     then
       echo "# REBUILDING CONTAINERS (THIS MAY TAKE SOME TIME)"
