@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# current issue: collectstatic /home/app/sfs/static vs /home/app/sfs/sfs/static
+echo "# DEPLOY SCRIPT II"
 
 echo "# ensuring tests are passing"
-test_result=$(python <<'ENDPY'
+test_result=$(python3 <<'ENDPY'
 import requests
 session = requests.Session()
 session.headers.update({'PRIVATE-TOKEN': 'ameaqjp9RMWxVtnnzTaD'})
@@ -32,7 +32,7 @@ select yn in "Yes" "No"; do
         No ) echo "  # CANCELLED"; exit;;
     esac
 done
-echo "# REQUIRES REBUILD OF CONTAINERS?"
+echo "# REQUIRES REBUILD OF CONTAINERS? (THIS WOULD ERASE THE DATABASE)"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) echo "# WILL REBUILD CONTAINERS"; rebuild_required=1; break;;
@@ -42,12 +42,12 @@ done
 
 echo "# DEPLOYING TO PRODUCTION"
 
-ssh $1@sharedfutures.webarch.net 'bash -s' <<ENDSSH
+ssh sharedfutures.webarch.net 'bash -s' <<ENDSSH
   # The following commands run on the remote host
-  if sudo -u dev test ! -f /home/dev/sites/dev_data/app_variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/db_pg_variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/local.py || sudo -u dev test ! -f /home/dev/sites/dev_data/settings.py;
+  if sudo -u dev test ! -f /home/dev/sites/dev_data/variables.env || sudo -u dev test ! -f /home/dev/sites/dev_data/local.py || sudo -u dev test ! -f /home/dev/sites/dev_data/settings.py;
   then
     echo "# COULD NOT FIND ALL REQUIRED LOCAL SETTINGS FILES"
-    echo "# wanted /home/dev/sites/dev_data/app_variables.env, db_pg_variables.env and local.py"
+    echo "# wanted /home/dev/sites/dev_data/variables.env, local.py and settings.py"
     echo "# WILL NOT DEPLOY WITHOUT LOCAL SETTINGS BECAUSE DEFAULTS INCLUDE CREDENTIALS"
     exit
   fi
@@ -77,8 +77,7 @@ ssh $1@sharedfutures.webarch.net 'bash -s' <<ENDSSH
     echo "# DEPLOYMENT FAILED"
   else
     echo "# installing local settings files from /home/dev/sites/dev_data/"
-    cp /home/dev/sites/dev_data/app_variables.env /home/dev/sites/dev/
-    cp /home/dev/sites/dev_data/db_pg_variables.env /home/dev/sites/dev/
+    cp /home/dev/sites/dev_data/variables.env /home/dev/sites/dev/
     cp /home/dev/sites/dev_data/local.py /home/dev/sites/dev/sfs/settings/
     cp /home/dev/sites/dev_data/settings.py /home/dev/sites/dev/sfs/settings/
     if [[ $rebuild_required -eq 1 ]];
