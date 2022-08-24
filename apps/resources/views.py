@@ -4,22 +4,13 @@ from django.http import HttpResponse
 
 from .models import Resource, HowTo, CaseStudy
 from django.shortcuts import render
+from apps.core.helpers.tags_declusterer import objects_tags_cluster_list_overwrite
+from itertools import chain
 
 def resource(request: HttpRequest) -> HttpResponse:
-    resources = HowTo.objects.all()
-    for elem in resources:
-        tag_list = []
-        print(elem)
-        if elem.tags:
-            print(elem.tags.all())
-            print(type(elem.tags.all()))
-            for tag in elem.tags.all():
-                tag_list.append(tag)
-                print(tag)
-            elem.tags = tag_list
-            print('reassigned')
-            print(elem.tags)
-    print(resources)
+    how_tos = objects_tags_cluster_list_overwrite(HowTo.objects.all())
+    case_studies = objects_tags_cluster_list_overwrite(CaseStudy.objects.all())
+    resources = list(chain(how_tos, case_studies))
     context = {'resources': resources}
     return render(request, 'resources/resources.html', context)
 
