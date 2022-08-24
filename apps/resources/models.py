@@ -12,34 +12,50 @@ from wagtail.admin.panels import StreamFieldPanel
 from apps.streams import blocks
 from uuid import uuid4
 
+
 # you need to specify each model's tag system seperately because the db doesn't have a notion of inheritance
 # thy still autocomplete tags that were defined on other models though
 class HowToTag(TaggedItemBase):
     content_object = ParentalKey('resources.HowTo', on_delete=models.CASCADE, related_name='tagged_items')
+
+
 class CaseStudyTag(TaggedItemBase):
     content_object = ParentalKey('resources.CaseStudy', on_delete=models.CASCADE, related_name='tagged_items')
+
 
 # do not create Resources! this model is just to inherit specific kinds of resources from
 class Resource(ClusterableModel):
     uuid: models.UUIDField = models.UUIDField(
-        default = uuid4, editable = False
+        default=uuid4, editable=False
     )
-    title : models.CharField = models.CharField(
+    published_on: models.DateTimeField = models.DateTimeField(
+        auto_now_add=True
+    )
+    slug: models.SlugField = models.SlugField(
+        max_length=100,
+        unique=True
+    )
+    title: models.CharField = models.CharField(
         max_length=50,
         blank=False,
         null=False,
     )
-    summary : models.CharField = models.CharField(
+    summary: models.CharField = models.CharField(
         max_length=300,
         blank=False,
         null=False,
     )
+    link: models.CharField = models.CharField(
+        max_length=50,
+        blank=False,
+        null=False,
+    )
+
     def __str__(self) -> str:
         return f"{self.title}"
 
 
 class HowTo(Resource):
-    
     tags = ClusterTaggableManager(through=HowToTag, blank=True)
 
     class Meta:
@@ -48,7 +64,6 @@ class HowTo(Resource):
 
 
 class CaseStudy(Resource):
-
     case_study_image: models.ForeignKey = models.ForeignKey(
         'wagtailimages.Image',
         null=True,

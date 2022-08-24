@@ -41,4 +41,17 @@ def resource_search(request: HttpRequest) -> HttpResponse:
     results = list(chain(how_tos, case_studies))
 
     context = {'results': results}
-    return render(request, 'resources/partials/search-results.html', context)
+    return render(request, 'resources/partials/search_results.html', context)
+
+
+def resource_item(request: HttpRequest, slug) -> HttpResponse:
+    #resource_page = get_object_or_404(Resource, slug=slug)
+    #how_tos = HowTo.objects.all()
+    #case_studies = CaseStudy.objects.all()
+    current_resource = Resource.objects.get(slug=slug)
+
+    context = {
+    'resource': current_resource
+    }
+
+    return render(request, 'resources/resource_item.html', context)
