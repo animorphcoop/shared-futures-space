@@ -1,8 +1,9 @@
 #!/bin/bash
 
-deployment_user="dev"
-deployment_dir="/home/dev/sites/dev"
-deployment_data_dir="/home/dev/sites/dev_data"
+target_server="sharedfutures.webarch.net"
+target_user="dev"
+target_dir="/home/dev/sites/dev"
+target_data_dir="/home/dev/sites/dev_data"
 
 echo "# DEPLOY SCRIPT II"
 
@@ -46,17 +47,17 @@ done
 
 echo "# DEPLOYING TO PRODUCTION"
 
-ssh sharedfutures.webarch.net 'bash -s' <<ENDSSH
+ssh $target_server 'bash -s' <<ENDSSH
   # The following commands run on the remote host
-  if sudo -u $deployment_user test ! -f $deployment_data_dir/variables.env || sudo -u $deployment_user test ! -f $deployment_data_dir/local.py || sudo -u $deployment_user test ! -f $deployment_data_dir/settings.py;
+  if sudo -u $target_user test ! -f $target_data_dir/variables.env || sudo -u $target_user test ! -f $target_data_dir/local.py || sudo -u $target_user test ! -f $target_data_dir/settings.py;
   then
     echo "# COULD NOT FIND ALL REQUIRED LOCAL SETTINGS FILES"
-    echo "# wanted $deployment_data_dir/variables.env, local.py and settings.py"
+    echo "# wanted $target_data_dir/variables.env, local.py and settings.py"
     echo "# WILL NOT DEPLOY WITHOUT LOCAL SETTINGS BECAUSE DEFAULTS INCLUDE CREDENTIALS"
     exit
   fi
-  sudo su - $deployment_user
-  cd $deployment_dir
+  sudo su - $target_user
+  cd $target_dir
   echo "# stopping docker-compose"
   USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop > /dev/null
   if [[ "\$(git rev-parse --abbrev-ref HEAD)" != "staging" ]];
@@ -81,9 +82,9 @@ ssh sharedfutures.webarch.net 'bash -s' <<ENDSSH
     echo "# DEPLOYMENT FAILED"
   else
     echo "# installing local settings files from /home/dev/sites/dev_data/"
-    cp $deployment_data_dir/variables.env $deployment_dir
-    cp $deployment_data_dir/local.py $deployment_dir/sfs/settings/
-    cp $deployment_data_dir/settings.py $deployment_dir/sfs/settings/
+    cp $target_data_dir/variables.env $target_dir
+    cp $target_data_dir/local.py $target_dir/sfs/settings/
+    cp $target_data_dir/settings.py $target_dir/sfs/settings/
     if [[ $rebuild_required -eq 1 ]];
     then
       echo "# REBUILDING CONTAINERS (THIS MAY TAKE SOME TIME)"
