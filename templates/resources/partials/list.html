@@ -1,13 +1,22 @@
 <section>
     {% for resource in resources %}
+        {% if resource.tags %}
+            {% for tag in resource.tags %}
+                {{ tag }}
+            {% endfor %}
+        {% endif %}
+        {% comment %}
     <div class="px-4 mb-12 pb-4 rounded-lg shadow-lg">
         <div class="w-full">
             <p class="text-sm text-gray-600">{{ resource.title }}</p>
         </div>
         <div class="w-full mb-6">
-            <p class="text-md text-indigo-500 font-bold">{{ resource.content }}</p>
+            <p class="text-md text-indigo-500 font-bold">{{ resource.summary }}</p>
         </div>
-    </div>
+<div class="w-full mb-6">
+            <p class="text-md text-indigo-500 font-bold">{{ resource }}</p>
+        </div>{% endcomment %}
+        </div>
 
     {% endfor %}
 </section>

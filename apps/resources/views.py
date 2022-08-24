@@ -2,11 +2,24 @@
 from django.http.request import HttpRequest
 from django.http import HttpResponse
 
-from .models import Resource
+from .models import Resource, HowTo, CaseStudy
 from django.shortcuts import render
 
 def resource(request: HttpRequest) -> HttpResponse:
-    resources = Resource.objects.all()
+    resources = HowTo.objects.all()
+    for elem in resources:
+        tag_list = []
+        print(elem)
+        if elem.tags:
+            print(elem.tags.all())
+            print(type(elem.tags.all()))
+            for tag in elem.tags.all():
+                tag_list.append(tag)
+                print(tag)
+            elem.tags = tag_list
+            print('reassigned')
+            print(elem.tags)
+    print(resources)
     context = {'resources': resources}
     return render(request, 'resources/resources.html', context)
 

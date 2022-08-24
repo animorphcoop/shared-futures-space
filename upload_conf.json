@@ -1,18 +1,138 @@
 {
- "Areas": {"Colin": ["BT17 0LE", "BT17 0LF"]},
- "Resources":
-  {
-   "How To": [{"title": "test how to 1", "summary": "this resource helps you to do something", "tags": ["resource", "useful"]},
-              {"title": "test how to 2", "summary": "this resource points you to an external project", "tags": ["resource", "organisation"]}],
-   "Case Study": [{"title": "test case study 1", "summary": "a case study of studying cases", "image": "ignore/example1.webp", "body": "body <b>texttt</b>", "tags": ["case study", "not useful"]}]
+  "Areas": {
+    "Ardoyne and Greater Ballysillan": [
+      "BT13",
+      "BT14",
+      "BT15"
+    ],
+    "Colin": [
+      "BT11",
+      "BT12"
+    ],
+    "EastSide": [
+      "BT4",
+      "BT5",
+      "BT6",
+      "BT16"
+    ],
+    "Sandy Row, Donegall Pass and the Markets": [
+      "BT7",
+      "BT8",
+      "BT9",
+      "BT10"
+    ],
+    "The Bogside, Fountain and Bishop Street": [
+      "BT48"
+    ],
+    "Arranmore": [
+      "WD23"
+    ]
   },
- "Users": [{"display name": "test_asa", "email": "fake@email.com", "year of birth": 1999, "postcode": "BT17 0LE", "editor": false, "organisation": false, "password": "P@ssword!"},
-           {"display name": "some person", "email": "other@email.com", "year of birth": 1987, "postcode": "BT17 0LF", "editor": true, "organisation": false, "password": "P@ssword!"}],
- "Projects": [{"name": "test project A", "description": "a project to do A", "tags": ["project", "A"]},
-              {"name": "test project B", "description": "a project that will do B", "tags": ["project", "B"]}],
- "Relations":
-  {
-    "Project Membership": [{"Project": "test project A", "User": "test_asa", "owner": false, "champion": true}],
-    "User Chat" : [{"user1": "test_asa", "user2": "some person"}]
+  "Resources": {
+    "How To": [
+      {
+        "title": "Developing Business Case",
+        "summary": "To make a compelling argument about your idea for a project or organisation, it helps to be able to present your rationale from a few angles. You can argue why it is  viable using Five Cases Model prepared by HM Treasury.",
+        "tags": [
+          "economy",
+          "planning",
+          "toolkit",
+          "guidance"
+        ]
+      },
+      {
+        "title": "Starting New Business Advice",
+        "summary": "Have an idea but not sure how to go about going ahead with it? You can get a support from the Go For It Programme, which provides step-by-step advice and mentoring to guide founders towards the launch and success of their businesses.",
+        "tags": [
+          "enterprise",
+          "support",
+          "advice"
+        ]
+      },
+      {
+        "title": "Funding sports projects",
+        "summary": "The best organisation to turn to for financial support for a project concerned with physical activities is Sport NI. They always have a few funding programmes on the go, which you can apply for!",
+        "tags": [
+          "culture",
+          "sports",
+          "funding"
+        ]
+      },
+      {
+        "title": "Starting a Community Group",
+        "summary": "If you are working with other towards a shared goal but you do not have a formal group, why not start one? It can give you more leverage in advancing your agenda as well as provide practical benefits such as being able to receive funding.",
+        "tags": [
+          "community",
+          "organising",
+          "wellbeing"
+        ]
+      }
+    ],
+    "Case Study": [
+      {
+        "title": "test case study 1",
+        "summary": "a case study of studying cases",
+        "image": "autoupload/example1.webp",
+        "body": "body <b>texttt</b>",
+        "tags": [
+          "case study",
+          "not useful"
+        ]
+      }
+    ]
+  },
+  "Users": [
+    {
+      "display name": "test_asa",
+      "email": "fake@email.com",
+      "year of birth": 1999,
+      "postcode": "BT17 0LE",
+      "editor": false,
+      "organisation": false,
+      "password": "P@ssword!"
+    },
+    {
+      "display name": "some person",
+      "email": "other@email.com",
+      "year of birth": 1987,
+      "postcode": "BT17 0LF",
+      "editor": true,
+      "organisation": false,
+      "password": "P@ssword!"
+    }
+  ],
+  "Projects": [
+    {
+      "name": "test project A",
+      "description": "a project to do A",
+      "tags": [
+        "project",
+        "A"
+      ]
+    },
+    {
+      "name": "test project B",
+      "description": "a project that will do B",
+      "tags": [
+        "project",
+        "B"
+      ]
+    }
+  ],
+  "Relations": {
+    "Project Membership": [
+      {
+        "Project": "test project A",
+        "User": "test_asa",
+        "owner": false,
+        "champion": true
+      }
+    ],
+    "User Chat": [
+      {
+        "user1": "test_asa",
+        "user2": "some person"
+      }
+    ]
   }
 }
