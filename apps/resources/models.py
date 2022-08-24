@@ -12,6 +12,10 @@ from wagtail.admin.panels import StreamFieldPanel
 from apps.streams import blocks
 from uuid import uuid4
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils.text import slugify
+from apps.core.helpers.slugifier import generate_random_string
 
 # you need to specify each model's tag system seperately because the db doesn't have a notion of inheritance
 # thy still autocomplete tags that were defined on other models though
@@ -33,7 +37,8 @@ class Resource(ClusterableModel):
     )
     slug: models.SlugField = models.SlugField(
         max_length=100,
-        unique=True
+        unique=True,
+        editable=False
     )
     title: models.CharField = models.CharField(
         max_length=50,
@@ -47,8 +52,8 @@ class Resource(ClusterableModel):
     )
     link: models.CharField = models.CharField(
         max_length=50,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
     )
 
     def __str__(self) -> str:
@@ -85,3 +90,27 @@ class CaseStudy(Resource):
     class Meta:
         verbose_name = 'Case Study'
         verbose_name_plural = 'Case Studies'
+
+
+
+# SIGNALS
+@receiver(post_save, sender=HowTo)
+def add_slug_to_how_to(sender, instance, *args, **kwargs):
+    print('received signal from HowTo')
+    if instance and not instance.slug:
+        slug = slugify(instance.title)
+        random_string = generate_random_string()
+        instance.slug = slug + "-" + random_string
+        print('about to save slug HowTo')
+        instance.save()
+
+
+@receiver(post_save, sender=CaseStudy)
+def add_slug_to_case_study(sender, instance, *args, **kwargs):
+    print('received signal from CaseStudy')
+    if instance and not instance.slug:
+        slug = slugify(instance.title)
+        random_string = generate_random_string()
+        instance.slug = slug + "-" + random_string
+        print('about to save slug CaseStudy')
+        instance.save()
