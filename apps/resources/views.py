@@ -4,13 +4,12 @@ from django.http import HttpResponse
 
 from .models import Resource, HowTo, CaseStudy
 from django.shortcuts import render, get_object_or_404
-from apps.core.helpers.tags_declusterer import objects_tags_cluster_list_overwrite
+from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
 
 from django.db.models import Q
 
 from django.shortcuts import get_object_or_404
-
 
 
 def resource(request: HttpRequest) -> HttpResponse:
@@ -50,16 +49,12 @@ def resource_item(request: HttpRequest, slug) -> HttpResponse:
     try:
         current_resource = HowTo.objects.get(slug=slug)
     except HowTo.DoesNotExist:
-        print('it is not a howto')
-
-    if current_resource is None:
         try:
             current_resource = CaseStudy.objects.get(slug=slug)
         except CaseStudy.DoesNotExist:
-            print('it is not a case study')
-
+            print('it is neither HowTo nor CaseStudy')
     context = {
-        'resource': current_resource
+        'resource': single_object_tags_cluster_overwrite(current_resource)
     }
 
     return render(request, 'resources/resource_item.html', context)

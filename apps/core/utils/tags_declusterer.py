@@ -10,6 +10,14 @@ def objects_tags_cluster_list_overwrite(objects_set):
 
     return objects_set
 
+
+def single_object_tags_cluster_overwrite(single_object):
+    if single_object.tags:
+        single_object.tags = tag_cluster_to_list(single_object.tags)
+
+    return single_object
+
+
 def tag_cluster_to_list(tags):
     tag_list = []
     for tag in tags.all():

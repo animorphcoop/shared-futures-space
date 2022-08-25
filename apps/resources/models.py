@@ -15,7 +15,7 @@ from uuid import uuid4
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
-from apps.core.helpers.slugifier import generate_random_string
+from apps.core.utils.slugifier import generate_random_string
 
 # you need to specify each model's tag system seperately because the db doesn't have a notion of inheritance
 # thy still autocomplete tags that were defined on other models though
@@ -96,21 +96,17 @@ class CaseStudy(Resource):
 # SIGNALS
 @receiver(post_save, sender=HowTo)
 def add_slug_to_how_to(sender, instance, *args, **kwargs):
-    print('received signal from HowTo')
     if instance and not instance.slug:
         slug = slugify(instance.title)
         random_string = generate_random_string()
         instance.slug = slug + "-" + random_string
-        print('about to save slug HowTo')
         instance.save()
 
 
 @receiver(post_save, sender=CaseStudy)
 def add_slug_to_case_study(sender, instance, *args, **kwargs):
-    print('received signal from CaseStudy')
     if instance and not instance.slug:
         slug = slugify(instance.title)
         random_string = generate_random_string()
         instance.slug = slug + "-" + random_string
-        print('about to save slug CaseStudy')
         instance.save()

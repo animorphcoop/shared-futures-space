@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load wagtailimages_tags %}
 {% load static %}
 
 {% block body_class %}template-homepage{% endblock %}
@@ -12,26 +13,42 @@
 
     <div class="block items-center justify-center h-screen">
         Title: {{ resource.title }}
-        <br/>
+        <br/><br/>
+
         Published on: {{ resource.published_on }}
-        <br/>
+        <br/><br/>
+
         Summary: {{ resource.summary }}
-        <br/>
+        <br/><br/>
+
         {% if resource.link %}
-            Link: {{ resource.link }}
+            Link:    <a href="{{ resource.link }}" target="_blank">Find out more</a>
         {% endif %}
-        <br/>
+
+        <br/><br/>
+        {% if resource.case_study_image %}
+            Image:
+            {% image resource.case_study_image max-750x400 %}
+
+            {{ resource.case_study_image }}
+        {% endif %}
+
+        <br/><br/>
+
         {% if resource.body %}
-            bodyuyy
+            Body:
+            {{ resource.body }}
         {% endif %}
-        <br/>
-            {% if resource.tag %}
-                <div class="w-full flex-inline mb-6">
-                    {% for tag in resource.tag %}
-                        <p class="text-sm text-indigo-500">{{ tag }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
+
+        <br/><br/>
+        {% if resource.tags %}
+            <div class="">
+            Tags:
+                {% for tag in resource.tags %}
+                    <p class="text-sm">{{ tag }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         <br/>
     </div>
 {% endblock %}
