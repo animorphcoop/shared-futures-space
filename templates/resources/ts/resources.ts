@@ -16,7 +16,6 @@ searchbar.addEventListener('input', function (evt) {
     } else {
         flipped = false
         searching(false)
-
     }
 
 });

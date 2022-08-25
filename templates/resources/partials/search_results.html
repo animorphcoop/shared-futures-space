@@ -5,8 +5,18 @@
             <p class="text-sm text-gray-600">{{ result.title }}</p>
         </div>
         <div class="w-full mb-6">
-            <p class="text-md text-indigo-500 font-bold">{{ result.content }}</p>
+            <p class="text-md text-indigo-500 font-bold">{{ result.summary }}</p>
         </div>
+            {% if result.tags %}
+                <div class="w-full flex-inline mb-6">
+                    {% for tag in result.tags %}
+                        <p class="text-sm text-indigo-500">{{ tag }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <a class="db pv4 ph3 ph0-l no-underline black" href="{% url "resource_item" result.slug %}">Button</a>
+
 
     </div>
 

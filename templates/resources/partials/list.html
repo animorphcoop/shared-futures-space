@@ -11,11 +11,12 @@
             {% if resource.tags %}
                 <div class="w-full flex-inline mb-6">
                     {% for tag in resource.tags %}
-                        <p class="text-sm text-indigo-500">{{ tag }}</p>
+                        <button hx-post="{% url 'resource_search' %}" hx-vals='js:{search: event.target.innerHTML }' hx-trigger="click" hx-target="#results">{{ tag }}</button>
+{% comment %}
+                        <p class="text-sm text-indigo-500">{{ tag }}</p>{% endcomment %}
                     {% endfor %}
                 </div>
             {% endif %}
-
             <a class="db pv4 ph3 ph0-l no-underline black" href="{% url "resource_item" resource.slug %}">Button</a>
 
 

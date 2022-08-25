@@ -19,31 +19,35 @@
         <br/><br/>
 
         Summary: {{ resource.summary }}
-        <br/><br/>
+
 
         {% if resource.link %}
+            <br/><br/>
             Link:    <a href="{{ resource.link }}" target="_blank">Find out more</a>
         {% endif %}
 
-        <br/><br/>
+
         {% if resource.case_study_image %}
+            <br/><br/>
             Image:
             {% image resource.case_study_image max-750x400 %}
 
             {{ resource.case_study_image }}
         {% endif %}
 
-        <br/><br/>
+
 
         {% if resource.body %}
+            <br/><br/>
             Body:
             {{ resource.body }}
         {% endif %}
 
-        <br/><br/>
+
         {% if resource.tags %}
+            <br/><br/>
             <div class="">
-            Tags:
+                Tags:
                 {% for tag in resource.tags %}
                     <p class="text-sm">{{ tag }}</p>
                 {% endfor %}

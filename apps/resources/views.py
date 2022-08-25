@@ -22,6 +22,7 @@ def resource(request: HttpRequest) -> HttpResponse:
 
 def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
+    print(search_text)
     how_tos = HowTo.objects.all()
     case_studies = CaseStudy.objects.all()
 
@@ -39,7 +40,7 @@ def resource_search(request: HttpRequest) -> HttpResponse:
     case_studies = objects_tags_cluster_list_overwrite(case_studies)
 
     results = list(chain(how_tos, case_studies))
-
+    print(results)
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)
 
