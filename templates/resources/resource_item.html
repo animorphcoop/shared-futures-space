@@ -1,1 +1,37 @@
-{{ resource }}
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+
+
+    <div class="block items-center justify-center h-screen">
+        Title: {{ resource.title }}
+        <br/>
+        Published on: {{ resource.published_on }}
+        <br/>
+        Summary: {{ resource.summary }}
+        <br/>
+        {% if resource.link %}
+            Link: {{ resource.link }}
+        {% endif %}
+        <br/>
+        {% if resource.body %}
+            bodyuyy
+        {% endif %}
+        <br/>
+            {% if resource.tag %}
+                <div class="w-full flex-inline mb-6">
+                    {% for tag in resource.tag %}
+                        <p class="text-sm text-indigo-500">{{ tag }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        <br/>
+    </div>
+{% endblock %}

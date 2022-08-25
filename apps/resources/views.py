@@ -8,8 +8,9 @@ from apps.core.helpers.tags_declusterer import objects_tags_cluster_list_overwri
 from itertools import chain
 
 from django.db.models import Q
-import operator
-import functools
+
+from django.shortcuts import get_object_or_404
+
 
 
 def resource(request: HttpRequest) -> HttpResponse:
@@ -45,19 +46,20 @@ def resource_search(request: HttpRequest) -> HttpResponse:
 
 
 def resource_item(request: HttpRequest, slug) -> HttpResponse:
-    #resource_page = get_object_or_404(Resource, slug=slug)
-    #how_tos = HowTo.objects.all()
-    #case_studies = CaseStudy.objects.all()
-    print('calling')
-    #current_resource = Resource.objects.get(slug=slug)
-    resource_page = get_object_or_404(HowTo, slug=slug)
+    current_resource = None
+    try:
+        current_resource = HowTo.objects.get(slug=slug)
+    except HowTo.DoesNotExist:
+        print('it is not a howto')
 
+    if current_resource is None:
+        try:
+            current_resource = CaseStudy.objects.get(slug=slug)
+        except CaseStudy.DoesNotExist:
+            print('it is not a case study')
 
-    current_resource = HowTo.objects.get(slug=slug)
-
-    print(current_resource)
     context = {
-    'resource': current_resource
+        'resource': current_resource
     }
 
     return render(request, 'resources/resource_item.html', context)
