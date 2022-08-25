@@ -231,8 +231,9 @@ WAGTAIL_USER_CUSTOM_FIELDS: List[str] = ['display_name', 'year_of_birth', 'post_
 
 # urls are not strings! domain.com/page and domain.com/page/ are the same url
 # unfortunately these settings don't seem to work, so urls are in fact strings for our purposes until we can figure out why :(
-APPEND_SLASH = False
-WAGTAIL_APPEND_SLASH = False
+APPEND_SLASH = True
+WAGTAIL_APPEND_SLASH = True
 
 TAILWIND_APP_NAME = 'theme'
 TAGGIT_CASE_INSENSITIVE = True
+
