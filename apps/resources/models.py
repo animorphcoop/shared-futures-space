@@ -94,8 +94,9 @@ class CaseStudy(Resource):
 
 
 # SIGNALS
+# TODO: Find out 'sender' type
 @receiver(post_save, sender=HowTo)
-def add_slug_to_how_to(sender, instance, *args, **kwargs):
+def add_slug_to_how_to(sender, instance, *args, **kwargs ) -> None:  # pyre-ignore[2]
     if instance and not instance.slug:
         slug = slugify(instance.title)
         random_string = generate_random_string()
@@ -104,7 +105,7 @@ def add_slug_to_how_to(sender, instance, *args, **kwargs):
 
 
 @receiver(post_save, sender=CaseStudy)
-def add_slug_to_case_study(sender, instance, *args, **kwargs):
+def add_slug_to_case_study(sender, instance, *args, **kwargs) -> None:  # pyre-ignore[2]
     if instance and not instance.slug:
         slug = slugify(instance.title)
         random_string = generate_random_string()

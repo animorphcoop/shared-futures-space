@@ -9,8 +9,7 @@ from itertools import chain
 
 from django.db.models import Q
 
-from django.shortcuts import get_object_or_404
-
+from typing import List, Optional
 
 def resource(request: HttpRequest) -> HttpResponse:
     how_tos = objects_tags_cluster_list_overwrite(HowTo.objects.all())
@@ -35,7 +34,7 @@ def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
     return render(request, 'resources/resources.html', context)
 
 
-def filter_and_cluster_resources(search_term):
+def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ignore[24]
     how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
                                    | Q(summary__icontains=search_term)
                                    | Q(tags__name__iexact=search_term)).distinct()
@@ -46,11 +45,10 @@ def filter_and_cluster_resources(search_term):
     # can iterate over tags only after filtering
     how_tos = objects_tags_cluster_list_overwrite(how_tos)
     case_studies = objects_tags_cluster_list_overwrite(case_studies)
-
     return list(chain(how_tos, case_studies))
 
 
-def resource_item(request: HttpRequest, slug) -> HttpResponse:
+def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
     current_resource = None
     try:
         current_resource = HowTo.objects.get(slug=slug)
