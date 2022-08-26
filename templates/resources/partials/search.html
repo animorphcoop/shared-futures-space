@@ -6,6 +6,8 @@
            placeholder=" Type To Search..."
            hx-post="{% url 'resource_search' %}"
            hx-trigger="keyup changed delay:500ms, search"
-           hx-target="#results">
+           hx-target="#search-results"
+           >
+    {% comment %}//hx-push-url="/resources/"{% endcomment %}
 </section>
 

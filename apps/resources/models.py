@@ -12,34 +12,55 @@ from wagtail.admin.panels import StreamFieldPanel
 from apps.streams import blocks
 from uuid import uuid4
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils.text import slugify
+from apps.core.utils.slugifier import generate_random_string
+
 # you need to specify each model's tag system seperately because the db doesn't have a notion of inheritance
 # thy still autocomplete tags that were defined on other models though
 class HowToTag(TaggedItemBase):
     content_object = ParentalKey('resources.HowTo', on_delete=models.CASCADE, related_name='tagged_items')
+
+
 class CaseStudyTag(TaggedItemBase):
     content_object = ParentalKey('resources.CaseStudy', on_delete=models.CASCADE, related_name='tagged_items')
+
 
 # do not create Resources! this model is just to inherit specific kinds of resources from
 class Resource(ClusterableModel):
     uuid: models.UUIDField = models.UUIDField(
-        default = uuid4, editable = False
+        default=uuid4, editable=False
     )
-    title : models.CharField = models.CharField(
+    published_on: models.DateTimeField = models.DateTimeField(
+        auto_now_add=True
+    )
+    slug: models.SlugField = models.SlugField(
+        max_length=100,
+        unique=True,
+        editable=False
+    )
+    title: models.CharField = models.CharField(
         max_length=50,
         blank=False,
         null=False,
     )
-    summary : models.CharField = models.CharField(
+    summary: models.CharField = models.CharField(
         max_length=300,
         blank=False,
         null=False,
     )
+    link: models.CharField = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+
     def __str__(self) -> str:
         return f"{self.title}"
 
 
 class HowTo(Resource):
-    
     tags = ClusterTaggableManager(through=HowToTag, blank=True)
 
     class Meta:
@@ -48,7 +69,6 @@ class HowTo(Resource):
 
 
 class CaseStudy(Resource):
-
     case_study_image: models.ForeignKey = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -70,3 +90,24 @@ class CaseStudy(Resource):
     class Meta:
         verbose_name = 'Case Study'
         verbose_name_plural = 'Case Studies'
+
+
+
+# SIGNALS
+# TODO: Find out 'sender' type
+@receiver(post_save, sender=HowTo)
+def add_slug_to_how_to(sender, instance, *args, **kwargs ) -> None:  # pyre-ignore[2]
+    if instance and not instance.slug:
+        slug = slugify(instance.title)
+        random_string = generate_random_string()
+        instance.slug = slug + "-" + random_string
+        instance.save()
+
+
+@receiver(post_save, sender=CaseStudy)
+def add_slug_to_case_study(sender, instance, *args, **kwargs) -> None:  # pyre-ignore[2]
+    if instance and not instance.slug:
+        slug = slugify(instance.title)
+        random_string = generate_random_string()
+        instance.slug = slug + "-" + random_string
+        instance.save()
