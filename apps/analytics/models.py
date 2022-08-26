@@ -1,5 +1,7 @@
 # pyre-strict
 
+from django.contrib.auth import user_logged_in
+from django.dispatch import receiver
 from django.db import models
 from uuid import uuid4
 
@@ -12,10 +14,12 @@ from userauth.models import CustomUser # pyre-ignore[21]
 
 
 # we take request as an argument so that we can log the session if that turns out later to be necessary
+# this is also why we can't hook a post_save signal for this, it doesn't have access to the request
 def log_signup(new_user: CustomUser, request: HttpRequest) -> None: # pyre-ignore[11]
     AnalyticsEvent.objects.create(area = new_user.post_code.area if new_user.post_code else None, type = AnalyticsEvent.EventType.SIGNUP)
 
-def log_login(request: HttpRequest) -> None:
+@receiver(user_logged_in)
+def log_login(sender: Type[CustomUser], request: HttpRequest, user: CustomUser, **kwargs) -> None:
     user = request.user
     AnalyticsEvent.objects.create(area = user.post_code.area if user.post_code else None, type = AnalyticsEvent.EventType.LOGIN) # pyre-ignore[16]
 
