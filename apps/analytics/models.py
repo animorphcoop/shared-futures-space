@@ -7,7 +7,7 @@ from uuid import uuid4
 
 from datetime import date, time
 from django.http import HttpRequest
-from typing import Type
+from typing import Type, Dict, Any
 
 from area.models import Area # pyre-ignore[21]
 from userauth.models import CustomUser # pyre-ignore[21]
@@ -18,8 +18,9 @@ from userauth.models import CustomUser # pyre-ignore[21]
 def log_signup(new_user: CustomUser, request: HttpRequest) -> None: # pyre-ignore[11]
     AnalyticsEvent.objects.create(area = new_user.post_code.area if new_user.post_code else None, type = AnalyticsEvent.EventType.SIGNUP)
 
+# use a signal here because django provides stuff for logins so there's not really a good exposed place to put the call
 @receiver(user_logged_in)
-def log_login(sender: Type[CustomUser], request: HttpRequest, user: CustomUser, **kwargs) -> None:
+def log_login(sender: Type[CustomUser], request: HttpRequest, user: CustomUser, **kwargs: Dict[str,Any]) -> None:
     user = request.user
     AnalyticsEvent.objects.create(area = user.post_code.area if user.post_code else None, type = AnalyticsEvent.EventType.LOGIN) # pyre-ignore[16]
 
