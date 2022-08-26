@@ -27,7 +27,6 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
 htmx_urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('update/', login_required(CustomUserUpdateView.as_view(template_name='account/update.html')),
          name='account_update'),
-
 ]
 
 urlpatterns += htmx_urlpatterns

@@ -1,8 +1,8 @@
 "use strict";
 const visible = 'block';
 const hidden = 'hidden';
-const initial = document.getElementById("initial");
-const results = document.getElementById("results");
+const initial = document.getElementById("initial-list");
+const results = document.getElementById("search-results");
 const searchbar = document.getElementById("searchbar");
 let flipped = false;
 searchbar.addEventListener('input', function (evt) {
