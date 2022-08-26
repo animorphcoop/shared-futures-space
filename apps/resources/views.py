@@ -23,36 +23,32 @@ def resource(request: HttpRequest) -> HttpResponse:
 def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
 
-    how_tos = HowTo.objects.filter(Q(title__icontains=search_text)
-                   | Q(summary__icontains=search_text)
-                   | Q(tags__name__icontains=search_text))
-
-    case_studies = CaseStudy.objects.filter(Q(title__icontains=search_text)
-                        | Q(summary__icontains=search_text)
-                        | Q(tags__name__icontains=search_text))
-    # can iterate over tags only after filtering
-    how_tos = objects_tags_cluster_list_overwrite(how_tos)
-    case_studies = objects_tags_cluster_list_overwrite(case_studies)
-
-    results = list(chain(how_tos, case_studies))
+    results = filter_and_cluster_resources(search_text)
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)
 
-def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
-    how_tos = HowTo.objects.filter(Q(title__icontains=tag)
-                   | Q(summary__icontains=tag)
-                   | Q(tags__name__icontains=tag))
 
-    case_studies = CaseStudy.objects.filter(Q(title__icontains=tag)
-                        | Q(summary__icontains=tag)
-                        | Q(tags__name__icontains=tag))
+# TODO: Abstract - merge search with tags and sort out trailing url, perhaps with hx-push-url
+def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
+    results = filter_and_cluster_resources(tag)
+    context = {'resources': results}
+    return render(request, 'resources/resources.html', context)
+
+
+def filter_and_cluster_resources(search_term):
+    how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
+                                   | Q(summary__icontains=search_term)
+                                   | Q(tags__name__iexact=search_term)).distinct()
+
+    case_studies = CaseStudy.objects.filter(Q(title__icontains=search_term)
+                                            | Q(summary__icontains=search_term)
+                                            | Q(tags__name__iexact=search_term)).distinct()
     # can iterate over tags only after filtering
     how_tos = objects_tags_cluster_list_overwrite(how_tos)
     case_studies = objects_tags_cluster_list_overwrite(case_studies)
 
-    results = list(chain(how_tos, case_studies))
-    context = {'resources': results}
-    return render(request, 'resources/resources.html', context)
+    return list(chain(how_tos, case_studies))
+
 
 def resource_item(request: HttpRequest, slug) -> HttpResponse:
     current_resource = None
