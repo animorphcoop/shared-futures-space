@@ -11,13 +11,13 @@
             {% if resource.tags %}
                 <div class="w-full flex-inline mb-6">
                     {% for tag in resource.tags %}
-                        <button hx-post="{% url 'resource_search' %}" hx-vals='js:{search: event.target.innerHTML }' hx-trigger="click" hx-target="#results">{{ tag }}</button>
-{% comment %}
-                        <p class="text-sm text-indigo-500">{{ tag }}</p>{% endcomment %}
+                        <button hx-post="{% url 'resource_search' %}" hx-vals='js:{search: event.target.innerHTML }' hx-trigger="click[resultsTrigger()]" hx-target="#search-results"
+                        class="inline-block px-3 py-2 bg-blue-100 text-grey font-medium text-xs leading-tight uppercase rounded-full">{{ tag }}</button>
+
                     {% endfor %}
                 </div>
             {% endif %}
-            <a class="db pv4 ph3 ph0-l no-underline black" href="{% url "resource_item" resource.slug %}">Find out more</a>
+            <a href="{% url "resource_item" resource.slug %}" class="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight">Find out more</a>
 
 
         </div>

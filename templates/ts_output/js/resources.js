@@ -1,9 +1,10 @@
 "use strict";
 const visible = 'block';
 const hidden = 'hidden';
-const initial = document.getElementById("initial");
-const results = document.getElementById("results");
+const initial = document.getElementById("initial-list");
+const results = document.getElementById("search-results");
 const searchbar = document.getElementById("searchbar");
+console.log('alive');
 let flipped = false;
 searchbar.addEventListener('input', function (evt) {
     if (searchbar.value.length > 2) {
@@ -15,6 +16,9 @@ searchbar.addEventListener('input', function (evt) {
     }
 });
 function searching(displayResults) {
+    console.log('wtf');
+    console.log(initial);
+    console.log(results);
     if (initial != null && results != null) {
         if (!flipped) {
             if (displayResults) {
@@ -29,4 +33,12 @@ function searching(displayResults) {
             }
         }
     }
+}
+// dummy method, always returns true to resolve issue with input field normally calling the results we need tags on the list & search partials to do the same.
+//TODO: Improve, abstract
+function resultsTrigger() {
+    flipped = false;
+    results.innerHTML = '';
+    searching(true);
+    return true;
 }

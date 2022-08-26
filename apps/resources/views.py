@@ -23,22 +23,34 @@ def resource(request: HttpRequest) -> HttpResponse:
 def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
     print(search_text)
-    how_tos = HowTo.objects.all()
-    case_studies = CaseStudy.objects.all()
+    # how_tos = HowTo.objects.all()
 
+    # case_studies = CaseStudy.objects.all()
+
+    '''
+    how_tos = HowTo.objects.get(title__icontains=search_text)
+    case_studies = CaseStudy.objects.get(title__icontains=search_text)
+    print(len(how_tos))
+    print(len(case_studies))
+    '''
+    # how_tos.filter(title__icontains=search_text)
+    # case_studies.filter(title__icontains=search_text)
     # filter through key shared fields
-    how_tos.filter(Q(title__icontains=search_text)
+
+    how_tos = HowTo.objects.filter(Q(title__icontains=search_text)
                    | Q(summary__icontains=search_text)
                    | Q(tags__name__icontains=search_text))
 
-    case_studies.filter(Q(title__icontains=search_text)
+    case_studies = CaseStudy.objects.filter(Q(title__icontains=search_text)
                         | Q(summary__icontains=search_text)
                         | Q(tags__name__icontains=search_text))
-
+    print(len(how_tos))
+    print(len(case_studies))
     # can iterate over tags only after filtering
     how_tos = objects_tags_cluster_list_overwrite(how_tos)
     case_studies = objects_tags_cluster_list_overwrite(case_studies)
-
+    print(len(how_tos))
+    print(len(case_studies))
     results = list(chain(how_tos, case_studies))
     print(results)
     context = {'results': results}
