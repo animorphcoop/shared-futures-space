@@ -10,8 +10,9 @@
             {% if result.tags %}
                 <div class="w-full flex-inline mb-6">
                     {% for tag in result.tags %}
-                        <button hx-post="{% url 'resource_search' %}" hx-vals='js:{search: event.target.innerHTML }' hx-trigger="click[resultsTrigger()]" hx-target="#search-results" hx-swap="outerHTML"
-                        class="inline-block px-3 py-2 bg-blue-100 text-grey font-medium text-xs leading-tight uppercase rounded-full">{{ tag }}</button>
+                                <button class="inline-block px-3 py-2 bg-blue-100 text-grey font-medium text-xs leading-tight uppercase rounded-full">
+                                    <a href="{% url "resources_tag" tag %}" class="text-sm">{{ tag }}</a>
+                                </button>
                     {% endfor %}
                 </div>
             {% endif %}
