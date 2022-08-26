@@ -1,7 +1,7 @@
 # pyre-strict
 from django import forms
 from .models import CustomUser
-from analytics.models import log_signup
+from analytics.models import log_signup # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
