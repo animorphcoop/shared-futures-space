@@ -4,6 +4,12 @@ target_server="sharedfutures.webarch.net"
 target_user="dev"
 target_dir="/home/dev/sites/dev"
 target_data_dir="/home/dev/sites/dev_data"
+if [ -z "$1" ];
+then
+  remote_user=$(whoami)
+else
+  remote_user=$1
+fi
 
 echo "# DEPLOY SCRIPT II"
 
@@ -47,7 +53,7 @@ done
 
 echo "# DEPLOYING TO PRODUCTION"
 
-ssh $target_server 'bash -s' <<ENDSSH
+ssh $remote_user@$target_server 'bash -s' <<ENDSSH
   # The following commands run on the remote host
   if sudo -u $target_user test ! -f $target_data_dir/variables.env || sudo -u $target_user test ! -f $target_data_dir/local.py || sudo -u $target_user test ! -f $target_data_dir/settings.py;
   then
