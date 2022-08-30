@@ -11,6 +11,8 @@ from typing import Type, Dict, Any
 
 from area.models import Area # pyre-ignore[21]
 from userauth.models import CustomUser # pyre-ignore[21]
+from resources.models import Resource # pyre-ignore[21]
+
 
 
 # we take request as an argument so that we can log the session if that turns out later to be necessary
@@ -32,3 +34,8 @@ class AnalyticsEvent(models.Model):
     date: models.DateField = models.DateField(default = date.today)
     #hour: models.IntegerField = models.IntegerField(validators=[min_value(0), max_value(23)])
     type: models.CharField = models.CharField(max_length = 6, choices = EventType.choices)
+    target_resource: models.ForeignKey = models.ForeignKey(Resource, on_delete = models.SET_NULL, null = True)
+
+class AnalyticsSession(models.Model):
+    sessid_hash: models.CharField = models.CharField(max_length = 128) # from django.contrib.auth.hashers import make_password
+    area: models.ForeignKey = models.ForeignKey(Area, on_delete = models.CASCADE, null = True)
