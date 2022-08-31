@@ -26,14 +26,13 @@ def resource_search(request: HttpRequest) -> HttpResponse:
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)
 
-
-# TODO: Abstract - merge search with tags and sort out trailing url, perhaps with hx-push-url
+'''
 def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
     results = filter_and_cluster_resources(tag)
     context = {'resources': results}
     return render(request, 'resources/resources.html', context)
 
-
+'''
 def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ignore[24]
     how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
                                    | Q(summary__icontains=search_term)

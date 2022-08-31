@@ -11,7 +11,9 @@
                 <div class="w-full flex-inline mb-6">
                     {% for tag in result.tags %}
                                 <button class="inline-block px-3 py-2 bg-blue-100 text-grey font-medium text-xs leading-tight uppercase rounded-full">
+{% comment %}
                                     <a href="{% url "resources_tag" tag %}" class="text-sm">{{ tag }}</a>
+{% endcomment %}
                                 </button>
                     {% endfor %}
                 </div>
