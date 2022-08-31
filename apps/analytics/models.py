@@ -35,6 +35,6 @@ class AnalyticsEvent(models.Model):
     type: models.CharField = models.CharField(max_length = 6, choices = EventType.choices)
     target_resource: models.ForeignKey = models.ForeignKey(Resource, on_delete = models.SET_NULL, null = True)
 
-class AnalyticsSession(models.Model):
-    sessid_hash: models.CharField = models.CharField(max_length = 128) # from django.contrib.auth.hashers import make_password
-    area: models.ForeignKey = models.ForeignKey(Area, on_delete = models.CASCADE, null = True)
+#class AnalyticsSession(models.Model):
+#    sessid_hash: models.CharField = models.CharField(max_length = 128) # from django.contrib.auth.hashers import make_password
+#    area: models.ForeignKey = models.ForeignKey(Area, on_delete = models.CASCADE, null = True)
