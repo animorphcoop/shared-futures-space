@@ -26,21 +26,27 @@ def resource_search(request: HttpRequest) -> HttpResponse:
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)
 
-'''
-def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
-    results = filter_and_cluster_resources(tag)
-    context = {'resources': results}
+
+def resource_tag(request: HttpRequest, tag) -> HttpResponse:
+    #search_text = request.POST.get('search')
+
+
+    how_tos = objects_tags_cluster_list_overwrite(HowTo.objects.all())
+    case_studies = objects_tags_cluster_list_overwrite(CaseStudy.objects.all())
+    resources = list(chain(how_tos, case_studies))
+    context = {'resources': resources,
+               'tag': tag}
     return render(request, 'resources/resources.html', context)
 
-'''
+
 def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ignore[24]
     how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
                                    | Q(summary__icontains=search_term)
-                                   | Q(tags__name__iexact=search_term)).distinct()
+                                   | Q(tags__name__icontains=search_term)).distinct()
 
     case_studies = CaseStudy.objects.filter(Q(title__icontains=search_term)
                                             | Q(summary__icontains=search_term)
-                                            | Q(tags__name__iexact=search_term)).distinct()
+                                            | Q(tags__name__icontains=search_term)).distinct()
     # can iterate over tags only after filtering
     how_tos = objects_tags_cluster_list_overwrite(how_tos)
     case_studies = objects_tags_cluster_list_overwrite(case_studies)

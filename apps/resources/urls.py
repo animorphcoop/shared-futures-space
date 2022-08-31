@@ -8,7 +8,7 @@ from django.urls import URLResolver, URLPattern
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('', views.resource, name='resources'),
     path('resource_search/', views.resource_search, name='resource_search'),
-    #path('resource_tag/', views.resource_tag, name='resources_tag'),
+    path('<str:tag>', views.resource_tag, name='resources_tag'),
     path('<slug>/', views.resource_item, name='resource_item'),
 
 ]
