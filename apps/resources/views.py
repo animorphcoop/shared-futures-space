@@ -2,22 +2,26 @@
 from django.http.request import HttpRequest
 from django.http import HttpResponse
 
-from .models import Resource, HowTo, CaseStudy
-from django.shortcuts import render, get_object_or_404
+from .models import HowTo, CaseStudy
+from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
 
 from django.db.models import Q
-
 from typing import List, Optional
 
+
 def resource(request: HttpRequest) -> HttpResponse:
-    how_tos = objects_tags_cluster_list_overwrite(HowTo.objects.all())
-    case_studies = objects_tags_cluster_list_overwrite(CaseStudy.objects.all())
-    resources = list(chain(how_tos, case_studies))
+    resources = retrieve_and_chain_resources()
     context = {'resources': resources}
     return render(request, 'resources/resources.html', context)
 
+# with argument as a separate url and view
+def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
+    resources = retrieve_and_chain_resources()
+    context = {'resources': resources,
+               'tag': tag}
+    return render(request, 'resources/resources.html', context)
 
 def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
@@ -26,18 +30,10 @@ def resource_search(request: HttpRequest) -> HttpResponse:
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)
 
-
-def resource_tag(request: HttpRequest, tag) -> HttpResponse:
-    #search_text = request.POST.get('search')
-
-
+def retrieve_and_chain_resources() -> List:  # pyre-ignore[24]
     how_tos = objects_tags_cluster_list_overwrite(HowTo.objects.all())
     case_studies = objects_tags_cluster_list_overwrite(CaseStudy.objects.all())
-    resources = list(chain(how_tos, case_studies))
-    context = {'resources': resources,
-               'tag': tag}
-    return render(request, 'resources/resources.html', context)
-
+    return list(chain(how_tos, case_studies))
 
 def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ignore[24]
     how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
@@ -53,6 +49,7 @@ def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ig
     return list(chain(how_tos, case_studies))
 
 
+# signular resource item
 def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
     current_resource = None
     try:
@@ -61,7 +58,7 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
         try:
             current_resource = CaseStudy.objects.get(slug=slug)
         except CaseStudy.DoesNotExist:
-            print('it is neither HowTo nor CaseStudy')
+            print('it is neither HowTo nor CaseStudy. Redirect to root url?')
     context = {
         'resource': single_object_tags_cluster_overwrite(current_resource)
     }
