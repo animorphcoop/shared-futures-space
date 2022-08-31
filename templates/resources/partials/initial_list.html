@@ -15,13 +15,6 @@
                                 onclick="buttonTagSearch('{{ tag }}')"
                                 hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}' hx-target="#search-results">
                             {{ tag }}
-
-
-                            {% comment %}
-                                        #onclick="document.getElementById('searchbar').value = '{{ tag }}'"
-
-                                    <a href="{% url "resources_tag" tag %}" class="text-sm">{{ tag }}</a>
-{% endcomment %}
                         </button>
 
                     {% endfor %}
