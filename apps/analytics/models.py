@@ -23,7 +23,7 @@ def log_signup(new_user: CustomUser, request: HttpRequest) -> None: # pyre-ignor
 # use a signal here because django provides stuff for logins so there's not really a good exposed place to put the call
 @receiver(user_logged_in)
 def log_login(sender: Type[CustomUser], request: HttpRequest, user: CustomUser, **kwargs: Dict[str,Any]) -> None:
-    AnalyticsEvent.objects.create(area = user.post_code.area if user.post_code else None, type = AnalyticsEvent.EventType.LOGIN) # pyre-ignore[16]
+    AnalyticsEvent.objects.create(area = user.post_code.area if user.post_code else None, type = AnalyticsEvent.EventType.LOGIN)
 
 class AnalyticsEvent(models.Model):
     class EventType(models.TextChoices):
