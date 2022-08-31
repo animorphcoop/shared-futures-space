@@ -11,7 +11,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 from django.urls import reverse
 
-from .models import Idea, IdeaSupport, Project, ProjectMembership
+from .models import Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from messaging.views import ChatView # pyre-ignore[21]
@@ -19,87 +19,6 @@ from action.util import send_offer # pyre-ignore[21]
 from action.models import Action # pyre-ignore[21]
 from messaging.util import send_system_message # pyre-ignore[21]
 from typing import Dict, List, Any
-
-class IdeaView(DetailView): # pyre-ignore[24] apparently pyre doesn't understand inheritence?
-    model = Idea
-    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        this_idea = Idea.objects.get(slug=slug)
-        if (request.POST['action'] == 'give_support'):
-            # can't support one idea more than once
-            if (0 == len(IdeaSupport.objects.filter(idea=this_idea,
-                                                    user=request.user))):
-                support = IdeaSupport(idea=this_idea,
-                                      user=request.user)
-                support.save()
-                # TODO: is this the only place support can be given? if not, need to check elsewhere as well
-                if (len(IdeaSupport.objects.filter(idea=Idea.objects.get(slug=slug))) >= settings.PROJECT_REQUIRED_SUPPORTERS):
-                    new_project_slug = replace_idea_with_project(Idea.objects.get(slug=slug))
-                    return redirect(reverse('view_project', args=[new_project_slug]))
-        elif (request.POST['action'] == 'remove_support'):
-            # can't remove support from your own idea (because you wouldn't be able to return it through the intended interface)
-            if (request.user != this_idea.proposed_by):
-                supports = IdeaSupport.objects.filter(idea=this_idea,
-                                                      user=request.user)
-                for support in supports: # there should only be one, but no need to assume that
-                    support.delete()
-        return super().get(request, slug)
-    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        context = super().get_context_data(**kwargs)
-        context['supporters'] = IdeaSupport.objects.filter(idea=context['object'].pk)
-        return context
-
-class AllIdeasView(TemplateView):
-    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        context = super().get_context_data(**kwargs)
-        context['ideas'] = Idea.objects.all()
-        return context
-
-class MakeIdeaView(TemplateView):
-    def post(self, request: WSGIRequest, **kwargs: Dict[str,Any]) -> HttpResponse:        
-        new_idea = Idea(name=request.POST['name'], description=request.POST['description'], proposed_by=request.user, slug="")
-        new_idea.save()
-        new_support = IdeaSupport(idea=new_idea, user=request.user)
-        new_support.save()
-        return redirect(reverse('all_ideas'))
-
-class EditIdeaView(UpdateView): # pyre-ignore[24]
-    model = Idea
-    fields = ['name', 'description']
-    def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
-        # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
-        return login_required(super().get)(*args, **kwargs) # pyre-ignore[6] destructuring not understood by pyre
-    def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str,Any]) -> HttpResponse: # pyre-ignore[14]
-        idea = Idea.objects.get(slug=slug)
-        if request.POST['action'] == 'update':
-            idea.name = request.POST['name']
-            idea.description = request.POST['description']
-            idea.save()
-            for support in IdeaSupport.objects.filter(idea=idea):
-                if support.user != request.user:
-                    send_system_message(get_userpair(get_system_user(), support.user).chat, 'idea_edited', context_idea = idea)
-                    support.delete()
-        elif request.POST['action'] == 'delete':
-            idea.delete()
-            return redirect(reverse('all_ideas'))
-        return redirect(reverse('view_idea', args=[slug]))
-
-# ---
-
-def replace_idea_with_project(idea: Idea) -> CharField: # pyre-ignore[24]
-    new_chat = Chat()
-    new_chat.save()
-    new_project = Project(name = idea.name, description = idea.description, slug = idea.slug, chat = new_chat)
-    new_project.save()
-    for support in IdeaSupport.objects.filter(idea=idea):
-        new_ownership = ProjectMembership(project = new_project, user = support.user, owner = True)
-        new_ownership.save()
-        send_system_message(get_userpair(get_system_user(), support.user).chat, 'idea_became_project', context_project = new_project)
-        send_system_message(new_project.chat, 'new_owner', context_user_a = support.user)
-        support.delete()
-    idea.delete()
-    return new_project.slug
-
-# ---
 
 class ProjectView(DetailView): # pyre-ignore[24]
     model = Project
