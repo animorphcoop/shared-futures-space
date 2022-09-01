@@ -7,5 +7,5 @@ from uuid import UUID
 
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path('<uuid:uuid>/', PollView.as_view(template_name='poll/poll_view.html'), name='poll_view'), # pyre-ignore[16]
+    path('<uuid:uuid>/', PollView.as_view(template_name='poll/poll_view.html'), name='poll_view'),
 ]

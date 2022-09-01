@@ -4,11 +4,14 @@ from django.views.generic.base import TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.urls import reverse
+from uuid import UUID
+
+from typing import Dict, Any
 
 from .models import Poll, Vote
 
 class PollView(TemplateView):
-    def post(self, request, uuid):
+    def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponseRedirect:
         if request.user.is_active and 'choice' in request.POST:
             poll = Poll.objects.get(uuid = uuid)
             try:
@@ -18,7 +21,7 @@ class PollView(TemplateView):
             [v.delete() for v in Vote.objects.filter(poll = poll, user = request.user)] # remove previous vote if there is one
             Vote.objects.create(poll = poll, user = request.user, choice = choice)
         return HttpResponseRedirect(reverse('poll_view', args=[uuid]))
-    def get_context_data(self, uuid, **kwargs):
+    def get_context_data(self, uuid: UUID, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(**kwargs)
         poll = Poll.objects.get(uuid = uuid)
         votes = Vote.objects.filter(poll = poll)
