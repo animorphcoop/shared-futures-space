@@ -8,7 +8,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from wagtail.fields import StreamField
-from wagtail.admin.panels import StreamFieldPanel
+from wagtail.admin.panels import FieldPanel
 from apps.streams import blocks
 from uuid import uuid4
 
@@ -28,6 +28,7 @@ class CaseStudyTag(TaggedItemBase):
 
 
 # do not create Resources! this model is just to inherit specific kinds of resources from
+# you can however query Resource.objects, and django will automatically search for anything that inherits from this model. that's pretty neat!
 class Resource(ClusterableModel):
     uuid: models.UUIDField = models.UUIDField(
         default=uuid4, editable=False
@@ -82,7 +83,7 @@ class CaseStudy(Resource):
     ], null=True, blank=True)
 
     content_panels = [
-        StreamFieldPanel("body"),
+        FieldPanel("body"),
     ]
 
     tags = ClusterTaggableManager(through=CaseStudyTag, blank=True)

@@ -34,6 +34,10 @@ function searching(displayResults: boolean) {
             }
         }
     }
+}
 
-
+function buttonTagSearch(tag: string) {
+    searchbar.value = tag
+    console.log('search')
+    searching(true)
 }

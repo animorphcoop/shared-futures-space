@@ -34,7 +34,6 @@ from uuid import UUID
 
 import magic
 
-
 def profile_view(request: WSGIRequest) -> HttpResponse:
     return render(request, 'account/view.html')
 

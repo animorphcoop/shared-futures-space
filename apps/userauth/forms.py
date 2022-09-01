@@ -1,12 +1,13 @@
 # pyre-strict
 from django import forms
 from .models import CustomUser
+from analytics.models import log_signup # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
 from allauth.account.forms import SignupForm, LoginForm
-
 from wagtail.users.forms import UserEditForm, UserCreationForm
+
 
 from typing import Type, List, Any
 from django.http import HttpRequest
@@ -47,6 +48,7 @@ class CustomSignupForm(SignupForm):
         user.display_name = self.cleaned_data['display_name'] # pyre-ignore[16]
         user.organisation = self.cleaned_data['organisation']
         user.save()
+        log_signup(user, request) # analytics
         return user
 
 
@@ -56,18 +58,9 @@ class CustomUserLoginForm(LoginForm):
         model: Type[CustomUser] = CustomUser
 '''
 
-# test
 class CustomUserPersonalForm(forms.Form):
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length = 8)
-
-
-#class CustomUserPersonalForm(forms.ModelForm):
-#    # used once to set these, thereafter you have to message an admin to change them
-#    class Meta:
-#        model: Type[CustomUser] = CustomUser
-#        fields: List[str] = ['year_of_birth', 'post_code']
-
 
 class CustomLoginForm(LoginForm):
 

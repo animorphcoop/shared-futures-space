@@ -1,4 +1,12 @@
 <section>
+{% comment %}In case the user calls it via resource_tag view we want to immediately filter and then mask the tag from the url & history{% endcomment %}
+    {% if tag %}
+        <section x-init="buttonTagSearch('{{ tag }}');
+                        history.replaceState({}, '{{ tag }}', '/resources/');"
+                 hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}' hx-target="#search-results"
+                 hx-trigger="load">
+        </section>
+    {% endif %}
     {% for resource in resources %}
         <div class="px-4 mb-12 pb-4 rounded-lg shadow-lg">
             <div class="w-full">
@@ -11,14 +19,19 @@
             {% if resource.tags %}
                 <div class="w-full flex-inline mb-6">
                     {% for tag in resource.tags %}
-                                <button class="inline-block px-3 py-2 bg-blue-100 text-grey font-medium text-xs leading-tight uppercase rounded-full">
-                                    <a href="{% url "resources_tag" tag %}" class="text-sm">{{ tag }}</a>
-                                </button>
+                        <button class="inline-block px-3 py-2 bg-blue-100 text-grey font-medium text-sm leading-tight uppercase rounded-full"
+                                onclick="buttonTagSearch('{{ tag }}')"
+                                hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
+                                hx-target="#search-results">
+                            {{ tag }}
+                        </button>
 
                     {% endfor %}
                 </div>
             {% endif %}
-            <a href="{% url "resource_item" resource.slug %}" class="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight">Find out more</a>
+            <a href="{% url "resource_item" resource.slug %}"
+               class="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight">Find
+                out more</a>
 
 
         </div>
