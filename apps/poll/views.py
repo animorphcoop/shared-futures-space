@@ -1,8 +1,10 @@
 # pyre-strict
 
+from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.handlers.wsgi import WSGIRequest
+from django.utils import timezone
 from django.urls import reverse
 from uuid import UUID
 
@@ -12,8 +14,8 @@ from .models import Poll, Vote
 
 class PollView(TemplateView):
     def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponseRedirect:
-        if request.user.is_active and 'choice' in request.POST:
-            poll = Poll.objects.get(uuid = uuid)
+        poll = Poll.objects.get(uuid = uuid)
+        if request.user.is_active and 'choice' in request.POST and poll.expires < timezone.now():
             try:
                 choice = poll.options.index(request.POST['choice']) + 1
             except ValueError:
@@ -30,5 +32,10 @@ class PollView(TemplateView):
             results[poll.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
         ctx['poll_name'] = poll.question
         ctx['poll_results'] = results
+        ctx['poll_expires'] = poll.expires
+        ctx['poll_done'] = poll.expires < timezone.now()
         return ctx
         
+class PollCreateView(CreateView):
+    model = Poll
+    fields = ['question', 'options', 'expires']

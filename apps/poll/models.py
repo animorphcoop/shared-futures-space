@@ -18,12 +18,13 @@ class Poll(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4)
     question: models.CharField = models.CharField(max_length = 100)
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
+    expires: models.DateTimeField = models.DateTimeField()
 
 class Vote(models.Model):
     user: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
     poll: models.ForeignKey = models.ForeignKey(Poll, on_delete = models.CASCADE)
     choice: models.IntegerField = models.IntegerField()
-    def clean(self) -> None: # pyre insists this returns None, dunno why
+    def clean(self) -> None:
         cleaned_data = super().clean()
         # 0 indicates the always-present unask-the-question option
         if self.choice < 0 or self.choice > len(self.poll.options):
