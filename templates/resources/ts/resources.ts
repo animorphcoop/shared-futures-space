@@ -1,8 +1,8 @@
 const visible: string = 'block'
 const hidden: string = 'hidden'
 
-const initial = document.getElementById("initial")
-const results = document.getElementById("results")
+const initial = document.getElementById("initial-list")
+const results = document.getElementById("search-results")
 
 const searchbar = <HTMLInputElement>document.getElementById("searchbar")
 
@@ -16,7 +16,6 @@ searchbar.addEventListener('input', function (evt) {
     } else {
         flipped = false
         searching(false)
-
     }
 
 });

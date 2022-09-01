@@ -129,6 +129,8 @@ apps/theme/static_src/node_modules/
 !**/migrations/__init__.py
 
 
-# ignore
+# ignore for test upload
 ignore
 ignore/*
+autoupload
+autoupload/*
