@@ -49,7 +49,7 @@ def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ig
     return list(chain(how_tos, case_studies))
 
 
-# signular resource item
+# single resource item
 def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
     current_resource = None
     try:
