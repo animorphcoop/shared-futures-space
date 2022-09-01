@@ -92,8 +92,10 @@ module.exports = {
                 incorrect:'#fe2712',
             },
             fontSize: {
-                '26': ['1.3em', '1.25em'],
-                '43': ['2.15em', '1.255em'],
+                'xxs': ['0.625em', '0.625em']
+            },
+            spacing: {
+                '4.5': ['1.125em']
             },
         },
 
