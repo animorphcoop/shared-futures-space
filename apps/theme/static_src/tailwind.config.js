@@ -98,11 +98,9 @@ module.exports = {
                 '4.5': ['1.125em']
             },
         },
-
         fontFamily: {
-            'light': ['SofiaPro_Light', 'sans-serif'],
-            'regular': ['SofiaPro_Regular', 'sans-serif'],
-            'semibold': ['SofiaPro_SemiBold', 'sans-serif'],
+            'head': ['Kanit_Regular', 'sans-serif'],
+            'body': ['EB_Garamond_Regular', 'serif']
         },
 
     },
