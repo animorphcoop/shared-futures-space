@@ -33,31 +33,42 @@ def test_project(db):
     return Project.objects.create(name='some project', description='project to do something')
 
 
+'''
+
 @pytest.fixture(scope='function')
-def test_resource(db):
+def test_how_to_resource(db):
     return HowTo.objects.create(title='howtitle', summary='not much to say, do it yourself',
-                                link='https://animorph.coop/')
-
+                                    link='https://animorph.coop/', tags=['how to', 'urban garden', 'leisure'])
 
 @pytest.fixture(scope='function')
-def test_resource(db):
-    return HowTo.objects.create(title='howtitle', summary='not much to say, do it yourself',
-                                link='https://animorph.coop/')
+def test_case_study_resource(db):
+    return CaseStudy.objects.create(title='case study title', summary='not much to say, do it yourself',
+                                             link='https://animorph.coop/', tags=['case study', 'advice', 'enterprise'])
 
-#TODO: Add tags
 @pytest.fixture(scope='function')
-def test_resources(db):
+def test_how_to_resources(db):
     how_tos = [HowTo.objects.create(title='howtitle', summary='not much to say, do it yourself',
-                                    link='https://animorph.coop/'),
+                                    link='https://animorph.coop/', tags=['how to', 'urban garden', 'leisure']),
                HowTo.objects.create(title='howtitle2', summary='not much to say, do it yourself2',
-                                    link='https://animorph.coop/')
+                                    link='https://animorph.coop/', tags=['how to', 'community', 'organising'])
                ]
+    return how_tos
+
+@pytest.fixture(scope='function')
+def test_case_study_resources(db):
     case_studies = [CaseStudy.objects.create(title='case study title', summary='not much to say, do it yourself',
-                                             link='https://animorph.coop/'),
+                                             link='https://animorph.coop/', tags=['case study', 'advice', 'enterprise']),
                     CaseStudy.objects.create(title='case study title2', summary='not much to say, do it yourself2',
-                                             link='https://animorph.coop/')
+                                             link='https://animorph.coop/', tags=['case study', 'community', 'sustainability'])
                     ]
+    return case_studies
+
+@pytest.fixture(scope='function')
+def test_resources():
+    how_tos = test_how_to_resources()
+    case_studies = test_case_study_resources()
     return list(chain(how_tos, case_studies))
+'''
 
 
 # make celery work
