@@ -92,15 +92,16 @@ module.exports = {
                 incorrect:'#fe2712',
             },
             fontSize: {
-                '26': ['1.3em', '1.25em'],
-                '43': ['2.15em', '1.255em'],
+                'xxs': ['0.625em', '0.625em']
+            },
+            spacing: {
+                '4.5': ['1.125em']
             },
         },
-
         fontFamily: {
-            'light': ['SofiaPro_Light', 'sans-serif'],
-            'regular': ['SofiaPro_Regular', 'sans-serif'],
-            'semibold': ['SofiaPro_SemiBold', 'sans-serif'],
+            'head': ['Kanit_SemiBold', 'sans-serif'],
+            'button': ['Kanit_Bold', 'sans-serif'],
+            'body': ['EB_Garamond_Regular', 'serif']
         },
 
     },
