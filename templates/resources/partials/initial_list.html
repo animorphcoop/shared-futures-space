@@ -1,4 +1,4 @@
-<section>
+<ul class="px-3">
 {% comment %}In case the user calls it via resource_tag view we want to immediately filter and then mask the tag from the url & history{% endcomment %}
     {% if tag %}
         <section x-init="buttonTagSearch('{{ tag }}');
@@ -8,32 +8,25 @@
         </section>
     {% endif %}
     {% for resource in resources %}
-        <div class="px-4 mb-12 pb-4 rounded-lg shadow-lg">
-            <div class="w-full">
-                <p class="text-sm text-gray-600">{{ resource.title }}</p>
-            </div>
-            <div class="w-full mb-6">
-                <p class="text-md text-indigo-500 font-bold">{{ resource.summary }}</p>
-            </div>
+        <li class="p-4 even:bg-blue-100 odd:bg-green-100">
+            <h2 class="uppercase mb-3 text-xs text-gray-600">{{ resource.title }}</h2>
+            <p class="mb-3">{{ resource.summary }}</p>
 
             {% if resource.tags %}
-                <div class="w-full flex-inline mb-6">
+                <div class="w-full flex-inline">
                     {% for tag in resource.tags %}
-                        <button class="inline-block px-3 py-2 bg-blue-100 text-grey font-medium text-sm leading-tight uppercase rounded-full"
+                        <button class="inline-block px-2 py-1 mr-2 mb-3 bg-green-200 text-green-800 text-xs leading-tight uppercase"
                                 onclick="buttonTagSearch('{{ tag }}')"
                                 hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
                                 hx-target="#search-results">
                             {{ tag }}
                         </button>
-
                     {% endfor %}
                 </div>
             {% endif %}
+
             <a href="{% url "resource_item" resource.slug %}"
-               class="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight">Find
-                out more</a>
-
-
-        </div>
+               class="inline-block px-4 py-2 bg-white text-purple-600 font-medium uppercase text-xs rounded-full">Find out more</a>
+        </li>
     {% endfor %}
-</section>
+</ul>
