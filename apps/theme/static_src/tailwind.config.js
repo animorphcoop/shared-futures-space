@@ -99,7 +99,8 @@ module.exports = {
             },
         },
         fontFamily: {
-            'head': ['Kanit_Regular', 'sans-serif'],
+            'head': ['Kanit_SemiBold', 'sans-serif'],
+            'button': ['Kanit_Bold', 'sans-serif'],
             'body': ['EB_Garamond_Regular', 'serif']
         },
 

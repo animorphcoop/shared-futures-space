@@ -1113,6 +1113,16 @@ select {
   padding-right: 0.5rem;
 }
 
+.py-0\.5 {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+
+.py-0 {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
 .px-1\.5 {
   padding-left: 0.375rem;
   padding-right: 0.375rem;
@@ -1176,11 +1186,15 @@ select {
 }
 
 .font-head {
-  font-family: Kanit_Regular, sans-serif;
+  font-family: Kanit_SemiBold, sans-serif;
 }
 
 .font-body {
   font-family: EB_Garamond_Regular, serif;
+}
+
+.font-button {
+  font-family: Kanit_Bold, sans-serif;
 }
 
 .text-2xl {
@@ -1259,16 +1273,12 @@ select {
   line-height: 1.25rem;
 }
 
-.tracking-wide {
-  letter-spacing: 0.025em;
-}
-
-.tracking-wider {
-  letter-spacing: 0.05em;
-}
-
 .tracking-widest {
   letter-spacing: 0.1em;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
 }
 
 .text-black {
@@ -1301,11 +1311,6 @@ select {
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
-.text-gray-600 {
-  --tw-text-opacity: 1;
-  color: rgb(75 85 99 / var(--tw-text-opacity));
-}
-
 .text-green-800 {
   --tw-text-opacity: 1;
   color: rgb(22 101 52 / var(--tw-text-opacity));
@@ -1314,6 +1319,11 @@ select {
 .text-purple-600 {
   --tw-text-opacity: 1;
   color: rgb(147 51 234 / var(--tw-text-opacity));
+}
+
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
 .text-indigo-500 {
@@ -1440,9 +1450,9 @@ select {
   font-weight: 600;
 }
 
-.odd\:bg-green-100:nth-child(odd) {
+.odd\:bg-blue-200:nth-child(odd) {
   --tw-bg-opacity: 1;
-  background-color: rgb(220 252 231 / var(--tw-bg-opacity));
+  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
 }
 
 .even\:bg-blue-100:nth-child(even) {
