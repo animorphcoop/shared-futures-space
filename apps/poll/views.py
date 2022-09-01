@@ -35,7 +35,9 @@ class PollView(TemplateView):
         ctx['poll_expires'] = poll.expires
         ctx['poll_done'] = poll.expires < timezone.now()
         return ctx
-        
+
 class PollCreateView(CreateView):
     model = Poll
     fields = ['question', 'options', 'expires']
+    def get_success_url(self):
+        return reverse('poll_view', args=[self.object.uuid])
