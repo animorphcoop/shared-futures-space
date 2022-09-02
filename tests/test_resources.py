@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 from resources.models import HowTo, CaseStudy
+from resources.views import filter_and_cluster_resources
 from core.utils.tags_declusterer import tag_cluster_to_list
 from itertools import chain
 import bs4
@@ -31,24 +32,17 @@ def test_resource_add(client, test_user, test_image):
     test_user.save()
 
 def test_resource_search(client, test_how_to_resource, test_case_study_resource):
-    resource_page = str(client.get(reverse('resources')).content)
+    resource_page = client.get(reverse('resources')).content.decode('utf-8')
     assert test_how_to_resource.title in resource_page
     assert test_case_study_resource.title in resource_page
     
-    howto_url_search = str(client.get(reverse('resources_tag', args=[test_how_to_resource.title])).content)
-    assert test_how_to_resource.summary in howto_url_search
-    casestudy_url_search = str(client.get(reverse('resources_tag', args=['se5rtybhj'])).content)
-    assert test_case_study_resource.summary in casestudy_url_search
+    # we can't test the search with a request because it's done client-side by htmx requesting filter_and_cluster_resources after /resources/ loads
+    assert test_how_to_resource in filter_and_cluster_resources(test_how_to_resource.title)
+    assert test_case_study_resource in filter_and_cluster_resources(test_case_study_resource.title)
 
-    howto_post_search = str(client.post(reverse('resource_search'), {'search': test_how_to_resource.title}).content)
-    assert test_how_to_resource.summary in howto_post_search
-    casestudy_post_search = str(client.post(reverse('resource_search'), {'search': test_how_to_resource.title}).content)
-    assert test_case_study_resource.summary in casestudy_post_search
-
-
-def test_resource_item(client, test_how_to_resource):
-    how_to = test_how_to_resource
-    resource_item_page = client.post(reverse('resource_item', args=[how_to.slug]))
-    resource_item_page_html = bs4.BeautifulSoup(resource_item_page.content, features='html5lib')
-    assert resource_item_page_html.body.find_all('h4', string=" howtitle")
+def test_resource_item(client, test_how_to_resource, test_case_study_resource):
+    howto_item_page = client.get(reverse('resource_item', args=[test_how_to_resource.slug])).content.decode('utf-8')
+    assert test_how_to_resource.title in howto_item_page
+    casestudy_item_page = client.get(reverse('resource_item', args=[test_case_study_resource.slug])).content.decode('utf-8')
+    assert test_case_study_resource.title in casestudy_item_page
 
