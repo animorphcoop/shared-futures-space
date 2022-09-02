@@ -37,7 +37,7 @@ def test_resource_search(client, test_how_to_resource, test_case_study_resource)
     
     howto_url_search = str(client.get(reverse('resources_tag', args=[test_how_to_resource.title])).content)
     assert test_how_to_resource.summary in howto_url_search
-    casestudy_url_search = str(client.get(reverse('resources_tag', args=['how'])).content)
+    casestudy_url_search = str(client.get(reverse('resources_tag', args=['se5rtybhj'])).content)
     assert test_case_study_resource.summary in casestudy_url_search
 
     howto_post_search = str(client.post(reverse('resource_search'), {'search': test_how_to_resource.title}).content)
