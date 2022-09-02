@@ -1,6 +1,10 @@
 import pytest
 from django.conf import settings
 
+from django.core.files.images import ImageFile
+from wagtail.images.models import Image
+from io import BytesIO
+
 from project.models import Project, Idea
 from area.models import PostCode, Area
 from resources.models import HowTo, CaseStudy
@@ -21,12 +25,6 @@ def other_test_user(db, django_user_model):
                                                  year_of_birth=1998, post_code=PostCode.objects.create(code="PS7C0DE"))
 
 
-# items to use during testing
-@pytest.fixture(scope='function')
-def test_idea(db):
-    return Idea.objects.create(name='some idea', description='idea to do something')
-
-
 @pytest.fixture(scope='function')
 def test_project(db):
     return Project.objects.create(name='some project', description='project to do something')
@@ -43,27 +41,13 @@ def test_case_study_resource(db):
     return CaseStudy.objects.create(title='case study title', summary='not much to say, do it yourself',
                                     link='https://animorph.coop/')
 
-
 @pytest.fixture(scope='function')
-def test_how_to_resources(db):
-    how_tos = [
-        {HowTo.objects.create(title='how title', summary='not much to say, do it yourself',
-                              link='https://animorph.coop/', tags=['how to', 'urban garden', 'leisure'])},
-        {HowTo.objects.create(title='how title2', summary='not much to say, do it yourself2',
-                              link='https://animorph.coop/', tags=['how to', 'community', 'organising'])}
-    ]
-    return how_tos
-
-
-@pytest.fixture(scope='function')
-def test_case_study_resources(db):
-    case_studies = [
-        {CaseStudy.objects.create(title='case study title', summary='not much to say, do it yourself',
-                                  link='https://animorph.coop/', tags=['case study', 'advice', 'enterprise'])},
-        {CaseStudy.objects.create(title='case study title2', summary='not much to say, do it yourself2',
-                                  link='https://animorph.coop/', tags=['case study', 'community', 'sustainability'])}
-    ]
-    return case_studies
+def test_image(db):
+    # http://web.archive.org/web/20111224041840/http://www.techsupportteam.org/forum/digital-imaging-photography/1892-worlds-smallest-valid-jpeg.html
+    # needs to be valid because avatar upload only accepts valid images in png, jpg or bmp
+    smallest_jpg = b"\xFF\xD8\xFF\xE0\x00\x10\x4A\x46\x49\x46\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xFF\xDB\x00\x43\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xC2\x00\x0B\x08\x00\x01\x00\x01\x01\x01\x11\x00\xFF\xC4\x00\x14\x10\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xDA\x00\x08\x01\x01\x00\x01\x3F\x10"
+    img_file = ImageFile(BytesIO(smallest_jpg), name='test image')
+    return Image.objects.create(title='test image', file=img_file)
 
 
 # make celery work
