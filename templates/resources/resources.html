@@ -8,10 +8,10 @@
 {% endblock extra_css %}
 
 {% block content %}
-<section>
-
-    {% include 'resources/partials/search.html' %}
-</section>
+    <section>
+        <h1 class="font-head text-purple text-xl">Resources</h1>
+        {% include 'resources/partials/search.html' %}
+    </section>
 <section>
     <div id="search-results" class="hidden">
         {% include 'resources/partials/search_results.html' %}

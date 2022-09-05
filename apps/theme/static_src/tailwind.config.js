@@ -80,6 +80,7 @@ module.exports = {
                 incorrect:'#fe2712',
             },
             fontSize: {
+                'xxxs': ['0.5625em', '0.5625em'],
                 'xxs': ['0.625em', '0.625em']
             },
             spacing: {
@@ -87,8 +88,10 @@ module.exports = {
             },
         },
         fontFamily: {
-            'head': ['Kanit_SemiBold', 'sans-serif'],
-            'button': ['Kanit_Bold', 'sans-serif'],
+            'kanit-400': ['Kanit_Regular', 'sans-serif'],
+            'kanit-500': ['Kanit_Medium', 'sans-serif'],
+            'kanit-600': ['Kanit_SemiBold', 'sans-serif'],
+            'kanit-700': ['Kanit_Bold', 'sans-serif'],
             'body': ['EB_Garamond_Regular', 'serif']
         },
 

@@ -5,6 +5,18 @@
 }
 
 @font-face {
+    font-family: 'Kanit_Regular';
+    src: url('../fonts/Kanit-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Kanit_Medium';
+    src: url('../fonts/Kanit-Medium.ttf') format('truetype');
+    font-weight: 500;
+}
+
+@font-face {
     font-family: 'Kanit_SemiBold';
     src: url('../fonts/Kanit-SemiBold.ttf') format('truetype');
     font-weight: 600;

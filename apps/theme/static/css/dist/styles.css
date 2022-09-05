@@ -1185,7 +1185,7 @@ select {
   vertical-align: baseline;
 }
 
-.font-head {
+.font-kanit-600 {
   font-family: Kanit_SemiBold, sans-serif;
 }
 
@@ -1193,7 +1193,11 @@ select {
   font-family: EB_Garamond_Regular, serif;
 }
 
-.font-button {
+.font-kanit-400 {
+  font-family: Kanit_Regular, sans-serif;
+}
+
+.font-kanit-700 {
   font-family: Kanit_Bold, sans-serif;
 }
 
@@ -1212,6 +1216,16 @@ select {
   line-height: 1.25rem;
 }
 
+.text-xxxs {
+  font-size: 0.5625em;
+  line-height: 0.5625em;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .text-xxs {
   font-size: 0.625em;
   line-height: 0.625em;
@@ -1224,11 +1238,6 @@ select {
 
 .text-lg {
   font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
-.text-xl {
-  font-size: 1.25rem;
   line-height: 1.75rem;
 }
 
@@ -1281,6 +1290,10 @@ select {
   letter-spacing: 0.025em;
 }
 
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
@@ -1301,14 +1314,14 @@ select {
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
-.text-gray-500 {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
 .text-purple {
   --tw-text-opacity: 1;
   color: rgb(151 89 255 / var(--tw-text-opacity));
+}
+
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 .text-gray-600 {
@@ -1566,27 +1579,7 @@ select {
   background-color: rgb(206 223 242 / var(--tw-bg-opacity));
 }
 
-.third-1\:bg-resources-three:nth-child(3n) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(223 245 246 / var(--tw-bg-opacity));
-}
-
 .third-2\:bg-resources-two:nth-child(3n+1) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(196 245 248 / var(--tw-bg-opacity));
-}
-
-.third-2\:bg-resources-three:nth-child(3n+1) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(223 245 246 / var(--tw-bg-opacity));
-}
-
-.third-2\:bg-resources-one:nth-child(3n+1) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(206 223 242 / var(--tw-bg-opacity));
-}
-
-.third-3\:bg-resources-two:nth-child(3n+2) {
   --tw-bg-opacity: 1;
   background-color: rgb(196 245 248 / var(--tw-bg-opacity));
 }
