@@ -1,6 +1,6 @@
 # pyre-strict
 from django import forms
-from .models import CustomUser
+from .models import CustomUser, Organisation
 from analytics.models import log_signup # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
@@ -41,12 +41,12 @@ class CustomUserUpdateForm(forms.ModelForm):
 class CustomSignupForm(SignupForm):
     display_name = forms.CharField(max_length=30, label=_("Display name"),
                                    help_text=_("Will be shown e.g. when commenting."))
-    organisation = forms.BooleanField(required=False, label="organisation")
+    organisation = forms.CharField(required=False, label="organisation")
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
         user.display_name = self.cleaned_data['display_name'] # pyre-ignore[16]
-        user.organisation = self.cleaned_data['organisation']
+        user.organisation = Organisation.objects.get_or_create(name = self.cleaned_data['organisation'])[0]
         user.save()
         log_signup(user, request) # analytics
         return user
