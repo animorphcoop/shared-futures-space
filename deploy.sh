@@ -66,6 +66,8 @@ ssh $remote_user@$target_server 'bash -s' <<ENDSSH
   cd $target_dir
   echo "# stopping docker-compose"
   USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop > /dev/null
+  echo "# stashing so git won't complain"
+  git stash > /dev/null
   if [[ "\$(git rev-parse --abbrev-ref HEAD)" != "staging" ]];
   then
     echo "# checking out staging"
