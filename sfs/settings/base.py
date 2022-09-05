@@ -70,13 +70,12 @@ INSTALLED_APPS: List[str] = [
     'resources',
     'search',
     'core',
-
+    'poll',
 
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
 
     'tailwind',
     'theme',

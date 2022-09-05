@@ -1,0 +1,13 @@
+<h1>{{ poll_name }}</h1>
+expires: {{ poll_expires }}
+<table>
+{% for name, count in poll_results.items %}
+  <tr>
+    <td>{{ name }}</td>
+    <td>{{ count }}</td>
+    {% if request.user.is_active %}
+      <td><form method=POST><button>vote</button><input type=hidden name=choice value="{{ name }}"></input>{% csrf_token %}</form></td>
+    {% endif %}
+  <tr>
+{% endfor %}
+</table>

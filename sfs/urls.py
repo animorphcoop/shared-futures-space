@@ -26,6 +26,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('dashboard/', include('dashboard.urls'), name='dashboard'),
     path('projects/', include('project.urls')),
     path('action/', include('action.urls')),
+    path('poll/', include('poll.urls')),
 
     path("__reload__/", include("django_browser_reload.urls")),
 

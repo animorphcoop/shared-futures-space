@@ -25,6 +25,7 @@ def other_test_user(db, django_user_model):
                                                  year_of_birth=1998, post_code=PostCode.objects.create(code="PS7C0DE"))
 
 
+# items to use during testing
 @pytest.fixture(scope='function')
 def test_project(db):
     return Project.objects.create(name='some project', description='project to do something')
