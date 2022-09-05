@@ -67,9 +67,13 @@ module.exports = {
                 },
                 black: {
                     DEFAULT: '#000000',
+                    text: 'rgba(0, 0, 0, 0.75);',
                 },
                 purple: {
                     DEFAULT: '#9759FF',
+                },
+                blue: {
+                    pale: '#EAF3F9',
                 },
                 resources: {
                     one: '#CEDFF2',

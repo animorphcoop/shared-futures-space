@@ -6,7 +6,7 @@
 
             {% if result.tags %}
                 <div class="w-full flex-inline">
-                    {% for tag in resulte.tags %}
+                    {% for tag in result.tags %}
                         <button class="px-1.5 py-1.5 mr-1 mb-3 bg-gray-50 text-gray-500 font-kanit-400 text-xxxs uppercase tracking-widest"
                                 onclick="buttonTagSearch('{{ tag }}')"
                                 hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
