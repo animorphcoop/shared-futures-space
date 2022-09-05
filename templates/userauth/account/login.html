@@ -8,11 +8,11 @@
 
 {% block content %}
 
-    <p class="text-2xl">Log In</p>
+    <p class="text-2xl">Log in</p>
 
 
     <div class="w-full max-w-xs">
-        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="POST" action="{% url 'account_login' %}">
+        <form class="" method="POST" action="{% url 'account_login' %}">
             {% csrf_token %}
 
             <div class="mb-4">
@@ -61,23 +61,20 @@
 
         </form>
     </div>
+
+    <hr>
+
     <div>
-        <p class="text-lg">You can also use Social Media accounts to log in:</p>
-        <div class="socialaccount_ballot">
-
-            <ul class="">
-                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-            </ul>
-
+        <div class="">
+            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
         </div>
 
+        <hr>
 
-        {% include "socialaccount/snippets/login_extra.html" %}
-
-
-        <p class="text-lg">If you haven't got an account yet, make sure to <a href="{{ signup_url }}"
-                                                                              class="underline text-2xl font-semibold">create
-            one</a>!
+        <p class="text-lg">Don't have an account yet?
+            <button class="block"><a href="{{ signup_url }}"
+                                                                              class="font-semibold">Sign up</a>
+        </button>
         </p>
     </div>
 
@@ -112,10 +109,7 @@
                 if (inputFeedback.classList.contains('hidden')) {
                     inputFeedback.classList.remove('hidden')
                 }
-                console.log('check')
-
                 if (!loginButton.classList.contains('cursor-not-allowed')) {
-                    console.log('wtf do you want')
                     loginButton.disabled = true
                     loginButton.classList.add('cursor-not-allowed')
                 }
