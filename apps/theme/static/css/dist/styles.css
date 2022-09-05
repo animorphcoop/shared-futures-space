@@ -1336,6 +1336,11 @@ select {
   color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
+.text-red-200 {
+  --tw-text-opacity: 1;
+  color: rgb(254 202 202 / var(--tw-text-opacity));
+}
+
 .text-incorrect {
   --tw-text-opacity: 1;
   color: rgb(254 39 18 / var(--tw-text-opacity));
@@ -1358,6 +1363,11 @@ select {
 
 .text-current {
   color: currentColor;
+}
+
+.text-purple-200 {
+  --tw-text-opacity: 1;
+  color: rgb(233 213 255 / var(--tw-text-opacity));
 }
 
 .underline {

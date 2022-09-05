@@ -1,154 +1,149 @@
 {% extends "account/base.html" %}
 
-{% load i18n %}
 {% load account socialaccount %}
 
 {% load widget_tweaks %}
-
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% get_providers as socialaccount_providers %}
 
 {% block content %}
 
-<p class="text-2xl">{% trans "Sign In" %}</p>
+    <p class="text-2xl">Log In</p>
 
 
-<p class="text-lg">
-    Please log in to engage with other community members, access your profile and messages.
-</p>
+    <div class="w-full max-w-xs">
+        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">
+                    Email
+                </label>
+                {% render_field form.login id="email-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+                <div id="email-feedback" class="hidden text-purple-600">Enter a valid email address.</div>
+            </div>
 
 
-<div class="w-full max-w-xs">
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="POST" action="{% url 'account_login' %}">
-        {% csrf_token %}
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">
+                    Password
+                </label>
+                {% render_field form.password id="password-input" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+            </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Email
-            </label>
-            {% render_field form.login hx-post="/check_email/" hx-trigger="keyup[usernameLength(target.value)] delay:500ms" hx-target="#email-feedback" hx-swap="outerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-            <div id="email-feedback" class="hidden"></div>
+            {% if form.errors %}
+                {{ form.errors }}
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="-mt-8">
+                    {% for error in form.non_field_errors %}
+                        <span id="password-error" class="text-incorrect">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+            {% endif %}
+
+
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+
+            <div class="items-center">
+                <a class="block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 pb-6"
+                   href="{% url 'account_reset_password' %}">Forgot Password? -></a>
+                <button id="login-button" disabled
+                        class="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
+                        type="submit">Log in
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+    <div>
+        <p class="text-lg">You can also use Social Media accounts to log in:</p>
+        <div class="socialaccount_ballot">
+
+            <ul class="">
+                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
+
         </div>
 
 
-        <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Password
-            </label>
-            {% render_field form.password disabled="true" id="password-input" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
-        </div>
-
-<!--
-        {% if form.errors %}
-        {{form.errors}}
-        {% endif %}
--->
-
-        {% if form.non_field_errors %}
-        <div class="-mt-8">
-                {% for error in form.non_field_errors %}
-                <span id="password-error" class="text-incorrect">{{error}}</span>
-                {% endfor %}
-        </div>
-
-        {% endif %}
+        {% include "socialaccount/snippets/login_extra.html" %}
 
 
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-        {% endif %}
-
-        <div class="flex items-center justify-between">
-            <button id="login-button" disabled
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
-                    type="submit">{% trans "Sign In" %}
-            </button>
-            <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-               href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-        </div>
-
-    </form>
-</div>
-<div>
-    <p class="text-lg">You can also use Social Media accounts to log in:</p>
-    <div class="socialaccount_ballot">
-
-        <ul class="">
-            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-        </ul>
-
+        <p class="text-lg">If you haven't got an account yet, make sure to <a href="{{ signup_url }}"
+                                                                              class="underline text-2xl font-semibold">create
+            one</a>!
+        </p>
     </div>
 
 
-    {% include "socialaccount/snippets/login_extra.html" %}
+    <!--Styles passed from views are not dynamically applied to tailwind
+    Tailwind classes are active only if applied to existing html element
+    //TODO: sort out the hidden declaration, find way to include in config so gets added to the styles sheet
+    -->
+    <div class="hidden">
+        <span class="text-incorrect">incorrect</span>
+        <span class="text-correct opacity-0">correct</span>
+    </div>
+
+    <!--onmounted directive when template loads-->
+    {% comment %}
+    <div x-init=IsThereError()></div>
+{% endcomment %}
+
+    <script>
+
+        const input = document.getElementById('email-input');
+        input.addEventListener('change', updateValue);
+        const inputFeedback = document.getElementById('email-feedback');
+
+        loginButton = document.getElementById("login-button")
+
+        function updateValue(e) {
+            console.log('thats triggered')
+            //console.log()
+            console.log(ValidateEmail(e.target.value))
+            if (!ValidateEmail(e.target.value)) {
+                if (inputFeedback.classList.contains('hidden')) {
+                    inputFeedback.classList.remove('hidden')
+                }
+                console.log('check')
+
+                if (!loginButton.classList.contains('cursor-not-allowed')) {
+                    console.log('wtf do you want')
+                    loginButton.disabled = true
+                    loginButton.classList.add('cursor-not-allowed')
+                }
+
+            } else {
+                if (!inputFeedback.classList.contains('hidden')) {
+                    inputFeedback.classList.add('hidden')
+                }
+                if (loginButton.classList.contains('cursor-not-allowed')) {
 
 
-    <p class="text-lg">If you haven't got an account yet, make sure to <a href="{{ signup_url }}"
-                                                                          class="underline text-2xl font-semibold">create
-        one</a>!
-    </p>
-</div>
+                    loginButton.disabled = false
+                    loginButton.classList.remove('cursor-not-allowed')
+                }
+            }
 
 
-<!--Styles passed from views are not dynamically applied to tailwind
-Tailwind classes are active only if applied to existing html element
-//TODO: sort out the hidden declaration, find way to include in config so gets added to the styles sheet
--->
-<div class="hidden">
-    <span class="text-incorrect">incorrect</span>
-    <span class="text-correct opacity-0">correct</span>
-</div>
+        }
 
-<!--onmounted directive when template loads-->
-<div x-init=isThereError()></div>
 
-<script>
-
-    /*only if the username input field is 5+ chars we send request to django to check if it's valid.*/
-    function usernameLength(input) {
-        if (input.length >= 5) {
-            checkEmailFeedback()
-            return true
-        } else {
-            const passElem = document.getElementById("password-input")
-            /*see if the password input field is disabled first*/
-            if (!passElem.hasAttribute("disabled")) {
-                passElem.setAttribute("disabled", "true")
-                document.getElementById("login-button").disabled = true
-                document.getElementById("login-button").classList.add('cursor-not-allowed')
+        function ValidateEmail(address) {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
+                return true
             }
             return false
         }
-    }
-
-    /*is email feedback correct and should we be able to enter password and send it out?*/
-    function checkEmailFeedback() {
-        setTimeout(() => {
-            const emailElem = document.getElementById("email-feedback").classList.value
-            const r = /^text-correct$/;
-            if (r.test(emailElem)) {
-                document.getElementById("login-button").disabled = false
-                document.getElementById("login-button").classList.remove('cursor-not-allowed')
-                document.getElementById("password-input").removeAttribute("disabled")
-            } else {
-                /*user had entered correct email but started changing it into an incorrect one*/
-                usernameLength('')
-            }
-        }, 600)
-    }
-
-    /*if user had entered correct email but wrong password, they template is reloaded with their address, need to change default state and allow them to type password*/
-    function isThereError() {
-        const errorContent = document.getElementById("password-error")
-        if (errorContent) {
-            document.getElementById("login-button").disabled = false
-            document.getElementById("login-button").classList.remove('cursor-not-allowed')
-            document.getElementById("password-input").removeAttribute("disabled")
-        }
-    }
 
 
-</script>
+    </script>
 
 {% endblock %}
