@@ -30,3 +30,8 @@ function searching(displayResults) {
         }
     }
 }
+function buttonTagSearch(tag) {
+    searchbar.value = tag;
+    console.log('search');
+    searching(true);
+}

@@ -8,7 +8,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from wagtail.fields import StreamField
-from wagtail.admin.panels import StreamFieldPanel
+from wagtail.admin.panels import FieldPanel
 from apps.streams import blocks
 from uuid import uuid4
 
@@ -83,7 +83,7 @@ class CaseStudy(Resource):
     ], null=True, blank=True)
 
     content_panels = [
-        StreamFieldPanel("body"),
+        FieldPanel("body"),
     ]
 
     tags = ClusterTaggableManager(through=CaseStudyTag, blank=True)

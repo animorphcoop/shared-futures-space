@@ -1,23 +1,17 @@
 @font-face {
-    font-family: 'SofiaPro_Light';
-    src: url('../fonts/SofiaPro_Light.ttf') format('truetype');
-    font-weight: 300;
-}
-
-@font-face {
-    font-family: 'SofiaPro_Regular';
-    src: url('../fonts/SofiaPro_Regular.ttf') format('truetype');
+    font-family: 'EB_Garamond_Regular';
+    src: url('../fonts/EBGaramond-Regular.ttf') format('truetype');
     font-weight: 400;
 }
 
 @font-face {
-    font-family: 'SofiaPro_SemiBold';
-    src: url('../fonts/SofiaPro_SemiBold.ttf') format('truetype');
+    font-family: 'Kanit_SemiBold';
+    src: url('../fonts/Kanit-SemiBold.ttf') format('truetype');
     font-weight: 600;
 }
 
 @font-face {
-    font-family: 'SpaceMono_Regular';
-    src: url('../fonts/SpaceMono_Regular.ttf') format('truetype');
-    font-weight: 400;
+    font-family: 'Kanit_Bold';
+    src: url('../fonts/Kanit-Bold.ttf') format('truetype');
+    font-weight: 700;
 }

@@ -30,8 +30,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
     'google': {
         'APP': {
-            'client_id': '961383502349-qjmt77m2n1pm9s8fqr3rp2fgcdoot3qc.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': '952892024794-dr53p12mssmv41j362o46h92nktmh5b6.apps.googleusercontent.com',
+            'secret': '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',
             'key': ''
         }
     }
