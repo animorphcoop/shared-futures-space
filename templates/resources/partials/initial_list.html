@@ -8,14 +8,14 @@
         </section>
     {% endif %}
     {% for resource in resources %}
-        <li class="p-4.5 pt-5 even:bg-blue-100 odd:bg-blue-200">
+        <li class="p-4.5 pt-5 third-1:bg-resources-one third-2:bg-resources-two third-3:bg-resources-three">
             <h2 class="uppercase font-head font-medium py-0.5 mb-3 text-xxs tracking-widest text-gray-900">{{ resource.title }}</h2>
             <p class="mb-1.5 font-body leading-5">{{ resource.summary }}</p>
 
             {% if resource.tags %}
                 <div class="w-full flex-inline">
                     {% for tag in resource.tags %}
-                        <button class="px-1.5 py-1 mr-1 mb-3 bg-gray-200 text-gray-800 text-xxs leading-tight uppercase"
+                        <button class="px-1.5 py-1 mr-1 mb-3 bg-gray-50 text-gray-500 text-xxs leading-tight uppercase"
                                 onclick="buttonTagSearch('{{ tag }}')"
                                 hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
                                 hx-target="#search-results">
@@ -26,7 +26,7 @@
             {% endif %}
 
             <a href="{% url "resource_item" resource.slug %}"
-               class="inline-block px-4 py-3.5 bg-white text-purple-600 font-button font-medium uppercase text-xxs tracking-widest rounded-full">Learn more</a>
+               class="inline-block px-4 py-3.5 bg-white text-purple font-button font-medium uppercase text-xxs tracking-widest rounded-full">Learn more</a>
         </li>
     {% endfor %}
 </ul>
