@@ -3,13 +3,13 @@
 <section class="overflow-hidden">
 
 {#  Burger and close button  #}
-    <header x-data="{ open: false }" class="w-full absolute pointer-events-auto z-20 p-4">
+    <header x-data="{ open: false }" :class="{'fixed top-0 right-6.5': open == true}" class="w-full absolute pointer-events-auto z-20 p-4" >
         <button class="text-purple flex w-6 h-6 absolute right-3 focus:outline-none" @click="open = !open" onclick="navToggle()">
             <span class="sr-only">Open main menu</span>
             <div class="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
                 <span aria-hidden="true" class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out" :class="{'rotate-45': open,' -translate-y-1.5': !open }"></span>
-                <span aria-hidden="true" class="block absolute  h-0.5 w-5 bg-current   transform transition duration-500 ease-in-out" :class="{'opacity-0': open } "></span>
-                <span aria-hidden="true" class="block absolute  h-0.5 w-5 bg-current transform  transition duration-500 ease-in-out" :class="{'-rotate-45': open, ' translate-y-1.5': !open}"></span>
+                <span aria-hidden="true" class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out" :class="{'opacity-0': open } "></span>
+                <span aria-hidden="true" class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out" :class="{'-rotate-45': open, ' translate-y-1.5': !open}"></span>
             </div>
         </button>
     </header>
@@ -18,7 +18,7 @@
     <div id="menu" class="hidden bg-blue-pale w-screen h-screen fixed z-10 transition ease-out opacity-100 duration-200 ease-in opacity-0 duration-150">
 
 {#      Menu list  #}
-        <nav class="w-full">
+        <nav class="w-full overflow-y-auto">
             <ul class="font-kanit-500 text-xl text-black-text">
                 <li class="bg-white p-4 pt-3.5">
                     <h1 class="text-purple">Menu</h1>

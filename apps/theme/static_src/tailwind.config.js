@@ -74,6 +74,7 @@ module.exports = {
                 },
                 blue: {
                     pale: '#EAF3F9',
+                    done: '#93FFE0',
                 },
                 resources: {
                     one: '#CEDFF2',
