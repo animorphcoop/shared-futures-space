@@ -12,6 +12,10 @@ from area.models import PostCode # pyre-ignore[21]
 
 from typing import List, Optional, Any, Dict
 
+class Organisation(models.Model):
+    uuid: models.UUIDField = models.UUIDField(default = uuid4)
+    name: models.CharField = models.CharField(max_length = 100)
+    link: models.URLField = models.URLField()
 
 class CustomUser(AbstractUser):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
@@ -27,7 +31,7 @@ class CustomUser(AbstractUser):
     avatar: models.FileField = models.FileField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
 
     editor: models.BooleanField = models.BooleanField(default=False)  # is this user an editor
-    organisation: models.BooleanField = models.BooleanField(default=False)  # is this an organisation's account
+    organisation: models.ForeignKey = models.ForeignKey(Organisation, default = None, null = True, on_delete = models.SET_NULL)
 
     class Meta:
         ordering: List[str] = ['display_name']
@@ -59,3 +63,4 @@ class UserPair(models.Model):
             self.user1.uuid = self.user2.uuid
             self.user2.uuid = swp
         return super().save(*args, **kwargs)  # pyre-ignore[6] destructuring arguments
+    
