@@ -6,7 +6,7 @@ const subNav = document.getElementById('dropdownNav');
 // Toggle menu
 function navToggle() {
 
-  mainNavLink?.classList.toggle('hidden');
+  // mainNavLink?.classList.toggle('hidden');
   nav?.classList.toggle('hidden');
 }
 

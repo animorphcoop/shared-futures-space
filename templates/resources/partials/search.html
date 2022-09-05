@@ -1,9 +1,10 @@
-<section>
+<section class="px-3">
     <input id="searchbar"
-           class="form-control mb-12 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+           class="form-control mb-6 block w-full px-3 py-2.5 font-body text-gray-700 bg-white bg-clip-padding
+           border border-solid border-gray-300 rounded-t-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-purple focus:outline-none"
            type="search"
            name="search"
-           placeholder=" Type To Search..."
+           placeholder=" Type to search..."
            hx-post="{% url 'resource_search' %}"
            hx-trigger="keyup changed delay:500ms, search"
            hx-target="#search-results"
