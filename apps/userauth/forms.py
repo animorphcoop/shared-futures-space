@@ -64,8 +64,9 @@ class CustomUserPersonalForm(forms.Form):
 
 class CustomLoginForm(LoginForm):
 
+
     error_messages = {
-        "email_password_mismatch": "Your password does not match, try again."
+        "email_password_mismatch": "The e-mail address and/or password you provided are not correct, please try again."
     }
 
 #class CustomLoginForm(LoginForm):

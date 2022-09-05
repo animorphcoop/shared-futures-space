@@ -21,7 +21,10 @@
                     Email
                 </label>
                 {% render_field form.login id="email-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+
+                {% comment %}controlled via js/ts{% endcomment %}
                 <div id="email-feedback" class="hidden text-purple-600">Enter a valid email address.</div>
+
             </div>
 
 
@@ -32,17 +35,13 @@
                 {% render_field form.password id="password-input" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
             </div>
 
-            {% if form.errors %}
-                {{ form.errors }}
-            {% endif %}
-
             {% if form.non_field_errors %}
-                <div class="-mt-8">
+
+                <div class="border-2 rounded-lg mt-2 mb-2">
                     {% for error in form.non_field_errors %}
-                        <span id="password-error" class="text-incorrect">{{ error }}</span>
+                        <span>{{ error }}</span>
                     {% endfor %}
                 </div>
-
             {% endif %}
 
 
@@ -63,43 +62,27 @@
         </form>
     </div>
 
-    <hr>
 
     <div>
-        <div class="">
+        <div class="border-2 rounded-lg mt-2 mb-2">
             {% include "socialaccount/snippets/provider_list.html" with process="login" %}
         </div>
 
-        <hr>
-
-        <p class="text-lg">Don't have an account yet?
-            <button class="block"><a href="{{ signup_url }}"
-                                                                              class="font-semibold">Sign up</a>
-        </button>
-        </p>
+        <div class="border-2 rounded-lg mt-2 mb-2">
+            <p class="text-lg">Don't have an account yet?
+                <button class="block"><a href="{{ signup_url }}"
+                                         class="font-semibold">Sign up</a>
+                </button>
+            </p>
+        </div>
     </div>
 
 
-    <!--Styles passed from views are not dynamically applied to tailwind
-    Tailwind classes are active only if applied to existing html element
-    //TODO: sort out the hidden declaration, find way to include in config so gets added to the styles sheet
-    -->
-    <div class="hidden">
-        <span class="text-incorrect">incorrect</span>
-        <span class="text-correct opacity-0">correct</span>
-    </div>
-
-    <!--onmounted directive when template loads-->
-    {% comment %}
-    <div x-init=IsThereError()></div>
-{% endcomment %}
 
 
-
-{% block scripts %}
-
-    <script src="{% static 'js/email-helper.js' %}"></script>
-{% endblock %}
+    {% block scripts %}
+        <script src="{% static 'js/email-helper.js' %}"></script>
+    {% endblock %}
 
 
 
