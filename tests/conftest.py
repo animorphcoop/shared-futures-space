@@ -5,7 +5,7 @@ from django.core.files.images import ImageFile
 from wagtail.images.models import Image
 from io import BytesIO
 
-from project.models import Project, Idea
+from project.models import Project
 from area.models import PostCode, Area
 from resources.models import HowTo, CaseStudy
 
