@@ -947,6 +947,11 @@ select {
   border-bottom-left-radius: 0.375rem;
 }
 
+.rounded-t-lg {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
 .border {
   border-width: 1px;
 }
@@ -1199,6 +1204,10 @@ select {
 
 .font-kanit-700 {
   font-family: Kanit_Bold, sans-serif;
+}
+
+.font-kanit-500 {
+  font-family: Kanit_Medium, sans-serif;
 }
 
 .text-2xl {
@@ -1516,9 +1525,28 @@ select {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.focus\:border-none:focus {
+  border-style: none;
+}
+
 .focus\:border-blue-600:focus {
   --tw-border-opacity: 1;
   border-color: rgb(37 99 235 / var(--tw-border-opacity));
+}
+
+.focus\:border-purple:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(151 89 255 / var(--tw-border-opacity));
+}
+
+.focus\:border-red-100:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(254 226 226 / var(--tw-border-opacity));
+}
+
+.focus\:border-white:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
 .focus\:bg-white:focus {
@@ -1555,6 +1583,10 @@ select {
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.focus\:outline-white:focus {
+  outline-color: #FFFFFF;
 }
 
 .focus\:ring-0:focus {
