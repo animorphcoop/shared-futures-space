@@ -1,4 +1,5 @@
 {% extends "account/base.html" %}
+{% load static %}
 
 {% load account socialaccount %}
 
@@ -52,7 +53,7 @@
             <div class="items-center">
                 <a class="block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 pb-6"
                    href="{% url 'account_reset_password' %}">Forgot Password? -></a>
-                <button id="login-button" disabled
+                <button id="submit-button" disabled
                         class="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
                         type="submit">Log in
                 </button>
@@ -93,51 +94,13 @@
     <div x-init=IsThereError()></div>
 {% endcomment %}
 
-    <script>
-
-        const input = document.getElementById('email-input');
-        input.addEventListener('change', updateValue);
-        const inputFeedback = document.getElementById('email-feedback');
-
-        loginButton = document.getElementById("login-button")
-
-        function updateValue(e) {
-            console.log('thats triggered')
-            //console.log()
-            console.log(ValidateEmail(e.target.value))
-            if (!ValidateEmail(e.target.value)) {
-                if (inputFeedback.classList.contains('hidden')) {
-                    inputFeedback.classList.remove('hidden')
-                }
-                if (!loginButton.classList.contains('cursor-not-allowed')) {
-                    loginButton.disabled = true
-                    loginButton.classList.add('cursor-not-allowed')
-                }
-
-            } else {
-                if (!inputFeedback.classList.contains('hidden')) {
-                    inputFeedback.classList.add('hidden')
-                }
-                if (loginButton.classList.contains('cursor-not-allowed')) {
 
 
-                    loginButton.disabled = false
-                    loginButton.classList.remove('cursor-not-allowed')
-                }
-            }
+{% block scripts %}
+
+    <script src="{% static 'js/email-helper.js' %}"></script>
+{% endblock %}
 
 
-        }
-
-
-        function ValidateEmail(address) {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
-                return true
-            }
-            return false
-        }
-
-
-    </script>
 
 {% endblock %}
