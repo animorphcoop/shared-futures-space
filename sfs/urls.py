@@ -12,7 +12,6 @@ from search import views as search_views
 
 from typing import List, Union
 from django.urls import URLResolver, URLPattern
-from userauth.views import check_email, check_display_name # pyre-ignore[21]
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     # pyre comment suppresses an error caused by pyre's limited understanding of django
@@ -31,15 +30,9 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("__reload__/", include("django_browser_reload.urls")),
 
     path('resources/', include('resources.urls')),
+    path('core/', include('core.urls')),
     path('', include('landing.urls')),
 ]
-#TODO: can be moved to local urls
-htmx_urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path('check_email/', check_email, name='check_email'),
-    path('check_display_name/', check_display_name, name='check_display_name'),
-]
-
-urlpatterns += htmx_urlpatterns
 
 if settings.DEBUG:
     from django.conf.urls.static import static

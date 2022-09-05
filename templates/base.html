@@ -25,7 +25,7 @@
     {% tailwind_css %}
 
     <!--TODO: COPY TO STATIC FILES-->
-    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
 
     <!--Alpine JS-->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -36,11 +36,13 @@
 
 <body class="antialiased">
 
-{% if  request.get_full_path != '/account/login/' %}
+{% comment %} URL-dependent navbar {% endcomment %}
+<div hx-get="/core/check_url/"
+     hx-trigger="load"
+     hx-swap="outerHTML"
+>
+</div>
 
-
-    {% include "partials/nav.html" %}
-{% endif %}
 {% wagtailuserbar %}
 
 {% block content %}
