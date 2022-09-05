@@ -36,8 +36,8 @@ class PollView(TemplateView):
         ctx['poll_done'] = poll.expires < timezone.now()
         return ctx
 
-class PollCreateView(CreateView):
+class PollCreateView(CreateView): # pyre-ignore[24]
     model = Poll
     fields = ['question', 'options', 'expires']
-    def get_success_url(self):
-        return reverse('poll_view', args=[self.object.uuid])
+    def get_success_url(self) -> str:
+        return reverse('poll_view', args=[self.object.uuid]) # pyre-ignore[16]
