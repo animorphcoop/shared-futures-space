@@ -3,7 +3,7 @@ from django.conf import settings
 from django.urls import include, path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
 from .views import CustomUserUpdateView, CustomUserDeleteView, profile_view, user_request_view, AdminRequestView, \
-    CustomUserPersonalView, CustomLoginView, UserChatView, UserAllChatsView, user_detail
+    CustomUserPersonalView, CustomLoginView, UserChatView, UserAllChatsView, user_detail, check_email
 from typing import List, Union
 from uuid import UUID
 
@@ -20,6 +20,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('delete/', login_required(CustomUserDeleteView.as_view(template_name='account/delete.html')), name='account_delete'),
     path('chat/', login_required(UserAllChatsView.as_view(template_name='account/all_user_chats.html')), name='all_chats'),
     path('chat/<uuid:other_uuid>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')), name='user_chat'), # pyre-ignore[16]
+    path('check_email/', check_email, name='check_email'),
     # add all paths that are not custom
     path('', include('allauth.urls')),
 ]
