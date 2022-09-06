@@ -111,15 +111,15 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
         context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
-#class ProjectChatView(ChatView): # pyre-ignore[11] - thinks ChatView isn't a type
+#class ProjectChatView(ChatView):
 #    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
 #        project = Project.objects.get(slug=slug)
-#        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]), # pyre-ignore[16] doesn't know the contingent type of super(), thinks it's just 'object'
+#        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]),
 #                            members = [membership.user for membership
 #                                       in ProjectMembership.objects.filter(project=project)])
 #    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
 #        project = Project.objects.get(slug=kwargs['slug'])
-#        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]), # pyre-ignore[16]
+#        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]),
 #                                           members = [membership.user for membership
 #                                                      in ProjectMembership.objects.filter(project=project)])
 #        context['project'] = project
