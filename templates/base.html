@@ -34,7 +34,7 @@
 </head>
 <script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
-<body class="antialiased">
+<body class="antialiased" x-data="{ menu: false }" >
 
 {% comment %} URL-dependent navbar {% endcomment %}
 <div hx-get="/core/check_url_nav/"
@@ -43,11 +43,13 @@
 >
 </div>
 
-{% wagtailuserbar %}
+<section class="block" :class="{'hidden': menu == true}">
+    {% wagtailuserbar %}
 
-{% block content %}
+    {% block content %}
 
-{% endblock %}
+    {% endblock %}
+</section>
 
 {# Global javascript #}
 
