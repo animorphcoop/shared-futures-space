@@ -34,15 +34,17 @@
 </head>
 <script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
-<body class="antialiased" x-data="{ menu: false }" :class="{'fixed': menu == true}">
+<body class="antialiased" x-data="{ menu: false }" >
 
 {% include "partials/nav.html" %}
 
-{% wagtailuserbar %}
+<section class="block" :class="{'hidden': menu == true}">
+    {% wagtailuserbar %}
 
-{% block content %}
+    {% block content %}
 
-{% endblock %}
+    {% endblock %}
+</section>
 
 {# Global javascript #}
 
