@@ -1,14 +1,16 @@
-const input = (<HTMLInputElement>document.getElementById('email-input'))
+const emailInput = (<HTMLInputElement>document.getElementById('email-input'))
 //input?.addEventListener('change', updateValue)
 
 const inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
 const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
 
-function updateValue(ev: Event) {
-    if (!ev.target || inputFeedback == null || submitButton == null) return
+function processEmailValue() {
+    if (emailInput == null || inputFeedback == null || submitButton == null) return
+
+    const emailPassed = emailInput.value
 
     // console.log(ValidateEmail(ev.target.value))
-    if (!validateEmail((ev.target as HTMLInputElement).value)) {
+    if (!validateEmail(emailPassed)) {
         if (inputFeedback.classList.contains('hidden')) {
             inputFeedback.classList.remove('hidden')
         }
@@ -16,6 +18,7 @@ function updateValue(ev: Event) {
             submitButton.disabled = true
             submitButton.classList.add('cursor-not-allowed')
         }
+        return false
 
     } else {
         if (!inputFeedback.classList.contains('hidden')) {
@@ -25,6 +28,7 @@ function updateValue(ev: Event) {
             submitButton.disabled = false
             submitButton.classList.remove('cursor-not-allowed')
         }
+        return true
     }
 }
 

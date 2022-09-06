@@ -15,7 +15,7 @@ from .tasks import send_after
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
-from area.models import PostCode # pyre-ignore[21]
+from area.models import PostCode  # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -25,7 +25,7 @@ from typing import Type, List, Dict, Union, Any
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
-from allauth.account.views import LoginView
+from allauth.account.views import LoginView, SignupView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
@@ -33,6 +33,7 @@ from django.http import HttpResponse
 from uuid import UUID
 
 import magic
+
 
 def profile_view(request: WSGIRequest) -> HttpResponse:
     return render(request, 'account/view.html')
@@ -53,7 +54,7 @@ class CustomUserPersonalView(TemplateView):
                 form.full_clean()
                 print(form.cleaned_data)
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
-                current_user.post_code = PostCode.objects.get_or_create(code = form.cleaned_data.get('post_code'))[0]
+                current_user.post_code = PostCode.objects.get_or_create(code=form.cleaned_data.get('post_code'))[0]
                 current_user.save()
                 return HttpResponseRedirect(reverse_lazy('dashboard'))
             except:
@@ -223,6 +224,7 @@ class UserAllChatsView(TemplateView):
                    UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user)])
         return context
 
+
 # helper for inspecting db whether user exists
 # TODO: Add more validation e.g. to lower case
 def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse?
@@ -263,6 +265,7 @@ def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse
         return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
 
 
+'''
 # TODO: Add more validation e.g. to lower case
 def check_display_name(request: WSGIRequest) -> HttpResponse:
     if request.POST.getlist('display_name'):
@@ -280,8 +283,14 @@ def check_display_name(request: WSGIRequest) -> HttpResponse:
     else:
         return HttpResponse("Failed to retrieve or process the name, please refresh the page")
 
+'''
 
 class CustomLoginView(LoginView):
+    form_class: Type[CustomLoginForm] = CustomLoginForm
+
+
+class CustomSignupView(SignupView):
+    print('is this called')
     form_class: Type[CustomLoginForm] = CustomLoginForm
 
 
