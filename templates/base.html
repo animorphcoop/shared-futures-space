@@ -34,7 +34,7 @@
 </head>
 <script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
-<body class="antialiased">
+<body class="antialiased" x-data="{ menu: false }" :class="{'fixed': menu == true}">
 
 {% include "partials/nav.html" %}
 
