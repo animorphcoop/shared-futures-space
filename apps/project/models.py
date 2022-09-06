@@ -14,10 +14,31 @@ from hashlib import shake_256
 
 from typing import List, Dict, Any
 
+
 def new_chat() -> int: # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
     c = Chat()
     c.save()
     return c.id
+
+# STAGES
+
+# stages are defined before projects because projects reference stages
+class EnvisionStage(models.Model):
+    class Step(models.TextChoices):
+        GET_TO_KNOW = '1', 'get to know'
+        FINALISE_VISION = '2', 'finalise vision'
+        REVIEW = '3', 'review tags and image'
+    chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT)
+    step: models.CharField = models.CharField(max_length = 1, choices = Step.choices, default = Step.GET_TO_KNOW)
+
+class PlanStage(models.Model):
+    general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'general_chat')
+    funding_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'funding_chat')
+    location_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'location_chat')
+    dates_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'dates_chat')
+
+
+# PROJECTS
 
 class ProjectTag(TaggedItemBase):
     content_object = ParentalKey('project.Project', on_delete=models.CASCADE, related_name='tagged_items')
@@ -43,21 +64,6 @@ class ProjectMembership(models.Model):
     champion: models.BooleanField = models.BooleanField(default = False)
 
 
-# STAGES
-
-class EnvisionStage(models.Model):
-    class Step(models.TextChoices):
-        GET_TO_KNOW = '1', 'get to know'
-        FINALISE_VISION = '2', 'finalise vision'
-        REVIEW = '3', 'review tags and image'
-    chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT)
-    step: models.CharField = models.CharField(max_length = 1, choices = Step.choices, default = Step.GET_TO_KNOW)
-
-class PlanStage(models.Model):
-    general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'general_chat')
-    funding_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'funding_chat')
-    location_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'location_chat')
-    dates_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'dates_chat')
 
 
 
