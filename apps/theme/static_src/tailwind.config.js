@@ -5,6 +5,7 @@
  * https://unpkg.com/browse/tailwindcss@latest/stubs/defaultConfig.stub.js
  */
 const colors = require('tailwindcss/colors')
+const plugin = require('tailwindcss/plugin')
 
 module.exports = {
     /**
@@ -59,15 +60,6 @@ module.exports = {
                 white: {
                     DEFAULT: '#FFFFFF',
                 },
-                morph: {
-                    lightest: '#eaebff',
-                    light: '#999EFF',
-                    DEFAULT: '#4E56FF',
-                },
-                morphalt: {
-                    DEFAULT: '#E0F3AA',
-                    dark: '#A4B87E',
-                },
                 gray: {
                     lightest: '#DCDCDC',
                     light: '#9C9C9C',
@@ -75,23 +67,25 @@ module.exports = {
                 },
                 black: {
                     DEFAULT: '#000000',
+                    text: 'rgba(0, 0, 0, 0.75);',
                 },
-                train: {
-                    DEFAULT: '#F2D7C4', //#E0F3AA
-                    dark: '#C69E82', //#A4B87E
+                purple: {
+                    DEFAULT: '#9759FF',
                 },
-                build: {
-                    DEFAULT: '#BAD3E1',
-                    dark: '#829CAA',
+                blue: {
+                    pale: '#EAF3F9',
+                    done: '#93FFE0',
                 },
-                heal: {
-                    DEFAULT: '#AFDFD4',
-                    dark: '#77A69B',
+                resources: {
+                    one: '#CEDFF2',
+                    two: '#C4F5F8',
+                    three: '#DFF5F6',
                 },
                 correct: '#228b22',
                 incorrect:'#fe2712',
             },
             fontSize: {
+                'xxxs': ['0.5625em', '0.5625em'],
                 'xxs': ['0.625em', '0.625em']
             },
             spacing: {
@@ -99,8 +93,10 @@ module.exports = {
             },
         },
         fontFamily: {
-            'head': ['Kanit_SemiBold', 'sans-serif'],
-            'button': ['Kanit_Bold', 'sans-serif'],
+            'kanit-400': ['Kanit_Regular', 'sans-serif'],
+            'kanit-500': ['Kanit_Medium', 'sans-serif'],
+            'kanit-600': ['Kanit_SemiBold', 'sans-serif'],
+            'kanit-700': ['Kanit_Bold', 'sans-serif'],
             'body': ['EB_Garamond_Regular', 'serif']
         },
 
@@ -109,6 +105,12 @@ module.exports = {
         extend: {},
     },
     plugins: [
+        plugin(function ({ addVariant }) {
+            // Add a `third` variant, ie. `third:pb-0`
+            addVariant('third-1', '&:nth-child(3n)')
+            addVariant('third-2', '&:nth-child(3n+1)')
+            addVariant('third-3', '&:nth-child(3n+2)')
+        }),
         /**
          * '@tailwindcss/forms' is the forms plugin that provides a minimal styling
          * for forms. If you don't like it or have own styling for forms,

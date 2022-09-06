@@ -120,7 +120,7 @@ GitHub.sublime-settings
 .pyre
 
 # Local settings file (for production)
-static/
+static/*
 apps/theme/static_src/node_modules/
 
 # migrations files
@@ -134,3 +134,5 @@ ignore
 ignore/*
 autoupload
 autoupload/*
+node_modules/
+package-lock.json

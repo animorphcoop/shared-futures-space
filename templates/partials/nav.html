@@ -1,98 +1,82 @@
 {% load static %}
-<section class="overflow-hidden">
-    <header id="burger" class="w-full absolute pointer-events-auto z-10">
-        <div onclick="navToggle()" class="flex w-12 h-12 absolute right-6">
 
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="mb-3 w-auto text-black fill-current">
-                <path class="cls-1" d="M0,5V0H32V5ZM32,32V27H0v5Zm0-13.5v-5H0v5Z"/>
-            </svg>
-        </div>
+<section class="overflow-hidden">
+
+{#  Burger and close button  #}
+    <header x-data="{ open: false }" :class="{'fixed top-0 right-6.5': open == true}" class="w-full absolute pointer-events-auto z-20 p-4" >
+        <button class="text-purple flex w-6 h-6 absolute right-3 focus:outline-none" @click="open = !open" onclick="navToggle()">
+            <span class="sr-only">Open main menu</span>
+            <div class="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
+                <span aria-hidden="true" class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out" :class="{'rotate-45': open,' -translate-y-1.5': !open }"></span>
+                <span aria-hidden="true" class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out" :class="{'opacity-0': open } "></span>
+                <span aria-hidden="true" class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out" :class="{'-rotate-45': open, ' translate-y-1.5': !open}"></span>
+            </div>
+        </button>
     </header>
 
-    <div id="menu" class="hidden bg-black w-screen h-screen fixed z-20">
-             <div onclick="navToggle()" class="flex w-12 h-12 absolute right-6">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 32"
-                     class="mb-3 w-auto text-white fill-current">
-                    <polygon class="cls-1"
-                             points="22.33 16 36.98 32 30.21 32 18.81 19.55 7.41 32 0.63 32 15.28 16 0.61 0 7.4 0 18.81 12.45 30.22 0 37 0 22.33 16"/>
-                </svg>
-            </div>
+{#  Menu overlay  #}
+    <div id="menu" class="hidden bg-blue-pale w-screen h-screen fixed z-10 transition ease-out opacity-100 duration-200 ease-in opacity-0 duration-150">
 
-        <header class="flex w-full justify-between items-center">
-
-
-
-            <nav class="text-43 font-semibold w-full leading-8">
-                <ul class="pb-6">
-                    <li class="heal-page text-heal pb-8">
-                        <a href="{% url 'dashboard' %}">Dashboard</a>
-                    </li>
-                    <li class="heal-page text-heal pb-8">
-                        <button onclick="subNavToggle()"  id="dropdownNavLink" data-dropdown-toggle="dropdownNavbar"
-                                class="heal-page text-heal flex items-center justify-between w-full">
-                            Springs
-                            <svg class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 20 20"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                      clip-rule="evenodd"></path>
-                            </svg>
-                        </button>
-                        <!-- Dropdown menu -->
-                        <div id="dropdownNav"
-                             class="hidden bg-white text-base mt-2 list-none rounded shadow">
-                            <ul class="" aria-labelledby="dropdownLargeButton">
-                                <li>
-                                    <a href="#" class="text-sm text-morph block px-4 py-2">North
-                                        Belfast</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">East
-                                        Belfast</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">West
-                                        Belfast</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">South
-                                        Belfast</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">Derry
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-sm text-morph text-gray-700 block px-4 py-2">Donegal
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="heal-page text-heal pb-8">
-                        <a href="{% url 'account_logout' %}">Messages</a>
-                    </li>
-                    <li class="heal-page text-heal pb-8">
-                        <a href="{% url 'resources' %}">Resources</a>
-                    </li>
-                     <li class="heal-page text-heal pb-8">
-                        <a href="{% url 'account_logout' %}">Profile</a>
-                    </li>
-                    <li class="heal-page text-heal pb-8">
-                        <a href="{% url 'account_logout' %}">Logout</a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
+{#      Menu list  #}
+        <nav class="w-full overflow-y-auto">
+            <ul class="font-kanit-500 text-xl text-black-text">
+                <li class="bg-white p-4 pt-3.5">
+                    <h1 class="text-purple">Menu</h1>
+                </li>
+                <li class="p-4 pb-5">
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                </li>
+                <li class="p-4 pb-5">
+                    <button onclick="subNavToggle()"  id="dropdownNavLink" data-dropdown-toggle="dropdownNavbar" class="flex items-center justify-between w-full">
+                        Springs
+                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z" fill="#9759FF"/>
+                        </svg>
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div id="dropdownNav" class="hidden">
+                        <ul class="list-none" aria-labelledby="dropdownLargeButton">
+                            <li class="p-4">
+                                <a href="#">North Belfast</a>
+                            </li>
+                            <li class="p-4">
+                                <a href="#">East Belfast</a>
+                            </li>
+                            <li class="p-4">
+                                <a href="#">West Belfast</a>
+                            </li>
+                            <li class="p-4">
+                                <a href="#">South Belfast</a>
+                            </li>
+                            <li class="p-4">
+                                <a href="#">Derry</a>
+                            </li>
+                            <li class="p-4">
+                                <a href="#">Donegal</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="p-4 pb-5">
+                    <a href="{% url 'account_logout' %}">Messages</a>
+                </li>
+                <li class="p-4 pb-5">
+                    <a href="{% url 'resources' %}">Resources</a>
+                </li>
+                 <li class="p-4 pb-5">
+                    <a href="{% url 'account_logout' %}">Profile</a>
+                </li>
+                <li class="p-4 pb-5">
+                    <a href="{% url 'account_logout' %}">Logout</a>
+                </li>
+            </ul>
+        </nav>
 
     </div>
 
 
     {% block scripts %}
-
-    <script src="{% static 'js/nav.js' %}"></script>
+        <script src="{% static 'js/nav.js' %}"></script>
     {% endblock scripts %}
-
-    <!---->
 
 </section>

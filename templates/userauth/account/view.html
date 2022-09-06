@@ -9,7 +9,9 @@
 
 
     <p class="font-sans text-5xl bg">Your account</p>
-    {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
+
+{% comment %}    {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}{% endcomment %}
+
     <div id="profile-data" class="w-1/2 bg-green-100 rounded-lg shadow p-4">
 
         <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">

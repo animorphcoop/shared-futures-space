@@ -8,25 +8,22 @@
 {% endblock extra_css %}
 
 {% block content %}
-<section>
+    <section>
+        <h1 class="font-kanit-500 text-purple text-xl px-4 py-3.5">Resources</h1>
+        {% include 'resources/partials/search.html' %}
+    </section>
+    <section>
+        <div id="search-results" class="hidden">
+            {% include 'resources/partials/search_results.html' %}
+        </div>
+        <div id="initial-list" class="">
+            {% include 'resources/partials/initial_list.html' %}
+        </div>
+    </section>
 
-    {% include 'resources/partials/search.html' %}
-</section>
-<section>
-    <div id="search-results" class="hidden">
-        {% include 'resources/partials/search_results.html' %}
-    </div>
-    <div id="initial-list" class="">
-        {% include 'resources/partials/initial_list.html' %}
-    </div>
-
-</section>
-
-
-{% block scripts %}
-
-<script src="{% static 'js/resources.js' %}"></script>
-{% endblock scripts %}
+    {% block scripts %}
+        <script src="{% static 'js/resources.js' %}"></script>
+    {% endblock scripts %}
 
 {% endblock content %}
 
