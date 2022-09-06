@@ -1355,6 +1355,11 @@ select {
   color: currentColor;
 }
 
+.text-incorrect {
+  --tw-text-opacity: 1;
+  color: rgb(254 39 18 / var(--tw-text-opacity));
+}
+
 .antialiased {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
