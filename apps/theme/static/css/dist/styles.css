@@ -776,6 +776,10 @@ select {
   margin-top: 0.5rem;
 }
 
+.-mt-8 {
+  margin-top: -2rem;
+}
+
 .box-content {
   box-sizing: content-box;
 }
@@ -1423,6 +1427,16 @@ select {
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
+.text-correct {
+  --tw-text-opacity: 1;
+  color: rgb(34 139 34 / var(--tw-text-opacity));
+}
+
+.underline {
+  -webkit-text-decoration-line: underline;
+          text-decoration-line: underline;
 }
 
 .antialiased {

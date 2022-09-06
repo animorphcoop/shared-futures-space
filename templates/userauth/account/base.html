@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
-
+{% comment %}
 <head>
+
     <title>{% block head_title %}{% endblock %}</title>
+
     {% block extra_head %}
     {% endblock %}
 
 </head>
 <body>
+{% endcomment %}
 {% block body %}
 
 {% if messages %}

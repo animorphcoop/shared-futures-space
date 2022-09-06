@@ -1,12 +1,13 @@
 {% extends "account/base.html" %}
 
-{% load i18n %}
-
-{% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
+{% comment %}After successful signup{% endcomment %}
 
 {% block content %}
-    <h1>{% trans "Verify Your E-mail Address" %}</h1>
 
-    <p>{% blocktrans %}We have sent an e-mail to you for verification. If you reached this page by signing in to an account that has already been signed up but not been confirmed, the email has been resent. If you need to resend the email, sign in with the email address and password you registered. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
+    {% block title %}{% include "partials/title.html" with title="Thank you!" %}{% endblock %}
+
+
+    <p>To confirm your account, please click the link in the email you will receive shortly. If you can’t find the
+        email please check your spam folder.</p>
 
 {% endblock %}
