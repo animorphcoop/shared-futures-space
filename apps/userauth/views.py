@@ -247,34 +247,9 @@ def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse
         return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
 
 
-'''
-# TODO: Add more validation e.g. to lower case
-def check_display_name(request: WSGIRequest) -> HttpResponse:
-    if request.POST.getlist('display_name'):
-        display_name = request.POST.getlist('display_name')[0]
-        if len(display_name) < 2:
-            return HttpResponse(
-                "<span id='name-feedback' class='text-incorrect'>Please enter a name at least 2 characters long.</span>")
-        elif get_user_model().objects.filter(display_name=display_name).exists():
-            return HttpResponse(
-                "<span id='name-feedback' class='text-incorrect'>This name is in use, please choose a different one.</span>")
-        else:
-            return HttpResponse(
-                "<span id='name-feedback' class='text-correct'>The name is available.</span>")
-
-    else:
-        return HttpResponse("Failed to retrieve or process the name, please refresh the page")
-
-'''
-
-
 class CustomLoginView(LoginView):
     form_class: Type[CustomLoginForm] = CustomLoginForm
 
-
-class CustomSignupView(SignupView):
-    print('is this called')
-    form_class: Type[CustomLoginForm] = CustomLoginForm
 
 
 def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:

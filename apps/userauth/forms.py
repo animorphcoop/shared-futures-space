@@ -1,13 +1,12 @@
 # pyre-strict
 from django import forms
 from .models import CustomUser, Organisation
-from analytics.models import log_signup # pyre-ignore[21]
+from analytics.models import log_signup  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
 from allauth.account.forms import SignupForm, LoginForm
 from wagtail.users.forms import UserEditForm, UserCreationForm
-
 
 from typing import Type, List, Any
 from django.http import HttpRequest
@@ -39,16 +38,14 @@ class CustomUserUpdateForm(forms.ModelForm):
 
 
 class CustomSignupForm(SignupForm):
-    #display_name = forms.CharField(max_length=30, label=_("Display name"), help_text=_("Will be shown e.g. when commenting."))
-    #organisation = forms.CharField(required=False, label="organisation")
+    # display_name = forms.CharField(max_length=30, label=_("Display name"), help_text=_("Will be shown e.g. when commenting."))
+    # organisation = forms.CharField(required=False, label="organisation")
 
     def save(self, request: HttpRequest) -> CustomUser:
-        print(self.cleaned_data)
         user = super(CustomSignupForm, self).save(request)
-        #user.display_name = self.cleaned_data['display_name'] # pyre-ignore[16]
-        #user.organisation = Organisation.objects.get_or_create(name = self.cleaned_data['organisation'])[0]
+        # user.organisation = Organisation.objects.get_or_create(name = self.cleaned_data['organisation'])[0]
         user.save()
-        log_signup(user, request) # analytics
+        log_signup(user, request)  # analytics
         return user
 
 
@@ -58,14 +55,16 @@ class CustomUserLoginForm(LoginForm):
         model: Type[CustomUser] = CustomUser
 '''
 
+
 class CustomUserPersonalForm(forms.Form):
     year_of_birth = forms.IntegerField()
-    post_code = forms.CharField(max_length = 8)
+    post_code = forms.CharField(max_length=8)
+
 
 class CustomLoginForm(LoginForm):
-
     error_messages = {
-        "email_password_mismatch": "Your password does not match, try again."
+        "email_password_mismatch": "The e-mail address and/or password you provided are not correct, please try again."
+
     }
 
-#class CustomLoginForm(LoginForm):
+# class CustomLoginForm(LoginForm):

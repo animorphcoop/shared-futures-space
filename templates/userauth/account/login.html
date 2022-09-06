@@ -44,10 +44,6 @@
             {% endif %}
 
 
-            {% if redirect_field_value %}
-                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-            {% endif %}
-
             <div class="items-center">
                 <a class="block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 pb-6"
                    href="{% url 'account_reset_password' %}">Forgot Password? -></a>

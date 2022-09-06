@@ -7,12 +7,28 @@ const passwordInputOne = document.getElementById("password-input1");
 const passwordInputTwo = document.getElementById("password-input2");
 const submitButton = document.getElementById("submit-button");
 function processEmailValue() {
+    console.log('WTF');
     if (emailInput == null || inputFeedback == null)
         return;
+    console.log('WTF2');
     const emailPassed = emailInput.value;
-    const returnValue = validateEmail(emailPassed);
-    toggleSubmitButton(returnValue);
-    return returnValue;
+    inputFeedback.classList.remove('hidden');
+    if (emailPassed <= 5) {
+        inputFeedback.innerText = 'Enter a valid email address.';
+        return false;
+    }
+    else {
+        const returnValue = validateEmail(emailPassed);
+        toggleSubmitButton(returnValue);
+        if (!returnValue) {
+            inputFeedback.innerText = 'Enter a valid email address.';
+            return false;
+        }
+        else {
+            inputFeedback.innerText = '';
+            return true;
+        }
+    }
 }
 function validateEmail(address) {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
@@ -20,35 +36,36 @@ function validateEmail(address) {
     }
     return false;
 }
-function parseEmail(textArg) {
-    inputFeedback.classList.remove('hidden');
+/*function parseEmail(textArg) {
+    inputFeedback.classList.remove('hidden')
     if (textArg <= 5) {
-        inputFeedback.innerText = 'Enter a valid email address.';
-        return false;
+        inputFeedback.innerText = 'Enter a valid email address.'
+        return false
     }
-    let result = validateEmail(textArg);
-    console.log(result);
+
+
+    let result = validateEmail(textArg)
+    console.log(result)
     if (!result) {
-        inputFeedback.innerText = 'Enter a valid email address.';
+        inputFeedback.innerText = 'Enter a valid email address.'
+    } else {
+        inputFeedback.innerText = ''
+        return true
     }
-    else {
-        inputFeedback.innerText = 'Thank you for entering your email.';
-        return true;
-    }
-}
+}*/
 function toggleSubmitButton(toEnable) {
     if (submitButton == null)
         return;
     if (toEnable) {
         if (submitButton.classList.contains('cursor-not-allowed')) {
-            submitButton.disabled = false;
             submitButton.classList.remove('cursor-not-allowed');
+            submitButton.disabled = false;
         }
     }
     else {
         if (!submitButton.classList.contains('cursor-not-allowed')) {
-            submitButton.disabled = true;
             submitButton.classList.add('cursor-not-allowed');
+            submitButton.disabled = true;
         }
     }
 }
@@ -102,7 +119,6 @@ function getPasswordFeedback() {
     if (!passwordFeedbackTwo.classList.contains('hidden')) {
         passwordFeedbackTwo.classList.add('hidden');
     }
-    //comparePasswords()
 }
 function checkPasswordQuality(pass) {
     const score = scorePassword(pass);
