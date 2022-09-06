@@ -136,3 +136,5 @@ autoupload
 autoupload/*
 node_modules/
 package-lock.json
+
+!sfs/static/*
