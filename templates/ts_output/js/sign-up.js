@@ -1,67 +1,78 @@
 "use strict";
-/// <reference lib="es2015"/>
 /*
 * Variables for the component
 */
-const correctClass = 'text-correct';
-const incorrectClass = 'text-incorrect';
+/*
+
+const correctClass: string = 'text-correct'
+const incorrectClass: string = 'text-incorrect'
+*/
 /*
 * Methods for the component
 */
-/*only if the email input field is 5+ chars we send request to django to check if it's valid.*/
-function emailLength(textInput) {
-    return textInput.length >= 5;
-}
-function nameLength() {
-    const inputValue = document.getElementById("display-input").value;
-    let result = false;
+/*
+/!*only if the email input field is 5+ chars we send request to django to check if it's valid.*!/
+function emailLength(textInput: string) {
+    return textInput.length >= 5
+}*/
+/*
+function nameLength(): boolean {
+    const inputValue: string = (<HTMLInputElement>document.getElementById("display-input")).value;
+    let result: boolean = false
     if (inputValue.length < 2) {
-        const nameFeedback = document.getElementById("name-feedback");
+        const nameFeedback: HTMLElement | null = document.getElementById("name-feedback")
         if (nameFeedback != null) {
-            nameFeedback.innerText = "Please enter a name at least 2 characters long.";
-            nameFeedback.classList.value = incorrectClass;
+            nameFeedback.innerText = "Please enter a name at least 2 characters long."
+            nameFeedback.classList.value = incorrectClass
         }
-        result = false;
+        result = false
+    } else {
+        result = true
     }
-    else {
-        result = true;
-    }
-    //TODO: Button can be evaluated before the response from the server arrives
     setTimeout(() => {
-        evaluateButton();
-    }, 500);
-    return result;
-}
+        evaluateButton()
+    }, 500)
+    return result
+}*/
+/*
+
 //CHECK EMAILS
 function compareEmails() {
     setTimeout(() => {
-        const emailFeedback = document.getElementById("email-feedback");
-        const emailFeedback2 = document.getElementById("email-feedback2");
-        const emailOne = document.getElementById("email-input").value;
-        const emailTwo = document.getElementById("email-input2").value;
+        const emailFeedback: HTMLElement | null = document.getElementById("email-feedback")
+        const emailFeedback2: HTMLElement | null = document.getElementById("email-feedback2")
+
+        const emailOne = (<HTMLInputElement>document.getElementById("email-input")).value
+        const emailTwo = (<HTMLInputElement>document.getElementById("email-input2")).value
+
+
         if (emailOne.length !== 0 && emailTwo.length !== 0) {
+
             if (emailFeedback != null && emailFeedback2 != null) {
-                const emailFeedbackClasses = emailFeedback.classList;
-                let emailFeedbackClasses2 = emailFeedback2.classList;
+                const emailFeedbackClasses: DOMTokenList = emailFeedback.classList
+                let emailFeedbackClasses2: DOMTokenList = emailFeedback2.classList
+
                 // check if the first email is correct
                 if (/^text-incorrect$/.test(String(emailFeedbackClasses))) {
-                    emailFeedback2.innerText = "Please enter a correct email above first.";
-                    emailFeedback2.classList.value = incorrectClass;
+                    emailFeedback2.innerText = "Please enter a correct email above first."
+                    emailFeedback2.classList.value = incorrectClass
                 }
                 // compare email input values
                 else if (emailOne !== emailTwo) {
-                    emailFeedback2.classList.value = incorrectClass;
-                    emailFeedback2.innerText = "Sorry, e-mails do not match.";
-                }
-                else {
-                    emailFeedbackClasses2.value = correctClass;
-                    emailFeedback2.innerText = "Thank you for entering matching emails.";
+                    emailFeedback2.classList.value = incorrectClass
+                    emailFeedback2.innerText = "Sorry, e-mails do not match."
+
+                } else {
+                    emailFeedbackClasses2.value = correctClass
+                    emailFeedback2.innerText = "Thank you for entering matching emails."
                 }
             }
         }
-        evaluateButton();
-    }, 750);
+        evaluateButton()
+    }, 750)
 }
+
+*/
 // CHECK PASSWORDS
 function comparePasswords() {
     setTimeout(() => {
@@ -160,25 +171,4 @@ function checkPasswordQuality(pass) {
         return "Weak";
     else
         return "Tragic";
-}
-/*
-* Used
-* https://stackoverflow.com/questions/948172/password-strength-meter#comment120524342_11268104
-* */
-function scorePassword(pass) {
-    let score = 0;
-    // variation range
-    score += new Set(pass.split("")).size;
-    // shuffle score - bonus for messing things up. 0 score for playing with upper/lowercase.
-    const charCodes = pass.split('').map(x => x.toLowerCase().charCodeAt(0));
-    for (let i = 1; i < charCodes.length; i++) {
-        const dist = Math.abs(charCodes[i - 1] - charCodes[i]);
-        if (dist > 60)
-            score += 15;
-        else if (dist > 1)
-            score += 5;
-    }
-    // bonus for length
-    score += (pass.length - 6) * 3;
-    return parseInt(String(score));
 }

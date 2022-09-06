@@ -12,34 +12,34 @@
     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
 
         {% csrf_token %}
-            <div class="mb-4">
-                <label for="email-input" class="block text-gray-700 text-sm font-bold mb-2">
-                    Email
-                </label>
-                {% render_field form.email hx-post="/account/check_email/" hx-trigger="focusout[parseEmail(target.value)] delay:500ms" hx-target="#email-feedback" id="email-input" hx-swap="innerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-                <div id="email-feedback" class="hidden text-purple-600"></div>
-            </div>
-{% comment %}
+        <div class="mb-4">
+            <label for="email-input" class="block text-gray-700 text-sm font-bold mb-2">
+                Email
+            </label>
+            {% render_field form.email id="email-input" hx-post="/account/check_email/" hx-trigger="focusout[parseEmail(target.value)] delay:500ms" hx-target="#email-feedback" id="email-input" hx-swap="innerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <div id="email-feedback" class="hidden text-purple-600"></div>
+        </div>
+        {% comment %}
         {{ form.as_p }}
         {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
         {% endif %}
 {% endcomment %}
-            <div class="mb-4">
-                <label for="password-input" class="block text-gray-700 text-sm font-bold mb-2">
-                    Password
-                </label>
-                {% render_field form.password1 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-                <span id="password-feedback1" class="text-incorrect"></span>
-            </div>
+        <div class="mb-4">
+            <label for="password-input" class="block text-gray-700 text-sm font-bold mb-2">
+                Password
+            </label>
+            {% render_field form.password1 id="password-input1" onfocusout="passwordFeedback()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="password-feedback1" class="text-purple-600"></span>
+        </div>
 
-            <div class="mb-6">
-                <label for="password-input2" class="block text-gray-700 text-sm font-bold mb-2">
-                    Repeat password
-                </label>
-                {% render_field form.password2 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-                <span id="password-feedback2" class="text-incorrect"></span>
-            </div>
+        <div class="mb-6">
+            <label for="password-input2" class="block text-gray-700 text-sm font-bold mb-2">
+                Repeat password
+            </label>
+            {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="password-feedback2" class="text-purple-600"></span>
+        </div>
 
 
         <button
@@ -49,25 +49,14 @@
         </button>
 
     </form>
-        <script>
-        function parseEmail(textArg) {
-            inputFeedback.classList.remove('hidden')
-            if (textArg <= 5) {
-                inputFeedback.innerText = 'Enter a valid email address.'
-                return false
-            }
+
+    {% block scripts %}
+        <script src="{% static 'js/auth-helper.js' %}"></script>
+        {% comment %}<script src="{% static 'js/sign-up.js' %}"></script>{% endcomment %}
+    {% endblock %}
+    <script>
 
 
 
-            let result = validateEmail(textArg)
-            console.log(result)
-            if (!result) {
-                inputFeedback.innerText = 'Enter a valid email address.'
-
-            } else {
-                return true
-            }
-
-        }
     </script>
 {% endblock %}

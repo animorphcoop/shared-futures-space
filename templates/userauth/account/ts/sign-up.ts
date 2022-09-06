@@ -1,23 +1,24 @@
-/// <reference lib="es2015"/>
 /*
 * Variables for the component
 */
+/*
 
 const correctClass: string = 'text-correct'
 const incorrectClass: string = 'text-incorrect'
+*/
 
 
 /*
 * Methods for the component
 */
 
-
-/*only if the email input field is 5+ chars we send request to django to check if it's valid.*/
+/*
+/!*only if the email input field is 5+ chars we send request to django to check if it's valid.*!/
 function emailLength(textInput: string) {
     return textInput.length >= 5
-}
+}*/
 
-
+/*
 function nameLength(): boolean {
     const inputValue: string = (<HTMLInputElement>document.getElementById("display-input")).value;
     let result: boolean = false
@@ -31,12 +32,12 @@ function nameLength(): boolean {
     } else {
         result = true
     }
-    //TODO: Button can be evaluated before the response from the server arrives
     setTimeout(() => {
         evaluateButton()
     }, 500)
     return result
-}
+}*/
+/*
 
 //CHECK EMAILS
 function compareEmails() {
@@ -74,6 +75,7 @@ function compareEmails() {
     }, 750)
 }
 
+*/
 
 // CHECK PASSWORDS
 function comparePasswords() {
@@ -206,29 +208,3 @@ function checkPasswordQuality(pass: string) {
         return "Tragic"
 }
 
-
-/*
-* Used
-* https://stackoverflow.com/questions/948172/password-strength-meter#comment120524342_11268104
-* */
-function scorePassword(pass: string) {
-    let score = 0;
-
-    // variation range
-    score += new Set(pass.split("")).size;
-
-    // shuffle score - bonus for messing things up. 0 score for playing with upper/lowercase.
-    const charCodes = pass.split('').map(x => x.toLowerCase().charCodeAt(0));
-    for (let i = 1; i < charCodes.length; i++) {
-        const dist = Math.abs(charCodes[i - 1] - charCodes[i]);
-        if (dist > 60)
-            score += 15;
-        else if (dist > 1)
-            score += 5;
-    }
-
-    // bonus for length
-    score += (pass.length - 6) * 3;
-
-    return parseInt(String(score));
-}
