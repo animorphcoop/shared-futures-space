@@ -88,7 +88,7 @@
       "year of birth": 1999,
       "postcode": "BT17 0LE",
       "editor": false,
-      "organisation": false,
+      "organisation": "BIP",
       "password": "P@ssword!"
     },
     {
@@ -97,7 +97,7 @@
       "year of birth": 1987,
       "postcode": "BT17 0LF",
       "editor": true,
-      "organisation": false,
+      "organisation": "PIB",
       "password": "P@ssword!"
     }
   ],

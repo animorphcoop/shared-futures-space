@@ -1531,6 +1531,11 @@ select {
   border-color: transparent;
 }
 
+.hover\:bg-blue-done:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(147 255 224 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-blue-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(29 78 216 / var(--tw-bg-opacity));
@@ -1544,11 +1549,6 @@ select {
 .hover\:bg-purple-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(126 34 206 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-blue-done:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(147 255 224 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-opacity-75:hover {

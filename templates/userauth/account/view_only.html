@@ -7,7 +7,9 @@
 <a href="{% url 'dashboard' %}">Back to Dashboard</a>
 
 <p class="font-sans text-5xl bg">{{user.display_name}} profile</p>
+{% comment %}
 {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
+{% endcomment %}
 <div id="profile-data">
     <br/>
     {{user.display_name}}, born in {{user.year_of_birth}}
