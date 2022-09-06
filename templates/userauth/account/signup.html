@@ -17,7 +17,7 @@
                 Email
             </label>
             {% render_field form.email id="email-input" hx-post="/account/check_email/" hx-trigger="focusout[parseEmail(target.value)] delay:500ms" hx-target="#email-feedback" id="email-input" hx-swap="innerHTML" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-            <div id="email-feedback" class="hidden text-purple-600"></div>
+            <span id="email-feedback" class="hidden text-purple-600"></span>
         </div>
         {% comment %}
         {{ form.as_p }}
@@ -29,8 +29,8 @@
             <label for="password-input" class="block text-gray-700 text-sm font-bold mb-2">
                 Password
             </label>
-            {% render_field form.password1 id="password-input1" onfocusout="passwordFeedback()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-            <span id="password-feedback1" class="text-purple-600"></span>
+            {% render_field form.password1 id="password-input1" onfocusout="getPasswordFeedback()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+            <span id="password-feedback1" class="hidden text-purple-600"></span>
         </div>
 
         <div class="mb-6">
@@ -38,13 +38,13 @@
                 Repeat password
             </label>
             {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
-            <span id="password-feedback2" class="text-purple-600"></span>
+            <span id="password-feedback2" class="hidden text-purple-600"></span>
         </div>
 
 
         <button
-                id="signup-button"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                id="submit-button" disabled
+                class="cursor-not-allowed bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit">Sign Up
         </button>
 

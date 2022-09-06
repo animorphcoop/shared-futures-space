@@ -230,37 +230,19 @@ class UserAllChatsView(TemplateView):
 def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse?
     # print(request.META.get('HTTP_REFERER'))
     print(request.META.get('HTTP_REFERER').rsplit('/', 2)[1])
-    if request.POST.getlist('login'):
-        user_mail = request.POST.getlist('login')[0]
-        if (get_user_model().objects.filter(email=user_mail).exists()):
-            return HttpResponse("<span id='email-feedback' class='text-correct'>Please enter your password.</span>")
-        else:
-            return HttpResponse(
-                "<span id='email-feedback' class='text-incorrect'>Such an address does not exist.</span>")
-    elif request.POST.getlist('email'):
+    if request.POST.getlist('email'):
         user_mail = request.POST.getlist('email')[0]
-        # TODO: Better email validation needed!
-        if ("@" not in user_mail or "." not in user_mail) or ("@" == user_mail[-1] or "." == user_mail[-1]):
-            return HttpResponse(
-                "<span id='email-feedback' class='text-incorrect'>Please make sure you enter an email address.</span>")
-        else:
-            request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
-            if request_source_url == "signup":
-                if get_user_model().objects.filter(email=user_mail).exists():
-                    return HttpResponse(
-                        "<span id='email-feedback' class='text-incorrect'>This address is in use, please choose a different one.</span>")
-                else:
-                    return HttpResponse(
-                        "<span id='email-feedback' class='text-correct'>This e-mail address is available.</span>")
-            elif request_source_url == "reset":
-                if get_user_model().objects.filter(email=user_mail).exists():
-                    return HttpResponse(
-                        "<span id='email-feedback' class='text-correct'>This address exists in our records, you can request the reset by pressing the button.</span>")
-                else:
-                    return HttpResponse(
-                        "<span id='email-feedback' class='text-incorrect'>Sorry, this address does not exist in our records.</span>")
+        request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
+        if request_source_url == "signup":
+            if get_user_model().objects.filter(email=user_mail).exists():
+                return HttpResponse(
+                    "This address is taken, please choose a different one.")
             else:
-                return HttpResponse("<h2>Unrecognised referrer: " + request_source_url + "</h2>")
+                return HttpResponse(
+                    "This address address is available.")
+        else:
+            return HttpResponse("<h2>Unrecognised referrer: " + request_source_url + "</h2>")
+
     else:
         return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
 
@@ -284,6 +266,7 @@ def check_display_name(request: WSGIRequest) -> HttpResponse:
         return HttpResponse("Failed to retrieve or process the name, please refresh the page")
 
 '''
+
 
 class CustomLoginView(LoginView):
     form_class: Type[CustomLoginForm] = CustomLoginForm

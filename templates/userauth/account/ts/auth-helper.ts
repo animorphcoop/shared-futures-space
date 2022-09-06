@@ -1,15 +1,24 @@
 const emailInput = (<HTMLInputElement>document.getElementById('email-input'))
-//input?.addEventListener('change', updateValue)
 
 const inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
+
+const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
+
+const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+
+
 const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
 
 function processEmailValue() {
-    if (emailInput == null || inputFeedback == null || submitButton == null) return
+    if (emailInput == null || inputFeedback == null) return
 
     const emailPassed = emailInput.value
     const returnValue = validateEmail(emailPassed)
+
     toggleSubmitButton(returnValue)
+
     return returnValue
 
 }
@@ -35,6 +44,7 @@ function parseEmail(textArg) {
     if (!result) {
         inputFeedback.innerText = 'Enter a valid email address.'
     } else {
+        inputFeedback.innerText = 'Thank you for entering your email.'
         return true
     }
 }
@@ -42,18 +52,14 @@ function parseEmail(textArg) {
 
 function toggleSubmitButton(toEnable: boolean) {
 
+    if (submitButton == null) return
+
     if (toEnable) {
-        if (!inputFeedback.classList.contains('hidden')) {
-            inputFeedback.classList.add('hidden')
-        }
         if (submitButton.classList.contains('cursor-not-allowed')) {
             submitButton.disabled = false
             submitButton.classList.remove('cursor-not-allowed')
         }
     } else {
-        if (inputFeedback.classList.contains('hidden')) {
-            inputFeedback.classList.remove('hidden')
-        }
         if (!submitButton.classList.contains('cursor-not-allowed')) {
             submitButton.disabled = true
             submitButton.classList.add('cursor-not-allowed')
@@ -63,42 +69,46 @@ function toggleSubmitButton(toEnable: boolean) {
 
 // CHECK PASSWORDS
 function comparePasswords() {
-    const passwordFeedback: HTMLElement | null = document.getElementById("password-feedback1")
-    const passwordFeedback2: HTMLElement | null = document.getElementById("password-feedback2")
 
-    const passwordOne: string = (<HTMLInputElement>document.getElementById("password-input1")).value
-    const passwordTwo: string = (<HTMLInputElement>document.getElementById("password-input2")).value
+    if (passwordInputOne == null || passwordInputTwo == null) return
+
+    const passwordOne: string = passwordInputOne.value
+    const passwordTwo: string = passwordInputTwo.value
 
     // check if one of the passwords is not empty
     if (passwordOne.length !== 0 && passwordTwo.length !== 0) {
 
 
-        if (passwordFeedback != null && passwordFeedback2 != null) {
+        if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
+            passwordFeedbackTwo.classList.remove('hidden')
 
-            const passwordFeedbackClasses: DOMTokenList = passwordFeedback.classList
-            let passwordFeedbackClasses2: DOMTokenList = passwordFeedback2.classList
+            // WARNING - includes is case-sensitive so make sure to match output of checkPasswordQuality()
+            if (!passwordFeedbackOne.innerText.includes("Good") && !passwordFeedbackOne.innerText.includes("Secure")) {
+                passwordFeedbackTwo.innerText = "Please enter a secure password above first."
+            }
 
-/*            // check if the first email is correct
-            if (checkIfIncorrect(passwordFeedbackClasses)) {
-                passwordFeedbackClasses2.value = incorrectClass
-                passwordFeedback2.innerText = "Please enter a secure password above first."
-            }*/
             // compare email input values
             else if (passwordOne !== passwordTwo) {
-                //passwordFeedbackClasses2.value = incorrectClass
-                passwordFeedback2.innerText = "Sorry, passwords do not match."
+                passwordFeedbackTwo.innerText = "Sorry, passwords do not match."
             } else {
-                //passwordFeedbackClasses2.value = correctClass
-                passwordFeedback2.innerText = "Thank you, passwords do match."
+                passwordFeedbackTwo.innerText = "Thank you, passwords do match."
+                toggleSubmitButton(true)
+
             }
         }
     }
 }
 
-function passwordFeedback() {
-    console.log('triggering this')
-    let passwordFeedback: HTMLElement | null = document.getElementById("password-feedback1")
+function getPasswordFeedback() {
+
+    //TODO: Should be really dependenent on whether you are in login or sign up
+    toggleSubmitButton(false)
+
+    passwordFeedbackOne.classList.remove('hidden')
+
+
     const passwordEntered: string = (<HTMLInputElement>document.getElementById("password-input1")).value
+
 
     if (passwordEntered.length < 1)
         return
@@ -106,26 +116,26 @@ function passwordFeedback() {
 
     const passwordQuality = checkPasswordQuality(passwordEntered)
 
-    if (passwordFeedback == null)
+    if (passwordFeedbackOne == null)
         return
 
     if (passwordQuality.includes("Secure")) {
-        passwordFeedback.innerText = `${passwordQuality} password, well done!`
-        // passwordFeedback.classList.value = correctClass
+        passwordFeedbackOne.innerText = `${passwordQuality} password, well done!`
+
     } else if (passwordQuality.includes("Good")) {
-        passwordFeedback.innerText = `${passwordQuality} password, thank you.`
-        // passwordFeedback.classList.value = correctClass
+        passwordFeedbackOne.innerText = `${passwordQuality} password, thank you.`
 
     } else if (passwordQuality.includes("Weak")) {
-        passwordFeedback.innerText = `${passwordQuality} password, spicy it up please!`
-        // passwordFeedback.classList.value = incorrectClass
+        passwordFeedbackOne.innerText = `${passwordQuality} password, spicy it up please!`
 
     } else {
-        passwordFeedback.innerText = `${passwordQuality} password, improve it please!`
-        //passwordFeedback.classList.value = incorrectClass
+        passwordFeedbackOne.innerText = `${passwordQuality} password, improve it please!`
     }
 
-    //comparePasswords()
+    if (!passwordFeedbackTwo.classList.contains('hidden')) {
+        passwordFeedbackTwo.classList.add('hidden')
+
+    }
 
 }
 
