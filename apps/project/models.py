@@ -62,6 +62,11 @@ class ProjectTag(TaggedItemBase):
     content_object = ParentalKey('project.Project', on_delete=models.CASCADE, related_name='tagged_items')
 
 class Project(ClusterableModel):
+    class Stage(models.TextChoices):
+        ENVISION = 'envision'
+        PLAN = 'plan'
+        ACT = 'act'
+        REFLECT = 'reflect'
     slug: models.CharField = models.CharField(max_length=100, default='')
     name: models.CharField = models.CharField(max_length=200)
     description: models.CharField = models.CharField(max_length=2000)
@@ -70,10 +75,21 @@ class Project(ClusterableModel):
     plan_stage: models.ForeignKey = models.ForeignKey(PlanStage, null = True, default = None, on_delete = models.SET_NULL)
     act_stage: models.ForeignKey = models.ForeignKey(ActStage, null = True, default = None, on_delete = models.SET_NULL)
     reflect_stage: models.ForeignKey = models.ForeignKey(ReflectStage, null = True, default = None, on_delete = models.SET_NULL)
+    current_stage: models.CharField(choices = Stage.choices)
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''):
             self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[16] same
         return super().save(*args, **kwargs)
+    def start_envision(self):
+        self.current_stage = Stage.ENVISION
+        self.envision_stage = EnvisionStage.objects.create()
+    def start_plan(self):
+        self.current_stage = Stage.PLAN
+        self.plan_stage = PlanStage.objects.create()
+    def start_act(self):
+        self.current_stage = Stage.ACT
+        self.act_stage = ActStage.objects.create()
+        # put polls in chats
 
 class ProjectMembership(models.Model):
     project: models.ForeignKey = models.ForeignKey(Project, on_delete=models.CASCADE)
