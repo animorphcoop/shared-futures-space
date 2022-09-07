@@ -75,7 +75,7 @@ class Project(ClusterableModel):
     plan_stage: models.ForeignKey = models.ForeignKey(PlanStage, null = True, default = None, on_delete = models.SET_NULL)
     act_stage: models.ForeignKey = models.ForeignKey(ActStage, null = True, default = None, on_delete = models.SET_NULL)
     reflect_stage: models.ForeignKey = models.ForeignKey(ReflectStage, null = True, default = None, on_delete = models.SET_NULL)
-    current_stage: models.CharField(choices = Stage.choices)
+    current_stage: models.CharField(choices = Stage.choices, null = True, default = None)
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''):
             self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[16] same
@@ -86,10 +86,38 @@ class Project(ClusterableModel):
     def start_plan(self):
         self.current_stage = Stage.PLAN
         self.plan_stage = PlanStage.objects.create()
+        # for testing purposes ONLY # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        self.plan_stage.general_poll = Poll.objects.create(question = 'general question', options = ['1', 'b'], project = self, expires = timezone.now() + timezone.delta(days=30))   #
+        self.plan_stage.funding_poll = Poll.objects.create(question = 'funding question', options = ['1', 'b'], project = self, expires = timezone.now() + timezone.delta(days=30))   #
+        self.plan_stage.location_poll = Poll.objects.create(question = 'location question', options = ['1', 'b'], project = self, expires = timezone.now() + timezone.delta(days=30)) #
+        self.plan_stage.dates_poll = Poll.objects.create(question = 'dates question', options = ['1', 'b'], project = self, expires = timezone.now() + timezone.delta(days=30))       #
+        self.plan_stage.general_poll.closed = True    #
+        self.plan_stage.funding_poll.closed = True    #
+        self.plan_stage.location_poll.closed = True   #
+        self.plan_stage.dates_poll.closed = True      #
     def start_act(self):
+        if (self.plan_stage.general_poll is None or not self.plan_stage.general_poll.closed or
+            self.plan_stage.funding_poll is None or not self.plan_stage.funding_poll.closed or
+            self.plan_stage.location_poll is None or not self.plan_stage.location_poll.closed or
+            self.plan_stage.dates_poll is None or not self.plan_stage.dates_poll.closed):
+            raise ValueError('plan stage is not finished!')
         self.current_stage = Stage.ACT
         self.act_stage = ActStage.objects.create()
-        # put polls in chats
+        self.act_stage.general_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], project = self, expires = timezone.now() + timezone.delta(days=30)) # expiry date needs adjustment? TODO
+        send_system_message(self.act_stage.general_chat, 'poll', context_poll = self.plan_stage.general_poll)
+        send_system_message(self.act_stage.general_chat, 'poll', context_poll = self.act_stage.general_poll)
+        self.act_stage.funding_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], project = self, expires = timezone.now() + timezone.delta(days=30)) # expiry date needs adjustment? TODO
+        send_system_message(self.act_stage.funding_chat, 'poll', context_poll = self.plan_stage.funding_poll)
+        send_system_message(self.act_stage.funding_chat, 'poll', context_poll = self.act_stage.funding_poll)
+        self.act_stage.location_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], project = self, expires = timezone.now() + timezone.delta(days=30)) # expiry date needs adjustment? TODO
+        send_system_message(self.act_stage.location_chat, 'poll', context_poll = self.plan_stage.location_poll)
+        send_system_message(self.act_stage.location_chat, 'poll', context_poll = self.act_stage.location_poll)
+        self.act_stage.dates_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], project = self, expires = timezone.now() + timezone.delta(days=30)) # expiry date needs adjustment? TODO
+        send_system_message(self.act_stage.dates_chat, 'poll', context_poll = self.plan_stage.dates_poll)
+        send_system_message(self.act_stage.dates_chat, 'poll', context_poll = self.act_stage.dates_poll)
+    def start_reflect(self):
+        self.current_stage = Stage.REFLECT
+        self.reflect_stage = ReflectStage.objects.create()
 
 class ProjectMembership(models.Model):
     project: models.ForeignKey = models.ForeignKey(Project, on_delete=models.CASCADE)
