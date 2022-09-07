@@ -80,7 +80,7 @@ class CaseStudy(Resource):
     # could be a streamfield
     body = StreamField([
         ("body_text", blocks.RichTextSimpleBlock()),
-    ], null=True, blank=True)
+    ], null=True, blank=True, use_json_field=True)
 
     content_panels = [
         FieldPanel("body"),

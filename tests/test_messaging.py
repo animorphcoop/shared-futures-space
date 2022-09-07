@@ -54,16 +54,16 @@ def test_project_chat_interface(client, test_user, test_project):
         assert 'test message ' + str(i) not in chat_page_html.text
 
 def test_direct_chat_basics(client, test_user, other_test_user):
-    from userauth.util import get_userpair # import here because importing from util is side-effecting on the db the first time it happpens and pytest doesn't like that
+    from userauth.util import get_userpair # import here because importing from util is side-effecting on the db the first time it happens and pytest doesn't like that
     pair = get_userpair(test_user, other_test_user)
     chat_url = reverse('user_chat', args=[other_test_user.uuid])
     client.force_login(test_user)
     chat_page = client.get(chat_url)
-    assert b'User Chat: Other Test User' in chat_page.content
+    assert b'Private chat' in chat_page.content
     client.post(chat_url, {'message': 'test message'})
     client.force_login(other_test_user)
     chat_page = client.get(reverse('user_chat', args=[test_user.uuid]))
-    assert b'User Chat: Test User' in chat_page.content
+    assert b'Private chat' in chat_page.content
     assert b'test message' in chat_page.content
 
 def test_direct_chat_interface(client, test_user, other_test_user):
@@ -94,7 +94,7 @@ def test_direct_chat_listing(client, test_user, other_test_user):
     from userauth.util import get_userpair
     client.force_login(test_user)
     listing = client.get(reverse('all_chats'))
-    assert 'Open Chats' in str(listing.content)
+    assert 'Your Messages' in str(listing.content)
     assert other_test_user.display_name not in str(listing.content)
     get_userpair(test_user, other_test_user)
     listing = client.get(reverse('all_chats'))
