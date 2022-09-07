@@ -13,13 +13,11 @@ const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementBy
 
 
 function processEmailValue() {
-    console.log('WTF')
     if (emailInput == null || inputFeedback == null) return
-    console.log('WTF2')
     const emailPassed = emailInput.value
 
     inputFeedback.classList.remove('hidden')
-    if (emailPassed <= 5) {
+    if (emailPassed.length <= 5) {
         inputFeedback.innerText = 'Enter a valid email address.'
         return false
     } else {
@@ -98,42 +96,42 @@ function comparePasswords() {
 
 function getPasswordFeedback() {
 
-    //TODO: Should be really dependenent on whether you are in login or sign up
-    toggleSubmitButton(false)
+    if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
 
-    passwordFeedbackOne.classList.remove('hidden')
+        //TODO: Should be really dependent on whether you are in login or sign up
+        toggleSubmitButton(false)
 
-
-    const passwordEntered: string = (<HTMLInputElement>document.getElementById("password-input1")).value
-
-
-    if (passwordEntered.length < 1)
-        return
+        passwordFeedbackOne.classList.remove('hidden')
 
 
-    const passwordQuality = checkPasswordQuality(passwordEntered)
+        const passwordEntered: string = (<HTMLInputElement>document.getElementById("password-input1")).value
 
-    if (passwordFeedbackOne == null)
-        return
 
-    if (passwordQuality.includes("Secure")) {
-        passwordFeedbackOne.innerText = `${passwordQuality} password, well done!`
+        if (passwordEntered.length < 1)
+            return
 
-    } else if (passwordQuality.includes("Good")) {
-        passwordFeedbackOne.innerText = `${passwordQuality} password, thank you.`
 
-    } else if (passwordQuality.includes("Weak")) {
-        passwordFeedbackOne.innerText = `${passwordQuality} password, spicy it up please!`
+        const passwordQuality = checkPasswordQuality(passwordEntered)
 
-    } else {
-        passwordFeedbackOne.innerText = `${passwordQuality} password, improve it please!`
+
+        if (passwordQuality.includes("Secure")) {
+            passwordFeedbackOne.innerText = `${passwordQuality} password, well done!`
+
+        } else if (passwordQuality.includes("Good")) {
+            passwordFeedbackOne.innerText = `${passwordQuality} password, thank you.`
+
+        } else if (passwordQuality.includes("Weak")) {
+            passwordFeedbackOne.innerText = `${passwordQuality} password, spicy it up please!`
+
+        } else {
+            passwordFeedbackOne.innerText = `${passwordQuality} password, improve it please!`
+        }
+
+        if (!passwordFeedbackTwo.classList.contains('hidden')) {
+            passwordFeedbackTwo.classList.add('hidden')
+
+        }
     }
-
-    if (!passwordFeedbackTwo.classList.contains('hidden')) {
-        passwordFeedbackTwo.classList.add('hidden')
-
-    }
-
 }
 
 

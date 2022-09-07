@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "account/base.html" %}
 
 {% load i18n %}
 
@@ -12,7 +12,6 @@
 {% if user.emailaddress_set.all.count < 2 or user.emailaddress_set.all.1.verified %}
 
 Your email has been confirmed!
-<a href="{% url 'dashboard' %}">Go to Dashboard</a>
 
 {% else %}
 

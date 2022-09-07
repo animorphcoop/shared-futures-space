@@ -1,34 +1,39 @@
-{% extends "base.html" %}
+{% extends "account/base.html" %}
 
-{% load i18n %}
 
+{% comment %} User logged in profile view /account/view/
+can trigger profile edit too
+TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
+{% endcomment %}
 
 {% block content %}
-<a href="{% url 'dashboard' %}">Back to Dashboard</a>
 
-<p class="font-sans text-5xl bg">{{user.display_name}} profile</p>
-{% comment %}
+    {% block title %}{% include "partials/title.html" with title=user.display_name %}{% endblock %}
+
+
+    <p class="font-sans text-5xl bg">{{ user.display_name }} profile</p>
+    {% comment %}
 {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}
 {% endcomment %}
-<div id="profile-data">
-    <br/>
-    {{user.display_name}}, born in {{user.year_of_birth}}
-    <br/>
-    {% if user.post_code != null%}
-    Living at Post code {{user.post_code}}
-    {% else %}
-    Don't have one yet.
-    {% endif %}
-    <br/>
-    Profile image:
-    <br/>
-    {% if user.avatar.url != null%}
-    <img src="{{ user.avatar.url }}"/>
-    {% else %}
-    Don't have one yet.
-    {% endif %}
-    <br/>
-</div>
-<hr/>
+    <div id="profile-data">
+        <br/>
+        {{ user.display_name }}, born in {{ user.year_of_birth }}
+        <br/>
+        {% if user.post_code != null %}
+            Living at Post code {{ user.post_code }}
+        {% else %}
+            Don't have one yet.
+        {% endif %}
+        <br/>
+        Profile image:
+        <br/>
+        {% if user.avatar.url != null %}
+            <img src="{{ user.avatar.url }}"/>
+        {% else %}
+            Don't have one yet.
+        {% endif %}
+        <br/>
+    </div>
+    <hr/>
 
 {% endblock %}

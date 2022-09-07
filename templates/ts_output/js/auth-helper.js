@@ -7,13 +7,11 @@ const passwordInputOne = document.getElementById("password-input1");
 const passwordInputTwo = document.getElementById("password-input2");
 const submitButton = document.getElementById("submit-button");
 function processEmailValue() {
-    console.log('WTF');
     if (emailInput == null || inputFeedback == null)
         return;
-    console.log('WTF2');
     const emailPassed = emailInput.value;
     inputFeedback.classList.remove('hidden');
-    if (emailPassed <= 5) {
+    if (emailPassed.length <= 5) {
         inputFeedback.innerText = 'Enter a valid email address.';
         return false;
     }
@@ -36,23 +34,6 @@ function validateEmail(address) {
     }
     return false;
 }
-/*function parseEmail(textArg) {
-    inputFeedback.classList.remove('hidden')
-    if (textArg <= 5) {
-        inputFeedback.innerText = 'Enter a valid email address.'
-        return false
-    }
-
-
-    let result = validateEmail(textArg)
-    console.log(result)
-    if (!result) {
-        inputFeedback.innerText = 'Enter a valid email address.'
-    } else {
-        inputFeedback.innerText = ''
-        return true
-    }
-}*/
 function toggleSubmitButton(toEnable) {
     if (submitButton == null)
         return;
@@ -95,29 +76,29 @@ function comparePasswords() {
     }
 }
 function getPasswordFeedback() {
-    //TODO: Should be really dependenent on whether you are in login or sign up
-    toggleSubmitButton(false);
-    passwordFeedbackOne.classList.remove('hidden');
-    const passwordEntered = document.getElementById("password-input1").value;
-    if (passwordEntered.length < 1)
-        return;
-    const passwordQuality = checkPasswordQuality(passwordEntered);
-    if (passwordFeedbackOne == null)
-        return;
-    if (passwordQuality.includes("Secure")) {
-        passwordFeedbackOne.innerText = `${passwordQuality} password, well done!`;
-    }
-    else if (passwordQuality.includes("Good")) {
-        passwordFeedbackOne.innerText = `${passwordQuality} password, thank you.`;
-    }
-    else if (passwordQuality.includes("Weak")) {
-        passwordFeedbackOne.innerText = `${passwordQuality} password, spicy it up please!`;
-    }
-    else {
-        passwordFeedbackOne.innerText = `${passwordQuality} password, improve it please!`;
-    }
-    if (!passwordFeedbackTwo.classList.contains('hidden')) {
-        passwordFeedbackTwo.classList.add('hidden');
+    if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
+        //TODO: Should be really dependent on whether you are in login or sign up
+        toggleSubmitButton(false);
+        passwordFeedbackOne.classList.remove('hidden');
+        const passwordEntered = document.getElementById("password-input1").value;
+        if (passwordEntered.length < 1)
+            return;
+        const passwordQuality = checkPasswordQuality(passwordEntered);
+        if (passwordQuality.includes("Secure")) {
+            passwordFeedbackOne.innerText = `${passwordQuality} password, well done!`;
+        }
+        else if (passwordQuality.includes("Good")) {
+            passwordFeedbackOne.innerText = `${passwordQuality} password, thank you.`;
+        }
+        else if (passwordQuality.includes("Weak")) {
+            passwordFeedbackOne.innerText = `${passwordQuality} password, spicy it up please!`;
+        }
+        else {
+            passwordFeedbackOne.innerText = `${passwordQuality} password, improve it please!`;
+        }
+        if (!passwordFeedbackTwo.classList.contains('hidden')) {
+            passwordFeedbackTwo.classList.add('hidden');
+        }
     }
 }
 function checkPasswordQuality(pass) {

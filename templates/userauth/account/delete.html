@@ -1,20 +1,18 @@
 {% extends "account/base.html" %}
 
-{% load i18n %}
-
-{% block head_title %}{% trans "Delete account" %}{% endblock %}
+{% comment %} Delete your account page /account/delete/ {% endcomment %}
 
 {% block content %}
-<h1>{% trans "Delete account" %}</h1>
 
+    {% block title %}{% include "partials/title.html" with title="Delete account" %}{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    <p>Want to delete your account? {{ user.email }}</p>
-    <button type="submit" name=confirm value=confirm>{% trans "Delete" %} &raquo;</button>
-</form>
-<br/>
-<p>{% trans "No, keep my account" %} </p>
-    <a href="{% url 'account_view' %}">{% trans "Return to site" %}</a>
+    <form method="post">
+        {% csrf_token %}
+        <p>Want to delete your account associated with the email: {{ user.email }}</p>
+        <button type="submit" name=confirm value=confirm>Delete</button>
+    </form>
+
+    <p>No, keep my account</p>
+    <a href="{% url 'account_view' %}">Return to site</a>
 
 {% endblock %}

@@ -1,4 +1,7 @@
 {% extends "account/base.html" %}
+
+{% comment %} If you are not logged in and trying to access restricted areas you are redirected to /account/login/{% endcomment %}
+
 {% load static %}
 
 {% load account socialaccount %}
@@ -9,7 +12,7 @@
 
 {% block content %}
 
-    <p class="text-2xl">Log in</p>
+    {% block title %}{% include "partials/title.html" with title="Log in" %}{% endblock %}
 
     <div class="w-full max-w-xs">
         <form class="" method="POST" action="{% url 'account_login' %}">

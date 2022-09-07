@@ -1,2 +1,13 @@
-<h3>User Chat: {{other_user.display_name}}</h3>
+{% extends "account/base.html" %}
+
+{% comment %} Page: a messages- direct chat exchanges with another user {% endcomment %}
+
+{% block content %}
+
+
+            {% block title %}{% include "partials/title.html" with title="Private chat" %}{% endblock %}
+
+{{ other_user.display_name }}
 {% include 'messaging/chatbox_snippet.html' %}
+
+{% endblock %}

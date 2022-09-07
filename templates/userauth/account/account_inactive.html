@@ -1,11 +1,17 @@
 {% extends "account/base.html" %}
 
-{% load i18n %}
-
-{% block head_title %}{% trans "Account Inactive" %}{% endblock %}
+{% comment %} If account is suspended /account/inactive/{% endcomment %}
 
 {% block content %}
-<h1>{% trans "Account Inactive" %}</h1>
 
-<p>{% trans "This account is inactive." %}</p>
+    {% block title %}{% include "partials/title.html" with title="Account Inactive" %}{% endblock %}
+
+    {% if not user.is_active %}
+        <p>You cannot sign in because your account is account inactive.</p>
+
+    {% else %}
+        <p>Your account is active and you should not see it (you will be redirected automatically because you should not be able to sign in).</p>
+
+    {% endif %}
+
 {% endblock %}

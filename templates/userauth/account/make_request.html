@@ -1,3 +1,14 @@
+{% extends "account/base.html" %}
+
+{% comment %} Component allowing users to request a change in their non-editable fields /account/request/
+TODO: is that covered in Figma?
+{% endcomment %}
+
+{% block content %}
+
+    {% block title %}{% include "partials/title.html" with title="Make change request" %}{% endblock %}
+
+
 
 <form method=post>
   {% csrf_token %}
@@ -20,3 +31,6 @@
   </p>
   <p><button>Submit Request</button></p>
 </form>
+
+
+{% endblock %}

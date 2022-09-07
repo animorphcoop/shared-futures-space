@@ -1,12 +1,16 @@
-{% extends "base.html" %}
+{% extends "account/base.html" %}
 
+
+{% comment %} User logged in profile view /account/view/{{id}}
+can trigger profile edit too
+TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
+{% endcomment %}
 
 {% block content %}
+
+    {% block title %}{% include "partials/title.html" with title="Your profile" %}{% endblock %}
+
 <section id="profile-view">
-
-
-    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
-
 
     <p class="font-sans text-5xl bg">Your account</p>
 

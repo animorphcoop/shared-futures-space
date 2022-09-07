@@ -1,31 +1,37 @@
 {% extends "base.html" %}
 
-{% load i18n %}
+{% comment %}After user passes the signup process or tries to log in with an account that has not been confirmed yet
+/account/confirm-email/{{dynamically-generated-token}}/
+{% endcomment %}
+
 {% load account %}
 
-{% block head_title %}{% trans "Confirm E-mail Address" %}{% endblock %}
 
 
 {% block content %}
-<h1>{% trans "Confirm E-mail Address" %}</h1>
+    {% block title %}{% include "partials/title.html" with title="Confirm E-mail Address" %}{% endblock %}
 
-{% if confirmation %}
+    {% if confirmation %}
 
-{% user_display confirmation.email_address.user as user_display %}
 
-<p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}</p>
 
-<form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
-{% csrf_token %}
-    <button type="submit">{% trans 'Confirm' %}</button>
-</form>
+        {% user_display confirmation.email_address.user as user_display %}
 
-{% else %}
+        <p> Please confirm that you registered with us an e-mail address starting with: {{ user_display }}</p>
 
-{% url 'account_email' as email_url %}
+        <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+            {% csrf_token %}
+            <button type="submit">Confirm</button>
+        </form>
 
-<p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}</p>
+    {% else %}
 
-{% endif %}
+        {% url 'account_email' as email_url %}
+
+        <p>This e-mail confirmation link expired or is invalid. Please attempt <a href="{{ email_url }}">to login to
+            issue a new e-mail
+            confirmation request</a>.</p>
+
+    {% endif %}
 
 {% endblock %}
