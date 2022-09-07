@@ -1,11 +1,10 @@
 {% extends "account/base.html" %}
 
-{% load i18n %}
-
-{% block head_title %}{% trans "Sign Up Closed" %}{% endblock %}
+{% comment %} In case we disable signup in the settings and people want to go to Sign up Page {% endcomment %}
 
 {% block content %}
-<h1>{% trans "Sign Up Closed" %}</h1>
 
-<p>{% trans "We are sorry, but the sign up is currently closed." %}</p>
+    {% block title %}{% include "partials/title.html" with title="Sign Up Closed" %}{% endblock %}
+
+    <p>We are sorry, but the sign up is currently closed.</p>
 {% endblock %}

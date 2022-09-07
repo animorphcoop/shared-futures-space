@@ -55,10 +55,10 @@ def test_data_add(client, test_user):
     test_user.post_code = None
     test_user.save()
     client.force_login(test_user)
-    client.post(reverse('account_data'), {'year_of_birth': 1997, 'post_code': 'AB12 3CD'})
+    client.post(reverse('account_add_data'), {'year_of_birth': 1997, 'post_code': 'AB12 3CD'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12 3CD'
-    client.post(reverse('account_data'), {'year_of_birth': 2001, 'post_code': 'N4 3HH'})
+    client.post(reverse('account_add_data'), {'year_of_birth': 2001, 'post_code': 'N4 3HH'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12 3CD'
 

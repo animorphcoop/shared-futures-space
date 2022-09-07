@@ -1,6 +1,22 @@
-{% if user.is_superuser %}
- <h3>Manage User Requests</h3>
- {% include 'messaging/chatbox_snippet.html' %}
-{% else %}
- go away
-{% endif %}
+{% extends "account/base.html" %}
+
+{% comment %} Component allowing admins to review and action the requests for changes in users' otherwise non-editable fields
+/account/managerequests/
+TODO: is that covered in Figma?
+{% endcomment %}
+
+{% block content %}
+
+    {% block title %}{% include "partials/title.html" with title="Manage change requests" %}{% endblock %}
+
+
+
+
+    {% if user.is_superuser %}
+        <h3>Manage User Requests</h3>
+        {% include 'messaging/chatbox_snippet.html' %}
+    {% else %}
+        You are not an admin so you should not see this message, you should have been redirected already!
+    {% endif %}
+
+{% endblock %}

@@ -63,7 +63,8 @@
 
     <div>
         <div class="border-2 rounded-lg mt-2 mb-2">
-            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            {% comment %}TODO: Should this be partials to keep things consistent?{% endcomment %}
+            {% include "socialaccount/partials/provider_list.html" with process="login" %}
         </div>
 
         <div class="border-2 rounded-lg mt-2 mb-2">

@@ -58,7 +58,7 @@ class CustomUserPersonalView(TemplateView):
                 current_user.save()
                 return HttpResponseRedirect(reverse_lazy('dashboard'))
             except:
-                return HttpResponseRedirect(reverse_lazy('account_data'))
+                return HttpResponseRedirect(reverse_lazy('account_add_data'))
 
 
 class CustomUserUpdateView(TemplateView):
@@ -229,7 +229,6 @@ class UserAllChatsView(TemplateView):
 # TODO: Add more validation e.g. to lower case
 def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse?
     # print(request.META.get('HTTP_REFERER'))
-    print(request.META.get('HTTP_REFERER').rsplit('/', 2)[1])
     if request.POST.getlist('email'):
         user_mail = request.POST.getlist('email')[0]
         request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]

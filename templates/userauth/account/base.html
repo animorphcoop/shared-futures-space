@@ -1,21 +1,23 @@
 {% extends "base.html" %}
 
 
-{% comment %}Clarify the way of using this element for rendering system replies (messages) after respective actions{% endcomment %}
+{% comment %}TODO: Clarify the way of using this element for rendering system replies (messages) after respective actions...
+If we use the messages we might want to consider using the .txt files from templates/account/messages of allauth, otherwise delete this file?
+{% endcomment %}
 {% block body %}
 
-{% if messages %}
-<div>
-    <strong>Messages:</strong>
-    <ul>
-        {% for message in messages %}
-        <li>{{message}}</li>
-        {% endfor %}
-    </ul>
-</div>
-{% endif %}
+    {% if messages %}
+        <div>
+            <strong>Messages:</strong>
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 
-<div>
+    <div>
     <!--      <strong>Menu:</strong>
           <ul>
             {% if user.is_authenticated %}
@@ -29,6 +31,6 @@
         </div>-->
     {% block content %}
     {% endblock %}
-    {% endblock %}
-    {% block extra_body %}
-    {% endblock %}
+{% endblock %}
+{% block extra_body %}
+{% endblock %}

@@ -7,6 +7,7 @@ const passwordInputOne = document.getElementById("password-input1");
 const passwordInputTwo = document.getElementById("password-input2");
 const submitButton = document.getElementById("submit-button");
 function processEmailValue() {
+    console.log('LOOOOL');
     if (emailInput == null || inputFeedback == null)
         return;
     const emailPassed = emailInput.value;

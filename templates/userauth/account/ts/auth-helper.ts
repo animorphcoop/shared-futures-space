@@ -13,6 +13,7 @@ const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementBy
 
 
 function processEmailValue() {
+    console.log('LOOOOL')
     if (emailInput == null || inputFeedback == null) return
     const emailPassed = emailInput.value
 
