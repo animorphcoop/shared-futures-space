@@ -2,6 +2,7 @@
 
 from django.db import models
 from modelcluster.models import ClusterableModel
+from django.utils import timezone
 
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -9,6 +10,7 @@ from taggit.models import TaggedItemBase
 
 from userauth.models import CustomUser # pyre-ignore[21]
 from messaging.models import Chat # pyre-ignore[21]
+from poll.models import Poll # pyre-ignore[21]
 from urllib.parse import quote
 from hashlib import shake_256
 
@@ -20,9 +22,14 @@ def new_chat() -> int: # required because a plain Chat.objects.create or a lambd
     c.save()
     return c.id
 
-# STAGES
+def new_act_poll() -> int:
+    p = Poll(question = 'has this been done?', options = ['yes','no'], expires = timezone.now() + timezone.timedelta(days=30)) # TODO probably expiry will have to be specified by users?
+    p.save()
+    return p.id
 
+# STAGES
 # stages are defined before projects because projects reference stages
+
 class EnvisionStage(models.Model):
     class Step(models.TextChoices):
         GET_TO_KNOW = '1', 'get to know'
@@ -32,11 +39,28 @@ class EnvisionStage(models.Model):
     step: models.CharField = models.CharField(max_length = 1, choices = Step.choices, default = Step.GET_TO_KNOW)
 
 class PlanStage(models.Model):
-    general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'general_chat')
-    funding_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'funding_chat')
-    location_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'location_chat')
-    dates_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'dates_chat')
+    general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'plan_general_chat')
+    funding_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'plan_funding_chat')
+    location_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'plan_location_chat')
+    dates_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'plan_dates_chat')
+    general_poll: models.ForeignKey = models.ForeignKey(Poll, default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_general_poll')
+    funding_poll: models.ForeignKey = models.ForeignKey(Poll, default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_funding_poll')
+    location_poll: models.ForeignKey = models.ForeignKey(Poll, default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_location_poll')
+    dates_poll: models.ForeignKey = models.ForeignKey(Poll, default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_dates_poll')
 
+class ActStage(models.Model):
+    general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'act_general_chat')
+    funding_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'act_funding_chat')
+    location_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'act_location_chat')
+    dates_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'act_dates_chat')
+    general_poll: models.ForeignKey = models.ForeignKey(Poll, default = new_act_poll, on_delete = models.SET_DEFAULT, related_name = 'act_general_poll')
+    funding_poll: models.ForeignKey = models.ForeignKey(Poll, default = new_act_poll, on_delete = models.SET_DEFAULT, related_name = 'act_funding_poll')
+    location_poll: models.ForeignKey = models.ForeignKey(Poll, default = new_act_poll, on_delete = models.SET_DEFAULT, related_name = 'act_location_poll')
+    dates_poll: models.ForeignKey = models.ForeignKey(Poll, default = new_act_poll, on_delete = models.SET_DEFAULT, related_name = 'act_dates_poll')
+
+class ReflectStage(models.Model):
+    chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT)
+    # feedback?
 
 # PROJECTS
 
@@ -50,8 +74,8 @@ class Project(ClusterableModel):
     tags = ClusterTaggableManager(through=ProjectTag, blank=True)
     envision_stage: models.ForeignKey = models.ForeignKey(EnvisionStage, null = True, default = None, on_delete = models.SET_NULL)
     plan_stage: models.ForeignKey = models.ForeignKey(PlanStage, null = True, default = None, on_delete = models.SET_NULL)
-    # act_stage: models.ForeignKey = models.ForeignKey(ActStage, null = True, default = None, on_delete = models.SET_NULL)
-    # reflect_stage: models.ForeignKey = models.ForeignKey(ReflectStage, null = True, default = None, on_delete = models.SET_NULL)
+    act_stage: models.ForeignKey = models.ForeignKey(ActStage, null = True, default = None, on_delete = models.SET_NULL)
+    reflect_stage: models.ForeignKey = models.ForeignKey(ReflectStage, null = True, default = None, on_delete = models.SET_NULL)
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''):
             self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[16] same
