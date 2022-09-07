@@ -31,5 +31,5 @@ def test_access_logged_in(url, is_accessible, test_user, client):
 
 def test_access_admin_stuff(client, admin_client, test_user):
     client.force_login(test_user)
-    assert 'go away' in str(client.get('/account/managerequests/').content)
-    assert 'go away' not in str(admin_client.get('/account/managerequests/').content)
+    assert 'You are not an admin' in str(client.get('/account/managerequests/').content)
+    assert 'You are not an admin' not in str(admin_client.get('/account/managerequests/').content)
