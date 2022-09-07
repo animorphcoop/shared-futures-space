@@ -15,7 +15,7 @@ from .models import Poll, Vote
 class PollView(TemplateView):
     def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponseRedirect:
         poll = Poll.objects.get(uuid = uuid)
-        if request.user.is_active and 'choice' in request.POST and poll.expires < timezone.now():
+        if request.user.is_active and 'choice' in request.POST and not poll.check_closed():
             try:
                 choice = poll.options.index(request.POST['choice']) + 1
             except ValueError:
@@ -32,12 +32,12 @@ class PollView(TemplateView):
             results[poll.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
         ctx['poll_name'] = poll.question
         ctx['poll_results'] = results
+        ctx['poll_closed'] = poll.check_closed()
         ctx['poll_expires'] = poll.expires
-        ctx['poll_done'] = poll.expires < timezone.now()
         return ctx
 
 class PollCreateView(CreateView): # pyre-ignore[24]
     model = Poll
-    fields = ['question', 'options', 'expires']
+    fields = ['question', 'options', 'expires', 'project']
     def get_success_url(self) -> str:
         return reverse('poll_view', args=[self.object.uuid]) # pyre-ignore[16]

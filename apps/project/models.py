@@ -10,7 +10,6 @@ from taggit.models import TaggedItemBase
 
 from userauth.models import CustomUser # pyre-ignore[21]
 from messaging.models import Chat # pyre-ignore[21]
-from poll.models import Poll # pyre-ignore[21]
 from urllib.parse import quote
 from hashlib import shake_256
 
@@ -21,11 +20,6 @@ def new_chat() -> int: # required because a plain Chat.objects.create or a lambd
     c = Chat()
     c.save()
     return c.id
-
-def new_act_poll() -> int:
-    p = Poll(question = 'has this been done?', options = ['yes','no'], expires = timezone.now() + timezone.timedelta(days=30)) # TODO probably expiry will have to be specified by users?
-    p.save()
-    return p.id
 
 # STAGES
 # stages are defined before projects because projects reference stages
@@ -43,20 +37,20 @@ class PlanStage(models.Model):
     funding_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'plan_funding_chat')
     location_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'plan_location_chat')
     dates_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'plan_dates_chat')
-    general_poll: models.ForeignKey = models.ForeignKey(Poll, default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_general_poll')
-    funding_poll: models.ForeignKey = models.ForeignKey(Poll, default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_funding_poll')
-    location_poll: models.ForeignKey = models.ForeignKey(Poll, default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_location_poll')
-    dates_poll: models.ForeignKey = models.ForeignKey(Poll, default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_dates_poll')
+    general_poll: models.ForeignKey = models.ForeignKey('poll.Poll', default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_general_poll')
+    funding_poll: models.ForeignKey = models.ForeignKey('poll.Poll', default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_funding_poll')
+    location_poll: models.ForeignKey = models.ForeignKey('poll.Poll', default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_location_poll')
+    dates_poll: models.ForeignKey = models.ForeignKey('poll.Poll', default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'plan_dates_poll')
 
 class ActStage(models.Model):
     general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'act_general_chat')
     funding_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'act_funding_chat')
     location_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'act_location_chat')
     dates_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'act_dates_chat')
-    general_poll: models.ForeignKey = models.ForeignKey(Poll, default = new_act_poll, on_delete = models.SET_DEFAULT, related_name = 'act_general_poll')
-    funding_poll: models.ForeignKey = models.ForeignKey(Poll, default = new_act_poll, on_delete = models.SET_DEFAULT, related_name = 'act_funding_poll')
-    location_poll: models.ForeignKey = models.ForeignKey(Poll, default = new_act_poll, on_delete = models.SET_DEFAULT, related_name = 'act_location_poll')
-    dates_poll: models.ForeignKey = models.ForeignKey(Poll, default = new_act_poll, on_delete = models.SET_DEFAULT, related_name = 'act_dates_poll')
+    general_poll: models.ForeignKey = models.ForeignKey('poll.Poll', default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'act_general_poll')
+    funding_poll: models.ForeignKey = models.ForeignKey('poll.Poll', default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'act_funding_poll')
+    location_poll: models.ForeignKey = models.ForeignKey('poll.Poll', default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'act_location_poll')
+    dates_poll: models.ForeignKey = models.ForeignKey('poll.Poll', default = None, null = True, on_delete = models.SET_DEFAULT, related_name = 'act_dates_poll')
 
 class ReflectStage(models.Model):
     chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT)
