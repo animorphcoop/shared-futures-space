@@ -6,7 +6,6 @@ from django.db import models
 from uuid import uuid4
 
 from userauth.models import CustomUser # pyre-ignore[21]
-from project.models import Project, ProjectMembership # pyre-ignore[21]
 
 from typing import List
 
@@ -20,7 +19,7 @@ class Poll(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4)
     question: models.CharField = models.CharField(max_length = 100)
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
-    project: models.ForeignKey = models.ForeignKey(Project, on_delete = models.CASCADE)
+    voter_num: models.PositiveIntegerField = models.PositiveIntegerField()
     expires: models.DateTimeField = models.DateTimeField()
     closed: models.BooleanField = models.BooleanField(default = False)
     def check_closed(self) -> bool:
@@ -34,10 +33,8 @@ class Poll(models.Model):
             return True
         else:
             vote_nums = sorted([len(Vote.objects.filter(poll = self, choice = option)) for option in range(len(self.options)+1)], reverse = True)
-            print(vote_nums)
-            print(ProjectMembership.objects.filter(project = self.project))
-            if vote_nums[0] > vote_nums[1] + len(ProjectMembership.objects.filter(project = self.project)) - sum(vote_nums):
-                # if all remaining votes went to the current second-place option it still wouldn't overtake the top option
+            if vote_nums[0] > vote_nums[1] + self.voter_num - sum(vote_nums):
+                # if all remaining votes went to the current second-place option it still wouldn't equal the top option
                 self.closed = True
                 self.save()
                 return True

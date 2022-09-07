@@ -10,6 +10,8 @@ from taggit.models import TaggedItemBase
 
 from userauth.models import CustomUser # pyre-ignore[21]
 from messaging.models import Chat # pyre-ignore[21]
+from messaging.util import send_system_message # pyre-ignore[21]
+from poll.models import Poll # pyre-ignore[21]
 from urllib.parse import quote
 from hashlib import shake_256
 
@@ -58,6 +60,12 @@ class ReflectStage(models.Model):
 
 # PROJECTS
 
+class ProjectMembership(models.Model):
+    project: models.ForeignKey = models.ForeignKey('project.Project', on_delete=models.CASCADE)
+    user: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
+    owner: models.BooleanField = models.BooleanField(default = False)
+    champion: models.BooleanField = models.BooleanField(default = False)
+
 class ProjectTag(TaggedItemBase):
     content_object = ParentalKey('project.Project', on_delete=models.CASCADE, related_name='tagged_items')
 
@@ -75,27 +83,27 @@ class Project(ClusterableModel):
     plan_stage: models.ForeignKey = models.ForeignKey(PlanStage, null = True, default = None, on_delete = models.SET_NULL)
     act_stage: models.ForeignKey = models.ForeignKey(ActStage, null = True, default = None, on_delete = models.SET_NULL)
     reflect_stage: models.ForeignKey = models.ForeignKey(ReflectStage, null = True, default = None, on_delete = models.SET_NULL)
-    current_stage: models.CharField(choices = Stage.choices, null = True, default = None)
+    current_stage: models.CharField = models.CharField(choices = Stage.choices, max_length = 8, null = True, default = None)
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''):
             self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[16] same
         return super().save(*args, **kwargs)
-    def start_envision(self):
-        self.current_stage = Stage.ENVISION
+    def start_envision(self) -> None:
+        self.current_stage = Stage.ENVISION # pyre-ignore[10]
         self.envision_stage = EnvisionStage.objects.create()
-    def start_plan(self):
+    def start_plan(self) -> None:
         self.current_stage = Stage.PLAN
         self.plan_stage = PlanStage.objects.create()
         # for testing purposes ONLY # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-        self.plan_stage.general_poll = Poll.objects.create(question = 'general question', options = ['1', 'b'], project = self, expires = timezone.now() + timezone.delta(days=30))   #
-        self.plan_stage.funding_poll = Poll.objects.create(question = 'funding question', options = ['1', 'b'], project = self, expires = timezone.now() + timezone.delta(days=30))   #
-        self.plan_stage.location_poll = Poll.objects.create(question = 'location question', options = ['1', 'b'], project = self, expires = timezone.now() + timezone.delta(days=30)) #
-        self.plan_stage.dates_poll = Poll.objects.create(question = 'dates question', options = ['1', 'b'], project = self, expires = timezone.now() + timezone.delta(days=30))       #
+        self.plan_stage.general_poll = Poll.objects.create(question = 'general question', options = ['1', 'b'], voter_num = ProjectMembership.objects.filter(project = self), expires = timezone.now() + timezone.timedelta(days=30))   #
+        self.plan_stage.funding_poll = Poll.objects.create(question = 'funding question', options = ['1', 'b'], voter_num = ProjectMembership.objects.filter(project = self), expires = timezone.now() + timezone.timedelta(days=30))   #
+        self.plan_stage.location_poll = Poll.objects.create(question = 'location question', options = ['1', 'b'], voter_num = ProjectMembership.objects.filter(project = self), expires = timezone.now() + timezone.timedelta(days=30)) #
+        self.plan_stage.dates_poll = Poll.objects.create(question = 'dates question', options = ['1', 'b'], voter_num = ProjectMembership.objects.filter(project = self), expires = timezone.now() + timezone.timedelta(days=30))       #
         self.plan_stage.general_poll.closed = True    #
         self.plan_stage.funding_poll.closed = True    #
         self.plan_stage.location_poll.closed = True   #
         self.plan_stage.dates_poll.closed = True      #
-    def start_act(self):
+    def start_act(self) -> None:
         if (self.plan_stage.general_poll is None or not self.plan_stage.general_poll.closed or
             self.plan_stage.funding_poll is None or not self.plan_stage.funding_poll.closed or
             self.plan_stage.location_poll is None or not self.plan_stage.location_poll.closed or
@@ -103,27 +111,21 @@ class Project(ClusterableModel):
             raise ValueError('plan stage is not finished!')
         self.current_stage = Stage.ACT
         self.act_stage = ActStage.objects.create()
-        self.act_stage.general_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], project = self, expires = timezone.now() + timezone.delta(days=30)) # expiry date needs adjustment? TODO
+        self.act_stage.general_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = ProjectMembership.objects.filter(project = self), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
         send_system_message(self.act_stage.general_chat, 'poll', context_poll = self.plan_stage.general_poll)
         send_system_message(self.act_stage.general_chat, 'poll', context_poll = self.act_stage.general_poll)
-        self.act_stage.funding_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], project = self, expires = timezone.now() + timezone.delta(days=30)) # expiry date needs adjustment? TODO
+        self.act_stage.funding_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = ProjectMembership.objects.filter(project = self), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
         send_system_message(self.act_stage.funding_chat, 'poll', context_poll = self.plan_stage.funding_poll)
         send_system_message(self.act_stage.funding_chat, 'poll', context_poll = self.act_stage.funding_poll)
-        self.act_stage.location_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], project = self, expires = timezone.now() + timezone.delta(days=30)) # expiry date needs adjustment? TODO
+        self.act_stage.location_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = ProjectMembership.objects.filter(project = self), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
         send_system_message(self.act_stage.location_chat, 'poll', context_poll = self.plan_stage.location_poll)
         send_system_message(self.act_stage.location_chat, 'poll', context_poll = self.act_stage.location_poll)
-        self.act_stage.dates_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], project = self, expires = timezone.now() + timezone.delta(days=30)) # expiry date needs adjustment? TODO
+        self.act_stage.dates_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = ProjectMembership.objects.filter(project = self), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
         send_system_message(self.act_stage.dates_chat, 'poll', context_poll = self.plan_stage.dates_poll)
         send_system_message(self.act_stage.dates_chat, 'poll', context_poll = self.act_stage.dates_poll)
-    def start_reflect(self):
+    def start_reflect(self) -> None:
         self.current_stage = Stage.REFLECT
         self.reflect_stage = ReflectStage.objects.create()
-
-class ProjectMembership(models.Model):
-    project: models.ForeignKey = models.ForeignKey(Project, on_delete=models.CASCADE)
-    user: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
-    owner: models.BooleanField = models.BooleanField(default = False)
-    champion: models.BooleanField = models.BooleanField(default = False)
 
 
 

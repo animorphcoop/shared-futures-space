@@ -15,7 +15,7 @@ from typing import Union, Optional
 
 def send_system_message(chat: Chat, kind: str, # pyre-ignore[11]
                         context_action: Optional[Action] = None, context_project: Optional[Project] = None, # pyre-ignore[11]
-                        context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None,
+                        context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None, # pyre-ignore[11]
                         context_poll: Optional[Poll] = None) -> None: # pyre-ignore[11]
     Message.objects.create(sender = get_system_user(), text='',
                            snippet = {'offer_of_ownership': 'messaging/system_messages/offer_of_ownership.html',
