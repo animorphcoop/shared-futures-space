@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.dispatch import receiver
 from django.db.models import Q
-from .models import CustomUser, UserPair
+from .models import CustomUser, UserPair, Organisation
 from django.contrib.auth import get_user_model
 from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm
 from django.http.request import QueryDict
@@ -31,6 +31,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
 from django.http import HttpResponse
 from uuid import UUID
+from core.utils.postcode_matcher import filter_postcode
 
 import magic
 
@@ -39,6 +40,7 @@ def profile_view(request: WSGIRequest) -> HttpResponse:
     return render(request, 'account/view.html')
 
 
+# adding all the data required via /account/add_data/
 class CustomUserPersonalView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
@@ -50,15 +52,20 @@ class CustomUserPersonalView(TemplateView):
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         else:
-            try:
+            if form.is_valid():
                 form.full_clean()
-                print(form.cleaned_data)
+                current_user.display_name = str(form.cleaned_data.get('display_name'))
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
-                current_user.post_code = PostCode.objects.get_or_create(code=form.cleaned_data.get('post_code'))[0]
+                current_user.post_code = \
+                    PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
+                current_user.organisation = \
+                    Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
+
+                current_user.added_data = True
                 current_user.save()
                 return HttpResponseRedirect(reverse_lazy('dashboard'))
-            except:
-                return HttpResponseRedirect(reverse_lazy('account_add_data'))
+            else:
+                return HttpResponseRedirect(reverse('account_add_data'))
 
 
 class CustomUserUpdateView(TemplateView):
@@ -248,7 +255,6 @@ def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse
 
 class CustomLoginView(LoginView):
     form_class: Type[CustomLoginForm] = CustomLoginForm
-
 
 
 def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:

@@ -8,11 +8,17 @@
 
 <form method="post" action="{% url 'account_add_data' %}">
     {% csrf_token %}
-    <label for=year_of_birth>Year of Birth</label>
-    <input id=year_of_birth name=year_of_birth type=text value="{{ user.year_of_birth }}"></input>
+    <label for=display_name class="text-sm text-grey-600 basis-1/2">Your name</label>
+    <input id=display_name name=display_name type=text value="{{ user.display_name }}">
     <br/>
-    <label for=user.post_code>Postcode</label>
-    <input id=user.post_code name=post_code type=text value="{{ user.post_code.code }}"></input>
+    <label for=year_of_birth>Year of Birth</label>
+    <input id=year_of_birth name=year_of_birth type=text value="{{ user.year_of_birth }}">
+    <br/>
+    <label for=post_code>Postcode</label>
+    <input id=post_code name=post_code type=text value="{{ user.post_code.code }}">
+    <br/>
+    <label for=organisation>Organisation</label>
+    <input id=organisation name=organisation type=text value="{{ user.organisation }}">
     <br/>
     <button type="submit">Update</button>
 </form>

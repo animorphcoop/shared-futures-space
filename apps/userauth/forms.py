@@ -57,8 +57,10 @@ class CustomUserLoginForm(LoginForm):
 
 
 class CustomUserPersonalForm(forms.Form):
+    display_name = forms.CharField(max_length=50)
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
+    organisation = forms.CharField(max_length=50)
 
 
 class CustomLoginForm(LoginForm):

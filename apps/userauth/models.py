@@ -19,6 +19,10 @@ class Organisation(models.Model):
     link: models.URLField = models.URLField()
 
 
+    def __str__(self):
+            return self.name
+
+
 class CustomUser(AbstractUser):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     first_name: None = None
