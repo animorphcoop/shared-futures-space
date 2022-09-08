@@ -115,22 +115,6 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
         context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
-#class ProjectChatView(ChatView):
-#    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-#        project = Project.objects.get(slug=slug)
-#        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]),
-#                            members = [membership.user for membership
-#                                       in ProjectMembership.objects.filter(project=project)])
-#    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-#        project = Project.objects.get(slug=kwargs['slug'])
-#        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]),
-#                                           members = [membership.user for membership
-#                                                      in ProjectMembership.objects.filter(project=project)])
-#        context['project'] = project
-#        context['user_anonymous_message'] = '(you must sign in to contribute)'
-#        context['not_member_message'] = '(you must be a member of this project to contribute)'
-#        return context
-
 class EnvisionView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         Project.objects.get(slug = slug).start_plan() # TODO TESTING PURPOSES ONLY
