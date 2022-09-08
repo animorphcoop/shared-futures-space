@@ -4,10 +4,14 @@
 
 {% block content %}
 
-    {% block title %}{% include "partials/title.html" with title="Confrm your email" %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title="Check your email" %}{% endblock %}
 
+    <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+        We've sent a message to the email you provided with a link to activate your account.
+    </p>
 
-    <p>Confirmation email has just been sent to you! Please click the link in the email you will receive shortly. If you can’t find the
-        email please check your spam folder.</p>
+    <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+        Didn't get an email? Check your spam folder!
+    </p>
 
 {% endblock %}

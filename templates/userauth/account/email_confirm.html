@@ -8,19 +8,22 @@
 
 
 {% block content %}
-    {% block title %}{% include "partials/title.html" with title="Confirm E-mail Address" %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title="Confirm e-mail address" %}{% endblock %}
 
     {% if confirmation %}
 
-
-
         {% user_display confirmation.email_address.user as user_display %}
 
-        <p> Please confirm that you registered with us an e-mail address starting with: {{ user_display }}</p>
+        <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+            Please confirm that you registered for a Shared Futures account using an e-mail address starting with “{{ user_display }}”
+        </p>
 
-        <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+        <form class="px-4" method="post" action="{% url 'account_confirm_email' confirmation.key %}">
             {% csrf_token %}
-            <button type="submit">Confirm</button>
+            <button type="submit"
+            class="inline-block mb-2 bg-yellow px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light">
+                Confirm
+            </button>
         </form>
 
     {% else %}
