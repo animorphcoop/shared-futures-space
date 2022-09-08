@@ -90,8 +90,9 @@ module.exports = {
                 incorrect:'#fe2712',
             },
             fontSize: {
-                'xxxs': ['0.5625em', '0.5625em'],
-                'xxs': ['0.625em', '0.625em']
+                'xxxs': ['0.5625rem', '0.5625rem'],
+                'xxs': ['0.625rem', '0.625rem'],
+                '22': ['1.375rem', '1.75rem']
             },
             spacing: {
                 '4.5': ['1.125em']
@@ -105,7 +106,8 @@ module.exports = {
             'kanit-500': ['Kanit_Medium', 'sans-serif'],
             'kanit-600': ['Kanit_SemiBold', 'sans-serif'],
             'kanit-700': ['Kanit_Bold', 'sans-serif'],
-            'body': ['EB_Garamond_Regular', 'serif']
+            'body': ['EB_Garamond_Regular', 'serif'],
+            'garamond-500': ['EB_Garamond_Medium', 'serif']
         },
 
     },

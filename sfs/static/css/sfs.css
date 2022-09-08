@@ -5,6 +5,12 @@
 }
 
 @font-face {
+    font-family: 'EB_Garamond_Medium';
+    src: url('../fonts/EBGaramond-Medium.ttf') format('truetype');
+    font-weight: 500;
+}
+
+@font-face {
     font-family: 'Kanit_Regular';
     src: url('../fonts/Kanit-Regular.ttf') format('truetype');
     font-weight: 400;
