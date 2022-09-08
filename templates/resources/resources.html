@@ -1,15 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Resources{% endblock %}
-
 {% block extra_css %}
 
 {% endblock extra_css %}
 
 {% block content %}
     <section>
-        <h1 class="font-kanit-500 text-purple text-xl px-4 py-3.5">Resources</h1>
+        {% block title %}{% include "partials/title.html" with title="Resources" %}{% endblock %}
         {% include 'resources/partials/search.html' %}
     </section>
     <section>
