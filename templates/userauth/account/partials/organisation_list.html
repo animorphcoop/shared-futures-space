@@ -1,0 +1,45 @@
+<section>
+    <section>
+        <h2 class="text-2xl">Is your organisation already in our system?</h2>
+    </section>
+
+    <div>
+        <h3 class="text-1xl uppercase">Organisations</h3>
+        <ul>
+            {% for organisation in organisations %}
+                <li>
+                    <button onclick="selectOrganisation(this.innerHTML)"
+                            class="inline-block px-4 py-3.5 bg-white hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium text-xxs tracking-widest rounded-full">{{ organisation }}
+                    </button>
+                </li>
+            {% endfor %}
+        </ul>
+        <button onclick="submitOrganisation()"
+                class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">Done
+        </button>
+
+    </div>
+</section>
+
+<script>
+
+    let selectedOrganisation = ''
+
+    function selectOrganisation(orgName){
+        selectedOrganisation = orgName
+    }
+
+    function submitOrganisation(){
+        console.log(`Selected ${selectedOrganisation}`)
+        const organisationInput = document.getElementById("organisation")
+        organisationInput.type="text"
+        organisationInput.value = selectedOrganisation
+        organisationInput.disabled = true
+        organisationInput.classList.add('cursor-not-allowed')
+        const organisationInputLabel = document.getElementById("organisation-label")
+
+        organisationInputLabel.innerHTML = 'Your organisation:'
+        //TODO: Insert input after the label!
+        organisationInput.insertAfter(organisationInputLabel)
+    }
+</script>

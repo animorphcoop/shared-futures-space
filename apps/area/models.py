@@ -28,7 +28,6 @@ class PostCode(models.Model):
         # normalise different ways of writing the postcode - TODO: carrying cleaning on the frontend & view
         #m = re.match(r'([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)\s?([0-9][a-zA-Z]{2})', self.code)
         if not self.area:
-            print('are you trying?')
             #self.code = m.group(1).upper() + ' ' + m.group(2).upper()
             self.area = Area.objects.get_or_create(name='Other')[0]
             return super().save(*args, **kwargs) # pyre-ignore[6]

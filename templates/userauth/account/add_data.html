@@ -4,27 +4,34 @@
 {% block content %}
     {% block title %}{% include "partials/title.html" with title="Add data" %}{% endblock %}
 
-<h1>Add relevant data to your account</h1>
+    <h1>Add relevant data to your account</h1>
 
-<form method="post" action="{% url 'account_add_data' %}">
-    {% csrf_token %}
-    <label for=display_name class="text-sm text-grey-600 basis-1/2">Your name</label>
-    <input id=display_name name=display_name type=text value="{{ user.display_name }}">
+    <form method="post" action="{% url 'account_add_data' %}">
+        {% csrf_token %}
+        <label for=display_name class="text-sm text-grey-600 basis-1/2">Your name</label>
+        <input id=display_name name=display_name type=text placeholder="Your name" value="">
+        <br/>
+        <label for=year_of_birth>Year of Birth</label>
+        <input id=year_of_birth name=year_of_birth type=text placeholder="Year you were born" value="">
+        <br/>
+        <label for=post_code>Postcode</label>
+        <input id=post_code name=post_code type=text placeholder="Your postcode" value="">
+        <br/>
+        {% comment %}    <label for=organisation>Organisation</label>
+    <input id=organisation name=organisation type=text value="">
+    <br/>{% endcomment %}
+        <input type="checkbox" id="organisation" name="organisation" value="">
+        <label id="organisation-label" for="organisation">Are you a part of an organisation?</label>
+        <div class="mb-4">
+            <button type="submit">Update</button>
+        </div>
+    </form>
     <br/>
-    <label for=year_of_birth>Year of Birth</label>
-    <input id=year_of_birth name=year_of_birth type=text value="{{ user.year_of_birth }}">
-    <br/>
-    <label for=post_code>Postcode</label>
-    <input id=post_code name=post_code type=text value="{{ user.post_code.code }}">
-    <br/>
-    <label for=organisation>Organisation</label>
-    <input id=organisation name=organisation type=text value="{{ user.organisation }}">
-    <br/>
-    <button type="submit">Update</button>
-</form>
-<br/>
+    <div id="" class="">
+        {% include 'userauth/account/partials/organisation_list.html' %}
+    </div>
 
-<br/>
+    <br/>
 
 
 

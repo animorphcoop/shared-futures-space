@@ -45,6 +45,13 @@ class CustomUserPersonalView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
+
+    def get_context_data(self, **kwargs):
+        context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
+        context['organisations'] = Organisation.objects.all()
+        return context
+
+
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
         form = CustomUserPersonalForm(request.POST)
@@ -58,11 +65,13 @@ class CustomUserPersonalView(TemplateView):
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
                 current_user.post_code = \
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
-                current_user.organisation = \
-                    Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
+                print(form.cleaned_data.get('organisation'))
+                if form.cleaned_data.get('organisation') is not None:
+                    current_user.organisation = \
+                        Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
 
-                current_user.added_data = True
-                current_user.save()
+                # current_user.added_data = True
+                # current_user.save()
                 return HttpResponseRedirect(reverse_lazy('dashboard'))
             else:
                 return HttpResponseRedirect(reverse('account_add_data'))
