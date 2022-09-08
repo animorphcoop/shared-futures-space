@@ -14,31 +14,27 @@
 
     {% block title %}{% include "partials/title.html" with title="Log in" %}{% endblock %}
 
-    <div class="w-full max-w-xs">
         <form class="" method="POST" action="{% url 'account_login' %}">
             {% csrf_token %}
 
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">
+            <div class="pt-4 px-4 pb-9">
+                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
                     Email
                 </label>
-                {% render_field form.login id="email-input" onfocusout="processEmailValue()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %}
+                {% render_field form.login id="email-input" onfocusout="processEmailValue()" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
 
                 {% comment %}controlled via js/ts{% endcomment %}
-                <span id="email-feedback" class="hidden text-purple-600">Enter a valid email address.</span>
-
+                <span id="email-feedback" class="hidden block text-incorrect font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
             </div>
 
-
-            <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2">
+            <div class="px-4 pb-9">
+                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
                     Password
                 </label>
-                {% render_field form.password id="password-input" class="shadow appearance-none border border-red-100 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %}
+                {% render_field form.password id="password-input" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
             </div>
 
             {% if form.non_field_errors %}
-
                 <div class="border-2 rounded-lg mt-2 mb-2">
                     {% for error in form.non_field_errors %}
                         <span>{{ error }}</span>
@@ -46,27 +42,28 @@
                 </div>
             {% endif %}
 
-
-            <div class="items-center">
-                <a class="block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 pb-6"
-                   href="{% url 'account_reset_password' %}">Forgot Password? -></a>
+            <div class="px-4 pb-9">
                 <button id="submit-button" disabled
-                        class="cursor-not-allowed block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
-                        type="submit">Log in
+                    class="cursor-not-allowed inline-block px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light"
+                    type="submit">Log in
                 </button>
-
             </div>
 
-        </form>
-    </div>
+            <a href="{% url 'account_reset_password' %}"
+               class="flex items-center px-4 uppercase font-kanit-400 font-medium text-xxxs tracking-widest text-black-text">
+                <p class="inline-block pr-1.5">Forgotten password?</p>
+                <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z" fill="#9759FF"/>
+                </svg>
+            </a>
 
+        </form>
 
     <div>
         <div class="border-2 rounded-lg mt-2 mb-2">
             {% comment %}TODO: Should this be partials to keep things consistent?{% endcomment %}
             {% include "socialaccount/partials/provider_list.html" with process="login" %}
         </div>
-
         <div class="border-2 rounded-lg mt-2 mb-2">
             <p class="text-lg">Don't have an account yet?
                 <button class="block"><a href="{{ signup_url }}"
@@ -76,13 +73,8 @@
         </div>
     </div>
 
-
-
-
     {% block scripts %}
         <script src="{% static 'js/auth-helper.js' %}"></script>
     {% endblock %}
-
-
 
 {% endblock %}

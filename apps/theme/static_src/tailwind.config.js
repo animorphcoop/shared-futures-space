@@ -62,11 +62,12 @@ module.exports = {
                 },
                 gray: {
                     lightest: '#DCDCDC',
-                    light: '#9C9C9C',
+                    light: 'rgba(240, 240, 240, 1)',
                     DEFAULT: 'rgba(0, 0, 0, 0.5)', //#777777
                 },
                 black: {
                     DEFAULT: '#000000',
+                    meta: 'rgba(0, 0, 0, 0.30);',
                     text: 'rgba(0, 0, 0, 0.75);',
                 },
                 purple: {
@@ -91,6 +92,9 @@ module.exports = {
             spacing: {
                 '4.5': ['1.125em']
             },
+            boxShadow: {
+                'input': '0px 1px 1px 0px rgba(0, 0, 0, 0.15) inset'
+            }
         },
         fontFamily: {
             'kanit-400': ['Kanit_Regular', 'sans-serif'],
