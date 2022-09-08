@@ -1316,6 +1316,10 @@ select {
   padding-bottom: 3.5rem;
 }
 
+.pb-7 {
+  padding-bottom: 1.75rem;
+}
+
 .text-center {
   text-align: center;
 }
