@@ -2,18 +2,18 @@
 
 {% get_providers as socialaccount_providers %}
 
-<section>
+<section class="bg-gradient-to-b from-blue-second to-white flex flex-col items-center">
+    <h2 class="pt-10 mx-auto inline-block pb-8 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">Alternatively</h2>
 
-    <p class="uppercase text-center">Alternatively</p>
-
-    <ul class="flex items-center justify-center">
+    <ul class="flex justify-evenly w-full pb-14">
         {% for provider in socialaccount_providers %}
             <li>
-                <p class="inline-block mx-4 px-4 mt-2 bg-orange-300 rounded-full hover:bg-opacity-50">
-
-                    <a title="{{ provider.name }}" class="text-morph uppercase tracking-wide font-semibold"
-                       href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{ provider.name }}</a>
-                </p>
+                <a title="Log in with {{ provider.name }}"
+                    href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+                    class="flex items-center text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest">
+                    <span>Log in with {{ provider.name }}</span>
+{#                    Call the provider.logo instead of the name, saved logo svgs in local.py but not sure how to get it #}
+                </a>
             </li>
         {% endfor %}
     </ul>

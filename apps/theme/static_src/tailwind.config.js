@@ -74,6 +74,7 @@ module.exports = {
                     DEFAULT: '#9759FF',
                 },
                 blue: {
+                    second: 'rgba(229, 241, 248, 1)',
                     pale: '#EAF3F9',
                     done: '#93FFE0',
                 },
@@ -81,6 +82,9 @@ module.exports = {
                     one: '#CEDFF2',
                     two: '#C4F5F8',
                     three: '#DFF5F6',
+                },
+                yellow: {
+                    DEFAULT: 'rgba(255, 250, 142, 1)',
                 },
                 correct: '#228b22',
                 incorrect:'#fe2712',

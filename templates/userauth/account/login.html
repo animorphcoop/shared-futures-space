@@ -14,63 +14,64 @@
 
     {% block title %}{% include "partials/title.html" with title="Log in" %}{% endblock %}
 
-        <form class="" method="POST" action="{% url 'account_login' %}">
-            {% csrf_token %}
+    <form class="" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
 
-            <div class="pt-4 px-4 pb-9">
-                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                    Email
-                </label>
-                {% render_field form.login id="email-input" onfocusout="processEmailValue()" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
-
-                {% comment %}controlled via js/ts{% endcomment %}
-                <span id="email-feedback" class="hidden block text-incorrect font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
+        {% if form.non_field_errors %}
+            <div class="mx-4 mb-4 font-body bg-red-100">
+                {% for error in form.non_field_errors %}
+                    <p class="px-4 py-3">{{ error }}</p>
+                {% endfor %}
             </div>
+        {% endif %}
 
-            <div class="px-4 pb-9">
-                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                    Password
-                </label>
-                {% render_field form.password id="password-input" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
-            </div>
+        <div class="pt-4 px-4 pb-9">
+            <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                Email
+            </label>
+            {% render_field form.login id="email-input" onfocusout="processEmailValue()" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
 
-            {% if form.non_field_errors %}
-                <div class="border-2 rounded-lg mt-2 mb-2">
-                    {% for error in form.non_field_errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-            {% endif %}
+            {% comment %}controlled via js/ts{% endcomment %}
+            <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
+        </div>
 
-            <div class="px-4 pb-9">
-                <button id="submit-button" disabled
-                    class="cursor-not-allowed inline-block px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light"
+        <div class="px-4 pb-9">
+            <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                Password
+            </label>
+            {% render_field form.password id="password-input" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
+        </div>
+
+        <div class="px-4 pb-9">
+            <button id="submit-button" disabled
+                    class="cursor-not-allowed inline-block px-4 py-3.5 transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-yellow disabled:bg-gray-light"
                     type="submit">Log in
-                </button>
-            </div>
-
-            <a href="{% url 'account_reset_password' %}"
-               class="flex items-center px-4 uppercase font-kanit-400 font-medium text-xxxs tracking-widest text-black-text">
-                <p class="inline-block pr-1.5">Forgotten password?</p>
-                <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z" fill="#9759FF"/>
-                </svg>
-            </a>
-
-        </form>
-
-    <div>
-        <div class="border-2 rounded-lg mt-2 mb-2">
-            {% comment %}TODO: Should this be partials to keep things consistent?{% endcomment %}
-            {% include "socialaccount/partials/provider_list.html" with process="login" %}
+            </button>
         </div>
-        <div class="border-2 rounded-lg mt-2 mb-2">
-            <p class="text-lg">Don't have an account yet?
-                <button class="block"><a href="{{ signup_url }}"
-                                         class="font-semibold">Sign up</a>
-                </button>
-            </p>
-        </div>
+
+        <a href="{% url 'account_reset_password' %}"
+           class="flex items-center px-4 pb-9 uppercase font-kanit-400 text-xxxs tracking-widest text-black-text">
+            <p class="inline-block pr-1.5">Forgotten password?</p>
+            <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z" fill="#9759FF"/>
+            </svg>
+        </a>
+
+    </form>
+
+
+    {% comment %}TODO: Should this be partials to keep things consistent?{% endcomment %}
+    {% include "socialaccount/partials/provider_list.html" with process="login" %}
+
+    <div class="bg-blue-second text-center">
+        <h2 class="pt-4 pb-4 uppercase font-kanit-400 text-xxxs tracking-widest text-black-text">
+            Need a Shared Futures account?
+        </h2>
+        <a href="{{ signup_url }}"
+           class="inline-block mb-2 bg-yellow px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light">
+            Sign up
+        </a>
     </div>
 
     {% block scripts %}
