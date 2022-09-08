@@ -35,6 +35,10 @@ class ProjectView(DetailView): # pyre-ignore[24]
                 ProjectMembership.objects.create(user=request.user, project=project, owner=False, champion=False)
                 print('!!! WARNING D !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
                 #send_system_message(project.chat, 'joined_project', context_project = project, context_user_a = request.user)
+        # TESTING PURPOSES ONLY!! TODO # # # # # # # # # #
+        if (request.POST['action'] == 'start_envision'): #
+            project.start_envision()                     #
+        # # # # # # # # # # # # # # # # # # # # # # # # #
         return super().get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
@@ -127,9 +131,38 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
 #        context['not_member_message'] = '(you must be a member of this project to contribute)'
 #        return context
 
+class EnvisionView(TemplateView):
+    def post(self, request: WSGIRequest, slug: str):
+        Project.objects.get(slug = slug).start_plan() # TODO TESTING PURPOSES ONLY
+        return super().get(request, slug)
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['project'] = Project.get(slug = slug)
+        return ctx
 
+class PlanView(TemplateView):
+    def post(self, request: WSGIRequest, slug: str):
+        Project.objects.get(slug = slug).start_act() # TODO TESTING PURPOSES ONLY
+        return super().get(request, slug)
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['project'] = Project.get(slug = slug)
+        return ctx
 
+class ActView(TemplateView):
+    def post(self, request: WSGIRequest, slug: str):
+        Project.objects.get(slug = slug).start_reflect() # TODO TESTING PURPOSES ONLY
+        return super().get(request, slug)
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['project'] = Project.get(slug = slug)
+        return ctx
 
+class ReflectView(TemplateView):
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['project'] = Project.get(slug = slug)
+        return ctx
 
 
 

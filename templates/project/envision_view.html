@@ -1,0 +1,6 @@
+
+envision view
+
+{% if project.current_stage == project.Stage.ENVISION %}
+  <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Plan Stage</button></form>
+{% endif %}

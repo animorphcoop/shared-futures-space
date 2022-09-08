@@ -20,3 +20,20 @@
   {% endif %}
  </form>
 {% endif %}
+<!-- TESTING PURPOSES ONLY -->
+{% if object.current_stage is None %}
+  <form method=POST>{% csrf_token %}<button name='action' value='start_envision'>[TESTING] Start Envision Stage</button></form>
+{% endif %}
+<!-- -->
+{% if object.envision_stage is not None %}
+  <p><a href="{% url 'view_envision' object.slug %}">Envision Stage</a></p>
+{% endif %}
+{% if object.plan_stage is not None %}
+  <p><a href="{% url 'view_plan' object.slug %}">Plan Stage</a></p>
+{% endif %}
+{% if object.act_stage is not None %}
+  <p><a href="{% url 'view_act' object.slug %}">Act Stage</a></p>
+{% endif %}
+{% if object.reflect_stage is not None %}
+  <p><a href="{% url 'view_reflect' object.slug %}">Reflect Stage</a></p>
+{% endif %}
