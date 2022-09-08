@@ -132,36 +132,36 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
 #        return context
 
 class EnvisionView(TemplateView):
-    def post(self, request: WSGIRequest, slug: str):
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         Project.objects.get(slug = slug).start_plan() # TODO TESTING PURPOSES ONLY
         return super().get(request, slug)
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(*args, **kwargs)
-        ctx['project'] = Project.get(slug = slug)
+        ctx['project'] = Project.objects.get(slug = self.kwargs['slug'])
         return ctx
 
 class PlanView(TemplateView):
-    def post(self, request: WSGIRequest, slug: str):
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         Project.objects.get(slug = slug).start_act() # TODO TESTING PURPOSES ONLY
         return super().get(request, slug)
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(*args, **kwargs)
-        ctx['project'] = Project.get(slug = slug)
+        ctx['project'] = Project.objects.get(slug = self.kwargs['slug'])
         return ctx
 
 class ActView(TemplateView):
-    def post(self, request: WSGIRequest, slug: str):
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         Project.objects.get(slug = slug).start_reflect() # TODO TESTING PURPOSES ONLY
         return super().get(request, slug)
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(*args, **kwargs)
-        ctx['project'] = Project.get(slug = slug)
+        ctx['project'] = Project.objects.get(slug = self.kwargs['slug'])
         return ctx
 
 class ReflectView(TemplateView):
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(*args, **kwargs)
-        ctx['project'] = Project.get(slug = slug)
+        ctx['project'] = Project.objects.get(slug = self.kwargs['slug'])
         return ctx
 
 

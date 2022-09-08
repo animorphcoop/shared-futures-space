@@ -90,11 +90,11 @@ class Project(ClusterableModel):
         return super().save(*args, **kwargs)
     def start_envision(self) -> None:
         if self.current_stage is None:
-            self.current_stage = self.Stage.ENVISION # pyre-ignore[10]
+            self.current_stage = self.Stage.ENVISION
             self.envision_stage = EnvisionStage.objects.create()
             self.save()
     def start_plan(self) -> None:
-        if True: # self.current_stage == self.Stage.ENVISION:
+        if self.current_stage == self.Stage.ENVISION:
             self.current_stage = self.Stage.PLAN
             self.plan_stage = PlanStage.objects.create()
             # for testing purposes ONLY # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -113,7 +113,7 @@ class Project(ClusterableModel):
             self.plan_stage.save()
             self.save()
     def start_act(self) -> None:
-        if True: #self.current_stage == self.Stage.PLAN:
+        if self.current_stage == self.Stage.PLAN:
             print(self.plan_stage.general_poll.closed)
             if (self.plan_stage.general_poll is None or not self.plan_stage.general_poll.closed or
                 self.plan_stage.funding_poll is None or not self.plan_stage.funding_poll.closed or

@@ -1,5 +1,5 @@
 plan view
 
-{% if project.current_stage == project.Stage.PLAN %}
+{% if object.current_stage == object.Stage.PLAN %}
   <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Act Stage</button></form>
 {% endif %}
