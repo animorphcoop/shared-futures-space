@@ -7,7 +7,7 @@ from uuid import uuid4
 
 from userauth.models import CustomUser # pyre-ignore[21]
 
-from typing import List
+from typing import List, Dict
 
 def validate_poll_options(value: List[str]) -> bool:
     if type(value) == list and all(map(lambda x: type(x) == str, value)):
@@ -22,6 +22,13 @@ class Poll(models.Model):
     voter_num: models.PositiveIntegerField = models.PositiveIntegerField()
     expires: models.DateTimeField = models.DateTimeField()
     closed: models.BooleanField = models.BooleanField(default = False)
+    @property
+    def current_results(self) -> Dict[str,List[CustomUser]]: # pyre-ignore[11]
+        votes = Vote.objects.filter(poll = self)
+        results = {self.options[n-1] if n != 0 else 'poll is wrong':[] for n in range(len(self.options) + 1)}
+        for vote in votes:
+            results[self.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
+        return results
     def check_closed(self) -> bool:
         if self.closed:
             print('already closed')

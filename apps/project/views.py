@@ -115,6 +115,40 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
         context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
+class ProjectChatView(ChatView): # pyre-ignore[11]
+    def get_chat(self, project: Project, stage: str, topic: str) -> Chat: # pyre-ignore[11]
+        if stage == 'envision':
+            chat = project.envision_stage.chat
+        elif stage == 'plan':
+            if topic == 'general':
+                chat = project.plan_stage.general_chat
+            elif topic == 'funding':
+                chat = project.plan_stage.funding_chat
+            elif topic == 'location':
+                chat = project.plan_stage.location_chat
+            elif topic == 'dates':
+                chat = project.plan_stage.dates_chat
+        elif stage == 'act':
+            if topic == 'general':
+                chat = project.act_stage.general_chat
+            elif topic == 'funding':
+                chat = project.act_stage.funding_chat
+            elif topic == 'location':
+                chat = project.act_stage.location_chat
+            elif topic == 'dates':
+                chat = project.act_stage.dates_chat
+        elif stage == 'reflect':
+            chat = project.reflect_stage.chat
+        return chat # pyre-ignore[61]
+    def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
+        project = Project.objects.get(slug = slug)
+        chat = self.get_chat(project, stage, topic)
+        return super().post(request, chat = chat, url = request.get_full_path(), members = list(map(lambda x: x.user, ProjectMembership.objects.filter(project = project)))) # pyre-ignore[16]
+    def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
+        project = Project.objects.get(slug = slug)
+        ctx = super().get_context_data(chat = self.get_chat(project, stage, topic), url = self.request.get_full_path(), members = list(map(lambda x: x.user, ProjectMembership.objects.filter(project = project)))) # pyre-ignore[16]
+        return ctx
+
 class EnvisionView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         Project.objects.get(slug = slug).start_plan() # TODO TESTING PURPOSES ONLY

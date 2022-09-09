@@ -1,6 +1,8 @@
 
-envision view
+<h1>envision view</h1>
 
-{% if object.current_stage == object.Stage.ENVISION %}
+<p><a href="{% url 'project_chat' project.slug 'envision' 'general' %}">Envision Chat</a></p>
+
+{% if project.current_stage == project.Stage.ENVISION %}
   <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Plan Stage</button></form>
 {% endif %}

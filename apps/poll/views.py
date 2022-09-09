@@ -22,16 +22,14 @@ class PollView(TemplateView):
                 choice = 0
             [v.delete() for v in Vote.objects.filter(poll = poll, user = request.user)] # remove previous vote if there is one
             Vote.objects.create(poll = poll, user = request.user, choice = choice)
-        return HttpResponseRedirect(reverse('poll_view', args=[uuid]))
+            poll.check_closed()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     def get_context_data(self, uuid: UUID, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(**kwargs)
         poll = Poll.objects.get(uuid = uuid)
         votes = Vote.objects.filter(poll = poll)
-        results = {poll.options[n-1] if n != 0 else 'poll is wrong':[] for n in range(len(poll.options) + 1)}
-        for vote in votes:
-            results[poll.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
         ctx['poll_name'] = poll.question
-        ctx['poll_results'] = results
+        ctx['poll_results'] = poll.current_results
         ctx['poll_closed'] = poll.check_closed()
         ctx['poll_expires'] = poll.expires
         return ctx
