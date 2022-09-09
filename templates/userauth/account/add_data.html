@@ -2,40 +2,43 @@
 {% comment %}/account/add_data.html{% endcomment %}
 
 {% block content %}
-{% comment %}    <div x-init="console.log('I\'m being initialized!')"></div>{% endcomment %}
+    {% comment %}    <div x-init="console.log('I\'m being initialized!')"></div>{% endcomment %}
 
     {% block title %}{% include "partials/title.html" with title="Add data" %}{% endblock %}
-    <div x-data="{ open: false }">
 
-        <h1>Add relevant data to your account</h1>
+    <h1>Add relevant data to your account</h1>
 
-        <form method="post" action="{% url 'account_add_data' %}">
-            {% csrf_token %}
-            <label for=display_name class="text-sm text-grey-600 basis-1/2">Your name</label>
-            <input id=display_name name=display_name type=text placeholder="Your name" value="">
-            <br/>
-            <label for=year_of_birth>Year of Birth</label>
-            <input id=year_of_birth name=year_of_birth type=text placeholder="Year you were born" value="">
-            <br/>
-            <label for=post_code>Postcode</label>
-            <input id=post_code name=post_code type=text placeholder="Your postcode" value="">
-            <br/>
-            {% comment %}    <label for=organisation>Organisation</label>
-    <input id=organisation name=organisation type=text value="">
-    <br/>{% endcomment %}
-            <input type="checkbox" x-on:click="open = ! open" id="organisation" name="organisation" value="">
-            <label id="organisation-label" class="text-sm" for="organisation">Are you a part of an organisation?</label>
-            <div class="mb-4">
-                <button type="submit">Update</button>
-            </div>
-        </form>
+    <form method="post" action="{% url 'account_add_data' %}">
+        {% csrf_token %}
+        <label for=display_name class="text-sm text-grey-600 basis-1/2">Your name</label>
+        <input id=display_name name=display_name type=text placeholder="Your name" value="">
         <br/>
-        <div id="" x-show="open">
-            {% include 'userauth/account/partials/organisation_list.html' %}
+        <label for=year_of_birth>Year of Birth</label>
+        <input id=year_of_birth name=year_of_birth type=text placeholder="Year you were born" value="">
+        <br/>
+        <label for=post_code>Postcode</label>
+        <input id=post_code name=post_code type=text placeholder="Your postcode" value="">
+        <br/>
+        <div id="organisation-data" class="hidden">
+            <label for="organisation">Your organisation:</label>
+            <input id="organisation" name="organisation" type=text value=" ">
+        </div>
+        <div id="organisation-starter" class="">
+            <input type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
+            <label id="organisation-label" class="text-sm" for="organisation-checkbox">Are you a part of an
+                organisation?</label>
+        </div>
+        <div class="mb-4">
+            <button type="submit">Update</button>
         </div>
 
-        <br/>
-
-
+    </form>
+    <br/>
+    <div id="organisation-list" class="hidden">
+        {% include 'userauth/account/partials/organisation_list.html' %}
     </div>
+
+    <br/>
+
+
 {% endblock %}

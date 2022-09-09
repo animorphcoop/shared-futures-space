@@ -1,4 +1,4 @@
-# TODO: They could be loaded via upload_conf
+# TODO: They would be loaded via upload_conf with locations
 active_postcodes = ['BT48', 'BT48', 'BT17', 'BT12', 'BT7', 'BT4', 'BT15', 'WD23']
 
 # TODO: make sure on the front the post code is no shorter than 3chars

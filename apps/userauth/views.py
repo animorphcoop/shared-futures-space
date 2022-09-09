@@ -45,35 +45,33 @@ class CustomUserPersonalView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
-
     def get_context_data(self, **kwargs):
         context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
         context['organisations'] = Organisation.objects.all()
         return context
 
-
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
         form = CustomUserPersonalForm(request.POST)
+        print(form.is_valid())
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         else:
             if form.is_valid():
+                print(form.cleaned_data)
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
                 current_user.post_code = \
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
-                print(form.cleaned_data.get('organisation'))
-                if form.cleaned_data.get('organisation') is not None:
-                    current_user.organisation = \
-                        Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
-
-                # current_user.added_data = True
-                # current_user.save()
+                current_user.organisation = \
+                    Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
+                current_user.added_data = True
+                current_user.save()
                 return HttpResponseRedirect(reverse_lazy('dashboard'))
             else:
+                print("most often missing fields - request data: ", request.POST)
                 return HttpResponseRedirect(reverse('account_add_data'))
 
 
