@@ -34,15 +34,17 @@ def invoke_action(action: Action) -> None: # pyre-ignore[11]
         if not membership.owner:
             membership.owner = True
             membership.save()
-            send_system_message(action.param_project.chat, 'new_owner',
-                                context_user_a = action.receiver, context_user_b = action.creator)
+            print('!!! WARNING B !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+            #send_system_message(action.param_project.chat, 'new_owner',
+            #                    context_user_a = action.receiver, context_user_b = action.creator)
     elif (action.kind == 'become_champion'):
         membership = ProjectMembership.objects.get(user=action.receiver, project=action.param_project)
         if not membership.champion:
             membership.champion = True
             membership.save()
-            send_system_message(action.param_project.chat, 'new_champion',
-                                context_user_a = action.receiver, context_user_b = action.creator)
+            print('!!! WARNING A !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+            #send_system_message(action.param_project.chat, 'new_champion',
+            #                    context_user_a = action.receiver, context_user_b = action.creator)
     elif (action.kind.startswith('user_request_')):
         # TODO: actions have the option to automatically do the thing based on info given by user
         #if (action.kind == 'user_request_make_editor'):

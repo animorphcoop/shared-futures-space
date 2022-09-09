@@ -7,7 +7,6 @@
 <hr>
 <p>{{object.description}}</p>
 <hr>
-<p><a href="{% url 'project_chat' object.slug %}">Project Chat</a></p>
 {% if request.user in owners|attrmap:'user' %}
  <p><a href="{% url 'edit_project' object.slug %}">Edit Project</a></p>
  <p><a href="{% url 'manage_project' object.slug %}">Manage Project</a></p>
@@ -20,4 +19,21 @@
    <button name=action value=join>join project</button>
   {% endif %}
  </form>
+{% endif %}
+<!-- TESTING PURPOSES ONLY -->
+{% if object.current_stage is None %}
+  <form method=POST>{% csrf_token %}<button name='action' value='start_envision'>[TESTING] Start Envision Stage</button></form>
+{% endif %}
+<!-- -->
+{% if object.envision_stage is not None %}
+  <p><a href="{% url 'view_envision' object.slug %}">Envision Stage</a></p>
+{% endif %}
+{% if object.plan_stage is not None %}
+  <p><a href="{% url 'view_plan' object.slug %}">Plan Stage</a></p>
+{% endif %}
+{% if object.act_stage is not None %}
+  <p><a href="{% url 'view_act' object.slug %}">Act Stage</a></p>
+{% endif %}
+{% if object.reflect_stage is not None %}
+  <p><a href="{% url 'view_reflect' object.slug %}">Reflect Stage</a></p>
 {% endif %}

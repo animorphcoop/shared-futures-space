@@ -1,11 +1,15 @@
 <h1>{{ poll_name }}</h1>
-expires: {{ poll_expires }}
+{% if poll_closed %}
+ POLL CLOSED
+{% else %}
+ expiry date: {{ poll_expires }}
+{% endif %}
 <table>
 {% for name, count in poll_results.items %}
   <tr>
     <td>{{ name }}</td>
     <td>{{ count }}</td>
-    {% if request.user.is_active %}
+    {% if request.user.is_active and not poll_closed %}
       <td><form method=POST><button>vote</button><input type=hidden name=choice value="{{ name }}"></input>{% csrf_token %}</form></td>
     {% endif %}
   <tr>
