@@ -14,9 +14,13 @@
 
         {% user_display confirmation.email_address.user as user_display %}
 
+<<<<<<< HEAD
         <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
             Please confirm that you registered for a Shared Futures account using an e-mail address starting with “{{ user_display }}”
         </p>
+=======
+        <p> Please confirm that you registered with us an e-mail address {{ user_display }}</p>
+>>>>>>> 4b6260c0dbef0d66b95062942a038172a08973a4
 
         <form class="px-4" method="post" action="{% url 'account_confirm_email' confirmation.key %}">
             {% csrf_token %}

@@ -1,25 +1,53 @@
 {% extends "account/base.html" %}
-
+{% comment %}/account/add_data.html{% endcomment %}
 
 {% block content %}
+    {% comment %}    <div x-init="console.log('I\'m being initialized!')"></div>{% endcomment %}
+
     {% block title %}{% include "partials/title.html" with title="Add data" %}{% endblock %}
 
-<h1>Add relevant data to your account</h1>
+    <h1>Add relevant data to your account</h1>
 
-<form method="post" action="{% url 'account_add_data' %}">
-    {% csrf_token %}
-    <label for=year_of_birth>Year of Birth</label>
-    <input id=year_of_birth name=year_of_birth type=text value="{{ user.year_of_birth }}"></input>
+    <form method="post" action="{% url 'account_add_data' %}">
+        {% csrf_token %}
+        <label for=display_name class="text-sm text-grey-600 basis-1/2">Your name</label>
+        <input id=display_name name=display_name type=text placeholder="Your name" value="">
+        <br/>
+        <label for=year_of_birth>Year of Birth</label>
+        <input id=year_of_birth name=year_of_birth type=text placeholder="Year you were born" value="">
+        <br/>
+        <label for=post_code>Postcode</label>
+        <input id=post_code name=post_code type=text placeholder="Your postcode" value="">
+        <br/>
+        <div id="organisation-data" class="hidden">
+            <label for="organisation">Your organisation:</label>
+            <input id="organisation" onfocus="blur()" name="organisation" type=text value="None">
+            <button onclick="event.preventDefault(); toggleOrganisations()"
+                    class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
+                Edit organisation
+            </button>
+
+        </div>
+        <div id="organisation-starter" class="">
+            <input type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
+            <label id="organisation-label" class="text-sm" for="organisation-checkbox">Are you a part of an
+                organisation?</label>
+        </div>
+        <div class="mb-4">
+            <button type="submit">SUBMIT</button>
+        </div>
+
+    </form>
     <br/>
-    <label for=user.post_code>Postcode</label>
-    <input id=user.post_code name=post_code type=text value="{{ user.post_code.code }}"></input>
+    <div id="organisation-list" class="hidden">
+        {% include 'userauth/account/partials/organisation_list.html' %}
+    </div>
+
+    <div id="organisation-name-enter" class="hidden">
+        {% include 'userauth/account/partials/organisation_name_enter.html' %}
+    </div>
+
     <br/>
-    <button type="submit">Update</button>
-</form>
-<br/>
-
-<br/>
-
 
 
 {% endblock %}

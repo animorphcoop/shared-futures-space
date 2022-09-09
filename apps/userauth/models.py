@@ -7,31 +7,39 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 from uuid import uuid4
 
-from messaging.models import Chat # pyre-ignore[21]
-from area.models import PostCode # pyre-ignore[21]
+from messaging.models import Chat  # pyre-ignore[21]
+from area.models import PostCode  # pyre-ignore[21]
 
 from typing import List, Optional, Any, Dict
 
+
 class Organisation(models.Model):
-    uuid: models.UUIDField = models.UUIDField(default = uuid4)
-    name: models.CharField = models.CharField(max_length = 100)
+    uuid: models.UUIDField = models.UUIDField(default=uuid4)
+    name: models.CharField = models.CharField(max_length=100)
     link: models.URLField = models.URLField()
+
+
+    def __str__(self):
+            return self.name
+
 
 class CustomUser(AbstractUser):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     first_name: None = None
     last_name: None = None
+    added_data: models.BooleanField = models.BooleanField(default=False)
     display_name: models.CharField = models.CharField(verbose_name=_("Display name"),
                                                       max_length=30, help_text=_("Will be shown alongside entries"),
                                                       null=True)
     year_of_birth: models.PositiveIntegerField = models.PositiveIntegerField(verbose_name=_("Year of birth"),
                                                                              validators=[MinValueValidator(1900)],
                                                                              null=True, blank=True)
-    post_code: models.ForeignKey = models.ForeignKey(PostCode, null = True, on_delete = models.SET_NULL)
+    post_code: models.ForeignKey = models.ForeignKey(PostCode, null=True, on_delete=models.SET_NULL)
     avatar: models.FileField = models.FileField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
 
     editor: models.BooleanField = models.BooleanField(default=False)  # is this user an editor
-    organisation: models.ForeignKey = models.ForeignKey(Organisation, default = None, null = True, on_delete = models.SET_NULL)
+    organisation: models.ForeignKey = models.ForeignKey(Organisation, default=None, null=True,
+                                                        on_delete=models.SET_NULL)
 
     class Meta:
         ordering: List[str] = ['display_name']
@@ -63,4 +71,3 @@ class UserPair(models.Model):
             self.user1.uuid = self.user2.uuid
             self.user2.uuid = swp
         return super().save(*args, **kwargs)  # pyre-ignore[6] destructuring arguments
-    

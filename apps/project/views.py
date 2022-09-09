@@ -28,11 +28,17 @@ class ProjectView(DetailView): # pyre-ignore[24]
             membership = ProjectMembership.objects.get(user=request.user, project=project)
             if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
                 membership.delete()
-                send_system_message(project.chat, 'left_project', context_project = project, context_user_a = request.user)
+                print('!!! WARNING C !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                # send_system_message(project.chat, 'left_project', context_project = project, context_user_a = request.user)
         if (request.POST['action'] == 'join'):
             if len(ProjectMembership.objects.filter(user=request.user, project=project)) == 0:
                 ProjectMembership.objects.create(user=request.user, project=project, owner=False, champion=False)
-                send_system_message(project.chat, 'joined_project', context_project = project, context_user_a = request.user)
+                print('!!! WARNING D !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                #send_system_message(project.chat, 'joined_project', context_project = project, context_user_a = request.user)
+        # TESTING PURPOSES ONLY!! TODO # # # # # # # # # #
+        if (request.POST['action'] == 'start_envision'): #
+            project.start_envision()                     #
+        # # # # # # # # # # # # # # # # # # # # # # # # #
         return super().get(request, slug)
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
@@ -70,7 +76,8 @@ class EditProjectView(UpdateView): # pyre-ignore[24]
                     my_membership = ProjectMembership.objects.get(project=project, user=request.user, owner=True)
                     my_membership.owner = False
                     my_membership.save()
-                    send_system_message(project.chat, 'lost_ownership', context_user_a = request.user)
+                    print('!!! WARNING E !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                    #send_system_message(project.chat, 'lost_ownership', context_user_a = request.user)
             project.name = request.POST['name']
             project.description = request.POST['description']
             project.save()
@@ -97,7 +104,8 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
             elif (request.POST['action'] == 'remove_championship'):
                 if membership.champion:
                     membership.champion = False
-                    send_system_message(project.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
+                    print('!!! WARNING F !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                    #send_system_message(project.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
                     send_system_message(get_userpair(request.user, membership.user).chat, 'lost_championship_notification', context_user_a = request.user, context_project = membership.project)
             membership.save()
         return self.get(request, slug)
@@ -107,25 +115,72 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
         context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
-class ProjectChatView(ChatView): # pyre-ignore[11] - thinks ChatView isn't a type
+class ProjectChatView(ChatView): # pyre-ignore[11]
+    def get_chat(self, project: Project, stage: str, topic: str) -> Chat: # pyre-ignore[11]
+        if stage == 'envision':
+            chat = project.envision_stage.chat
+        elif stage == 'plan':
+            if topic == 'general':
+                chat = project.plan_stage.general_chat
+            elif topic == 'funding':
+                chat = project.plan_stage.funding_chat
+            elif topic == 'location':
+                chat = project.plan_stage.location_chat
+            elif topic == 'dates':
+                chat = project.plan_stage.dates_chat
+        elif stage == 'act':
+            if topic == 'general':
+                chat = project.act_stage.general_chat
+            elif topic == 'funding':
+                chat = project.act_stage.funding_chat
+            elif topic == 'location':
+                chat = project.act_stage.location_chat
+            elif topic == 'dates':
+                chat = project.act_stage.dates_chat
+        elif stage == 'reflect':
+            chat = project.reflect_stage.chat
+        return chat # pyre-ignore[61]
+    def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
+        project = Project.objects.get(slug = slug)
+        chat = self.get_chat(project, stage, topic)
+        return super().post(request, chat = chat, url = request.get_full_path(), members = list(map(lambda x: x.user, ProjectMembership.objects.filter(project = project)))) # pyre-ignore[16]
+    def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
+        project = Project.objects.get(slug = slug)
+        ctx = super().get_context_data(chat = self.get_chat(project, stage, topic), url = self.request.get_full_path(), members = list(map(lambda x: x.user, ProjectMembership.objects.filter(project = project)))) # pyre-ignore[16]
+        return ctx
+
+class EnvisionView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        project = Project.objects.get(slug=slug)
-        return super().post(request, chat = project.chat, url = reverse('project_chat', args=[slug]), # pyre-ignore[16] doesn't know the contingent type of super(), thinks it's just 'object'
-                            members = [membership.user for membership
-                                       in ProjectMembership.objects.filter(project=project)])
-    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
-        project = Project.objects.get(slug=kwargs['slug'])
-        context = super().get_context_data(slug=kwargs['slug'], chat = project.chat, url = reverse('project_chat', args=[kwargs['slug']]), # pyre-ignore[16]
-                                           members = [membership.user for membership
-                                                      in ProjectMembership.objects.filter(project=project)])
-        context['project'] = project
-        context['user_anonymous_message'] = '(you must sign in to contribute)'
-        context['not_member_message'] = '(you must be a member of this project to contribute)'
-        return context
+        Project.objects.get(slug = slug).start_plan() # TODO TESTING PURPOSES ONLY
+        return super().get(request, slug)
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['project'] = Project.objects.get(slug = self.kwargs['slug'])
+        return ctx
 
+class PlanView(TemplateView):
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        Project.objects.get(slug = slug).start_act() # TODO TESTING PURPOSES ONLY
+        return super().get(request, slug)
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['project'] = Project.objects.get(slug = self.kwargs['slug'])
+        return ctx
 
+class ActView(TemplateView):
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        Project.objects.get(slug = slug).start_reflect() # TODO TESTING PURPOSES ONLY
+        return super().get(request, slug)
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['project'] = Project.objects.get(slug = self.kwargs['slug'])
+        return ctx
 
-
+class ReflectView(TemplateView):
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['project'] = Project.objects.get(slug = self.kwargs['slug'])
+        return ctx
 
 
 
