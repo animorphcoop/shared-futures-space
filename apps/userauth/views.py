@@ -65,10 +65,12 @@ class CustomUserPersonalView(TemplateView):
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
                 current_user.post_code = \
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
-                current_user.organisation = \
-                    Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
-                #current_user.added_data = True
-                #current_user.save()
+                if len(form.cleaned_data.get('organisation')) > 0 and form.cleaned_data.get('organisation') != 'None':
+                    current_user.organisation = \
+                        Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
+                current_user.organisation = None
+                current_user.added_data = True
+                current_user.save()
                 return HttpResponseRedirect(reverse_lazy('dashboard'))
             else:
                 print("Missing fields? Request data: ", request.POST)

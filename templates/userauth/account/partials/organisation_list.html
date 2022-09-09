@@ -50,14 +50,22 @@
     function backFromOrganisations() {
         const organisationList = document.getElementById("organisation-list")
         const checkbox = document.getElementById("organisation-checkbox")
+        const organisationDataBlock = document.getElementById("organisation-data")
+        const organisationInputBox = document.getElementById("organisation-starter")
+        organisationInputBox.classList.add('hidden')
 
         if (checkbox.checked) {
             organisationList.classList.add('hidden')
             checkbox.checked = false
             const organisationInput = document.getElementById("organisation")
-            selectedOrganisation = ''
+            selectedOrganisation = 'None'
             organisationInput.value = selectedOrganisation
+            organisationDataBlock.classList.add('hidden')
+            if (organisationInputBox.classList.contains('hidden')) {
+                organisationInputBox.classList.remove('hidden')
+            }
         }
+
     }
 
 
@@ -96,7 +104,7 @@
         organisationDataBlock.classList.remove('hidden')
     }
 
-    function addName(){
+    function addName() {
         const newOrg = document.getElementById("organisation-name").value
 
         selectOrganisation(newOrg)
@@ -107,7 +115,6 @@
         organisationDataBlock.classList.add('hidden')
 
     }
-
 
 
 </script>
