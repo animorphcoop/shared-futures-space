@@ -840,6 +840,10 @@ select {
   height: 100vh;
 }
 
+.h-16 {
+  height: 4rem;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -870,6 +874,10 @@ select {
 
 .w-4 {
   width: 1rem;
+}
+
+.w-16 {
+  width: 4rem;
 }
 
 .flex-shrink-0 {
@@ -1128,6 +1136,16 @@ select {
 .bg-red-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
+}
+
+.bg-purple {
+  --tw-bg-opacity: 1;
+  background-color: rgb(151 89 255 / var(--tw-bg-opacity));
+}
+
+.bg-resources-one {
+  --tw-bg-opacity: 1;
+  background-color: rgb(206 223 242 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-b {

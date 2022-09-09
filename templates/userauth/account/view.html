@@ -1,6 +1,5 @@
 {% extends "account/base.html" %}
 
-
 {% comment %} User logged in profile view /account/view/{{id}}
 can trigger profile edit too
 TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
@@ -8,53 +7,58 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
 
 {% block content %}
 
-    {% block title %}{% include "partials/title.html" with title="Your profile" %}{% endblock %}
+    <div class="flex flex-col h-screen">
 
-<section id="profile-view">
+        {% block title %}{% include "partials/title.html" with title="Your profile" %}{% endblock %}
 
-{% comment %}    {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}{% endcomment %}
+        <section id="profile-view">
 
-    <div id="profile-data" class="w-1/2 bg-green-100 rounded-lg shadow p-4">
+            {% comment %}    {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}{% endcomment %}
 
-        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
-            <span class="text-sm text-grey-600 basis-1/2">Display name:</span>
-            <span class="text-lg font-semibold basis-1/2">{{user.display_name}}</span>
-        </div>
+            <div id="profile-data" class="">
 
+                <div class="flex flex-col items-center justify-center">
+                   <div class="pb-2.5">
+                        {% if user.avatar.url != null %}
+                            <img src="{{ user.avatar.url }}"
+                                 class="rounded-full w-16 h-16"
+                            />
+                        {% else %}
+                            <div class="rounded-full bg-resources-one w-16 h-16">
 
-        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
-            <span class="text-sm text-grey-600 basis-1/2">Year of birth:</span>
-            <span class="text-lg font-semibold basis-1/2">{{user.year_of_birth}}</span>
-        </div>
-
-        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
-            <span class="text-sm text-grey-600 basis-1/2">Post code:</span>
-            <span class="text-lg font-semibold basis-1/2">{{ user.post_code.code }} ({{ user.post_code.area.name|default:'unknown area' }})</span>
-        </div>
-
-
-        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
-
-            <span class="text-sm text-grey-600 basis-1/2">Profile image:</span>
-            {% if user.avatar.url != null%}
-            <span class="text-lg font-semibold basis-1/2"><img src="{{ user.avatar.url }}"/></span>
-            {% else %}
-            <span class="text-lg font-semibold basis-1/2">Don't have one yet.</span>
-            {% endif %}
-        </div>
-
-        <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
-            <span class="text-sm text-grey-600 basis-1/2">E-mail:</span>
-            <span class="text-lg font-semibold basis-1/2">{{user.email}}</span>
-        </div>
+                            </div>
+                        {% endif %}
+                   </div>
+                    <h2 class="font-kanit-500 text-black-text text-xl">Display name: {{ user.display_name }}</</h2>
+                </div>
 
 
-        <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile
-        </button>
+                <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+                    <span class="text-sm text-grey-600 basis-1/2">Year of birth:</span>
+                    <span class="text-lg font-semibold basis-1/2">{{ user.year_of_birth }}</span>
+                </div>
 
+                <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+                    <span class="text-sm text-grey-600 basis-1/2">Post code:</span>
+                    <span class="text-lg font-semibold basis-1/2">{{ user.post_code.code }} ({{ user.post_code.area.name|default:'unknown area' }})</span>
+                </div>
+
+                <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
+                    <span class="text-sm text-grey-600 basis-1/2">E-mail:</span>
+                    <span class="text-lg font-semibold basis-1/2">{{ user.email }}</span>
+                </div>
+
+
+                <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                        hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile
+                </button>
+
+            </div>
+            <hr/>
+
+        </section>
+
+        <div class="bg-gradient-to-b from-blue-second to-white flex flex-grow"></div>
     </div>
-    <hr/>
 
-</section>
 {% endblock %}
