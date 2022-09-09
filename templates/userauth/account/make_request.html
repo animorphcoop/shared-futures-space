@@ -6,31 +6,42 @@ TODO: is that covered in Figma?
 
 {% block content %}
 
-    {% block title %}{% include "partials/title.html" with title="Make change request" %}{% endblock %}
+    <div class="flex flex-col h-screen">
 
+        {% block title %}{% include "partials/title.html" with title="Request profile change" %}{% endblock %}
 
+        <form class="px-4" method=post>
+            {% csrf_token %}
+            <fieldset>
+                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text" for=kind>
+                    What would you like to change?
+                </label>
+                <select id=kind
+                        name=kind
+                        class="mb-9 form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
+                    <option value="">Please choose an option</option>
+                    <option value=make_editor>Editor status</option>
+                    <option value=change_postcode>Postcode</option>
+                    <option value=change_dob>Year of birth</option>
+                    <option value=other>Other</option>
+                </select>
 
-<form method=post>
-  {% csrf_token %}
-  <p>
-    <label for=kind>
-      Kind of request
-    </label>
-    <select id=kind name=kind>
-      <option value=make_editor>Make me an Editor</option>
-      <option value=change_postcode>Change the postcode on my account</option>
-      <option value=change_dob>Change the year of birth on my account</option>
-      <option value=other>Other request</option>
-    </select>
-  </p>
-  <p>
-    <label for=reason>
-      Reason for your request, including the new postcode or year of birth you want or a description of the request if you selected 'Other request'<br/>
-    </label>
-    <textarea id=reason name=reason maxlength=1000></textarea>
-  </p>
-  <p><button>Submit Request</button></p>
-</form>
+                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text" for=reason>
+                    Why do you want this change? <span class="block pt-1 text-black-meta">Please include the new postcode or year of birth if relevant.</span>
+                </label>
+                <textarea id=reason
+                          name=reason
+                          maxlength=1000
+                          class="mb-9 form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
+                </textarea>
 
+                <button class="inline-block mb-2 bg-yellow px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light"
+                        type="submit">Submit
+                </button>
+            </fieldset>
+        </form>
+
+        <div class="bg-gradient-to-b from-blue-second to-white flex flex-grow"></div>
+    </div>
 
 {% endblock %}
