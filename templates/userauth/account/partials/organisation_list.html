@@ -1,29 +1,34 @@
-<section>
-    <section>
+<section class="flex justify-center absolute left-0 top-0 border-8 shadow-xl">
+    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
         <h2 class="text-2xl">Is your organisation already in our system?</h2>
-    </section>
 
-    <div>
-        <h3 class="text-1xl uppercase">Organisations</h3>
-        <ul>
-            {% for organisation in organisations %}
-                <li>
-                    <button onclick="selectOrganisation(this.innerText)"
-                            class="inline-block px-4 py-3.5 bg-white hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium text-xxs tracking-widest rounded-full">{{ organisation }}
-                    </button>
-                </li>
-            {% endfor %}
-        </ul>
-        <button x-on:click="open = ! open;
-        document.getElementById('organisation').checked=false"
-                class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
-            Back
-        </button>
-        <button onclick="submitOrganisation()"
-                class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
-            Done
-        </button>
+        <div>
+            <h3 class="text-1xl uppercase">Organisations</h3>
+            <ul>
+                {% for organisation in organisations %}
+                    <li>
+                        <button onclick="selectOrganisation(this.innerText)"
+                                class="inline-block px-4 py-3.5 bg-white hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium text-xxs tracking-widest rounded-full">{{ organisation }}
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="flex items-center">
+                <button onclick="backFromOrganisations()"
+                        class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
+                    Back
+                </button>
+                <button onclick="submitOrganisation()"
+                        class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
+                    Done
+                </button>
+            </div>
 
+            <button onclick="openAddName()"
+                    class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
+                Not on the list
+            </button>
+        </div>
     </div>
 </section>
 
@@ -42,6 +47,25 @@
         }
     }
 
+    function backFromOrganisations() {
+        const organisationList = document.getElementById("organisation-list")
+        const checkbox = document.getElementById("organisation-checkbox")
+
+        if (checkbox.checked) {
+            organisationList.classList.add('hidden')
+            checkbox.checked = false
+            const organisationInput = document.getElementById("organisation")
+            selectedOrganisation = ''
+            organisationInput.value = selectedOrganisation
+        }
+    }
+
+
+    {% comment %}
+    if (submitButton.classList.contains('cursor-not-allowed'))
+        {}
+      {% endcomment %}
+
     function selectOrganisation(orgName) {
         selectedOrganisation = orgName
     }
@@ -50,12 +74,7 @@
         console.log(`Selected ${selectedOrganisation}`)
 
         const organisationInput = document.getElementById("organisation")
-        //organisationInput.type = "text"
-        //organisationInput.value = selectedOrganisation
-        //organisationInput.setAttribute('value', selectedOrganisation)
         organisationInput.value = selectedOrganisation
-
-        //organisationInput.disabled = true
         organisationInput.classList.add('cursor-not-allowed')
 
         const organisationInputBox = document.getElementById("organisation-starter")
@@ -63,25 +82,32 @@
 
         const organisationDataBlock = document.getElementById("organisation-data")
         organisationDataBlock.classList.remove('hidden')
-        //const inputParent = organisationInput.parentNode
 
-        // extracting current classes and removing the label
-        //const organisationInputLabel = document.getElementById("organisation-label")
-        //const inputLabelClasses = organisationInputLabel.classList.value
-        //organisationInputLabel.remove()
+        const organisationList = document.getElementById("organisation-list")
+        organisationList.classList.add('hidden')
 
-
-        // creating new label that can be slotted before the disabled input:
-        //let newOrganisationLabel = document.createElement("label")
-
-        //newOrganisationLabel.classList.value = inputLabelClasses
-        //newOrganisationLabel.htmlFor = "organisation"
-        //newOrganisationLabel.id = "organisation-label"
-        //newOrganisationLabel.innerHTML = 'Your organisation:'
-
-        //inputParent.insertBefore(newOrganisationLabel, organisationInput)
-
-        //const organisationDataBlock = document.getElementById("organisation-data")
-        //organisationDataBlock.classList.remove('hidden')
     }
+
+    function openAddName() {
+
+        const organisationList = document.getElementById("organisation-list")
+        organisationList.classList.add('hidden')
+        const organisationDataBlock = document.getElementById("organisation-name-enter")
+        organisationDataBlock.classList.remove('hidden')
+    }
+
+    function addName(){
+        const newOrg = document.getElementById("organisation-name").value
+
+        selectOrganisation(newOrg)
+        submitOrganisation()
+
+
+        const organisationDataBlock = document.getElementById("organisation-name-enter")
+        organisationDataBlock.classList.add('hidden')
+
+    }
+
+
+
 </script>

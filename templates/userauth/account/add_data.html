@@ -21,7 +21,12 @@
         <br/>
         <div id="organisation-data" class="hidden">
             <label for="organisation">Your organisation:</label>
-            <input id="organisation" name="organisation" type=text value=" ">
+            <input id="organisation" onfocus="blur()" name="organisation" type=text value=" ">
+            <button onclick="event.preventDefault(); toggleOrganisations()"
+                    class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
+                Edit organisation
+            </button>
+
         </div>
         <div id="organisation-starter" class="">
             <input type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
@@ -29,13 +34,17 @@
                 organisation?</label>
         </div>
         <div class="mb-4">
-            <button type="submit">Update</button>
+            <button type="submit">SUBMIT</button>
         </div>
 
     </form>
     <br/>
     <div id="organisation-list" class="hidden">
         {% include 'userauth/account/partials/organisation_list.html' %}
+    </div>
+
+     <div id="organisation-name-enter" class="hidden">
+        {% include 'userauth/account/partials/organisation_name_enter.html' %}
     </div>
 
     <br/>

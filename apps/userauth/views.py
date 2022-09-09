@@ -67,11 +67,11 @@ class CustomUserPersonalView(TemplateView):
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
                 current_user.organisation = \
                     Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
-                current_user.added_data = True
-                current_user.save()
+                #current_user.added_data = True
+                #current_user.save()
                 return HttpResponseRedirect(reverse_lazy('dashboard'))
             else:
-                print("most often missing fields - request data: ", request.POST)
+                print("Missing fields? Request data: ", request.POST)
                 return HttpResponseRedirect(reverse('account_add_data'))
 
 
