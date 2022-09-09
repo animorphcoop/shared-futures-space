@@ -4,20 +4,27 @@
 
 {% block content %}
 
-    {% block title %}{% include "partials/title.html" with title="Delete account" %}{% endblock %}
+    <div class="flex flex-col h-screen">
 
-    <form method="post">
-        {% csrf_token %}
-        <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
-            Are you sure you want to delete the account associated with the email <span class="">{{ user.email }}</span>?
-        </p>
-        <button type="submit" name=confirm value=confirm
-        class="inline-block mx-4 px-4 py-3.5 transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-yellow disabled:bg-gray-light">
-            Delete
-        </button>
-    </form>
+        {% block title %}{% include "partials/title.html" with title="Delete profile" %}{% endblock %}
 
-    <p>No, keep my account</p>
-    <a href="{% url 'account_view' %}">Return to site</a>
+        <form method="post">
+            {% csrf_token %}
+            <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+                Are you sure you want to delete the profile associated with the email <span
+                    class="">{{ user.email }}</span>?
+            </p>
+
+            <a href="{% url 'account_view' %}" class="inline-block mx-4 px-4 py-3.5 transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-yellow disabled:bg-gray-light">
+                Back to profile
+            </a>
+            <button type="submit" name=confirm value=confirm
+                    class="inline-block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
+                Delete
+            </button>
+        </form>
+
+        <div class="bg-gradient-to-b from-blue-second to-white flex flex-grow"></div>
+    </div>
 
 {% endblock %}
