@@ -776,6 +776,10 @@ select {
   margin-bottom: 1rem;
 }
 
+.mb-9 {
+  margin-bottom: 2.25rem;
+}
+
 .box-content {
   box-sizing: content-box;
 }
@@ -1306,6 +1310,10 @@ select {
   padding-bottom: 3.5rem;
 }
 
+.pt-1 {
+  padding-top: 0.25rem;
+}
+
 .text-center {
   text-align: center;
 }
@@ -1458,6 +1466,10 @@ select {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-black-meta {
+  color: rgba(0, 0, 0, 0.30);;
 }
 
 .antialiased {
