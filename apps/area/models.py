@@ -7,11 +7,11 @@ import re
 
 from typing import Any, Dict, List, Tuple
 
-'''
+
 def validate_postcode(postcode: str) -> None:
     if not re.match(r'[a-zA-Z]{1,2}[0-9][a-zA-0-9]?\s?[0-9][a-zA-Z]{2}', postcode):
         raise ValidationError('not a valid UK postcode: %(value)s', params = {'value': postcode})
-'''
+
 
 class Area(models.Model):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
