@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from allauth.account.forms import SignupForm, LoginForm
 from wagtail.users.forms import UserEditForm, UserCreationForm
 
-from typing import Type, List, Any
+from typing import Type, List, Any, Dict
 from django.http import HttpRequest
 
 '''
@@ -61,8 +61,8 @@ class CustomUserPersonalForm(forms.Form):
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
     organisation = forms.CharField(max_length=50)
-    def __init__(self, *arg, **kwarg):
-        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg)
+    def __init__(self, *arg: List[Any], **kwarg: Dict[str,Any]) -> None:
+        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg) # pyre-ignore[6]
         self.empty_permitted = True
 
 

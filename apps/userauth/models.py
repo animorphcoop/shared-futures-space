@@ -18,9 +18,8 @@ class Organisation(models.Model):
     name: models.CharField = models.CharField(max_length=100)
     link: models.URLField = models.URLField()
 
-
-    def __str__(self):
-            return self.name
+    def __str__(self) -> str:
+        return self.name
 
 
 class CustomUser(AbstractUser):
