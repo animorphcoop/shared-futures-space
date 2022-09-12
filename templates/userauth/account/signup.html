@@ -17,11 +17,8 @@
             {% csrf_token %}
 
             <div class="pt-4 px-4 pb-9">
-                <label for="email-input"
-                       class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                    Email
-                </label>
-                {% render_field form.email id="email-input" hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms" hx-target="#email-feedback" id="email-input" hx-swap="innerHTML" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
+                {% include "partials/input-label.html" with for="email-input" label="Email" %}
+                {% render_field form.email id="email-input" type="email" hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms" hx-target="#email-feedback" id="email-input" hx-swap="innerHTML" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
 
                 {% comment %}controlled via js/ts{% endcomment %}
                 <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
@@ -35,28 +32,19 @@
 {% endcomment %}
 
             <div class="px-4 pb-9">
-                <label for="password-input"
-                       class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                    Password
-                </label>
-                {% render_field form.password1 id="password-input1" onfocusout="getPasswordFeedback()" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
+                {% include "partials/input-label.html" with for="password-input1" label="Password" %}
+                {% render_field form.password1 id="password-input1" onfocusout="getPasswordFeedback()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
                 <span id="password-feedback1" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>
             </div>
 
             <div class="px-4 pb-9">
-                <label for="password-input2"
-                       class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                    Repeat password
-                </label>
-                {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
+                {% include "partials/input-label.html" with for="password-input2" label="Repeat password" %}
+                {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
                 <span id="password-feedback2" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>
             </div>
 
             <div class="px-4 pb-6">
-                <button id="submit-button" disabled
-                        class="cursor-not-allowed inline-block px-4 py-3.5 transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-blue-button disabled:bg-gray-light"
-                        type="submit">Sign up
-                </button>
+                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" onclick=""%}
             </div>
 
         </form>

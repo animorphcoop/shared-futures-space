@@ -87,6 +87,9 @@ module.exports = {
                 yellow: {
                     DEFAULT: 'rgba(255, 250, 142, 1)',
                 },
+                red: {
+                    important: 'rgba(255, 134, 134, 1)',
+                }
                 correct: '#228b22',
                 incorrect:'#fe2712',
             },
