@@ -31,7 +31,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
 from django.http import HttpResponse
 from uuid import UUID
-from core.utils.postcode_matcher import filter_postcode
+from core.utils.postcode_matcher import filter_postcode # pyre-ignore[21]
 
 import magic
 
@@ -45,14 +45,14 @@ class CustomUserPersonalView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
         context['organisations'] = Organisation.objects.all()
         return context
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
-        form = CustomUserPersonalForm(request.POST)
+        form = CustomUserPersonalForm(request.POST) # pyre-ignore[6]
         print(form.is_valid())
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(

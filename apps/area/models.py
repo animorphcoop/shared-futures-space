@@ -16,8 +16,8 @@ def validate_postcode(postcode: str) -> None:
 class Area(models.Model):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     name: models.CharField = models.CharField(max_length = 50)
-    def __str__(self):
-            return self.name
+    def __str__(self) -> str:
+        return self.name
 
 
 # Post Codes will be automatically added, if one does not exist, it can belong to 'other' area
@@ -32,6 +32,6 @@ class PostCode(models.Model):
             self.area = Area.objects.get_or_create(name='Other')[0]
             return super().save(*args, **kwargs) # pyre-ignore[6]
 
-    def __str__(self):
-            return self.code
+    def __str__(self) -> str:
+        return self.code
 
