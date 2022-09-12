@@ -76,7 +76,8 @@ module.exports = {
                 blue: {
                     second: 'rgba(229, 241, 248, 1)',
                     pale: '#EAF3F9',
-                    done: '#93FFE0',
+                    button: 'rgba(190, 236, 223, 1)',
+                    done: 'rgba(147, 255, 224, 1)',
                 },
                 resources: {
                     one: '#CEDFF2',

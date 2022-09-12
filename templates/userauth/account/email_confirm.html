@@ -24,7 +24,7 @@
             <form class="px-4" method="post" action="{% url 'account_confirm_email' confirmation.key %}">
                 {% csrf_token %}
                 <button type="submit"
-                        class="inline-block mb-2 bg-yellow px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light">
+                        class="inline-block mb-2 bg-blue-button px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light">
                     Confirm
                 </button>
             </form>
