@@ -1,5 +1,25 @@
-<title>
-    Shared Futures Space - {{ title }}
-</title>
+{% if dashboard %}
+    <title>
+        Shared Futures Space - Dashboard
+    </title>
 
-<h1 class="font-kanit-500 text-purple text-xl px-4 py-3.5">{{ title }}</h1>
+    <h1 class="font-kanit-500 text-purple text-xl px-4 py-3.5">
+        Welcome
+        {{ title }}
+        {% comment %}
+        TODO: emojii
+        {% endcomment %}
+    </h1>
+{% else %}
+
+
+    <title>
+        Shared Futures Space - {{ title }}
+    </title>
+
+    <h1 class="font-kanit-500 text-purple text-xl px-4 py-3.5">
+
+        {{ title }}
+
+    </h1>
+{% endif %}

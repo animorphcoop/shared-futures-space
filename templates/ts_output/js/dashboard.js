@@ -1,14 +1,15 @@
 "use strict";
 //getWeather()
-/*document.getElementById('dash-weather').innerHTML = 'lol'
-
-const weather = await parseData()
-
-console.log(weather)*/
-//TODO: Potentially look into geocoding requests to get more precise measurement
+//TODO: Rewrite endpoints to load dynamically based on user
 const endpointDerry = 'https:api.openweathermap.org/data/2.5/weather?q=Derry,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
 const endpointDungloe = 'https:api.openweathermap.org/data/2.5/weather?q=Dungloe,IE&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
 const endpointBelfast = 'https://api.openweathermap.org/data/2.5/weather?q=Belfast,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
+//TODO: Write postcode converter to lat & long, e.g. for Arranmore
+//https://api.openweathermap.org/geo/1.0/zip?zip=F92,IE&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
+//https://api.openweathermap.org/data/2.5/weather?lat=54.95&lon=-7.7333&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
+//or North Belfast
+//https://api.openweathermap.org/geo/1.0/zip?zip=BT13,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
+//https://api.openweathermap.org/data/2.5/weather?lat=54.5833&lon=-5.9333&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
 const backupWeatherIcon = 'https://openweathermap.org/img/wn/01d@2x.png';
 const weatherTypes = {
     'clear sky': 'https://openweathermap.org/img/wn/01d@2x.png',

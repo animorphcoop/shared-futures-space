@@ -1,0 +1,13 @@
+<div class="">
+<h1>{{ title }}</h1>
+    <ul>
+        {% for entry in list_items %}
+            {% comment %}
+            TODO: check whether the entry is a message, notification, river or resource
+            {% endcomment %}
+        <li>
+            {{ entry }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
