@@ -9,32 +9,71 @@
 
 {% block content %}
 
-<p class="font-sans text-2xl">Welcome {{ user.display_name }}🐠</p>
+    {% block title %}{% include "partials/title.html" with title=user.display_name dashboard=True %}{% endblock %}
 
-<img src="{% static 'images/dashboard/mobius.gif' %}" alt="mobius temp" class="w-full mt-12">
+    {% comment %}
+<p class="font-sans text-2xl">🐠</p>
+{% endcomment %}
 
-<!--
+    <img src="{% static 'images/dashboard/mobius.gif' %}" alt="mobius temp" class="w-full mt-12">
 
-{% if user.year_of_birth == None or user.post_code == None %}
-<a href="{% url 'account_add_data' %}">Your profile misses important data, please add them in.</a>
-<br/>
-{% endif %}-->
+
+
+
     <div id="initial" class="">
         {% include 'dashboard/partials/location.html' %}
     </div>
-<br/>
-<a href="{% url 'account_view' %}">Profile view</a>
 
-{% if user.is_staff %}
-<br/>
-<a href="{% url 'account_request_panel' %}">Manage User Requests</a>
-{% endif %}
-<br/>
-<a href="{% url 'all_chats' %}">Your Messages</a>
-<br/>
-<a href="{% url 'all_projects' %}">Projects</a>
+    {% block messages %}
+        {% include "dashboard/partials/accordion.html" with title="Messages" list_items=messages %}
+    {% endblock %}
 
 
-<script src="{% static 'js/dashboard.js' %}"></script>
+    <br/>
+    <hr>
+    <br/>
+    {% block notifications %}
+        {% include "dashboard/partials/accordion.html" with title="Notifications" list_items=notifications %}
+    {% endblock %}
+
+
+    <br/>
+    <hr>
+    <br/>
+    <section>
+        <div>
+            <p>Ready to swim?</p>
+            <p><a href="{% url 'all_projects' %}" class="uppercase">Go to the spring</a></p>
+        </div>
+    </section>
+
+    <br/>
+    <hr>
+    <br/>
+    {% block rivers %}
+        {% include "dashboard/partials/accordion.html" with title="Status of your rivers" list_items=rivers %}
+    {% endblock %}
+
+
+    <br/>
+    <hr>
+    <br/>
+    {% block resources %}
+        {% include "dashboard/partials/accordion.html" with title="Favourite resources" list_items=resources %}
+    {% endblock %}
+
+
+    {% comment %}
+    TODO: Is this true?
+    {% endcomment %}
+    {% if user.is_staff %}
+        <br/>
+        <a href="{% url 'account_request_panel' %}">Manage User Requests</a>
+    {% endif %}
+    <br/>
+
+
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
 
 {% endblock content %}

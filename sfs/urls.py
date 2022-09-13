@@ -23,7 +23,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('search/', search_views.search, name='search'),
     path('account/', include('userauth.urls')),
     path('dashboard/', include('dashboard.urls'), name='dashboard'),
-    path('projects/', include('project.urls')),
+    path('projects/', include('project.urls'), name='projects'),
     path('action/', include('action.urls')),
     path('poll/', include('poll.urls')),
 
