@@ -54,7 +54,7 @@ def add_users(users_data):
         new_user = CustomUser.objects.get_or_create(display_name = user_data['display name'], email = user_data['email'], year_of_birth = user_data['year of birth'],
                                                     post_code = PostCode.objects.get_or_create(code = user_data['postcode'])[0], editor = user_data['editor'],
                                                     organisation = Organisation.objects.get_or_create(name = user_data['organisation'])[0] if 'organisation' in user_data else None,
-                                                    username = user_data['display name'])[0]
+                                                    added_data = True, username = user_data['display name'])[0]
         new_user.set_password(user_data['password'])
         new_user.save()
         eml = EmailAddress.objects.get_or_create(email = user_data['email'], verified = True, primary = True, user = new_user)[0]

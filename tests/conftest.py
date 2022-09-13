@@ -15,14 +15,15 @@ from resources.models import HowTo, CaseStudy
 def test_user(db, django_user_model):
     return django_user_model.objects.create_user(username='test_user', email='test_user@email.com',
                                                  password='test_password', display_name='Test User', year_of_birth=1999,
-                                                 post_code=PostCode.objects.create(code="AB12"))
+                                                 post_code=PostCode.objects.create(code="AB12"), added_data = True)
 
 
 @pytest.fixture(scope='function')
 def other_test_user(db, django_user_model):
     return django_user_model.objects.create_user(username='other_test_user', email='other_test_user@email.com',
                                                  password='other_test_password', display_name='Other Test User',
-                                                 year_of_birth=1998, post_code=PostCode.objects.create(code="PS7"))
+                                                 year_of_birth=1998, post_code=PostCode.objects.create(code="PS7"),
+                                                 added_data = True)
 
 
 # items to use during testing
