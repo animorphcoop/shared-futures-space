@@ -53,14 +53,17 @@ def test_dashboard_info(client, test_user):
 def test_data_add(client, test_user):
     test_user.year_of_birth = None
     test_user.post_code = None
+    test_user.display_name = None
+    test_user.organisation = None
+    test_user.added_data = False
     test_user.save()
     client.force_login(test_user)
-    print(client.post(reverse('account_add_data'), {'year_of_birth': 1997, 'post_code': 'AB12'}))
+    client.post(reverse('account_add_data'), {'year_of_birth': 1997, 'post_code': 'AB12', 'display_name': 'a test user', 'organisation': 'BIP'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
-    assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12 3CD'
-    client.post(reverse('account_add_data'), {'year_of_birth': 2001, 'post_code': 'N4'})
+    assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12'
+    client.post(reverse('account_add_data'), {'year_of_birth': 2001, 'post_code': 'N4', 'display_name': 'somebody else', 'organisation': 'BIP'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
-    assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12 3CD'
+    assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12'
 
 
 @pytest.mark.django_db
@@ -126,7 +129,8 @@ def test_name_update_flow(client, test_user):
 def test_delete_account(client, test_user):
     client.force_login(test_user)
     delete_page = client.get(reverse('account_delete'))
-    assert 'Want to delete your account' in str(delete_page.content)
+    print(delete_page.content)
+    assert 'Are you sure you want to delete the profile associated with the email ' in str(delete_page.content)
     client.post(reverse('account_delete'), {'confirm': 'confirm'})
     assert len(CustomUser.objects.filter(id=test_user.id)) == 0
 
