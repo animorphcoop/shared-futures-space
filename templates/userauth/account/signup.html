@@ -44,13 +44,16 @@
             </div>
 
             <div class="px-4 pb-6">
-                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" onclick=""%}
+                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" onclick="" %}
             </div>
 
         </form>
 
-        {% comment %}TODO: Should this be partials to keep things consistent?{% endcomment %}
-        {% include "socialaccount/partials/provider_list.html" with process="login" %}
+        <section class="bg-gradient-to-b from-blue-second to-white flex flex-col items-center">
+            <h2 class="pt-10 mx-auto inline-block pb-8 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                Alternatively sign up with</h2>
+            {% include "socialaccount/partials/provider_list.html" with process="login" %}
+        </section>
 
         <div class="bg-blue-second text-center">
             <h2 class="pt-4 pb-4 uppercase font-kanit-400 text-xxxs tracking-widest text-black-text">
