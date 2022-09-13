@@ -68,6 +68,7 @@ module.exports = {
                 black: {
                     DEFAULT: '#000000',
                     meta: 'rgba(0, 0, 0, 0.30);',
+                    large: 'rgba(0, 0, 0, 0.55);',
                     text: 'rgba(0, 0, 0, 0.75);',
                 },
                 purple: {
@@ -78,6 +79,7 @@ module.exports = {
                     pale: '#EAF3F9',
                     button: 'rgba(190, 236, 223, 1)',
                     done: 'rgba(147, 255, 224, 1)',
+                    blur: 'rgba(229, 241, 248, 0.5)',
                 },
                 resources: {
                     one: '#CEDFF2',
@@ -85,6 +87,7 @@ module.exports = {
                     three: '#DFF5F6',
                 },
                 yellow: {
+                    pale: 'rgba(255, 252, 192, 1)',
                     DEFAULT: 'rgba(255, 250, 142, 1)',
                 },
                 red: {
