@@ -13,14 +13,14 @@ function processEmailValue() {
     const emailPassed = emailInput.value;
     inputFeedback.classList.remove('hidden');
     if (emailPassed.length <= 5) {
-        inputFeedback.innerText = 'Enter a valid email address.';
+        inputFeedback.innerText = 'Please enter a valid email address.';
         return false;
     }
     else {
         const returnValue = validateEmail(emailPassed);
         toggleSubmitButton(returnValue);
         if (!returnValue) {
-            inputFeedback.innerText = 'Enter a valid email address.';
+            inputFeedback.innerText = 'Please enter a valid email address.';
             return false;
         }
         else {
