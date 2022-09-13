@@ -87,7 +87,7 @@ class Project(ClusterableModel):
     current_stage: models.CharField = models.CharField(choices = Stage.choices, max_length = 8, null = True, default = None)
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''):
-            self.slug = slugify(self.name + str(self.id))
+            self.slug = slugify(self.name + str(self.id)) # pyre-ignore[16]
         return super().save(*args, **kwargs)
     def start_envision(self) -> None:
         if self.current_stage is None:
