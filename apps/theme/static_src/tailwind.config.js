@@ -89,7 +89,7 @@ module.exports = {
                 },
                 red: {
                     important: 'rgba(255, 134, 134, 1)',
-                }
+                },
                 correct: '#228b22',
                 incorrect:'#fe2712',
             },
