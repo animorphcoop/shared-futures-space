@@ -2,78 +2,80 @@
 {% comment %}/account/add_data.html{% endcomment %}
 
 {% block content %}
-    {% comment %}    <div x-init="console.log('I\'m being initialized!')"></div>{% endcomment %}
 
-    {% block title %}{% include "partials/title.html" with title="Add data" %}{% endblock %}
+    <div class="flex flex-col h-screen">
 
-    <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
-        Please add the relevant data to your account
-    </p>
+        {% comment %}    <div x-init="console.log('I\'m being initialized!')"></div>{% endcomment %}
 
-    <form method="post" action="{% url 'account_add_data' %}">
-        {% csrf_token %}
+        {% block title %}{% include "partials/title.html" with title="Add data" %}{% endblock %}
 
-        <div class="px-4 pb-9">
-            {% include "partials/input-label.html" with for="display_name" label="Name" %}
-            {% include "partials/input-text.html" with id="display_name" name="display_name" type="text" placeholder="Your full name" %}
-        </div>
+        <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+            Please add the relevant data to your account
+        </p>
 
-        <div class="px-4 pb-9">
-            {% include "partials/input-label.html" with for="year_of_birth" label="Year of birth" %}
-            <div class="pb-1.5">
-                {% include "partials/input-text.html" with id="year_of_birth" name="year_of_birth" type="number" placeholder="YYYY" %}
+        <form method="post" action="{% url 'account_add_data' %}">
+            {% csrf_token %}
+
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="display_name" label="Name" %}
+                {% include "partials/input-text.html" with id="display_name" name="display_name" type="text" placeholder="Your full name" %}
             </div>
-            {% include "partials/input-note.html" with for="year_of_birth" label="Under 16s cannot comment on projects" %}
-        </div>
 
-        <div class="px-4 pb-9">
-            {% include "partials/input-label.html" with for="post_code" label="Postcode" %}
-            <div class="pb-1.5">
-                {% include "partials/input-text.html" with id="post_code" name="post_code" type="text" placeholder="Your postcode" %}
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="year_of_birth" label="Year of birth" %}
+                <div class="pb-1.5">
+                    {% include "partials/input-text.html" with id="year_of_birth" name="year_of_birth" type="number" placeholder="YYYY" %}
+                </div>
+                {% include "partials/input-note.html" with for="year_of_birth" label="Under 16s cannot comment on projects" %}
             </div>
-            {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
-        </div>
 
-        <div class="px-4 pb-9">
-            <div id="organisation-starter" class="">
-                <input type="checkbox"
-                       id="organisation-checkbox"
-                       class="inline-block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
-                       onclick="toggleOrganisations()"
-                >
-                <label id="organisation-label"
-                       class="inline-block pb-2.5 uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
-                       for="organisation-checkbox">
-                    I represent an
-                    organisation</label>
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="post_code" label="Postcode" %}
+                <div class="pb-1.5">
+                    {% include "partials/input-text.html" with id="post_code" name="post_code" type="text" placeholder="Your postcode" %}
+                </div>
+                {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
             </div>
+
+            <div class="px-4 pb-9">
+                <div id="organisation-starter" class="">
+                    <input type="checkbox"
+                           id="organisation-checkbox"
+                           class="inline-block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
+                           onclick="toggleOrganisations()"
+                    >
+                    <label id="organisation-label"
+                           class="inline-block pb-2.5 uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
+                           for="organisation-checkbox">
+                        I represent an
+                        organisation</label>
+                </div>
+            </div>
+
+            <div id="organisation-data" class="hidden">
+                <label for="organisation">Your organisation:</label>
+                <input id="organisation" onfocus="blur()" name="organisation" type=text value="None">
+                <button onclick="event.preventDefault(); toggleOrganisations()"
+                        class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
+                    Edit organisation
+                </button>
+            </div>
+
+            <div class="px-4 pb-9">
+                {% include "partials/input-submit.html" with button="Submit" id="submit-button" type="submit" onclick="event.preventDefault(); toggleOrganisations()" %}
+            </div>
+
+        </form>
+
+        <div id="organisation-list" class="hidden">
+            {% include 'userauth/account/partials/organisation_list.html' %}
         </div>
 
-        <div id="organisation-data" class="hidden">
-            <label for="organisation">Your organisation:</label>
-            <input id="organisation" onfocus="blur()" name="organisation" type=text value="None">
-            <button onclick="event.preventDefault(); toggleOrganisations()"
-                    class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
-                Edit organisation
-            </button>
+        <div id="organisation-name-enter" class="hidden">
+            {% include 'userauth/account/partials/organisation_name_enter.html' %}
         </div>
 
-        <div class="px-4 pb-9">
-            {% include "partials/input-submit.html" with button="Submit" id="submit-button" type="submit" onclick="event.preventDefault(); toggleOrganisations()"%}
-        </div>
-
-    </form>
-
-    <div id="organisation-list" class="hidden">
-        {% include 'userauth/account/partials/organisation_list.html' %}
-    </div>
-
-    <div id="organisation-name-enter" class="hidden">
-        {% include 'userauth/account/partials/organisation_name_enter.html' %}
-    </div>
-
-    <div class="pt-4 px-4 pb-9">
-
+        {% include "partials/footer-gradient.html" %}
     </div>
 
 {% endblock %}
