@@ -68,7 +68,8 @@ class CustomUserPersonalView(TemplateView):
                 if len(form.cleaned_data.get('organisation')) > 0 and form.cleaned_data.get('organisation') != 'None':
                     current_user.organisation = \
                         Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
-                current_user.organisation = None
+                else:
+                    current_user.organisation = None
                 current_user.added_data = True
                 current_user.save()
                 return HttpResponseRedirect(reverse_lazy('dashboard'))

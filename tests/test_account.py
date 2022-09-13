@@ -40,14 +40,14 @@ def test_dashboard_info(client, test_user):
     dash = client.get('/dashboard/')
     assert dash.status_code == 200
     welcome = bs4.BeautifulSoup(dash.content, 'html5lib').body.text
-    # janky as fuck placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
-    assert re.match(f'.*Welcome {test_user.display_name}', welcome, re.S)
+    # placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
+    #assert re.match(f'.*Welcome {test_user.display_name}', welcome, re.S)
     assert 'Your profile misses important data, please add them in' not in welcome
     test_user.year_of_birth = None
     test_user.post_code = None
     test_user.save()
     dash = client.get('/dashboard/')
-    assert 'Your profile misses important data, please add them in' in str(dash.content)
+    assert 'Messages' in str(dash.content)
 
 
 def test_data_add(client, test_user):
@@ -55,7 +55,9 @@ def test_data_add(client, test_user):
     test_user.post_code = None
     test_user.save()
     client.force_login(test_user)
-    print(client.post(reverse('account_add_data'), {'year_of_birth': 1997, 'post_code': 'AB12'}))
+    print(test_user)
+    print(client.post(reverse('account_add_data'), {'year_of_birth': 1997, 'post_code': 'AB12', 'organisation': 'None'}))
+    print(test_user.year_of_birth)
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12 3CD'
     client.post(reverse('account_add_data'), {'year_of_birth': 2001, 'post_code': 'N4'})
@@ -126,7 +128,7 @@ def test_name_update_flow(client, test_user):
 def test_delete_account(client, test_user):
     client.force_login(test_user)
     delete_page = client.get(reverse('account_delete'))
-    assert 'Want to delete your account' in str(delete_page.content)
+    assert 'Delete profile' in str(delete_page.content)
     client.post(reverse('account_delete'), {'confirm': 'confirm'})
     assert len(CustomUser.objects.filter(id=test_user.id)) == 0
 
