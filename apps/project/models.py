@@ -3,6 +3,7 @@
 from django.db import models
 from modelcluster.models import ClusterableModel
 from django.utils import timezone
+from django.utils.text import slugify
 
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -76,7 +77,7 @@ class Project(ClusterableModel):
         ACT = 'act'
         REFLECT = 'reflect'
     slug: models.CharField = models.CharField(max_length=100, default='')
-    name: models.CharField = models.CharField(max_length=200)
+    name: models.CharField = models.CharField(max_length=100)
     description: models.CharField = models.CharField(max_length=2000)
     tags = ClusterTaggableManager(through=ProjectTag, blank=True)
     envision_stage: models.ForeignKey = models.ForeignKey(EnvisionStage, null = True, default = None, on_delete = models.SET_NULL)
@@ -86,7 +87,7 @@ class Project(ClusterableModel):
     current_stage: models.CharField = models.CharField(choices = Stage.choices, max_length = 8, null = True, default = None)
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         if (self.slug == ''):
-            self.slug = quote(self.name)[:86] + shake_256(str(self.id).encode()).hexdigest(8) # pyre-ignore[16] same
+            self.slug = slugify(self.name + str(self.id))
         return super().save(*args, **kwargs)
     def start_envision(self) -> None:
         if self.current_stage is None:

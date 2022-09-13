@@ -14,18 +14,6 @@ from project.models import Project, ProjectMembership # pyre-ignore[21]
 from messaging.models import Message # pyre-ignore[21]
 from area.models import PostCode, Area # pyre-ignore[21]
 
-#data = {'Resources':
-#           {'How To': [{'title': 'test how to 1', 'summary': 'this resource helps you to do something', 'tags': ['resource', 'useful']},
-#                      {'title': 'test how to 2', 'summary': 'this resource points you to an external project', 'tags': ['resource', 'organisation']}],
-#            'Case Study': [{'title': 'test case study 1', 'summary': 'a case study of studying cases', 'image': 'ignore/example1.webp', 'body': 'body <b>texttt</b>', 'tags': ['case study', 'not useful']}]},
-#        'Users': [{'display name': 'test_asa', 'email': 'fake@email.com', 'year of birth': 1999, 'postcode': 'BT17 0LE', 'editor': False, 'organisation': False, 'password': 'P@ssword!'},
-#                  {'display name': 'some person', 'email': 'other@email.com', 'year of birth': 1987, 'postcode': 'BT17 0LF', 'editor': True, 'organisation': False, 'password': 'P@ssword!'}],
-#        'Projects': [{'name': 'test project A', 'description': 'a project to do A', 'tags': ['project', 'A']},
-#                     {'name': 'test project B', 'description': 'a project that will do B', 'tags': ['project', 'B']}],
-#        'Relations':
-#            {'Project Membership': [{'Project': 'test project A', 'User': 'test_asa', 'owner': False, 'champion': True}],
-#             'User Chat' : [{'user1': 'test_asa', 'user2': 'some person'}]}}
-
 def add_resources(resource_data):
     for new_howto_data in resource_data['How To']:
         new_howto = HowTo.objects.get_or_create(title = new_howto_data['title'], summary = new_howto_data['summary'])[0]
@@ -48,6 +36,11 @@ def add_projects(projects_data):
         for tag in project_data['tags']:
             new_project.tags.add(tag)
         new_project.save()
+        new_project.start_envision()
+
+def add_organisations(data):
+    for org_data in data:
+        Organisation.objects.get_or_create(name = org_data['name'], link = org_data['link'])
 
 def add_users(users_data):
     for user_data in users_data:
@@ -89,12 +82,15 @@ class Command(BaseCommand):
                 data = json.load(f)
             except:
                 print('could not parse valid json from ' + options['datafile'])
+                exit()
             f.close()
         except:
             print('could not read from file: ' + options['datafile'])
+            exit()
 
         add_areas(data['Areas'])
         add_resources(data['Resources'])
+        add_organisations(data['Organisations'])
         add_users(data['Users'])
         add_projects(data['Projects'])
         add_relations(data['Relations'])
