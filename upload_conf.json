@@ -86,7 +86,7 @@
       "display name": "test_asa",
       "email": "fake@email.com",
       "year of birth": 1999,
-      "postcode": "BT17 0LE",
+      "postcode": "BT17",
       "editor": false,
       "organisation": "BIP",
       "password": "P@ssword!"
@@ -95,7 +95,7 @@
       "display name": "some person",
       "email": "other@email.com",
       "year of birth": 1987,
-      "postcode": "BT17 0LF",
+      "postcode": "BT17",
       "editor": true,
       "organisation": "PIB",
       "password": "P@ssword!"
