@@ -54,26 +54,33 @@
                 {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
             </div>
 
-            <div class="px-4 pb-9">
-                <div id="organisation-starter" class="">
-                    <input class="inline-block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
-                           type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
-                    <label class="inline-block pb-2.5 uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
-                           id="organisation-label" for="organisation-checkbox">
-                        Are you a part of an
-                        organisation?
-                    </label>
-                </div>
+            <div id="organisation-starter" class="px-4 pb-9">
+                <input class="inline-block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
+                       type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
+                <label class="inline-block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
+                       id="organisation-label" for="organisation-checkbox">
+                    Are you a part of an organisation?
+                </label>
             </div>
 
-
-            <div id="organisation-data" class="hidden">
-                <label for="organisation">Your organisation:</label>
-                <input class="inline-block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18" id="organisation" onfocus="blur()" name="organisation" type=text value="None">
-                <button onclick="event.preventDefault(); toggleOrganisations()"
-                        class="inline-block px-4 py-3.5 bg-orange-300 transition ease-out duration-300 text-purple font-kanit-700 uppercase font-medium text-xxs tracking-widest rounded-full">
-                    Edit organisation
-                </button>
+            <div id="organisation-data" class="px-4 pb-9 hidden">
+                {% include "partials/input-label.html" with for="organisation" label="Organisation" %}
+                <div class="">
+                    <input class="form-control w-full px-3 py-2.5 mb-1.5
+                           font-body text-black-text text-sm
+                           placeholder:text-black-meta
+                           bg-white bg-clip-padding border border-solid border-gray-light
+                           transition ease-in-out m-0
+                           focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"
+                           id="organisation" onfocus="blur()" name="organisation" type=text value="None">
+                    <button onclick="event.preventDefault(); toggleOrganisations()"
+                            class="inline -ml-9">
+                        <svg class="-mb-1" width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.06 6.02L11.98 6.94L2.92 16H2V15.08L11.06 6.02ZM14.66 0C14.41 0 14.15 0.1 13.96 0.29L12.13 2.12L15.88 5.87L17.71 4.04C18.1 3.65 18.1 3.02 17.71 2.63L15.37 0.29C15.17 0.09 14.92 0 14.66 0ZM11.06 3.19L0 14.25V18H3.75L14.81 6.94L11.06 3.19Z"
+                                  fill="#9759FF"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div class="px-5 pb-9">
@@ -90,7 +97,8 @@
 
         </form>
 
-        <div id="organisation-list" class="hidden">
+        {# Add hidden when done #}
+        <div id="organisation-list" class="">
             {% include 'userauth/account/partials/organisation_list.html' %}
         </div>
 
