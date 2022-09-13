@@ -15,7 +15,11 @@
             {% for organisation in organisations %}
                 <li>
                     <button onclick="selectOrganisation(this.innerText)"
-                            class="px-3 py-3.5 font-garamond-500 text-black-large text-sm">{{ organisation }}
+                            class="px-3 py-3.5 w-full text-left leading-normal
+                            font-garamond-500 text-black-large text-sm
+                            focus:bg-blue-pale
+                            transition ease-out duration-300">
+                        {{ organisation }}
                     </button>
                 </li>
             {% endfor %}
@@ -26,7 +30,7 @@
         <div class="flex items-center justify-center mb-5 ">
             <button onclick="backFromOrganisations()"
                     type="submit"
-                    class="inline-block rounded-full px-4 py-3.5
+                    class="inline-block rounded-full px-4 py-3.5 mr-2.5
                     font-kanit-700 uppercase font-medium text-xxs tracking-widest
                     text-purple bg-white
                     hover:bg-blue-pale focus:bg-blue-pale
@@ -48,13 +52,13 @@
 
         <button onclick="openAddName()"
                 type="submit"
-                class="inline-block rounded-full px-4 py-3.5
+                class="flex justify-center items-center rounded-full px-4 py-3
                     font-kanit-700 uppercase font-medium text-xxs tracking-widest
                     text-purple bg-white
                     hover:bg-blue-pale focus:bg-blue-pale
                     transition ease-out duration-300
                     disabled:bg-gray-light">
-            My organisation is not on this list
+            <span class="pr-1.5">My organisation is not on this list</span>
             <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z" fill="#9759FF"/>
