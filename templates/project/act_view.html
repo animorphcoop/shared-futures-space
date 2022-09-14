@@ -2,7 +2,7 @@ act view
 
 <p><a href="{% url 'project_chat' project.slug 'act' 'general' %}">Act General Chat</a></p>
 <p><a href="{% url 'project_chat' project.slug 'act' 'funding' %}">Act Funding Chat</a></p>
-<p><a href="{% url 'project_chat' project.slug 'act' 'location' %"}>Act Location Chat</a></p>
+<p><a href="{% url 'project_chat' project.slug 'act' 'location' %}">Act Location Chat</a></p>
 <p><a href="{% url 'project_chat' project.slug 'act' 'dates' %}">Act Dates Chat</a></p>
 
 {% if project.current_stage == project.Stage.ACT %}

@@ -290,7 +290,28 @@
         "Gardening",
         "Food",
         "Community"
-      ]
+      ],
+      "swimmers": ["Patrick Casey", "Darren Wayne", "Dan O’Callaghan"],
+      "champions": ["Aoife Wilson"],
+      "owners": ["conor telainy"],
+      "envision": {
+        "chat": [{"from": "Dan O’Callaghan", "content": "hello everyone!"}]
+      },
+      "plan": {
+        "general": [{"from": "conor telainy", "content": "this is the general chat for the plan stage"}],
+        "funding": [{"from": "conor telainy", "content": "this is the funding chat for the plan stage"}],
+        "location": [{"from": "conor telainy", "content": "this is the location chat for the plan stage"}],
+        "dates": [{"from": "conor telainy", "content": "this is the dates chat for the plan stage"}]
+      },
+      "act": {
+        "general": [{"from": "Aoife Wilson", "content": "this is the general chat for the act stage"}],
+        "funding": [{"from": "Aoife Wilson", "content": "this is the funding chat for the act stage"}],
+        "location": [{"from": "Aoife Wilson", "content": "this is the location chat for the act stage"}],
+        "dates": [{"from": "Aoife Wilson", "content": "this is the dates chat for the act stage"}]
+      },
+      "reflect": {
+        "chat": [{"from": "Patrick Casey", "content": "so, how do we think that went?"}]
+      }
     },
     {
       "name": "Health & Hygiene Training – Available to Bogside residents",
@@ -299,7 +320,10 @@
         "Qualification",
         "Food",
         "Training"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
     {
       "name": "Árainn Mhór Arts Club",
@@ -308,7 +332,10 @@
         "Art",
         "Education",
         "Training"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
     {
       "name": "Tidy Up! Campaign",
@@ -317,7 +344,10 @@
         "Infrastructure",
         "Community",
         "Waste Management"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
     {
       "name": "Fundraising Marathon for Ardoyne Youth Enterprise",
@@ -326,7 +356,10 @@
         "Fundraising",
         "Youth Centre",
         "Running"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
     {
       "name": "New food coop & Seed bank",
@@ -335,7 +368,10 @@
         "Shopping",
         "Food Security",
         "Community Support"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
     {
       "name": "Non Violent Communication Working Group",
@@ -344,7 +380,10 @@
         "Self-Care",
         "Communication",
         "Education"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
     {
       "name": "Colin's New Man Shed",
@@ -353,7 +392,10 @@
         "Man Shed",
         "Community",
         "DIY"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
     {
       "name": "Save the Moat park Fairies Campaign",
@@ -362,45 +404,49 @@
         "Children",
         "Days Out",
         "Park Activities"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
-  {
+    {
       "name": "Lessons – ‘I am learning Irish (Tá mé ag foghlaim na Gaeilge)",
       "description": "Were taking it back lads, old school. Let’s learn Irish together, myself and a group of Irish speaker’s started a successful facegroup that’s been running since 2016, we hope to formalise some our practice into classes and events in the community.",
       "tags": [
         "Gaelic",
         "Training",
         "Courses"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
-{
+    {
       "name": "Donegall Pass Community Centre - 2x Positions",
-       "description": "We’re looking for two new part time youth team leaders to self start and run some training for the next 6-8 months. \nThe brief is your own to create but you must provide a compelling work schedule from the syllabus we will share here, suitable candidates will also need appropriate up-to-date qualifications and a formatted CV.\nWe’ll be managing applications for this proposal on this platform in order to help field questions around the application process mentioned. \nPlease join the group if interested and sharpen your pencils for the applications opening; we will be posting all information here in the coming weeks and applications will be open April 10th 12:00 noon and will close April 30th.",
+      "description": "We’re looking for two new part time youth team leaders to self start and run some training for the next 6-8 months. \nThe brief is your own to create but you must provide a compelling work schedule from the syllabus we will share here, suitable candidates will also need appropriate up-to-date qualifications and a formatted CV.\nWe’ll be managing applications for this proposal on this platform in order to help field questions around the application process mentioned. \nPlease join the group if interested and sharpen your pencils for the applications opening; we will be posting all information here in the coming weeks and applications will be open April 10th 12:00 noon and will close April 30th.",
       "tags": [
         "Jobs",
         "Training",
         "Courses"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     },
-{
+    {
       "name": "New Seeds – Help co-design and plant new flower beds at the end of Eureka Drive",
       "description": "With the help of the community centre I’ve negotiated some space to plant some flowers on some land that the council has no use for currently. No big plans just some Saturday mornings to make an excuse for coffee and cake. I am happy to host as I’m local and an easy walk to the plot. We can take a look and then workshop at mine. So we are all happy before sowing in the spring. My friend’s daugher Catriona Jones is the local community gardener for area will be joining the group and will give tips and advice and approve our final design. Please feel free to bring your favorite biscuits or cake and I’ll have the kettle ready and everything else we’ll need. I’m posting a call out on my street’s whatsapp group and the local parent’s facebook also. I’ll keep you all informed of timings and post up our designs as they go here.",
       "tags": [
         "Gardening",
         "Tea&Biscuits",
         "Gettogether"
-      ]
+      ],
+      "swimmers": [],
+      "champions": [],
+      "owners": []
     }
   ],
   "Relations": {
-    "Project Membership": [
-      {
-        "Project": "Shared Green Space for Bogside Residence",
-        "User": "Patrick Casey",
-        "owner": false,
-        "champion": true
-      }
-    ],
     "User Chat": [
       {
         "user1": "Patrick Casey",

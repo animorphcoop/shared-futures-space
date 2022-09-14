@@ -86,9 +86,10 @@ class Project(ClusterableModel):
     reflect_stage: models.ForeignKey = models.ForeignKey(ReflectStage, null = True, default = None, on_delete = models.SET_NULL)
     current_stage: models.CharField = models.CharField(choices = Stage.choices, max_length = 8, null = True, default = None)
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
+        ssave = super().save(*args, **kwargs) # save first or we won't have an id
         if (self.slug == ''):
             self.slug = slugify(self.name + str(self.id)) # pyre-ignore[16]
-        return super().save(*args, **kwargs)
+        return ssave
     def start_envision(self) -> None:
         if self.current_stage is None:
             self.current_stage = self.Stage.ENVISION
