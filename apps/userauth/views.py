@@ -243,7 +243,6 @@ class UserAllChatsView(TemplateView):
 
 
 # helper for inspecting db whether user exists
-# TODO: Add more validation e.g. to lower case
 def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse?
     # print(request.META.get('HTTP_REFERER'))
     if request.POST.getlist('email'):
@@ -251,16 +250,14 @@ def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse
         request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
         if request_source_url == "signup":
             if get_user_model().objects.filter(email=user_mail).exists():
-                return HttpResponse(
-                    "This address is taken, please choose a different one.")
+                return HttpResponse('<span id="email-feedback" class="block text-red-600 font-kanit-400 text-xxs pt-2">This address is taken, please choose a different one.</span>')
             else:
-                return HttpResponse(
-                    "This address address is available.")
+                return HttpResponse('<span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>')
         else:
-            return HttpResponse("<h2>Unrecognised referrer: " + request_source_url + "</h2>")
+            return HttpResponse("Could not process your request, please refresh the page or get in touch.")
 
     else:
-        return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
+        return HttpResponse("Could not process your request, please refresh the page or get in touch.")
 
 
 class CustomLoginView(LoginView):
