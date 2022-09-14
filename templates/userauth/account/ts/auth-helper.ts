@@ -1,20 +1,19 @@
-const emailInput = (<HTMLInputElement>document.getElementById('email-input'))
-let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
+//let emailInput = (<HTMLInputElement>document.getElementById('email-input'))
+//let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
 
 
-const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
-const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
+//let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+//let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
 
-const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
-const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
-
-
-const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
+//let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+//let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
 
 
 function processEmailValue() {
     // it's swapped by htmx so need to find again
     let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
+    let emailInput = (<HTMLInputElement>document.getElementById('email-input'))
+
 
     if (emailInput == null || inputFeedback == null) return
     const emailPassed = emailInput.value
@@ -22,15 +21,12 @@ function processEmailValue() {
     inputFeedback.classList.remove('hidden')
     if (emailPassed.length <= 5) {
         inputFeedback.innerText = 'Please enter a valid email address.'
-        //toggleSubmitButton(false)
         return false
     } else {
         const returnValue = validateEmail(emailPassed)
 
-        //toggleSubmitButton(returnValue)
         if (!returnValue) {
             inputFeedback.innerText = 'Please enter a valid email address.'
-            //toggleSubmitButton(returnValue)
             return false
         } else {
             inputFeedback.innerText = ''
@@ -51,6 +47,7 @@ function validateEmail(address: string) {
 
 
 function toggleSubmitButton(toEnable: boolean) {
+    let submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
 
     if (submitButton == null) return
 
@@ -68,6 +65,9 @@ function toggleSubmitButton(toEnable: boolean) {
 }
 
 function comparePasswords() {
+    let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+    let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+
 
     if (passwordInputOne == null || passwordInputTwo == null) return
 
@@ -78,6 +78,9 @@ function comparePasswords() {
     // check if one of the passwords is not empty
     if (passwordOne.length !== 0 && passwordTwo.length !== 0) {
 
+
+        let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+        let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
 
         if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
             passwordFeedbackTwo.classList.remove('hidden')
@@ -105,6 +108,10 @@ function comparePasswords() {
 }
 
 function getPasswordFeedback() {
+
+
+    let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+    let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
 
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
 
@@ -184,9 +191,14 @@ function scorePassword(pass: string) {
 }
 
 function checkFeedbackBeforeSubmit() {
+    console.log('ARE YOU FUCKINGS TUPID?')
     if (!event) return
-    const submitButton: HTMLButtonElement = <HTMLButtonElement>event.target
+    let submitButton: HTMLButtonElement = <HTMLButtonElement>event.target
     let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
+
+    let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+    let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
+
 
     if (submitButton == null || inputFeedback == null || passwordFeedbackOne == null || passwordFeedbackTwo == null) {
         event.preventDefault()
@@ -197,7 +209,7 @@ function checkFeedbackBeforeSubmit() {
         return true
     } else {
         event.preventDefault()
-        submitButton.disabled = true
+        toggleSubmitButton(false)
         return false
     }
 }

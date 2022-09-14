@@ -1,29 +1,26 @@
 "use strict";
-const emailInput = document.getElementById('email-input');
-let inputFeedback = document.getElementById('email-feedback');
-const passwordFeedbackOne = document.getElementById("password-feedback1");
-const passwordFeedbackTwo = document.getElementById("password-feedback2");
-const passwordInputOne = document.getElementById("password-input1");
-const passwordInputTwo = document.getElementById("password-input2");
-const submitButton = document.getElementById("submit-button");
+//let emailInput = (<HTMLInputElement>document.getElementById('email-input'))
+//let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
+//let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+//let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
+//let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+//let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
 function processEmailValue() {
     // it's swapped by htmx so need to find again
     let inputFeedback = document.getElementById('email-feedback');
+    let emailInput = document.getElementById('email-input');
     if (emailInput == null || inputFeedback == null)
         return;
     const emailPassed = emailInput.value;
     inputFeedback.classList.remove('hidden');
     if (emailPassed.length <= 5) {
         inputFeedback.innerText = 'Please enter a valid email address.';
-        //toggleSubmitButton(false)
         return false;
     }
     else {
         const returnValue = validateEmail(emailPassed);
-        //toggleSubmitButton(returnValue)
         if (!returnValue) {
             inputFeedback.innerText = 'Please enter a valid email address.';
-            //toggleSubmitButton(returnValue)
             return false;
         }
         else {
@@ -39,6 +36,7 @@ function validateEmail(address) {
     return false;
 }
 function toggleSubmitButton(toEnable) {
+    let submitButton = document.getElementById("submit-button");
     if (submitButton == null)
         return;
     if (toEnable) {
@@ -55,6 +53,8 @@ function toggleSubmitButton(toEnable) {
     }
 }
 function comparePasswords() {
+    let passwordInputOne = document.getElementById("password-input1");
+    let passwordInputTwo = document.getElementById("password-input2");
     if (passwordInputOne == null || passwordInputTwo == null)
         return;
     const passwordOne = passwordInputOne.value;
@@ -62,6 +62,8 @@ function comparePasswords() {
     toggleSubmitButton(false);
     // check if one of the passwords is not empty
     if (passwordOne.length !== 0 && passwordTwo.length !== 0) {
+        let passwordFeedbackOne = document.getElementById("password-feedback1");
+        let passwordFeedbackTwo = document.getElementById("password-feedback2");
         if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
             passwordFeedbackTwo.classList.remove('hidden');
             // WARNING - includes is case-sensitive so make sure to match output of checkPasswordQuality()
@@ -84,6 +86,8 @@ function comparePasswords() {
     }
 }
 function getPasswordFeedback() {
+    let passwordFeedbackOne = document.getElementById("password-feedback1");
+    let passwordFeedbackTwo = document.getElementById("password-feedback2");
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
         //TODO: Should be really dependent on whether you are in login or sign up
         //toggleSubmitButton(false)
@@ -139,22 +143,23 @@ function scorePassword(pass) {
     return parseInt(String(score));
 }
 function checkFeedbackBeforeSubmit() {
+    console.log('ARE YOU FUCKINGS TUPID?');
     if (!event)
         return;
-    const submitButton = event.target;
+    let submitButton = event.target;
     let inputFeedback = document.getElementById('email-feedback');
+    let passwordFeedbackOne = document.getElementById("password-feedback1");
+    let passwordFeedbackTwo = document.getElementById("password-feedback2");
     if (submitButton == null || inputFeedback == null || passwordFeedbackOne == null || passwordFeedbackTwo == null) {
         event.preventDefault();
         return false;
     }
     if (inputFeedback.classList.contains('hidden') && passwordFeedbackOne.classList.contains('hidden') && passwordFeedbackTwo.classList.contains('hidden')) {
-        console.log('ALLGOD');
         return true;
     }
     else {
-        console.log('FUCKEDIT');
         event.preventDefault();
-        submitButton.disabled = true;
+        toggleSubmitButton(false);
         return false;
     }
 }

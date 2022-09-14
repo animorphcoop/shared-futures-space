@@ -1,5 +1,5 @@
 {% load widget_tweaks %}
-{% render_field field id=id name=name type=type hx-post=hxurl hx-trigger=hxtrigger hx-target=hxtarget hx-swap=hxswap class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"%}
+{% render_field field id=id name=name type=type hx-post=hxurl hx-trigger=hxtrigger hx-target=hxtarget hx-swap=hxswap onkeyup=keyup onfocusout=focusout class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"%}
 
 {% comment %}    {% render_field
     field hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms"
