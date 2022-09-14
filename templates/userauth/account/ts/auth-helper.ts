@@ -13,7 +13,6 @@ const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementBy
 
 
 function processEmailValue() {
-    console.log('LOOOOL')
     if (emailInput == null || inputFeedback == null) return
     const emailPassed = emailInput.value
 
@@ -79,7 +78,7 @@ function comparePasswords() {
             passwordFeedbackTwo.classList.remove('hidden')
 
             // WARNING - includes is case-sensitive so make sure to match output of checkPasswordQuality()
-            if (!passwordFeedbackOne.innerText.includes("Good") && !passwordFeedbackOne.innerText.includes("Secure")) {
+            if (!passwordFeedbackOne.classList.contains("hidden")) {
                 passwordFeedbackTwo.innerText = "Please enter a secure password above first."
             }
 
@@ -102,7 +101,7 @@ function getPasswordFeedback() {
         //TODO: Should be really dependent on whether you are in login or sign up
         toggleSubmitButton(false)
 
-        passwordFeedbackOne.classList.remove('hidden')
+        //passwordFeedbackOne.classList.remove('hidden')
 
 
         const passwordEntered: string = (<HTMLInputElement>document.getElementById("password-input1")).value
@@ -115,19 +114,13 @@ function getPasswordFeedback() {
         const passwordQuality = checkPasswordQuality(passwordEntered)
 
 
-        if (passwordQuality.includes("Secure")) {
-            passwordFeedbackOne.innerText = `${passwordQuality} password, well done!`
-
-        } else if (passwordQuality.includes("Good")) {
-            passwordFeedbackOne.innerText = `${passwordQuality} password, thank you.`
-
-        } else if (passwordQuality.includes("Weak")) {
-            passwordFeedbackOne.innerText = `${passwordQuality} password, spicy it up please!`
-
+        if (passwordQuality.includes("Secure") || passwordQuality.includes("Good")) {
+            //passwordFeedbackTwo.classList.add('hidden')
         } else {
-            passwordFeedbackOne.innerText = `${passwordQuality} password, improve it please!`
-        }
+            passwordFeedbackOne.classList.remove('hidden')
+            passwordFeedbackOne.innerText = `${passwordQuality} Please improve your password!`
 
+        }
         if (!passwordFeedbackTwo.classList.contains('hidden')) {
             passwordFeedbackTwo.classList.add('hidden')
 
