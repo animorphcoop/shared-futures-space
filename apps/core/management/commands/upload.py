@@ -67,7 +67,8 @@ def add_relations(relations_data):
     for userchat_data in relations_data['User Chat']:
         pair = UserPair.objects.get_or_create(user1 = CustomUser.objects.get(display_name = userchat_data['user1']),
                                               user2 = CustomUser.objects.get(display_name = userchat_data['user2']))[0]
-        Message.objects.create(sender = CustomUser.objects.get(display_name = userchat_data['user1']), text = 'hello! :)', chat = pair.chat)
+        for message in userchat_data['messages']:
+            Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = pair.chat)
 
 class Command(BaseCommand):
     help = 'import data'
