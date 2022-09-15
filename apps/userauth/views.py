@@ -250,9 +250,9 @@ def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse
         request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
         if request_source_url == "signup":
             if get_user_model().objects.filter(email=user_mail).exists():
-                return HttpResponse('<span id="email-feedback" class="block text-red-600 font-kanit-400 text-xxs pt-2">This address is taken, please choose a different one.</span>')
+                return HttpResponse('This address is taken, please choose a different one.')
             else:
-                return HttpResponse('<span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>')
+                return HttpResponse('')
         else:
             return HttpResponse("Could not process your request, please refresh the page or get in touch.")
 

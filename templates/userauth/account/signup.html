@@ -18,10 +18,11 @@
 
             <div class="pt-4 px-4 pb-9">
                 {% include "partials/input-label.html" with for="email-input" label="Email" %}
+                {% render_field form.email id="email-input" type="email" hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms" hx-target="#email-feedback" hx-swap="innerHTML" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
+
                 {% comment %}
-                {% render_field form.email id="email-input" type="email" hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms" hx-target="#email-feedback" id="email-input" hx-swap="innerHTML" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
-{% endcomment %}
                 {% include "partials/input-text.html" with field=form.email id="email-input" name="email" type="email" hxurl="/account/check_email/" hxtrigger="focusout[processEmailValue()] delay:500ms" hxtarget="#email-feedback" hxswap="innerHTML" %}
+{% endcomment %}
                 {% comment %}controlled via js/ts{% endcomment %}
                 <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
             </div>
@@ -35,20 +36,22 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input1" label="Password" %}
-{% comment %}
                 {% render_field form.password1 id="password-input1" onfocusout="getPasswordFeedback()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
-{% endcomment %}
+
+                {% comment %}
                 {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password" focusout="getPasswordFeedback()" %}
+{% endcomment %}
 
                 <span id="password-feedback1" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>
             </div>
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input2" label="Repeat password" %}
-                {% comment %}
                 {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
-{% endcomment %}
+
+                {% comment %}
                 {% include "partials/input-text.html" with field=form.password2 id="password-input2" name="password-input2" type="password" keyup="comparePasswords()" %}
+{% endcomment %}
 
                 <span id="password-feedback2" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>
             </div>
@@ -79,6 +82,32 @@
 
         {% block scripts %}
             <script src="{% static 'js/auth-helper.js' %}"></script>
+            <script>
+{% comment %}                var targetEmail = document.getElementById('email-feedback')
+                var observer = new MutationObserver(function (mutations) {
+                    mutations.forEach(function (mutation) {
+                        if (mutation.type === 'childList') {
+                            if (target.innerText === '') {
+                                console.log('empty')
+                                console.log(target.classList.contains('hidden'))
+                                if (!target.classList.contains('hidden')) {
+
+                                    target.classList.add('hidden')
+                                }
+                                console.log('LOOOL')
+                            } else {
+                                if (target.classList.contains('hidden')) {
+                                    target.classList.remove('hidden')
+                                }
+                            }
+                            console.log(target.innerText)
+                        }
+                        console.log(mutation.type);
+                    });
+                });
+                var config = {attributes: true, childList: true, characterData: true};
+                observer.observe(target, config);{% endcomment %}
+            </script>
         {% endblock %}
 
         {% include "partials/footer-gradient.html" %}

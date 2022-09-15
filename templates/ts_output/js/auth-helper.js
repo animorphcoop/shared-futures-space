@@ -1,14 +1,38 @@
 "use strict";
-//let emailInput = (<HTMLInputElement>document.getElementById('email-input'))
-//let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
-//let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
-//let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
-//let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
-//let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+const emailInput = document.getElementById('email-input');
+const inputFeedback = document.getElementById('email-feedback');
+const passwordFeedbackOne = document.getElementById("password-feedback1");
+const passwordFeedbackTwo = document.getElementById("password-feedback2");
+const passwordInputOne = document.getElementById("password-input1");
+const passwordInputTwo = document.getElementById("password-input2");
+const submitButton = document.getElementById("submit-button");
+//var targetEmail = document.getElementById('email-feedback')
+//TODO: Have 3 observers and they trigger a method that collates results from the 3 existing ones, then unlock the button and skip checkFeedbackBeforeSubmit dodgy method
+var observerEmail = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+        if (mutation.type === 'childList') {
+            if (inputFeedback.innerText === '') {
+                console.log('empty');
+                console.log(inputFeedback.classList.contains('hidden'));
+                if (!inputFeedback.classList.contains('hidden')) {
+                    inputFeedback.classList.add('hidden');
+                }
+                console.log('LOOOL');
+            }
+            else {
+                if (inputFeedback.classList.contains('hidden')) {
+                    inputFeedback.classList.remove('hidden');
+                }
+            }
+            console.log(inputFeedback.innerText);
+        }
+        console.log(mutation.type);
+    });
+});
+var config = { childList: true };
+observerEmail.observe(inputFeedback, config);
 function processEmailValue() {
-    // it's swapped by htmx so need to find again
-    let inputFeedback = document.getElementById('email-feedback');
-    let emailInput = document.getElementById('email-input');
+    //let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
     if (emailInput == null || inputFeedback == null)
         return;
     const emailPassed = emailInput.value;
@@ -36,7 +60,7 @@ function validateEmail(address) {
     return false;
 }
 function toggleSubmitButton(toEnable) {
-    let submitButton = document.getElementById("submit-button");
+    //let submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
     if (submitButton == null)
         return;
     if (toEnable) {
@@ -53,8 +77,8 @@ function toggleSubmitButton(toEnable) {
     }
 }
 function comparePasswords() {
-    let passwordInputOne = document.getElementById("password-input1");
-    let passwordInputTwo = document.getElementById("password-input2");
+    //let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+    //let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
     if (passwordInputOne == null || passwordInputTwo == null)
         return;
     const passwordOne = passwordInputOne.value;
@@ -86,8 +110,8 @@ function comparePasswords() {
     }
 }
 function getPasswordFeedback() {
-    let passwordFeedbackOne = document.getElementById("password-feedback1");
-    let passwordFeedbackTwo = document.getElementById("password-feedback2");
+    //let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+    //let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
         //TODO: Should be really dependent on whether you are in login or sign up
         //toggleSubmitButton(false)
@@ -143,17 +167,14 @@ function scorePassword(pass) {
     return parseInt(String(score));
 }
 function checkFeedbackBeforeSubmit() {
-    console.log('ARE YOU FUCKINGS TUPID?');
+    console.log(`hello ${event}`);
     if (!event)
         return;
-    let submitButton = event.target;
-    let inputFeedback = document.getElementById('email-feedback');
-    let passwordFeedbackOne = document.getElementById("password-feedback1");
-    let passwordFeedbackTwo = document.getElementById("password-feedback2");
     if (submitButton == null || inputFeedback == null || passwordFeedbackOne == null || passwordFeedbackTwo == null) {
         event.preventDefault();
         return false;
     }
+    console.log('ok?');
     if (inputFeedback.classList.contains('hidden') && passwordFeedbackOne.classList.contains('hidden') && passwordFeedbackTwo.classList.contains('hidden')) {
         return true;
     }
@@ -162,4 +183,5 @@ function checkFeedbackBeforeSubmit() {
         toggleSubmitButton(false);
         return false;
     }
+    console.log('yay?');
 }

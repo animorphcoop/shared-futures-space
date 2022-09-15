@@ -1,18 +1,47 @@
-//let emailInput = (<HTMLInputElement>document.getElementById('email-input'))
-//let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
+const emailInput = (<HTMLInputElement>document.getElementById('email-input'))
+const inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
 
 
-//let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
-//let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
+const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
 
-//let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
-//let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+
+
+const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
+
+
+//var targetEmail = document.getElementById('email-feedback')
+
+//TODO: Have 3 observers and they trigger a method that collates results from the 3 existing ones, then unlock the button and skip checkFeedbackBeforeSubmit dodgy method
+var observerEmail = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+        if (mutation.type === 'childList') {
+            if (inputFeedback.innerText === '') {
+                console.log('empty')
+                console.log(inputFeedback.classList.contains('hidden'))
+                if (!inputFeedback.classList.contains('hidden')) {
+
+                    inputFeedback.classList.add('hidden')
+                }
+                console.log('LOOOL')
+            } else {
+                if (inputFeedback.classList.contains('hidden')) {
+                    inputFeedback.classList.remove('hidden')
+                }
+            }
+            console.log(inputFeedback.innerText)
+        }
+        console.log(mutation.type);
+    });
+});
+var config = {childList: true};
+observerEmail.observe(inputFeedback, config);
 
 
 function processEmailValue() {
-    // it's swapped by htmx so need to find again
-    let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
-    let emailInput = (<HTMLInputElement>document.getElementById('email-input'))
+    //let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
 
 
     if (emailInput == null || inputFeedback == null) return
@@ -47,7 +76,7 @@ function validateEmail(address: string) {
 
 
 function toggleSubmitButton(toEnable: boolean) {
-    let submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
+    //let submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
 
     if (submitButton == null) return
 
@@ -65,8 +94,8 @@ function toggleSubmitButton(toEnable: boolean) {
 }
 
 function comparePasswords() {
-    let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
-    let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+    //let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+    //let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
 
 
     if (passwordInputOne == null || passwordInputTwo == null) return
@@ -110,8 +139,8 @@ function comparePasswords() {
 function getPasswordFeedback() {
 
 
-    let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
-    let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
+    //let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+    //let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
 
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
 
@@ -191,19 +220,13 @@ function scorePassword(pass: string) {
 }
 
 function checkFeedbackBeforeSubmit() {
-    console.log('ARE YOU FUCKINGS TUPID?')
+    console.log(`hello ${event}`)
     if (!event) return
-    let submitButton: HTMLButtonElement = <HTMLButtonElement>event.target
-    let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
-
-    let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
-    let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
-
-
     if (submitButton == null || inputFeedback == null || passwordFeedbackOne == null || passwordFeedbackTwo == null) {
         event.preventDefault()
         return false
     }
+    console.log('ok?')
 
     if (inputFeedback.classList.contains('hidden') && passwordFeedbackOne.classList.contains('hidden') && passwordFeedbackTwo.classList.contains('hidden')) {
         return true
@@ -212,4 +235,6 @@ function checkFeedbackBeforeSubmit() {
         toggleSubmitButton(false)
         return false
     }
+    console.log('yay?')
+
 }
