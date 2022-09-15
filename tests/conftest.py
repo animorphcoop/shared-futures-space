@@ -3,6 +3,7 @@ from django.conf import settings
 
 from django.core.files.images import ImageFile
 from wagtail.images.models import Image
+from django.utils import timezone
 from io import BytesIO
 
 from project.models import Project
@@ -49,6 +50,10 @@ def test_how_to_resource(db):
 def test_case_study_resource(db):
     return CaseStudy.objects.create(title='case study title', summary='not much to say, do it yourself',
                                     link='https://animorph.coop/')
+
+@pytest.fixture(scope='function')
+def test_poll(db):
+    return Poll.objects.create(question='is this a test question?', options = ['option 1', 'option 2'], expires = timezone.now() + timezone.timedelta(days=1), voter_num = 3)
 
 @pytest.fixture(scope='function')
 def test_image(db):
