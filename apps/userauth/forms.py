@@ -48,6 +48,8 @@ class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super(CustomSignupForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs = {'borken': 'false'}
+        self.fields['password1'].widget.attrs = {'borken': 'false'}
+        self.fields['password2'].widget.attrs = {'borken': 'false'}
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)

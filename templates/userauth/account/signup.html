@@ -29,12 +29,6 @@
                       class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 1</span>
             </div>
 
-            {% comment %}
-    {{ form.as_p }}
-    {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-    {% endif %}
-{% endcomment %}
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input1" label="Password" %}
@@ -86,9 +80,6 @@
 
         {% block scripts %}
             <script src="{% static 'js/auth-helper.js' %}"></script>
-            <script>
-                document.getElementById('email-input').setCustomValidity('valid')
-            </script>
         {% endblock %}
 
         {% include "partials/footer-gradient.html" %}
