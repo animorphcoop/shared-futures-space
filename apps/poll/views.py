@@ -1,6 +1,6 @@
 # pyre-strict
 
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, _ModelFormT
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.handlers.wsgi import WSGIRequest
@@ -12,7 +12,7 @@ from uuid import UUID
 from typing import Dict, Any
 
 from .models import Poll, Vote
-from project.models import Project, ProjectMembership
+from project.models import Project, ProjectMembership # pyre-ignore[21]
 
 class PollView(TemplateView):
     def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponseRedirect:
@@ -45,7 +45,7 @@ class PollCreateForm(ModelForm):
 class PollCreateView(CreateView): # pyre-ignore[24]
     model = Poll
     form_class = PollCreateForm
-    def form_valid(self, form):
+    def form_valid(self, form: _ModelFormT) -> HttpResponseRedirect:
         new_poll = Poll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, voter_num = len(ProjectMembership.objects.filter(project = form.cleaned_data['project'])))
         return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
     def get_success_url(self) -> str:
