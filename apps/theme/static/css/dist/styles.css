@@ -815,6 +815,10 @@ select {
   margin-right: 0.5rem;
 }
 
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
 .box-content {
   box-sizing: content-box;
 }
@@ -835,10 +839,6 @@ select {
   display: flex;
 }
 
-.inline-flex {
-  display: inline-flex;
-}
-
 .table {
   display: table;
 }
@@ -857,14 +857,6 @@ select {
 
 .h-0 {
   height: 0px;
-}
-
-.h-12 {
-  height: 3rem;
-}
-
-.h-8 {
-  height: 2rem;
 }
 
 .h-screen {
@@ -903,12 +895,12 @@ select {
   width: 1.25rem;
 }
 
-.w-1\/2 {
-  width: 50%;
-}
-
 .w-auto {
   width: auto;
+}
+
+.w-1\/2 {
+  width: 50%;
 }
 
 .w-4 {
@@ -1050,6 +1042,10 @@ select {
 
 .rounded-none {
   border-radius: 0px;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
 }
 
 .rounded-t-lg {
@@ -1203,9 +1199,81 @@ select {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
 
+.bg-\[linear-gradient\(180deg\2c _\#005BBB_49\.9\%\2c _\#FFD500_50\%\)\] {
+  background-image: linear-gradient(180deg, #005BBB 49.9%, #FFD500 50%);
+}
+
+.bg-\[conic-gradient\(at_left_center\2c _\#eab308\2c _\#a855f7\2c _\#3b82f6\)\] {
+  background-image: conic-gradient(at left center, #eab308, #a855f7, #3b82f6);
+}
+
+.bg-\[linear-gradient\(180deg\2c _\#EEF3F4_0\%\2c _\#E5F1F8_0\.01\%\2c _E5F1F8_15\.62\%\)\] {
+  background-image: linear-gradient(180deg, #EEF3F4 0%, #E5F1F8 0.01%, E5F1F8 15.62%);
+}
+
+.bg-\[linear-gradient\(180deg\2c _\#EEF3F4_0\%\2c _\#E5F1F8_0\.01\%\2c _\#E5F1F8_17\%\)\] {
+  background-image: linear-gradient(180deg, #EEF3F4 0%, #E5F1F8 0.01%, #E5F1F8 17%);
+}
+
+.bg-\[linear-gradient\(180deg\2c _\#EEF3F4_0\%\2c _\#E5F1F8_17\%\)\] {
+  background-image: linear-gradient(180deg, #EEF3F4 0%, #E5F1F8 17%);
+}
+
+.bg-\[linear-gradient\(180deg\2c _\#EEF3F4_1\%\2c _\#E5F1F8_17\%\)\] {
+  background-image: linear-gradient(180deg, #EEF3F4 1%, #E5F1F8 17%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_1\%\2c \#E5F1F8_17\%\2c \)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 1%,#E5F1F8 17%,);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_1\%\2c \#E5F1F8_17\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 1%,#E5F1F8 17%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_1\%\2c \#E5F1F8_17\%\2c \#111111_100\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 1%,#E5F1F8 17%,#111111 100%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_1\%\2c \#E5F1F8_17\%\2c \#FFFFFF_100\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 1%,#E5F1F8 17%,#FFFFFF 100%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_1\%\2c \#E5F1F8_12\%\2c \#FFFFFF_100\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 1%,#E5F1F8 12%,#FFFFFF 100%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_1\%\2c \#777777_12\%\2c \#FFFFFF_100\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 1%,#777777 12%,#FFFFFF 100%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_1\%\2c \#E5F1F8_0\.01\%\2c \#E5F1F8_12\%\2c \#FFFFFF_100\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 1%,#E5F1F8 0.01%,#E5F1F8 12%,#FFFFFF 100%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_1\%\2c \#E5F1F8_0\.01\%\2c \#E5F1F8_12\%\2c \#FFFFFF_17\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 1%,#E5F1F8 0.01%,#E5F1F8 12%,#FFFFFF 17%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_0\%\2c \#E5F1F8_1\%\2c \#E5F1F8_12\%\2c \#FFFFFF_15\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 0%,#E5F1F8 1%,#E5F1F8 12%,#FFFFFF 15%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_0\%\2c \#E5F1F8_1\%\2c \#E5F1F8_12\%\2c \#e5ffff_15\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 0%,#E5F1F8 1%,#E5F1F8 12%,#e5ffff 15%);
+}
+
+.bg-\[linear-gradient\(180deg\2c \#EEF3F4_0\%\2c \#E5F1F8_1\%\2c \#e5ffff_15\%\)\] {
+  background-image: linear-gradient(180deg,#EEF3F4 0%,#E5F1F8 1%,#e5ffff 15%);
+}
+
 .from-blue-second {
   --tw-gradient-from: rgba(229, 241, 248, 1);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(229 241 248 / 0));
+}
+
+.via-white {
+  --tw-gradient-stops: var(--tw-gradient-from), #FFFFFF, var(--tw-gradient-to, rgb(255 255 255 / 0));
 }
 
 .to-white {
@@ -1238,6 +1306,10 @@ select {
 
 .p-7 {
   padding: 1.75rem;
+}
+
+.p-3 {
+  padding: 0.75rem;
 }
 
 .px-4 {
@@ -1278,6 +1350,11 @@ select {
 .px-8 {
   padding-left: 2rem;
   padding-right: 2rem;
+}
+
+.px-4\.5 {
+  padding-left: 1.125em;
+  padding-right: 1.125em;
 }
 
 .px-2 {
@@ -1325,19 +1402,9 @@ select {
   padding-bottom: 1.25rem;
 }
 
-.px-4\.5 {
-  padding-left: 1.125em;
-  padding-right: 1.125em;
-}
-
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.py-4\.5 {
-  padding-top: 1.125em;
-  padding-bottom: 1.125em;
 }
 
 .pb-2\.5 {
@@ -1441,7 +1508,7 @@ select {
 }
 
 .font-body {
-  font-family: EB_Garamond_Regular, serif;
+  font-family: EB_Garamond_Medium, serif;
 }
 
 .font-kanit-500 {
