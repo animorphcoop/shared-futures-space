@@ -115,7 +115,7 @@ class CustomUserUpdateView(TemplateView):
             print(form.errors)
             return HttpResponse("Failed to retrieve or process the change, please refresh the page")
 
-
+# TODO: is this actually used anywhere? can't find it if so
 def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[HttpResponse, HttpResponse]:
     current_user = request.user
     data = QueryDict(request.body).dict()
@@ -251,14 +251,11 @@ def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse
         request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
         if request_source_url == "signup":
             if get_user_model().objects.filter(email=user_mail).exists():
-                return HttpResponse(
-                    "This address is taken, please choose a different one.")
+                return HttpResponse("This address is taken, please choose a different one.")
             else:
-                return HttpResponse(
-                    "This address address is available.")
+                return HttpResponse("This address address is available.")
         else:
             return HttpResponse("<h2>Unrecognised referrer: " + request_source_url + "</h2>")
-
     else:
         return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
 
