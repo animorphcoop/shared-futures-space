@@ -256,7 +256,6 @@ def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse
                 return HttpResponse("This address address is available.")
         else:
             return HttpResponse("<h2>Unrecognised referrer: " + request_source_url + "</h2>")
-
     else:
         return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
 

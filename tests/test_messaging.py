@@ -59,7 +59,7 @@ def test_project_chat_interface(client, test_user, test_project):
 
 def test_direct_chat_basics(client, test_user, other_test_user):
     from userauth.util import get_userpair # import here because importing from util is side-effecting on the db the first time it happens and pytest doesn't like that
-    pair = get_userpair(test_user, other_test_user)
+    pair = get_userpair(other_test_user, test_user)
     chat_url = reverse('user_chat', args=[other_test_user.uuid])
     client.force_login(test_user)
     chat_page = client.get(chat_url)

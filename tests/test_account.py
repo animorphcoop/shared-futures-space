@@ -95,6 +95,7 @@ def test_user_request_flow(client, test_user, admin_client):
     action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
     admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
     messages = client.get(reverse('user_chat', args=[get_system_user().uuid]))
+    print(str(messages.content))
     assert 'your request to become an editor has been granted' in str(messages.content)
 
 
