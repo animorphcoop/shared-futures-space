@@ -15,14 +15,17 @@ function setupObservers() {
             if (inputFeedback.innerText === '') {
                 if (!inputFeedback.classList.contains('hidden')) {
                     inputFeedback.classList.add('hidden');
-                    emailInput.setCustomValidity('');
+                    //emailInput.setCustomValidity('')
+                    emailInput.setAttribute('borken', 'false');
                     evaluateButton();
                 }
             }
             else {
                 if (inputFeedback.classList.contains('hidden')) {
                     inputFeedback.classList.remove('hidden');
-                    emailInput.setCustomValidity('invalid');
+                    //emailInput.setCustomValidity('invalid')
+                    //emailInput.classList.add("ring-red-important", "border-red-important", "focus:ring-red-important")
+                    emailInput.setAttribute('borken', 'true');
                 }
             }
         });
@@ -36,14 +39,14 @@ function setupObservers() {
             if (passwordFeedbackOne.innerText === '') {
                 if (!passwordFeedbackOne.classList.contains('hidden')) {
                     passwordFeedbackOne.classList.add('hidden');
-                    passwordInputOne.setCustomValidity('');
+                    //passwordInputOne.setCustomValidity('')
                     evaluateButton();
                 }
             }
             else {
                 if (passwordFeedbackOne.classList.contains('hidden')) {
                     passwordFeedbackOne.classList.remove('hidden');
-                    passwordInputOne.setCustomValidity('invalid');
+                    //passwordInputOne.setCustomValidity('invalid')
                 }
             }
         });
@@ -57,14 +60,14 @@ function setupObservers() {
             if (passwordFeedbackTwo.innerText === '') {
                 if (!passwordFeedbackTwo.classList.contains('hidden')) {
                     passwordFeedbackTwo.classList.add('hidden');
-                    passwordInputTwo.setCustomValidity('');
+                    //passwordInputTwo.setCustomValidity('')
                     evaluateButton();
                 }
             }
             else {
                 if (passwordFeedbackTwo.classList.contains('hidden')) {
                     passwordFeedbackTwo.classList.remove('hidden');
-                    passwordInputTwo.setCustomValidity('invalid');
+                    //passwordInputTwo.setCustomValidity('invalid')
                 }
             }
         });

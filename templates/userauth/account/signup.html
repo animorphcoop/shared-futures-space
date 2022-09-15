@@ -12,19 +12,21 @@
 
         {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
 
-        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}" x-init="setupObservers()">
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}"
+              x-init="setupObservers()">
 
             {% csrf_token %}
 
             <div class="pt-4 px-4 pb-9">
                 {% include "partials/input-label.html" with for="email-input" label="Email" %}
-                {% render_field form.email id="email-input" type="email" hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms" hx-target="#email-feedback" hx-swap="innerHTML" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important" %}
+                {% render_field form.email id="email-input" type="email" hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms" hx-target="#email-feedback" hx-swap="innerHTML" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 borken:border-red-important focus:borken:ring-red-important" %}
 
                 {% comment %}
                 {% include "partials/input-text.html" with field=form.email id="email-input" name="email" type="email" hxurl="/account/check_email/" hxtrigger="focusout[processEmailValue()] delay:500ms" hxtarget="#email-feedback" hxswap="innerHTML" %}
 {% endcomment %}
                 {% comment %}controlled via js/ts{% endcomment %}
-                <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 1</span>
+                <span id="email-feedback"
+                      class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 1</span>
             </div>
 
             {% comment %}
@@ -36,24 +38,26 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input1" label="Password" %}
-                {% render_field form.password1 id="password-input1" onfocusout="getPasswordFeedback()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important" %}
+                {% render_field form.password1 id="password-input1" onfocusout="getPasswordFeedback()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 borken:border-red-important focus:borken:ring-red-important" %}
 
                 {% comment %}
                 {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password" focusout="getPasswordFeedback()" %}
 {% endcomment %}
 
-                <span id="password-feedback1" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 2</span>
+                <span id="password-feedback1"
+                      class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 2</span>
             </div>
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input2" label="Repeat password" %}
-                {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important" %}
+                {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 borken:border-red-important focus:borken:ring-red-important" %}
 
                 {% comment %}
                 {% include "partials/input-text.html" with field=form.password2 id="password-input2" name="password-input2" type="password" keyup="comparePasswords()" %}
 {% endcomment %}
 
-                <span id="password-feedback2" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 3</span>
+                <span id="password-feedback2"
+                      class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 3</span>
             </div>
 
             <div class="px-4 pb-6">
@@ -83,30 +87,7 @@
         {% block scripts %}
             <script src="{% static 'js/auth-helper.js' %}"></script>
             <script>
-{% comment %}                var targetEmail = document.getElementById('email-feedback')
-                var observer = new MutationObserver(function (mutations) {
-                    mutations.forEach(function (mutation) {
-                        if (mutation.type === 'childList') {
-                            if (target.innerText === '') {
-                                console.log('empty')
-                                console.log(target.classList.contains('hidden'))
-                                if (!target.classList.contains('hidden')) {
-
-                                    target.classList.add('hidden')
-                                }
-                                console.log('LOOOL')
-                            } else {
-                                if (target.classList.contains('hidden')) {
-                                    target.classList.remove('hidden')
-                                }
-                            }
-                            console.log(target.innerText)
-                        }
-                        console.log(mutation.type);
-                    });
-                });
-                var config = {attributes: true, childList: true, characterData: true};
-                observer.observe(target, config);{% endcomment %}
+                document.getElementById('email-input').setCustomValidity('valid')
             </script>
         {% endblock %}
 

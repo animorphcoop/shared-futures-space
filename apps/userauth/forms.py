@@ -40,6 +40,14 @@ class CustomUserUpdateForm(forms.ModelForm):
 class CustomSignupForm(SignupForm):
     # display_name = forms.CharField(max_length=30, label=_("Display name"), help_text=_("Will be shown e.g. when commenting."))
     # organisation = forms.CharField(required=False, label="organisation")
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['email', 'password1', 'password2']
+
+
+    def __init__(self, *args, **kwargs):
+        super(CustomSignupForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs = {'borken': 'false'}
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)

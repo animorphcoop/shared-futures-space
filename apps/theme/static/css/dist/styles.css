@@ -1885,3 +1885,11 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(223 245 246 / var(--tw-bg-opacity));
 }
+
+.borken\:border-red-important[borken="true"] {
+  border-color: rgba(255, 134, 134, 1);
+}
+
+.focus\:borken\:ring-red-important[borken="true"]:focus {
+  --tw-ring-color: rgba(255, 134, 134, 1);
+}
