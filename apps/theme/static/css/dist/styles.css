@@ -1325,6 +1325,21 @@ select {
   padding-bottom: 1.25rem;
 }
 
+.px-4\.5 {
+  padding-left: 1.125em;
+  padding-right: 1.125em;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.py-4\.5 {
+  padding-top: 1.125em;
+  padding-bottom: 1.125em;
+}
+
 .pb-2\.5 {
   padding-bottom: 0.625rem;
 }
