@@ -25,7 +25,6 @@ def test_vote_poll(client, test_user, test_poll, test_project):
     assert 'poll is wrong' in chat_view.content.decode('utf-8')
     client.force_login(test_user)
     client.post(reverse('poll_view', args=[test_poll.uuid]), {'choice': test_poll.options[0]})
-    print(Vote.objects.all()[0].choice)
     assert len(Vote.objects.filter(poll = test_poll, choice = 1)) == 1
     assert Poll.objects.get(id = test_poll.id).closed == False
     Vote.objects.get(poll = test_poll, choice = 1).delete()
