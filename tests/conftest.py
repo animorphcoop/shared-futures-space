@@ -9,6 +9,7 @@ from io import BytesIO
 from project.models import Project
 from area.models import PostCode, Area
 from resources.models import HowTo, CaseStudy
+from poll.models import Poll
 
 
 # a user account to use during testing

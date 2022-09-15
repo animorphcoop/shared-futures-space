@@ -24,13 +24,14 @@ def test_vote_poll(client, test_user, test_poll, test_project):
     assert 'is this a test question?' in chat_view.content.decode('utf-8')
     assert 'poll is wrong' in chat_view.content.decode('utf-8')
     client.force_login(test_user)
-    client.post(reverse('poll_view', args=[test_poll.uuid]), {'choice': '1'})
+    client.post(reverse('poll_view', args=[test_poll.uuid]), {'choice': test_poll.options[0]})
+    print(Vote.objects.all()[0].choice)
     assert len(Vote.objects.filter(poll = test_poll, choice = 1)) == 1
-    assert Poll.objects.get(id = test_poll.id).closed = False
+    assert Poll.objects.get(id = test_poll.id).closed == False
     Vote.objects.get(poll = test_poll, choice = 1).delete()
     test_poll_newref = Poll.objects.get(id = test_poll.id)
     test_poll_newref.voter_num = 1
     test_poll_newref.save()
-    client.post(reverse('poll_view', args=[test_poll.uuid]), {'choice': '0'})
+    client.post(reverse('poll_view', args=[test_poll.uuid]), {'choice': 'poll is wrong'})
     assert len(Vote.objects.filter(poll = test_poll, choice = 0)) == 1
-    assert Poll.objects.get(id = test_poll.id).closed = True
+    assert Poll.objects.get(id = test_poll.id).closed == True
