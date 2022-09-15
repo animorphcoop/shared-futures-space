@@ -82,5 +82,5 @@ class CustomLoginForm(LoginForm):
 
     def __init__(self, *args, **kwargs):
         super(CustomLoginForm, self).__init__(*args, **kwargs)
-        self.fields['login'].widget.attrs = {'borken': 'false'}
+        self.fields['login'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
         self.fields['password'].widget.attrs = {'borken': 'false',}

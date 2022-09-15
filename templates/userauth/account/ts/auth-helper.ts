@@ -12,6 +12,7 @@ const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-in
 const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
 
 
+//TODO: DIFFERENTIATE between signup and login setup - potentially split the helper into 2 depending on the page?
 // triggered from x-init on the form
 function setupObservers() {
 

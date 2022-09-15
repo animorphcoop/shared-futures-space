@@ -28,20 +28,31 @@
             {% endif %}
 
             <div class="pt-4 px-4 pb-9">
-                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                {% comment %}                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
                     Email
-                </label>
+                </label>{% endcomment %}
+                {% comment %}
                 {% render_field form.login id="email-input" onfocusout="processEmailValue()" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
+{% endcomment %}
+                {% include "partials/input-label.html" with for="email-input" label="Email" %}
+                {% include "partials/input-text.html" with field=form.login id="email-input" name="email-input" type="text" %}
+
 
                 {% comment %}controlled via js/ts{% endcomment %}
                 <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
             </div>
 
             <div class="px-4 pb-9">
-                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                {% comment %}
+ <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
                     Password
                 </label>
                 {% render_field form.password id="password-input" class="form-control block w-full px-3 py-2.5 font-body text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
+            {% endcomment %}
+                {% include "partials/input-label.html" with for="password-input" label="Password" %}
+                {% include "partials/input-text.html" with field=form.password id="password-input" name="password-input" type="password" %}
+
+
             </div>
 
             <div class="px-4 pb-9">

@@ -33,10 +33,6 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input1" label="Password" %}
-                {% comment %}
-                {% render_field form.password1 id="password-input1" onfocusout="getPasswordFeedback()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 borken:border-red-important focus:borken:ring-red-important" %}
-{% endcomment %}
-
                 {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password"%}
 
 
@@ -46,10 +42,6 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input2" label="Repeat password" %}
-                {% comment %}
-                {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 borken:border-red-important focus:borken:ring-red-important" %}
-{% endcomment %}
-
                 {% include "partials/input-text.html" with field=form.password2 id="password-input2" name="password-input2" type="password" %}
 
 
