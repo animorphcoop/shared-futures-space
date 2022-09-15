@@ -16,6 +16,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 @pytest.mark.usefixtures('celery_session_app')
 @pytest.mark.usefixtures('celery_session_worker')
 def test_create_account(client, mailoutbox):
+    email_free = client.post(reverse('check_email'), {'email': 'testemail@example.com'}, HTTP_REFERER = '/account/signup/')
+    assert 'This address address is available.' in email_free.content.decode('utf-8')
     response = client.post('/account/signup/', {'email': 'testemail@example.com',
                                                 'email2': 'testemail@example.com',
                                                 'display_name': 'testuser',
@@ -33,6 +35,8 @@ def test_create_account(client, mailoutbox):
                                                      'password': 'test_password'})
     assert login_response.status_code == 302
     assert login_response.url == '/dashboard/'
+    email_free_now = client.post(reverse('check_email'), {'email': 'testemail@example.com'}, HTTP_REFERER = '/account/signup/')
+    assert 'This address is taken, please choose a different one.' in email_free_now.content.decode('utf-8')
 
 
 def test_dashboard_info(client, test_user):
@@ -49,6 +53,12 @@ def test_dashboard_info(client, test_user):
     dash = client.get('/dashboard/')
     assert 'Messages' in str(dash.content)
 
+def test_account_info(client, test_user):
+    info_page = client.get(reverse('user_detail', args=[test_user.id]))
+    assert test_user.display_name in info_page.content.decode('utf-8')
+    assert str(test_user.year_of_birth) in info_page.content.decode('utf-8')
+    assert test_user.post_code.code in info_page.content.decode('utf-8')
+    assert test_user.avatar.url in info_page.content.decode('utf-8')
 
 def test_data_add(client, test_user):
     test_user.year_of_birth = None
@@ -58,6 +68,7 @@ def test_data_add(client, test_user):
     test_user.added_data = False
     test_user.save()
     client.force_login(test_user)
+    client.get(reverse('account_add_data')) # just make sure getting that page is safe
     client.post(reverse('account_add_data'), {'year_of_birth': 1997, 'post_code': 'AB12', 'display_name': 'a test user', 'organisation': 'BIP'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12'
