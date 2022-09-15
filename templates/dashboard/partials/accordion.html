@@ -1,13 +1,23 @@
 <div class="">
-<h1>{{ title }}</h1>
-    <ul>
+    {# Come back to custom gradients https://www.hyperui.dev/blog/custom-gradients-with-tailwindcss-jit #}
+    <div class="bg-gradient-to-b from-blue-second via-white to-white">
+        <div class="px-4.5">
+            <h2 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text py-4">
+                {{ title }}
+            </h2>
+        </div>
+
+    </div>
+
+    <ul class="px-4.5">
         {% for entry in list_items %}
             {% comment %}
             TODO: check whether the entry is a message, notification, river or resource
             {% endcomment %}
-        <li>
-            {{ entry }}
-        </li>
+            <li class="bg-gray-light rounded-xl p-3 mb-9">
+                <p class="font-kanit-400 text-black-meta text-xxxs tracking-widest">28/03/2022 20:05</p>
+                <p class="font-garamond-500 text-black-text text-md leading-tight">{{ entry }}</p>
+            </li>
         {% endfor %}
     </ul>
 </div>
