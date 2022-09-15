@@ -6,18 +6,18 @@ const passwordFeedbackTwo = document.getElementById("password-feedback2");
 const passwordInputOne = document.getElementById("password-input1");
 const passwordInputTwo = document.getElementById("password-input2");
 const submitButton = document.getElementById("submit-button");
-//var targetEmail = document.getElementById('email-feedback')
-//TODO: Have 3 observers and they trigger a method that collates results from the 3 existing ones, then unlock the button and skip checkFeedbackBeforeSubmit dodgy method
-var observerEmail = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-        if (mutation.type === 'childList') {
+// triggered from x-init on the form
+function setupObservers() {
+    console.log('init');
+    //TODO: Have 3 observers and they trigger a method that collates results from the 3 existing ones, then unlock the button and skip checkFeedbackBeforeSubmit dodgy method
+    const observerEmail = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
             if (inputFeedback.innerText === '') {
-                console.log('empty');
-                console.log(inputFeedback.classList.contains('hidden'));
+                console.log('empty email');
                 if (!inputFeedback.classList.contains('hidden')) {
                     inputFeedback.classList.add('hidden');
+                    evaluateButton();
                 }
-                console.log('LOOOL');
             }
             else {
                 if (inputFeedback.classList.contains('hidden')) {
@@ -25,18 +25,64 @@ var observerEmail = new MutationObserver(function (mutations) {
                 }
             }
             console.log(inputFeedback.innerText);
-        }
-        console.log(mutation.type);
+        });
     });
-});
-var config = { childList: true };
-observerEmail.observe(inputFeedback, config);
+    let configEmail = { childList: true };
+    observerEmail.observe(inputFeedback, configEmail);
+    const observerPasswordOne = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (passwordFeedbackOne.innerText === '') {
+                console.log('empty pass1');
+                if (!passwordFeedbackOne.classList.contains('hidden')) {
+                    passwordFeedbackOne.classList.add('hidden');
+                    evaluateButton();
+                }
+            }
+            else {
+                if (passwordFeedbackOne.classList.contains('hidden')) {
+                    passwordFeedbackOne.classList.remove('hidden');
+                }
+            }
+            console.log(passwordFeedbackOne.innerText);
+        });
+    });
+    let configPasswordOne = { childList: true };
+    observerPasswordOne.observe(passwordFeedbackOne, configPasswordOne);
+    const observerPasswordTwo = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (passwordFeedbackTwo.innerText === '') {
+                console.log('empty pass 2');
+                console.log(passwordFeedbackTwo.classList.contains('hidden'));
+                if (!passwordFeedbackTwo.classList.contains('hidden')) {
+                    passwordFeedbackTwo.classList.add('hidden');
+                    evaluateButton();
+                }
+            }
+            else {
+                if (passwordFeedbackTwo.classList.contains('hidden')) {
+                    passwordFeedbackTwo.classList.remove('hidden');
+                }
+            }
+            console.log(passwordFeedbackTwo.innerText);
+        });
+    });
+    let configPasswordTwo = { childList: true };
+    observerPasswordTwo.observe(passwordFeedbackTwo, configPasswordTwo);
+}
+//TODO: ADD DELAY
+function evaluateButton() {
+    if (inputFeedback.innerText === '' && passwordFeedbackOne.innerText === '' && passwordFeedbackTwo.innerText === '') {
+        toggleSubmitButton(true);
+    }
+    else {
+        toggleSubmitButton(false);
+    }
+}
 function processEmailValue() {
     //let inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
     if (emailInput == null || inputFeedback == null)
         return;
     const emailPassed = emailInput.value;
-    inputFeedback.classList.remove('hidden');
     if (emailPassed.length <= 5) {
         inputFeedback.innerText = 'Please enter a valid email address.';
         return false;
@@ -60,7 +106,6 @@ function validateEmail(address) {
     return false;
 }
 function toggleSubmitButton(toEnable) {
-    //let submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
     if (submitButton == null)
         return;
     if (toEnable) {
@@ -77,41 +122,26 @@ function toggleSubmitButton(toEnable) {
     }
 }
 function comparePasswords() {
-    //let passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
-    //let passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
     if (passwordInputOne == null || passwordInputTwo == null)
         return;
     const passwordOne = passwordInputOne.value;
     const passwordTwo = passwordInputTwo.value;
-    toggleSubmitButton(false);
     // check if one of the passwords is not empty
     if (passwordOne.length !== 0 && passwordTwo.length !== 0) {
-        let passwordFeedbackOne = document.getElementById("password-feedback1");
-        let passwordFeedbackTwo = document.getElementById("password-feedback2");
         if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
-            passwordFeedbackTwo.classList.remove('hidden');
-            // WARNING - includes is case-sensitive so make sure to match output of checkPasswordQuality()
-            if (!passwordFeedbackOne.classList.contains("hidden")) {
-                passwordFeedbackTwo.innerText = "Please enter a secure password above first.";
+            if (passwordFeedbackOne.innerText !== '') {
+                passwordFeedbackTwo.innerText = 'Please enter a secure password above first.';
             }
-            // compare email input values
             else if (passwordOne !== passwordTwo) {
-                passwordFeedbackTwo.innerText = "Sorry, passwords do not match.";
+                passwordFeedbackTwo.innerText = 'Sorry, passwords do not match.';
             }
             else {
-                //passwordFeedbackTwo.innerText = "Thank you, passwords do match."
-                //toggleSubmitButton(true)
-                if (!passwordFeedbackTwo.classList.contains('hidden')) {
-                    passwordFeedbackTwo.classList.add('hidden');
-                    toggleSubmitButton(true);
-                }
+                passwordFeedbackTwo.innerText = '';
             }
         }
     }
 }
 function getPasswordFeedback() {
-    //let passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
-    //let passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
         //TODO: Should be really dependent on whether you are in login or sign up
         //toggleSubmitButton(false)
@@ -121,17 +151,12 @@ function getPasswordFeedback() {
             return;
         const passwordQuality = checkPasswordQuality(passwordEntered);
         if (passwordQuality.includes("Secure") || passwordQuality.includes("Good")) {
-            if (!passwordFeedbackOne.classList.contains('hidden')) {
-                passwordFeedbackOne.classList.add('hidden');
-                toggleSubmitButton(true);
-            }
+            passwordFeedbackOne.innerText = '';
         }
         else {
-            if (passwordFeedbackOne.classList.contains('hidden')) {
-                passwordFeedbackOne.classList.remove('hidden');
-            }
-            passwordFeedbackOne.innerText = `Please improve your password!`;
+            passwordFeedbackOne.innerText = 'Please improve your password!';
         }
+        comparePasswords();
     }
 }
 function checkPasswordQuality(pass) {
@@ -165,23 +190,4 @@ function scorePassword(pass) {
     // bonus for length
     score += (pass.length - 6) * 3;
     return parseInt(String(score));
-}
-function checkFeedbackBeforeSubmit() {
-    console.log(`hello ${event}`);
-    if (!event)
-        return;
-    if (submitButton == null || inputFeedback == null || passwordFeedbackOne == null || passwordFeedbackTwo == null) {
-        event.preventDefault();
-        return false;
-    }
-    console.log('ok?');
-    if (inputFeedback.classList.contains('hidden') && passwordFeedbackOne.classList.contains('hidden') && passwordFeedbackTwo.classList.contains('hidden')) {
-        return true;
-    }
-    else {
-        event.preventDefault();
-        toggleSubmitButton(false);
-        return false;
-    }
-    console.log('yay?');
 }

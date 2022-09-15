@@ -12,7 +12,7 @@
 
         {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
 
-        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}" x-init="setupObservers()">
 
             {% csrf_token %}
 
@@ -24,7 +24,7 @@
                 {% include "partials/input-text.html" with field=form.email id="email-input" name="email" type="email" hxurl="/account/check_email/" hxtrigger="focusout[processEmailValue()] delay:500ms" hxtarget="#email-feedback" hxswap="innerHTML" %}
 {% endcomment %}
                 {% comment %}controlled via js/ts{% endcomment %}
-                <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
+                <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 1</span>
             </div>
 
             {% comment %}
@@ -42,7 +42,7 @@
                 {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password" focusout="getPasswordFeedback()" %}
 {% endcomment %}
 
-                <span id="password-feedback1" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>
+                <span id="password-feedback1" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 2</span>
             </div>
 
             <div class="px-4 pb-9">
@@ -53,7 +53,7 @@
                 {% include "partials/input-text.html" with field=form.password2 id="password-input2" name="password-input2" type="password" keyup="comparePasswords()" %}
 {% endcomment %}
 
-                <span id="password-feedback2" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>
+                <span id="password-feedback2" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 3</span>
             </div>
 
             <div class="px-4 pb-6">
