@@ -48,8 +48,8 @@ class CustomSignupForm(SignupForm):
                                              'hx-post': '/account/check_email/',
                                              'hx-trigger': 'focusout[processEmailValue()] delay:500ms',
                                              'hx-target': '#email-feedback', 'hx-swap': 'innerHTML'}
-        self.fields['password1'].widget.attrs = {'borken': 'false', 'onfocusout':"getPasswordFeedback()" }
-        self.fields['password2'].widget.attrs = {'borken': 'false', 'onfocusout':"comparePasswords()" }
+        self.fields['password1'].widget.attrs = {'borken': 'false', 'onfocusout': 'getPasswordFeedback()'}
+        self.fields['password2'].widget.attrs = {'borken': 'false', 'onfocusout': 'comparePasswords()'}
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
@@ -57,13 +57,6 @@ class CustomSignupForm(SignupForm):
         user.save()
         log_signup(user, request)  # analytics
         return user
-
-
-'''
-class CustomUserLoginForm(LoginForm):
-    class Meta(LoginForm.Meta):
-        model: Type[CustomUser] = CustomUser
-'''
 
 
 class CustomUserPersonalForm(forms.Form):
@@ -83,4 +76,11 @@ class CustomLoginForm(LoginForm):
 
     }
 
-# class CustomLoginForm(LoginForm):
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['email', 'password']
+
+    def __init__(self, *args, **kwargs):
+        super(CustomLoginForm, self).__init__(*args, **kwargs)
+        self.fields['login'].widget.attrs = {'borken': 'false'}
+        self.fields['password'].widget.attrs = {'borken': 'false',}
