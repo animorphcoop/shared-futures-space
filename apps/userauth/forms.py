@@ -38,18 +38,18 @@ class CustomUserUpdateForm(forms.ModelForm):
 
 
 class CustomSignupForm(SignupForm):
-    # display_name = forms.CharField(max_length=30, label=_("Display name"), help_text=_("Will be shown e.g. when commenting."))
-    # organisation = forms.CharField(required=False, label="organisation")
     class Meta:
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email', 'password1', 'password2']
 
-
     def __init__(self, *args, **kwargs):
         super(CustomSignupForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs = {'borken': 'false'}
-        self.fields['password1'].widget.attrs = {'borken': 'false'}
-        self.fields['password2'].widget.attrs = {'borken': 'false'}
+        self.fields['email'].widget.attrs = {'borken': 'false', 'hx-post': '/search/',
+                                             'hx-post': '/account/check_email/',
+                                             'hx-trigger': 'focusout[processEmailValue()] delay:500ms',
+                                             'hx-target': '#email-feedback', 'hx-swap': 'innerHTML'}
+        self.fields['password1'].widget.attrs = {'borken': 'false', 'onfocusout':"getPasswordFeedback()" }
+        self.fields['password2'].widget.attrs = {'borken': 'false', 'onfocusout':"comparePasswords()" }
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
@@ -71,8 +71,9 @@ class CustomUserPersonalForm(forms.Form):
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
     organisation = forms.CharField(max_length=50)
-    def __init__(self, *arg: List[Any], **kwarg: Dict[str,Any]) -> None:
-        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg) # pyre-ignore[6]
+
+    def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
+        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
         self.empty_permitted = True
 
 
