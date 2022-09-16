@@ -19,9 +19,6 @@
 
             <div class="pt-4 px-4 pb-9">
                 {% include "partials/input-label.html" with for="email-input" label="Email" %}
-                {% comment %}
-                {% render_field form.email id="email-input" type="email" hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms" hx-target="#email-feedback" hx-swap="innerHTML" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0 borken:border-red-important focus:borken:ring-red-important" %}
-{% endcomment %}
 
                 {% include "partials/input-text.html" with field=form.email id="email-input" name="email" type="email" %}
 
@@ -51,7 +48,7 @@
 
             <div class="px-4 pb-6">
 
-                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" onclick="checkFeedbackBeforeSubmit()" %}
+                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" %}
 
             </div>
 
@@ -75,7 +72,7 @@
 
         {% block scripts %}
             <script src="{% static 'js/signup.js' %}"></script>
-            <script src="{% static 'js/auth-helper.js' %}"></script>
+            <script src="{% static 'js/auth_helper.js' %}"></script>
 
         {% endblock %}
 

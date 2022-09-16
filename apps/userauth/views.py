@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation
 from django.contrib.auth import get_user_model
-from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm
+from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm, CustomResetPasswordForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -25,7 +25,7 @@ from typing import Type, List, Dict, Union, Any
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
-from allauth.account.views import LoginView, SignupView
+from allauth.account.views import LoginView, SignupView, PasswordResetView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
@@ -264,7 +264,12 @@ class CustomLoginView(LoginView):
     form_class: Type[CustomLoginForm] = CustomLoginForm
 
 
+class CustomPasswordResetView(PasswordResetView):
+    form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
+
 def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:
     user = get_object_or_404(CustomUser, pk=pk)
     context = {'user': user}
     return render(request, 'account/view_only.html', context)
+
+

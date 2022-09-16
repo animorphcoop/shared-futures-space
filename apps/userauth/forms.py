@@ -5,7 +5,7 @@ from analytics.models import log_signup  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
-from allauth.account.forms import SignupForm, LoginForm
+from allauth.account.forms import SignupForm, LoginForm, ResetPasswordForm
 from wagtail.users.forms import UserEditForm, UserCreationForm
 
 from typing import Type, List, Any, Dict
@@ -84,3 +84,14 @@ class CustomLoginForm(LoginForm):
         super(CustomLoginForm, self).__init__(*args, **kwargs)
         self.fields['login'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
         self.fields['password'].widget.attrs = {'borken': 'false',}
+
+
+
+class CustomResetPasswordForm(ResetPasswordForm):
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['email']
+
+    def __init__(self, *args, **kwargs):
+        super(CustomResetPasswordForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
