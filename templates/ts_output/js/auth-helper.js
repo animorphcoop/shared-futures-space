@@ -1,89 +1,5 @@
 "use strict";
-const emailInput = document.getElementById('email-input');
-const inputFeedback = document.getElementById('email-feedback');
-const passwordFeedbackOne = document.getElementById("password-feedback1");
-const passwordFeedbackTwo = document.getElementById("password-feedback2");
-const passwordInputOne = document.getElementById("password-input1");
-const passwordInputTwo = document.getElementById("password-input2");
-const submitButton = document.getElementById("submit-button");
-// triggered from x-init on the form
-function setupObservers() {
-    console.log('wtf');
-    if (inputFeedback == null)
-        return;
-    newObserver(emailInput, inputFeedback);
-    /*    const observerEmail = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (inputFeedback.innerText === '') {
-                    if (!inputFeedback.classList.contains('hidden')) {
-                        inputFeedback.classList.add('hidden')
-                        emailInput.setAttribute('borken', 'false')
-
-                    }
-                    evaluateButton()
-
-                } else {
-                    if (inputFeedback.classList.contains('hidden')) {
-                        inputFeedback.classList.remove('hidden')
-                        emailInput.setAttribute('borken', 'true')
-
-                    }
-
-
-                }
-
-            })
-        })
-        let configEmail = {childList: true};
-        observerEmail.observe(inputFeedback, configEmail);*/
-    if (passwordFeedbackOne == null)
-        return;
-    newObserver(passwordInputOne, passwordFeedbackOne);
-    /*    const observerPasswordOne = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (passwordFeedbackOne.innerText === '') {
-                    if (!passwordFeedbackOne.classList.contains('hidden')) {
-                        passwordFeedbackOne.classList.add('hidden')
-                        passwordInputOne.setAttribute('borken', 'false')
-                    }
-                    evaluateButton()
-
-                } else {
-                    if (passwordFeedbackOne.classList.contains('hidden')) {
-                        passwordFeedbackOne.classList.remove('hidden')
-                        passwordInputOne.setAttribute('borken', 'true')
-                    }
-                }
-            })
-        })
-        let configPasswordOne = {childList: true};
-        observerPasswordOne.observe(passwordFeedbackOne, configPasswordOne);*/
-    if (passwordFeedbackTwo == null)
-        return;
-    newObserver(passwordInputTwo, passwordFeedbackTwo);
-    /*    const observerPasswordTwo = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (passwordFeedbackTwo.innerText === '') {
-                    if (!passwordFeedbackTwo.classList.contains('hidden')) {
-                        passwordFeedbackTwo.classList.add('hidden')
-                        passwordInputTwo.setAttribute('borken', 'false')
-
-                    }
-                    evaluateButton()
-
-                } else {
-                    if (passwordFeedbackTwo.classList.contains('hidden')) {
-                        passwordFeedbackTwo.classList.remove('hidden')
-                        passwordInputTwo.setAttribute('borken', 'true')
-
-
-                    }
-                }
-            })
-        })
-        let configPasswordTwo = {childList: true};
-        observerPasswordTwo.observe(passwordFeedbackTwo, configPasswordTwo);*/
-}
+/* helper functions used in signup and login - import first!*/
 function newObserver(input, feedback) {
     console.log('setting up input');
     const observerEmail = new MutationObserver(function (mutations) {
@@ -106,16 +22,6 @@ function newObserver(input, feedback) {
     let configEmail = { childList: true };
     observerEmail.observe(feedback, configEmail);
 }
-function evaluateButton() {
-    if (inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
-        return;
-    if (inputFeedback.innerText === '' && passwordFeedbackOne.innerText === '' && passwordFeedbackTwo.innerText === '') {
-        toggleSubmitButton(true);
-    }
-    else {
-        toggleSubmitButton(false);
-    }
-}
 function processEmailValue() {
     if (emailInput == null || inputFeedback == null)
         return;
@@ -136,12 +42,6 @@ function processEmailValue() {
         }
     }
 }
-function validateEmail(address) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
-        return true;
-    }
-    return false;
-}
 function toggleSubmitButton(toEnable) {
     if (submitButton == null)
         return;
@@ -157,6 +57,12 @@ function toggleSubmitButton(toEnable) {
             submitButton.disabled = true;
         }
     }
+}
+function validateEmail(address) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
+        return true;
+    }
+    return false;
 }
 function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null)
@@ -180,9 +86,6 @@ function comparePasswords() {
 }
 function getPasswordFeedback() {
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
-        //TODO: Should be really dependent on whether you are in login or sign up
-        //toggleSubmitButton(false)
-        //passwordFeedbackOne.classList.remove('hidden')
         const passwordEntered = document.getElementById("password-input1").value;
         if (passwordEntered.length < 1)
             return;

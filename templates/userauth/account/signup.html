@@ -33,7 +33,7 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input1" label="Password" %}
-                {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password"%}
+                {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password" %}
 
 
                 <span id="password-feedback1"
@@ -74,7 +74,9 @@
         </div>
 
         {% block scripts %}
+            <script src="{% static 'js/signup.js' %}"></script>
             <script src="{% static 'js/auth-helper.js' %}"></script>
+
         {% endblock %}
 
         {% include "partials/footer-gradient.html" %}

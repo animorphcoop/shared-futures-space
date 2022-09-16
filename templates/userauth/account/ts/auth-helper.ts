@@ -1,33 +1,6 @@
-const emailInput = (<HTMLInputElement>document.getElementById('email-input'))
-const inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
+/* helper functions used in signup and login - import first!*/
 
 
-const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
-const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
-
-const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
-const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
-
-
-const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
-
-
-//TODO: DIFFERENTIATE between signup and login setup - potentially split the helper into 2 depending on the page?
-// triggered from x-init on the form
-function setupObservers() {
-
-    if (inputFeedback == null) return
-    newObserver(emailInput, inputFeedback)
-
-
-    if (passwordFeedbackOne == null) return
-    newObserver(passwordInputOne, passwordFeedbackOne)
-
-
-    if (passwordFeedbackTwo == null) return
-    newObserver(passwordInputTwo, passwordFeedbackTwo)
-
-}
 
 function newObserver(input: HTMLInputElement, feedback: HTMLElement) {
     console.log('setting up input')
@@ -56,17 +29,6 @@ function newObserver(input: HTMLInputElement, feedback: HTMLElement) {
 }
 
 
-function evaluateButton() {
-
-    if (inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null) return
-    if (inputFeedback.innerText === '' && passwordFeedbackOne.innerText === '' && passwordFeedbackTwo.innerText === '') {
-        toggleSubmitButton(true)
-    } else {
-        toggleSubmitButton(false)
-    }
-
-
-}
 
 
 function processEmailValue() {
@@ -92,14 +54,6 @@ function processEmailValue() {
 }
 
 
-function validateEmail(address: string) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
-        return true
-    }
-    return false
-}
-
-
 function toggleSubmitButton(toEnable: boolean) {
 
     if (submitButton == null) return
@@ -116,6 +70,20 @@ function toggleSubmitButton(toEnable: boolean) {
         }
     }
 }
+
+
+function validateEmail(address: string) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
+        return true
+    }
+    return false
+}
+
+
+
+
+
+
 
 function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null) return
@@ -164,6 +132,7 @@ function getPasswordFeedback() {
 
     }
 }
+
 
 
 function checkPasswordQuality(pass: string) {

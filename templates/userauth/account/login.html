@@ -16,7 +16,7 @@
 
         {% block title %}{% include "partials/title.html" with title="Log in" %}{% endblock %}
 
-        <form class="" method="POST" action="{% url 'account_login' %}">
+        <form class="" method="POST" action="{% url 'account_login' %}" x-init="setupObservers()">
             {% csrf_token %}
 
             {% if form.non_field_errors %}
@@ -90,7 +90,9 @@
         </div>
 
         {% block scripts %}
+            <script src="{% static 'js/login.js' %}"></script>
             <script src="{% static 'js/auth-helper.js' %}"></script>
+
         {% endblock %}
 
         {% include "partials/footer-gradient.html" %}
