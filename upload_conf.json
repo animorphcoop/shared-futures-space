@@ -40,6 +40,36 @@
           "guidance"
         ]
       },
+         {
+        "title": "East Belfast Enterprise",
+        "summary": "This resource links you to an incubation workspace and training/mentoring initiatives to support new and established businesses in the local area. The company has developed from its original focus providing support in the local area and now works for the benefit of businesses in other areas of Belfast and surrounding areas, through a partnership approach with other organisations.",
+        "tags": [
+          "Enterprise",
+          "Economic",
+          "Skills",
+          "Support"
+        ]
+      },
+        {
+        "title": "Community Advice Services",
+        "summary": "This resource links you to a service providing a free, independent, accessible and confidential advice, information and representation service using a community development approach.",
+        "tags": [
+          "Service",
+          "Economic",
+          "Skills",
+          "Support"
+        ]
+      },
+         {
+        "title": "Community Resource and Finance",
+        "summary": "This resource links you to a service promoting good financial management practice in the community sector by offering financial management advice, training services and a community accountancy service.",
+        "tags": [
+          "Service",
+          "Economic",
+          "Skills",
+          "Support"
+        ]
+      },
       {
         "title": "Starting New Business Advice",
         "summary": "Have an idea but not sure how to go about going ahead with it? You can get a support from the Go For It Programme, which provides step-by-step advice and mentoring to guide founders towards the launch and success of their businesses.",
@@ -89,6 +119,67 @@
         "tags": [
           "",
           ""
+        ]
+      },
+            {
+        "title": "Refresh Café",
+        "summary": "This resource links you to a social enterprise helping a thousand vulnerable people every week to have a roof over their heads, get into work and improve their mental health",
+        "link": "https://www.ebm.org.uk/refresh-cafe/",
+        "image": "autoupload/example1.webp",
+        "body": "body <b>texttt</b>",
+        "tags": [
+          "Enterprise",
+          "Economic",
+          "Regeneration",
+          "Support",
+          "Socialeconomy"
+        ]
+      },
+            {
+        "title": "Restore Shops",
+        "summary": "This resource links you to a social economy project selling a range of good quality second hand clothes, furniture, books, bric-a-brac, refurbished furniture, bikes and other household items.",
+        "link": "https://www.ebm.org.uk/retail/",
+        "image": "autoupload/example1.webp",
+        "body": "body <b>texttt</b>",
+        "tags": [
+          "Enterprise",
+          "Economic",
+          "ustainability",
+          "ESupport",
+          "Socialeconomy"
+        ]
+      },
+            {
+        "title": "test case study 1",
+        "summary": "a case study of studying cases",
+        "link": "https://animorph.cooop",
+        "image": "autoupload/example1.webp",
+        "body": "body <b>texttt</b>",
+        "tags": [
+          "case study",
+          "not useful"
+        ]
+      },
+            {
+        "title": "test case study 1",
+        "summary": "a case study of studying cases",
+        "link": "https://animorph.cooop",
+        "image": "autoupload/example1.webp",
+        "body": "body <b>texttt</b>",
+        "tags": [
+          "case study",
+          "not useful"
+        ]
+      },
+            {
+        "title": "test case study 1",
+        "summary": "a case study of studying cases",
+        "link": "https://animorph.cooop",
+        "image": "autoupload/example1.webp",
+        "body": "body <b>texttt</b>",
+        "tags": [
+          "case study",
+          "not useful"
         ]
       }
     ]
