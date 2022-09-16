@@ -31,17 +31,10 @@
         {% include "dashboard/partials/accordion.html" with title="Notifications" list_items=notifications %}
     {% endblock %}
 
+    {#  Call to action partial, replace URL variable  #}
     <section class="bg-resources-two">
-        <div class="flex flex-col items-center py-7">
-            <p class="font-garamond-500 text-black-large text-22 pb-6">Ready to swim?</p>
-            <a href="{% url 'all_projects' %}" class="inline-block rounded-full px-4 py-4
-                                                        font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-                                                        text-purple bg-white
-                                                        hover:bg-resources-one focus:bg-resources-one
-                                                        transition ease-out duration-300">
-                Go to the spring
-            </a>
-        </div>
+        {% url 'all_projects' as the_url %}
+        {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
     </section>
 
     {% block rivers %}

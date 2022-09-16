@@ -839,6 +839,10 @@ select {
   display: table;
 }
 
+.contents {
+  display: contents;
+}
+
 .hidden {
   display: none;
 }
@@ -1353,6 +1357,16 @@ select {
 .py-4\.5 {
   padding-top: 1.125em;
   padding-bottom: 1.125em;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.py-9 {
+  padding-top: 2.25rem;
+  padding-bottom: 2.25rem;
 }
 
 .pb-2\.5 {
