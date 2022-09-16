@@ -86,9 +86,10 @@ class Project(ClusterableModel):
     reflect_stage: models.ForeignKey = models.ForeignKey(ReflectStage, null = True, default = None, on_delete = models.SET_NULL)
     current_stage: models.CharField = models.CharField(choices = Stage.choices, max_length = 8, null = True, default = None)
     def save(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
+        super().save(*args, **kwargs) # save first or we won't have an id
         if (self.slug == ''):
             self.slug = slugify(self.name + str(self.id)) # pyre-ignore[16]
-        return super().save(*args, **kwargs)
+        super().save() # without args because they tell it that it's the first time saving
     def start_envision(self) -> None:
         if self.current_stage is None:
             self.current_stage = self.Stage.ENVISION
@@ -99,10 +100,14 @@ class Project(ClusterableModel):
             self.current_stage = self.Stage.PLAN
             self.plan_stage = PlanStage.objects.create()
             # for testing purposes ONLY # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-            self.plan_stage.general_poll = Poll.objects.create(question = 'general question', options = ['1', 'b'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30))   #
-            self.plan_stage.funding_poll = Poll.objects.create(question = 'funding question', options = ['1', 'b'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30))   #
-            self.plan_stage.location_poll = Poll.objects.create(question = 'location question', options = ['1', 'b'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) #
-            self.plan_stage.dates_poll = Poll.objects.create(question = 'dates question', options = ['1', 'b'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30))       #
+            self.plan_stage.general_poll = Poll.objects.create(question = 'general question', options = ['1', 'b'], expires = timezone.now() + timezone.timedelta(days=30))   #
+            self.plan_stage.general_poll.make_votes(self)
+            self.plan_stage.funding_poll = Poll.objects.create(question = 'funding question', options = ['1', 'b'], expires = timezone.now() + timezone.timedelta(days=30))   #
+            self.plan_stage.funding_poll.make_votes(self)
+            self.plan_stage.location_poll = Poll.objects.create(question = 'location question', options = ['1', 'b'], expires = timezone.now() + timezone.timedelta(days=30)) #
+            self.plan_stage.location_poll.make_votes(self)
+            self.plan_stage.dates_poll = Poll.objects.create(question = 'dates question', options = ['1', 'b'], expires = timezone.now() + timezone.timedelta(days=30))       #
+            self.plan_stage.dates_poll.make_votes(self)
             self.plan_stage.general_poll.closed = True    #
             self.plan_stage.general_poll.save()
             self.plan_stage.funding_poll.closed = True    #
@@ -124,15 +129,19 @@ class Project(ClusterableModel):
             self.current_stage = self.Stage.ACT
             self.act_stage = ActStage.objects.create()
             self.act_stage.general_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
+            self.act_stage.general_poll.make_votes(self)
             send_system_message(self.act_stage.general_chat, 'poll', context_poll = self.plan_stage.general_poll)
             send_system_message(self.act_stage.general_chat, 'poll', context_poll = self.act_stage.general_poll)
             self.act_stage.funding_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
+            self.act_stage.funding_poll.make_votes(self)
             send_system_message(self.act_stage.funding_chat, 'poll', context_poll = self.plan_stage.funding_poll)
             send_system_message(self.act_stage.funding_chat, 'poll', context_poll = self.act_stage.funding_poll)
             self.act_stage.location_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
+            self.act_stage.location_poll.make_votes(self)
             send_system_message(self.act_stage.location_chat, 'poll', context_poll = self.plan_stage.location_poll)
             send_system_message(self.act_stage.location_chat, 'poll', context_poll = self.act_stage.location_poll)
             self.act_stage.dates_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
+            self.act_stage.dates_poll.make_votes(self)
             send_system_message(self.act_stage.dates_chat, 'poll', context_poll = self.plan_stage.dates_poll)
             send_system_message(self.act_stage.dates_chat, 'poll', context_poll = self.act_stage.dates_poll)
             self.act_stage.save()

@@ -16,7 +16,7 @@ from area.models import PostCode, Area # pyre-ignore[21]
 
 def add_resources(resource_data):
     for new_howto_data in resource_data['How To']:
-        new_howto = HowTo.objects.get_or_create(title = new_howto_data['title'], summary = new_howto_data['summary'])[0]
+        new_howto = HowTo.objects.get_or_create(title = new_howto_data['title'], summary = new_howto_data['summary'], link = new_howto_data['link'])[0]
         for tag in new_howto_data['tags']:
             new_howto.tags.add(tag)
         new_howto.save()
@@ -24,7 +24,7 @@ def add_resources(resource_data):
         with open(new_casestudy_data['image'], 'rb') as f:
             pimg = PillowImage.open(new_casestudy_data['image'])
             img = Image.objects.get_or_create(file = ImageFile(BytesIO(f.read()), name=new_casestudy_data['image']), width = pimg.width, height = pimg.height)[0]
-        new_casestudy = CaseStudy.objects.get_or_create(title = new_casestudy_data['title'], summary = new_casestudy_data['summary'], case_study_image = img)[0]
+        new_casestudy = CaseStudy.objects.get_or_create(title = new_casestudy_data['title'], summary = new_casestudy_data['summary'], case_study_image = img, link = new_casestudy_data['link'])[0]
         new_casestudy.body.append(('body_text', {'content':RichText(new_casestudy_data['body'])}))
         for tag in new_casestudy_data['tags']:
             new_casestudy.tags.add(tag)
@@ -36,7 +36,41 @@ def add_projects(projects_data):
         for tag in project_data['tags']:
             new_project.tags.add(tag)
         new_project.save()
-        new_project.start_envision()
+        for member in project_data['swimmers']:
+            ProjectMembership.objects.get_or_create(project = new_project, user = CustomUser.objects.get(display_name = member), owner = False, champion = False)[0]
+        for member in project_data['champions']:
+            ProjectMembership.objects.get_or_create(project = new_project, user = CustomUser.objects.get(display_name = member), owner = False, champion = True)[0]
+        for member in project_data['owners']:
+            ProjectMembership.objects.get_or_create(project = new_project, user = CustomUser.objects.get(display_name = member), owner = True, champion = True)[0]
+        if 'envision' in project_data:
+            new_project.start_envision()
+            for message in project_data['envision']['chat']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.envision_stage.chat)
+        if 'plan' in project_data:
+            new_project.start_plan()
+            for message in project_data['plan']['general']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.plan_stage.general_chat)
+            for message in project_data['plan']['funding']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.plan_stage.funding_chat)
+            for message in project_data['plan']['location']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.plan_stage.location_chat)
+            for message in project_data['plan']['dates']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.plan_stage.dates_chat)
+        if 'act' in project_data:
+            new_project.start_act()
+            for message in project_data['act']['general']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.act_stage.general_chat)
+            for message in project_data['act']['funding']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.act_stage.funding_chat)
+            for message in project_data['act']['location']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.act_stage.location_chat)
+            for message in project_data['act']['dates']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.act_stage.dates_chat)
+        if 'reflect' in project_data:
+            new_project.start_reflect()
+            for message in project_data['reflect']['chat']:
+                Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = new_project.reflect_stage.chat)
+
 
 def add_organisations(data):
     for org_data in data:
@@ -60,14 +94,11 @@ def add_areas(areas_data):
             PostCode.objects.get_or_create(code = postcode, area = this_area)
 
 def add_relations(relations_data):
-    for projectmembership_data in relations_data['Project Membership']:
-        ProjectMembership.objects.get_or_create(project = Project.objects.get(name = projectmembership_data['Project']),
-                                                user = CustomUser.objects.get(display_name = projectmembership_data['User']),
-                                                owner = projectmembership_data['owner'], champion = projectmembership_data['champion'])[0]
     for userchat_data in relations_data['User Chat']:
         pair = UserPair.objects.get_or_create(user1 = CustomUser.objects.get(display_name = userchat_data['user1']),
                                               user2 = CustomUser.objects.get(display_name = userchat_data['user2']))[0]
-        Message.objects.create(sender = CustomUser.objects.get(display_name = userchat_data['user1']), text = 'hello! :)', chat = pair.chat)
+        for message in userchat_data['messages']:
+            Message.objects.get_or_create(sender = CustomUser.objects.get(display_name = message['from']), text = message['content'], chat = pair.chat)
 
 class Command(BaseCommand):
     help = 'import data'

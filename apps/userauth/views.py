@@ -115,7 +115,7 @@ class CustomUserUpdateView(TemplateView):
             print(form.errors)
             return HttpResponse("Failed to retrieve or process the change, please refresh the page")
 
-
+# TODO: is this actually used anywhere? can't find it if so
 def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[HttpResponse, HttpResponse]:
     current_user = request.user
     data = QueryDict(request.body).dict()
