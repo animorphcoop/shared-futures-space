@@ -1447,6 +1447,18 @@ select {
   padding-top: 1.75rem;
 }
 
+.pb-7 {
+  padding-bottom: 1.75rem;
+}
+
+.pb-3 {
+  padding-bottom: 0.75rem;
+}
+
+.pt-1\.5 {
+  padding-top: 0.375rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -1550,6 +1562,10 @@ select {
 
 .leading-4 {
   line-height: 1rem;
+}
+
+.leading-none {
+  line-height: 1;
 }
 
 .tracking-widest {
