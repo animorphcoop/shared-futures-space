@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation
 from django.contrib.auth import get_user_model
-from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm
+from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm, CustomResetPasswordForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -25,7 +25,7 @@ from typing import Type, List, Dict, Union, Any
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
-from allauth.account.views import LoginView, SignupView
+from allauth.account.views import LoginView, SignupView, PasswordResetView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
@@ -243,7 +243,6 @@ class UserAllChatsView(TemplateView):
 
 
 # helper for inspecting db whether user exists
-# TODO: Add more validation e.g. to lower case
 def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse?
     # print(request.META.get('HTTP_REFERER'))
     if request.POST.getlist('email'):
@@ -251,20 +250,26 @@ def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse
         request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
         if request_source_url == "signup":
             if get_user_model().objects.filter(email=user_mail).exists():
-                return HttpResponse("This address is taken, please choose a different one.")
+                return HttpResponse('This address is taken, please choose a different one.')
             else:
-                return HttpResponse("This address address is available.")
+                return HttpResponse('')
         else:
-            return HttpResponse("<h2>Unrecognised referrer: " + request_source_url + "</h2>")
+            return HttpResponse("Could not process your request, please refresh the page or get in touch.")
+
     else:
-        return HttpResponse("<h2>Failed to retrieve or process the address, please refresh the page.</h2>")
+        return HttpResponse("Could not process your request, please refresh the page or get in touch.")
 
 
 class CustomLoginView(LoginView):
     form_class: Type[CustomLoginForm] = CustomLoginForm
 
 
+class CustomPasswordResetView(PasswordResetView):
+    form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
+
 def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:
     user = get_object_or_404(CustomUser, pk=pk)
     context = {'user': user}
     return render(request, 'account/view_only.html', context)
+
+

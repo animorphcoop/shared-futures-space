@@ -1,30 +1,47 @@
-const emailInput = (<HTMLInputElement>document.getElementById('email-input'))
-
-const inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
-
-const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
-const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
-
-const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
-const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+/* helper functions used in signup and login - import first!*/
 
 
-const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
+
+function newObserver(input: HTMLInputElement, feedback: HTMLElement) {
+    console.log('setting up input')
+    const observerEmail = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (feedback.innerText === '') {
+                if (!feedback.classList.contains('hidden')) {
+                    feedback.classList.add('hidden')
+                    input.setAttribute('borken', 'false')
+                }
+                evaluateButton()
+
+            } else {
+                if (feedback.classList.contains('hidden')) {
+                    feedback.classList.remove('hidden')
+                    input.setAttribute('borken', 'true')
+                }
+
+
+            }
+
+        })
+    })
+    let configEmail = {childList: true};
+    observerEmail.observe(feedback, configEmail);
+}
+
+
 
 
 function processEmailValue() {
-    console.log('LOOOOL')
+
     if (emailInput == null || inputFeedback == null) return
     const emailPassed = emailInput.value
 
-    inputFeedback.classList.remove('hidden')
     if (emailPassed.length <= 5) {
         inputFeedback.innerText = 'Please enter a valid email address.'
         return false
     } else {
         const returnValue = validateEmail(emailPassed)
 
-        toggleSubmitButton(returnValue)
         if (!returnValue) {
             inputFeedback.innerText = 'Please enter a valid email address.'
             return false
@@ -34,15 +51,6 @@ function processEmailValue() {
         }
     }
 
-
-}
-
-
-function validateEmail(address: string) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
-        return true
-    }
-    return false
 }
 
 
@@ -63,9 +71,21 @@ function toggleSubmitButton(toEnable: boolean) {
     }
 }
 
-// CHECK PASSWORDS
-function comparePasswords() {
 
+function validateEmail(address: string) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
+        return true
+    }
+    return false
+}
+
+
+
+
+
+
+
+function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null) return
 
     const passwordOne: string = passwordInputOne.value
@@ -74,36 +94,22 @@ function comparePasswords() {
     // check if one of the passwords is not empty
     if (passwordOne.length !== 0 && passwordTwo.length !== 0) {
 
-
         if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
-            passwordFeedbackTwo.classList.remove('hidden')
+            if (passwordFeedbackOne.innerText !== '') {
+                passwordFeedbackTwo.innerText = 'Please enter a secure password above first.'
 
-            // WARNING - includes is case-sensitive so make sure to match output of checkPasswordQuality()
-            if (!passwordFeedbackOne.innerText.includes("Good") && !passwordFeedbackOne.innerText.includes("Secure")) {
-                passwordFeedbackTwo.innerText = "Please enter a secure password above first."
-            }
-
-            // compare email input values
-            else if (passwordOne !== passwordTwo) {
-                passwordFeedbackTwo.innerText = "Sorry, passwords do not match."
+            } else if (passwordOne !== passwordTwo) {
+                passwordFeedbackTwo.innerText = 'Sorry, passwords do not match.'
             } else {
-                passwordFeedbackTwo.innerText = "Thank you, passwords do match."
-                toggleSubmitButton(true)
-
+                passwordFeedbackTwo.innerText = ''
             }
         }
     }
+
 }
 
 function getPasswordFeedback() {
-
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
-
-        //TODO: Should be really dependent on whether you are in login or sign up
-        toggleSubmitButton(false)
-
-        passwordFeedbackOne.classList.remove('hidden')
-
 
         const passwordEntered: string = (<HTMLInputElement>document.getElementById("password-input1")).value
 
@@ -115,25 +121,18 @@ function getPasswordFeedback() {
         const passwordQuality = checkPasswordQuality(passwordEntered)
 
 
-        if (passwordQuality.includes("Secure")) {
-            passwordFeedbackOne.innerText = `${passwordQuality} password, well done!`
-
-        } else if (passwordQuality.includes("Good")) {
-            passwordFeedbackOne.innerText = `${passwordQuality} password, thank you.`
-
-        } else if (passwordQuality.includes("Weak")) {
-            passwordFeedbackOne.innerText = `${passwordQuality} password, spicy it up please!`
+        if (passwordQuality.includes("Secure") || passwordQuality.includes("Good")) {
+            passwordFeedbackOne.innerText = ''
 
         } else {
-            passwordFeedbackOne.innerText = `${passwordQuality} password, improve it please!`
-        }
-
-        if (!passwordFeedbackTwo.classList.contains('hidden')) {
-            passwordFeedbackTwo.classList.add('hidden')
+            passwordFeedbackOne.innerText = 'Please improve your password!'
 
         }
+        comparePasswords()
+
     }
 }
+
 
 
 function checkPasswordQuality(pass: string) {
@@ -176,3 +175,4 @@ function scorePassword(pass: string) {
 
     return parseInt(String(score));
 }
+

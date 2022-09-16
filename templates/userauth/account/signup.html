@@ -12,39 +12,44 @@
 
         {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
 
-        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}"
+              x-init="setupObservers()">
 
             {% csrf_token %}
 
             <div class="pt-4 px-4 pb-9">
                 {% include "partials/input-label.html" with for="email-input" label="Email" %}
-                {% render_field form.email id="email-input" type="email" hx-post="/account/check_email/" hx-trigger="focusout[processEmailValue()] delay:500ms" hx-target="#email-feedback" id="email-input" hx-swap="innerHTML" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
+
+                {% include "partials/input-text.html" with field=form.email id="email-input" name="email" type="email" %}
 
                 {% comment %}controlled via js/ts{% endcomment %}
-                <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
+                <span id="email-feedback"
+                      class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 1</span>
             </div>
 
-            {% comment %}
-    {{ form.as_p }}
-    {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-    {% endif %}
-{% endcomment %}
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input1" label="Password" %}
-                {% render_field form.password1 id="password-input1" onfocusout="getPasswordFeedback()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
-                <span id="password-feedback1" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>
+                {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password" %}
+
+
+                <span id="password-feedback1"
+                      class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 2</span>
             </div>
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="password-input2" label="Repeat password" %}
-                {% render_field form.password2 id="password-input2" onfocusout="comparePasswords()" class="form-control block w-full px-3 py-2.5 font-body text-black-text placeholder:text-black-meta bg-blue-second bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0" %}
-                <span id="password-feedback2" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2"></span>
+                {% include "partials/input-text.html" with field=form.password2 id="password-input2" name="password-input2" type="password" %}
+
+
+                <span id="password-feedback2"
+                      class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 3</span>
             </div>
 
             <div class="px-4 pb-6">
-                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" onclick="" %}
+
+                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" %}
+
             </div>
 
         </form>
@@ -66,7 +71,9 @@
         </div>
 
         {% block scripts %}
-            <script src="{% static 'js/auth-helper.js' %}"></script>
+            <script src="{% static 'js/signup.js' %}"></script>
+            <script src="{% static 'js/auth_helper.js' %}"></script>
+
         {% endblock %}
 
         {% include "partials/footer-gradient.html" %}

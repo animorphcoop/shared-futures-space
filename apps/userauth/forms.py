@@ -5,11 +5,12 @@ from analytics.models import log_signup  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
-from allauth.account.forms import SignupForm, LoginForm
+from allauth.account.forms import SignupForm, LoginForm, ResetPasswordForm
 from wagtail.users.forms import UserEditForm, UserCreationForm
 
 from typing import Type, List, Any, Dict
 from django.http import HttpRequest
+from typing import Tuple
 
 '''
 Resolving the first&last name issue, reference
@@ -38,8 +39,18 @@ class CustomUserUpdateForm(forms.ModelForm):
 
 
 class CustomSignupForm(SignupForm):
-    # display_name = forms.CharField(max_length=30, label=_("Display name"), help_text=_("Will be shown e.g. when commenting."))
-    # organisation = forms.CharField(required=False, label="organisation")
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['email', 'password1', 'password2']
+
+    def __init__(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
+        super(CustomSignupForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs = {'borken': 'false', 'hx-post': '/search/',
+                                             'hx-post': '/account/check_email/',
+                                             'hx-trigger': 'focusout[processEmailValue()] delay:500ms',
+                                             'hx-target': '#email-feedback', 'hx-swap': 'innerHTML'}
+        self.fields['password1'].widget.attrs = {'borken': 'false', 'onfocusout': 'getPasswordFeedback()'}
+        self.fields['password2'].widget.attrs = {'borken': 'false', 'onfocusout': 'comparePasswords()'}
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
@@ -49,20 +60,14 @@ class CustomSignupForm(SignupForm):
         return user
 
 
-'''
-class CustomUserLoginForm(LoginForm):
-    class Meta(LoginForm.Meta):
-        model: Type[CustomUser] = CustomUser
-'''
-
-
 class CustomUserPersonalForm(forms.Form):
     display_name = forms.CharField(max_length=50)
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
     organisation = forms.CharField(max_length=50)
-    def __init__(self, *arg: List[Any], **kwarg: Dict[str,Any]) -> None:
-        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg) # pyre-ignore[6]
+
+    def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
+        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
         self.empty_permitted = True
 
 
@@ -72,4 +77,22 @@ class CustomLoginForm(LoginForm):
 
     }
 
-# class CustomLoginForm(LoginForm):
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['email', 'password']
+
+    def __init__(self, *args: Tuple[Any], **kwargs: Dict[str,Any]) -> None:
+        super(CustomLoginForm, self).__init__(*args, **kwargs)
+        self.fields['login'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
+        self.fields['password'].widget.attrs = {'borken': 'false',}
+
+
+
+class CustomResetPasswordForm(ResetPasswordForm):
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['email']
+
+    def __init__(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
+        super(CustomResetPasswordForm, self).__init__(*args, **kwargs) # pyre-ignore[6]
+        self.fields['email'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}

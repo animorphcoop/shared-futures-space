@@ -128,6 +128,8 @@ module.exports = {
             addVariant('third-1', '&:nth-child(3n)')
             addVariant('third-2', '&:nth-child(3n+1)')
             addVariant('third-3', '&:nth-child(3n+2)')
+            addVariant('borken', '&[borken="true"]')
+
         }),
         /**
          * '@tailwindcss/forms' is the forms plugin that provides a minimal styling
