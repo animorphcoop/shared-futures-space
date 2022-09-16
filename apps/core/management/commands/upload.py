@@ -16,7 +16,7 @@ from area.models import PostCode, Area # pyre-ignore[21]
 
 def add_resources(resource_data):
     for new_howto_data in resource_data['How To']:
-        new_howto = HowTo.objects.get_or_create(title = new_howto_data['title'], summary = new_howto_data['summary'])[0]
+        new_howto = HowTo.objects.get_or_create(title = new_howto_data['title'], summary = new_howto_data['summary'], link = new_howto_data['link'])[0]
         for tag in new_howto_data['tags']:
             new_howto.tags.add(tag)
         new_howto.save()
@@ -24,7 +24,7 @@ def add_resources(resource_data):
         with open(new_casestudy_data['image'], 'rb') as f:
             pimg = PillowImage.open(new_casestudy_data['image'])
             img = Image.objects.get_or_create(file = ImageFile(BytesIO(f.read()), name=new_casestudy_data['image']), width = pimg.width, height = pimg.height)[0]
-        new_casestudy = CaseStudy.objects.get_or_create(title = new_casestudy_data['title'], summary = new_casestudy_data['summary'], case_study_image = img)[0]
+        new_casestudy = CaseStudy.objects.get_or_create(title = new_casestudy_data['title'], summary = new_casestudy_data['summary'], case_study_image = img, link = new_casestudy_data['link'])[0]
         new_casestudy.body.append(('body_text', {'content':RichText(new_casestudy_data['body'])}))
         for tag in new_casestudy_data['tags']:
             new_casestudy.tags.add(tag)
