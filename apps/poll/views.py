@@ -6,11 +6,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
 from django.urls import reverse
+from django.forms import ModelChoiceField, ModelForm
 from uuid import UUID
 
 from typing import Dict, Any
 
 from .models import Poll, Vote
+from project.models import Project, ProjectMembership # pyre-ignore[21]
 
 class PollView(TemplateView):
     def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponseRedirect:
@@ -34,8 +36,17 @@ class PollView(TemplateView):
         ctx['poll_expires'] = poll.expires
         return ctx
 
+class PollCreateForm(ModelForm):
+    project = ModelChoiceField(queryset=Project.objects.all()) # should only be projects you're a member of
+    class Meta:
+        model = Poll
+        fields = ['question', 'options', 'expires']
+
 class PollCreateView(CreateView): # pyre-ignore[24]
     model = Poll
-    fields = ['question', 'options', 'expires', 'project']
+    form_class = PollCreateForm
+    def form_valid(self, form) -> HttpResponseRedirect: # pyre-ignore[2] - the type of the form argument is some weird private thing that i can't seem to get hold of
+        new_poll = Poll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, voter_num = len(ProjectMembership.objects.filter(project = form.cleaned_data['project'])))
+        return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
     def get_success_url(self) -> str:
         return reverse('poll_view', args=[self.object.uuid]) # pyre-ignore[16]
