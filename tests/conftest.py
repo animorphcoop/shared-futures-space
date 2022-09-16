@@ -54,7 +54,7 @@ def test_case_study_resource(db):
 
 @pytest.fixture(scope='function')
 def test_poll(db):
-    return Poll.objects.create(question='is this a test question?', options = ['option 1', 'option 2'], expires = timezone.now() + timezone.timedelta(days=1), voter_num = 3)
+    return Poll.objects.create(question='is this a test question?', options = ['option 1', 'option 2'], expires = timezone.now() + timezone.timedelta(days=1))
 
 @pytest.fixture(scope='function')
 def test_image(db):
