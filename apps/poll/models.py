@@ -19,40 +19,41 @@ class Poll(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4)
     question: models.CharField = models.CharField(max_length = 100)
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
-    voter_num: models.PositiveIntegerField = models.PositiveIntegerField()
     expires: models.DateTimeField = models.DateTimeField()
     closed: models.BooleanField = models.BooleanField(default = False)
+    # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
+    def make_votes(self, project) -> None: # pyre-ignore[2] can't import Project for this, see next line
+        from project.models import ProjectMembership # pyre-ignore[21] this is considered bad form, but as far as i can tell necessary to avoid a circular import
+        for voter in ProjectMembership.objects.filter(project = project):
+            Vote.objects.create(user = voter.user, poll = self, choice = None)
     @property
     def current_results(self) -> Dict[str,List[CustomUser]]: # pyre-ignore[11]
-        votes = Vote.objects.filter(poll = self)
+        votes = Vote.objects.filter(poll = self, choice__isnull = False)
         results = {self.options[n-1] if n != 0 else 'poll is wrong':[] for n in range(len(self.options) + 1)}
         for vote in votes:
             results[self.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
         return results
     def check_closed(self) -> bool:
         if self.closed:
-            print('already closed')
             return True
         elif self.expires < timezone.now():
-            print('timed out')
             self.closed = True
             self.save()
             return True
         else:
             vote_nums = sorted([len(Vote.objects.filter(poll = self, choice = option)) for option in range(len(self.options)+1)], reverse = True)
-            if vote_nums[0] > vote_nums[1] + self.voter_num - sum(vote_nums):
+            if vote_nums[0] > vote_nums[1] + len(Vote.objects.filter(poll = self, choice__isnull = True)):
                 # if all remaining votes went to the current second-place option it still wouldn't equal the top option
                 self.closed = True
                 self.save()
                 return True
             else:
                 return False
-            
 
 class Vote(models.Model):
     user: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
     poll: models.ForeignKey = models.ForeignKey(Poll, on_delete = models.CASCADE)
-    choice: models.IntegerField = models.IntegerField()
+    choice: models.IntegerField = models.IntegerField(null = True, default = None)
     def clean(self) -> None:
         cleaned_data = super().clean()
         # 0 indicates the always-present unask-the-question option
