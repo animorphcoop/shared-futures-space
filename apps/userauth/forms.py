@@ -10,6 +10,7 @@ from wagtail.users.forms import UserEditForm, UserCreationForm
 
 from typing import Type, List, Any, Dict
 from django.http import HttpRequest
+from typing import Tuple
 
 '''
 Resolving the first&last name issue, reference
@@ -42,7 +43,7 @@ class CustomSignupForm(SignupForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email', 'password1', 'password2']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
         super(CustomSignupForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs = {'borken': 'false', 'hx-post': '/search/',
                                              'hx-post': '/account/check_email/',
@@ -80,7 +81,7 @@ class CustomLoginForm(LoginForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email', 'password']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Tuple[Any], **kwargs: Dict[str,Any]) -> None:
         super(CustomLoginForm, self).__init__(*args, **kwargs)
         self.fields['login'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
         self.fields['password'].widget.attrs = {'borken': 'false',}
@@ -92,6 +93,6 @@ class CustomResetPasswordForm(ResetPasswordForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email']
 
-    def __init__(self, *args, **kwargs):
-        super(CustomResetPasswordForm, self).__init__(*args, **kwargs)
+    def __init__(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
+        super(CustomResetPasswordForm, self).__init__(*args, **kwargs) # pyre-ignore[6]
         self.fields['email'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
