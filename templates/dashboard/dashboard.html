@@ -31,11 +31,10 @@
         {% include "dashboard/partials/accordion.html" with title="Notifications" list_items=notifications %}
     {% endblock %}
 
-    <section>
-        <div>
-            <p>Ready to swim?</p>
-            <p><a href="{% url 'all_projects' %}" class="uppercase">Go to the spring</a></p>
-        </div>
+    {#  Call to action partial, replace URL variable  #}
+    <section class="bg-resources-two">
+        {% url 'all_projects' as the_url %}
+        {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
     </section>
 
     {% block rivers %}
