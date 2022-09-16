@@ -15,7 +15,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         return HttpResponseRedirect(reverse('account_add_data'))
 
     messages = ['message one', 'message two', 'message three', 'message four', 'message five']
-    notifications = ['notifications one', 'notifications two', 'notifications three', 'notifications four', 'notifications five']
+    notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new project. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
     rivers = ['rivers one', 'rivers two', 'rivers three']
     resources = ['fav resource one', 'fav resource two', 'fav resource three', 'fav resource four']
 
