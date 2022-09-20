@@ -14,8 +14,8 @@ do
       echo "same dir"
     else
       if [[ "$last_dir" != "" ]]; then #to take out the first iteration
-         echo "compiling from ${dir_name}"
-         tsc --strict --target es2017 --outDir $templates_dir/ts_output/js $(find $dir_name -type f -name '*.ts');
+         echo "compiling from ${last_dir}" #compile from last dir
+         tsc --strict --target es2017 --outDir $templates_dir/ts_output/js $(find $last_dir -type f -name '*.ts');
       fi
       last_dir=$dir_name
     fi
