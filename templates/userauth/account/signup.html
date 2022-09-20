@@ -54,29 +54,36 @@
 
         </form>
 
-        <section class="bg-gradient-to-b from-blue-second to-white flex flex-col items-center">
-            <h2 class="pt-10 mx-auto inline-block pb-8 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                Alternatively sign up with</h2>
-            {% include "socialaccount/partials/provider_list.html" with process="login" %}
-        </section>
+        <div class="flex flex-col flex-grow justify-end">
+            <section
+                    class="bg-gradient-to-b from-blue-second to-white flex flex-grow flex-col justify-end items-center">
+                <h2 class="pt-10 mx-auto inline-block pb-8 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                    Alternatively sign up with</h2>
+                {% include "socialaccount/partials/provider_list.html" with process="login" %}
+            </section>
 
-        <div class="bg-blue-second text-center">
-            <h2 class="pt-4 pb-4 uppercase font-kanit-400 text-xxxs tracking-widest text-black-text">
-                Already have a Shared Futures account?
-            </h2>
-            <a href="{{ login_url }}"
-               class="inline-block mb-2 bg-blue-button px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light">
-                Log in
-            </a>
+            <section class="bg-yellow text-center">
+                <h2 class="py-3 font-kanit-400 text-xxxs tracking-wide text-black-text">
+                    Already have a Shared Futures account?
+                </h2>
+                {# WET BUTTON #}
+                <div class="pb-3">
+                    <a href="{{ login_url }}"
+                       class="inline-block rounded-full px-4 py-4
+                   font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
+                   text-purple bg-white
+                   hover:bg-resources-one focus:bg-resources-one
+                   transition ease-out duration-300">
+                        Log in
+                    </a>
+                </div>
+            </section>
         </div>
 
         {% block scripts %}
             <script src="{% static 'js/signup.js' %}"></script>
             <script src="{% static 'js/auth_helper.js' %}"></script>
-
         {% endblock %}
-
-        {% include "partials/footer-gradient.html" %}
     </div>
 
 {% endblock %}
