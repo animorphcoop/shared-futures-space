@@ -1,13 +1,13 @@
 "use strict";
 /* helper functions used in signup and login - import first!*/
-const emailInput = document.getElementById('email-input');
-const inputFeedback = document.getElementById('email-feedback');
+const emailInput = document.getElementById("email-input");
+const inputFeedback = document.getElementById("email-feedback");
 const passwordInputOne = document.getElementById("password-input1");
 const passwordFeedbackOne = document.getElementById("password-feedback1");
 const passwordInputTwo = document.getElementById("password-input2");
 const passwordFeedbackTwo = document.getElementById("password-feedback2");
 const submitButton = document.getElementById("submit-button");
-function newObserver(input, feedback, buttonFunction) {
+function newObserver(input, feedback, action) {
     console.log('setting up input');
     const observerEmail = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
@@ -16,7 +16,7 @@ function newObserver(input, feedback, buttonFunction) {
                     feedback.classList.add('hidden');
                     input.setAttribute('borken', 'false');
                 }
-                buttonFunction();
+                action();
             }
             else {
                 if (feedback.classList.contains('hidden')) {

@@ -4,13 +4,13 @@
 function setupObserversSignup() {
     if (inputFeedback == null)
         return;
-    newObserver(emailInput, inputFeedback, evaluateButtonSignup());
+    newObserver(emailInput, inputFeedback, evaluateButtonSignup);
     if (passwordFeedbackOne == null)
         return;
-    newObserver(passwordInputOne, passwordFeedbackOne, evaluateButtonSignup());
+    newObserver(passwordInputOne, passwordFeedbackOne, evaluateButtonSignup);
     if (passwordFeedbackTwo == null)
         return;
-    newObserver(passwordInputTwo, passwordFeedbackTwo, evaluateButtonSignup());
+    newObserver(passwordInputTwo, passwordFeedbackTwo, evaluateButtonSignup);
 }
 function evaluateButtonSignup() {
     if (inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)

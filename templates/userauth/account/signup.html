@@ -13,7 +13,7 @@
         {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
 
         <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}"
-              x-init="setupObservers()">
+              x-init="setupObserversSignup()">
 
             {% csrf_token %}
 

@@ -1,8 +1,7 @@
 /* helper functions used in signup and login - import first!*/
 
-
-const emailInput = (<HTMLInputElement>document.getElementById('email-input'))
-const inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
+const emailInput = (<HTMLInputElement>document.getElementById("email-input"))
+const inputFeedback: HTMLElement | null = document.getElementById("email-feedback")
 
 const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
 const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
@@ -11,11 +10,11 @@ const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-in
 const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
 
 
-
 const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
 
 
-function newObserver(input: HTMLInputElement, feedback: HTMLElement, buttonFunction: any) {
+
+function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () => void) {
     console.log('setting up input')
     const observerEmail = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
@@ -24,7 +23,7 @@ function newObserver(input: HTMLInputElement, feedback: HTMLElement, buttonFunct
                     feedback.classList.add('hidden')
                     input.setAttribute('borken', 'false')
                 }
-                buttonFunction()
+                action();
 
             } else {
                 if (feedback.classList.contains('hidden')) {
@@ -40,8 +39,6 @@ function newObserver(input: HTMLInputElement, feedback: HTMLElement, buttonFunct
     let configEmail = {childList: true};
     observerEmail.observe(feedback, configEmail);
 }
-
-
 
 
 function processEmailValue() {
@@ -93,11 +90,6 @@ function validateEmail(address: string) {
 }
 
 
-
-
-
-
-
 function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null) return
 
@@ -145,7 +137,6 @@ function getPasswordFeedback() {
 
     }
 }
-
 
 
 function checkPasswordQuality(pass: string) {

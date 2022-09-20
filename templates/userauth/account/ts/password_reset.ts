@@ -5,7 +5,7 @@
 function setupObserversReset() {
 
     if (inputFeedback == null) return
-    newObserver(emailInput, inputFeedback, evaluateButtonReset())
+    newObserver(emailInput, inputFeedback, evaluateButtonReset)
 
 
 }
