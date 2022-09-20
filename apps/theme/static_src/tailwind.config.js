@@ -114,7 +114,6 @@ module.exports = {
             'kanit-600': ['Kanit_SemiBold', 'sans-serif'],
             'kanit-700': ['Kanit_Bold', 'sans-serif'],
             'garamond-400': ['EB_Garamond_Regular', 'serif'],
-            'body': ['EB_Garamond_Medium', 'serif'],
             'garamond-500': ['EB_Garamond_Medium', 'serif']
         },
 
