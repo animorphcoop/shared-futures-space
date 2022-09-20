@@ -1,15 +1,12 @@
 "use strict";
 /* Needs auth-helper to run */
-const emailInput = document.getElementById('email-input');
-const inputFeedback = document.getElementById('email-feedback');
-const submitButton = document.getElementById("submit-button");
 // triggered from x-init on the form
-function setupObservers() {
+function setupObserversLogin() {
     if (inputFeedback == null)
         return;
-    newObserver(emailInput, inputFeedback);
+    newObserver(emailInput, inputFeedback, evaluateButtonLogin());
 }
-function evaluateButton() {
+function evaluateButtonLogin() {
     if (inputFeedback === null)
         return;
     if (inputFeedback.innerText === '') {

@@ -1,8 +1,21 @@
 /* helper functions used in signup and login - import first!*/
 
 
+const emailInput = (<HTMLInputElement>document.getElementById('email-input'))
+const inputFeedback: HTMLElement | null = document.getElementById('email-feedback')
 
-function newObserver(input: HTMLInputElement, feedback: HTMLElement) {
+const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+
+const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
+
+
+
+const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
+
+
+function newObserver(input: HTMLInputElement, feedback: HTMLElement, buttonFunction: any) {
     console.log('setting up input')
     const observerEmail = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
@@ -11,7 +24,7 @@ function newObserver(input: HTMLInputElement, feedback: HTMLElement) {
                     feedback.classList.add('hidden')
                     input.setAttribute('borken', 'false')
                 }
-                evaluateButton()
+                buttonFunction()
 
             } else {
                 if (feedback.classList.contains('hidden')) {
