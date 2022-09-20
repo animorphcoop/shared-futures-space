@@ -33,4 +33,4 @@ for path in $allfiles; do
   last_dir=$dir_name
 done
 
-# docker-compose exec app python3 manage.py collectstatic --noinput
+docker-compose exec app python3 manage.py collectstatic --noinput
