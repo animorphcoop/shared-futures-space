@@ -128,19 +128,19 @@ class Project(ClusterableModel):
                 raise ValueError('plan stage is not finished!')
             self.current_stage = self.Stage.ACT
             self.act_stage = ActStage.objects.create()
-            self.act_stage.general_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
+            self.act_stage.general_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
             self.act_stage.general_poll.make_votes(self)
             send_system_message(self.act_stage.general_chat, 'poll', context_poll = self.plan_stage.general_poll)
             send_system_message(self.act_stage.general_chat, 'poll', context_poll = self.act_stage.general_poll)
-            self.act_stage.funding_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
+            self.act_stage.funding_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
             self.act_stage.funding_poll.make_votes(self)
             send_system_message(self.act_stage.funding_chat, 'poll', context_poll = self.plan_stage.funding_poll)
             send_system_message(self.act_stage.funding_chat, 'poll', context_poll = self.act_stage.funding_poll)
-            self.act_stage.location_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
+            self.act_stage.location_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
             self.act_stage.location_poll.make_votes(self)
             send_system_message(self.act_stage.location_chat, 'poll', context_poll = self.plan_stage.location_poll)
             send_system_message(self.act_stage.location_chat, 'poll', context_poll = self.act_stage.location_poll)
-            self.act_stage.dates_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], voter_num = len(ProjectMembership.objects.filter(project = self)), expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
+            self.act_stage.dates_poll = Poll.objects.create(question = 'was this done?', options = ['yes', 'no'], expires = timezone.now() + timezone.timedelta(days=30)) # expiry date needs adjustment? TODO
             self.act_stage.dates_poll.make_votes(self)
             send_system_message(self.act_stage.dates_chat, 'poll', context_poll = self.plan_stage.dates_poll)
             send_system_message(self.act_stage.dates_chat, 'poll', context_poll = self.act_stage.dates_poll)
