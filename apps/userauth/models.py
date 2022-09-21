@@ -10,7 +10,7 @@ from uuid import uuid4
 from messaging.models import Chat  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
 
-from typing import List, Optional, Any, Dict
+from typing import List, Optional, Any, Dict, Optional
 
 
 class Organisation(models.Model):
@@ -26,9 +26,10 @@ class UserAvatar(models.Model):
     avatar: models.ImageField = models.ImageField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
 
     @property
-    def image_url(self):
+    def image_url(self) -> Optional[str]:
         if self.avatar and hasattr(self.avatar, 'url'):
             return self.avatar.url
+
 
 class CustomUser(AbstractUser):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
@@ -42,7 +43,7 @@ class CustomUser(AbstractUser):
                                                                              validators=[MinValueValidator(1900)],
                                                                              null=True, blank=True)
     post_code: models.ForeignKey = models.ForeignKey(PostCode, null=True, on_delete=models.SET_NULL)
-    avatar: models.ImageField = models.ForeignKey(UserAvatar, null=True, on_delete=models.SET_NULL)
+    avatar: models.ForeignKey = models.ForeignKey(UserAvatar, null=True, on_delete=models.SET_NULL)
     editor: models.BooleanField = models.BooleanField(default=False)  # is this user an editor
     organisation: models.ForeignKey = models.ForeignKey(Organisation, default=None, null=True,
                                                         on_delete=models.SET_NULL)
@@ -56,6 +57,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.email}"
+
 
 def new_chat() -> int:  # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
     c = Chat()
