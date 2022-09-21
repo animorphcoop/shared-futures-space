@@ -14,6 +14,8 @@ from project.models import Project, ProjectMembership # pyre-ignore[21]
 from messaging.models import Message # pyre-ignore[21]
 from area.models import PostCode, Area # pyre-ignore[21]
 
+image_dir = 'autoupload/'
+
 def add_resources(resource_data):
     for new_howto_data in resource_data['How To']:
         try:
@@ -25,8 +27,8 @@ def add_resources(resource_data):
             print('could not add howto with definition: ' + str(new_howto_data) + '\nerror given: ' + repr(e))
     for new_casestudy_data in resource_data['Case Study']:
         try:
-            with open(new_casestudy_data['image'], 'rb') as f:
-                pimg = PillowImage.open(new_casestudy_data['image'])
+            with open(image_dir + new_casestudy_data['image'], 'rb') as f:
+                pimg = PillowImage.open(image_dir + new_casestudy_data['image'])
                 img = Image.objects.get_or_create(file = ImageFile(BytesIO(f.read()), name=new_casestudy_data['image']), width = pimg.width, height = pimg.height)[0]
             new_casestudy = CaseStudy.objects.get_or_create(title = new_casestudy_data['title'], summary = new_casestudy_data['summary'], case_study_image = img, link = new_casestudy_data['link'])[0]
             new_casestudy.body.append(('body_text', {'content':RichText(new_casestudy_data['body'])}))
