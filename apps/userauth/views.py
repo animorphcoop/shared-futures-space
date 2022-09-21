@@ -48,6 +48,7 @@ class CustomUserPersonalView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
         context['organisations'] = Organisation.objects.all()
+        context['avatars'] = UserAvatar.objects.all()
         return context
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:

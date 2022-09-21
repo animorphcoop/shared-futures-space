@@ -65,6 +65,13 @@
                 {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
             </div>
 
+            <div>
+                {% for avatar in avatars %}
+                    <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="?">
+                {% endfor %}
+
+            </div>
+
             <div id="organisation-starter" class="px-4 pb-9">
                 <input class="inline-block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
                        type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
