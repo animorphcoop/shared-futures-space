@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.dispatch import receiver
 from django.db.models import Q
-from .models import CustomUser, UserPair, Organisation
+from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
 from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm, CustomResetPasswordForm
 from django.http.request import QueryDict

@@ -712,12 +712,8 @@ select {
   right: 0.75rem;
 }
 
-.top-3\.5 {
-  top: 0.875rem;
-}
-
-.top-3 {
-  top: 0.75rem;
+.top-\[11px\] {
+  top: 11px;
 }
 
 .left-1\/2 {
@@ -730,22 +726,6 @@ select {
 
 .left-0 {
   left: 0px;
-}
-
-.top-2\.5 {
-  top: 0.625rem;
-}
-
-.top-2 {
-  top: 0.5rem;
-}
-
-.top-\[10px\] {
-  top: 10px;
-}
-
-.top-\[11px\] {
-  top: 11px;
 }
 
 .z-10 {
@@ -1459,14 +1439,6 @@ select {
 
 .pl-0 {
   padding-left: 0px;
-}
-
-.pt-3\.5 {
-  padding-top: 0.875rem;
-}
-
-.pt-3 {
-  padding-top: 0.75rem;
 }
 
 .pb-5 {

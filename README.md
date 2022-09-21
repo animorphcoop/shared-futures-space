@@ -1,7 +1,7 @@
 # Shared Futures Space
 ## Django/Wagtail + Postgres + Redis + Celery
 
-- Build containers
+- Build containers (Linux and MINGW64)
 Since [Commit 6e3c8b4a](https://git.coop/animorph-coop/shared-futures-space/-/commit/6e3c8b4a6e5893e3a00379ba383c7c0cead397d0)
 ```USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build```
 
@@ -9,7 +9,11 @@ On MacOS
 - Building: ```USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up --build``` because Mac has obfuscated groups for Docker, so we use user ID for Dockerfile group instead of group ID.
 - Running after containers have been built: ```USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up```
 
-To enter shell
+On Windows (running Linux containers)
+- Building: ```USER_ID=$(1000) GROUP_ID=$(1000) docker-compose up --build``` 
+- Running after containers have been built: ```USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up```
+
+- To enter shell
 
 ```docker-compose exec app sh```
 

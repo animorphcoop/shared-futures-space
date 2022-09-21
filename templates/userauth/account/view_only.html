@@ -25,13 +25,14 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
             Don't have one yet.
         {% endif %}
         <br/>
-        Profile image:
-        <br/>
-        {% if user.avatar.url != null %}
-            <img src="{{ user.avatar.url }}"/>
-        {% else %}
-            Don't have one yet.
-        {% endif %}
+    {{ avatar.image_url|default_if_none:'#' }}
+    <img src="{{ avatar.image_url|default_if_none:'#' }}" />
+{% comment %}    {% for avatar in user.avatar %}
+        lol
+    {% endfor %}{% endcomment %}
+
+        Profile image: <img src="{{user.avatar.image_url|default_if_none:'#' }}">
+}
         <br/>
     </div>
     <hr/>
