@@ -122,7 +122,6 @@ def add_avatars(avatars_data):
                 new_avatar = UserAvatar.objects.create()
                 new_avatar.avatar = ImageFile(f)
                 new_avatar.save()
-
         except Exception as e:
             print('could not add avatar with definition: ' + str(avatar_data) + '\nerror given: ' + repr(e))
 

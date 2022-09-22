@@ -56,7 +56,7 @@ def test_account_info(client, test_user):
     assert test_user.display_name in info_page.content.decode('utf-8')
     assert str(test_user.year_of_birth) in info_page.content.decode('utf-8')
     assert test_user.post_code.code in info_page.content.decode('utf-8')
-    assert test_user.avatar.url in info_page.content.decode('utf-8')
+    assert test_user.avatar.image_url in info_page.content.decode('utf-8')
 
 def test_data_add(client, test_user):
     test_user.year_of_birth = None
@@ -130,7 +130,7 @@ def test_name_update_flow(client, test_user):
     current_name = bs4.BeautifulSoup(update_form.content, features='html5lib').body.find("div").find("form").find("div").find("input", attrs={'name': 'display_name'})['value']
     assert current_name == test_user.display_name
     #data = {'display_name': 'New Name', 'email': 'testemail@example.com',}
-    data = 'display_name=New Name&email=testemail%40example.com'
+    data = 'display_name=New Name&email=testemail%40example.com&avatar=' + str(test_user.avatar.id)
     client.put(reverse('account_update'), data)
     assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
 

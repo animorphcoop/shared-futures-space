@@ -10,6 +10,7 @@ from project.models import Project
 from area.models import PostCode, Area
 from resources.models import HowTo, CaseStudy
 from poll.models import Poll
+from userauth.models import UserAvatar
 
 
 # a user account to use during testing
@@ -19,10 +20,11 @@ def test_user(db, django_user_model):
     # needs to be valid because avatar upload only accepts valid images in png, jpg or bmp
     smallest_jpg = b"\xFF\xD8\xFF\xE0\x00\x10\x4A\x46\x49\x46\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xFF\xDB\x00\x43\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xC2\x00\x0B\x08\x00\x01\x00\x01\x01\x01\x11\x00\xFF\xC4\x00\x14\x10\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xDA\x00\x08\x01\x01\x00\x01\x3F\x10"
     img_file = ImageFile(BytesIO(smallest_jpg), name='test image')
-    user = django_user_model.objects.create_user(username='test_user', email='test_user@email.com',
+    avatar = UserAvatar.objects.create()
+    avatar.avatar.save(name = 'test avatar', content = img_file)
+    user = django_user_model.objects.create_user(username='test_user', email='test_user@email.com', avatar = avatar,
                                                  password='test_password', display_name='Test User', year_of_birth=1999,
                                                  post_code=PostCode.objects.create(code="AB12"), added_data = True)
-    user.avatar.save(name = 'test avatar', content = img_file)
     user.save()
     return user
 
