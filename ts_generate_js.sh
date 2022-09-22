@@ -32,4 +32,9 @@ for path in $allfiles; do
   last_dir=$dir_name
 done
 
-docker-compose exec app python3 manage.py collectstatic --noinput
+if [[ "$1" == "--test" ]];
+then
+  echo "not collecting static because this was a test run"
+else
+  docker-compose exec app python3 manage.py collectstatic --noinput
+fi
