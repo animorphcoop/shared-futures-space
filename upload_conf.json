@@ -508,6 +508,36 @@
       }
     ]
   },
+  "Organisations": [
+    {
+      "name": "Refresh Café",
+      "link": "https://www.ebm.org.uk/refresh-cafe/"
+    },
+    {
+      "name": "Ashton FabLab",
+      "link": "https://en.wikipedia.org/wiki/Fab_lab/"
+    },
+    {
+      "name": "Colin Connect",
+      "link": "https://www.communityni.org/news/official-launch-colin-connect-transport-hub-and-colin-town-square"
+    },
+    {
+      "name": "Community Daycare",
+      "link": "https://en.wikipedia.org/wiki/Belfast"
+    },
+    {
+      "name": "Restore Shops",
+      "link": "https://www.ebm.org.uk/retail/"
+    },
+    {
+      "name": "East Belfast Enterprise",
+      "link": "https://www.eastbelfast.org/"
+    },
+    {
+      "name": "South Belfast Foodbank",
+      "link": "https://southbelfast.foodbank.org.uk/"
+    }
+  ],
   "User Avatars": [
     {
       "avatar": "angler.png"
@@ -576,7 +606,7 @@
       "email": "fmarg72@gmail.com",
       "year of birth": 1972,
       "postcode": "BT17",
-      "avatar": 0,
+      "avatar": 14,
       "editor": true,
       "organisation": "None",
       "password": "TopSecret2022"
@@ -740,36 +770,6 @@
       "editor": true,
       "organisation": "None",
       "password": "yohy!"
-    }
-  ],
-  "Organisations": [
-    {
-      "name": "Refresh Café",
-      "link": "https://www.ebm.org.uk/refresh-cafe/"
-    },
-    {
-      "name": "Ashton FabLab",
-      "link": "https://en.wikipedia.org/wiki/Fab_lab/"
-    },
-    {
-      "name": "Colin Connect",
-      "link": "https://www.communityni.org/news/official-launch-colin-connect-transport-hub-and-colin-town-square"
-    },
-    {
-      "name": "Community Daycare",
-      "link": "https://en.wikipedia.org/wiki/Belfast"
-    },
-    {
-      "name": "Restore Shops",
-      "link": "https://www.ebm.org.uk/retail/"
-    },
-    {
-      "name": "East Belfast Enterprise",
-      "link": "https://www.eastbelfast.org/"
-    },
-    {
-      "name": "South Belfast Foodbank",
-      "link": "https://southbelfast.foodbank.org.uk/"
     }
   ],
   "Projects": [

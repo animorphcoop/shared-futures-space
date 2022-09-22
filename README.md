@@ -1,7 +1,7 @@
 # Shared Futures Space
 ## Django/Wagtail + Postgres + Redis + Celery
 
-- Build containers (Linux and MINGW64)
+- Build containers (Linux & MINGW64 on Windows)
 Since [Commit 6e3c8b4a](https://git.coop/animorph-coop/shared-futures-space/-/commit/6e3c8b4a6e5893e3a00379ba383c7c0cead397d0)
 ```USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build```
 
@@ -48,6 +48,9 @@ docker-compose exec app pyre
 ---
 
 Uploading Data
+
+Fetch zip with autoupload directory to be dropped into repo's root: https://hub.animorph.coop/f/249157
+
 ```
 docker-compose exec app ./manage.py upload [filename.json]
 ```

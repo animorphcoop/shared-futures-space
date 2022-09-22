@@ -1,15 +1,21 @@
-let lastClicked = null
+let lastClicked: HTMLElement | null
 
-function selectAvatar(avatarElemId, avatarPk) {
+const avatarInput = (<HTMLInputElement>document.getElementById("avatar"))
+
+
+function selectAvatar(avatarElemId: string, avatarPk: string) {
     console.log(avatarPk)
+
     if (lastClicked != null) {
         lastClicked.classList.remove("bg-purple-600")
     }
-    document.getElementById(avatarElemId).classList.add("bg-purple-600")
+    const currentAvatarElem = document.getElementById(avatarElemId)
+    if (currentAvatarElem == null) return
 
-    lastClicked = document.getElementById(avatarElemId)
+    currentAvatarElem.classList.add("bg-purple-600")
+    lastClicked = currentAvatarElem
 
-    let avatarFormInput = document.getElementById("avatar")
-    avatarFormInput.setAttribute('value', avatarPk)
+    if (avatarInput == null) return
+    avatarInput.setAttribute('value', avatarPk)
 
 }

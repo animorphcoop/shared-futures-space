@@ -8,6 +8,8 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
 
 {% block content %}
 
+
+
     {% block title %}{% include "partials/title.html" with title=user.display_name %}{% endblock %}
 
 
@@ -30,7 +32,7 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
         {% comment %}By default people belong to organisation 'None'! {% endcomment %}
         {% if user.organisation != "None" %}
             <div>
-                From {{ user.organisation }}
+                From <a href="{{ user.organisation.link }}">{{ user.organisation }}</a>
             </div>
         {% endif %}
 

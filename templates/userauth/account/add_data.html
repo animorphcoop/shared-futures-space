@@ -70,13 +70,12 @@
                 <span class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text">Select your avatar</span>
 
                 {% for avatar in avatars %}
-                    {% if  avatar.pk != 0 %}
 
-                        <button id="button-{{ avatar.pk }}"
-                                onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})" class="m-2">
-                            <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
-                        </button>
-                    {% endif %}
+
+                    <button id="button-{{ avatar.pk }}"
+                            onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})" class="m-2">
+                        <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
+                    </button>
                 {% endfor %}
 
                 {% comment %}taking on the value of the avatar (pk) via button{% endcomment %}
@@ -149,9 +148,9 @@
     </div>
 
 
-        {% block scripts %}
-            <script src="{% static 'js/add_data.js' %}"></script>
-        {% endblock %}
+    {% block scripts %}
+        <script src="{% static 'js/add_data.js' %}"></script>
+    {% endblock %}
 
 {% endblock %}
 
