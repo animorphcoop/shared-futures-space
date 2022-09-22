@@ -68,6 +68,7 @@
 
             <div class="px-4 pb-9">
                 <span class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text">Select your avatar</span>
+
                 {% for avatar in avatars %}
                     {% if  avatar.pk != 0 %}
 
@@ -78,7 +79,7 @@
                     {% endif %}
                 {% endfor %}
 
-                {% comment %}taking on the value of the avatar via button{% endcomment %}
+                {% comment %}taking on the value of the avatar (pk) via button{% endcomment %}
                 <input id="avatar" name=avatar type=text value="" class="hidden">
 
             </div>
@@ -148,24 +149,9 @@
     </div>
 
 
-    <script>
-
-        let lastClicked = null
-
-        function selectAvatar(avatarElemId, avatarPk) {
-            console.log(avatarPk)
-            if (lastClicked != null) {
-                lastClicked.classList.remove("bg-purple-600")
-            }
-            document.getElementById(avatarElemId).classList.add("bg-purple-600")
-
-            lastClicked = document.getElementById(avatarElemId)
-
-            let avatarFormInput = document.getElementById("avatar")
-            avatarFormInput.setAttribute('value', avatarPk)
-
-        }
-    </script>
+        {% block scripts %}
+            <script src="{% static 'js/add_data.js' %}"></script>
+        {% endblock %}
 
 {% endblock %}
 
