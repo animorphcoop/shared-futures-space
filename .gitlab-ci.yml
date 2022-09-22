@@ -17,7 +17,7 @@ variables:
   DB_PASS: testpassword
 
 before_script:
-  - apt-get update
+  - apt-get update -y
   - apt-get install npm
   - npm install -g typescript
   - pip install -r requirements.txt
