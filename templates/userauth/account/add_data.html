@@ -65,9 +65,17 @@
                 {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
             </div>
 
-            <div>
+
+            <div class="px-4 pb-9">
+                <p>Select your avatar</p>
                 {% for avatar in avatars %}
-                    <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="?">
+                    {% if  avatar.pk != 0 %}
+
+                        <button id="button-{{ avatar.pk }}"
+                                onclick="event.preventDefault(); selectAvatar(this.id)" class="m-2">
+                            <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
+                        </button>
+                    {% endif %}
                 {% endfor %}
 
             </div>
@@ -127,4 +135,22 @@
         {% include "partials/footer-gradient.html" %}
     </div>
 
+
+    <script>
+
+        let lastClicked = null
+
+        function selectAvatar(avatarId) {
+            console.log(avatarId)
+            if (lastClicked != null) {
+                lastClicked.classList.remove("bg-purple-600")
+            }
+            document.getElementById(avatarId).classList.add("bg-purple-600")
+
+            lastClicked = document.getElementById(avatarId)
+            console.log(lastClicked)
+        }
+    </script>
+
 {% endblock %}
+

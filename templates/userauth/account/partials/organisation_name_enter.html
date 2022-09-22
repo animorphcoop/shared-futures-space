@@ -4,14 +4,14 @@
     <div class="w-full">
         <div class="p-7 mx-5 mb-5 bg-white">
             <h2 class="font-garamond-500 text-black-large text-xl text-22 text-center">
-                No worries!
+                No worries, add it now!
             </h2>
         </div>
     </div>
 
     <div class="px-5 flex items-center justify-center flex-col w-full">
             <div class="w-full">
-                {% include "partials/input-label.html" with for="organisation-name" label="Organisation" %}
+                {% include "partials/input-label.html" with for="organisation-name" label="Organisation name" %}
                 <input class="form-control w-full px-3 py-2.5 mb-5
                            font-garamond-500 text-black-text text-sm
                            placeholder:text-black-meta
@@ -19,7 +19,18 @@
                            transition ease-in-out m-0
                            focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"
                        id="organisation-name" name="organisation-name" type=text value=""
-                       placeholder="Name of organisation">
+                       placeholder="Organisation Name">
+            </div>
+             <div class="w-full">
+                {% include "partials/input-label.html" with for="organisation-url" label="Online address" %}
+                <input class="form-control w-full px-3 py-2.5 mb-5
+                           font-garamond-500 text-black-text text-sm
+                           placeholder:text-black-meta
+                           bg-white bg-clip-padding border border-solid border-gray-light
+                           transition ease-in-out m-0
+                           focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"
+                       id="organisation-url" name="organisation-url" type=text value=""
+                       placeholder="https://myorganisation.org">
             </div>
             <button onclick="event.preventDefault(); addName()"
                     type="submit"

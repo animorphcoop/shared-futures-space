@@ -33,6 +33,8 @@ Migrations
 
 ```docker-compose exec app python3 manage.py makemigrations && docker-compose exec app python3 manage.py migrate```
 
+---
+
 Running Tests
 ```
 docker-compose exec app pytest tests
@@ -43,11 +45,19 @@ docker-compose exec app pyre
 - to run a specific py.test, e.g. `docker-compose exec app pytest tests/test_account.py`
 - add `-s` flag to display output
 
+---
+
 Uploading Data
 ```
 docker-compose exec app ./manage.py upload [filename.json]
 ```
+
 put data from [filename.json] in the db. filename defaults to `upload_conf.json`, which contains some default debugging data.
+
+
+With the current file it is:
+```docker-compose exec app python3 manage.py upload upload_conf.json```
+
 
 ---
 
