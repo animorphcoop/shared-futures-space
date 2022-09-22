@@ -75,10 +75,14 @@
     function toggleOrganisations() {
         const organisationList = document.getElementById("organisation-list")
         const checkbox = document.getElementById("organisation-checkbox")
+        const organisationData = document.getElementById("organisation-data")
+
         if (checkbox.checked) {
             organisationList.classList.remove('hidden')
+            organisationData.classList.remove('hidden')
         } else {
             organisationList.classList.add('hidden')
+            organisationData.classList.add('hidden')
         }
     }
 
@@ -87,7 +91,7 @@
         const checkbox = document.getElementById("organisation-checkbox")
         const organisationDataBlock = document.getElementById("organisation-data")
         const organisationInputBox = document.getElementById("organisation-starter")
-        organisationInputBox.classList.add('hidden')
+        //organisationInputBox.classList.add('hidden')
 
         if (checkbox.checked) {
             organisationList.classList.add('hidden')
@@ -116,7 +120,7 @@
         organisationInput.classList.add('cursor-not-allowed')
 
         const organisationInputBox = document.getElementById("organisation-starter")
-        organisationInputBox.classList.add('hidden')
+        //organisationInputBox.classList.add('hidden')
 
         const organisationDataBlock = document.getElementById("organisation-data")
         organisationDataBlock.classList.remove('hidden')

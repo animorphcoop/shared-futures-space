@@ -64,6 +64,7 @@ class CustomUserPersonalForm(forms.Form):
     display_name = forms.CharField(max_length=50)
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
+    avatar = forms.CharField(max_length=2)
     organisation = forms.CharField(max_length=50)
 
     def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
