@@ -37,6 +37,11 @@ pytest:
     - ./manage.py collectstatic --noinput
     - pytest tests/
 
+typescript:
+  stage: Tests
+  script:
+    - ./ts_generate_js.sh
+
 deploy:
   stage: Deploy
   rules:
