@@ -66,6 +66,8 @@ class CustomUserPersonalView(TemplateView):
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
                 current_user.post_code = \
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
+                current_user.avatar = \
+                    UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]
                 if len(form.cleaned_data.get('organisation')) > 0 and form.cleaned_data.get('organisation') != 'None':
                     current_user.organisation = \
                         Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]

@@ -67,16 +67,19 @@
 
 
             <div class="px-4 pb-9">
-                <p>Select your avatar</p>
+                <span class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text">Select your avatar</span>
                 {% for avatar in avatars %}
                     {% if  avatar.pk != 0 %}
 
                         <button id="button-{{ avatar.pk }}"
-                                onclick="event.preventDefault(); selectAvatar(this.id)" class="m-2">
+                                onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})" class="m-2">
                             <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
                         </button>
                     {% endif %}
                 {% endfor %}
+
+                {% comment %}taking on the value of the avatar via button{% endcomment %}
+                <input id="avatar" name=avatar type=text value="" class="hidden">
 
             </div>
 
@@ -87,7 +90,7 @@
 
                     <label class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
                            id="organisation-label" for="organisation-checkbox">
-                        Are you a part of an organisation?
+                        Are you representing an organisation?
                     </label>
 
                     <input class="block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
@@ -149,15 +152,18 @@
 
         let lastClicked = null
 
-        function selectAvatar(avatarId) {
-            console.log(avatarId)
+        function selectAvatar(avatarElemId, avatarPk) {
+            console.log(avatarPk)
             if (lastClicked != null) {
                 lastClicked.classList.remove("bg-purple-600")
             }
-            document.getElementById(avatarId).classList.add("bg-purple-600")
+            document.getElementById(avatarElemId).classList.add("bg-purple-600")
 
-            lastClicked = document.getElementById(avatarId)
-            console.log(lastClicked)
+            lastClicked = document.getElementById(avatarElemId)
+
+            let avatarFormInput = document.getElementById("avatar")
+            avatarFormInput.setAttribute('value', avatarPk)
+
         }
     </script>
 

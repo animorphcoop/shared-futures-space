@@ -76,6 +76,7 @@
         const organisationList = document.getElementById("organisation-list")
         const checkbox = document.getElementById("organisation-checkbox")
         const organisationData = document.getElementById("organisation-data")
+        const organisationInput = document.getElementById("organisation")
 
         if (checkbox.checked) {
             organisationList.classList.remove('hidden')
@@ -83,13 +84,15 @@
         } else {
             organisationList.classList.add('hidden')
             organisationData.classList.add('hidden')
+            selectedOrganisation = 'None'
+            organisationInput.value = selectedOrganisation
         }
     }
 
     function backFromOrganisations() {
         const organisationList = document.getElementById("organisation-list")
         const checkbox = document.getElementById("organisation-checkbox")
-        const organisationDataBlock = document.getElementById("organisation-data")
+        const organisationData = document.getElementById("organisation-data")
         const organisationInputBox = document.getElementById("organisation-starter")
         //organisationInputBox.classList.add('hidden')
 
@@ -99,7 +102,7 @@
             const organisationInput = document.getElementById("organisation")
             selectedOrganisation = 'None'
             organisationInput.value = selectedOrganisation
-            organisationDataBlock.classList.add('hidden')
+            organisationData.classList.add('hidden')
             if (organisationInputBox.classList.contains('hidden')) {
                 organisationInputBox.classList.remove('hidden')
             }
@@ -119,9 +122,6 @@
         organisationInput.value = selectedOrganisation
         organisationInput.classList.add('cursor-not-allowed')
 
-        const organisationInputBox = document.getElementById("organisation-starter")
-        //organisationInputBox.classList.add('hidden')
-
         const organisationDataBlock = document.getElementById("organisation-data")
         organisationDataBlock.classList.remove('hidden')
 
@@ -134,8 +134,8 @@
 
         const organisationList = document.getElementById("organisation-list")
         organisationList.classList.add('hidden')
-        const organisationDataBlock = document.getElementById("organisation-name-enter")
-        organisationDataBlock.classList.remove('hidden')
+        const organisationDataEnter = document.getElementById("organisation-name-enter")
+        organisationDataEnter.classList.remove('hidden')
     }
 
     function addName() {
@@ -145,8 +145,8 @@
         submitOrganisation()
 
 
-        const organisationDataBlock = document.getElementById("organisation-name-enter")
-        organisationDataBlock.classList.add('hidden')
+        const organisationDataEnter = document.getElementById("organisation-name-enter")
+        organisationDataEnter.classList.add('hidden')
 
     }
 
