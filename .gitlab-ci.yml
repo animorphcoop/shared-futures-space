@@ -17,6 +17,7 @@ variables:
   DB_PASS: testpassword
 
 before_script:
+  - apt-get install npm
   - npm install -g typescript
   - pip install -r requirements.txt
   - ./manage.py wait_for_db
