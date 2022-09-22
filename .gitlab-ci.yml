@@ -1,4 +1,5 @@
 
+
 image: python:3.9.5
 
 services:
@@ -16,10 +17,12 @@ variables:
   DB_PASS: testpassword
 
 before_script:
+  - apt-get install node-typescript
   - pip install -r requirements.txt
   - ./manage.py wait_for_db
   - ./manage.py makemigrations --no-input
   - ./manage.py migrate --no-input
+
 
 stages:
   - Tests
