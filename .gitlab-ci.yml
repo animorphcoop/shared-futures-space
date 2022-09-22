@@ -17,7 +17,7 @@ variables:
   DB_PASS: testpassword
 
 before_script:
-  - apt-get install node-typescript
+  - apt search typescript
   - pip install -r requirements.txt
   - ./manage.py wait_for_db
   - ./manage.py makemigrations --no-input
@@ -43,6 +43,7 @@ pytest:
 typescript:
   stage: Tests
   script:
+    - apt-get install tsc
     - ./ts_generate_js.sh
 
 deploy:
