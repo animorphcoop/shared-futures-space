@@ -53,6 +53,44 @@
         <a href="{% url 'account_request_panel' %}">Manage User Requests</a>
     {% endif %}
 
+    <div x-data="{selected:null}">
+        <button type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+            <h2 class="pt-4 px-4">
+            {% include "partials/text-style/header.html" with text="Get in touch" %}
+        </h2>
+        </button>
+
+        <div class="p-4 relative overflow-hidden transition-all max-h-0 duration-700" style="" x-ref="container1" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
+            {% include "partials/get-in-touch-buttons.html" %}
+        </div>
+    </div>
+
+    <div x-data="{selected:null}">
+        <button type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+            <h2 class="pt-4 px-4">
+            {% include "partials/text-style/header.html" with text="Get in touch" %}
+        </h2>
+        </button>
+
+        <div class="p-4 relative overflow-hidden transition-all max-h-0 duration-700" style="" x-ref="container2" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container2.scrollHeight + 'px' : ''">
+            {% include "partials/get-in-touch-buttons.html" %}
+        </div>
+    </div>
+
+    <div x-data="{selected:null}">
+        <button type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+            <h2 class="pt-4 px-4">
+            {% include "partials/text-style/header.html" with text="Get in touch" %}
+        </h2>
+        </button>
+
+        <div class="p-4 relative overflow-hidden transition-all max-h-0 duration-700" style="" x-ref="container3" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
+            {% include "partials/get-in-touch-buttons.html" %}
+        </div>
+    </div>
+
+
+
     <script src="{% static 'js/dashboard.js' %}"></script>
 
 {% endblock content %}

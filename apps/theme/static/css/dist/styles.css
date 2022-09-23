@@ -899,8 +899,20 @@ select {
   height: 4rem;
 }
 
+.h-4\.5 {
+  height: 1.125em;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
 .max-h-72 {
   max-height: 18rem;
+}
+
+.max-h-0 {
+  max-height: 0px;
 }
 
 .min-h-screen {
@@ -1098,6 +1110,10 @@ select {
 
 .self-center {
   align-self: center;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .overflow-y-auto {
@@ -1805,6 +1821,12 @@ select {
   transition-duration: 150ms;
 }
 
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
 .delay-150 {
   transition-delay: 150ms;
 }
@@ -1819,6 +1841,10 @@ select {
 
 .duration-150 {
   transition-duration: 150ms;
+}
+
+.duration-700 {
+  transition-duration: 700ms;
 }
 
 .ease-out {
