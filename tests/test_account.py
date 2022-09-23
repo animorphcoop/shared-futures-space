@@ -67,10 +67,10 @@ def test_data_add(client, test_user):
     test_user.save()
     client.force_login(test_user)
     client.get(reverse('account_add_data')) # just make sure getting that page is safe
-    client.post(reverse('account_add_data'), {'year_of_birth': 1997, 'post_code': 'AB12', 'display_name': 'a test user', 'organisation': 'BIP'})
+    client.post(reverse('account_add_data'), {'display_name': 'a test user', 'year_of_birth': 1997, 'post_code': 'AB12', 'avatar': '1',  'organisation_name': 'BIP', 'organisation_url': 'https://bip.org'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12'
-    client.post(reverse('account_add_data'), {'year_of_birth': 2001, 'post_code': 'N4', 'display_name': 'somebody else', 'organisation': 'BIP'})
+    client.post(reverse('account_add_data'), {'display_name': 'a test user', 'year_of_birth': 1987, 'post_code': 'BT11b', 'avatar': '3',  'organisation_name': 'CIR', 'organisation_url': 'https://cir.org'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12'
 

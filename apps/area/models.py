@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Tuple
 
 
 def validate_postcode(postcode: str) -> None:
-    if not re.match(r'[a-zA-Z]{1,2}[0-9][a-zA-0-9]?\s?[0-9][a-zA-Z]{2}', postcode):
+    if not re.match(r'[a-zA-Z]{1,2}[0-9][a-zA-0-9]?\s?([0-9][a-zA-Z]{2})?', postcode):
         raise ValidationError('not a valid UK postcode: %(value)s', params = {'value': postcode})
 
 
@@ -26,11 +26,11 @@ class PostCode(models.Model):
     area: models.ForeignKey = models.ForeignKey(Area, on_delete = models.CASCADE, null = True)
     def save(self, *args: Tuple[Any], **kwargs: Dict[str,Any]) -> None:
         # normalise different ways of writing the postcode - TODO: carrying cleaning on the frontend & view
-        #m = re.match(r'([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)\s?([0-9][a-zA-Z]{2})', self.code)
+        m = re.match(r'([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)\s?([0-9][a-zA-Z]{2})?', self.code)
+        self.code = m.group(1).upper() # pyre-ignore[16] discard incode
         if not self.area:
-            #self.code = m.group(1).upper() + ' ' + m.group(2).upper()
             self.area = Area.objects.get_or_create(name='Other')[0]
-            return super().save(*args, **kwargs) # pyre-ignore[6]
+        return super().save(*args, **kwargs) # pyre-ignore[6]
 
     def __str__(self) -> str:
         return self.code

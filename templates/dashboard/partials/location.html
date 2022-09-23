@@ -12,7 +12,7 @@
     </div>
 
     <div id="dash-weather" class="flex justify-center items-center">
-        <span x-text="await getWeather" class="font-kanit-400 text-black-text text-xxxs"></span>
+        <span x-text="await getWeather('{{ user.post_code.code }}')" class="font-kanit-400 text-black-text text-xxxs"></span>
         <img src="" alt="" id="weather-icon" class="h-6 w-auto">
     </div>
 

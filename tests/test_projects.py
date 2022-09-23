@@ -102,6 +102,17 @@ def test_project_management(client, test_user, other_test_user, test_project):
     assert not ProjectMembership.objects.get(user=other_test_user, project=test_project).champion
 
 
+def test_project_stages(test_project):
+    test_project.start_envision()
+    assert Project.objects.get(id = test_project.id).envision_stage is not None
+    test_project.start_plan()
+    assert Project.objects.get(id = test_project.id).plan_stage is not None
+    test_project.start_act()
+    assert Project.objects.get(id = test_project.id).act_stage is not None
+    test_project.start_reflect()
+    assert Project.objects.get(id = test_project.id).reflect_stage is not None
+    
+
 
 
 

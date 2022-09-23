@@ -54,7 +54,6 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
-        # user.organisation = Organisation.objects.get_or_create(name = self.cleaned_data['organisation'])[0]
         user.save()
         log_signup(user, request)  # analytics
         return user
@@ -64,7 +63,9 @@ class CustomUserPersonalForm(forms.Form):
     display_name = forms.CharField(max_length=50)
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
-    organisation = forms.CharField(max_length=50)
+    avatar = forms.CharField(max_length=2)
+    organisation_name = forms.CharField(max_length=50)
+    organisation_url = forms.CharField(max_length=100)
 
     def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
         super(CustomUserPersonalForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
