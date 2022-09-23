@@ -1,45 +1,24 @@
-{% if style == 'primary_white' %}
-    {# Show the primary button on white style #}
-    <a href="{{ url }}"
-       class="inline-block rounded-full px-4 py-4
-       font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-       text-purple bg-blue-second
-       hover:bg-blue-done focus:bg-blue-done
-       transition ease-out duration-300">
-        {{ button }}
-    </a>
+<a href="{{ url }}"
+   class="inline-block rounded-full px-4 py-4
+   font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
+   transition ease-out duration-300
+   text-purple
+        {% if style == 'primary_white' %}
+        {# Show the primary button on white style #}
+        bg-blue-second hover:bg-blue-done focus:bg-blue-done
 
-{% elif style == 'primary_colour' %}
-    {# Show the primary button on a colour style #}
-    <a href="{{ url }}"
-       class="inline-block rounded-full px-4 py-4
-       font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-       text-purple bg-white
-       hover:bg-blue-done focus:bg-blue-done
-       transition ease-out duration-300">
-        {{ button }}
-    </a>
+        {% elif style == 'primary_colour' %}
+        {# Show the primary button on a colour style #}
+        bg-white hover:bg-blue-done focus:bg-blue-done
 
-{% elif style == 'important' %}
-    {# Show the important style #}
-    <a href="{{ url }}"
-       class="inline-block rounded-full px-4 py-4
-       font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-       text-purple bg-yellow-pale
-       hover:bg-blue-done focus:bg-blue-done
-       transition ease-out duration-300">
-        {{ button }}
-    </a>
+        {% elif style == 'important' %}
+        {# Show the important style #}
+        bg-yellow-pale hover:bg-blue-done focus:bg-blue-done
 
-{% else %}
-    {# Show the danger style #}
-    <a href="{{ url }}"
-       class="inline-block rounded-full px-4 py-4
-       font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-       text-purple bg-red-important
-       hover:bg-blue-done focus:bg-blue-done
-       transition ease-out duration-300">
-        {{ button }}
-    </a>
+        {% else %}
+        {# Show the danger style #}
+        bg-red-important hover:bg-blue-done focus:bg-blue-done
 
-{% endif %}
+        {% endif %}">
+    {{ button }}
+</a>
