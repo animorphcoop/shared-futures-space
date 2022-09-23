@@ -1,3 +1,5 @@
+import re
+
 # TODO: They would be loaded via upload_conf with locations
 active_postcodes = ['BT48', 'BT48', 'BT17', 'BT12', 'BT7', 'BT4', 'BT15', 'WD23']
 
@@ -8,10 +10,8 @@ def filter_postcode(typed_postcode):
     entered_postcode = typed_postcode.replace(" ", "")
 
     # get starting part and make upper for a match
-    if len(entered_postcode) >= 4:
-        entered_postcode = entered_postcode[0:4].upper()
-    else:
-        entered_postcode = entered_postcode[0:3].upper()
+    m = re.match(r'([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)([0-9][a-zA-Z]{2})?', entered_postcode)
+    entered_postcode = m.group(1).upper()
 
     # look for one with upper - make sure exact match is there,
     # particularly in a situation where people enter a full postcode
