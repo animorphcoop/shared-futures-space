@@ -508,6 +508,36 @@
       }
     ]
   },
+  "Organisations": [
+    {
+      "name": "Refresh Café",
+      "link": "https://www.ebm.org.uk/refresh-cafe/"
+    },
+    {
+      "name": "Ashton FabLab",
+      "link": "https://en.wikipedia.org/wiki/Fab_lab/"
+    },
+    {
+      "name": "Colin Connect",
+      "link": "https://www.communityni.org/news/official-launch-colin-connect-transport-hub-and-colin-town-square"
+    },
+    {
+      "name": "Community Daycare",
+      "link": "https://en.wikipedia.org/wiki/Belfast"
+    },
+    {
+      "name": "Restore Shops",
+      "link": "https://www.ebm.org.uk/retail/"
+    },
+    {
+      "name": "East Belfast Enterprise",
+      "link": "https://www.eastbelfast.org/"
+    },
+    {
+      "name": "South Belfast Foodbank",
+      "link": "https://southbelfast.foodbank.org.uk/"
+    }
+  ],
   "User Avatars": [
     {
       "avatar": "angler.png"
@@ -543,13 +573,13 @@
       "avatar": "octopus.png"
     },
     {
+      "avatar": "red_snapper.png"
+    },
+    {
       "avatar": "salmon_1.png"
     },
     {
       "avatar": "salmon_2.png"
-    },
-    {
-      "avatar": "goldfish.png"
     },
     {
       "avatar": "sardine.png"
@@ -576,9 +606,9 @@
       "email": "fmarg72@gmail.com",
       "year of birth": 1972,
       "postcode": "BT17",
-      "avatar": 0,
+      "avatar": 14,
       "editor": true,
-      "organisation": "None",
+      "organisation": "",
       "password": "TopSecret2022"
     },
     {
@@ -588,7 +618,7 @@
       "postcode": "BT48",
       "avatar": 1,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "DoC%_82£"
     },
     {
@@ -618,7 +648,7 @@
       "postcode": "BT14",
       "avatar": 4,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "G3nilhgGf7M"
     },
     {
@@ -638,7 +668,7 @@
       "postcode": "WD23",
       "avatar": 5,
       "editor": false,
-      "organisation": false,
+      "organisation": "",
       "password": "1q2w3e"
     },
     {
@@ -648,7 +678,7 @@
       "postcode": "BT48",
       "avatar": 6,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "SecretWords"
     },
     {
@@ -688,7 +718,7 @@
       "postcode": "BT11",
       "avatar": 10,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "&3DfghaveSmells09!"
     },
     {
@@ -698,7 +728,7 @@
       "postcode": "BT12",
       "avatar": 11,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "fgh12345G6785690"
     },
     {
@@ -708,7 +738,7 @@
       "postcode": "BT9",
       "avatar": 12,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "qwerty"
     },
     {
@@ -718,7 +748,7 @@
       "postcode": "BT10",
       "avatar": 12,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "sdf43qwerty"
     },
     {
@@ -738,42 +768,8 @@
       "postcode": "WD23",
       "avatar": 13,
       "editor": true,
-      "organisation": "None",
+      "organisation": "",
       "password": "yohy!"
-    }
-  ],
-  "Organisations": [
-    {
-      "name": "Refresh Café",
-      "link": ""
-    },
-    {
-      "name": "Ashton FabLab",
-      "link": ""
-    },
-    {
-      "name": "Colin Connect",
-      "link": ""
-    },
-    {
-      "name": "Community Daycare",
-      "link": ""
-    },
-    {
-      "name": "Restore Shops",
-      "link": ""
-    },
-    {
-      "name": "East Belfast Enterprise",
-      "link": ""
-    },
-    {
-      "name": "South Belfast Foodbank",
-      "link": ""
-    },
-    {
-      "name": "",
-      "link": ""
     }
   ],
   "Projects": [
