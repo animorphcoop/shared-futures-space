@@ -17,7 +17,7 @@ function addName() {
     const tempOrgUrlInput = document.getElementById("organisation-url");
     if (tempOrgNameInput == null || tempOrgUrlInput == null)
         return;
-    if (tempOrgNameInput.value < 1) {
+    if (Number(tempOrgNameInput.value) < 1) {
         tempOrgNameInput.setAttribute("required", "");
         return;
     }

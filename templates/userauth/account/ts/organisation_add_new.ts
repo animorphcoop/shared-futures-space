@@ -22,7 +22,7 @@ function addName() {
 
     if (tempOrgNameInput == null || tempOrgUrlInput == null) return
 
-    if (tempOrgNameInput.value < 1) {
+    if (Number(tempOrgNameInput.value) < 1) {
         tempOrgNameInput.setAttribute("required", "");
         return
     }
