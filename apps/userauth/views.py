@@ -31,7 +31,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
 from django.http import HttpResponse
 from uuid import UUID
-from core.utils.postcode_matcher import filter_postcode # pyre-ignore[21]
+from core.utils.postcode_matcher import filter_postcode  # pyre-ignore[21]
 
 import magic
 
@@ -45,7 +45,7 @@ class CustomUserPersonalView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
 
-    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
         context['organisations'] = Organisation.objects.all()
         context['avatars'] = UserAvatar.objects.all()
@@ -53,7 +53,7 @@ class CustomUserPersonalView(TemplateView):
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
-        form = CustomUserPersonalForm(request.POST) # pyre-ignore[6]
+        form = CustomUserPersonalForm(request.POST)  # pyre-ignore[6]
         print(form.is_valid())
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
@@ -68,13 +68,28 @@ class CustomUserPersonalView(TemplateView):
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
                 current_user.avatar = \
                     UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]
-                if len(form.cleaned_data.get('organisation')) > 0 and form.cleaned_data.get('organisation') != 'None':
-                    current_user.organisation = \
-                        Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation'))[0]
+                if len(form.cleaned_data.get('organisation_name')) > 0 and form.cleaned_data.get(
+                        'organisation_name') != 'None':
+                    lower_org_name = form.cleaned_data.get('organisation_name').lower()
+                    if Organisation.objects.filter(name__iexact=lower_org_name).exists():
+                        current_user.organisation = \
+                            get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))
+                        print('found')
+                        print(current_user.organisation)
+                    else:
+                        new_organisation = \
+                            Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
+                                                               link=form.cleaned_data.get('organisation_url'))[0]
+                        current_user.organisation = new_organisation
+                        print('created')
+                        print(current_user.organisation)
+
                 else:
                     current_user.organisation = None
                 current_user.added_data = True
+
                 current_user.save()
+
                 return HttpResponseRedirect(reverse_lazy('dashboard'))
             else:
                 print("Missing fields? Request data: ", request.POST)
@@ -117,6 +132,7 @@ class CustomUserUpdateView(TemplateView):
             print("form is invalid")
             print(form.errors)
             return HttpResponse("Failed to retrieve or process the change, please refresh the page")
+
 
 # TODO: is this actually used anywhere? can't find it if so
 def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[HttpResponse, HttpResponse]:
@@ -270,9 +286,8 @@ class CustomLoginView(LoginView):
 class CustomPasswordResetView(PasswordResetView):
     form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
 
+
 def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:
     user = get_object_or_404(CustomUser, pk=pk)
     context = {'user': user}
     return render(request, 'account/view_only.html', context)
-
-

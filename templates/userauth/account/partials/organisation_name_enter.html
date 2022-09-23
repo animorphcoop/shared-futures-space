@@ -1,3 +1,5 @@
+{% load static %}
+
 <section
         class="z-20 flex w-full justify-center items-center flex-col h-full absolute left-0 top-0 backdrop-blur bg-blue-blur">
 
@@ -45,3 +47,7 @@
     </div>
 
 </section>
+
+{% block scripts %}
+    <script src="{% static 'js/organisation_add_new.js' %}"></script>
+{% endblock %}

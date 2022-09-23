@@ -11,9 +11,10 @@ function uncoverNewOrgTyping(){
 //TODO: ADD URL TOO
 
 function addName() {
-    const newOrg = document.getElementById("organisation-name").value
+    const newOrgName = document.getElementById("organisation-name").value
+    const newOrgUrl = document.getElementById("organisation-url").value
 
-    selectOrganisation(newOrg)
+    selectOrganisation(newOrgName, newOrgUrl)
     submitOrganisation()
 
 

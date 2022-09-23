@@ -7,8 +7,9 @@ function uncoverNewOrgTyping() {
 }
 //TODO: ADD URL TOO
 function addName() {
-    const newOrg = document.getElementById("organisation-name").value;
-    selectOrganisation(newOrg);
+    const newOrgName = document.getElementById("organisation-name").value;
+    const newOrgUrl = document.getElementById("organisation-url").value;
+    selectOrganisation(newOrgName, newOrgUrl);
     submitOrganisation();
     const organisationDataEnter = document.getElementById("organisation-name-enter");
     organisationDataEnter.classList.add('hidden');

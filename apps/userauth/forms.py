@@ -65,7 +65,8 @@ class CustomUserPersonalForm(forms.Form):
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
     avatar = forms.CharField(max_length=2)
-    organisation = forms.CharField(max_length=50)
+    organisation_name = forms.CharField(max_length=50)
+    organisation_url = forms.CharField(max_length=100)
 
     def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
         super(CustomUserPersonalForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
