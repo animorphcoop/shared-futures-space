@@ -53,43 +53,34 @@
         <a href="{% url 'account_request_panel' %}">Manage User Requests</a>
     {% endif %}
 
-    <div x-data="{selected:null}">
-        <button type="button" @click="selected !== 1 ? selected = 1 : selected = null">
-            <h2 class="pt-4 px-4">
-            {% include "partials/text-style/header.html" with text="Get in touch" %}
-        </h2>
-        </button>
 
-        <div class="p-4 relative overflow-hidden transition-all max-h-0 duration-700" style="" x-ref="container1" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
-            {% include "partials/get-in-touch-buttons.html" %}
-        </div>
-    </div>
 
     <div x-data="{selected:null}">
-        <button type="button" @click="selected !== 1 ? selected = 1 : selected = null">
-            <h2 class="pt-4 px-4">
-            {% include "partials/text-style/header.html" with text="Get in touch" %}
-        </h2>
-        </button>
+        {# Custom gradients https://www.hyperui.dev/blog/custom-gradients-with-tailwindcss-jit #}
+        <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
+            <button class="w-full" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+                <h2 class="py-4.5 px-4.5 flex justify-between">
+                    {% include "partials/text-style/header.html" with text="Get in touch" %}
+                    <div class="w-[12] h-[8] transition duration-500 ease-out"
+                         :class="{'-rotate-180': selected}">
+                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                                  fill="#9759FF"/>
+                        </svg>
+                    </div>
+                </h2>
+            </button>
+        </div>
 
-        <div class="p-4 relative overflow-hidden transition-all max-h-0 duration-700" style="" x-ref="container2" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container2.scrollHeight + 'px' : ''">
+        <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
+             style=""
+             x-ref="container1"
+             x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
             {% include "partials/get-in-touch-buttons.html" %}
+            <div class="h-8"></div>
         </div>
     </div>
-
-    <div x-data="{selected:null}">
-        <button type="button" @click="selected !== 1 ? selected = 1 : selected = null">
-            <h2 class="pt-4 px-4">
-            {% include "partials/text-style/header.html" with text="Get in touch" %}
-        </h2>
-        </button>
-
-        <div class="p-4 relative overflow-hidden transition-all max-h-0 duration-700" style="" x-ref="container3" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''">
-            {% include "partials/get-in-touch-buttons.html" %}
-        </div>
-    </div>
-
-
 
     <script src="{% static 'js/dashboard.js' %}"></script>
 
