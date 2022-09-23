@@ -911,6 +911,18 @@ select {
   height: 1.25rem;
 }
 
+.h-\[8\] {
+  height: 8;
+}
+
+.h-\[54\] {
+  height: 54;
+}
+
+.h-8 {
+  height: 2rem;
+}
+
 .max-h-72 {
   max-height: 18rem;
 }
@@ -973,6 +985,10 @@ select {
 
 .w-16 {
   width: 4rem;
+}
+
+.w-\[12\] {
+  width: 12;
 }
 
 .flex-shrink-0 {
@@ -1041,6 +1057,16 @@ select {
 
 .-rotate-180 {
   --tw-rotate: -180deg;
+  transform: var(--tw-transform);
+}
+
+.rotate-90 {
+  --tw-rotate: 90deg;
+  transform: var(--tw-transform);
+}
+
+.-rotate-90 {
+  --tw-rotate: -90deg;
   transform: var(--tw-transform);
 }
 
@@ -1325,6 +1351,26 @@ select {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
 
+.bg-\[linear-gradient\(180deg\2c _\#005BBB_49\.9\%\2c _\#FFD500_50\%\)\] {
+  background-image: linear-gradient(180deg, #005BBB 49.9%, #FFD500 50%);
+}
+
+.bg-\[linear-gradient\(180deg\2c _\#EEF3F4_0\%\2c _\#FFD500_50\%\)\] {
+  background-image: linear-gradient(180deg, #EEF3F4 0%, #FFD500 50%);
+}
+
+.bg-\[linear-gradient\(180deg\2c _\#EEF3F4_0\%\2c _\#E5F1F8_1\%\)\] {
+  background-image: linear-gradient(180deg, #EEF3F4 0%, #E5F1F8 1%);
+}
+
+.bg-\[linear-gradient\(180deg\2c _\#EEF3F4_0\%\2c _\#E5F1F8_1\%\2c _\#15\.62\%\)\] {
+  background-image: linear-gradient(180deg, #EEF3F4 0%, #E5F1F8 1%, #15.62%);
+}
+
+.bg-\[linear-gradient\(180deg\2c _\#EEF3F4_0\%\2c _\#E5F1F8_1\%\2c _\#e5f1f800_15\.62\%\)\] {
+  background-image: linear-gradient(180deg, #EEF3F4 0%, #E5F1F8 1%, #e5f1f800 15.62%);
+}
+
 .from-blue-second {
   --tw-gradient-from: rgba(229, 241, 248, 1);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(229 241 248 / 0));
@@ -1486,6 +1532,11 @@ select {
 .py-5 {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
+}
+
+.py-4\.5 {
+  padding-top: 1.125em;
+  padding-bottom: 1.125em;
 }
 
 .pb-6 {
