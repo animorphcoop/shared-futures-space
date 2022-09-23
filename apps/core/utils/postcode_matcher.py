@@ -9,7 +9,7 @@ def filter_postcode(typed_postcode):
     # strip from whitespaces
     entered_postcode = typed_postcode.replace(" ", "")
 
-    # get incode and make upper for a match
+    # get outcode and make upper for a match
     m = re.match(r'([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)([0-9][a-zA-Z]{2})?', entered_postcode)
     entered_postcode = m.group(1).upper()
 
