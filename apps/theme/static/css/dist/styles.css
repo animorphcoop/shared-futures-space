@@ -1273,8 +1273,17 @@ select {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(229 241 248 / 0));
 }
 
+.from-red-800 {
+  --tw-gradient-from: #991b1b;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(153 27 27 / 0));
+}
+
 .via-white {
   --tw-gradient-stops: var(--tw-gradient-from), #FFFFFF, var(--tw-gradient-to, rgb(255 255 255 / 0));
+}
+
+.via-blue-second {
+  --tw-gradient-stops: var(--tw-gradient-from), rgba(229, 241, 248, 1), var(--tw-gradient-to, rgb(229 241 248 / 0));
 }
 
 .to-white {
@@ -1503,6 +1512,10 @@ select {
 
 .pb-14 {
   padding-bottom: 3.5rem;
+}
+
+.pb-0 {
+  padding-bottom: 0px;
 }
 
 .text-left {

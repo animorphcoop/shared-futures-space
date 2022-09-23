@@ -32,7 +32,7 @@
             {#      Menu list  #}
             <nav class="w-full font-kanit-500 text-xl text-black-text">
                 <h1 class="bg-white p-4 py-2.5 text-purple">Menu</h1>
-                <ul class="bg-blue-pale overflow-y-auto min-h-screen">
+                <ul class="bg-gradient-to-b from-blue-second to-white overflow-y-auto min-h-screen">
                     <li class="p-4 pb-5">
                         <a href="{% url 'dashboard' %}">Dashboard</a>
                     </li>
@@ -55,23 +55,26 @@
                              x-transition:leave="transition ease-in duration-150"
                              x-transition:leave-start="opacity-100"
                              x-transition:leave-end="opacity-0">
-                            <ul class="list-none" aria-labelledby="dropdownLargeButton">
-                                <li class="p-4">
+                            <ul class="list-non text-black-meta" aria-labelledby="dropdownLargeButton">
+                                <li class="px-4 py-3 pt-6 text-black-text">
+                                    <a href="#"><span>Your spring: </span>Colin</a>
+                                </li>
+                                <li class="px-4 py-3">
                                     <a href="#">North Belfast</a>
                                 </li>
-                                <li class="p-4">
+                                <li class="px-4 py-3">
                                     <a href="#">East Belfast</a>
                                 </li>
-                                <li class="p-4">
+                                <li class="px-4 py-3">
                                     <a href="#">West Belfast</a>
                                 </li>
-                                <li class="p-4">
+                                <li class="px-4 py-3">
                                     <a href="#">South Belfast</a>
                                 </li>
-                                <li class="p-4">
-                                    <a href="#">Derry</a>
+                                <li class="px-4 py-3">
+                                    <a href="#">Derry~Londonderry</a>
                                 </li>
-                                <li class="p-4">
+                                <li class="px-4 py-3 pb-0">
                                     <a href="#">Donegal</a>
                                 </li>
                             </ul>
