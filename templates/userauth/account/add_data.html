@@ -51,7 +51,8 @@
                            transition ease-in-out m-0
                            focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
                            invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-                       id=year_of_birth name=year_of_birth type="number" min="1900" max="2022" placeholder="Year you were born"
+                       id=year_of_birth name=year_of_birth type="number" min="1900" max="2022"
+                       placeholder="Year you were born"
                        value="">
                 {% include "partials/input-note.html" with for="year_of_birth" label="Under 16s cannot comment on projects" %}
             </div>
@@ -84,7 +85,7 @@
                 {% endfor %}
 
                 {% comment %}taking on the value of the avatar (pk) via button{% endcomment %}
-                <input id="avatar" name=avatar type=text value="" class="hidden">
+                <input id="avatar" name=avatar type=text value="1" class="hidden">
 
             </div>
 
