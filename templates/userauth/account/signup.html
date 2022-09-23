@@ -66,17 +66,11 @@
                 <h2 class="py-3 font-kanit-400 text-xxxs tracking-wide text-black-text">
                     Already have a Shared Futures account?
                 </h2>
-                {# WET BUTTON #}
-                <div class="pb-3">
-                    <a href="{{ login_url }}"
-                       class="inline-block rounded-full px-4 py-4
-                   font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-                   text-purple bg-white
-                   hover:bg-resources-one focus:bg-resources-one
-                   transition ease-out duration-300">
-                        Log in
-                    </a>
-                </div>
+
+                {% url 'account_login' as the_url %}
+                {% include "partials/button.html" with url=the_url style="primary_colour" button="Log in" %}
+
+                <div class="pb-3"></div>
             </section>
         </div>
 

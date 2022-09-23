@@ -21,6 +21,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('chat/', login_required(UserAllChatsView.as_view(template_name='account/all_user_chats.html')), name='account_all_chats'),
     path('chat/<uuid:other_uuid>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')), name='user_chat'), # pyre-ignore[16]
 
+    # add override of signup url with custom name so we dont hardcode paths
 
     # add all paths that are not custom
     path('', include('allauth.urls')),
