@@ -1060,6 +1060,16 @@ select {
   transform: var(--tw-transform);
 }
 
+.rotate-90 {
+  --tw-rotate: 90deg;
+  transform: var(--tw-transform);
+}
+
+.-rotate-90 {
+  --tw-rotate: -90deg;
+  transform: var(--tw-transform);
+}
+
 .scale-50 {
   --tw-scale-x: .5;
   --tw-scale-y: .5;
