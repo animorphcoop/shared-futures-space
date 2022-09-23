@@ -24,5 +24,6 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         'notifications': notifications,
         'rivers': rivers,
         'resources': resources,
+        'user': request.user,
     }
     return render(request, 'dashboard/dashboard.html', context)

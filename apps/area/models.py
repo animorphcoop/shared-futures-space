@@ -27,7 +27,7 @@ class PostCode(models.Model):
     def save(self, *args: Tuple[Any], **kwargs: Dict[str,Any]) -> None:
         # normalise different ways of writing the postcode - TODO: carrying cleaning on the frontend & view
         m = re.match(r'([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)\s?([0-9][a-zA-Z]{2})?', self.code)
-        self.code = m.group(1).upper() # discard second part
+        self.code = m.group(1).upper() # discard outcode
         if not self.area:
             self.area = Area.objects.get_or_create(name='Other')[0]
         return super().save(*args, **kwargs) # pyre-ignore[6]

@@ -13,6 +13,7 @@ const endpointBelfast = 'https://api.openweathermap.org/data/2.5/weather?q=Belfa
 //https://api.openweathermap.org/geo/1.0/zip?zip=BT13,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
 //https://api.openweathermap.org/data/2.5/weather?lat=54.5833&lon=-5.9333&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
 
+const appid = 'f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
 
 const backupWeatherIcon = 'https://openweathermap.org/img/wn/01d@2x.png'
 const weatherTypes = {
@@ -30,26 +31,52 @@ const weatherTypes = {
 
 
 // TODO: Based on Postcode / location
-function retrieveData() {
+async function retrieveData(postcode: string) {
     try {
-        apiService(endpointBelfast).then(data => {
+        /*apiService(endpointBelfast).then(data => {
             if (data) {
                 return data
             } else {
                 console.log("No luck retrieving weather data")
             }
 
-        })
-        return apiService(endpointBelfast)
+        })*/
+        let codeResponse = await postcodeQuery(postcode);
+        return await latLongQuery(Number(filterLoop(codeResponse, 'lat')), Number(filterLoop(codeResponse, 'lon')));
     } catch (error) {
         let errorMessage = "Failed to connect to weather API"
         if (error instanceof Error) {
             errorMessage = error.message;
         }
         console.log(errorMessage);
-
-
     }
+}
+
+async function postcodeQuery(code: string) {
+    // try the code as an eircode
+    let ie_attempt = await apiService('https://api.openweathermap.org/geo/1.0/zip?zip=' + code + ',IE&appid=' + appid);
+    if (ie_attempt != null) {
+        return ie_attempt;
+    } else {
+        // otherwise, try it as a gb postcode
+        let gb_attempt = await apiService('https://api.openweathermap.org/geo/1.0/zip?zip=' + code + ',GB&appid=' + appid);
+        if ('lat' in gb_attempt) {
+            return gb_attempt;
+        } else {
+            console.log('not a valid IE or GB postcode');
+            return gb_attempt;
+        }
+    }
+}
+
+function latLongQuery(lat: number, lon: number) {
+    return apiService('https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&appid=' + appid).then(data => {
+        if (data) {
+            return data
+        } else {
+            console.log("No luck retrieving weather data")
+        }
+    });
 }
 
 function mapWeatherType(weatherDescription: string) {
@@ -57,8 +84,6 @@ function mapWeatherType(weatherDescription: string) {
     const weatherIconHolder = <HTMLImageElement>document.getElementById("weather-icon")
     if (weatherIconHolder) weatherIconHolder.src = currentWeatherIcon
     //const {'clear sky': imgUrl} = weatherTypes
-
-
 }
 
 function findWeatherIcon(currentWeather: string) {
@@ -74,12 +99,11 @@ function findWeatherIcon(currentWeather: string) {
 }
 
 
-async function getWeather() {
-
-    let response = await retrieveData()
-    console.log(`returning ${getWeatherDetails(response)} temperature`)
-    return getWeatherDetails(response).toString()
-
+async function getWeather(postcode: string) {
+    let response = await retrieveData(postcode);
+    let temp = getWeatherDetails(response).toString();
+    console.log(`returning ${temp} temperature`);
+    return temp;
 }
 
 
