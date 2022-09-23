@@ -5,12 +5,16 @@ function uncoverNewOrgTyping() {
         return;
     organisationDataEnter.classList.remove('hidden');
 }
-//TODO: ADD URL TOO
 function addName() {
-    const newOrgName = document.getElementById("organisation-name").value;
-    const newOrgUrl = document.getElementById("organisation-url").value;
+    if (organisationDataEnter == null)
+        return;
+    const tempOrgNameInput = document.getElementById("organisation-name");
+    const tempOrgUrlInput = document.getElementById("organisation-url");
+    if (tempOrgNameInput == null || tempOrgUrlInput == null)
+        return;
+    const newOrgName = tempOrgNameInput.value;
+    const newOrgUrl = tempOrgUrlInput.value;
     selectOrganisation(newOrgName, newOrgUrl);
     submitOrganisation();
-    const organisationDataEnter = document.getElementById("organisation-name-enter");
     organisationDataEnter.classList.add('hidden');
 }

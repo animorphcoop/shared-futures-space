@@ -1,24 +1,28 @@
+const organisationDataEnter: HTMLElement | null = document.getElementById("organisation-name-enter")
 
-const organisationDataEnter = (<HTMLInputElement>document.getElementById("organisation-name-enter"))
 
-
-function uncoverNewOrgTyping(){
+function uncoverNewOrgTyping() {
     if (organisationDataEnter == null) return
 
     organisationDataEnter.classList.remove('hidden')
 }
 
-//TODO: ADD URL TOO
-
 function addName() {
-    const newOrgName = document.getElementById("organisation-name").value
-    const newOrgUrl = document.getElementById("organisation-url").value
+    if (organisationDataEnter == null) return
+
+    const tempOrgNameInput = (<HTMLInputElement>document.getElementById("organisation-name"))
+    const tempOrgUrlInput = (<HTMLInputElement>document.getElementById("organisation-url"))
+
+    if (tempOrgNameInput == null || tempOrgUrlInput == null) return
+
+    const newOrgName = tempOrgNameInput.value
+    const newOrgUrl = tempOrgUrlInput.value
+
 
     selectOrganisation(newOrgName, newOrgUrl)
     submitOrganisation()
 
 
-    const organisationDataEnter = document.getElementById("organisation-name-enter")
     organisationDataEnter.classList.add('hidden')
 
 }

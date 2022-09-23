@@ -7,7 +7,6 @@ const organisationDataBlock = document.getElementById("organisation-data");
 const organisationList = document.getElementById("organisation-list");
 const organisationNameInput = document.getElementById("organisation_name");
 const organisationUrlInput = document.getElementById("organisation_url");
-//TODO: SET UP ADDING URL TO NEW ORG
 function toggleOrganisations() {
     if (checkbox == null || organisationDataBlock == null || selectedOrganisation == null || organisationList == null)
         return;

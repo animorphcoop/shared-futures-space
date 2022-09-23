@@ -12,8 +12,6 @@ const organisationNameInput = (<HTMLInputElement>document.getElementById("organi
 const organisationUrlInput = (<HTMLInputElement>document.getElementById("organisation_url"))
 
 
-//TODO: SET UP ADDING URL TO NEW ORG
-
 function toggleOrganisations() {
     if (checkbox == null || organisationDataBlock == null || selectedOrganisation == null || organisationList == null) return
 
