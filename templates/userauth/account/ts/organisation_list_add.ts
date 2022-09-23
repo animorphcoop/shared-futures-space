@@ -17,7 +17,6 @@ function toggleOrganisations() {
 
     if (checkbox.checked) {
         organisationList.classList.remove('hidden')
-        //organisationDataBlock.classList.remove('hidden')
     } else {
         organisationList.classList.add('hidden')
         organisationDataBlock.classList.add('hidden')
@@ -50,7 +49,6 @@ function selectOrganisation(orgName: string, orgUrl: string) {
 }
 
 function submitOrganisation() {
-    console.log(`Selected ${selectedOrganisation}`)
 
 
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
@@ -71,21 +69,17 @@ function openAddName() {
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null) return
 
     organisationList.classList.add('hidden')
-    uncoverNewOrgTyping()
+    uncoverNewOrgTyping(true)
 
 }
 
-/*
+function goBack() {
 
-function addName() {
-    const newOrg = document.getElementById("organisation-name").value
+    if (organisationList == null) return
 
-    selectOrganisation(newOrg)
-    submitOrganisation()
+    organisationList.classList.remove('hidden')
 
-
-    const organisationDataEnter = document.getElementById("organisation-name-enter")
-    organisationDataEnter.classList.add('hidden')
-
+    uncoverNewOrgTyping(false)
 }
-*/
+
+

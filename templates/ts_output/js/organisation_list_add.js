@@ -12,7 +12,6 @@ function toggleOrganisations() {
         return;
     if (checkbox.checked) {
         organisationList.classList.remove('hidden');
-        //organisationDataBlock.classList.remove('hidden')
     }
     else {
         organisationList.classList.add('hidden');
@@ -40,7 +39,6 @@ function selectOrganisation(orgName, orgUrl) {
     newOrganisationUrl = orgUrl;
 }
 function submitOrganisation() {
-    console.log(`Selected ${selectedOrganisation}`);
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null)
         return;
     organisationNameInput.value = selectedOrganisation;
@@ -53,19 +51,11 @@ function openAddName() {
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null)
         return;
     organisationList.classList.add('hidden');
-    uncoverNewOrgTyping();
+    uncoverNewOrgTyping(true);
 }
-/*
-
-function addName() {
-    const newOrg = document.getElementById("organisation-name").value
-
-    selectOrganisation(newOrg)
-    submitOrganisation()
-
-
-    const organisationDataEnter = document.getElementById("organisation-name-enter")
-    organisationDataEnter.classList.add('hidden')
-
+function goBack() {
+    if (organisationList == null)
+        return;
+    organisationList.classList.remove('hidden');
+    uncoverNewOrgTyping(false);
 }
-*/

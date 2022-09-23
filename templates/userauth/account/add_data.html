@@ -13,7 +13,7 @@
         <section class="p-4 pt-2.5 flex flex-col items-end">
             <div class="bg-gray-light rounded-full">
                 <p class="font-garamond-500 text-black-large text-center text-22 p-2.5">
-                    Welcome! Just a few questions to complete your profile.
+                    Welcome! Just a few questions to help personalise your experience.
                 </p>
             </div>
             <div class="flex flex-col p-1 mr-4 w-12">
@@ -36,7 +36,10 @@
                            transition ease-in-out m-0
                            focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
                            invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-                       id=display_name name=display_name type=text placeholder="Your name" value="">
+                       id=display_name name=display_name type=text placeholder="Your name" value=""
+                       pattern="[a-zA-Z][a-zA-Z\s]*">
+                {% include "partials/input-note.html" with for="display_name" label="This is how people will see you." %}
+
             </div>
 
             <div class="px-4 pb-9">
@@ -48,7 +51,8 @@
                            transition ease-in-out m-0
                            focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
                            invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-                       id=year_of_birth name=year_of_birth type=text placeholder="Year you were born" value="">
+                       id=year_of_birth name=year_of_birth type="number" min="1900" max="2022" placeholder="Year you were born"
+                       value="">
                 {% include "partials/input-note.html" with for="year_of_birth" label="Under 16s cannot comment on projects" %}
             </div>
 
@@ -61,7 +65,8 @@
                            transition ease-in-out m-0
                            focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
                            invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-                       id=post_code name=post_code type=text placeholder="Your postcode" value="">
+                       id=post_code name=post_code type=text placeholder="Your postcode"
+                       pattern="(?=.*\d)(?=.*[A-Za-z]).{3,}" value="">
                 {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
             </div>
 

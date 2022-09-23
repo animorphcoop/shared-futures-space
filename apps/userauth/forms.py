@@ -54,7 +54,6 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
-        # user.organisation = Organisation.objects.get_or_create(name = self.cleaned_data['organisation'])[0]
         user.save()
         log_signup(user, request)  # analytics
         return user

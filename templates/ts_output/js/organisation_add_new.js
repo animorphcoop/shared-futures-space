@@ -1,9 +1,14 @@
 "use strict";
 const organisationDataEnter = document.getElementById("organisation-name-enter");
-function uncoverNewOrgTyping() {
-    if (organisationDataEnter == null)
+function uncoverNewOrgTyping(toOpenInput) {
+    if (organisationDataEnter == null || organisationList == null)
         return;
-    organisationDataEnter.classList.remove('hidden');
+    if (toOpenInput) {
+        organisationDataEnter.classList.remove('hidden');
+    }
+    else {
+        organisationDataEnter.classList.add('hidden');
+    }
 }
 function addName() {
     if (organisationDataEnter == null)

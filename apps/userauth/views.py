@@ -74,15 +74,11 @@ class CustomUserPersonalView(TemplateView):
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():
                         current_user.organisation = \
                             get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))
-                        print('found')
-                        print(current_user.organisation)
                     else:
                         new_organisation = \
                             Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
                                                                link=form.cleaned_data.get('organisation_url'))[0]
                         current_user.organisation = new_organisation
-                        print('created')
-                        print(current_user.organisation)
 
                 else:
                     current_user.organisation = None

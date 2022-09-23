@@ -1,11 +1,18 @@
 const organisationDataEnter: HTMLElement | null = document.getElementById("organisation-name-enter")
 
 
-function uncoverNewOrgTyping() {
-    if (organisationDataEnter == null) return
+function uncoverNewOrgTyping(toOpenInput: boolean) {
+    if (organisationDataEnter == null || organisationList == null) return
 
-    organisationDataEnter.classList.remove('hidden')
+    if (toOpenInput) {
+        organisationDataEnter.classList.remove('hidden')
+    } else {
+        organisationDataEnter.classList.add('hidden')
+
+    }
+
 }
+
 
 function addName() {
     if (organisationDataEnter == null) return

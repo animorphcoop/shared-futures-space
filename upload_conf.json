@@ -608,7 +608,7 @@
       "postcode": "BT17",
       "avatar": 14,
       "editor": true,
-      "organisation": "None",
+      "organisation": "",
       "password": "TopSecret2022"
     },
     {
@@ -618,7 +618,7 @@
       "postcode": "BT48",
       "avatar": 1,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "DoC%_82£"
     },
     {
@@ -648,7 +648,7 @@
       "postcode": "BT14",
       "avatar": 4,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "G3nilhgGf7M"
     },
     {
@@ -668,7 +668,7 @@
       "postcode": "WD23",
       "avatar": 5,
       "editor": false,
-      "organisation": false,
+      "organisation": "",
       "password": "1q2w3e"
     },
     {
@@ -678,7 +678,7 @@
       "postcode": "BT48",
       "avatar": 6,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "SecretWords"
     },
     {
@@ -718,7 +718,7 @@
       "postcode": "BT11",
       "avatar": 10,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "&3DfghaveSmells09!"
     },
     {
@@ -728,7 +728,7 @@
       "postcode": "BT12",
       "avatar": 11,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "fgh12345G6785690"
     },
     {
@@ -738,7 +738,7 @@
       "postcode": "BT9",
       "avatar": 12,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "qwerty"
     },
     {
@@ -748,7 +748,7 @@
       "postcode": "BT10",
       "avatar": 12,
       "editor": false,
-      "organisation": "None",
+      "organisation": "",
       "password": "sdf43qwerty"
     },
     {
@@ -768,7 +768,7 @@
       "postcode": "WD23",
       "avatar": 13,
       "editor": true,
-      "organisation": "None",
+      "organisation": "",
       "password": "yohy!"
     }
   ],
