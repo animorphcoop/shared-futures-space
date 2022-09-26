@@ -1,0 +1,34 @@
+<li class="px-3 pt-3 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#e5f1f800_15.62%)] rounded-t-xl rounded-t-xl">
+    <h2 class="font-kanit-500 text-xl text-black-large leading-tight">
+        {{ resource.title }}
+    </h2>
+
+    <div class="h-4"></div>
+
+    {% if resource.tags %}
+        <div class="">
+            {% for tag in resource.tags %}
+                <button class="whitespace-normal px-1.5 py-1 bg-blue-second text-black-large font-kanit-400 text-xxxs uppercase leading-none tracking-widest rounded-sm"
+                        onclick="buttonTagSearch('{{ tag }}')"
+                        hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
+                        hx-target="#search-results">
+                    {{ tag }}
+                </button>
+                <div class="inline mr-3 last:mr-0"></div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="h-6"></div>
+
+    <p class="mb-0.5 font-garamond-500 text-black-text text-base leading-5 whitespace-normal">
+        {{ resource.summary }}
+    </p>
+
+    <div class="h-4"></div>
+
+    {% url 'resource_item' resource.slug as the_url %}
+    {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
+
+    <div class="h-9"></div>
+</li>
