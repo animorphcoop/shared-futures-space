@@ -18,17 +18,17 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
             <div id="profile-data" class="">
 
                 <div class="flex flex-col items-center justify-center">
-                   <div class="pb-2.5">
+                    <div class="pb-2.5">
                         {% if user.avatar.url != null %}
                             <img src="{{ user.avatar.url }}"
-                                 class="rounded-full w-16 h-16"
+                                class="rounded-full w-16 h-16"
                             />
                         {% else %}
                             <div class="rounded-full bg-resources-one w-16 h-16">
 
                             </div>
                         {% endif %}
-                   </div>
+                    </div>
                     <h2 class="font-kanit-500 text-black-text text-xl">Display name: {{ user.display_name }}</</h2>
                 </div>
 
@@ -50,7 +50,7 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
 
 
                 <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                        hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile
+                    hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile
                 </button>
 
             </div>

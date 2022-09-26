@@ -11,10 +11,6 @@
 
     {% block title %}{% include "partials/title.html" with title=user.display_name dashboard=True %}{% endblock %}
 
-    {% comment %}
-<p class="font-sans text-2xl">🐠</p>
-{% endcomment %}
-
     <section>
         <img src="{% static 'images/dashboard/mobius.gif' %}" alt="mobius temp" class="w-full">
 
@@ -30,18 +26,18 @@
                 {% include "partials/text-style/header.html" with text="Your messages" %}
                 <div class="w-[12] h-[8] -rotate-90 transition duration-500 ease-out">
                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
+                        xmlns="http://www.w3.org/2000/svg">
                         <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                              fill="#9759FF"/>
+                            fill="#9759FF"/>
                     </svg>
                 </div>
             </h2>
         </button>
     </div>
 
-{#    {% block messages %}#}
-{#        {% include "dashboard/partials/accordion.html" with title="Messages" list_items=messages %}#}
-{#    {% endblock %}#}
+    {#    {% block messages %}#}
+    {#        {% include "dashboard/partials/accordion.html" with title="Messages" list_items=messages %}#}
+    {#    {% endblock %}#}
 
     {# Notifications #}
     <div x-data="{selected:null}">
@@ -51,11 +47,11 @@
                 <h2 class="py-4.5 px-4.5 flex items-center justify-between">
                     {% include "partials/text-style/header.html" with text="Notifications" %}
                     <div class="w-[12] h-[8] transition duration-500 ease-out"
-                         :class="{'-rotate-180': selected}">
+                        :class="{'-rotate-180': selected}">
                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
+                            xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                  fill="#9759FF"/>
+                                fill="#9759FF"/>
                         </svg>
                     </div>
                 </h2>
@@ -63,17 +59,20 @@
         </div>
 
         <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
-             style=""
-             x-ref="notifications"
-             x-bind:style="selected == 1 ? 'max-height: ' + $refs.notifications.scrollHeight + 'px' : ''">
-                NOTIFICATIONS!
+            style=""
+            x-ref="notifications"
+            x-bind:style="selected == 1 ? 'max-height: ' + $refs.notifications.scrollHeight + 'px' : ''">
+
+            {# If no notifications:  #}
+            {# {% include "partials/salmon-of-knowledge.html" with text="No new notifications, you're all caught up!" %} #}
+
+            {% block notifications %}
+                {% include "dashboard/partials/accordion.html" with title="Notifications" list_items=notifications %}
+            {% endblock %}
+
             <div class="h-8"></div>
         </div>
     </div>
-
-    {#    {% block notifications %}#}
-    {#        {% include "dashboard/partials/accordion.html" with title="Notifications" list_items=notifications %}#}
-    {#    {% endblock %}#}
 
     {#  Call to action partial, replace URL variable  #}
     <section class="bg-resources-two">
@@ -89,11 +88,11 @@
                 <h2 class="py-4.5 px-4.5 flex items-center justify-between">
                     {% include "partials/text-style/header.html" with text="Your rivers" %}
                     <div class="w-[12] h-[8] transition duration-500 ease-out"
-                         :class="{'-rotate-180': selected}">
+                        :class="{'-rotate-180': selected}">
                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
+                            xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                  fill="#9759FF"/>
+                                fill="#9759FF"/>
                         </svg>
                     </div>
                 </h2>
@@ -101,10 +100,13 @@
         </div>
 
         <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
-             style=""
-             x-ref="resources"
-             x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
-            RIVERS!
+            style=""
+            x-ref="resources"
+            x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
+
+            {# If no rivers:  #}
+            {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
+
             <div class="h-8"></div>
         </div>
     </div>
@@ -121,11 +123,11 @@
                 <h2 class="py-4.5 px-4.5 flex items-center justify-between">
                     {% include "partials/text-style/header.html" with text="Bookmarked resources" %}
                     <div class="w-[12] h-[8] transition duration-500 ease-out"
-                         :class="{'-rotate-180': selected}">
+                        :class="{'-rotate-180': selected}">
                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
+                            xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                  fill="#9759FF"/>
+                                fill="#9759FF"/>
                         </svg>
                     </div>
                 </h2>
@@ -133,10 +135,13 @@
         </div>
 
         <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
-             style=""
-             x-ref="resources"
-             x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
-            RESOURCES!
+            style=""
+            x-ref="resources"
+            x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
+
+            {# If no resources:  #}
+            {% include "partials/salmon-of-knowledge.html" with text="Resources you've marked as helpful are saved here in your Dashboard." %}
+            
             <div class="h-8"></div>
         </div>
     </div>
@@ -162,11 +167,11 @@
                 <h2 class="py-4.5 px-4.5 flex items-center justify-between">
                     {% include "partials/text-style/header.html" with text="Get in touch" %}
                     <div class="w-[12] h-[8] transition duration-500 ease-out"
-                         :class="{'-rotate-180': selected}">
+                        :class="{'-rotate-180': selected}">
                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
+                            xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                  fill="#9759FF"/>
+                                fill="#9759FF"/>
                         </svg>
                     </div>
                 </h2>
@@ -174,9 +179,9 @@
         </div>
 
         <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
-             style=""
-             x-ref="getInTouch"
-             x-bind:style="selected == 1 ? 'max-height: ' + $refs.getInTouch.scrollHeight + 'px' : ''">
+            style=""
+            x-ref="getInTouch"
+            x-bind:style="selected == 1 ? 'max-height: ' + $refs.getInTouch.scrollHeight + 'px' : ''">
             {% include "partials/get-in-touch-buttons.html" %}
             <div class="h-8"></div>
         </div>
