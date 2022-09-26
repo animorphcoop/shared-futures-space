@@ -1,72 +1,72 @@
 {% load static %}
 
 <section class="z-20 flex justify-center items-center flex-col h-full absolute left-0 top-0 backdrop-blur bg-blue-blur">
-  <div class="p-7 mx-5 mb-5 bg-white">
-    <h2 class="font-garamond-500 text-black-large text-xl text-22 text-center">
-      Is your organisation already in our system?
-    </h2>
-  </div>
-
-  <div class="rounded-t-xl w-full px-5 mb-5">
-    <div class="bg-yellow-pale rounded-t-xl shadow-xl">
-      <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-large px-3 py-5">
-        Organisations
-      </h3>
-    </div>
-    <ul class="bg-white max-h-72 overflow-y-auto shadow-xl">
-      {% for organisation in organisations %}
-        <li>
-          <button onclick="selectOrganisation(this.innerText)"
-            class="px-3 py-3.5 w-full text-left leading-normal
-              font-garamond-500 text-black-large text-sm
-              focus:bg-blue-pale
-              transition ease-out duration-300">
-            {{ organisation }}
-          </button>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div>
-    <div class="flex items-center justify-center mb-5 ">
-      <button onclick="backFromOrganisations()"
-        type="submit"
-        class="inline-block rounded-full px-4 py-3.5 mr-2.5
-          font-kanit-700 uppercase font-medium text-xxs tracking-widest
-          text-purple bg-white
-          hover:bg-blue-pale focus:bg-blue-pale
-          transition ease-out duration-300
-          disabled:bg-gray-light">
-        Back
-      </button>
-      <button onclick="submitOrganisation()"
-        type="submit"
-        class="inline-block rounded-full px-4 py-3.5
-          font-kanit-700 uppercase font-medium text-xxs tracking-widest
-          text-purple bg-yellow-pale
-          hover:bg-yellow focus:bg-yellow
-          transition ease-out duration-300
-          disabled:bg-gray-light">
-        Done
-      </button>
+    <div class="p-7 mx-5 mb-5 bg-white">
+        <h2 class="font-garamond-500 text-black-large text-xl text-22 text-center">
+            Is your organisation already in our system?
+        </h2>
     </div>
 
-    <button onclick="openAddName()"
-      type="submit"
-      class="flex justify-center items-center rounded-full px-4 py-3
-        font-kanit-700 uppercase font-medium text-xxs tracking-widest
-        text-purple bg-white
-        hover:bg-blue-pale focus:bg-blue-pale
-        transition ease-out duration-300
-        disabled:bg-gray-light">
-      <span class="pr-1.5">My organisation is not on this list</span>
-      <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z" fill="#9759FF"/>
-      </svg>
-    </button>
-  </div>
+    <div class="rounded-t-xl w-full px-5 mb-5">
+        <div class="bg-yellow-pale rounded-t-xl shadow-xl">
+            <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-large px-3 py-5">
+                Organisations
+            </h3>
+        </div>
+        <ul class="bg-white max-h-72 overflow-y-auto shadow-xl">
+            {% for organisation in organisations %}
+                <li>
+                    <button onclick="selectOrganisation(this.innerText)"
+                        class="px-3 py-3.5 w-full text-left leading-normal
+                            font-garamond-500 text-black-large text-sm
+                            focus:bg-blue-pale
+                            transition ease-out duration-300">
+                        {{ organisation }}
+                    </button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <div class="flex items-center justify-center mb-5 ">
+            <button onclick="backFromOrganisations()"
+                type="submit"
+                class="inline-block rounded-full px-4 py-3.5 mr-2.5
+                    font-kanit-700 uppercase font-medium text-xxs tracking-widest
+                    text-purple bg-white
+                    hover:bg-blue-pale focus:bg-blue-pale
+                    transition ease-out duration-300
+                    disabled:bg-gray-light">
+                Back
+            </button>
+            <button onclick="submitOrganisation()"
+                type="submit"
+                class="inline-block rounded-full px-4 py-3.5
+                    font-kanit-700 uppercase font-medium text-xxs tracking-widest
+                    text-purple bg-yellow-pale
+                    hover:bg-yellow focus:bg-yellow
+                    transition ease-out duration-300
+                    disabled:bg-gray-light">
+                Done
+            </button>
+        </div>
+
+        <button onclick="openAddName()"
+            type="submit"
+            class="flex justify-center items-center rounded-full px-4 py-3
+                font-kanit-700 uppercase font-medium text-xxs tracking-widest
+                text-purple bg-white
+                hover:bg-blue-pale focus:bg-blue-pale
+                transition ease-out duration-300
+                disabled:bg-gray-light">
+            <span class="pr-1.5">My organisation is not on this list</span>
+            <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z" fill="#9759FF"/>
+            </svg>
+        </button>
+    </div>
 </section>
 
 <script>
@@ -76,5 +76,5 @@
 
 
 {% block scripts %}
-  <script src="{% static 'js/organisation_list_add.js' %}"></script>
+    <script src="{% static 'js/organisation_list_add.js' %}"></script>
 {% endblock %}

@@ -7,25 +7,25 @@ covered by verification_sent.html
 
 {% block content %}
 
-  <div class="flex flex-col h-screen">
+    <div class="flex flex-col h-screen">
 
-    {% block title %}{% include "partials/title.html" with title="Verify e-mail address" %}{% endblock %}
+        {% block title %}{% include "partials/title.html" with title="Verify e-mail address" %}{% endblock %}
 
-    {% url 'account_email' as email_url %}
+        {% url 'account_email' as email_url %}
 
-    <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
-      This part of the site requires us to verify that you are who you claim to be. For this purpose, we require that you verify ownership of your e-mail address.
-    </p>
+        <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+            This part of the site requires us to verify that you are who you claim to be. For this purpose, we require that you verify ownership of your e-mail address.
+        </p>
 
-    <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
-      We have sent an e-mail to you for verification. Please click on the link inside this e-mail. Please contact us if you do not receive it within a few minutes.
-    </p>
+        <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+            We have sent an e-mail to you for verification. Please click on the link inside this e-mail. Please contact us if you do not receive it within a few minutes.
+        </p>
 
-    <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
-      You can still <a href="{{ email_url }}">change your e-mail address</a>.
-    </p>
+        <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+            You can still <a href="{{ email_url }}">change your e-mail address</a>.
+        </p>
 
-    {% include "partials/footer-gradient.html" %}
-  </div>
+        {% include "partials/footer-gradient.html" %}
+    </div>
 
 {% endblock %}

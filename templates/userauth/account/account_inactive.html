@@ -4,14 +4,14 @@
 
 {% block content %}
 
-  {% block title %}{% include "partials/title.html" with title="Account Inactive" %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title="Account Inactive" %}{% endblock %}
 
-  {% if not user.is_active %}
-    <p>You cannot sign in because your account is account inactive.</p>
+    {% if not user.is_active %}
+        <p>You cannot sign in because your account is account inactive.</p>
 
-  {% else %}
-    <p>Your account is active and you should not see it (you will be redirected automatically because you should not be able to sign in).</p>
+    {% else %}
+        <p>Your account is active and you should not see it (you will be redirected automatically because you should not be able to sign in).</p>
 
-  {% endif %}
+    {% endif %}
 
 {% endblock %}

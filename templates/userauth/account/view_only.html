@@ -10,33 +10,33 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
 
 
 
-  {% block title %}{% include "partials/title.html" with title=user.display_name %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title=user.display_name %}{% endblock %}
 
 
-  <p class="font-sans text-5xl bg">{{ user.display_name }} profile</p>
+    <p class="font-sans text-5xl bg">{{ user.display_name }} profile</p>
 
-  <div id="profile-data">
+    <div id="profile-data">
 
-    <br/>
-    {{ user.display_name }}, born in {{ user.year_of_birth }}
-    <br/>
+        <br/>
+        {{ user.display_name }}, born in {{ user.year_of_birth }}
+        <br/>
 
-    Living at Post code {{ user.post_code }}
+        Living at Post code {{ user.post_code }}
 
-    <br/>
+        <br/>
 
-    {% comment %}testing a way of parsing foreign key images{% endcomment %}
-    Profile image: <img class="inline" src="{{ user.avatar.image_url|default_if_none:'#' }}">
-    <br/>
+        {% comment %}testing a way of parsing foreign key images{% endcomment %}
+        Profile image: <img class="inline" src="{{ user.avatar.image_url|default_if_none:'#' }}">
+        <br/>
 
-    {% comment %}By default people belong to organisation 'None'! {% endcomment %}
-    {% if user.organisation != "None" %}
-      <div>
-        From <a href="{{ user.organisation.link }}">{{ user.organisation.name }}</a>
-      </div>
-    {% endif %}
+        {% comment %}By default people belong to organisation 'None'! {% endcomment %}
+        {% if user.organisation != "None" %}
+            <div>
+                From <a href="{{ user.organisation.link }}">{{ user.organisation.name }}</a>
+            </div>
+        {% endif %}
 
 
-  </div>
+    </div>
 
 {% endblock %}

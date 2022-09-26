@@ -2,23 +2,23 @@
 
 <div class="flex flex-col items-center py-9">
 
-  <p class="font-garamond-500 text-black-large text-22 pb-6">
-    {{ main }}
-  </p>
-
-  <a href="{{ url }}"
-    class="inline-block rounded-full px-4 py-4
-      font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-      text-purple bg-white
-      hover:bg-resources-one focus:bg-resources-one
-      transition ease-out duration-300">
-    {{ button }}
-  </a>
-
-  {% if info %}
-    <p class="text-black-large font-kanit-400 text-xxxs tracking-wide pt-6">
-      {{ info }}
+    <p class="font-garamond-500 text-black-large text-22 pb-6">
+        {{ main }}
     </p>
-  {% endif %}
+
+    <a href="{{ url }}"
+        class="inline-block rounded-full px-4 py-4
+            font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
+            text-purple bg-white
+            hover:bg-resources-one focus:bg-resources-one
+            transition ease-out duration-300">
+        {{ button }}
+    </a>
+
+    {% if info %}
+        <p class="text-black-large font-kanit-400 text-xxxs tracking-wide pt-6">
+            {{ info }}
+        </p>
+    {% endif %}
 
 </div>

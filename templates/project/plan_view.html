@@ -6,5 +6,5 @@ plan view
 <p><a href="{% url 'project_chat' project.slug 'plan' 'dates' %}">Plan Dates Chat</a></p>
 
 {% if project.current_stage == project.Stage.PLAN %}
-  <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Act Stage</button></form>
+    <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Act Stage</button></form>
 {% endif %}

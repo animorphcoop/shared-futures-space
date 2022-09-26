@@ -1,18 +1,18 @@
 <form method=POST action="{% url 'do_action' %}">
-  {% csrf_token %}
-  <input type=hidden name=action_id value={{message.context_action.uuid}}></input>
-  {% if message.context_action.result == 'invoked' %}
-    offer of championship accepted
-  {% elif message.context_action.result == 'rejected' %}
-    offer of championship rejected
-  {% elif message.context_action.result == 'rescinded' %}
-    offer of championship rescinded
-  {% elif request.user.id == message.context_action.receiver.id %}
-    {{message.context_action.creator.display_name}} has offered you championship of {{message.context_action.param_project.name}}.
-    <button name=choice value=invoke>Accept</button>
-    <button name=choice value=reject>Reject</button>
-  {% elif request.user.id == message.context_action.creator.id %}
-    you offered {{message.context_action.receiver.display_name}} championship of {{message.context_action.param_project.name}}.
-    <button name=choice value=retract>Retract</button>
-  {% endif %}
+    {% csrf_token %}
+    <input type=hidden name=action_id value={{message.context_action.uuid}}></input>
+    {% if message.context_action.result == 'invoked' %}
+        offer of championship accepted
+    {% elif message.context_action.result == 'rejected' %}
+        offer of championship rejected
+    {% elif message.context_action.result == 'rescinded' %}
+        offer of championship rescinded
+    {% elif request.user.id == message.context_action.receiver.id %}
+        {{message.context_action.creator.display_name}} has offered you championship of {{message.context_action.param_project.name}}.
+        <button name=choice value=invoke>Accept</button>
+        <button name=choice value=reject>Reject</button>
+    {% elif request.user.id == message.context_action.creator.id %}
+        you offered {{message.context_action.receiver.display_name}} championship of {{message.context_action.param_project.name}}.
+        <button name=choice value=retract>Retract</button>
+    {% endif %}
 </form>

@@ -1,18 +1,18 @@
 <h3>{{ message.context_poll.question }}</h3>
 {% if message.context_poll.closed %}
-  POLL CLOSED
+    POLL CLOSED
 {% else %}
-  expiry date: {{ message.context_poll.expires }}
+    expiry date: {{ message.context_poll.expires }}
 {% endif %}
 <table>
-  {% for name, count in message.context_poll.current_results.items %}
-    <tr>
-      <td>{{ name }}</td>
-      <td>{{ count }}</td>
-      {% if request.user.is_active and not poll_closed %}
-        <td><form method=POST action="{% url 'poll_view' message.context_poll.uuid %}"><button>vote</button><input type=hidden name=choice value="{{ name }}"></input>{% csrf_token %}</form></td>
-      {% endif %}
-      <tr>
-  {% endfor %}
+    {% for name, count in message.context_poll.current_results.items %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ count }}</td>
+            {% if request.user.is_active and not poll_closed %}
+                <td><form method=POST action="{% url 'poll_view' message.context_poll.uuid %}"><button>vote</button><input type=hidden name=choice value="{{ name }}"></input>{% csrf_token %}</form></td>
+            {% endif %}
+            <tr>
+    {% endfor %}
 </table>
 

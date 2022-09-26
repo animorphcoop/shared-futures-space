@@ -9,59 +9,59 @@ TODO: If redundant, set up a reverse redirect to dashboard and get rid of it?
 
 {% block content %}
 
-  {% block title %}{% include "partials/title.html" with title="Email confirmed" %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title="Email confirmed" %}{% endblock %}
 
 
 
-  {% if user.emailaddress_set.all %}
+    {% if user.emailaddress_set.all %}
 
 
 
-    {% if user.emailaddress_set.all.count < 2 or user.emailaddress_set.all.1.verified %}
+        {% if user.emailaddress_set.all.count < 2 or user.emailaddress_set.all.1.verified %}
 
-      Your email has been confirmed!
+            Your email has been confirmed!
+
+        {% else %}
+
+
+
+            <p> Please confirm your email </p>
+
+            <form action="{% url 'account_email' %}" class="email_list" method="post">
+                {% csrf_token %}
+                <fieldset class="blockLabels">
+
+                    {% for emailaddress in user.emailaddress_set.all %}
+                        <div class="ctrlHolder">
+
+
+                            {% if not emailaddress.verified %}
+                                <input type="radio" name="email" {% if not emailaddress.primary %}
+                                    checked="checked"{% endif %} value="{{ emailaddress.email }}"/>
+
+                                {{ emailaddress.email }}
+
+                                <span class="unverified">Unverified</span>
+                            {% endif %}
+                        </label>
+                        </div>
+                    {% endfor %}
+
+                    <div class="buttonHolder">
+                        <button class="secondaryAction" type="submit"
+                            name="action_send">Re-send Verification</button>
+                    </div>
+
+                </fieldset>
+            </form>
+
+        {% endif %}
 
     {% else %}
-
-
-
-      <p> Please confirm your email </p>
-
-      <form action="{% url 'account_email' %}" class="email_list" method="post">
-        {% csrf_token %}
-        <fieldset class="blockLabels">
-
-          {% for emailaddress in user.emailaddress_set.all %}
-            <div class="ctrlHolder">
-
-
-              {% if not emailaddress.verified %}
-                <input type="radio" name="email" {% if not emailaddress.primary %}
-                  checked="checked"{% endif %} value="{{ emailaddress.email }}"/>
-
-                {{ emailaddress.email }}
-
-                <span class="unverified">Unverified</span>
-              {% endif %}
-            </label>
-            </div>
-          {% endfor %}
-
-          <div class="buttonHolder">
-            <button class="secondaryAction" type="submit"
-              name="action_send">Re-send Verification</button>
-          </div>
-
-        </fieldset>
-      </form>
+        <p><strong>Warning</strong>You currently do not have any e-mail address set up. You should really add an e-mail
+            address so you can receive notifications, reset your password, etc.</p>
 
     {% endif %}
-
-  {% else %}
-    <p><strong>Warning</strong>You currently do not have any e-mail address set up. You should really add an e-mail
-      address so you can receive notifications, reset your password, etc.</p>
-
-  {% endif %}
 
 
 

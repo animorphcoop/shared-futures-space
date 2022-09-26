@@ -1,13 +1,13 @@
 <b>{{message.context_action.creator.display_name}} made a request: </b>{{message.context_action.kind}}<b>, because: </b>{{message.context_action.param_str}}.
 {% if message.context_action.result == 'invoked' %}
-  [accepted]
+    [accepted]
 {% elif message.context_action.result == 'rejected' %}
-  [rejected]
+    [rejected]
 {% else %}
-  <form action="{% url 'do_action' %}" method=POST>
-    {% csrf_token %}
-    <input type=hidden name=action_id value="{{message.context_action.uuid}}"></input>
-    <button name=choice value=invoke>Mark Accepted (don't forget to do it first)</button>
-    <button name=choice value=reject>Mark Rejected</button>
-  </form>
+    <form action="{% url 'do_action' %}" method=POST>
+        {% csrf_token %}
+        <input type=hidden name=action_id value="{{message.context_action.uuid}}"></input>
+        <button name=choice value=invoke>Mark Accepted (don't forget to do it first)</button>
+        <button name=choice value=reject>Mark Rejected</button>
+    </form>
 {% endif %}

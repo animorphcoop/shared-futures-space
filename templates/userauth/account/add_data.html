@@ -4,163 +4,163 @@
 
 {% block content %}
 
-  <div class="flex flex-col h-screen">
+    <div class="flex flex-col h-screen">
 
-    {% comment %}    <div x-init="console.log('I\'m being initialized!')"></div>{% endcomment %}
+        {% comment %}    <div x-init="console.log('I\'m being initialized!')"></div>{% endcomment %}
 
-    {% block title %}{% include "partials/title.html" with title="Complete profile" %}{% endblock %}
+        {% block title %}{% include "partials/title.html" with title="Complete profile" %}{% endblock %}
 
-    <section class="p-4 pt-2.5 flex flex-col items-end">
-      <div class="bg-gray-light rounded-full">
-        <p class="font-garamond-500 text-black-large text-center text-22 p-2.5">
-          Welcome! Just a few questions to help personalise your experience.
-        </p>
-      </div>
-      <div class="flex flex-col p-1 mr-4 w-12">
-        <div class="rounded-full bg-gray-light w-3 h-3 self-start"></div>
-        <div class="rounded-full bg-gray-light w-3.5 h-3.5 mt-1 self-end"></div>
-        <div class="rounded-full bg-gray-light w-2 h-2 mt-1 self-center"></div>
-      </div>
-      <img src="{% static 'images/salmon-of-knowledge.png' %}" alt="Salmon of Knowledge" class="w-36 h-auto">
-    </section>
+        <section class="p-4 pt-2.5 flex flex-col items-end">
+            <div class="bg-gray-light rounded-full">
+                <p class="font-garamond-500 text-black-large text-center text-22 p-2.5">
+                    Welcome! Just a few questions to help personalise your experience.
+                </p>
+            </div>
+            <div class="flex flex-col p-1 mr-4 w-12">
+                <div class="rounded-full bg-gray-light w-3 h-3 self-start"></div>
+                <div class="rounded-full bg-gray-light w-3.5 h-3.5 mt-1 self-end"></div>
+                <div class="rounded-full bg-gray-light w-2 h-2 mt-1 self-center"></div>
+            </div>
+            <img src="{% static 'images/salmon-of-knowledge.png' %}" alt="Salmon of Knowledge" class="w-36 h-auto">
+        </section>
 
-    <form method="post" action="{% url 'account_add_data' %}">
-      {% csrf_token %}
+        <form method="post" action="{% url 'account_add_data' %}">
+            {% csrf_token %}
 
-      <div class="px-4 pb-9">
-        {% include "partials/input-label.html" with for="display_name" label="Name" %}
-        <input class="form-control block w-full px-3 py-2.5
-          font-garamond-500 text-black-text
-          placeholder:text-black-meta
-          bg-blue-second bg-clip-padding border border-solid border-white
-          transition ease-in-out m-0
-          focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-          invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-          id=display_name name=display_name type=text placeholder="Your name" value=""
-          pattern="[a-zA-Z][a-zA-Z\s]*">
-        {% include "partials/input-note.html" with for="display_name" label="This is how people will see you." %}
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="display_name" label="Name" %}
+                <input class="form-control block w-full px-3 py-2.5
+                    font-garamond-500 text-black-text
+                    placeholder:text-black-meta
+                    bg-blue-second bg-clip-padding border border-solid border-white
+                    transition ease-in-out m-0
+                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    id=display_name name=display_name type=text placeholder="Your name" value=""
+                    pattern="[a-zA-Z][a-zA-Z\s]*">
+                {% include "partials/input-note.html" with for="display_name" label="This is how people will see you." %}
 
-      </div>
+            </div>
 
-      <div class="px-4 pb-9">
-        {% include "partials/input-label.html" with for="year_of_birth" label="Year of birth" %}
-        <input class="form-control block w-full px-3 py-2.5 mb-1.5
-          font-garamond-500 text-black-text
-          placeholder:text-black-meta
-          bg-blue-second bg-clip-padding border border-solid border-white
-          transition ease-in-out m-0
-          focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-          invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-          id=year_of_birth name=year_of_birth type="number" min="1900" max="2022"
-          placeholder="Year you were born"
-          value="">
-        {% include "partials/input-note.html" with for="year_of_birth" label="Under 16s cannot comment on projects" %}
-      </div>
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="year_of_birth" label="Year of birth" %}
+                <input class="form-control block w-full px-3 py-2.5 mb-1.5
+                    font-garamond-500 text-black-text
+                    placeholder:text-black-meta
+                    bg-blue-second bg-clip-padding border border-solid border-white
+                    transition ease-in-out m-0
+                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    id=year_of_birth name=year_of_birth type="number" min="1900" max="2022"
+                    placeholder="Year you were born"
+                    value="">
+                {% include "partials/input-note.html" with for="year_of_birth" label="Under 16s cannot comment on projects" %}
+            </div>
 
-      <div class="px-4 pb-9">
-        {% include "partials/input-label.html" with for="post_code" label="Postcode" %}
-        <input class="form-control block w-full px-3 py-2.5 mb-1.5
-          font-garamond-500 text-black-text
-          placeholder:text-black-meta
-          bg-blue-second bg-clip-padding border border-solid border-white
-          transition ease-in-out m-0
-          focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-          invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-          id=post_code name=post_code type=text placeholder="Your postcode"
-          pattern="(?=.*\d)(?=.*[A-Za-z]).{3,}" value="">
-        {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
-      </div>
-
-
-      <div class="px-4 pb-9">
-        <span class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text">Select your avatar</span>
-
-        {% for avatar in avatars %}
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="post_code" label="Postcode" %}
+                <input class="form-control block w-full px-3 py-2.5 mb-1.5
+                    font-garamond-500 text-black-text
+                    placeholder:text-black-meta
+                    bg-blue-second bg-clip-padding border border-solid border-white
+                    transition ease-in-out m-0
+                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    id=post_code name=post_code type=text placeholder="Your postcode"
+                    pattern="(?=.*\d)(?=.*[A-Za-z]).{3,}" value="">
+                {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
+            </div>
 
 
-          <button id="button-{{ avatar.pk }}"
-            onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})" class="m-2">
-            <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
-          </button>
-        {% endfor %}
+            <div class="px-4 pb-9">
+                <span class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text">Select your avatar</span>
 
-        {% comment %}taking on the value of the avatar (pk) via button{% endcomment %}
-        <input id="avatar" name=avatar type=text value="1" class="hidden">
-
-      </div>
+                {% for avatar in avatars %}
 
 
-      <div class="px-4 pb-9">
+                    <button id="button-{{ avatar.pk }}"
+                        onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})" class="m-2">
+                        <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
+                    </button>
+                {% endfor %}
 
-        <div id="organisation-starter" class="w-full">
+                {% comment %}taking on the value of the avatar (pk) via button{% endcomment %}
+                <input id="avatar" name=avatar type=text value="1" class="hidden">
 
-          <label class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
-            id="organisation-label" for="organisation-checkbox">
-            Are you representing an organisation?
-          </label>
+            </div>
 
-          <input class="block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
-            type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
+
+            <div class="px-4 pb-9">
+
+                <div id="organisation-starter" class="w-full">
+
+                    <label class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
+                        id="organisation-label" for="organisation-checkbox">
+                        Are you representing an organisation?
+                    </label>
+
+                    <input class="block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
+                        type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
+                </div>
+
+                <div id="organisation-data" class="hidden">
+
+                    {% include "partials/input-label.html" with for="organisation" label="Organisation" %}
+                    <div class="">
+                        <input class="form-control w-full px-3 py-2.5 mb-1.5
+                            font-garamond-500 text-black-text text-sm
+                            placeholder:text-black-meta
+                            bg-white bg-clip-padding border border-solid border-gray-light
+                            transition ease-in-out m-0
+                            focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"
+                            id="organisation_name" onfocus="blur()" name="organisation_name" type=text value="None">
+
+                        {% comment %}taking on the value of the organisation url via organisation_name_enter modal field{% endcomment %}
+                        <input id="organisation_url" name=organisation_url type=text value="" class="hidden">
+
+                        <button onclick="event.preventDefault(); toggleOrganisations()"
+                            class="inline -ml-9">
+                            <svg class="-mb-1" width="19" height="18" viewBox="0 0 19 18" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.06 6.02L11.98 6.94L2.92 16H2V15.08L11.06 6.02ZM14.66 0C14.41 0 14.15 0.1 13.96 0.29L12.13 2.12L15.88 5.87L17.71 4.04C18.1 3.65 18.1 3.02 17.71 2.63L15.37 0.29C15.17 0.09 14.92 0 14.66 0ZM11.06 3.19L0 14.25V18H3.75L14.81 6.94L11.06 3.19Z"
+                                    fill="#9759FF"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="px-5 pb-9">
+                <button type="submit"
+                    class="inline-block rounded-full px-4 py-3.5
+                        font-kanit-700 uppercase font-medium text-xxs tracking-widest
+                        text-purple bg-resources-one
+                        hover:bg-blue-done focus:bg-blue-done
+                        transition ease-out duration-300
+                        disabled:bg-gray-light">
+                    SUBMIT
+                </button>
+            </div>
+
+        </form>
+
+        <div id="organisation-list" class="hidden">
+            {% include 'userauth/account/partials/organisation_list.html' %}
         </div>
 
-        <div id="organisation-data" class="hidden">
-
-          {% include "partials/input-label.html" with for="organisation" label="Organisation" %}
-          <div class="">
-            <input class="form-control w-full px-3 py-2.5 mb-1.5
-              font-garamond-500 text-black-text text-sm
-              placeholder:text-black-meta
-              bg-white bg-clip-padding border border-solid border-gray-light
-              transition ease-in-out m-0
-              focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"
-              id="organisation_name" onfocus="blur()" name="organisation_name" type=text value="None">
-
-            {% comment %}taking on the value of the organisation url via organisation_name_enter modal field{% endcomment %}
-            <input id="organisation_url" name=organisation_url type=text value="" class="hidden">
-
-            <button onclick="event.preventDefault(); toggleOrganisations()"
-              class="inline -ml-9">
-              <svg class="-mb-1" width="19" height="18" viewBox="0 0 19 18" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.06 6.02L11.98 6.94L2.92 16H2V15.08L11.06 6.02ZM14.66 0C14.41 0 14.15 0.1 13.96 0.29L12.13 2.12L15.88 5.87L17.71 4.04C18.1 3.65 18.1 3.02 17.71 2.63L15.37 0.29C15.17 0.09 14.92 0 14.66 0ZM11.06 3.19L0 14.25V18H3.75L14.81 6.94L11.06 3.19Z"
-                  fill="#9759FF"/>
-              </svg>
-            </button>
-          </div>
+        <div id="organisation-name-enter" class="hidden">
+            {% include 'userauth/account/partials/organisation_name_enter.html' %}
         </div>
 
-      </div>
-
-
-      <div class="px-5 pb-9">
-        <button type="submit"
-          class="inline-block rounded-full px-4 py-3.5
-            font-kanit-700 uppercase font-medium text-xxs tracking-widest
-            text-purple bg-resources-one
-            hover:bg-blue-done focus:bg-blue-done
-            transition ease-out duration-300
-            disabled:bg-gray-light">
-          SUBMIT
-        </button>
-      </div>
-
-    </form>
-
-    <div id="organisation-list" class="hidden">
-      {% include 'userauth/account/partials/organisation_list.html' %}
+        {% include "partials/footer-gradient.html" %}
     </div>
 
-    <div id="organisation-name-enter" class="hidden">
-      {% include 'userauth/account/partials/organisation_name_enter.html' %}
-    </div>
 
-    {% include "partials/footer-gradient.html" %}
-  </div>
-
-
-  {% block scripts %}
-    <script src="{% static 'js/add_data.js' %}"></script>
-  {% endblock %}
+    {% block scripts %}
+        <script src="{% static 'js/add_data.js' %}"></script>
+    {% endblock %}
 
 {% endblock %}
 

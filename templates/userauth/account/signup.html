@@ -8,76 +8,76 @@
 
 {% block content %}
 
-  <div class="flex flex-col h-screen">
+    <div class="flex flex-col h-screen">
 
-    {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
+        {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
 
-    <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}"
-      x-init="setupObserversSignup()">
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}"
+            x-init="setupObserversSignup()">
 
-      {% csrf_token %}
+            {% csrf_token %}
 
-      <div class="pt-4 px-4 pb-9">
-        {% include "partials/input-label.html" with for="email-input" label="Email" %}
+            <div class="pt-4 px-4 pb-9">
+                {% include "partials/input-label.html" with for="email-input" label="Email" %}
 
-        {% include "partials/input-text.html" with field=form.email id="email-input" name="email" type="email" %}
+                {% include "partials/input-text.html" with field=form.email id="email-input" name="email" type="email" %}
 
-        {% comment %}controlled via js/ts{% endcomment %}
-        <span id="email-feedback"
-          class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 1</span>
-      </div>
-
-
-      <div class="px-4 pb-9">
-        {% include "partials/input-label.html" with for="password-input1" label="Password" %}
-        {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password" %}
+                {% comment %}controlled via js/ts{% endcomment %}
+                <span id="email-feedback"
+                    class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 1</span>
+            </div>
 
 
-        <span id="password-feedback1"
-          class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 2</span>
-      </div>
-
-      <div class="px-4 pb-9">
-        {% include "partials/input-label.html" with for="password-input2" label="Repeat password" %}
-        {% include "partials/input-text.html" with field=form.password2 id="password-input2" name="password-input2" type="password" %}
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="password-input1" label="Password" %}
+                {% include "partials/input-text.html" with field=form.password1 id="password-input1" name="password-input1" type="password" %}
 
 
-        <span id="password-feedback2"
-          class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 3</span>
-      </div>
+                <span id="password-feedback1"
+                    class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 2</span>
+            </div>
 
-      <div class="px-4 pb-6">
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="password-input2" label="Repeat password" %}
+                {% include "partials/input-text.html" with field=form.password2 id="password-input2" name="password-input2" type="password" %}
 
-        {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" %}
 
-      </div>
+                <span id="password-feedback2"
+                    class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Feedback 3</span>
+            </div>
 
-    </form>
+            <div class="px-4 pb-6">
 
-    <div class="flex flex-col flex-grow justify-end">
-      <section
-        class="bg-gradient-to-b from-blue-second to-white flex flex-grow flex-col justify-end items-center">
-        <h2 class="pt-10 mx-auto inline-block pb-8 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-          Alternatively sign up with</h2>
-        {% include "socialaccount/partials/provider_list.html" with process="login" %}
-      </section>
+                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" %}
 
-      <section class="bg-yellow text-center">
-        <h2 class="py-3 font-kanit-400 text-xxxs tracking-wide text-black-text">
-          Already have a Shared Futures account?
-        </h2>
+            </div>
 
-        {% url 'account_login' as the_url %}
-        {% include "partials/button.html" with url=the_url style="primary_colour" button="Log in" %}
+        </form>
 
-        <div class="pb-3"></div>
-      </section>
+        <div class="flex flex-col flex-grow justify-end">
+            <section
+                class="bg-gradient-to-b from-blue-second to-white flex flex-grow flex-col justify-end items-center">
+                <h2 class="pt-10 mx-auto inline-block pb-8 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                    Alternatively sign up with</h2>
+                {% include "socialaccount/partials/provider_list.html" with process="login" %}
+            </section>
+
+            <section class="bg-yellow text-center">
+                <h2 class="py-3 font-kanit-400 text-xxxs tracking-wide text-black-text">
+                    Already have a Shared Futures account?
+                </h2>
+
+                {% url 'account_login' as the_url %}
+                {% include "partials/button.html" with url=the_url style="primary_colour" button="Log in" %}
+
+                <div class="pb-3"></div>
+            </section>
+        </div>
+
+        {% block scripts %}
+            <script src="{% static 'js/signup.js' %}"></script>
+            <script src="{% static 'js/auth_helper.js' %}"></script>
+        {% endblock %}
     </div>
-
-    {% block scripts %}
-      <script src="{% static 'js/signup.js' %}"></script>
-      <script src="{% static 'js/auth_helper.js' %}"></script>
-    {% endblock %}
-  </div>
 
 {% endblock %}

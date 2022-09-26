@@ -1,67 +1,67 @@
 {% load static %}
 
 <section
-  class="z-20 flex w-full justify-center items-center flex-col h-full absolute left-0 top-0 backdrop-blur bg-blue-blur">
+    class="z-20 flex w-full justify-center items-center flex-col h-full absolute left-0 top-0 backdrop-blur bg-blue-blur">
 
-  <div class="w-full">
-    <div class="p-7 mx-5 mb-5 bg-white">
-      <h2 class="font-garamond-500 text-black-large text-xl text-22 text-center">
-        No worries, add it now!
-      </h2>
+    <div class="w-full">
+        <div class="p-7 mx-5 mb-5 bg-white">
+            <h2 class="font-garamond-500 text-black-large text-xl text-22 text-center">
+                No worries, add it now!
+            </h2>
+        </div>
     </div>
-  </div>
 
-  <div class="px-5 flex items-center justify-center flex-col w-full">
-    <div class="w-full">
-      {% include "partials/input-label.html" with for="organisation-name" label="Organisation name" %}
-      <input class=" form-control w-full px-3 py-2.5 mb-5
-        font-garamond-500 text-black-text text-sm
-        placeholder:text-black-meta
-        bg-white bg-clip-padding border border-solid border-gray-light
-        transition ease-in-out m-0
-        focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-        invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-        id="organisation-name" name="organisation-name" type=text value=""
-        pattern="[a-zA-Z0-9\s]+" placeholder="Organisation Name">
+    <div class="px-5 flex items-center justify-center flex-col w-full">
+        <div class="w-full">
+            {% include "partials/input-label.html" with for="organisation-name" label="Organisation name" %}
+            <input class=" form-control w-full px-3 py-2.5 mb-5
+                font-garamond-500 text-black-text text-sm
+                placeholder:text-black-meta
+                bg-white bg-clip-padding border border-solid border-gray-light
+                transition ease-in-out m-0
+                focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                id="organisation-name" name="organisation-name" type=text value=""
+                pattern="[a-zA-Z0-9\s]+" placeholder="Organisation Name">
+        </div>
+        <div class="w-full">
+            {% include "partials/input-label.html" with for="organisation-url" label="Online address" %}
+            <input class="form-control w-full px-3 py-2.5 mb-5
+                font-garamond-500 text-black-text text-sm
+                placeholder:text-black-meta
+                bg-white bg-clip-padding border border-solid border-gray-light
+                transition ease-in-out m-0
+                focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                id="organisation-url" name="organisation-url" type=text pattern="https?://.+"
+                value="" placeholder="https://myorganisation.org">
+        </div>
+        <div>
+            <button onclick="event.preventDefault(); goBack()"
+                type="submit"
+                class="inline-block rounded-full px-4 py-3.5 mr-2.5
+                    font-kanit-700 uppercase font-medium text-xxs tracking-widest
+                    text-purple bg-white
+                    hover:bg-blue-pale focus:bg-blue-pale
+                    transition ease-out duration-300
+                    disabled:bg-gray-light">
+                Back
+            </button>
+            <button onclick="event.preventDefault(); addName()"
+                type="submit"
+                class="inline rounded-full px-4 py-3.5
+                    font-kanit-700 uppercase font-medium text-xxs tracking-widest
+                    text-purple bg-yellow-pale
+                    hover:bg-yellow focus:bg-yellow
+                    transition ease-out duration-300
+                    disabled:bg-gray-light">
+                Done
+            </button>
+        </div>
     </div>
-    <div class="w-full">
-      {% include "partials/input-label.html" with for="organisation-url" label="Online address" %}
-      <input class="form-control w-full px-3 py-2.5 mb-5
-        font-garamond-500 text-black-text text-sm
-        placeholder:text-black-meta
-        bg-white bg-clip-padding border border-solid border-gray-light
-        transition ease-in-out m-0
-        focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-        invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-        id="organisation-url" name="organisation-url" type=text pattern="https?://.+"
-        value="" placeholder="https://myorganisation.org">
-    </div>
-    <div>
-      <button onclick="event.preventDefault(); goBack()"
-        type="submit"
-        class="inline-block rounded-full px-4 py-3.5 mr-2.5
-          font-kanit-700 uppercase font-medium text-xxs tracking-widest
-          text-purple bg-white
-          hover:bg-blue-pale focus:bg-blue-pale
-          transition ease-out duration-300
-          disabled:bg-gray-light">
-        Back
-      </button>
-      <button onclick="event.preventDefault(); addName()"
-        type="submit"
-        class="inline rounded-full px-4 py-3.5
-          font-kanit-700 uppercase font-medium text-xxs tracking-widest
-          text-purple bg-yellow-pale
-          hover:bg-yellow focus:bg-yellow
-          transition ease-out duration-300
-          disabled:bg-gray-light">
-        Done
-      </button>
-    </div>
-  </div>
 
 </section>
 
 {% block scripts %}
-  <script src="{% static 'js/organisation_add_new.js' %}"></script>
+    <script src="{% static 'js/organisation_add_new.js' %}"></script>
 {% endblock %}

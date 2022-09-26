@@ -1,14 +1,14 @@
 <section class="px-3">
-  <input id="searchbar"
-    class="form-control mb-6 block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-white bg-clip-padding
-      border border-solid border-gray-300 rounded-t-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-purple focus:outline-none"
-    type="search"
-    name="search"
-    placeholder=" Type to search..."
-    hx-post="{% url 'resource_search' %}"
-    hx-trigger="keyup changed delay:500ms, search"
-    hx-target="#search-results"
-  >
-  {% comment %}//hx-push-url="/resources/"{% endcomment %}
+    <input id="searchbar"
+        class="form-control mb-6 block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-white bg-clip-padding
+            border border-solid border-gray-300 rounded-t-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-purple focus:outline-none"
+        type="search"
+        name="search"
+        placeholder=" Type to search..."
+        hx-post="{% url 'resource_search' %}"
+        hx-trigger="keyup changed delay:500ms, search"
+        hx-target="#search-results"
+    >
+    {% comment %}//hx-push-url="/resources/"{% endcomment %}
 </section>
 

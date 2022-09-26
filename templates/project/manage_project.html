@@ -1,25 +1,25 @@
 {% load custom_filters %}
 {% if request.user in ownerships|attrmap:'user' %}
-  <table id=members>
-    <tr>
-      <th>Member</th>
-      <th>Status</th>
-      <th></th>
-    </tr>
-    {% for membership in memberships %}
-      <form method=POST>
-        {% csrf_token %}
-        <input type=hidden name=membership value={{membership.id}}></input>
+    <table id=members>
         <tr>
-          <td>{{membership.user.display_name}}</td>
-          <td>{% if membership.owner %}Owner{% endif %} {% if membership.champion %}Champion{% endif %}</td>
-          <td>
-            {% if membership.champion %}<button name=action value=remove_championship>remove championship</button>{% elif request.user != membership.user %}<button name=action value=offer_championship>offer championship</button>{% endif %}
-            {% if not membership.owner %}<button name=action value=offer_ownership>offer ownership</button>{% endif %}
-          </tr>
-        </form>
-    {% endfor %}
-  </table>
+            <th>Member</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        {% for membership in memberships %}
+            <form method=POST>
+                {% csrf_token %}
+                <input type=hidden name=membership value={{membership.id}}></input>
+                <tr>
+                    <td>{{membership.user.display_name}}</td>
+                    <td>{% if membership.owner %}Owner{% endif %} {% if membership.champion %}Champion{% endif %}</td>
+                    <td>
+                        {% if membership.champion %}<button name=action value=remove_championship>remove championship</button>{% elif request.user != membership.user %}<button name=action value=offer_championship>offer championship</button>{% endif %}
+                        {% if not membership.owner %}<button name=action value=offer_ownership>offer ownership</button>{% endif %}
+                    </tr>
+                </form>
+        {% endfor %}
+    </table>
 {% else %}
-  You are not authorised to manage this project
+    You are not authorised to manage this project
 {% endif %}
