@@ -52,8 +52,10 @@ class CustomUser(AbstractUser):
         ordering: List[str] = ['display_name']
 
     # to redirect to account profile page
-    def get_absolute_url(self) -> str:
-        return reverse('profile_view')
+    #def get_absolute_url(self) -> str:
+        #suffix = f"{self.display_name}{self.pk}"
+        #return reverse('profile_view')
+        #return reverse('user_detail', args=[suffix])
 
     def __str__(self) -> str:
         return f"{self.email}"

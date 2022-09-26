@@ -289,7 +289,25 @@ class CustomPasswordResetView(PasswordResetView):
     form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
 
 
+'''
 def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:
     user = get_object_or_404(CustomUser, pk=pk)
     context = {'user': user}
     return render(request, 'account/view_only.html', context)
+'''
+
+
+# make the path from name and pk
+def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResponse]:
+    split_slug = slug.rsplit('-')
+    pk = split_slug[-1]
+    display_name = [' '.join(split_slug[:-1])]
+    if CustomUser.objects.filter(pk=pk).exists():
+        user = get_object_or_404(CustomUser, pk=pk)
+        if str(user.display_name).lower() == display_name[0].lower():
+            context = {'user': user}
+            return render(request, 'account/view_only.html', context)
+        else:
+            return HttpResponseRedirect(reverse('404'))
+    else:
+        return HttpResponseRedirect(reverse('404'))

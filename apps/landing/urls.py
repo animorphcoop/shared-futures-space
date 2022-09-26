@@ -7,4 +7,5 @@ from django.urls import URLResolver, URLPattern
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('', views.landing, name='landing'),
+    path('404/', views.handle_404, name='404')
 ]
