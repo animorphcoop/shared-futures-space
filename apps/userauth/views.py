@@ -33,7 +33,7 @@ from django.http import HttpResponse
 from uuid import UUID
 from core.utils.postcode_matcher import filter_postcode  # pyre-ignore[21]
 
-import magic
+import random
 
 
 def profile_view(request: WSGIRequest) -> HttpResponse:
@@ -66,8 +66,15 @@ class CustomUserPersonalView(TemplateView):
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
                 current_user.post_code = \
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
-                current_user.avatar = \
-                    UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]
+
+                if len(form.cleaned_data.get('avatar')) > 0:
+                    current_user.avatar = \
+                        UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]
+                else:
+                    random_avatar = random.randint(1, UserAvatar.objects.count())
+                    current_user.avatar = \
+                        UserAvatar.objects.get_or_create(pk=random_avatar)[0]
+
                 if len(form.cleaned_data.get('organisation_name')) > 0:
                     lower_org_name = form.cleaned_data.get('organisation_name').lower()
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():

@@ -43,7 +43,7 @@ class CustomSignupForm(SignupForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email', 'password1', 'password2']
 
-    def __init__(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
+    def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomSignupForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs = {'borken': 'false', 'hx-post': '/search/',
                                              'hx-post': '/account/check_email/',
@@ -63,7 +63,7 @@ class CustomUserPersonalForm(forms.Form):
     display_name = forms.CharField(max_length=50)
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
-    avatar = forms.CharField(max_length=2)
+    avatar = forms.CharField(max_length=2, required=False)
     organisation_name = forms.CharField(max_length=50, required=False)
     organisation_url = forms.CharField(max_length=100, required=False)
 
@@ -82,11 +82,10 @@ class CustomLoginForm(LoginForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email', 'password']
 
-    def __init__(self, *args: Tuple[Any], **kwargs: Dict[str,Any]) -> None:
+    def __init__(self, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomLoginForm, self).__init__(*args, **kwargs)
         self.fields['login'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
-        self.fields['password'].widget.attrs = {'borken': 'false',}
-
+        self.fields['password'].widget.attrs = {'borken': 'false', }
 
 
 class CustomResetPasswordForm(ResetPasswordForm):
@@ -94,6 +93,6 @@ class CustomResetPasswordForm(ResetPasswordForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email']
 
-    def __init__(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
-        super(CustomResetPasswordForm, self).__init__(*args, **kwargs) # pyre-ignore[6]
+    def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        super(CustomResetPasswordForm, self).__init__(*args, **kwargs)  # pyre-ignore[6]
         self.fields['email'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
