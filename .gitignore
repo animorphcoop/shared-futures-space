@@ -122,12 +122,12 @@ GitHub.sublime-settings
 # Local settings file (for production)
 static/*
 apps/theme/static_src/node_modules/
+apps/theme/static/css/dist/
 
 # migrations files
 **/migrations/*.py
 **/migrations/*.pyc
 !**/migrations/__init__.py
-
 
 # ignore for test upload
 ignore
