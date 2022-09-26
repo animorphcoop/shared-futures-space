@@ -1601,6 +1601,16 @@ select {
   padding-bottom: 1.25rem;
 }
 
+.px-3\.5 {
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+}
+
+.px-\[18px\] {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
 .pb-6 {
   padding-bottom: 1.5rem;
 }
