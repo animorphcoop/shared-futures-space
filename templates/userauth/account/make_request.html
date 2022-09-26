@@ -6,42 +6,42 @@ TODO: is that covered in Figma?
 
 {% block content %}
 
-    <div class="flex flex-col h-screen">
+  <div class="flex flex-col h-screen">
 
-        {% block title %}{% include "partials/title.html" with title="Request profile change" %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title="Request profile change" %}{% endblock %}
 
-        <form class="px-4" method=post>
-            {% csrf_token %}
-            <fieldset>
-                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text" for=kind>
-                    What would you like to change?
-                </label>
-                <select id=kind
-                        name=kind
-                        class="mb-9 form-control block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
-                    <option value="">Please choose an option</option>
-                    <option value=make_editor>Editor status</option>
-                    <option value=change_postcode>Postcode</option>
-                    <option value=change_dob>Year of birth</option>
-                    <option value=other>Other</option>
-                </select>
+    <form class="px-4" method=post>
+      {% csrf_token %}
+      <fieldset>
+        <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text" for=kind>
+          What would you like to change?
+        </label>
+        <select id=kind
+          name=kind
+          class="mb-9 form-control block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
+          <option value="">Please choose an option</option>
+          <option value=make_editor>Editor status</option>
+          <option value=change_postcode>Postcode</option>
+          <option value=change_dob>Year of birth</option>
+          <option value=other>Other</option>
+        </select>
 
-                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text" for=reason>
-                    Why do you want this change? <span class="block pt-1 text-black-meta">Please include the new postcode or year of birth if relevant.</span>
-                </label>
-                <textarea id=reason
-                          name=reason
-                          maxlength=1000
-                          class="mb-9 form-control block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
-                </textarea>
+        <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text" for=reason>
+          Why do you want this change? <span class="block pt-1 text-black-meta">Please include the new postcode or year of birth if relevant.</span>
+        </label>
+        <textarea id=reason
+          name=reason
+          maxlength=1000
+          class="mb-9 form-control block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
+        </textarea>
 
-                <button class="inline-block mb-2 bg-blue-button px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light"
-                        type="submit">Submit
-                </button>
-            </fieldset>
-        </form>
+        <button class="inline-block mb-2 bg-blue-button px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light"
+          type="submit">Submit
+        </button>
+      </fieldset>
+    </form>
 
-        {% include "partials/footer-gradient.html" %}
-    </div>
+    {% include "partials/footer-gradient.html" %}
+  </div>
 
 {% endblock %}

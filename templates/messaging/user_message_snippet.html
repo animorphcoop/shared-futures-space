@@ -1,11 +1,11 @@
 <div style='border-style:solid'>
- <b>
-  {% if message.sender != request.user %}
-   <a href="{% url 'user_chat' message.sender.uuid %}">{{message.sender.display_name}}</a>
-  {% else %}
-   {{message.sender.display_name}}
-  {% endif %}:
- </b>
-<br/>
-{{message.text}}
+  <b>
+    {% if message.sender != request.user %}
+      <a href="{% url 'user_chat' message.sender.uuid %}">{{message.sender.display_name}}</a>
+    {% else %}
+      {{message.sender.display_name}}
+    {% endif %}:
+  </b>
+  <br/>
+  {{message.text}}
 </div>

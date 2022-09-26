@@ -1,112 +1,112 @@
 {% load static %}
 
 <div x-data="{ open: false, toggle() { this.open = ! this.open } }" :class="{'fixed top-0 right-6.5': open == true}"
-     class="w-full absolute pointer-events-auto">
-    <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
-            @click="toggle(), menu = !menu">
-        <span class="sr-only">Open main menu</span>
-        <div class="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
-            <span aria-hidden="true"
-                  class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
-                  :class="{'rotate-45': open, '-translate-y-1.5': !open}"></span>
-            <span aria-hidden="true"
-                  class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
-                  :class="{'opacity-0': open} "></span>
-            <span aria-hidden="true"
-                  class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
-                  :class="{'-rotate-45': open, 'translate-y-1.5': !open}"></span>
-        </div>
-    </button>
+  class="w-full absolute pointer-events-auto">
+  <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
+    @click="toggle(), menu = !menu">
+    <span class="sr-only">Open main menu</span>
+    <div class="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
+      <span aria-hidden="true"
+        class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
+        :class="{'rotate-45': open, '-translate-y-1.5': !open}"></span>
+      <span aria-hidden="true"
+        class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
+        :class="{'opacity-0': open} "></span>
+      <span aria-hidden="true"
+        class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
+        :class="{'-rotate-45': open, 'translate-y-1.5': !open}"></span>
+    </div>
+  </button>
 
-    <div x-show="open"
-         x-transition:enter="transition ease-out duration-500"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-400"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         x-cloak
+  <div x-show="open"
+    x-transition:enter="transition ease-out duration-500"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-400"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    x-cloak
     class="h-screen">
 
-            {#  Menu list  #}
-            <nav class="w-full min-h-full font-kanit-500 text-xl text-black-text flex flex-col">
-                <h1 class="bg-white p-4 py-2.5 text-purple">Menu</h1>
-                <ul class="bg-gradient-to-b from-blue-second to-white overflow-y-auto grow">
-                    <li class="p-4 pb-5">
-                        <a href="{% url 'dashboard' %}">Dashboard</a>
-                    </li>
-                    <li class="p-4 pb-5" x-data="{ drop: false }">
-                        <button class="flex items-center justify-between w-full" @click="drop = !drop">
-                            Springs
-                            <div class="transition duration-500 ease-out" :class="{'-rotate-180': drop}">
-                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                          fill="#9759FF"/>
-                                </svg>
-                            </div>
-                        </button>
-                        <!-- Dropdown menu -->
-                        <div x-show="drop"
-                             x-transition:enter="transition ease-out duration-400"
-                             x-transition:enter-start="opacity-0"
-                             x-transition:enter-end="opacity-100"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100"
-                             x-transition:leave-end="opacity-0">
-                            <ul class="list-non text-black-meta" aria-labelledby="dropdownLargeButton">
-                                <li class="px-4 py-3 pt-6 text-black-text">
-                                    <a href="#"><span>Your spring: </span>Colin</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="#">North Belfast</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="#">East Belfast</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="#">West Belfast</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="#">South Belfast</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="#">Derry~Londonderry</a>
-                                </li>
-                                <li class="px-4 py-3 pb-0">
-                                    <a href="#">Donegal</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="p-4 pb-5">
-                        <a href="{% url 'account_all_chats' %}">Messages</a>
-                    </li>
-                    <li class="p-4 pb-5">
-                        <a href="{% url 'resources' %}">Resources</a>
-                    </li>
-                    <li class="p-4 pb-5">
-                        <a href="{% url 'account_view' %}">Profile</a>
-                    </li>
-                    <li class="p-4 pb-5">
-                        <a href="{% url 'account_logout' %}">Logout</a>
-                    </li>
-                </ul>
-                <ul class="p-4">
-                    <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
-                        Get in touch
-                    </li>
-                    <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
-                        Pressroom
-                    </li>
-                    <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
-                        T&C
-                    </li>
-                    <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
-                        Legal
-                    </li>
-                </ul>
-            </nav>
+    {#  Menu list  #}
+    <nav class="w-full min-h-full font-kanit-500 text-xl text-black-text flex flex-col">
+      <h1 class="bg-white p-4 py-2.5 text-purple">Menu</h1>
+      <ul class="bg-gradient-to-b from-blue-second to-white overflow-y-auto grow">
+        <li class="p-4 pb-5">
+          <a href="{% url 'dashboard' %}">Dashboard</a>
+        </li>
+        <li class="p-4 pb-5" x-data="{ drop: false }">
+          <button class="flex items-center justify-between w-full" @click="drop = !drop">
+            Springs
+            <div class="transition duration-500 ease-out" :class="{'-rotate-180': drop}">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                  fill="#9759FF"/>
+              </svg>
+            </div>
+          </button>
+          <!-- Dropdown menu -->
+          <div x-show="drop"
+            x-transition:enter="transition ease-out duration-400"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0">
+            <ul class="list-non text-black-meta" aria-labelledby="dropdownLargeButton">
+              <li class="px-4 py-3 pt-6 text-black-text">
+                <a href="#"><span>Your spring: </span>Colin</a>
+              </li>
+              <li class="px-4 py-3">
+                <a href="#">North Belfast</a>
+              </li>
+              <li class="px-4 py-3">
+                <a href="#">East Belfast</a>
+              </li>
+              <li class="px-4 py-3">
+                <a href="#">West Belfast</a>
+              </li>
+              <li class="px-4 py-3">
+                <a href="#">South Belfast</a>
+              </li>
+              <li class="px-4 py-3">
+                <a href="#">Derry~Londonderry</a>
+              </li>
+              <li class="px-4 py-3 pb-0">
+                <a href="#">Donegal</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="p-4 pb-5">
+          <a href="{% url 'account_all_chats' %}">Messages</a>
+        </li>
+        <li class="p-4 pb-5">
+          <a href="{% url 'resources' %}">Resources</a>
+        </li>
+        <li class="p-4 pb-5">
+          <a href="{% url 'account_view' %}">Profile</a>
+        </li>
+        <li class="p-4 pb-5">
+          <a href="{% url 'account_logout' %}">Logout</a>
+        </li>
+      </ul>
+      <ul class="p-4">
+        <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
+          Get in touch
+        </li>
+        <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
+          Pressroom
+        </li>
+        <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
+          T&C
+        </li>
+        <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
+          Legal
+        </li>
+      </ul>
+    </nav>
 
-    </div>
+  </div>
 </div>

@@ -6,18 +6,18 @@ If we use the messages we might want to consider using the .txt files from templ
 {% endcomment %}
 {% block body %}
 
-    {% if messages %}
-        <div>
-            <strong>Messages:</strong>
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-
+  {% if messages %}
     <div>
+      <strong>Messages:</strong>
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <div>
     <!--      <strong>Menu:</strong>
           <ul>
             {% if user.is_authenticated %}

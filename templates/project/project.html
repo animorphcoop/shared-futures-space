@@ -8,17 +8,17 @@
 <p>{{object.description}}</p>
 <hr>
 {% if request.user in owners|attrmap:'user' %}
- <p><a href="{% url 'edit_project' object.slug %}">Edit Project</a></p>
- <p><a href="{% url 'manage_project' object.slug %}">Manage Project</a></p>
+  <p><a href="{% url 'edit_project' object.slug %}">Edit Project</a></p>
+  <p><a href="{% url 'manage_project' object.slug %}">Manage Project</a></p>
 {% elif not request.user.is_anonymous %}
- <form method=post>
-  {% csrf_token %}
-  {% if request.user in members|attrmap:'user' %}
-   <button name=action value=leave>leave project</button>
-  {% else %}
-   <button name=action value=join>join project</button>
-  {% endif %}
- </form>
+  <form method=post>
+    {% csrf_token %}
+    {% if request.user in members|attrmap:'user' %}
+      <button name=action value=leave>leave project</button>
+    {% else %}
+      <button name=action value=join>join project</button>
+    {% endif %}
+  </form>
 {% endif %}
 <!-- TESTING PURPOSES ONLY -->
 {% if object.current_stage is None %}

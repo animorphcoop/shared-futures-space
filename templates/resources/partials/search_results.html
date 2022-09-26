@@ -1,26 +1,26 @@
 <ul class="px-3">
-    {% for result in results %}
-        <li class="p-4.5 pt-5 third-1:bg-resources-one third-2:bg-resources-two third-3:bg-resources-three">
-            <h2 class="uppercase font-kanit-600 font-medium py-0.5 mb-3 text-xxs tracking-widest text-gray-900">{{ result.title }}</h2>
-            <p class="mb-1.5 font-garamond-500 leading-5">{{ result.summary }}</p>
+  {% for result in results %}
+    <li class="p-4.5 pt-5 third-1:bg-resources-one third-2:bg-resources-two third-3:bg-resources-three">
+      <h2 class="uppercase font-kanit-600 font-medium py-0.5 mb-3 text-xxs tracking-widest text-gray-900">{{ result.title }}</h2>
+      <p class="mb-1.5 font-garamond-500 leading-5">{{ result.summary }}</p>
 
-            {% if result.tags %}
-                <div class="w-full flex-inline">
-                    {% for tag in result.tags %}
-                        <button class="px-1.5 py-1.5 mr-1 mb-3 bg-gray-50 text-gray-500 font-kanit-400 text-xxxs uppercase tracking-widest"
-                                onclick="buttonTagSearch('{{ tag }}')"
-                                hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
-                                hx-target="#search-results">
-                            {{ tag }}
-                        </button>
-                    {% endfor %}
-                </div>
-            {% endif %}
+      {% if result.tags %}
+        <div class="w-full flex-inline">
+          {% for tag in result.tags %}
+            <button class="px-1.5 py-1.5 mr-1 mb-3 bg-gray-50 text-gray-500 font-kanit-400 text-xxxs uppercase tracking-widest"
+              onclick="buttonTagSearch('{{ tag }}')"
+              hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
+              hx-target="#search-results">
+              {{ tag }}
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
 
-            <a href="{% url "resource_item" result.slug %}"
-               class="inline-block px-4 py-3.5 bg-white hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full">Learn more</a>
-        </li>
-    {% endfor %}
+      <a href="{% url "resource_item" result.slug %}"
+        class="inline-block px-4 py-3.5 bg-white hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full">Learn more</a>
+    </li>
+  {% endfor %}
 </ul>
 
 

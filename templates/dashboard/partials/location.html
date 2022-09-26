@@ -2,18 +2,18 @@
 
 <div x-init="console.log('I\'m being initialized!')" class="flex justify-between w-full px-4.5">
 
-    <div class="flex justify-center items-center">
-        <img src="{% static 'images/dashboard/dashboard_location_pin_icon.png' %}" alt="location pin" class="hidden">
-        <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 10C6.9 10 6 9.1 6 8C6 6.9 6.9 6 8 6C9.1 6 10 6.9 10 8C10 9.1 9.1 10 8 10ZM14 8.2C14 4.57 11.35 2 8 2C4.65 2 2 4.57 2 8.2C2 10.54 3.95 13.64 8 17.34C12.05 13.64 14 10.54 14 8.2ZM8 0C12.2 0 16 3.22 16 8.2C16 11.52 13.33 15.45 8 20C2.67 15.45 0 11.52 0 8.2C0 3.22 3.8 0 8 0Z"
-                  fill="#9759FF"/>
-        </svg>
-        <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">Belfast</span>
-    </div>
+  <div class="flex justify-center items-center">
+    <img src="{% static 'images/dashboard/dashboard_location_pin_icon.png' %}" alt="location pin" class="hidden">
+    <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 10C6.9 10 6 9.1 6 8C6 6.9 6.9 6 8 6C9.1 6 10 6.9 10 8C10 9.1 9.1 10 8 10ZM14 8.2C14 4.57 11.35 2 8 2C4.65 2 2 4.57 2 8.2C2 10.54 3.95 13.64 8 17.34C12.05 13.64 14 10.54 14 8.2ZM8 0C12.2 0 16 3.22 16 8.2C16 11.52 13.33 15.45 8 20C2.67 15.45 0 11.52 0 8.2C0 3.22 3.8 0 8 0Z"
+        fill="#9759FF"/>
+    </svg>
+    <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">Belfast</span>
+  </div>
 
-    <div id="dash-weather" class="flex justify-center items-center">
-        <span x-text="await getWeather('{{ user.post_code.code }}')" class="font-kanit-400 text-black-text text-xxxs"></span>
-        <img src="" alt="" id="weather-icon" class="h-6 w-auto">
-    </div>
+  <div id="dash-weather" class="flex justify-center items-center">
+    <span x-text="await getWeather('{{ user.post_code.code }}')" class="font-kanit-400 text-black-text text-xxxs"></span>
+    <img src="" alt="" id="weather-icon" class="h-6 w-auto">
+  </div>
 
 </div>
