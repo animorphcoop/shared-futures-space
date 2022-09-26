@@ -700,6 +700,16 @@ select {
   position: relative;
 }
 
+.inset-y-0 {
+  top: 0px;
+  bottom: 0px;
+}
+
+.-inset-y-0 {
+  top: -0px;
+  bottom: -0px;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -726,6 +736,42 @@ select {
 
 .left-0 {
   left: 0px;
+}
+
+.right-0 {
+  right: 0px;
+}
+
+.-right-4 {
+  right: -1rem;
+}
+
+.right-4 {
+  right: 1rem;
+}
+
+.right-8 {
+  right: 2rem;
+}
+
+.top-2 {
+  top: 0.5rem;
+}
+
+.top-4 {
+  top: 1rem;
+}
+
+.top-3 {
+  top: 0.75rem;
+}
+
+.right-7 {
+  right: 1.75rem;
+}
+
+.top-3\.5 {
+  top: 0.875rem;
 }
 
 .z-10 {
@@ -923,6 +969,18 @@ select {
   height: 2.25rem;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
+.h-12 {
+  height: 3rem;
+}
+
+.h-11 {
+  height: 2.75rem;
+}
+
 .max-h-0 {
   max-height: 0px;
 }
@@ -985,6 +1043,18 @@ select {
 
 .w-16 {
   width: 4rem;
+}
+
+.w-fit {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.w-max {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
 }
 
 .flex-shrink-0 {
@@ -1215,6 +1285,10 @@ select {
 .border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
+}
+
+.border-transparent {
+  border-color: transparent;
 }
 
 .bg-resources-two {
@@ -1703,6 +1777,10 @@ select {
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
+}
+
+.text-\[9px\] {
+  font-size: 9px;
 }
 
 .font-medium {
