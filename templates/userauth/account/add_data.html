@@ -24,11 +24,10 @@
             <img src="{% static 'images/salmon-of-knowledge.png' %}" alt="Salmon of Knowledge" class="w-36 h-auto">
         </section>
 
-        <div id="error-box" class="hidden mx-4 mb-4 font-garamond-500 bg-red-100">
-
+        <div id="error-box-data" class="hidden mx-4 mb-4 font-garamond-500 bg-red-100">
             <p class="px-4 py-3">Please fill the required fields with valid information.</p>
-
         </div>
+
         <form id="add-data-form" method="post" action="{% url 'account_add_data' %}">
             {% csrf_token %}
 

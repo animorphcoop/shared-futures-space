@@ -5,7 +5,7 @@ const nameInput = document.getElementById("display_name");
 const yearOfBirthInput = document.getElementById("year_of_birth");
 const postcodeInput = document.getElementById("post_code");
 const avatarInput = document.getElementById("avatar");
-const errorBox = document.getElementById("error-box");
+const errorBoxData = document.getElementById("error-box-data");
 function selectAvatar(avatarElemId, avatarPk) {
     console.log(avatarPk);
     if (lastClicked != null) {
@@ -21,12 +21,11 @@ function selectAvatar(avatarElemId, avatarPk) {
     avatarInput.setAttribute('value', avatarPk);
 }
 function validateFields() {
-    if (nameInput == null || yearOfBirthInput == null || postcodeInput == null || addDataForm == null || errorBox == null)
+    if (nameInput == null || yearOfBirthInput == null || postcodeInput == null || addDataForm == null || errorBoxData == null)
         return;
     if (nameInput.value.length < 1 || yearOfBirthInput.value.length < 1 || postcodeInput.value.length < 1) {
-        console.log('empty innit');
-        if (errorBox.classList.contains('hidden')) {
-            errorBox.classList.remove('hidden');
+        if (errorBoxData.classList.contains('hidden')) {
+            errorBoxData.classList.remove('hidden');
         }
         if (nameInput.value.length < 1) {
             nameInput.setAttribute("required", "");
@@ -37,12 +36,9 @@ function validateFields() {
         if (postcodeInput.value.length < 1) {
             postcodeInput.setAttribute("required", "");
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     else {
-        if (!errorBox.classList.contains('hidden')) {
-            errorBox.classList.add('hidden');
-        }
-        console.log('airght form');
         addDataForm.submit();
     }
 }

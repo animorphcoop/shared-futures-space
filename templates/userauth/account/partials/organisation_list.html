@@ -15,7 +15,6 @@
         </div>
         <ul class="bg-white max-h-72 overflow-y-auto shadow-xl">
             {% for organisation in organisations %}
-                {% if organisation.name != 'None' and organisation.name != 'False' %}
                     <li>
                         <button onclick="selectOrganisation(this.innerText)"
                                 class="px-3 py-3.5 w-full text-left leading-normal
@@ -23,7 +22,6 @@
                             focus:bg-blue-pale
                             transition ease-out duration-300">{{ organisation.name }}</button>
                     </li>
-                {% endif %}
             {% endfor %}
         </ul>
     </div>

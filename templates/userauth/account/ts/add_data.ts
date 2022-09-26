@@ -7,7 +7,7 @@ const postcodeInput = (<HTMLInputElement>document.getElementById("post_code"))
 
 const avatarInput = (<HTMLInputElement>document.getElementById("avatar"))
 
-const errorBox: HTMLElement | null = document.getElementById("error-box")
+const errorBoxData: HTMLElement | null = document.getElementById("error-box-data")
 
 function selectAvatar(avatarElemId: string, avatarPk: string) {
     console.log(avatarPk)
@@ -28,12 +28,11 @@ function selectAvatar(avatarElemId: string, avatarPk: string) {
 
 function validateFields() {
 
-    if (nameInput == null || yearOfBirthInput == null || postcodeInput == null || addDataForm == null || errorBox == null) return
+    if (nameInput == null || yearOfBirthInput == null || postcodeInput == null || addDataForm == null || errorBoxData == null) return
 
     if (nameInput.value.length < 1 || yearOfBirthInput.value.length < 1 || postcodeInput.value.length < 1) {
-        console.log('empty innit')
-        if (errorBox.classList.contains('hidden')) {
-            errorBox.classList.remove('hidden')
+        if (errorBoxData.classList.contains('hidden')) {
+            errorBoxData.classList.remove('hidden')
         }
         if (nameInput.value.length < 1) {
             nameInput.setAttribute("required", "");
@@ -45,13 +44,9 @@ function validateFields() {
             postcodeInput.setAttribute("required", "");
         }
 
-
+        window.scrollTo({top: 0, behavior: 'smooth'});
 
     } else {
-        if (!errorBox.classList.contains('hidden')) {
-            errorBox.classList.add('hidden');
-        }
-        console.log('airght form')
 
         addDataForm.submit()
     }
