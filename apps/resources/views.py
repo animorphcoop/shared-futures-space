@@ -7,7 +7,7 @@ from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
 
-from analytics.models import log_resource_access
+from analytics.models import log_resource_access # pyre-ignore[21]
 
 from django.db.models import Q
 from typing import List, Optional

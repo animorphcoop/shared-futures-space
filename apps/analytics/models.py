@@ -8,7 +8,7 @@ from uuid import uuid4
 
 from datetime import date, time
 from django.http import HttpRequest
-from typing import Type, Dict, Any
+from typing import Type, Dict, Any, Union
 
 from area.models import Area # pyre-ignore[21]
 from userauth.models import CustomUser # pyre-ignore[21]
@@ -28,7 +28,7 @@ def log_login(sender: Type[CustomUser], request: HttpRequest, user: CustomUser, 
     analyticsSession = AnalyticsSession.objects.get_or_create(sessid_hash = make_password(user.display_name, salt = str(date.today())), area = user.post_code.area if user.post_code else None)[0]
     AnalyticsEvent.objects.create(session = analyticsSession, type = AnalyticsEvent.EventType.LOGIN)
 
-def log_resource_access(resource, user):
+def log_resource_access(resource: Resource, user: CustomUser) -> None: # pyre-ignore[11]
     analyticsSession = AnalyticsSession.objects.get_or_create(sessid_hash = make_password(user.display_name, salt = str(date.today())), area = user.post_code.area if user.post_code else None)[0]
     if not AnalyticsEvent.objects.filter(session = analyticsSession, type = AnalyticsEvent.EventType.RESOURCE, target_resource = resource).exists():
         AnalyticsEvent.objects.create(session = analyticsSession, date = date.today(), type = AnalyticsEvent.EventType.RESOURCE, target_resource = resource)
