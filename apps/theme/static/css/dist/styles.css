@@ -2228,6 +2228,10 @@ select {
   background-color: rgb(196 245 248 / var(--tw-bg-opacity));
 }
 
+.third-3\:mb-2:nth-child(3n+2) {
+  margin-bottom: 0.5rem;
+}
+
 .third-3\:bg-resources-three:nth-child(3n+2) {
   --tw-bg-opacity: 1;
   background-color: rgb(223 245 246 / var(--tw-bg-opacity));
