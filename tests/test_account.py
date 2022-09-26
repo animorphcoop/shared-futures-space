@@ -17,7 +17,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 @pytest.mark.usefixtures('celery_session_worker')
 def test_create_account(client, mailoutbox):
     email_free = client.post(reverse('check_email'), {'email': 'testemail@example.com'}, HTTP_REFERER = '/account/signup/')
-    assert '' in email_free.content.decode('utf-8')
+    assert '' == email_free.content.decode('utf-8')
     response = client.post('/account/signup/', {'email': 'testemail@example.com',
                                                 'password1': 'test_password',
                                                 'password2': 'test_password'})
