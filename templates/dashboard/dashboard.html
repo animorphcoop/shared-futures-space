@@ -11,10 +11,6 @@
 
     {% block title %}{% include "partials/title.html" with title=user.display_name dashboard=True %}{% endblock %}
 
-    {% comment %}
-<p class="font-sans text-2xl">🐠</p>
-  {% endcomment %}
-
     <section>
         <img src="{% static 'images/dashboard/mobius.gif' %}" alt="mobius temp" class="w-full">
 
@@ -66,14 +62,17 @@
             style=""
             x-ref="notifications"
             x-bind:style="selected == 1 ? 'max-height: ' + $refs.notifications.scrollHeight + 'px' : ''">
-            NOTIFICATIONS!
+
+            {# If no notifications:  #}
+            {# {% include "partials/salmon-of-knowledge.html" with text="No new notifications, you're all caught up!" %} #}
+
+            {% block notifications %}
+                {% include "dashboard/partials/accordion.html" with title="Notifications" list_items=notifications %}
+            {% endblock %}
+
             <div class="h-8"></div>
         </div>
     </div>
-
-    {#    {% block notifications %}#}
-    {#        {% include "dashboard/partials/accordion.html" with title="Notifications" list_items=notifications %}#}
-    {#    {% endblock %}#}
 
     {#  Call to action partial, replace URL variable  #}
     <section class="bg-resources-two">
@@ -104,7 +103,10 @@
             style=""
             x-ref="resources"
             x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
-            RIVERS!
+
+            {# If no rivers:  #}
+            {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
+
             <div class="h-8"></div>
         </div>
     </div>
@@ -136,7 +138,10 @@
             style=""
             x-ref="resources"
             x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
-            RESOURCES!
+
+            {# If no resources:  #}
+            {% include "partials/salmon-of-knowledge.html" with text="Resources you've marked as helpful are saved here in your Dashboard." %}
+            
             <div class="h-8"></div>
         </div>
     </div>
