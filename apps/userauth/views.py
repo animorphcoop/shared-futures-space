@@ -68,8 +68,7 @@ class CustomUserPersonalView(TemplateView):
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
                 current_user.avatar = \
                     UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]
-                if len(form.cleaned_data.get('organisation_name')) > 0 and form.cleaned_data.get(
-                        'organisation_name') != 'None':
+                if len(form.cleaned_data.get('organisation_name')) > 0:
                     lower_org_name = form.cleaned_data.get('organisation_name').lower()
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():
                         current_user.organisation = \
