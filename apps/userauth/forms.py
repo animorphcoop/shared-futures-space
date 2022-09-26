@@ -55,7 +55,7 @@ class CustomSignupForm(SignupForm):
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
         user.save()
-        log_signup(user, request)  # analytics
+        log_signup(user)  # analytics
         return user
 
 
