@@ -7,6 +7,8 @@ from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
 
+from analytics.models import log_resource_access
+
 from django.db.models import Q
 from typing import List, Optional
 
@@ -62,5 +64,8 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
     context = {
         'resource': single_object_tags_cluster_overwrite(current_resource)
     }
+
+    if request.user.is_authenticated:
+        log_resource_access(current_resource, request.user)
 
     return render(request, 'resources/resource_item.html', context)
