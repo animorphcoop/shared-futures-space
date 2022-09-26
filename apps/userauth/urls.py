@@ -14,7 +14,9 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
 
     path('request/', login_required(user_request_view), name='account_request'),
     path('managerequests/', login_required(AdminRequestView.as_view(template_name='account/manage_requests.html')), name='account_request_panel'),  # pyre-ignore[16]
-    path('view/', login_required(profile_view), name='account_view'),
+    #path('view/', login_required(profile_view), name='account_view'),
+    path('view/', profile_view, name='account_view'),
+
     path('<str:slug>/', user_detail, name='user_detail'),
 
     #path('view/<int:pk>/', user_detail, name='user_detail'),

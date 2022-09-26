@@ -36,8 +36,20 @@ from core.utils.postcode_matcher import filter_postcode  # pyre-ignore[21]
 import random
 
 
-def profile_view(request: WSGIRequest) -> HttpResponse:
-    return render(request, 'account/view.html')
+def profile_view(request: WSGIRequest) -> HttpResponseRedirect:
+    if request.user.is_authenticated:
+        display_name = str(request.user.display_name)
+        if ' ' in display_name:
+            name = display_name.replace(' ', '-')
+        else:
+            name = display_name
+
+        slug = f"{name}-{str(request.user.pk)}"
+        return redirect('user_detail', slug)
+
+    else:
+        return HttpResponseRedirect(reverse_lazy('account_login'))
+    # return render(request, 'account/view.html')
 
 
 # adding all the data required via /account/add_data/
