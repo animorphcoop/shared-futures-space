@@ -322,7 +322,9 @@ def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResp
         user = get_object_or_404(CustomUser, pk=pk)
         if str(user.display_name).lower() == display_name[0].lower():
             context = {'user': user}
-            return render(request, 'account/view_only.html', context)
+            if request.user == user:
+                context['self'] = True
+            return render(request, 'account/view.html', context)
         else:
             return HttpResponseRedirect(reverse('404'))
     else:
