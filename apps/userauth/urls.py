@@ -42,12 +42,3 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('<str:slug>/', user_detail, name='user_detail'),
 
 ]
-'''
-htmx_urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path('check_email/', check_email, name='check_email'),
-    path('update/', login_required(CustomUserUpdateView.as_view(template_name='account/update.html')),
-         name='account_update'),
-]
-
-urlpatterns += htmx_urlpatterns
-'''

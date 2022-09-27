@@ -49,21 +49,17 @@ def test_dashboard_info(client, test_user):
     test_user.post_code = None
     test_user.save()
     dash = client.get('/dashboard/')
-    assert 'Messages' in str(dash.content)
+    assert 'Your messages' in str(dash.content)
 
-def test_account_info(client, test_user):
-    info_page = client.get(reverse('user_detail', args=[test_user.id]))
-    assert test_user.display_name in info_page.content.decode('utf-8')
-    assert str(test_user.year_of_birth) in info_page.content.decode('utf-8')
-    assert test_user.post_code.code in info_page.content.decode('utf-8')
-    assert test_user.avatar.image_url in info_page.content.decode('utf-8')
 
 def test_data_add(client, test_user):
     test_user.year_of_birth = None
     test_user.post_code = None
     test_user.display_name = None
     test_user.organisation = None
+    test_user.avatar = None
     test_user.added_data = False
+
     test_user.save()
     client.force_login(test_user)
     client.get(reverse('account_add_data')) # just make sure getting that page is safe
@@ -74,6 +70,18 @@ def test_data_add(client, test_user):
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12'
 
+
+
+def test_account_info(client, test_user):
+    print(f'{test_user.display_name.replace(" ", "-")}-{test_user.pk}')
+
+    info_page = client.get(reverse('user_detail', args=[f'{test_user.display_name.replace(" ", "-")}-{test_user.pk}']))
+    #info_page = client.get(reverse('account_view'))
+    print(info_page.content.decode('utf-8'))
+    assert test_user.display_name in info_page.content.decode('utf-8')
+    #assert str(test_user.year_of_birth) in info_page.content.decode('utf-8')
+    #assert test_user.post_code.code in info_page.content.decode('utf-8')
+    assert test_user.avatar.image_url in info_page.content.decode('utf-8')
 
 @pytest.mark.django_db
 def test_user_request_flow(client, test_user, admin_client):
@@ -93,7 +101,7 @@ def test_user_request_flow(client, test_user, admin_client):
     action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
     admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
     messages = client.get(reverse('user_chat', args=[get_system_user().uuid]))
-    print(str(messages.content))
+    #print(str(messages.content))
     assert 'your request to become an editor has been granted' in str(messages.content)
 
 
@@ -139,7 +147,7 @@ def test_name_update_flow(client, test_user):
 def test_delete_account(client, test_user):
     client.force_login(test_user)
     delete_page = client.get(reverse('account_delete'))
-    print(delete_page.content)
+    #print(delete_page.content)
     assert 'Delete profile' in str(delete_page.content)
 
     client.post(reverse('account_delete'), {'confirm': 'confirm'})

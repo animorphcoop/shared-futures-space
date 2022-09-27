@@ -36,6 +36,7 @@ from core.utils.postcode_matcher import filter_postcode  # pyre-ignore[21]
 import random
 
 
+# redirecting to the profile url using the request data
 def profile_view(request: WSGIRequest) -> HttpResponseRedirect:
     if request.user.is_authenticated:
         display_name = str(request.user.display_name)
@@ -66,13 +67,13 @@ class CustomUserPersonalView(TemplateView):
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
         form = CustomUserPersonalForm(request.POST)  # pyre-ignore[6]
-        print(form.is_valid())
+        # print(form.is_valid())
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         else:
             if form.is_valid():
-                print(form.cleaned_data)
+                # print(form.cleaned_data)
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
@@ -119,13 +120,13 @@ class CustomUserUpdateView(TemplateView):
         HttpResponse, HttpResponse]:
 
         current_user = request.user
-        print(request.body)
+        # print(request.body)
         data = QueryDict(request.body).dict()
 
-        print(data)
+        # print(data)
         form = CustomUserUpdateForm(data, instance=current_user)
 
-        print(form)
+        # print(form)
         if form.is_valid():
 
             current_email = current_user.email  # pyre-ignore[16]
@@ -134,17 +135,16 @@ class CustomUserUpdateView(TemplateView):
             current_user.display_name = data.get('display_name')  # pyre-ignore[16]
 
             if current_email != new_email:
-                print('trying to change email')
+                # print('trying to change email')
                 add_email_address(request, new_email)
-            else:
-                print('the same email')
+
             current_user.email = current_email  # pyre-ignore[16]
             current_user.save()
             return profile_view(request)
 
         else:
-            print("form is invalid")
-            print(form.errors)
+            # print("form is invalid")
+            # print(form.errors)
             return HttpResponse("Failed to retrieve or process the change, please refresh the page")
 
 
@@ -160,13 +160,12 @@ def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any])
         current_user.display_name = data.get('display_name')  # pyre-ignore[16]
 
         if current_email != new_email:
-            print('trying to change email')
+            # print('trying to change email')
             add_email_address(request, new_email)
         else:
-            print('the same')
-        current_user.email = current_email  # pyre-ignore[16]
-        current_user.save()
-        return profile_view(request)
+            current_user.email = current_email  # pyre-ignore[16]
+            current_user.save()
+            return profile_view(request)
 
     else:
         return HttpResponse("Failed to retrieve or process the change, please refresh the page")
@@ -319,6 +318,7 @@ def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResp
         return HttpResponseRedirect(reverse('404'))
 
     display_name = [' '.join(split_slug[:-1])]
+
     if CustomUser.objects.filter(pk=pk).exists():
         user = get_object_or_404(CustomUser, pk=pk)
         if str(user.display_name).lower() == display_name[0].lower():
