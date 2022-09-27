@@ -45,7 +45,7 @@ def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpRespon
         else:
             name = display_name
 
-        slug = f"{name}-{str(request.user.pk)}"
+        slug = f"{name}-{str(request.user.pk)}".lower()
         return redirect('user_detail', slug)
 
     else:
@@ -322,6 +322,7 @@ def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResp
         user = get_object_or_404(CustomUser, pk=pk)
         if str(user.display_name).lower() == display_name[0].lower():
             context = {'user': user}
+            context['user'].signup_date = user.signup_date.year
             if request.user == user:
                 context['self'] = True
             return render(request, 'account/view.html', context)

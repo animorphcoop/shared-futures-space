@@ -23,7 +23,7 @@
                 {% include "partials/title.html" with title="Your profile" %}
 
             {% else %}
-                {% include "partials/title.html" with title="Not your profile" %}
+                {% include "partials/title.html" with title="Swimmer's profile" %}
 
             {% endif %}
         {% endblock %}
@@ -52,9 +52,7 @@
                 </div>
 
 
-                <div class="flex justify-center items-center">
-                    <img src="{% static 'images/dashboard/dashboard_location_pin_icon.png' %}" alt="location pin"
-                         class="hidden">
+                <div class="flex flex-col justify-center items-center">
                     <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8 10C6.9 10 6 9.1 6 8C6 6.9 6.9 6 8 6C9.1 6 10 6.9 10 8C10 9.1 9.1 10 8 10ZM14 8.2C14 4.57 11.35 2 8 2C4.65 2 2 4.57 2 8.2C2 10.54 3.95 13.64 8 17.34C12.05 13.64 14 10.54 14 8.2ZM8 0C12.2 0 16 3.22 16 8.2C16 11.52 13.33 15.45 8 20C2.67 15.45 0 11.52 0 8.2C0 3.22 3.8 0 8 0Z"
                               fill="#9759FF"/>
@@ -62,9 +60,36 @@
                     {% comment %}
                     TODO: Get this via post code
                     {% endcomment %}
+
                     <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">Belfast</span>
+                    Active since {{ user.signup_date }}
                 </div>
 
+                <div class="my-12">
+                    {% if user.organisation != None %}
+                        <h3 class="text-2xl">Organisation</h3>
+                        {{ user.organisation }}
+                    {% endif %}
+                </div>
+
+
+                {% if self %}
+                    <div class="w-1/2">
+                        <h3 class="text-2xl">Settings</h3>
+                        <a href="{% url 'account_change_password' %}"
+                           class="block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
+                            Change your password
+                        </a>
+
+                        <a href="{% url 'account_delete' %}"
+                           class="block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
+                            Delete
+                        </a>
+                    </div>
+
+                {% endif %}
+
+                {% comment %}
 
                 <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
                     <span class="text-sm text-grey-600 basis-1/2">Year of birth:</span>
@@ -85,6 +110,7 @@
                 <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                         hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile
                 </button>
+{% endcomment %}
 
             </div>
             <hr/>

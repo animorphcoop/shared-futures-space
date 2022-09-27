@@ -11,6 +11,7 @@ from messaging.models import Chat  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
 
 from typing import List, Optional, Any, Dict, Optional
+from django.utils import timezone
 
 
 class Organisation(models.Model):
@@ -35,6 +36,9 @@ class CustomUser(AbstractUser):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     first_name: None = None
     last_name: None = None
+    signup_date: models.DateTimeField = models.DateTimeField(
+        auto_now_add=True
+    )
     added_data: models.BooleanField = models.BooleanField(default=False)
     display_name: models.CharField = models.CharField(verbose_name=_("Display name"),
                                                       max_length=30, help_text=_("Will be shown alongside entries"),
@@ -52,10 +56,10 @@ class CustomUser(AbstractUser):
         ordering: List[str] = ['display_name']
 
     # to redirect to account profile page
-    #def get_absolute_url(self) -> str:
-        #suffix = f"{self.display_name}{self.pk}"
-        #return reverse('profile_view')
-        #return reverse('user_detail', args=[suffix])
+    # def get_absolute_url(self) -> str:
+    # suffix = f"{self.display_name}{self.pk}"
+    # return reverse('profile_view')
+    # return reverse('user_detail', args=[suffix])
 
     def __str__(self) -> str:
         return f"{self.email}"
