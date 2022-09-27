@@ -14,8 +14,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('password/reset/', CustomPasswordResetView.as_view(), name='account_password_reset'),
 
     path('request/', login_required(user_request_view), name='account_request'),
-    path('managerequests/', login_required(AdminRequestView.as_view(template_name='account/manage_requests.html')),
-         name='account_request_panel'),  # pyre-ignore[16]
+    path('managerequests/', login_required(AdminRequestView.as_view(template_name='account/manage_requests.html')), name='account_request_panel'),  # pyre-ignore[16]
     # path('view/', login_required(profile_view), name='account_view'),
     path('view/', profile_view, name='account_view'),
 
@@ -26,8 +25,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
          name='account_delete'),
     path('chat/', login_required(UserAllChatsView.as_view(template_name='account/all_user_chats.html')),
          name='account_all_chats'),
-    path('chat/<uuid:other_uuid>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')),
-         name='user_chat'),  # pyre-ignore[16]
+    path('chat/<uuid:other_uuid>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')), name='user_chat'),  # pyre-ignore[16]
 
     # add override of signup url with custom name so we dont hardcode paths
 

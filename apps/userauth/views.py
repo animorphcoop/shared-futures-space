@@ -19,7 +19,7 @@ from area.models import PostCode  # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.core.mail import EmailMessage
 from typing import Type, List, Dict, Union, Any
 
@@ -29,7 +29,6 @@ from allauth.account.views import LoginView, SignupView, PasswordResetView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
-from django.http import HttpResponse
 from uuid import UUID
 from core.utils.postcode_matcher import filter_postcode  # pyre-ignore[21]
 
@@ -37,9 +36,10 @@ import random
 
 
 # redirecting to the profile url using the request data
-def profile_view(request: WSGIRequest) -> HttpResponseRedirect:
+def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
     if request.user.is_authenticated:
-        display_name = str(request.user.display_name)
+        # we extended the user model so can ignore
+        display_name = str(request.user.display_name)  # pyre-ignore[16]
         if ' ' in display_name:
             name = display_name.replace(' ', '-')
         else:
@@ -149,7 +149,7 @@ class CustomUserUpdateView(TemplateView):
 
 
 # TODO: is this actually used anywhere? can't find it if so
-def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[HttpResponse, HttpResponse]:
+def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
     current_user = request.user
     data = QueryDict(request.body).dict()
     current_email = current_user.email  # pyre-ignore[16]
@@ -166,7 +166,6 @@ def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any])
             current_user.email = current_email  # pyre-ignore[16]
             current_user.save()
             return profile_view(request)
-
     else:
         return HttpResponse("Failed to retrieve or process the change, please refresh the page")
 
@@ -309,7 +308,7 @@ def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpRespon
 
 
 # make the path from name and pk
-def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResponse]:
+def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResponseRedirect]:
     split_slug = slug.rsplit('-')
     pk = split_slug[-1]
     try:

@@ -16,7 +16,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 @pytest.mark.usefixtures('celery_session_app')
 @pytest.mark.usefixtures('celery_session_worker')
 def test_create_account(client, mailoutbox):
-    email_free = client.post(reverse('check_email'), {'email': 'testemail@example.com'}, HTTP_REFERER = '/account/signup/')
+    email_free = client.post(reverse('check_email'), {'email': 'testemail@example.com'},
+                             HTTP_REFERER='/account/signup/')
     assert '' in email_free.content.decode('utf-8')
     response = client.post('/account/signup/', {'email': 'testemail@example.com',
                                                 'password1': 'test_password',
@@ -33,7 +34,8 @@ def test_create_account(client, mailoutbox):
                                                      'password': 'test_password'})
     assert login_response.status_code == 302
     assert login_response.url == '/dashboard/'
-    email_free_now = client.post(reverse('check_email'), {'email': 'testemail@example.com'}, HTTP_REFERER = '/account/signup/')
+    email_free_now = client.post(reverse('check_email'), {'email': 'testemail@example.com'},
+                                 HTTP_REFERER='/account/signup/')
     assert 'This address is taken, please choose a different one.' in email_free_now.content.decode('utf-8')
 
 
@@ -43,7 +45,7 @@ def test_dashboard_info(client, test_user):
     assert dash.status_code == 200
     welcome = bs4.BeautifulSoup(dash.content, 'html5lib').body.text
     # placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
-    #assert re.match(f'.*Welcome {test_user.display_name}', welcome, re.S)
+    # assert re.match(f'.*Welcome {test_user.display_name}', welcome, re.S)
     assert 'Your profile misses important data, please add them in' not in welcome
     test_user.year_of_birth = None
     test_user.post_code = None
@@ -62,26 +64,27 @@ def test_data_add(client, test_user):
 
     test_user.save()
     client.force_login(test_user)
-    client.get(reverse('account_add_data')) # just make sure getting that page is safe
-    client.post(reverse('account_add_data'), {'display_name': 'a test user', 'year_of_birth': 1997, 'post_code': 'AB12', 'avatar': '1',  'organisation_name': 'BIP', 'organisation_url': 'https://bip.org'})
+    client.get(reverse('account_add_data'))  # just make sure getting that page is safe
+    client.post(reverse('account_add_data'),
+                {'display_name': 'a test user', 'year_of_birth': 1997, 'post_code': 'AB12', 'avatar': '1',
+                 'organisation_name': 'BIP', 'organisation_url': 'https://bip.org'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12'
-    client.post(reverse('account_add_data'), {'display_name': 'a test user', 'year_of_birth': 1987, 'post_code': 'BT11b', 'avatar': '3',  'organisation_name': 'CIR', 'organisation_url': 'https://cir.org'})
+    client.post(reverse('account_add_data'),
+                {'display_name': 'a test user', 'year_of_birth': 1987, 'post_code': 'BT11b', 'avatar': '3',
+                 'organisation_name': 'CIR', 'organisation_url': 'https://cir.org'})
     assert CustomUser.objects.get(id=test_user.id).year_of_birth == 1997
     assert CustomUser.objects.get(id=test_user.id).post_code.code == 'AB12'
-
 
 
 def test_account_info(client, test_user):
-    print(f'{test_user.display_name.replace(" ", "-")}-{test_user.pk}')
-
     info_page = client.get(reverse('user_detail', args=[f'{test_user.display_name.replace(" ", "-")}-{test_user.pk}']))
-    #info_page = client.get(reverse('account_view'))
     print(info_page.content.decode('utf-8'))
     assert test_user.display_name in info_page.content.decode('utf-8')
-    #assert str(test_user.year_of_birth) in info_page.content.decode('utf-8')
-    #assert test_user.post_code.code in info_page.content.decode('utf-8')
+    # assert str(test_user.year_of_birth) in info_page.content.decode('utf-8')
+    # assert test_user.post_code.code in info_page.content.decode('utf-8')
     assert test_user.avatar.image_url in info_page.content.decode('utf-8')
+
 
 @pytest.mark.django_db
 def test_user_request_flow(client, test_user, admin_client):
@@ -101,7 +104,7 @@ def test_user_request_flow(client, test_user, admin_client):
     action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
     admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
     messages = client.get(reverse('user_chat', args=[get_system_user().uuid]))
-    #print(str(messages.content))
+    # print(str(messages.content))
     assert 'your request to become an editor has been granted' in str(messages.content)
 
 
@@ -135,21 +138,23 @@ def test_name_update_flow(client, test_user):
     client.force_login(test_user)
 
     update_form = client.get(reverse('account_update'))
-    current_name = bs4.BeautifulSoup(update_form.content, features='html5lib').body.find("div").find("form").find("div").find("input", attrs={'name': 'display_name'})['value']
+    current_name = \
+    bs4.BeautifulSoup(update_form.content, features='html5lib').body.find("div").find("form").find("div").find("input",
+                                                                                                               attrs={
+                                                                                                                   'name': 'display_name'})[
+        'value']
     assert current_name == test_user.display_name
-    #data = {'display_name': 'New Name', 'email': 'testemail@example.com',}
+    # data = {'display_name': 'New Name', 'email': 'testemail@example.com',}
     data = 'display_name=New Name&email=testemail%40example.com&avatar=' + str(test_user.avatar.id)
     client.put(reverse('account_update'), data)
     assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
 
 
-
 def test_delete_account(client, test_user):
     client.force_login(test_user)
     delete_page = client.get(reverse('account_delete'))
-    #print(delete_page.content)
+    # print(delete_page.content)
     assert 'Delete profile' in str(delete_page.content)
 
     client.post(reverse('account_delete'), {'confirm': 'confirm'})
     assert len(CustomUser.objects.filter(id=test_user.id)) == 0
-
