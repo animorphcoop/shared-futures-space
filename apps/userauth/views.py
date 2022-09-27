@@ -325,6 +325,9 @@ def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResp
             context['user'].signup_date = user.signup_date.year
             if request.user == user:
                 context['self'] = True
+                context['organisations'] = Organisation.objects.all()
+
+                context['avatars'] = UserAvatar.objects.all()
             return render(request, 'account/view.html', context)
         else:
             return HttpResponseRedirect(reverse('404'))

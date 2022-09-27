@@ -12,7 +12,7 @@ const organisationNameInput = (<HTMLInputElement>document.getElementById("organi
 const organisationUrlInput = (<HTMLInputElement>document.getElementById("organisation_url"))
 
 
-function toggleOrganisations() {
+function toggleOrganisationsAdd() {
     if (checkbox == null || organisationDataBlock == null || selectedOrganisation == null || organisationList == null) return
 
     if (checkbox.checked) {
@@ -25,20 +25,45 @@ function toggleOrganisations() {
     }
 }
 
+
+function toggleOrganisationsChange() {
+    console.log('neeein')
+    if (organisationDataBlock == null || selectedOrganisation == null || organisationList == null) return
+    organisationList.classList.remove('hidden')
+    /*
+        if (checkbox.checked) {
+            organisationList.classList.remove('hidden')
+        } else {
+            organisationList.classList.add('hidden')
+            organisationDataBlock.classList.add('hidden')
+            selectedOrganisation = 'None'
+            organisationNameInput.value = selectedOrganisation
+        }*/
+}
+
 function backFromOrganisations() {
-    if (organisationList == null || checkbox == null || organisationNameInput == null || organisationDataBlock == null || organisationCheckboxBlock == null) return
+    if (organisationList == null || organisationNameInput == null || organisationDataBlock == null) return
+    if (checkbox != null && organisationCheckboxBlock != null) {
 
 
-    if (checkbox.checked) {
-        organisationList.classList.add('hidden')
-        checkbox.checked = false
-        selectedOrganisation = 'None'
-        organisationNameInput.value = selectedOrganisation
-        organisationDataBlock.classList.add('hidden')
-        if (organisationCheckboxBlock.classList.contains('hidden')) {
-            organisationCheckboxBlock.classList.remove('hidden')
+        if (checkbox.checked) {
+
+            checkbox.checked = false
+
+            if (organisationCheckboxBlock.classList.contains('hidden')) {
+                organisationCheckboxBlock.classList.remove('hidden')
+            }
         }
+
+    } else {
+        console.log('in another dimension')
+
     }
+    organisationList.classList.add('hidden')
+    selectedOrganisation = 'None'
+    organisationNameInput.value = selectedOrganisation
+    organisationDataBlock.classList.add('hidden')
+
 
 }
 
