@@ -313,6 +313,11 @@ def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpRespon
 def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResponse]:
     split_slug = slug.rsplit('-')
     pk = split_slug[-1]
+    try:
+        int(pk)
+    except:
+        return HttpResponseRedirect(reverse('404'))
+
     display_name = [' '.join(split_slug[:-1])]
     if CustomUser.objects.filter(pk=pk).exists():
         user = get_object_or_404(CustomUser, pk=pk)
