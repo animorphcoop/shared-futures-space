@@ -21,6 +21,8 @@ before_script:
   - apt-get install -y npm
   - npm install cross-env
   - npm cache verify
+  - npm i -g n
+  - n latest
   - pip install -r requirements.txt
   - ./manage.py wait_for_db
   - ./manage.py makemigrations --no-input
