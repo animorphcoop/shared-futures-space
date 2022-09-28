@@ -123,7 +123,7 @@ GitHub.sublime-settings
 static/*
 static/css/dist/styles.css
 apps/theme/static_src/node_modules/
-apps/theme/static/css/dist/
+apps/theme/static/css/dist/*
 
 # migrations files
 **/migrations/*.py
