@@ -28,7 +28,7 @@ before_script:
   - ./manage.py makemigrations --no-input
   - ./manage.py migrate --no-input
   - ./manage.py tailwind install
-  - expect -c "spawn docker-compose exec app ./manage.py tailwind start --no-input; expect Done; send \x03" # 0x03 is ctrl-c
+  - expect -c "spawn ./manage.py tailwind start --no-input; expect Done; send \x03" # 0x03 is ctrl-c
 
 
 stages:
