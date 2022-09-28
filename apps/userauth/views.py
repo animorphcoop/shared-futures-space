@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
-from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm, CustomResetPasswordForm
+from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -54,19 +54,19 @@ def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpRespon
 
 
 # adding all the data required via /account/add_data/
-class CustomUserPersonalView(TemplateView):
+class CustomAddDataView(TemplateView):
     model: Type[CustomUser] = CustomUser
-    form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
+    form_class: Type[CustomUserAddDataForm] = CustomUserAddDataForm
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
+        context = super(CustomAddDataView, self).get_context_data(**kwargs)
         context['organisations'] = Organisation.objects.all()
         context['avatars'] = UserAvatar.objects.all()
         return context
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
-        form = CustomUserPersonalForm(request.POST)  # pyre-ignore[6]
+        form = CustomUserAddDataForm(request.POST)  # pyre-ignore[6]
         # print(form.is_valid())
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
@@ -113,9 +113,9 @@ class CustomUserPersonalView(TemplateView):
 
 '''
 
-class CustomUserUpdateView(TemplateView):
+class CustomAddDataView(TemplateView):
     model: Type[CustomUser] = CustomUser
-    form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
+    form_class: Type[CustomUserNameUpdateForm] = CustomUserNameUpdateForm
 
     # If changing the username only - need to ensure the email does not get wiped out
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
@@ -125,7 +125,7 @@ class CustomUserUpdateView(TemplateView):
         data = QueryDict(request.body).dict()
 
         # print(data)
-        form = CustomUserUpdateForm(data, instance=current_user)
+        form = CustomUserNameUpdateForm(data, instance=current_user)
 
         # print(form)
         if form.is_valid():
@@ -160,7 +160,7 @@ def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any])
     data = QueryDict(request.body).dict()
     current_email = current_user.email  # pyre-ignore[16]
     new_email = data.get('email')
-    form = CustomUserUpdateForm(data, instance=current_user)
+    form = CustomUserNameUpdateForm(data, instance=current_user)
     if form.is_valid():
 
         current_user.display_name = data.get('display_name')  # pyre-ignore[16]
@@ -316,15 +316,13 @@ def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpRespon
 '''
 
 
-# make the path from name and pk
+class CustomUserPersonalView(TemplateView):
+    # model: Type[CustomUser] = CustomUser
+    # form_class: Type[CustomUserNameUpdateForm] = CustomUserNameUpdateForm
 
-class CustomUserUpdateView(TemplateView):
-    model: Type[CustomUser] = CustomUser
-    form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
-
-    def get_context_data(self, **kwargs):
-        context = super(CustomUserUpdateView, self).get_context_data(**kwargs)
-        # context['lone_epic2'] = Epic.objects.get(key=self.kwargs['key'])
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
+        return context
 
     def get(self, request: WSGIRequest, *args, **kwargs) -> Union[HttpResponse, HttpResponseRedirect]:
         split_slug = kwargs['slug'].rsplit('-')
@@ -346,11 +344,31 @@ class CustomUserUpdateView(TemplateView):
                     context['organisations'] = Organisation.objects.all()
 
                     context['avatars'] = UserAvatar.objects.all()
-                    model: Type[CustomUser] = CustomUser
-                    form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
-                    context['form'] = form_class
+
                 return render(request, 'account/view.html', context)
             else:
                 return HttpResponseRedirect(reverse('404'))
         else:
             return HttpResponseRedirect(reverse('404'))
+
+    def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> None:
+        current_user: CustomUser = self.request.user
+        print('got it')
+        print(current_user)
+        print(request.body)
+        data = QueryDict(request.body).dict()
+        print(data)
+        # current_user: CustomUser = current_user  # pyre-ignore[9]
+        # form = CustomUserAddDataForm(self.request.PUT)  # pyre-ignore[6]
+
+        form = CustomUserNameUpdateForm(data, instance=current_user)
+
+        if form.is_valid():
+            # current_email = current_user.email  # pyre-ignore[16]
+            # new_email: Union[str, list[object], None] = data.get('email')
+
+            # current_user.display_name = data.get('display_name')  # pyre-ignore[16]
+            print('alright')
+            return HttpResponse("cheese")
+        else:
+            print('not')

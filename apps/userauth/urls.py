@@ -4,7 +4,7 @@ from django.urls import include, path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
 from .views import CustomUserDeleteView, profile_view, user_request_view, AdminRequestView, \
     CustomUserPersonalView, CustomLoginView, UserChatView, UserAllChatsView, check_email, \
-    CustomPasswordResetView, CustomUserUpdateView
+    CustomPasswordResetView, CustomAddDataView
 from typing import List, Union
 from uuid import UUID
 
@@ -20,7 +20,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('view/', profile_view, name='account_view'),
 
     # path('view/<int:pk>/', user_detail, name='user_detail'),
-    path('add_data/', login_required(CustomUserPersonalView.as_view(template_name='account/add_data.html')),
+    path('add_data/', login_required(CustomAddDataView.as_view(template_name='account/add_data.html')),
          name='account_add_data'),
     path('delete/', login_required(CustomUserDeleteView.as_view(template_name='account/delete.html')),
          name='account_delete'),
@@ -32,12 +32,12 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
 
     # HTMX paths
     path('check_email/', check_email, name='check_email'),
-    #path('update_avatar/', login_required(CustomUserUpdateView.as_view(template_name='account/update.html')), name='account_update'),
-
+    #path('update_avatar/', login_required(CustomUserPersonalView.as_view(template_name='account/update.html')), name='account_update'),
+    path('update_data/', login_required(CustomUserPersonalView.as_view()), name='account_update'),
     # add all paths that are not custom
     path('', include('allauth.urls')),
 
     # not to intercept any other paths that are not listed as custom but come from allauth
-    path('<str:slug>/', CustomUserUpdateView.as_view(), name='user_detail'),
+    path('<str:slug>/',CustomUserPersonalView.as_view(), name='user_detail'),
 
 ]

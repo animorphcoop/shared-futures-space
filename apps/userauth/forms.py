@@ -32,15 +32,32 @@ class CustomUserEditForm(UserEditForm):
         model: Type[CustomUser] = CustomUser
 
 
-class CustomUserUpdateForm(forms.ModelForm):
-    display_name = forms.CharField(max_length=50, required=False)
+class CustomUserNameUpdateForm(forms.ModelForm):
+    display_name = forms.CharField(max_length=50)
+
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['display_name']
+
+
+class CustomUserAvatarUpdateForm(forms.ModelForm):
     avatar = forms.CharField(max_length=2, required=False)
-    organisation_name = forms.CharField(max_length=50, required=False)
+    #organisation_name = forms.CharField(max_length=50, required=False)
+    #organisation_url = forms.CharField(max_length=100, required=False)
+
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['avatar']
+
+
+class CustomUserOrganisationUpdateForm(forms.ModelForm):
+    organisation_name = forms.CharField(max_length=50)
     organisation_url = forms.CharField(max_length=100, required=False)
 
-    def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
-        super(CustomUserUpdateForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
-        self.empty_permitted = True
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['organisation_name', 'organisation_url']
+
 
 
 class CustomSignupForm(SignupForm):
@@ -64,7 +81,7 @@ class CustomSignupForm(SignupForm):
         return user
 
 
-class CustomUserPersonalForm(forms.Form):
+class CustomUserAddDataForm(forms.Form):
     display_name = forms.CharField(max_length=50)
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
@@ -73,7 +90,7 @@ class CustomUserPersonalForm(forms.Form):
     organisation_url = forms.CharField(max_length=100, required=False)
 
     def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
-        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
+        super(CustomUserAddDataForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
         self.empty_permitted = True
 
 
