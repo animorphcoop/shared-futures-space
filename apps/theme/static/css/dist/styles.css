@@ -852,10 +852,6 @@ select {
   display: table;
 }
 
-.grid {
-  display: grid;
-}
-
 .contents {
   display: contents;
 }
@@ -980,10 +976,6 @@ select {
   width: 4rem;
 }
 
-.w-1\/3 {
-  width: 33.333333%;
-}
-
 .flex-shrink-0 {
   flex-shrink: 0;
 }
@@ -1058,18 +1050,6 @@ select {
   cursor: not-allowed;
 }
 
-.grid-cols-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .flex-row {
   flex-direction: row;
 }
@@ -1104,10 +1084,6 @@ select {
 
 .justify-evenly {
   justify-content: space-evenly;
-}
-
-.gap-4 {
-  gap: 1rem;
 }
 
 .self-start {
@@ -1924,13 +1900,13 @@ select {
   background-color: rgb(126 34 206 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-yellow:hover {
+  background-color: rgba(255, 250, 142, 1);
+}
+
 .hover\:bg-blue-pale:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(234 243 249 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-yellow:hover {
-  background-color: rgba(255, 250, 142, 1);
 }
 
 .hover\:bg-opacity-75:hover {
@@ -1990,13 +1966,13 @@ select {
   background-color: rgb(126 34 206 / var(--tw-bg-opacity));
 }
 
+.focus\:bg-yellow:focus {
+  background-color: rgba(255, 250, 142, 1);
+}
+
 .focus\:bg-blue-pale:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(234 243 249 / var(--tw-bg-opacity));
-}
-
-.focus\:bg-yellow:focus {
-  background-color: rgba(255, 250, 142, 1);
 }
 
 .focus\:text-black-text:focus {

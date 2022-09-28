@@ -34,6 +34,7 @@
 
             <div id="profile-data" class="">
 
+
                 <div class="flex flex-col items-center justify-center">
                     <div class="pb-2.5">
                         {% if user.avatar != null %}
@@ -123,6 +124,7 @@
                 {% if self %}
                     <div class="w-1/2">
                         <h3 class="text-2xl">Settings</h3>
+
                         <a href="{% url 'account_change_password' %}"
                            class="block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
                             Change your password
@@ -181,12 +183,5 @@
 
         {% include "partials/footer-gradient.html" %}
     </div>
-    <script>
-        function toggleAvatar() {
-            const avatars = document.getElementById("avatar-list")
-            avatars.classList.toggle('hidden')
 
-
-        }
-    </script>
 {% endblock %}

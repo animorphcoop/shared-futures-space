@@ -111,6 +111,8 @@ class CustomUserPersonalView(TemplateView):
                 return HttpResponseRedirect(reverse('account_add_data'))
 
 
+'''
+
 class CustomUserUpdateView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
@@ -118,7 +120,6 @@ class CustomUserUpdateView(TemplateView):
     # If changing the username only - need to ensure the email does not get wiped out
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
         HttpResponse, HttpResponse]:
-
         current_user = request.user
         # print(request.body)
         data = QueryDict(request.body).dict()
@@ -128,11 +129,16 @@ class CustomUserUpdateView(TemplateView):
 
         # print(form)
         if form.is_valid():
+            # current_email = current_user.email  # pyre-ignore[16]
+            # new_email: Union[str, list[object], None] = data.get('email')
 
-            current_email = current_user.email  # pyre-ignore[16]
-            new_email: Union[str, list[object], None] = data.get('email')
+            #current_user.display_name = data.get('display_name')  # pyre-ignore[16]
+            print('alright')
+        else:
+            print('not')
 
-            current_user.display_name = data.get('display_name')  # pyre-ignore[16]
+
+
 
             if current_email != new_email:
                 # print('trying to change email')
@@ -146,8 +152,8 @@ class CustomUserUpdateView(TemplateView):
             # print("form is invalid")
             # print(form.errors)
             return HttpResponse("Failed to retrieve or process the change, please refresh the page")
-
-
+'''
+'''
 # TODO: is this actually used anywhere? can't find it if so
 def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
     current_user = request.user
@@ -168,6 +174,8 @@ def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any])
             return profile_view(request)
     else:
         return HttpResponse("Failed to retrieve or process the change, please refresh the page")
+
+'''
 
 
 def add_email_address(request: WSGIRequest, new_email: Union[str, list[object], None]) -> None:
@@ -192,7 +200,8 @@ def update_user_email(request: WSGIRequest, email_address: EmailAddress,
 
 class CustomUserDeleteView(TemplateView):
     model: Type[CustomUser] = CustomUser
-    success_url: str = reverse_lazy('account_update')
+
+    # success_url: str = reverse_lazy('account_update')
 
     def post(self, request: WSGIRequest) -> HttpResponse:
         if (request.POST['confirm'] == 'confirm'):
@@ -308,28 +317,40 @@ def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpRespon
 
 
 # make the path from name and pk
-def user_detail(request: WSGIRequest, slug: str) -> Union[HttpResponse, HttpResponseRedirect]:
-    split_slug = slug.rsplit('-')
-    pk = split_slug[-1]
-    try:
-        int(pk)
-    except:
-        return HttpResponseRedirect(reverse('404'))
 
-    display_name = [' '.join(split_slug[:-1])]
+class CustomUserUpdateView(TemplateView):
+    model: Type[CustomUser] = CustomUser
+    form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
 
-    if CustomUser.objects.filter(pk=pk).exists():
-        user = get_object_or_404(CustomUser, pk=pk)
-        if str(user.display_name).lower() == display_name[0].lower():
-            context = {'user': user}
-            context['user'].signup_date = user.signup_date.year
-            if request.user == user:
-                context['self'] = True
-                context['organisations'] = Organisation.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(CustomUserUpdateView, self).get_context_data(**kwargs)
+        # context['lone_epic2'] = Epic.objects.get(key=self.kwargs['key'])
 
-                context['avatars'] = UserAvatar.objects.all()
-            return render(request, 'account/view.html', context)
+    def get(self, request: WSGIRequest, *args, **kwargs) -> Union[HttpResponse, HttpResponseRedirect]:
+        split_slug = kwargs['slug'].rsplit('-')
+        pk = split_slug[-1]
+        try:
+            int(pk)
+        except:
+            return HttpResponseRedirect(reverse('404'))
+
+        display_name = [' '.join(split_slug[:-1])]
+
+        if CustomUser.objects.filter(pk=pk).exists():
+            user = get_object_or_404(CustomUser, pk=pk)
+            if str(user.display_name).lower() == display_name[0].lower():
+                context = {'user': user}
+                context['user'].signup_date = user.signup_date.year
+                if self.request.user == user:
+                    context['self'] = True
+                    context['organisations'] = Organisation.objects.all()
+
+                    context['avatars'] = UserAvatar.objects.all()
+                    model: Type[CustomUser] = CustomUser
+                    form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
+                    context['form'] = form_class
+                return render(request, 'account/view.html', context)
+            else:
+                return HttpResponseRedirect(reverse('404'))
         else:
             return HttpResponseRedirect(reverse('404'))
-    else:
-        return HttpResponseRedirect(reverse('404'))

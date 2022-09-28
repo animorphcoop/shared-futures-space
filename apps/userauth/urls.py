@@ -2,11 +2,12 @@
 from django.conf import settings
 from django.urls import include, path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
-from .views import CustomUserUpdateView, CustomUserDeleteView, profile_view, user_request_view, AdminRequestView, \
-    CustomUserPersonalView, CustomLoginView, UserChatView, UserAllChatsView, user_detail, check_email, \
-    CustomPasswordResetView
+from .views import CustomUserDeleteView, profile_view, user_request_view, AdminRequestView, \
+    CustomUserPersonalView, CustomLoginView, UserChatView, UserAllChatsView, check_email, \
+    CustomPasswordResetView, CustomUserUpdateView
 from typing import List, Union
 from uuid import UUID
+
 
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
@@ -29,14 +30,14 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
 
     # add override of signup url with custom name so we dont hardcode paths
 
+    # HTMX paths
     path('check_email/', check_email, name='check_email'),
-    path('update/', login_required(CustomUserUpdateView.as_view(template_name='account/update.html')),
-         name='account_update'),
+    #path('update_avatar/', login_required(CustomUserUpdateView.as_view(template_name='account/update.html')), name='account_update'),
 
     # add all paths that are not custom
     path('', include('allauth.urls')),
 
     # not to intercept any other paths that are not listed as custom but come from allauth
-    path('<str:slug>/', user_detail, name='user_detail'),
+    path('<str:slug>/', CustomUserUpdateView.as_view(), name='user_detail'),
 
 ]

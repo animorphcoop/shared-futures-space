@@ -33,9 +33,14 @@ class CustomUserEditForm(UserEditForm):
 
 
 class CustomUserUpdateForm(forms.ModelForm):
-    class Meta:
-        model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['display_name', 'email', 'avatar']
+    display_name = forms.CharField(max_length=50, required=False)
+    avatar = forms.CharField(max_length=2, required=False)
+    organisation_name = forms.CharField(max_length=50, required=False)
+    organisation_url = forms.CharField(max_length=100, required=False)
+
+    def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
+        super(CustomUserUpdateForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
+        self.empty_permitted = True
 
 
 class CustomSignupForm(SignupForm):
