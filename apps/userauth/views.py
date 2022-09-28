@@ -8,7 +8,8 @@ from django.dispatch import receiver
 from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
-from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm
+from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm, \
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -355,20 +356,48 @@ class CustomUserPersonalView(TemplateView):
         current_user: CustomUser = self.request.user
         print('got it')
         print(current_user)
-        print(request.body)
         data = QueryDict(request.body).dict()
         print(data)
         # current_user: CustomUser = current_user  # pyre-ignore[9]
         # form = CustomUserAddDataForm(self.request.PUT)  # pyre-ignore[6]
 
-        form = CustomUserNameUpdateForm(data, instance=current_user)
+        if data.get('display_name'):
+            form = CustomUserNameUpdateForm(data, instance=current_user)
+            if form.is_valid():
+                return HttpResponse("name")
+            else:
+                return HttpResponse("nein name")
 
-        if form.is_valid():
-            # current_email = current_user.email  # pyre-ignore[16]
-            # new_email: Union[str, list[object], None] = data.get('email')
+        elif data.get('avatar'):
+            print('about to make form')
+            form = CustomUserAvatarUpdateForm(data, instance=current_user)
+            if form.is_valid():
+                form.full_clean()
+                print(form.cleaned_data.get('avatar'))
+                current_user.avatar = form.cleaned_data.get('avatar')
+                current_user.save()
 
-            # current_user.display_name = data.get('display_name')  # pyre-ignore[16]
-            print('alright')
-            return HttpResponse("cheese")
+                return HttpResponse("avatur")
+            else:
+                return HttpResponse("nein avatur")
+        elif data.get('organisation_name'):
+            form = CustomUserOrganisationUpdateForm(data, instance=current_user)
+            if form.is_valid():
+                return HttpResponse("organisation")
+            else:
+                return HttpResponse("nein orgz")
         else:
-            print('not')
+            return HttpResponse("errur")
+
+
+'''
+            if len(data.get('avatar')) > 0:
+                current_user.avatar = \
+                    UserAvatar.objects.get_or_create(pk=data.get('avatar'))[0]
+            else:
+                random_avatar = random.randint(1, UserAvatar.objects.count())
+                current_user.avatar = \
+                    UserAvatar.objects.get_or_create(pk=random_avatar)[0]
+
+            current_user.save()
+'''

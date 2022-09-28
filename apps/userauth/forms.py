@@ -1,6 +1,6 @@
 # pyre-strict
 from django import forms
-from .models import CustomUser, Organisation
+from .models import CustomUser, Organisation, UserAvatar
 from analytics.models import log_signup  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
@@ -11,6 +11,7 @@ from wagtail.users.forms import UserEditForm, UserCreationForm
 from typing import Type, List, Any, Dict
 from django.http import HttpRequest
 from typing import Tuple
+
 
 '''
 Resolving the first&last name issue, reference
@@ -48,6 +49,15 @@ class CustomUserAvatarUpdateForm(forms.ModelForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['avatar']
+
+    # need to retrieve an instance of the avatar since it's a foreign key to the user
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar')
+        try:
+            avatar_instance = UserAvatar.objects.get(pk=avatar)
+        except UserAvatar.DoesNotExist:
+            avatar_instance = None
+        return avatar_instance
 
 
 class CustomUserOrganisationUpdateForm(forms.ModelForm):
