@@ -379,7 +379,6 @@ class CustomUserPersonalView(TemplateView):
                 context = {
                     'image_url': current_user.avatar.image_url
                 }
-                # return HttpResponse("avatur")
                 return render(request, 'account/partials/avatar_image.html', context)
             else:
                 return HttpResponse("nein avatur")

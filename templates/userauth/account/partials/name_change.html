@@ -4,22 +4,13 @@
     <div class="rounded-t-xl w-full px-5 mb-5">
         <div class="bg-yellow-pale rounded-t-xl shadow-xl">
             <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-large px-3 py-5">
-                Avatars
+                Change your name
             </h3>
         </div>
-        <ul class="bg-white max-h-72 overflow-y-auto shadow-xl">
-            {% for avatar in avatars %}
-
-
-                <button id="button-{{ avatar.pk }}"
-                        onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})" class="m-2">
-                    <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
-                </button>
-            {% endfor %}
-        </ul>
+<p>You are currently called {{ name }}</p>
     </div>
     <div class="flex items-center justify-center mb-5">
-        <button onclick="toggleAvatar()"
+        <button onclick="toggleNameChange()"
                 type="submit"
                 class="inline-block rounded-full px-4 py-3.5
                     font-kanit-700 uppercase font-medium text-xxs tracking-widest
@@ -30,10 +21,13 @@
             Back
         </button>
 
+        {% comment %}
+        TODO: Adjust endpoint processing and container on view as well as ts file
+        {% endcomment %}
 
         <form hx-put="{% url 'account_update' %}" hx-target="#avatar-holder">
 
-            <button onclick="toggleAvatar()"
+            <button onclick="toggleNameChange()"
                     type="submit"
                     class="inline-block rounded-full px-4 py-3.5
                     font-kanit-700 uppercase font-medium text-xxs tracking-widest
@@ -51,8 +45,14 @@
 
 {% block scripts %}
     <script>
+function toggleNameChange() {
+    const nameContainer = document.getElementById("name-change")
+    nameContainer.classList.toggle('hidden')
 
+}
     </script>
-    <script src="{% static 'js/avatar_selection.js' %}"></script>
+{% comment %}
+    <script src="{% static 'js/name_change.js' %}"></script>
+{% endcomment %}
 
 {% endblock %}

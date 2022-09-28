@@ -1,6 +1,10 @@
 "use strict";
 let lastClicked;
 const avatarInput = document.getElementById("avatar");
+function toggleAvatar() {
+    const avatars = document.getElementById("avatar-list");
+    avatars.classList.toggle('hidden');
+}
 function selectAvatar(avatarElemId, avatarPk) {
     console.log(avatarPk);
     if (lastClicked != null) {

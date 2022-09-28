@@ -39,8 +39,8 @@
                     <div class="pb-2.5">
                         {% if user.avatar != null %}
                             <div id="avatar-holder">
-                                <img src="{{ user.avatar.image_url }}"
-                                     class="rounded-full w-16 h-16">
+                                {% include "account/partials/avatar_image.html" with image_url=user.avatar.image_url %}
+
                             </div>
                         {% else %}
                             <div class="rounded-full bg-resources-one w-16 h-16">
@@ -59,7 +59,11 @@
                         {% endif %}
                     </div>
                     <h2 class="font-kanit-500 text-black-text text-xl">{{ user.display_name }}</h2>
-
+                    <button onclick="toggleNameChange(); console.log('namey');">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z"/>
+                        </svg>
+                    </button>
 
                 </div>
 
@@ -168,8 +172,9 @@
 
             <div id="avatar-list" class="hidden">
                 {% include 'userauth/account/partials/avatar_list.html' with avatars=avatars %}
-
-
+            </div>
+            <div id="name-change" class="hidden">
+                {% include 'userauth/account/partials/name_change.html' with name=user.display_name %}
             </div>
 
             <div id="organisation-list" class="hidden">

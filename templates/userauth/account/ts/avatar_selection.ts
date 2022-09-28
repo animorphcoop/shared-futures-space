@@ -2,6 +2,13 @@ let lastClicked: HTMLElement | null
 
 const avatarInput = (<HTMLInputElement>document.getElementById("avatar"))
 
+
+function toggleAvatar() {
+    const avatars = document.getElementById("avatar-list")
+    avatars.classList.toggle('hidden')
+
+}
+
 function selectAvatar(avatarElemId: string, avatarPk: string) {
     console.log(avatarPk)
 
