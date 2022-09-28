@@ -71,7 +71,7 @@
                     focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
                     invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
                        id=post_code name=post_code type=text placeholder="Your postcode"
-                       pattern="(?=.*\d)(?=.*[A-Za-z]).{3,}" value="">
+                       pattern="([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)([0-9][a-zA-Z]{2})?" value="">
                 {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
             </div>
 
