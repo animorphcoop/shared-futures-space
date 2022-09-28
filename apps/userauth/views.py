@@ -376,8 +376,11 @@ class CustomUserPersonalView(TemplateView):
                 print(form.cleaned_data.get('avatar'))
                 current_user.avatar = form.cleaned_data.get('avatar')
                 current_user.save()
-
-                return HttpResponse("avatur")
+                context = {
+                    'image_url': current_user.avatar.image_url
+                }
+                # return HttpResponse("avatur")
+                return render(request, 'account/partials/avatar_image.html', context)
             else:
                 return HttpResponse("nein avatur")
         elif data.get('organisation_name'):

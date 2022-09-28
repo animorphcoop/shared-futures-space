@@ -38,9 +38,10 @@
                 <div class="flex flex-col items-center justify-center">
                     <div class="pb-2.5">
                         {% if user.avatar != null %}
-                            <img src="{{ user.avatar.image_url }}"
-                                 class="rounded-full w-16 h-16"
-                            />
+                            <div id="avatar-holder">
+                                <img src="{{ user.avatar.image_url }}"
+                                     class="rounded-full w-16 h-16">
+                            </div>
                         {% else %}
                             <div class="rounded-full bg-resources-one w-16 h-16">
 

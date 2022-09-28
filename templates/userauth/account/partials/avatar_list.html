@@ -18,7 +18,7 @@
             {% endfor %}
         </ul>
     </div>
-    <div class="flex items-center justify-center mb-5 ">
+    <div class="flex items-center justify-center mb-5">
         <button onclick="toggleAvatar()"
                 type="submit"
                 class="inline-block rounded-full px-4 py-3.5
@@ -31,21 +31,20 @@
         </button>
 
 
-        <form hx-put="{% url 'account_update' %}" hx-target="this">
-            <div>
-                <label>Avatar</label>
-                <input type="text" name="avatar" value="15">
-                        <button
-                type="submit"
-                class="inline-block rounded-full px-4 py-3.5
+        <form hx-put="{% url 'account_update' %}" hx-target="#avatar-holder">
+
+            <button onclick="toggleAvatar()"
+                    type="submit"
+                    class="inline-block rounded-full px-4 py-3.5
                     font-kanit-700 uppercase font-medium text-xxs tracking-widest
                     text-purple bg-yellow-pale
                     hover:bg-yellow focus:bg-yellow
                     transition ease-out duration-300
                     disabled:bg-gray-light">
-            Confirm
-        </button>
-            </div>
+                Confirm
+            </button>
+            <input id="avatar" type="text" name="avatar" value="1" class="hidden">
+
         </form>
     </div>
 </section>
@@ -58,7 +57,6 @@
 
         }
     </script>
-    {% comment %}
     <script src="{% static 'js/avatar_selection.js' %}"></script>
-{% endcomment %}
+
 {% endblock %}
