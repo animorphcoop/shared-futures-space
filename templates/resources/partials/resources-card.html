@@ -6,15 +6,14 @@
     <div class="h-4"></div>
 
     {% if resource.tags %}
-        <div class="">
+        <div class="flex flex-wrap gap-x-3 gap-y-2">
             {% for tag in resource.tags %}
-                <button class="whitespace-normal px-1.5 py-1 bg-blue-second text-black-large font-kanit-400 text-xxxs uppercase leading-none tracking-widest rounded-sm third-3:mb-2"
+                <button class="whitespace-normal px-1.5 py-1 bg-blue-second text-black-large font-kanit-400 text-xxxs uppercase leading-none tracking-widest rounded-sm"
                         onclick="buttonTagSearch('{{ tag }}')"
                         hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
                         hx-target="#search-results">
                     {{ tag }}
                 </button>
-                <div class="inline mr-3 last:mr-0"></div>
             {% endfor %}
         </div>
     {% endif %}
