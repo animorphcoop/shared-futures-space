@@ -18,7 +18,7 @@ variables:
 
 before_script:
   - apt-get update -y
-  - apt-get install -y npm
+  - apt-get install -y npm expect
   - npm install cross-env
   - npm cache verify
   - npm i -g n
@@ -28,7 +28,7 @@ before_script:
   - ./manage.py makemigrations --no-input
   - ./manage.py migrate --no-input
   - ./manage.py tailwind install
-  - ./manage.py tailwind start --no-input
+  - expect -c "spawn docker-compose exec app ./manage.py tailwind start --no-input; expect Done; send \x03" # 0x03 is ctrl-c
 
 
 stages:
