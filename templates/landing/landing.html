@@ -8,8 +8,11 @@
 {% endblock extra_css %}
 
 {% block content %}
+
+    {% block title %}{% include "partials/title.html" with title="Shared Futures" %}{% endblock %}
+
     <div class="mx-4.5">
-        {% include "partials/horizontal-spacer.html" with space="16" %}
+        {% include "partials/horizontal-spacer.html" with space="6" %}
 
         {% include "landing/main-heading.html" with title="A community project management tool that empowers people to work together and get stuff done." %}
         {% include "partials/horizontal-spacer.html" with space="9" %}
@@ -40,13 +43,13 @@
         {% include "partials/horizontal-spacer.html" with space="9" %}
 
         <section class="bg-resources-two -mx-4.5">
-            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
+            {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=the_url info="" %}
         </section>
         <section class="bg-[rgba(121,203,208,1)] -mx-4.5">
-            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
+            {% include "partials/call-to-action.html" with main="Find a community project to join!" button="Go to your river" url=the_url info="" %}
         </section>
         <section class="bg-yellow -mx-4.5">
-            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
+            {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=the_url info="" %}
         </section>
 
         {% include "partials/horizontal-spacer.html" with space="9" %}
@@ -61,12 +64,8 @@
         {% include "landing/section-heading.html" with title="get in touch 📧" %}
         {% include "partials/horizontal-spacer.html" with space="9" %}
 
-        <div class="flex flex-col gap-6 items-start">
-            {% include "partials/button.html" with url="the_url" style="primary_white" button="add resources" %}
-            {% include "partials/button.html" with url="the_url" style="primary_white" button="send your feedback" %}
-            {% include "partials/button.html" with url="the_url" style="primary_white" button="enquire about roll out in your area" %}
-            {% include "partials/button.html" with url="the_url" style="primary_white" button="research suggestions" %}
-            {% include "partials/button.html" with url="the_url" style="primary_white" button="report a bug" %}
+        <div class="">
+            {% include "partials/get-in-touch-buttons.html" %}
         </div>
 
         {% include "partials/horizontal-spacer.html" with space="9" %}
