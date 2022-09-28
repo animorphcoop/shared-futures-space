@@ -8,7 +8,89 @@
 {% endblock extra_css %}
 
 {% block content %}
+    <div class="mx-4.5">
+        {% include "partials/horizontal-spacer.html" with space="16" %}
 
+        {% include "landing/main-heading.html" with title="A community project management tool that empowers people to work together and get stuff done." %}
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+        <div
+            class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] -mx-4.5 h-[300px] flex flex-row justify-center items-center"
+        >
+            {% include "partials/button.html" with url="the_url" style="primary_colour" button="Enter to try" %}
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            {% include "partials/button.html" with url="the_url" style="primary_colour" button="Log in" %}
+        </div>
+        {% include "partials/horizontal-spacer.html" with space="9" %}
 
+        {% include "landing/section-heading.html" with title="What Shared Futures offers" %}
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+        {% include "landing/tabbed-resources/index.html" %}
+        {% include "partials/horizontal-spacer.html" with space="9" %}
 
+        {% include "landing/section-heading.html" with title="Where do we currently operate" %}
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+        <div class="grid grid-cols-2 gap-5">
+            {% include "landing/rounded-image.html" with image_url="/static/images/dashboard/dashboard_location_pin_icon.png" title="Belfast" %}
+            {% include "landing/rounded-image.html" with image_url="/static/images/dashboard/dashboard_location_pin_icon.png" title="Belfast" %}
+            {% include "landing/rounded-image.html" with image_url="/static/images/dashboard/dashboard_location_pin_icon.png" title="Belfast" %}
+            {% include "landing/rounded-image.html" with image_url="/static/images/dashboard/dashboard_location_pin_icon.png" title="Belfast" %}
+            {% include "landing/rounded-image.html" with image_url="/static/images/dashboard/dashboard_location_pin_icon.png" title="Belfast" %}
+            {% include "landing/rounded-image.html" with image_url="/static/images/dashboard/dashboard_location_pin_icon.png" title="Belfast" %}
+        </div>
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+
+        <section class="bg-resources-two -mx-4.5">
+            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
+        </section>
+        <section class="bg-[rgba(121,203,208,1)] -mx-4.5">
+            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
+        </section>
+        <section class="bg-yellow -mx-4.5">
+            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
+        </section>
+
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+        {% include "landing/section-heading.html" with title="Case Studies" %}
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+        {% include "landing/carousel.html" %}
+        {% include "partials/horizontal-spacer.html" with space="16" %}
+
+        <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] -mx-4.5 h-[300px] flex flex-row justify-center items-center"></div>
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+
+        {% include "landing/section-heading.html" with title="get in touch 📧" %}
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+
+        <div class="flex flex-col gap-6 items-start">
+            {% include "partials/button.html" with url="the_url" style="primary_white" button="add resources" %}
+            {% include "partials/button.html" with url="the_url" style="primary_white" button="send your feedback" %}
+            {% include "partials/button.html" with url="the_url" style="primary_white" button="enquire about roll out in your area" %}
+            {% include "partials/button.html" with url="the_url" style="primary_white" button="research suggestions" %}
+            {% include "partials/button.html" with url="the_url" style="primary_white" button="report a bug" %}
+        </div>
+
+        {% include "partials/horizontal-spacer.html" with space="9" %}
+
+        {% with h3_class="uppercase font-kanit-700 text-black-large text-[9px] leading-3 tracking-widest" p_class="font-kanit-400 text-[9px] leading-3 tracking-[0.03em] text-black-large" %}
+            <div class="bg-gradient-to-b from-blue-second to-white flex flex-col py-8 -mx-4.5 px-4.5">
+                <h3 class="{{ h3_class }}">Funded by</h3>
+                {% include "partials/horizontal-spacer.html" with space="3" %}
+                <p class="{{ p_class }}">Special EU Programmes Body</p>
+                {% include "partials/horizontal-spacer.html" with space="9" %}
+
+                <h3 class="{{ h3_class }}">Project Team</h3>
+                {% include "partials/horizontal-spacer.html" with space="3" %}
+                <p class="{{ p_class }}">National Lottery</p>
+                {% include "partials/horizontal-spacer.html" with space="3" %}
+                <p class="{{ p_class }}">Co-operation Ireland</p>
+                {% include "partials/horizontal-spacer.html" with space="3" %}
+                <p class="{{ p_class }}">Belfast Interface Project</p>
+                {% include "partials/horizontal-spacer.html" with space="3" %}
+                <p class="{{ p_class }}">Animorph</p>
+                {% include "partials/horizontal-spacer.html" with space="3" %}
+                <p class="{{ p_class }}">Essex University (prof. Peter Bloom)</p>
+                {% include "partials/horizontal-spacer.html" with space="9" %}
+            </div>
+        {% endwith %}
+    </div>
 {% endblock content %}

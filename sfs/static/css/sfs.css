@@ -1,35 +1,49 @@
 @font-face {
-    font-family: 'EB_Garamond_Regular';
-    src: url('../fonts/EBGaramond-Regular.ttf') format('truetype');
-    font-weight: 400;
+  font-family: "EB_Garamond_Regular";
+  src: url("../fonts/EBGaramond-Regular.ttf") format("truetype");
+  font-weight: 400;
 }
 
 @font-face {
-    font-family: 'EB_Garamond_Medium';
-    src: url('../fonts/EBGaramond-Medium.ttf') format('truetype');
-    font-weight: 500;
+  font-family: "EB_Garamond_Medium";
+  src: url("../fonts/EBGaramond-Medium.ttf") format("truetype");
+  font-weight: 500;
 }
 
 @font-face {
-    font-family: 'Kanit_Regular';
-    src: url('../fonts/Kanit-Regular.ttf') format('truetype');
-    font-weight: 400;
+  font-family: "Kanit_Regular";
+  src: url("../fonts/Kanit-Regular.ttf") format("truetype");
+  font-weight: 400;
 }
 
 @font-face {
-    font-family: 'Kanit_Medium';
-    src: url('../fonts/Kanit-Medium.ttf') format('truetype');
-    font-weight: 500;
+  font-family: "Kanit_Medium";
+  src: url("../fonts/Kanit-Medium.ttf") format("truetype");
+  font-weight: 500;
 }
 
 @font-face {
-    font-family: 'Kanit_SemiBold';
-    src: url('../fonts/Kanit-SemiBold.ttf') format('truetype');
-    font-weight: 600;
+  font-family: "Kanit_SemiBold";
+  src: url("../fonts/Kanit-SemiBold.ttf") format("truetype");
+  font-weight: 600;
 }
 
 @font-face {
-    font-family: 'Kanit_Bold';
-    src: url('../fonts/Kanit-Bold.ttf') format('truetype');
-    font-weight: 700;
+  font-family: "Kanit_Bold";
+  src: url("../fonts/Kanit-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-250px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.fish {
+  animation: 1s ease-out 0s 1 slideInFromLeft;
+  animation-fill-mode: forwards;
 }

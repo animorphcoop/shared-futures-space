@@ -17,14 +17,22 @@ function uncoverNewOrgTyping(toOpenInput: boolean) {
 function addName() {
     if (organisationDataEnter == null) return
 
+    const errorBoxName: HTMLElement | null = document.getElementById("error-box-name")
     const tempOrgNameInput = (<HTMLInputElement>document.getElementById("organisation-name"))
     const tempOrgUrlInput = (<HTMLInputElement>document.getElementById("organisation-url"))
 
-    if (tempOrgNameInput == null || tempOrgUrlInput == null) return
+    if (tempOrgNameInput == null || tempOrgUrlInput == null || errorBoxName == null) return
 
-    if (Number(tempOrgNameInput.value) < 1) {
+    if (tempOrgNameInput.value.length < 1) {
+
+        if (errorBoxName.classList.contains('hidden')) {
+            errorBoxName.classList.remove('hidden')
+        }
         tempOrgNameInput.setAttribute("required", "");
         return
+    }
+    if (!errorBoxName.classList.contains('hidden')) {
+        errorBoxName.classList.add('hidden')
     }
 
     const newOrgName = tempOrgNameInput.value
