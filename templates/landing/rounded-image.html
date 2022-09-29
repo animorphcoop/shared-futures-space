@@ -1,6 +1,6 @@
 {% load static %}
 <div>
-    <div class="bg-[url('{{ image_url }}')] h-[180px] rounded-full"></div>
+    <div class="bg-{{ image }} bg-center bg-cover h-[42.5vw] w-[42.5vw] rounded-full"></div>
     {% include "partials/horizontal-spacer.html" with space="3" %}
     <h3 class="uppercase text-center text-black-text font-kanit-400 text-[9px] leading-3 tracking-widest">{{ title }}</h3>
 </div>

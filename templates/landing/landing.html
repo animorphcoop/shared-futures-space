@@ -18,7 +18,7 @@
         {% include "landing/main-heading.html" with title="A community project management tool that empowers people to work together and get stuff done." %}
         {% include "partials/horizontal-spacer.html" with space="9" %}
         <div
-            class="bg-landing-enter bg-cover -mx-4.5 h-1/2 min-h-[180px] flex flex-row justify-center items-center"
+                class="bg-landing-enter bg-cover -mx-4.5 h-1/2 min-h-[180px] flex flex-row justify-center items-center"
         >
             {% include "partials/button.html" with url="/account/signup/" style="primary_colour" button="Sign up" %}
             {% include "partials/vertical-spacer.html" with space="4" %}
@@ -35,13 +35,14 @@
 
         {% include "landing/section-heading.html" with title="Where do we currently operate" %}
         {% include "partials/horizontal-spacer.html" with space="9" %}
+
         <div class="grid grid-cols-2 gap-5">
-            {% include "landing/rounded-image.html" with image_url="/static/images/landing/areas/northbelfast.png" title="North Belfast" %}
-            {% include "landing/rounded-image.html" with image_url="/static/images/landing/areas/eastbelfast.png" title="East Belfast" %}
-            {% include "landing/rounded-image.html" with image_url="/static/images/landing/areas/southbelfast.png" title="South Belfast" %}
-            {% include "landing/rounded-image.html" with image_url="/static/images/landing/areas/westbelfast.png" title="West Belfast" %}
-            {% include "landing/rounded-image.html" with image_url="/static/images/landing/areas/derrylondonderry.png" title="Derry~Londonderry" %}
-            {% include "landing/rounded-image.html" with image_url="/static/images/landing/areas/arranmore.png" title="Arranmore" %}
+            {% include "landing/rounded-image.html" with image="north-belfast" title="North Belfast" %}
+            {% include "landing/rounded-image.html" with image="east-belfast" title="East Belfast" %}
+            {% include "landing/rounded-image.html" with image="south-belfast" title="South Belfast" %}
+            {% include "landing/rounded-image.html" with image="west-belfast" title="West Belfast" %}
+            {% include "landing/rounded-image.html" with image="derry-londonderry" title="Derry~Londonderry" %}
+            {% include "landing/rounded-image.html" with image="arranmore" title="Arranmore" %}
         </div>
         {% include "partials/horizontal-spacer.html" with space="9" %}
 
