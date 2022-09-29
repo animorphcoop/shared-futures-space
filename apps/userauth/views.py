@@ -309,16 +309,7 @@ class CustomPasswordResetView(PasswordResetView):
     form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
 
 
-'''
-def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:
-    user = get_object_or_404(CustomUser, pk=pk)
-    context = {'user': user}
-    return render(request, 'account/view_only.html', context)
-'''
-
-
 class CustomUserPersonalView(TemplateView):
-
     http_method_names = ['get', 'post', 'put']
 
     # HTML does not send PUT only post so need to catch it as put since we need name to also update the url
@@ -399,21 +390,24 @@ class CustomUserPersonalView(TemplateView):
         elif data.get('organisation_name'):
             form = CustomUserOrganisationUpdateForm(data, instance=current_user)
             if form.is_valid():
-                return HttpResponse("organisation")
+                lower_org_name = form.cleaned_data.get('organisation_name').lower()
+                if Organisation.objects.filter(name__iexact=lower_org_name).exists():
+                    current_user.organisation = \
+                        get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))
+                else:
+                    new_organisation = \
+                        Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
+                                                           link=form.cleaned_data.get('organisation_url'))[0]
+                    current_user.organisation = new_organisation
+
+                current_user.save()
+                context = {
+                    'name': current_user.organisation.name,
+                    'link': current_user.organisation.link
+                }
+                return render(request, 'account/partials/organisation_name_link.html', context)
             else:
-                return HttpResponse("nein orgz")
+                return HttpResponse("Sorry, couldn't process your request, try again.")
+
         else:
-            return HttpResponse("errur")
-
-
-'''
-            if len(data.get('avatar')) > 0:
-                current_user.avatar = \
-                    UserAvatar.objects.get_or_create(pk=data.get('avatar'))[0]
-            else:
-                random_avatar = random.randint(1, UserAvatar.objects.count())
-                current_user.avatar = \
-                    UserAvatar.objects.get_or_create(pk=random_avatar)[0]
-
-            current_user.save()
-'''
+            return HttpResponse("Sorry, couldn't process your request, try again.")

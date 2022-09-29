@@ -1,21 +1,23 @@
 "use strict";
-let lastClicked;
-const avatarInput = document.getElementById("avatar");
+let avatarClicked;
+const avatarInputChange = document.getElementById("avatar");
 function toggleAvatar() {
     const avatars = document.getElementById("avatar-list");
+    if (avatars == null)
+        return;
     avatars.classList.toggle('hidden');
 }
-function selectAvatar(avatarElemId, avatarPk) {
+function changeAvatar(avatarElemId, avatarPk) {
     console.log(avatarPk);
-    if (lastClicked != null) {
-        lastClicked.classList.remove("bg-purple-600");
+    if (avatarClicked != null) {
+        avatarClicked.classList.remove("bg-purple-600");
     }
     const currentAvatarElem = document.getElementById(avatarElemId);
     if (currentAvatarElem == null)
         return;
     currentAvatarElem.classList.add("bg-purple-600");
-    lastClicked = currentAvatarElem;
-    if (avatarInput == null)
+    avatarClicked = currentAvatarElem;
+    if (avatarInputChange == null)
         return;
-    avatarInput.setAttribute('value', avatarPk);
+    avatarInputChange.setAttribute('value', avatarPk);
 }

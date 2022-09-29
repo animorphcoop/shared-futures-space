@@ -12,7 +12,7 @@
 
 
                 <button id="button-{{ avatar.pk }}"
-                        onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})" class="m-2">
+                        onclick="event.preventDefault(); changeAvatar(this.id, {{ avatar.pk }})" class="m-2">
                     <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
                 </button>
             {% endfor %}

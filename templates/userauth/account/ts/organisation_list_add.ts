@@ -27,9 +27,12 @@ function toggleOrganisationsAdd() {
 
 
 function toggleOrganisationsChange() {
-    console.log('neeein')
+    console.log('yaay')
     if (organisationDataBlock == null || selectedOrganisation == null || organisationList == null) return
+    organisationDataBlock.classList.remove('hidden')
+
     organisationList.classList.remove('hidden')
+
     /*
         if (checkbox.checked) {
             organisationList.classList.remove('hidden')
@@ -74,9 +77,10 @@ function selectOrganisation(orgName: string, orgUrl: string) {
 }
 
 function submitOrganisation() {
-
+    console.log('are you submitting or whatt')
 
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
+    console.log('submitting')
 
     organisationNameInput.value = selectedOrganisation
     organisationNameInput.classList.add('cursor-not-allowed')
@@ -86,6 +90,14 @@ function submitOrganisation() {
     organisationDataBlock.classList.remove('hidden')
 
     organisationList.classList.add('hidden')
+
+    //Call the function above if it exists.
+    if (typeof submitOrganisationChangeForm === "function") {
+        organisationNameInput.setAttribute('value', selectedOrganisation)
+        organisationUrlInput.setAttribute('value', newOrganisationUrl)
+
+        submitOrganisationChangeForm();
+    }
 
 }
 

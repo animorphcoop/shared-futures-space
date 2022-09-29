@@ -1,27 +1,28 @@
-let lastClicked: HTMLElement | null
+let avatarClicked: HTMLElement | null
 
-const avatarInput = (<HTMLInputElement>document.getElementById("avatar"))
+const avatarInputChange = (<HTMLInputElement>document.getElementById("avatar"))
 
 
 function toggleAvatar() {
     const avatars = document.getElementById("avatar-list")
+    if (avatars == null) return
     avatars.classList.toggle('hidden')
 
 }
 
-function selectAvatar(avatarElemId: string, avatarPk: string) {
+function changeAvatar(avatarElemId: string, avatarPk: string) {
     console.log(avatarPk)
 
-    if (lastClicked != null) {
-        lastClicked.classList.remove("bg-purple-600")
+    if (avatarClicked != null) {
+        avatarClicked.classList.remove("bg-purple-600")
     }
     const currentAvatarElem = document.getElementById(avatarElemId)
     if (currentAvatarElem == null) return
 
     currentAvatarElem.classList.add("bg-purple-600")
-    lastClicked = currentAvatarElem
+    avatarClicked = currentAvatarElem
 
-    if (avatarInput == null) return
-    avatarInput.setAttribute('value', avatarPk)
+    if (avatarInputChange == null) return
+    avatarInputChange.setAttribute('value', avatarPk)
 
 }
