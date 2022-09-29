@@ -1,15 +1,32 @@
 {% extends "account/base.html" %}
+{% load static %}
 
-{% comment %} User logged in profile view /account/view/{{id}}
-can trigger profile edit too
-TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
+{% comment %}TODO:
+- fix url ID to allow reflect in the header (and allow editing later)
+- to riverstarter thingy but add bubble tingy with BIG 0
+- avatar display
+- pin + translate postcode to location
+- model - add timestamp for created account
+- model - add skills (not in September)
+- organisation if exists
+- achievements - no rivers no achievements <q></q>
+- Password change link
+- Delete account link
 {% endcomment %}
 
 {% block content %}
 
     <div class="flex flex-col h-screen">
 
-        {% block title %}{% include "partials/title.html" with title="Your profile" %}{% endblock %}
+        {% block title %}
+            {% if self %}
+                {% include "partials/title.html" with title="Your profile" %}
+
+            {% else %}
+                {% include "partials/title.html" with title="Swimmer's profile" %}
+
+            {% endif %}
+        {% endblock %}
 
         <section id="profile-view">
 
@@ -17,21 +34,98 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
 
             <div id="profile-data" class="">
 
+
                 <div class="flex flex-col items-center justify-center">
                     <div class="pb-2.5">
-                        {% if user.avatar.url != null %}
-                            <img src="{{ user.avatar.url }}"
-                                class="rounded-full w-16 h-16"
-                            />
+                        {% if user.avatar != null %}
+                            <div id="avatar-holder">
+                                {% include "account/partials/avatar_image.html" with image_url=user.avatar.image_url %}
+
+                            </div>
                         {% else %}
                             <div class="rounded-full bg-resources-one w-16 h-16">
 
                             </div>
                         {% endif %}
+                        {% if self %}
+
+                            {% comment %}pencil edit for avatar{% endcomment %}
+                            <button onclick="toggleAvatar(); console.log('avv');">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z"/>
+                                </svg>
+                            </button>
+
+                        {% endif %}
                     </div>
-                    <h2 class="font-kanit-500 text-black-text text-xl">Display name: {{ user.display_name }}</</h2>
+                    <div id="name-holder">
+                        {% include "account/partials/name_profile.html" with name=user.display_name %}
+
+                    </div>
+                    {% if self %}
+                        {% comment %}pencil edit for name{% endcomment %}
+
+                        <button onclick="toggleNameChange()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z"/>
+                            </svg>
+                        </button>
+                    {% endif %}
                 </div>
 
+
+                <div class="flex flex-col justify-center items-center">
+                    <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 10C6.9 10 6 9.1 6 8C6 6.9 6.9 6 8 6C9.1 6 10 6.9 10 8C10 9.1 9.1 10 8 10ZM14 8.2C14 4.57 11.35 2 8 2C4.65 2 2 4.57 2 8.2C2 10.54 3.95 13.64 8 17.34C12.05 13.64 14 10.54 14 8.2ZM8 0C12.2 0 16 3.22 16 8.2C16 11.52 13.33 15.45 8 20C2.67 15.45 0 11.52 0 8.2C0 3.22 3.8 0 8 0Z"
+                              fill="#9759FF"/>
+                    </svg>
+                    {% comment %}
+                    TODO: Get this via post code
+                    {% endcomment %}
+
+                    <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">Belfast</span>
+                    Active since {{ user.signup_date }}
+                </div>
+
+                <div class="my-12">
+                    {% if user.organisation != None %}
+                        <h3 class="text-2xl">Organisation</h3>
+                        <div id="organisation-holder">
+                        {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
+                        </div>
+
+                        {% if self %}
+                            <button onclick="toggleOrganisationsChange()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z"/>
+                                </svg>
+                            </button>
+
+
+
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+
+                {% if self %}
+                    <div class="w-1/2">
+                        <h3 class="text-2xl">Settings</h3>
+
+                        <a href="{% url 'account_change_password' %}"
+                           class="block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
+                            Change your password
+                        </a>
+
+                        <a href="{% url 'account_delete' %}"
+                           class="block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
+                            Delete
+                        </a>
+                    </div>
+
+                {% endif %}
+
+                {% comment %}
 
                 <div class="flex-row bg-white rounded-sm w-1/2 shadow p-2 mb-2 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform">
                     <span class="text-sm text-grey-600 basis-1/2">Year of birth:</span>
@@ -50,11 +144,26 @@ TODO: https://hub.animorph.coop/apps/deck/#/board/41/card/1526
 
 
                 <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile
+                        hx-get="{% url 'account_update' %}" hx-target="#profile-data" hx-swap="outerHTML">Edit profile
                 </button>
+{% endcomment %}
 
             </div>
             <hr/>
+
+
+            <div id="avatar-list" class="hidden">
+                {% include 'userauth/account/partials/avatar_change.html' with avatars=avatars %}
+            </div>
+            <div id="name-change" class="hidden">
+                {% include 'userauth/account/partials/name_change.html' with name=user.display_name %}
+            </div>
+
+            <div id="organisation-data" class="hidden">
+                {% include "account/partials/organisation_change.html" %}
+
+            </div>
+
 
         </section>
 

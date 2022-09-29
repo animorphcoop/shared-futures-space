@@ -8,7 +8,8 @@ from django.dispatch import receiver
 from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
-from .forms import CustomUserUpdateForm, CustomUserPersonalForm, CustomLoginForm, CustomResetPasswordForm
+from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm, \
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -19,7 +20,8 @@ from area.models import PostCode  # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http.response import HttpResponseBase
 from django.core.mail import EmailMessage
 from typing import Type, List, Dict, Union, Any
 
@@ -29,38 +31,51 @@ from allauth.account.views import LoginView, SignupView, PasswordResetView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
-from django.http import HttpResponse
 from uuid import UUID
 from core.utils.postcode_matcher import filter_postcode  # pyre-ignore[21]
 
 import random
 
 
-def profile_view(request: WSGIRequest) -> HttpResponse:
-    return render(request, 'account/view.html')
+# redirecting to the profile url using the request data
+def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
+    if request.user.is_authenticated:
+        # we extended the user model so can ignore
+        display_name = str(request.user.display_name)  # pyre-ignore[16]
+        if ' ' in display_name:
+            name = display_name.replace(' ', '-')
+        else:
+            name = display_name
+
+        slug = f"{name}-{str(request.user.pk)}".lower()
+        return redirect('user_detail', slug)
+
+    else:
+        return HttpResponseRedirect(reverse_lazy('account_login'))
+    # return render(request, 'account/view.html')
 
 
 # adding all the data required via /account/add_data/
-class CustomUserPersonalView(TemplateView):
+class CustomAddDataView(TemplateView):
     model: Type[CustomUser] = CustomUser
-    form_class: Type[CustomUserPersonalForm] = CustomUserPersonalForm
+    form_class: Type[CustomUserAddDataForm] = CustomUserAddDataForm
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
+        context = super(CustomAddDataView, self).get_context_data(**kwargs)
         context['organisations'] = Organisation.objects.all()
         context['avatars'] = UserAvatar.objects.all()
         return context
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
-        form = CustomUserPersonalForm(request.POST)  # pyre-ignore[6]
-        print(form.is_valid())
+        form = CustomUserAddDataForm(request.POST)  # pyre-ignore[6]
+        # print(form.is_valid())
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         else:
             if form.is_valid():
-                print(form.cleaned_data)
+                # print(form.cleaned_data)
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
@@ -98,68 +113,6 @@ class CustomUserPersonalView(TemplateView):
                 return HttpResponseRedirect(reverse('account_add_data'))
 
 
-class CustomUserUpdateView(TemplateView):
-    model: Type[CustomUser] = CustomUser
-    form_class: Type[CustomUserUpdateForm] = CustomUserUpdateForm
-
-    # If changing the username only - need to ensure the email does not get wiped out
-    def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
-        HttpResponse, HttpResponse]:
-
-        current_user = request.user
-        print(request.body)
-        data = QueryDict(request.body).dict()
-
-        print(data)
-        form = CustomUserUpdateForm(data, instance=current_user)
-
-        print(form)
-        if form.is_valid():
-
-            current_email = current_user.email  # pyre-ignore[16]
-            new_email: Union[str, list[object], None] = data.get('email')
-
-            current_user.display_name = data.get('display_name')  # pyre-ignore[16]
-
-            if current_email != new_email:
-                print('trying to change email')
-                add_email_address(request, new_email)
-            else:
-                print('the same email')
-            current_user.email = current_email  # pyre-ignore[16]
-            current_user.save()
-            return profile_view(request)
-
-        else:
-            print("form is invalid")
-            print(form.errors)
-            return HttpResponse("Failed to retrieve or process the change, please refresh the page")
-
-
-# TODO: is this actually used anywhere? can't find it if so
-def post(request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[HttpResponse, HttpResponse]:
-    current_user = request.user
-    data = QueryDict(request.body).dict()
-    current_email = current_user.email  # pyre-ignore[16]
-    new_email = data.get('email')
-    form = CustomUserUpdateForm(data, instance=current_user)
-    if form.is_valid():
-
-        current_user.display_name = data.get('display_name')  # pyre-ignore[16]
-
-        if current_email != new_email:
-            print('trying to change email')
-            add_email_address(request, new_email)
-        else:
-            print('the same')
-        current_user.email = current_email  # pyre-ignore[16]
-        current_user.save()
-        return profile_view(request)
-
-    else:
-        return HttpResponse("Failed to retrieve or process the change, please refresh the page")
-
-
 def add_email_address(request: WSGIRequest, new_email: Union[str, list[object], None]) -> None:
     # Add a new email address for the user, and send email confirmation.
     # Old email will remain the primary until the new one is confirmed.
@@ -182,7 +135,8 @@ def update_user_email(request: WSGIRequest, email_address: EmailAddress,
 
 class CustomUserDeleteView(TemplateView):
     model: Type[CustomUser] = CustomUser
-    success_url: str = reverse_lazy('account_update')
+
+    # success_url: str = reverse_lazy('account_update')
 
     def post(self, request: WSGIRequest) -> HttpResponse:
         if (request.POST['confirm'] == 'confirm'):
@@ -264,7 +218,7 @@ class UserAllChatsView(TemplateView):
 
 
 # helper for inspecting db whether user exists
-def check_email(request: WSGIRequest) -> HttpResponse:  # should be HttpResponse?
+def check_email(request: WSGIRequest) -> HttpResponse:
     # print(request.META.get('HTTP_REFERER'))
     if request.POST.getlist('email'):
         user_mail = request.POST.getlist('email')[0]
@@ -289,7 +243,90 @@ class CustomPasswordResetView(PasswordResetView):
     form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
 
 
-def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpResponse]:
-    user = get_object_or_404(CustomUser, pk=pk)
-    context = {'user': user}
-    return render(request, 'account/view_only.html', context)
+class CustomUserPersonalView(TemplateView):
+    http_method_names = ['get', 'post', 'put']
+
+    # HTML does not send PUT only post so need to catch it as put since we need name to also update the url
+    def dispatch(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Union[None, HttpResponse]:  # pyre-ignore[15]
+        if self.request.POST:
+            return self.put(*args, **kwargs)  # pyre-ignore[6]
+        return super(CustomUserPersonalView, self).dispatch(*args, **kwargs)  # pyre-ignore[6, 7]
+
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
+        return context
+
+    def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[HttpResponse, HttpResponseRedirect]:
+        split_slug = str(kwargs['slug']).rsplit('-')
+        pk = split_slug[-1]
+        try:
+            int(pk)
+        except:
+            return HttpResponseRedirect(reverse('404'))
+
+        display_name = [' '.join(split_slug[:-1])]
+
+        if CustomUser.objects.filter(pk=pk).exists():
+            user = get_object_or_404(CustomUser, pk=pk)
+            if str(user.display_name).lower() == display_name[0].lower():
+                context = {'user': user}
+                context['user'].signup_date = user.signup_date.year
+                if self.request.user == user:
+                    context['self'] = True # pyre-ignore[6]
+                    context['organisations'] = Organisation.objects.all() # pyre-ignore[6]
+                    context['avatars'] = UserAvatar.objects.all() # pyre-ignore[6]
+
+                return render(request, 'account/view.html', context)
+            else:
+                return HttpResponseRedirect(reverse('404'))
+        else:
+            return HttpResponseRedirect(reverse('404'))
+
+    def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
+        current_user = self.request.user
+        print(current_user)
+        data = QueryDict(request.body).dict()
+        if data.get('display_name'):
+            form = CustomUserNameUpdateForm(data, instance=current_user)
+            if form.is_valid():
+                current_user.display_name = form.cleaned_data.get('display_name') # pyre-ignore[16]
+                current_user.save()
+                return HttpResponseRedirect(reverse('account_view'))
+            else:
+                return HttpResponse("Sorry, couldn't process your request, try again.")
+
+        elif data.get('avatar'):
+            form = CustomUserAvatarUpdateForm(data, instance=current_user)
+            if form.is_valid():
+                form.full_clean()
+                current_user.avatar = form.cleaned_data.get('avatar') # pyre-ignore[16]
+                current_user.save()
+                context = {
+                    'image_url': current_user.avatar.image_url  # pyre-ignore[16]
+                }
+                return render(request, 'account/partials/avatar_image.html', context)
+            else:
+                return HttpResponse("Sorry, couldn't process your request, try again.")
+        elif data.get('organisation_name'):
+            form = CustomUserOrganisationUpdateForm(data, instance=current_user)
+            if form.is_valid():
+                lower_org_name = form.cleaned_data.get('organisation_name').lower()
+                if Organisation.objects.filter(name__iexact=lower_org_name).exists():
+                    current_user.organisation =  get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))  # pyre-ignore[16]
+                else:
+                    new_organisation = \
+                        Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
+                                                           link=form.cleaned_data.get('organisation_url'))[0]
+                    current_user.organisation = new_organisation
+
+                current_user.save()
+                context = {
+                    'name': current_user.organisation.name, # pyre-ignore[16]
+                    'link': current_user.organisation.link # pyre-ignore[16]
+                }
+                return render(request, 'account/partials/organisation_name_link.html', context)
+            else:
+                return HttpResponse("Sorry, couldn't process your request, try again.")
+
+        else:
+            return HttpResponse("Sorry, couldn't process your request, try again.")

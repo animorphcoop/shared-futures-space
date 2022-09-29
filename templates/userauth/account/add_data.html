@@ -104,7 +104,7 @@
                     </label>
 
                     <input class="block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
-                           type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
+                           type="checkbox" id="organisation-checkbox" onclick="toggleOrganisationsAdd()">
                 </div>
 
                 <div id="organisation-data" class="hidden">
@@ -122,7 +122,7 @@
                         {% comment %}taking on the value of the organisation url via organisation_name_enter modal field{% endcomment %}
                         <input id="organisation_url" name=organisation_url type=text value="" class="hidden">
 
-                        <button onclick="event.preventDefault(); toggleOrganisations()"
+                        <button onclick="event.preventDefault(); toggleOrganisationsAdd()"
                                 class="inline -ml-9">
                             <svg class="-mb-1" width="19" height="18" viewBox="0 0 19 18" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">

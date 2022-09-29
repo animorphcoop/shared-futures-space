@@ -12,7 +12,7 @@ const organisationNameInput = (<HTMLInputElement>document.getElementById("organi
 const organisationUrlInput = (<HTMLInputElement>document.getElementById("organisation_url"))
 
 
-function toggleOrganisations() {
+function toggleOrganisationsAdd() {
     if (checkbox == null || organisationDataBlock == null || selectedOrganisation == null || organisationList == null) return
 
     if (checkbox.checked) {
@@ -25,20 +25,48 @@ function toggleOrganisations() {
     }
 }
 
+
+function toggleOrganisationsChange() {
+    console.log('yaay')
+    if (organisationDataBlock == null || selectedOrganisation == null || organisationList == null) return
+    organisationDataBlock.classList.remove('hidden')
+
+    organisationList.classList.remove('hidden')
+
+    /*
+        if (checkbox.checked) {
+            organisationList.classList.remove('hidden')
+        } else {
+            organisationList.classList.add('hidden')
+            organisationDataBlock.classList.add('hidden')
+            selectedOrganisation = 'None'
+            organisationNameInput.value = selectedOrganisation
+        }*/
+}
+
 function backFromOrganisations() {
-    if (organisationList == null || checkbox == null || organisationNameInput == null || organisationDataBlock == null || organisationCheckboxBlock == null) return
+    if (organisationList == null || organisationNameInput == null || organisationDataBlock == null) return
+    if (checkbox != null && organisationCheckboxBlock != null) {
 
 
-    if (checkbox.checked) {
-        organisationList.classList.add('hidden')
-        checkbox.checked = false
-        selectedOrganisation = 'None'
-        organisationNameInput.value = selectedOrganisation
-        organisationDataBlock.classList.add('hidden')
-        if (organisationCheckboxBlock.classList.contains('hidden')) {
-            organisationCheckboxBlock.classList.remove('hidden')
+        if (checkbox.checked) {
+
+            checkbox.checked = false
+
+            if (organisationCheckboxBlock.classList.contains('hidden')) {
+                organisationCheckboxBlock.classList.remove('hidden')
+            }
         }
+
+    } else {
+        console.log('in another dimension')
+
     }
+    organisationList.classList.add('hidden')
+    selectedOrganisation = 'None'
+    organisationNameInput.value = selectedOrganisation
+    organisationDataBlock.classList.add('hidden')
+
 
 }
 
@@ -49,9 +77,10 @@ function selectOrganisation(orgName: string, orgUrl: string) {
 }
 
 function submitOrganisation() {
-
+    console.log('are you submitting or whatt')
 
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
+    console.log('submitting')
 
     organisationNameInput.value = selectedOrganisation
     organisationNameInput.classList.add('cursor-not-allowed')
@@ -61,6 +90,14 @@ function submitOrganisation() {
     organisationDataBlock.classList.remove('hidden')
 
     organisationList.classList.add('hidden')
+
+    //Call the function above if it exists.
+    if (typeof submitOrganisationChangeForm === "function") {
+        organisationNameInput.setAttribute('value', selectedOrganisation)
+        organisationUrlInput.setAttribute('value', newOrganisationUrl)
+
+        submitOrganisationChangeForm();
+    }
 
 }
 
