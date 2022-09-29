@@ -43,7 +43,7 @@ class CustomUserAvatarUpdateForm(forms.ModelForm):
         fields: List[str] = ['avatar']
 
     # need to retrieve an instance of the avatar since it's a foreign key to the user
-    def clean_avatar(self):
+    def clean_avatar(self)  -> UserAvatar :
         avatar = self.cleaned_data.get('avatar')
         try:
             avatar_instance = UserAvatar.objects.get(pk=avatar)
