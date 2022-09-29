@@ -47,3 +47,22 @@
   animation: 1s ease-out 0s 1 slideInFromLeft;
   animation-fill-mode: forwards;
 }
+
+/* flickity carousel dots */
+/* position dots in carousel */
+.flickity-page-dots {
+  bottom: 500px;
+}
+/* circles */
+.flickity-page-dots .dot {
+  width: 6px;
+  height: 6px;
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.30);
+  border: none;
+  margin: 0 2px;
+}
+/* fill-in selected dot */
+.flickity-page-dots .dot.is-selected {
+  background: #9759FF; /* purple */
+}
