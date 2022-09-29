@@ -16,14 +16,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 @pytest.mark.usefixtures('celery_session_app')
 @pytest.mark.usefixtures('celery_session_worker')
 def test_create_account(client, mailoutbox):
-<<<<<<< HEAD
     email_free = client.post(reverse('check_email'), {'email': 'testemail@example.com'}, HTTP_REFERER = '/account/signup/')
     assert '' == email_free.content.decode('utf-8')
-=======
-    email_free = client.post(reverse('check_email'), {'email': 'testemail@example.com'},
-                             HTTP_REFERER='/account/signup/')
-    assert '' in email_free.content.decode('utf-8')
->>>>>>> userauth-profile-edit
     response = client.post('/account/signup/', {'email': 'testemail@example.com',
                                                 'password1': 'test_password',
                                                 'password2': 'test_password'})
@@ -48,9 +42,7 @@ def test_dashboard_info(client, test_user):
     client.force_login(test_user)
     dash = client.get('/dashboard/')
     assert dash.status_code == 200
-<<<<<<< HEAD
     assert test_user.post_code.area.name in dash.content.decode('utf-8')
-=======
     welcome = bs4.BeautifulSoup(dash.content, 'html5lib').body.text
     # placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
     # assert re.match(f'.*Welcome {test_user.display_name}', welcome, re.S)
@@ -60,7 +52,7 @@ def test_dashboard_info(client, test_user):
     test_user.save()
     dash = client.get('/dashboard/')
     assert 'Your messages' in str(dash.content)
->>>>>>> userauth-profile-edit
+
 
 
 def test_data_add(client, test_user):
@@ -113,10 +105,6 @@ def test_user_request_flow(client, test_user, admin_client):
     action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
     admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
     messages = client.get(reverse('user_chat', args=[get_system_user().uuid]))
-<<<<<<< HEAD
-=======
-    # print(str(messages.content))
->>>>>>> userauth-profile-edit
     assert 'your request to become an editor has been granted' in str(messages.content)
 
 
@@ -141,10 +129,6 @@ def test_name_update_flow(client, test_user):
 def test_delete_account(client, test_user):
     client.force_login(test_user)
     delete_page = client.get(reverse('account_delete'))
-<<<<<<< HEAD
-=======
-    # print(delete_page.content)
->>>>>>> userauth-profile-edit
     assert 'Delete profile' in str(delete_page.content)
 
     client.post(reverse('account_delete'), {'confirm': 'confirm'})
