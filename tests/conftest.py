@@ -11,6 +11,8 @@ from area.models import PostCode, Area
 from resources.models import HowTo, CaseStudy
 from poll.models import Poll
 from userauth.models import UserAvatar
+from allauth.account.admin import EmailAddress
+
 
 
 # a user account to use during testing
@@ -26,6 +28,8 @@ def test_user(db, django_user_model):
                                                  password='test_password', display_name='Test User', year_of_birth=1999,
                                                  post_code=PostCode.objects.create(code="AB12"), added_data = True)
     user.save()
+    EmailAddress.objects.create(email = user.email, verified = True, primary = True, user = user) # make user verified
+
     return user
 
 

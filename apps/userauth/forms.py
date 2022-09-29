@@ -1,6 +1,6 @@
 # pyre-strict
 from django import forms
-from .models import CustomUser, Organisation
+from .models import CustomUser, Organisation, UserAvatar
 from analytics.models import log_signup  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
@@ -11,6 +11,7 @@ from wagtail.users.forms import UserEditForm, UserCreationForm
 from typing import Type, List, Any, Dict
 from django.http import HttpRequest
 from typing import Tuple
+
 
 '''
 Resolving the first&last name issue, reference
@@ -26,16 +27,39 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model: Type[CustomUser] = CustomUser
 
+class CustomUserNameUpdateForm(forms.ModelForm):
+    display_name = forms.CharField(max_length=50)
 
-class CustomUserEditForm(UserEditForm):
-    class Meta(UserEditForm.Meta):
-        model: Type[CustomUser] = CustomUser
-
-
-class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['display_name', 'email', 'avatar']
+        fields: List[str] = ['display_name']
+
+
+class CustomUserAvatarUpdateForm(forms.ModelForm):
+    avatar = forms.CharField(max_length=2, required=False)
+
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['avatar']
+
+    # need to retrieve an instance of the avatar since it's a foreign key to the user
+    def clean_avatar(self)  -> UserAvatar :
+        avatar = self.cleaned_data.get('avatar')
+        try:
+            avatar_instance = UserAvatar.objects.get(pk=avatar)
+        except UserAvatar.DoesNotExist:
+            avatar_instance = None
+        return avatar_instance
+
+
+class CustomUserOrganisationUpdateForm(forms.ModelForm):
+    organisation_name = forms.CharField(max_length=50)
+    organisation_url = forms.CharField(max_length=100, required=False)
+
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['organisation_name', 'organisation_url']
+
 
 
 class CustomSignupForm(SignupForm):
@@ -59,7 +83,7 @@ class CustomSignupForm(SignupForm):
         return user
 
 
-class CustomUserPersonalForm(forms.Form):
+class CustomUserAddDataForm(forms.Form):
     display_name = forms.CharField(max_length=50)
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
@@ -68,7 +92,7 @@ class CustomUserPersonalForm(forms.Form):
     organisation_url = forms.CharField(max_length=100, required=False)
 
     def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
-        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
+        super(CustomUserAddDataForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
         self.empty_permitted = True
 
 
