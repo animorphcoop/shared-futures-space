@@ -364,13 +364,6 @@ class CustomUserPersonalView(TemplateView):
                 print(form.cleaned_data.get('display_name'))
                 current_user.display_name = form.cleaned_data.get('display_name')
                 current_user.save()
-                '''
-                context = {
-                    'name': current_user.display_name,
-                    'changed': True
-                }
-                return render(request, 'account/partials/name_profile.html', context)
-                '''
                 return HttpResponseRedirect(reverse('account_view'))
             else:
                 return HttpResponse("Sorry, couldn't process your request, try again.")

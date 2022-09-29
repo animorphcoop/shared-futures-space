@@ -27,12 +27,6 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model: Type[CustomUser] = CustomUser
 
-
-class CustomUserEditForm(UserEditForm):
-    class Meta(UserEditForm.Meta):
-        model: Type[CustomUser] = CustomUser
-
-
 class CustomUserNameUpdateForm(forms.ModelForm):
     display_name = forms.CharField(max_length=50)
 
@@ -43,8 +37,6 @@ class CustomUserNameUpdateForm(forms.ModelForm):
 
 class CustomUserAvatarUpdateForm(forms.ModelForm):
     avatar = forms.CharField(max_length=2, required=False)
-    #organisation_name = forms.CharField(max_length=50, required=False)
-    #organisation_url = forms.CharField(max_length=100, required=False)
 
     class Meta:
         model: Type[CustomUser] = CustomUser
