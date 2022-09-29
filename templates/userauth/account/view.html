@@ -83,7 +83,8 @@
                     TODO: Get this via post code
                     {% endcomment %}
 
-                    <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">Belfast</span>
+        <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">{{ user.post_code.area.name }}</span>
+
                     Active since {{ user.signup_date }}
                 </div>
 
