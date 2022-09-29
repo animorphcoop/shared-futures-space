@@ -14,15 +14,15 @@
                 {% include "landing/tabbed-resources/title.html" with title="co creation" %}
             </li>
         </ul>
-        <div :class="`bg-resources-${openTab}`" class="w-full py-9 px-4.5">
+        <div :class="`bg-resources-${openTab}`" class="w-full py-6 px-4.5">
             <div x-show="openTab === 'one'">
                 <div class="px-3">
                     {% include "landing/main-heading.html" with title="We offer smart resources throughout the project." %}
                 </div>
-                {% include "partials/horizontal-spacer.html" with space="7" %}
+                {% include "partials/horizontal-spacer.html" with space="6" %}
 
                 {# WET SALMON #}
-                <section class="p-4 pt-2.5 flex flex-col items-center">
+                <section class="flex flex-col items-center">
                     <div class="bg-blue-pale rounded-full">
                         <p class="font-garamond-500 text-black-large text-center text-lg p-2.5 px-6">
                             How can I help you?
@@ -44,8 +44,39 @@
                     {% include "partials/button.html" with url="the_url" style="primary_colour" button="Community business 💰" %}
                 </div>
             </div>
-            <div x-show="openTab === 'two'">Tab #2</div>
-            <div x-show="openTab === 'three'">Tab #3</div>
+            <div x-show="openTab === 'two'">
+                <div class="px-3">
+                    {% include "landing/main-heading.html" with title="Stages, polls, and dedicated chats to help keep projects on track." %}
+                </div>
+                {% include "partials/horizontal-spacer.html" with space="6" %}
+            </div>
+            <div x-show="openTab === 'three'">
+                <div class="px-3">
+                    {% include "landing/main-heading.html" with title="Find like-minded people in your area and together make a change." %}
+                </div>
+                {% include "partials/horizontal-spacer.html" with space="6" %}
+                <div>
+                    <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
+                        Hi all! I am starting a new project to create a new community garden and teach children how to cook.
+                    </p>
+                    <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
+                    <div class="flex gap-1 items-center">
+                        <img src="autoupload/crab_1.png">
+                        {% include "landing/tabbed-resources/title.html" with title="Grace Campbell" %}
+                    </div>
+                </div>
+                {% include "partials/horizontal-spacer.html" with space="6" %}
+                <div class="flex flex-col items-end">
+                    <p class="bg-white font-garamond-500 text-black-large text-right text-base px-3 py-2.5 rounded-xl leading-tight">
+                        Hi Grace, amazing! I am keen to see where we can take this!
+                    </p>
+                    <div class="mr-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
+                    <div class="flex gap-1 items-center">
+                        <img src="autoupload/crab_2.png">
+                        {% include "landing/tabbed-resources/title.html" with title="Tom Bell" %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endwith %}
