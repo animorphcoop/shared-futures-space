@@ -318,8 +318,14 @@ def user_detail(request: WSGIRequest, pk: int) -> Union[HttpResponse, HttpRespon
 
 
 class CustomUserPersonalView(TemplateView):
-    # model: Type[CustomUser] = CustomUser
-    # form_class: Type[CustomUserNameUpdateForm] = CustomUserNameUpdateForm
+
+    http_method_names = ['get', 'post', 'put']
+
+    # HTML does not send PUT only post so need to catch it as put since we need name to also update the url
+    def dispatch(self, *args, **kwargs):
+        if self.request.POST:
+            return self.put(*args, **kwargs)
+        return super(CustomUserPersonalView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
@@ -367,12 +373,14 @@ class CustomUserPersonalView(TemplateView):
                 print(form.cleaned_data.get('display_name'))
                 current_user.display_name = form.cleaned_data.get('display_name')
                 current_user.save()
+                '''
                 context = {
                     'name': current_user.display_name,
                     'changed': True
                 }
                 return render(request, 'account/partials/name_profile.html', context)
-
+                '''
+                return HttpResponseRedirect(reverse('account_view'))
             else:
                 return HttpResponse("Sorry, couldn't process your request, try again.")
 

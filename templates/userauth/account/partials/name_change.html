@@ -15,18 +15,19 @@
         TODO: Adjust endpoint processing and container on view as well as ts file
         {% endcomment %}
 
-    <form hx-put="{% url 'account_update' %}" hx-target="#name-holder">
+    <form method="post" action="{% url 'account_update' %}">
+        {% csrf_token %}
 
-                <input class="form-control block w-full px-3 py-2.5
+        <input class="form-control block w-full px-3 py-2.5
                     font-garamond-500 text-black-text
                     placeholder:text-black-meta
                     bg-blue-second bg-clip-padding border border-solid border-white
                     transition ease-in-out m-0
                     focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
                     invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
-                       id=display_name name=display_name type=text placeholder="Your new name" value=""
-                       pattern="[a-zA-Z][a-zA-Z\s]*">
-                {% include "partials/input-note.html" with for="display_name" label="It will change web address of your profile" %}
+               id=display_name name=display_name type=text placeholder="Your new name" value=""
+               pattern="[a-zA-Z][a-zA-Z\s]*">
+        {% include "partials/input-note.html" with for="display_name" label="It will change web address of your profile" %}
 
 
         <button onclick="toggleNameChange()"
