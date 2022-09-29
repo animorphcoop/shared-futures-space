@@ -1,0 +1,6 @@
+<h2 class="font-kanit-500 text-black-text text-xl">{{ name }}</h2>
+{% if changed %}
+<span class="pl-0.5 font-kanit-400 text-xxxs text-black-meta tracking-wide">
+    <a href="{% url 'account_view' %}">Click here to refresh your new profile URL Profile</a>
+</span>
+{% endif %}

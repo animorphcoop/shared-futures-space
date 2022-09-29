@@ -364,16 +364,22 @@ class CustomUserPersonalView(TemplateView):
         if data.get('display_name'):
             form = CustomUserNameUpdateForm(data, instance=current_user)
             if form.is_valid():
-                return HttpResponse("name")
+                print(form.cleaned_data.get('display_name'))
+                current_user.display_name = form.cleaned_data.get('display_name')
+                current_user.save()
+                context = {
+                    'name': current_user.display_name,
+                    'changed': True
+                }
+                return render(request, 'account/partials/name_profile.html', context)
+
             else:
-                return HttpResponse("nein name")
+                return HttpResponse("Sorry, couldn't process your request, try again.")
 
         elif data.get('avatar'):
-            print('about to make form')
             form = CustomUserAvatarUpdateForm(data, instance=current_user)
             if form.is_valid():
                 form.full_clean()
-                print(form.cleaned_data.get('avatar'))
                 current_user.avatar = form.cleaned_data.get('avatar')
                 current_user.save()
                 context = {
@@ -381,7 +387,7 @@ class CustomUserPersonalView(TemplateView):
                 }
                 return render(request, 'account/partials/avatar_image.html', context)
             else:
-                return HttpResponse("nein avatur")
+                return HttpResponse("Sorry, couldn't process your request, try again.")
         elif data.get('organisation_name'):
             form = CustomUserOrganisationUpdateForm(data, instance=current_user)
             if form.is_valid():
