@@ -68,24 +68,13 @@
 
         {% comment %}        {% include 'partials/button.html' with style='primary_white' button='I found this useful' %}{% endcomment %}
         {% if user.is_authenticated %}
-            {{ resource.found_useful.count }}
-{{ useful }}
-            {% if resource.found_useful %}
+            {% if useful %}
+                OK
 
-                {{ user.pk }}
-                {{ resource.found_useful.useful_to }}
-                {{ useful.found_useful.found_useful_by }}
 
-                {% comment %}
-                            {{ resource.found_useful }}
-
-                {% for useful in resource.found_useful.all %}
-                    {{ useful.found_useful_by }}
-
-                {% endfor %}
-                {% endcomment %}
-            {% endif %}
+            {% else %}
             {% include 'partials/button-hx.html' with resource_id=resource.id %}
+                            {% endif %}
 
         {% endif %}
         {% comment %}

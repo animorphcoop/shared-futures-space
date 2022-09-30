@@ -70,6 +70,7 @@ class Resource(ClusterableModel):
         blank=True,
         null=True,
     )
+    # TODO: this just should be a counter - computed value
     found_useful: models.ForeignKey = models.ForeignKey(FoundUseful, blank=True,
                                                         null=True, on_delete=models.SET_NULL,
                                    related_name="useful")
