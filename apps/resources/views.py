@@ -2,7 +2,7 @@
 from django.http.request import HttpRequest
 from django.http import HttpResponse
 
-from .models import HowTo, CaseStudy
+from .models import HowTo, CaseStudy, FoundUseful
 from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
@@ -75,11 +75,53 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
     return render(request, 'resources/resource_item.html', context)
 
 
-def resource_found_useful(request: HttpRequest, id: Optional[int]) -> HttpResponse:
+def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpResponse:
     print('here')
-    resource_id = id
+    resource_id = res_id
     print(resource_id)
+    current_resource = None
+    # is_how_to = False
+    try:
+        current_resource = HowTo.objects.get(pk=res_id)
+        # is_how_to = True
+    except HowTo.DoesNotExist:
+        try:
+            current_resource = CaseStudy.objects.get(pk=res_id)
+        except CaseStudy.DoesNotExist:
+            print('confzd')
+            return render(request, 'partials/button-hx.html')
+
+    print(current_resource)
+    print(current_resource.found_useful)
+    current_user = request.user
+    print(current_user)
+    useful_instance = None
+    if current_resource.found_useful is not None:
+        try:
+            useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
+            useful_instance.delete()
+            print('deleted')
+        except FoundUseful:
+            print('no useful match')
+            useful_instance = FoundUseful.objects.create(useful_resource=current_resource,
+                                                                found_useful_by=current_user)
+            # useful_instance.found_useful = new_useful
+            current_resource.found_useful = useful_instance
+            current_resource.save()
+    else:
+        useful_instance = FoundUseful.objects.create(useful_resource=current_resource,
+                                                            found_useful_by=current_user)
+        current_resource.found_useful = useful_instance
+        current_resource.save()
+        print(useful_instance.useful_resource)
+
+        print('created')
+
+
+    print('saved')
+
     context = {
-        'resource_id': id
+        'resource_id': res_id
     }
+
     return render(request, 'partials/button-hx.html', context)

@@ -28,6 +28,12 @@ class CaseStudyTag(TaggedItemBase):
     content_object = ParentalKey('resources.CaseStudy', on_delete=models.CASCADE, related_name='tagged_items')
 
 
+class FoundUseful(models.Model):
+    useful_resource = models.ForeignKey('resources.Resource',
+                                        on_delete=models.CASCADE)
+    found_useful_by = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
+
+
 # do not create Resources! this model is just to inherit specific kinds of resources from
 # you can however query Resource.objects, and django will automatically search for anything that inherits from this model. that's pretty neat!
 class Resource(ClusterableModel):
@@ -57,8 +63,8 @@ class Resource(ClusterableModel):
         blank=True,
         null=True,
     )
-    found_useful: models.ForeignKey = models.ForeignKey('userauth.CustomUser', blank=True,
-                                                        null=True, on_delete=models.CASCADE)
+    found_useful: models.ForeignKey = models.ForeignKey(FoundUseful, blank=True,
+                                                        null=True, on_delete=models.SET_NULL)
 
     def __str__(self) -> str:
         return f"{self.title}"
