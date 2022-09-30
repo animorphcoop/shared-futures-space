@@ -7,7 +7,7 @@ from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
 
-from analytics.models import log_resource_access # pyre-ignore[21]
+from analytics.models import log_resource_access  # pyre-ignore[21]
 
 from django.db.models import Q
 from typing import List, Optional
@@ -18,12 +18,14 @@ def resource(request: HttpRequest) -> HttpResponse:
     context = {'resources': resources}
     return render(request, 'resources/resources.html', context)
 
+
 # with argument as a separate url and view
 def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
     resources = retrieve_and_chain_resources()
     context = {'resources': resources,
                'tag': tag}
     return render(request, 'resources/resources.html', context)
+
 
 def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
@@ -32,10 +34,12 @@ def resource_search(request: HttpRequest) -> HttpResponse:
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)
 
+
 def retrieve_and_chain_resources() -> List:  # pyre-ignore[24]
     how_tos = objects_tags_cluster_list_overwrite(HowTo.objects.all())
     case_studies = objects_tags_cluster_list_overwrite(CaseStudy.objects.all())
     return list(chain(how_tos, case_studies))
+
 
 def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ignore[24]
     how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
@@ -69,3 +73,13 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
         log_resource_access(current_resource, request.user)
 
     return render(request, 'resources/resource_item.html', context)
+
+
+def resource_found_useful(request: HttpRequest, id: Optional[int]) -> HttpResponse:
+    print('here')
+    resource_id = id
+    print(resource_id)
+    context = {
+        'resource_id': id
+    }
+    return render(request, 'partials/hx-button.html', context)
