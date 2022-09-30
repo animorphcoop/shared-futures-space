@@ -82,4 +82,4 @@ def resource_found_useful(request: HttpRequest, id: Optional[int]) -> HttpRespon
     context = {
         'resource_id': id
     }
-    return render(request, 'partials/hx-button.html', context)
+    return render(request, 'partials/button-hx.html', context)
