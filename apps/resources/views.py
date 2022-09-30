@@ -101,6 +101,7 @@ def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpRe
         except CaseStudy.DoesNotExist:
             return render(request, 'partials/button-hx.html')
 
+    found_useful = ''
     useful_instance = None
     try:
         useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
@@ -112,12 +113,13 @@ def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpRe
         print('no useful match')
         FoundUseful.objects.create(useful_resource=current_resource,
                                                      found_useful_by=current_user)
-
+        found_useful = 'found_useful'
 
     print('done')
 
     context = {
-        'resource_id': res_id
+        'resource_id': res_id,
+        'status': found_useful
     }
 
     return render(request, 'partials/button-hx.html', context)
