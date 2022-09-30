@@ -22,7 +22,6 @@ def test_log_account_create(client):
     assert new_events[0].session.sessid_hash == '[no session]'
 
 def test_log_login(client, test_user):
-    EmailAddress.objects.create(email = test_user.email, verified = True, primary = True, user = test_user) # make test_user verified
     previous_events = AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.LOGIN)
     assert len(previous_events) == 0
     exclude_list = [evt.id for evt in previous_events] # force evaluation of the queryset
