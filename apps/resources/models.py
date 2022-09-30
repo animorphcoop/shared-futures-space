@@ -17,6 +17,7 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from apps.core.utils.slugifier import generate_random_string
 
+
 # you need to specify each model's tag system seperately because the db doesn't have a notion of inheritance
 # thy still autocomplete tags that were defined on other models though
 class HowToTag(TaggedItemBase):
@@ -56,6 +57,8 @@ class Resource(ClusterableModel):
         blank=True,
         null=True,
     )
+    found_useful: models.ForeignKey = models.ForeignKey('userauth.CustomUser', blank=True,
+                                                        null=True, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -93,11 +96,10 @@ class CaseStudy(Resource):
         verbose_name_plural = 'Case Studies'
 
 
-
 # SIGNALS
 # TODO: Find out 'sender' type
 @receiver(post_save, sender=HowTo)
-def add_slug_to_how_to(sender, instance, *args, **kwargs ) -> None:  # pyre-ignore[2]
+def add_slug_to_how_to(sender, instance, *args, **kwargs) -> None:  # pyre-ignore[2]
     if instance and not instance.slug:
         slug = slugify(instance.title)
         random_string = generate_random_string()
