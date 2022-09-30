@@ -216,8 +216,8 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL: str = 'https://dev.sharedfutures.space'
-CSRF_TRUSTED_ORIGINS = ['https://dev.sharedfutures.space']
+BASE_URL: str = 'https://sharedfutures.space'
+CSRF_TRUSTED_ORIGINS = ['https://dev.sharedfutures.space', 'https://sharedfutures.space']
 
 # for @login_required
 LOGIN_URL = '/account/login/'
