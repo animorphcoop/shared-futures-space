@@ -66,12 +66,29 @@
             <div class="h-4"></div>
         {% endif %}
 
-        {% include 'partials/button.html' with style='primary_white' button='I found this useful' %}
+        {% comment %}        {% include 'partials/button.html' with style='primary_white' button='I found this useful' %}{% endcomment %}
+        {% if user.is_authenticated %}
+            {% if useful %}
+                {% include 'partials/button-hx.html' with resource_id=resource.id status='found_useful' %}
+
+
+
+            {% else %}
+                {% include 'partials/button-hx.html' with resource_id=resource.id status='' %}
+            {% endif %}
+
+        {% endif %}
+        {% comment %}
         {% include 'partials/button.html' with style='primary_white' button='Share' icon='link' %}
+{% endcomment %}
+        {% include 'partials/button-copy.html' with button='Share' %}
 
         <div class="h-4"></div>
 
-        {% include 'partials/button.html' with style='primary_white' icon='arrow-left' %}
+        {% comment %}
+{% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
+{% endcomment %}
+        {% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
 
         <div class="h-4"></div>
 

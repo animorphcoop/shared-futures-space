@@ -16,6 +16,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from apps.core.utils.slugifier import generate_random_string
+from typing import Optional
 
 # you need to specify each model's tag system seperately because the db doesn't have a notion of inheritance
 # thy still autocomplete tags that were defined on other models though
@@ -25,6 +26,19 @@ class HowToTag(TaggedItemBase):
 
 class CaseStudyTag(TaggedItemBase):
     content_object = ParentalKey('resources.CaseStudy', on_delete=models.CASCADE, related_name='tagged_items')
+
+
+class FoundUseful(models.Model):
+    useful_resource = models.ForeignKey('resources.Resource',
+                                        on_delete=models.CASCADE)
+    found_useful_by = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
+
+    @property
+    def useful_to(self) -> Optional[str]:
+        if self.found_useful_by and hasattr(self.found_useful_by, 'pk'):
+            return self.found_useful_by.pk
+
+
 
 
 # do not create Resources! this model is just to inherit specific kinds of resources from
@@ -56,6 +70,10 @@ class Resource(ClusterableModel):
         blank=True,
         null=True,
     )
+    # TODO: this just should be a counter - computed value
+    found_useful: models.ForeignKey = models.ForeignKey(FoundUseful, blank=True,
+                                                        null=True, on_delete=models.SET_NULL,
+                                   related_name="useful")
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -93,11 +111,10 @@ class CaseStudy(Resource):
         verbose_name_plural = 'Case Studies'
 
 
-
 # SIGNALS
 # TODO: Find out 'sender' type
 @receiver(post_save, sender=HowTo)
-def add_slug_to_how_to(sender, instance, *args, **kwargs ) -> None:  # pyre-ignore[2]
+def add_slug_to_how_to(sender, instance, *args, **kwargs) -> None:  # pyre-ignore[2]
     if instance and not instance.slug:
         slug = slugify(instance.title)
         random_string = generate_random_string()
