@@ -99,27 +99,37 @@
 
                 </div>
 
+                <div class="h-3.5"></div>
+
                 {# Organisation #}
-                <div class="my-12">
+                <div class="">
                     {% if user.organisation != None %}
-                        <h3 class="text-2xl">Organisation</h3>
-                        <div id="organisation-holder">
+                        <div class="py-4 px-4.5 flex justify-between items-center  bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
+                            <h3 class="inline-block font-kanit-700 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
+                                Organisation
+                            </h3>
+                            {% if self %}
+                                <button onclick="toggleOrganisationsChange()">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.545 4.765L9.235 5.455L2.44 12.25H1.75V11.56L8.545 4.765V4.765ZM11.245 0.25C11.0575 0.25 10.8625 0.325 10.72 0.4675L9.3475 1.84L12.16 4.6525L13.5325 3.28C13.825 2.9875 13.825 2.515 13.5325 2.2225L11.7775 0.4675C11.6275 0.3175 11.44 0.25 11.245 0.25V0.25ZM8.545 2.6425L0.25 10.9375V13.75H3.0625L11.3575 5.455L8.545 2.6425V2.6425Z"
+                                              fill="#9759FF"/>
+                                    </svg>
+                                </button>
+                            {% endif %}
+                        </div>
+                        <div class="h-1"></div>
+                        <div id="organisation-holder" class="px-4.5">
                             {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
                         </div>
-                        {% if self %}
-                            <button onclick="toggleOrganisationsChange()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                    <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z"/>
-                                </svg>
-                            </button>
-                        {% endif %}
+                        <div class="h-4"></div>
                     {% endif %}
                 </div>
 
                 {# Settings #}
                 {% if self %}
                     <div class="">
-                        <div class="py-3.5 bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
+                        <div class="py-4 bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
                             <h3 class="font-kanit-700 text-center uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
                                 Settings
                             </h3>
@@ -160,21 +170,17 @@
 {% endcomment %}
 
             </div>
-            <hr/>
 
-
+            {# Hidden settings modals #}
             <div id="avatar-list" class="hidden">
                 {% include 'userauth/account/partials/avatar_change.html' with avatars=avatars %}
             </div>
             <div id="name-change" class="hidden">
                 {% include 'userauth/account/partials/name_change.html' with name=user.display_name %}
             </div>
-
             <div id="organisation-data" class="hidden">
                 {% include "account/partials/organisation_change.html" %}
-
             </div>
-
 
         </section>
 
