@@ -1,9 +1,7 @@
 #!/bin/bash
 
 target_server="sharedfutures.webarch.net"
-target_user="dev"
-target_dir="/home/dev/sites/dev"
-target_data_dir="/home/dev/sites/dev_data"
+
 if [ -z "$1" ];
 then
   remote_user=$(whoami)
@@ -36,10 +34,11 @@ else
   echo "# tests pass"
 fi
 
-echo "# DEPLOY TO PRODUCTION (REALLY REAL WORLD FOR REAL)?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) break;;
+echo "# DEPLOY TO DEVELOPMENT/PRODUCTION (REALLY REAL WORLD FOR REAL)?"
+select opt in "Development" "Production" "Cancel"; do
+    case $opt in
+        Development ) target_user="dev"; target_dir="/home/dev/sites/dev"; target_data_dir="/home/dev/sites/dev_data"; break;;
+        Production ) target_user="prod"; target_dir="/home/prod/sites/prod"; target_data_dir="/home/prod/sites/prod_data"; break;;
         No ) echo "  # CANCELLED"; exit;;
     esac
 done
