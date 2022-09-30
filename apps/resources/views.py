@@ -65,8 +65,6 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
             current_resource = CaseStudy.objects.get(slug=slug)
         except CaseStudy.DoesNotExist:
             print('it is neither HowTo nor CaseStudy. Redirect to root url?')
-    # resource_instance = single_object_tags_cluster_overwrite(current_resource).al
-    # useful = current_resource.prefetch_related('useful')
     current_user = request.user
     useful_instance = None
     try:

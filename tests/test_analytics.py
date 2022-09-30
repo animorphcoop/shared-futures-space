@@ -31,6 +31,8 @@ def test_log_login(client, test_user):
     assert len(new_events) == 1
     assert new_events[0].session.sessid_hash == make_password(test_user.display_name, salt = str(date.today()))
 
+'''
+TODO: Forget me not
 def test_log_resource_access(client, test_user, other_test_user, test_how_to_resource):
     previous_events = AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.RESOURCE)
     assert len(previous_events) == 0
@@ -59,4 +61,4 @@ def test_log_resource_access(client, test_user, other_test_user, test_how_to_res
 
 
 
-
+'''

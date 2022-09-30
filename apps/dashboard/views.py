@@ -19,7 +19,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new project. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
     rivers = ['rivers one', 'rivers two', 'rivers three']
     #resources = ['fav resource one', 'fav resource two', 'fav resource three', 'fav resource four']
-    resources = ['']
+    resources = []
     useful_resources = None
     try:
         useful_resources = FoundUseful.objects.filter(found_useful_by=current_user).values()

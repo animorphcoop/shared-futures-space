@@ -26,12 +26,14 @@ async function retrieveData(postcode) {
         }
     }
     catch (error) {
-        let errorMessage = "Failed to connect to weather API";
+        //let errorMessage = "Failed to connect to weather API"
+        let errorMessage = "";
         if (error instanceof Error) {
             errorMessage = error.message;
         }
         console.log(errorMessage);
-        return { 'error': errorMessage };
+        //return {'error': errorMessage};
+        return { 'error': '' };
     }
 }
 async function postcodeQuery(code) {
@@ -47,8 +49,9 @@ async function postcodeQuery(code) {
             return gb_attempt;
         }
         else {
-            console.log('not a valid IE or GB postcode');
-            return { 'error': code + ' is not a valid IE or GB postcode' };
+            //console.log('not a valid IE or GB postcode');
+            //return {'error': code + ' is not a valid IE or GB postcode'};
+            return { 'error': '' };
         }
     }
 }
@@ -58,8 +61,9 @@ function latLongQuery(lat, lon) {
             return data;
         }
         else {
-            console.log("No luck retrieving weather data");
-            return { 'error': 'failed to retrieve weather data for ' + lat + ':' + lon };
+            //console.log("No luck retrieving weather data");
+            //return {'error': 'failed to retrieve weather data for ' + lat + ':' + lon};
+            return { 'error': '' };
         }
     });
 }
@@ -85,12 +89,13 @@ function findWeatherIcon(currentWeather) {
 async function getWeather(postcode) {
     let response = await retrieveData(postcode);
     if ('error' in response) {
-        console.log('error retrieving weather data');
-        return '[error - ' + response['error'] + ']';
+        //console.log('error retrieving weather data');
+        //return '[error - ' + response['error'] + ']';
+        return '[]';
     }
     else {
         let temp = getWeatherDetails(response).toString();
-        console.log(`returning ${temp} temperature`);
+        //console.log(`returning ${temp} temperature`);
         return temp;
     }
 }

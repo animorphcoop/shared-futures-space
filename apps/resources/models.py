@@ -29,9 +29,9 @@ class CaseStudyTag(TaggedItemBase):
 
 
 class FoundUseful(models.Model):
-    useful_resource = models.ForeignKey('resources.Resource',
+    useful_resource: models.ForeignKey = models.ForeignKey('resources.Resource',
                                         on_delete=models.CASCADE)
-    found_useful_by = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
+    found_useful_by: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
 
     @property
     def useful_to(self) -> Optional[str]:
@@ -70,10 +70,6 @@ class Resource(ClusterableModel):
         blank=True,
         null=True,
     )
-    # TODO: this just should be a counter - computed value
-    found_useful: models.ForeignKey = models.ForeignKey(FoundUseful, blank=True,
-                                                        null=True, on_delete=models.SET_NULL,
-                                   related_name="useful")
 
     def __str__(self) -> str:
         return f"{self.title}"
