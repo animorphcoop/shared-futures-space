@@ -1,15 +1,5 @@
 "use strict";
 //getWeather()
-//TODO: Rewrite endpoints to load dynamically based on user
-const endpointDerry = 'https:api.openweathermap.org/data/2.5/weather?q=Derry,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
-const endpointDungloe = 'https:api.openweathermap.org/data/2.5/weather?q=Dungloe,IE&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
-const endpointBelfast = 'https://api.openweathermap.org/data/2.5/weather?q=Belfast,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
-//TODO: Write postcode converter to lat & long, e.g. for Arranmore
-//https://api.openweathermap.org/geo/1.0/zip?zip=F92,IE&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
-//https://api.openweathermap.org/data/2.5/weather?lat=54.95&lon=-7.7333&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
-//or North Belfast
-//https://api.openweathermap.org/geo/1.0/zip?zip=BT13,GB&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
-//https://api.openweathermap.org/data/2.5/weather?lat=54.5833&lon=-5.9333&appid=f477b3ea5b7d6c3e35e9f9fc5b9b03ef
 const appid = 'f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
 const backupWeatherIcon = 'https://openweathermap.org/img/wn/01d@2x.png';
 const weatherTypes = {
@@ -27,16 +17,13 @@ const weatherTypes = {
 // TODO: Based on Postcode / location
 async function retrieveData(postcode) {
     try {
-        /*apiService(endpointBelfast).then(data => {
-            if (data) {
-                return data
-            } else {
-                console.log("No luck retrieving weather data")
-            }
-
-        })*/
         let codeResponse = await postcodeQuery(postcode);
-        return await latLongQuery(Number(filterLoop(codeResponse, 'lat')), Number(filterLoop(codeResponse, 'lon')));
+        if ('error' in codeResponse) {
+            return codeResponse;
+        }
+        else {
+            return await latLongQuery(Number(filterLoop(codeResponse, 'lat')), Number(filterLoop(codeResponse, 'lon')));
+        }
     }
     catch (error) {
         let errorMessage = "Failed to connect to weather API";
@@ -44,6 +31,7 @@ async function retrieveData(postcode) {
             errorMessage = error.message;
         }
         console.log(errorMessage);
+        return { 'error': errorMessage };
     }
 }
 async function postcodeQuery(code) {
@@ -55,12 +43,12 @@ async function postcodeQuery(code) {
     else {
         // otherwise, try it as a gb postcode
         let gb_attempt = await apiService('https://api.openweathermap.org/geo/1.0/zip?zip=' + code + ',GB&appid=' + appid);
-        if ('lat' in gb_attempt) {
+        if (gb_attempt != null && 'lat' in gb_attempt) {
             return gb_attempt;
         }
         else {
             console.log('not a valid IE or GB postcode');
-            return gb_attempt;
+            return { 'error': code + ' is not a valid IE or GB postcode' };
         }
     }
 }
@@ -71,6 +59,7 @@ function latLongQuery(lat, lon) {
         }
         else {
             console.log("No luck retrieving weather data");
+            return { 'error': 'failed to retrieve weather data for ' + lat + ':' + lon };
         }
     });
 }
@@ -95,9 +84,15 @@ function findWeatherIcon(currentWeather) {
 }
 async function getWeather(postcode) {
     let response = await retrieveData(postcode);
-    let temp = getWeatherDetails(response).toString();
-    console.log(`returning ${temp} temperature`);
-    return temp;
+    if ('error' in response) {
+        console.log('error retrieving weather data');
+        return '[error - ' + response['error'] + ']';
+    }
+    else {
+        let temp = getWeatherDetails(response).toString();
+        console.log(`returning ${temp} temperature`);
+        return temp;
+    }
 }
 function getWeatherDetails(toProcess) {
     let filteredData = [];

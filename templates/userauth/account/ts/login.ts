@@ -4,9 +4,7 @@
 function setupObserversLogin() {
 
     if (inputFeedback == null) return
-    console.log('WTF2')
     newObserver(emailInput, inputFeedback, evaluateButtonLogin)
-    //myfunction(this.evaluateButtonLogin)
 
 }
 

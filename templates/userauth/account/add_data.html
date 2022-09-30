@@ -24,18 +24,22 @@
             <img src="{% static 'images/salmon-of-knowledge.png' %}" alt="Salmon of Knowledge" class="w-36 h-auto">
         </section>
 
-        <form method="post" action="{% url 'account_add_data' %}">
+        <div id="error-box-data" class="hidden mx-4 mb-4 font-garamond-500 bg-red-100">
+            <p class="px-4 py-3">Please fill the required fields with valid information.</p>
+        </div>
+
+        <form id="add-data-form" method="post" action="{% url 'account_add_data' %}">
             {% csrf_token %}
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="display_name" label="Name" %}
                 <input class="form-control block w-full px-3 py-2.5
-                           font-garamond-500 text-black-text
-                           placeholder:text-black-meta
-                           bg-blue-second bg-clip-padding border border-solid border-white
-                           transition ease-in-out m-0
-                           focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-                           invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    font-garamond-500 text-black-text
+                    placeholder:text-black-meta
+                    bg-blue-second bg-clip-padding border border-solid border-white
+                    transition ease-in-out m-0
+                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
                        id=display_name name=display_name type=text placeholder="Your name" value=""
                        pattern="[a-zA-Z][a-zA-Z\s]*">
                 {% include "partials/input-note.html" with for="display_name" label="This is how people will see you." %}
@@ -45,12 +49,12 @@
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="year_of_birth" label="Year of birth" %}
                 <input class="form-control block w-full px-3 py-2.5 mb-1.5
-                           font-garamond-500 text-black-text
-                           placeholder:text-black-meta
-                           bg-blue-second bg-clip-padding border border-solid border-white
-                           transition ease-in-out m-0
-                           focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-                           invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    font-garamond-500 text-black-text
+                    placeholder:text-black-meta
+                    bg-blue-second bg-clip-padding border border-solid border-white
+                    transition ease-in-out m-0
+                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
                        id=year_of_birth name=year_of_birth type="number" min="1900" max="2022"
                        placeholder="Year you were born"
                        value="">
@@ -60,14 +64,14 @@
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="post_code" label="Postcode" %}
                 <input class="form-control block w-full px-3 py-2.5 mb-1.5
-                           font-garamond-500 text-black-text
-                           placeholder:text-black-meta
-                           bg-blue-second bg-clip-padding border border-solid border-white
-                           transition ease-in-out m-0
-                           focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-                           invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    font-garamond-500 text-black-text
+                    placeholder:text-black-meta
+                    bg-blue-second bg-clip-padding border border-solid border-white
+                    transition ease-in-out m-0
+                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
                        id=post_code name=post_code type=text placeholder="Your postcode"
-                       pattern="(?=.*\d)(?=.*[A-Za-z]).{3,}" value="">
+                       pattern="([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)([0-9][a-zA-Z]{2})?" value="">
                 {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
             </div>
 
@@ -84,8 +88,8 @@
                     </button>
                 {% endfor %}
 
-                {% comment %}taking on the value of the avatar (pk) via button{% endcomment %}
-                <input id="avatar" name=avatar type=text value="1" class="hidden">
+                {% comment %}taking on the value of the avatar (pk) via button - if empty gets randomised in the view{% endcomment %}
+                <input id="avatar" name=avatar type=text value="" class="hidden">
 
             </div>
 
@@ -100,7 +104,7 @@
                     </label>
 
                     <input class="block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
-                           type="checkbox" id="organisation-checkbox" onclick="toggleOrganisations()">
+                           type="checkbox" id="organisation-checkbox" onclick="toggleOrganisationsAdd()">
                 </div>
 
                 <div id="organisation-data" class="hidden">
@@ -108,17 +112,17 @@
                     {% include "partials/input-label.html" with for="organisation" label="Organisation" %}
                     <div class="">
                         <input class="form-control w-full px-3 py-2.5 mb-1.5
-                           font-garamond-500 text-black-text text-sm
-                           placeholder:text-black-meta
-                           bg-white bg-clip-padding border border-solid border-gray-light
-                           transition ease-in-out m-0
-                           focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"
-                               id="organisation_name" onfocus="blur()" name="organisation_name" type=text value="None">
+                            font-garamond-500 text-black-text text-sm
+                            placeholder:text-black-meta
+                            bg-white bg-clip-padding border border-solid border-gray-light
+                            transition ease-in-out m-0
+                            focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0"
+                               id="organisation_name" onfocus="blur()" name="organisation_name" type=text value="">
 
                         {% comment %}taking on the value of the organisation url via organisation_name_enter modal field{% endcomment %}
                         <input id="organisation_url" name=organisation_url type=text value="" class="hidden">
 
-                        <button onclick="event.preventDefault(); toggleOrganisations()"
+                        <button onclick="event.preventDefault(); toggleOrganisationsAdd()"
                                 class="inline -ml-9">
                             <svg class="-mb-1" width="19" height="18" viewBox="0 0 19 18" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -134,12 +138,13 @@
 
             <div class="px-5 pb-9">
                 <button type="submit"
+                        onclick="event.preventDefault(); validateFields()"
                         class="inline-block rounded-full px-4 py-3.5
-                            font-kanit-700 uppercase font-medium text-xxs tracking-widest
-                            text-purple bg-resources-one
-                            hover:bg-blue-done focus:bg-blue-done
-                            transition ease-out duration-300
-                            disabled:bg-gray-light">
+                        font-kanit-700 uppercase font-medium text-xxs tracking-widest
+                        text-purple bg-resources-one
+                        hover:bg-blue-done focus:bg-blue-done
+                        transition ease-out duration-300
+                        disabled:bg-gray-light">
                     SUBMIT
                 </button>
             </div>

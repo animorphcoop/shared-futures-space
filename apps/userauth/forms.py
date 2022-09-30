@@ -1,6 +1,6 @@
 # pyre-strict
 from django import forms
-from .models import CustomUser, Organisation
+from .models import CustomUser, Organisation, UserAvatar
 from analytics.models import log_signup  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
@@ -11,6 +11,7 @@ from wagtail.users.forms import UserEditForm, UserCreationForm
 from typing import Type, List, Any, Dict
 from django.http import HttpRequest
 from typing import Tuple
+
 
 '''
 Resolving the first&last name issue, reference
@@ -26,16 +27,39 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model: Type[CustomUser] = CustomUser
 
+class CustomUserNameUpdateForm(forms.ModelForm):
+    display_name = forms.CharField(max_length=50)
 
-class CustomUserEditForm(UserEditForm):
-    class Meta(UserEditForm.Meta):
-        model: Type[CustomUser] = CustomUser
-
-
-class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['display_name', 'email', 'avatar']
+        fields: List[str] = ['display_name']
+
+
+class CustomUserAvatarUpdateForm(forms.ModelForm):
+    avatar = forms.CharField(max_length=2, required=False)
+
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['avatar']
+
+    # need to retrieve an instance of the avatar since it's a foreign key to the user
+    def clean_avatar(self)  -> UserAvatar :
+        avatar = self.cleaned_data.get('avatar')
+        try:
+            avatar_instance = UserAvatar.objects.get(pk=avatar)
+        except UserAvatar.DoesNotExist:
+            avatar_instance = None
+        return avatar_instance
+
+
+class CustomUserOrganisationUpdateForm(forms.ModelForm):
+    organisation_name = forms.CharField(max_length=50)
+    organisation_url = forms.CharField(max_length=100, required=False)
+
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['organisation_name', 'organisation_url']
+
 
 
 class CustomSignupForm(SignupForm):
@@ -43,7 +67,7 @@ class CustomSignupForm(SignupForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email', 'password1', 'password2']
 
-    def __init__(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
+    def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomSignupForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs = {'borken': 'false', 'hx-post': '/search/',
                                              'hx-post': '/account/check_email/',
@@ -55,20 +79,20 @@ class CustomSignupForm(SignupForm):
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
         user.save()
-        log_signup(user, request)  # analytics
+        log_signup(user)  # analytics
         return user
 
 
-class CustomUserPersonalForm(forms.Form):
+class CustomUserAddDataForm(forms.Form):
     display_name = forms.CharField(max_length=50)
     year_of_birth = forms.IntegerField()
     post_code = forms.CharField(max_length=8)
-    avatar = forms.CharField(max_length=2)
-    organisation_name = forms.CharField(max_length=50)
-    organisation_url = forms.CharField(max_length=100)
+    avatar = forms.CharField(max_length=2, required=False)
+    organisation_name = forms.CharField(max_length=50, required=False)
+    organisation_url = forms.CharField(max_length=100, required=False)
 
     def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
-        super(CustomUserPersonalForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
+        super(CustomUserAddDataForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
         self.empty_permitted = True
 
 
@@ -82,11 +106,10 @@ class CustomLoginForm(LoginForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email', 'password']
 
-    def __init__(self, *args: Tuple[Any], **kwargs: Dict[str,Any]) -> None:
+    def __init__(self, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomLoginForm, self).__init__(*args, **kwargs)
         self.fields['login'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
-        self.fields['password'].widget.attrs = {'borken': 'false',}
-
+        self.fields['password'].widget.attrs = {'borken': 'false', }
 
 
 class CustomResetPasswordForm(ResetPasswordForm):
@@ -94,6 +117,6 @@ class CustomResetPasswordForm(ResetPasswordForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['email']
 
-    def __init__(self, *args: List[Any], **kwargs: Dict[str,Any]) -> None:
-        super(CustomResetPasswordForm, self).__init__(*args, **kwargs) # pyre-ignore[6]
+    def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        super(CustomResetPasswordForm, self).__init__(*args, **kwargs)  # pyre-ignore[6]
         self.fields['email'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}

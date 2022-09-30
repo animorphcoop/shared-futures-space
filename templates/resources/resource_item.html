@@ -2,65 +2,81 @@
 {% load wagtailimages_tags %}
 {% load static %}
 
-{% block title %}Resource - {{ resource.title }}{% endblock %}
-
-
 {% block extra_css %}
 
 {% endblock extra_css %}
 
 {% block content %}
-    <div class="flex bg-gray-100 antialiased text-gray-900">
-        <h2 class="text-sm pt-6 pb-6 px-4">Published on: {{ resource.published_on }}</h2>
-        <div class="mx-auto flex flex-col justify-center items-left">
 
-            {% if resource.case_study_image %}
-                <div class=" pt-6 pb-6">
+    {% block title %}{% include "partials/title.html" with title="Resources" %}{% endblock %}
 
-                    <picture>
-                        {% image resource.case_study_image max-750x400 %}
-                        {{ resource.case_study_image }}
+    <article class="px-4.5">
+        <div class="h-2"></div>
 
-                    </picture>
-                </div>
-            {% endif %}
+        <h1 class="font-kanit-500 text-xl text-black-large leading-tight">
+            {{ resource.title }}
+        </h1>
 
-            <div class='left-0'>
-                <div class="p-6">
-                    <h4 class='font-medium text-2xl mb-3'> {{ resource.title }}</h4>
-                    <p class='leading-normal'>{{ resource.summary }}</p>
+        <div class="h-4"></div>
 
-                    {% if resource.link %}
-                        <div class="px-6 pt-4 pb-8">
-                            <a href="{{ resource.link }}"
-                               class="bg-lime-400 py-3 px-8 mt-4 rounded text-sm font-semibold
-                            hover:bg-opacity-75">Find out more</a>
-                        </div>
-                    {% endif %}
-
-
-                    {% if resource.body %}
-                        <div class="p-6">
-                            <p class='leading-normal'>{{ resource.body }}</p>
-                        </div>
-                    {% endif %}
-
-                    {% if resource.tags %}
-                        <br/><br/>
-                        <div class="">
-                            Tags:
-                            {% for tag in resource.tags %}
-                                <button class="inline-block px-3 py-2 bg-blue-100 text-grey font-medium leading-tight uppercase rounded-full">
-                                    <a href="{% url "resources_tag" tag %}" class="text-xxxs">{{ tag }}</a>
-
-                                </button>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                </div>
+        {% if resource.tags %}
+            <div class="flex flex-wrap gap-x-3 gap-y-2">
+                {% for tag in resource.tags %}
+                    <button class="whitespace-normal px-1.5 py-1 bg-blue-second text-black-large font-kanit-400 text-xxxs uppercase leading-none tracking-widest rounded-sm">
+                        <a href="{% url "resources_tag" tag %}">{{ tag }}</a>
+                    </button>
+                {% endfor %}
             </div>
-        </div>
-    </div>
+        {% endif %}
+
+        <div class="h-4"></div>
+
+        <p class="mb-0.5 font-garamond-500 text-black-text text-base leading-5 whitespace-normal">
+            {{ resource.summary }}
+        </p>
+
+        <div class="h-4"></div>
+
+        {% if resource.case_study_image %}
+            <div class="w-full h-auto">
+                {% image resource.case_study_image max-750x400 %}
+                <img src="{{ resource.case_study_image }}" alt="" title="">
+            </div>
+            <div class="h-4"></div>
+        {% endif %}
+
+        {% if resource.link %}
+            <a href="{{ resource.link }}"
+               class="font-kanit-400 font-medium text-[9px] tracking-wide text-black-text leading-normal">
+                {{ resource.link }}
+                <svg class="ml-1 mb-1 inline-block" width="10" height="10" viewBox="0 0 10 10" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.817121 10L0 9.18288L8.01556 1.16732H0.661479V0H10V9.33852H8.83268V1.98444L0.817121 10Z"
+                          fill="#9759FF"/>
+                </svg>
+
+            </a>
+            <div class="h-4"></div>
+        {% endif %}
+
+        {% if resource.body %}
+            <div class="p-6">
+                <p class='leading-normal'>{{ resource.body }}</p>
+            </div>
+            <div class="h-4"></div>
+        {% endif %}
+
+        {% include 'partials/button.html' with style='primary_white' button='I found this useful' %}
+        {% include 'partials/button.html' with style='primary_white' button='Share' icon='link' %}
+
+        <div class="h-4"></div>
+
+        {% include 'partials/button.html' with style='primary_white' icon='arrow-left' %}
+
+        <div class="h-4"></div>
+
+        {% include 'partials/text-style/meta-lowercase.html' with text="Published: " %}
+        {% include 'partials/text-style/meta-lowercase.html' with text=resource.published_on %}
+    </article>
 
 {% endblock %}

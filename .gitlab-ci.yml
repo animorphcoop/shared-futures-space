@@ -17,10 +17,18 @@ variables:
   DB_PASS: testpassword
 
 before_script:
+  - apt-get update -y
+  - apt-get install -y npm expect
+  - npm install cross-env
+  - npm cache verify
+  - npm i -g n
+  - n latest
   - pip install -r requirements.txt
   - ./manage.py wait_for_db
   - ./manage.py makemigrations --no-input
   - ./manage.py migrate --no-input
+  - ./manage.py tailwind install
+  - expect -c "spawn ./manage.py tailwind start --no-input; expect Done; send \x03" # 0x03 is ctrl-c
 
 
 stages:
@@ -42,7 +50,6 @@ pytest:
 typescript:
   stage: Tests
   script:
-    - apt-get update -y
     - apt-get install -y node-typescript
     - ./ts_generate_js.sh --test
 

@@ -1,9 +1,7 @@
 #!/bin/bash
 
 target_server="sharedfutures.webarch.net"
-target_user="dev"
-target_dir="/home/dev/sites/dev"
-target_data_dir="/home/dev/sites/dev_data"
+
 if [ -z "$1" ];
 then
   remote_user=$(whoami)
@@ -36,10 +34,11 @@ else
   echo "# tests pass"
 fi
 
-echo "# DEPLOY TO PRODUCTION (REALLY REAL WORLD FOR REAL)?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) break;;
+echo "# DEPLOY TO DEVELOPMENT/PRODUCTION (REALLY REAL WORLD FOR REAL)?"
+select opt in "Development" "Production" "Cancel"; do
+    case $opt in
+        Development ) target_user="dev"; target_dir="/home/dev/sites/dev"; target_data_dir="/home/dev/sites/dev_data"; break;;
+        Production ) target_user="prod"; target_dir="/home/prod/sites/prod"; target_data_dir="/home/prod/sites/prod_data"; break;;
         No ) echo "  # CANCELLED"; exit;;
     esac
 done
@@ -55,10 +54,10 @@ echo "# DEPLOYING TO PRODUCTION"
 
 ssh $remote_user@$target_server 'bash -s' <<ENDSSH
   # The following commands run on the remote host
-  if sudo -u $target_user test ! -f $target_data_dir/variables.env || sudo -u $target_user test ! -f $target_data_dir/local.py || sudo -u $target_user test ! -f $target_data_dir/settings.py;
+  if sudo -u $target_user test ! -f $target_data_dir/variables.env || sudo -u $target_user test ! -f $target_data_dir/local.py || sudo -u $target_user test ! -f $target_data_dir/settings.py || sudo -u $target_user test ! -f $target_data_dir/docker-compose.override.yaml;
   then
     echo "# COULD NOT FIND ALL REQUIRED LOCAL SETTINGS FILES"
-    echo "# wanted $target_data_dir/variables.env, local.py and settings.py"
+    echo "# wanted $target_data_dir/variables.env, local.py, settings.py and docker-compose.override.yaml"
     echo "# WILL NOT DEPLOY WITHOUT LOCAL SETTINGS BECAUSE DEFAULTS INCLUDE CREDENTIALS"
     exit
   fi
@@ -89,10 +88,11 @@ ssh $remote_user@$target_server 'bash -s' <<ENDSSH
     echo "# COULD NOT PULL FROM STAGING"
     echo "# DEPLOYMENT FAILED"
   else
-    echo "# installing local settings files from /home/dev/sites/dev_data/"
+    echo "# installing local settings files from $target_data_dir"
     cp $target_data_dir/variables.env $target_dir
     cp $target_data_dir/local.py $target_dir/sfs/settings/
     cp $target_data_dir/settings.py $target_dir/sfs/settings/
+    cp $target_data_dir/docker-compose.override.yaml $target_dir
     if [[ $rebuild_required -eq 1 ]];
     then
       echo "# REBUILDING CONTAINERS (THIS MAY TAKE SOME TIME)"

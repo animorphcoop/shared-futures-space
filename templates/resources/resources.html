@@ -6,17 +6,32 @@
 {% endblock extra_css %}
 
 {% block content %}
-    <section>
-        {% block title %}{% include "partials/title.html" with title="Resources" %}{% endblock %}
-        {% include 'resources/partials/search.html' %}
+
+    {% block title %}{% include "partials/title.html" with title="Resources" %}{% endblock %}
+
+    {#Search, number of results, and filter#}
+    <section class="bg-gradient-to-b from-gray-light via-white">
+        <div class="h-6"></div>
+        <div class="px-4.5 h-11 relative">
+            {% include 'resources/partials/search.html' %}
+        </div>
+        <div class="h-4"></div>
+        <div class="px-4.5">
+            {#Not sure how the numbers will arrive, but separated number from the results sentence...but then I guess there's no 's' if it's only 1...#}
+            {% include 'partials/text-style/meta-lowercase.html' with text="125" %}
+            {% include 'partials/text-style/meta-lowercase.html' with text=" results available" %}
+        </div>
+        <div class="h-3"></div>
     </section>
-    <section>
-        <div id="search-results" class="hidden">
-            {% include 'resources/partials/search_results.html' %}
-        </div>
-        <div id="initial-list" class="">
-            {% include 'resources/partials/initial_list.html' %}
-        </div>
+
+    {#Results#}
+    <section class="px-1.5 text-[0px]">
+        <ul id="search-results" class="hidden">
+            {% include "resources/partials/search_results.html" with resource=result %}
+        </ul>
+        <ul id="initial-list" class="">
+            {% include "resources/partials/initial_list.html" with resource=resource %}
+        </ul>
     </section>
 
     {% block scripts %}

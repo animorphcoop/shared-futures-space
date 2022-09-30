@@ -15,15 +15,15 @@
         </div>
         <ul class="bg-white max-h-72 overflow-y-auto shadow-xl">
             {% for organisation in organisations %}
-                <li>
-                    <button onclick="selectOrganisation(this.innerText)"
-                            class="px-3 py-3.5 w-full text-left leading-normal
+                {% if organisation.name != "" %}
+                    <li>
+                        <button onclick="selectOrganisation(this.innerText)"
+                                class="px-3 py-3.5 w-full text-left leading-normal
                             font-garamond-500 text-black-large text-sm
                             focus:bg-blue-pale
-                            transition ease-out duration-300">
-                        {{ organisation }}
-                    </button>
-                </li>
+                            transition ease-out duration-300">{{ organisation.name }}</button>
+                    </li>
+                {% endif %}
             {% endfor %}
         </ul>
     </div>
@@ -55,11 +55,11 @@
         <button onclick="openAddName()"
                 type="submit"
                 class="flex justify-center items-center rounded-full px-4 py-3
-                    font-kanit-700 uppercase font-medium text-xxs tracking-widest
-                    text-purple bg-white
-                    hover:bg-blue-pale focus:bg-blue-pale
-                    transition ease-out duration-300
-                    disabled:bg-gray-light">
+                font-kanit-700 uppercase font-medium text-xxs tracking-widest
+                text-purple bg-white
+                hover:bg-blue-pale focus:bg-blue-pale
+                transition ease-out duration-300
+                disabled:bg-gray-light">
             <span class="pr-1.5">My organisation is not on this list</span>
             <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" fill="none"
                  xmlns="http://www.w3.org/2000/svg">

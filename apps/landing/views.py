@@ -13,3 +13,6 @@ def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
         return HttpResponseRedirect(reverse('dashboard'))
     else:
         return render(request, 'landing/landing.html')
+
+def handle_404(request: HttpRequest) -> HttpResponse:
+    return render(request, '404.html')

@@ -32,7 +32,7 @@ media
 # Distribution / packaging
 .Python build/
 develop-eggs/
-#dist/
+dist/
 downloads/
 eggs/
 .eggs/
@@ -121,13 +121,14 @@ GitHub.sublime-settings
 
 # Local settings file (for production)
 static/*
+static/css/dist/styles.css
 apps/theme/static_src/node_modules/
+apps/theme/static/css/dist/*
 
 # migrations files
 **/migrations/*.py
 **/migrations/*.pyc
 !**/migrations/__init__.py
-
 
 # ignore for test upload
 ignore

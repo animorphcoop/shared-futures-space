@@ -11,28 +11,33 @@
         </div>
     </div>
 
+    <div id="error-box-name" class="hidden mx-4 mb-4 font-garamond-500 bg-red-100">
+        <p class="px-4 py-3">Please fill the name of your organisation.</p>
+    </div>
+
+
     <div class="px-5 flex items-center justify-center flex-col w-full">
         <div class="w-full">
             {% include "partials/input-label.html" with for="organisation-name" label="Organisation name" %}
             <input class=" form-control w-full px-3 py-2.5 mb-5
-                           font-garamond-500 text-black-text text-sm
-                           placeholder:text-black-meta
-                           bg-white bg-clip-padding border border-solid border-gray-light
-                           transition ease-in-out m-0
-                           focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-                           invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                font-garamond-500 text-black-text text-sm
+                placeholder:text-black-meta
+                bg-white bg-clip-padding border border-solid border-gray-light
+                transition ease-in-out m-0
+                focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
                    id="organisation-name" name="organisation-name" type=text value=""
                    pattern="[a-zA-Z0-9\s]+" placeholder="Organisation Name">
         </div>
         <div class="w-full">
             {% include "partials/input-label.html" with for="organisation-url" label="Online address" %}
             <input class="form-control w-full px-3 py-2.5 mb-5
-                           font-garamond-500 text-black-text text-sm
-                           placeholder:text-black-meta
-                           bg-white bg-clip-padding border border-solid border-gray-light
-                           transition ease-in-out m-0
-                           focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-                           invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                font-garamond-500 text-black-text text-sm
+                placeholder:text-black-meta
+                bg-white bg-clip-padding border border-solid border-gray-light
+                transition ease-in-out m-0
+                focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
+                invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
                    id="organisation-url" name="organisation-url" type=text pattern="https?://.+"
                    value="" placeholder="https://myorganisation.org">
         </div>
