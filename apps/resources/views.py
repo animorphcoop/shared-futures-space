@@ -65,8 +65,16 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
             current_resource = CaseStudy.objects.get(slug=slug)
         except CaseStudy.DoesNotExist:
             print('it is neither HowTo nor CaseStudy. Redirect to root url?')
+    # resource_instance = single_object_tags_cluster_overwrite(current_resource).al
+    # useful = current_resource.prefetch_related('useful')
+    useful_instance = None
+    try:
+        useful_instance = FoundUseful.objects.get(useful_resource=current_resource)
+    except:
+        print('does not exist')
     context = {
-        'resource': single_object_tags_cluster_overwrite(current_resource)
+        'resource': single_object_tags_cluster_overwrite(current_resource),
+        'useful': useful_instance,
     }
 
     if request.user.is_authenticated:
@@ -88,37 +96,41 @@ def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpRe
         try:
             current_resource = CaseStudy.objects.get(pk=res_id)
         except CaseStudy.DoesNotExist:
-            print('confzd')
             return render(request, 'partials/button-hx.html')
 
     print(current_resource)
-    print(current_resource.found_useful)
     current_user = request.user
     print(current_user)
+    print(current_resource.found_useful)
+
     useful_instance = None
     if current_resource.found_useful is not None:
         try:
             useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
+            print(useful_instance)
+
             useful_instance.delete()
             print('deleted')
-        except FoundUseful:
+        except FoundUseful.DoesNotExist:
             print('no useful match')
             useful_instance = FoundUseful.objects.create(useful_resource=current_resource,
-                                                                found_useful_by=current_user)
+                                                         found_useful_by=current_user)
             # useful_instance.found_useful = new_useful
             current_resource.found_useful = useful_instance
             current_resource.save()
+            print(useful_instance.found_useful_by)
+
+            print('created 1')
     else:
         useful_instance = FoundUseful.objects.create(useful_resource=current_resource,
-                                                            found_useful_by=current_user)
+                                                     found_useful_by=current_user)
         current_resource.found_useful = useful_instance
         current_resource.save()
-        print(useful_instance.useful_resource)
+        print(useful_instance.found_useful_by)
 
-        print('created')
+        print('created 2')
 
-
-    print('saved')
+    print('done')
 
     context = {
         'resource_id': res_id

@@ -16,7 +16,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from apps.core.utils.slugifier import generate_random_string
-
+from typing import Optional
 
 # you need to specify each model's tag system seperately because the db doesn't have a notion of inheritance
 # thy still autocomplete tags that were defined on other models though
@@ -32,6 +32,13 @@ class FoundUseful(models.Model):
     useful_resource = models.ForeignKey('resources.Resource',
                                         on_delete=models.CASCADE)
     found_useful_by = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
+
+    @property
+    def useful_to(self) -> Optional[str]:
+        if self.found_useful_by and hasattr(self.found_useful_by, 'pk'):
+            return self.found_useful_by.pk
+
+
 
 
 # do not create Resources! this model is just to inherit specific kinds of resources from
@@ -64,7 +71,8 @@ class Resource(ClusterableModel):
         null=True,
     )
     found_useful: models.ForeignKey = models.ForeignKey(FoundUseful, blank=True,
-                                                        null=True, on_delete=models.SET_NULL)
+                                                        null=True, on_delete=models.SET_NULL,
+                                   related_name="useful")
 
     def __str__(self) -> str:
         return f"{self.title}"

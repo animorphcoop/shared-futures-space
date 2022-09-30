@@ -67,10 +67,28 @@
         {% endif %}
 
         {% comment %}        {% include 'partials/button.html' with style='primary_white' button='I found this useful' %}{% endcomment %}
-        {% include 'partials/button-hx.html' with resource_id=resource.id %}
+        {% if user.is_authenticated %}
+            {{ resource.found_useful.count }}
+{{ useful }}
+            {% if resource.found_useful %}
 
+                {{ user.pk }}
+                {{ resource.found_useful.useful_to }}
+                {{ useful.found_useful.found_useful_by }}
 
-{% comment %}
+                {% comment %}
+                            {{ resource.found_useful }}
+
+                {% for useful in resource.found_useful.all %}
+                    {{ useful.found_useful_by }}
+
+                {% endfor %}
+                {% endcomment %}
+            {% endif %}
+            {% include 'partials/button-hx.html' with resource_id=resource.id %}
+
+        {% endif %}
+        {% comment %}
         {% include 'partials/button.html' with style='primary_white' button='Share' icon='link' %}
 {% endcomment %}
         {% include 'partials/button-copy.html' with button='Share' %}
@@ -80,7 +98,7 @@
         {% comment %}
 {% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
 {% endcomment %}
-{% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
+        {% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
 
         <div class="h-4"></div>
 
