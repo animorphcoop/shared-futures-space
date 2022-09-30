@@ -8,8 +8,6 @@ services:
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
-    ports:
-      - "9000:9000"
     volumes:
       - .:/home/app/sfs
     command: >
@@ -29,8 +27,6 @@ services:
       - variables.env
     volumes:
       - /var/lib/postgres
-    ports:
-      - "127.0.0.1:6432:6432"
     restart: always
 
   # redis-overcommit-on-host
