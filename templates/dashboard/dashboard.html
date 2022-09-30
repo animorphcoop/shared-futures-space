@@ -147,12 +147,16 @@
             {# If no resources:  #}
             {% include "partials/salmon-of-knowledge.html" with text="Resources you've marked as helpful are saved here in your Dashboard." %}
             <div class="h-8"></div>
+            {% for resource in resources %}
+
+
 
             {# If resources, one looks like: #}
-            <a href="Link to Resource">
+                {% url 'resource_item' resource.slug as the_url %}
+            <a href="{{ the_url }}">
                 <div class="bg-gradient-to-b from-gray-light via-white rounded-t-xl flex justify-between items-center">
                     <h3 class="font-kanit-500 text-black-large text-xl p-3">
-                        Title of Resource
+                        {{ resource.title }}
                     </h3>
                     <div class="px-3">
                         {# Link icon opens the copy URL of that resource modal #}
@@ -169,6 +173,7 @@
                 </div>
                 <div class="h-3"></div>
             </a>
+            {% endfor %}
 
         </div>
     </div>

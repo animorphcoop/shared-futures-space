@@ -71,7 +71,7 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
     useful_instance = None
     try:
         useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
-    except:
+    except FoundUseful.DoesNotExist:
         print('does not exist')
     context = {
         'resource': single_object_tags_cluster_overwrite(current_resource),
