@@ -65,12 +65,16 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
             current_resource = CaseStudy.objects.get(slug=slug)
         except CaseStudy.DoesNotExist:
             print('it is neither HowTo nor CaseStudy. Redirect to root url?')
-    current_user = request.user
+
     useful_instance = None
-    try:
-        useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
-    except FoundUseful.DoesNotExist:
-        print('does not exist')
+
+    if request.user.is_authenticated:
+        current_user = request.user
+        try:
+            useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
+        except FoundUseful.DoesNotExist:
+            print('does not exist')
+
     context = {
         'resource': single_object_tags_cluster_overwrite(current_resource),
         'useful': useful_instance,
@@ -88,7 +92,6 @@ def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpRe
     print(resource_id)
     current_user = request.user
     current_resource = None
-
 
     try:
         current_resource = HowTo.objects.get(pk=res_id)
@@ -110,7 +113,7 @@ def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpRe
     except FoundUseful.DoesNotExist:
         print('no useful match')
         FoundUseful.objects.create(useful_resource=current_resource,
-                                                     found_useful_by=current_user)
+                                   found_useful_by=current_user)
         found_useful = 'found_useful'
 
     print('done')
