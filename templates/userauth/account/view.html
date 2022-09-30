@@ -33,14 +33,13 @@
             {% comment %}    {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}{% endcomment %}
 
             <div id="profile-data" class="">
-
-
                 <div class="flex flex-col items-center justify-center">
-                    <div class="pb-2.5">
+
+                    {# Avatar #}
+                    <div class="relative">
                         {% if user.avatar != null %}
                             <div id="avatar-holder">
                                 {% include "account/partials/avatar_image.html" with image_url=user.avatar.image_url %}
-
                             </div>
                         {% else %}
                             <div class="rounded-full bg-resources-one w-16 h-16">
@@ -48,29 +47,38 @@
                             </div>
                         {% endif %}
                         {% if self %}
-
                             {% comment %}pencil edit for avatar{% endcomment %}
-                            <button onclick="toggleAvatar(); console.log('avv');">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                    <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z"/>
+                            <button onclick="toggleAvatar(); console.log('avv');"
+                                    class="absolute bottom-0 -right-1.5 bg-blue-pale rounded-full py-1.5 px-2.5">
+                                <svg width="13" height="12" viewBox="0 0 13 12" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.37333 4.01333L7.98667 4.62667L1.94667 10.6667H1.33333V10.0533L7.37333 4.01333V4.01333ZM9.77333 0C9.60667 0 9.43333 0.0666666 9.30667 0.193333L8.08667 1.41333L10.5867 3.91333L11.8067 2.69333C12.0667 2.43333 12.0667 2.01333 11.8067 1.75333L10.2467 0.193333C10.1133 0.06 9.94667 0 9.77333 0V0ZM7.37333 2.12667L0 9.5V12H2.5L9.87333 4.62667L7.37333 2.12667V2.12667Z"
+                                          fill="#9759FF"/>
                                 </svg>
                             </button>
-
                         {% endif %}
                     </div>
-                    <div id="name-holder">
-                        {% include "account/partials/name_profile.html" with name=user.display_name %}
 
+                    <div class="h-2.5"></div>
+
+                    {# Name #}
+                    <div id="name-holder flex flex-row">
+                        <span class="inline-block">
+                            {% include "account/partials/name_profile.html" with name=user.display_name %}
+                        </span>
+                        {% if self %}
+                            {% comment %}pencil edit for name{% endcomment %}
+                            <button onclick="toggleNameChange()"
+                                    class="bg-blue-pale rounded-full py-1.5 px-2.5">
+                                <svg width="13" height="12" viewBox="0 0 13 12" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.37333 4.01333L7.98667 4.62667L1.94667 10.6667H1.33333V10.0533L7.37333 4.01333V4.01333ZM9.77333 0C9.60667 0 9.43333 0.0666666 9.30667 0.193333L8.08667 1.41333L10.5867 3.91333L11.8067 2.69333C12.0667 2.43333 12.0667 2.01333 11.8067 1.75333L10.2467 0.193333C10.1133 0.06 9.94667 0 9.77333 0V0ZM7.37333 2.12667L0 9.5V12H2.5L9.87333 4.62667L7.37333 2.12667V2.12667Z"
+                                          fill="#9759FF"/>
+                                </svg>
+                            </button>
+                        {% endif %}
                     </div>
-                    {% if self %}
-                        {% comment %}pencil edit for name{% endcomment %}
 
-                        <button onclick="toggleNameChange()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z"/>
-                            </svg>
-                        </button>
-                    {% endif %}
                 </div>
 
 
@@ -83,7 +91,7 @@
                     TODO: Get this via post code
                     {% endcomment %}
 
-        <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">{{ user.post_code.area.name }}</span>
+                    <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">{{ user.post_code.area.name }}</span>
 
                     Active since {{ user.signup_date }}
                 </div>
@@ -92,7 +100,7 @@
                     {% if user.organisation != None %}
                         <h3 class="text-2xl">Organisation</h3>
                         <div id="organisation-holder">
-                        {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
+                            {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
                         </div>
 
                         {% if self %}
