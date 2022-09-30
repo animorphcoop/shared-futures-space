@@ -79,59 +79,61 @@
                         {% endif %}
                     </div>
 
-                </div>
+                    <div class="h-2.5"></div>
 
-
-                <div class="flex flex-col justify-center items-center">
+                    {# Location #}
                     <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8 10C6.9 10 6 9.1 6 8C6 6.9 6.9 6 8 6C9.1 6 10 6.9 10 8C10 9.1 9.1 10 8 10ZM14 8.2C14 4.57 11.35 2 8 2C4.65 2 2 4.57 2 8.2C2 10.54 3.95 13.64 8 17.34C12.05 13.64 14 10.54 14 8.2ZM8 0C12.2 0 16 3.22 16 8.2C16 11.52 13.33 15.45 8 20C2.67 15.45 0 11.52 0 8.2C0 3.22 3.8 0 8 0Z"
                               fill="#9759FF"/>
                     </svg>
-                    {% comment %}
-                    TODO: Get this via post code
-                    {% endcomment %}
+                    <div class="h-3.5"></div>
+                    <p class="font-kanit-700 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
+                        {{ user.post_code.area.name }}
+                    </p>
+                    <div class="h-3.5"></div>
 
-                    <span class="font-kanit-500 text-black-text text-xl px-2 py-3.5">{{ user.post_code.area.name }}</span>
+                    {# Location #}
+                    <p class="font-kanit-400 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
+                        Active since {{ user.signup_date }}
+                    </p>
 
-                    Active since {{ user.signup_date }}
                 </div>
 
+                {# Organisation #}
                 <div class="my-12">
                     {% if user.organisation != None %}
                         <h3 class="text-2xl">Organisation</h3>
                         <div id="organisation-holder">
                             {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
                         </div>
-
                         {% if self %}
                             <button onclick="toggleOrganisationsChange()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                     <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z"/>
                                 </svg>
                             </button>
-
-
-
                         {% endif %}
                     {% endif %}
                 </div>
 
-
+                {# Settings #}
                 {% if self %}
-                    <div class="w-1/2">
-                        <h3 class="text-2xl">Settings</h3>
+                    <div class="">
+                        <div class="py-3.5 bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
+                            <h3 class="font-kanit-700 text-center uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
+                                Settings
+                            </h3>
+                        </div>
+                        <div class="h-4.5"></div>
+                        <div class="flex flex-col gap-6 items-start px-4.5">
+                            {% url 'account_change_password' as the_url %}
+                            {% include "partials/button.html" with url=the_url style="danger" button="Change your password" %}
 
-                        <a href="{% url 'account_change_password' %}"
-                           class="block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
-                            Change your password
-                        </a>
-
-                        <a href="{% url 'account_delete' %}"
-                           class="block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
-                            Delete
-                        </a>
+                            {% url 'account_delete' as the_url %}
+                            {% include "partials/button.html" with url=the_url style="danger" button="Delete your account" %}
+                        </div>
+                        <div class="h-6"></div>
                     </div>
-
                 {% endif %}
 
                 {% comment %}
