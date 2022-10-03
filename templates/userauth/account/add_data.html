@@ -33,13 +33,14 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="display_name" label="Name" %}
-                <input class="form-control block w-full px-3 py-2.5
+                {# WET INPUT #}
+                <input class="form-control block w-full px-3 py-3 mb-1.5
                     font-garamond-500 text-black-text
                     placeholder:text-black-meta
                     bg-blue-second bg-clip-padding border border-solid border-white
                     transition ease-in-out m-0
-                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    focus:text-black-text focus:border-purple focus:ring-0
+                    invalid:border-red-important focus:invalid:ring-red-important"
                        id=display_name name=display_name type=text placeholder="Your name" value=""
                        pattern="[a-zA-Z][a-zA-Z\s]*">
                 {% include "partials/input-note.html" with for="display_name" label="This is how people will see you." %}
@@ -48,13 +49,14 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="year_of_birth" label="Year of birth" %}
-                <input class="form-control block w-full px-3 py-2.5 mb-1.5
+                {# WET INPUT #}
+                <input class="form-control block w-full px-3 py-3 mb-1.5
                     font-garamond-500 text-black-text
                     placeholder:text-black-meta
                     bg-blue-second bg-clip-padding border border-solid border-white
                     transition ease-in-out m-0
-                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    focus:text-black-text focus:border-purple focus:ring-0
+                    invalid:border-red-important focus:invalid:ring-red-important"
                        id=year_of_birth name=year_of_birth type="number" min="1900" max="2022"
                        placeholder="Year you were born"
                        value="">
@@ -63,13 +65,14 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="post_code" label="Postcode" %}
-                <input class="form-control block w-full px-3 py-2.5 mb-1.5
+                {# WET INPUT #}
+                <input class="form-control block w-full px-3 py-3 mb-1.5
                     font-garamond-500 text-black-text
                     placeholder:text-black-meta
                     bg-blue-second bg-clip-padding border border-solid border-white
                     transition ease-in-out m-0
-                    focus:text-black-text focus:bg-white focus:border-gray-light focus:ring-0
-                    invalid:border-red-important invalid:text-red-important focus:invalid:ring-red-important focus:invalid:text-red-important"
+                    focus:text-black-text focus:border-purple focus:ring-0
+                    invalid:border-red-important focus:invalid:ring-red-important"
                        id=post_code name=post_code type=text placeholder="Your postcode"
                        pattern="([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)([0-9][a-zA-Z]{2})?" value="">
                 {% include "partials/input-note.html" with for="post_code" label="To find your neighbourhood river please add in your postcode" %}
