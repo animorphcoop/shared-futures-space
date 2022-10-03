@@ -13,7 +13,6 @@ const passwordFeedbackTwo: HTMLElement | null = document.getElementById("passwor
 const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
 
 
-
 function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () => void) {
     console.log('setting up input')
     const observerEmail = new MutationObserver(function (mutations) {
@@ -131,7 +130,8 @@ function getPasswordFeedback() {
 
         } else {
             passwordFeedbackOne.innerText = 'Please improve your password!'
-
+            //    Update text to provide pointers for secure passwords, not sure what the rules are but something like:
+            //    Strengthen your password; use lowercase, uppercase, numbers, special characters, and at least X characters.
         }
         comparePasswords()
 
