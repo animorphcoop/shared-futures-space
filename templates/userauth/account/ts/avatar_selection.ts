@@ -14,12 +14,12 @@ function changeAvatar(avatarElemId: string, avatarPk: string) {
     console.log(avatarPk)
 
     if (avatarClicked != null) {
-        avatarClicked.classList.remove("bg-purple-600")
+        avatarClicked.classList.remove("bg-purple/25")
     }
     const currentAvatarElem = document.getElementById(avatarElemId)
     if (currentAvatarElem == null) return
 
-    currentAvatarElem.classList.add("bg-purple-600")
+    currentAvatarElem.classList.add("bg-purple/25")
     avatarClicked = currentAvatarElem
 
     if (avatarInputChange == null) return
