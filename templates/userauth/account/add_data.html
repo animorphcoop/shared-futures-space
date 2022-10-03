@@ -79,17 +79,20 @@
             </div>
 
 
-            <div class="px-4 pb-9">
-                <span class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text">Select your avatar</span>
+            <div class="px-4">
+                {% include "partials/input-label.html" with for="post_code" label="Select your avatar" %}
+                <div class="h-6"></div>
 
-                {% for avatar in avatars %}
-
-
-                    <button id="button-{{ avatar.pk }}"
-                            onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})" class="m-2">
-                        <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
-                    </button>
-                {% endfor %}
+                <div class="flex flex-wrap gap-5 -m-1">
+                    {% for avatar in avatars %}
+                        <button id="button-{{ avatar.pk }}"
+                                onclick="event.preventDefault(); selectAvatar(this.id, {{ avatar.pk }})"
+                                class="rounded-full p-0.5">
+                            <img class="w-6 h-6" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
+                        </button>
+                    {% endfor %}
+                </div>
+                <div class="h-9"></div>
 
                 {% comment %}taking on the value of the avatar (pk) via button - if empty gets randomised in the view{% endcomment %}
                 <input id="avatar" name=avatar type=text value="" class="hidden">
@@ -100,10 +103,9 @@
             <div class="px-4 pb-9">
 
                 <div id="organisation-starter" class="w-full">
-
                     <label class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
                            id="organisation-label" for="organisation-checkbox">
-                        Are you representing an organisation?
+                        Will you be representing your organisation on Shared Futures?
                     </label>
 
                     <input class="block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
