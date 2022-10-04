@@ -26,11 +26,8 @@
 
     {#Results#}
     <section>
-        <ul id="search-results" class="hidden">
+        <ul id="search-results" class="">
             {% include "resources/partials/search_results.html" with resource=result %}
-        </ul>
-        <ul id="initial-list" class="">
-            {% include "resources/partials/initial_list.html" with resource=resource %}
         </ul>
     </section>
 
