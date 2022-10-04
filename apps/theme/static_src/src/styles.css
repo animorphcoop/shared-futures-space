@@ -21,6 +21,9 @@
         @apply bg-red-important hover:bg-purple focus:bg-purple
         text-white
     }
+    .input-text {
+
+    }
 }
 
 @tailwind utilities; /* after layer so they can still be overwritten by utilities */
