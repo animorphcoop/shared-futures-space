@@ -9,12 +9,12 @@ const errorBoxData = document.getElementById("error-box-data");
 function selectAvatar(avatarElemId, avatarPk) {
     console.log(avatarPk);
     if (lastClicked != null) {
-        lastClicked.classList.remove("bg-purple-600");
+        lastClicked.classList.remove("bg-purple/25");
     }
     const currentAvatarElem = document.getElementById(avatarElemId);
     if (currentAvatarElem == null)
         return;
-    currentAvatarElem.classList.add("bg-purple-600");
+    currentAvatarElem.classList.add("bg-purple/25");
     lastClicked = currentAvatarElem;
     if (avatarInput == null)
         return;

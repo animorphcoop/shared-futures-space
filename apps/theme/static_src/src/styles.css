@@ -1,15 +1,29 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
-@font-face {
-  font-family: "EB_Garamond_Regular";
-  src: url("/fonts/EBGaramond-Regular.ttf") format("truetype");
-  font-weight: 500;
+@layer components { /* layer so they're on included if used */
+    .button {
+        @apply inline-block rounded-full px-4 py-4 max-h-12
+        font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
+        transition ease-out duration-300
+        text-purple;
+    }
+    .button-on-white {
+        @apply bg-blue-second hover:bg-resources-one focus:bg-blue-done
+    }
+    .button-on-colour {
+        @apply bg-white hover:bg-resources-one focus:bg-blue-done
+    }
+    .button-important {
+        @apply bg-yellow-pale hover:bg-yellow focus:bg-red-important
+    }
+    .button-danger {
+        @apply bg-red-important hover:bg-purple focus:bg-purple
+        text-white
+    }
+    .input-text {
+
+    }
 }
 
-@font-face {
-  font-family: "Kanit_Regular";
-  src: url("/fonts/Kanit-Regular.ttf") format("truetype");
-  font-weight: 600;
-}
+@tailwind utilities; /* after layer so they can still be overwritten by utilities */
