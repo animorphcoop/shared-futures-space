@@ -31,10 +31,20 @@
         {#  Menu list  #}
         <nav class="w-full min-h-full font-kanit-500 text-xl text-black-text flex flex-col">
             <h1 class="bg-white p-4 py-2.5 text-purple">Menu</h1>
+            {% if not user.is_authenticated %}
+                CTA BLOCK
+            {% endif %}
             <ul class="bg-gradient-to-b from-blue-second to-white overflow-y-auto grow">
+
                 <li class="p-4 pb-5">
-                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                    {% else %}
+                        <a href="{% url 'landing' %}">Landing page</a>
+                    {% endif %}
+
                 </li>
+
                 <li class="p-4 pb-5" x-data="{ drop: false }">
                     <button class="flex items-center justify-between w-full" @click="drop = !drop">
                         Springs
@@ -55,6 +65,7 @@
                          x-transition:leave-start="opacity-100"
                          x-transition:leave-end="opacity-0">
                         <ul class="list-non text-black-meta" aria-labelledby="dropdownLargeButton">
+                            {% comment %}TODO: LIST ITEMS ONLY{% endcomment %}
                             <li class="px-4 py-3 pt-6 text-black-text">
                                 <a href="#"><span>Your spring: </span>Colin</a>
                             </li>
@@ -79,28 +90,33 @@
                         </ul>
                     </div>
                 </li>
-                <li class="p-4 pb-5">
-                    <a href="{% url 'account_all_chats' %}">Messages</a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="p-4 pb-5">
+                        <a href="{% url 'account_all_chats' %}">Messages</a>
+                    </li>
+                    <li class="p-4 pb-5">
+                        <a href="{% url 'account_view' %}">Profile</a>
+                    </li>
+                {% endif %}
                 <li class="p-4 pb-5">
                     <a href="{% url 'resources' %}">Resources</a>
                 </li>
                 <li class="p-4 pb-5">
-                    <a href="{% url 'account_view' %}">Profile</a>
-                </li>
-                <li class="p-4 pb-5">
-                    <form method="post" action="{% url 'account_logout' %}">
-                        {% csrf_token %}
-                        <button type="submit">
-                            Log out
-                        </button>
-                    </form>
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'account_logout' %}">
+                            {% csrf_token %}
+                            <button type="submit">
+                                Log out
+                            </button>
+                        </form>
+                        {% comment %}
+                        {% else %}
+                        <a href="{% url 'account_login' %}">Log in</a>
+                        {% endcomment %}
+                    {% endif %}
                 </li>
 
 
-                {% comment %}                <li class="p-4 pb-5">
-                    <a href="{% url 'account_logout' %}">Logout</a>
-                </li>{% endcomment %}
             </ul>
             <ul class="p-4">
                 <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
