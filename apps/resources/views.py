@@ -3,12 +3,11 @@ from django.http.request import HttpRequest
 from django.http import HttpResponse
 
 from .models import HowTo, CaseStudy, FoundUseful
-from analytics.models import AnalyticsEvent
 from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
 
-from analytics.models import log_resource_access  # pyre-ignore[21]
+from analytics.models import AnalyticsEvent, log_resource_access  # pyre-ignore[21]
 
 from django.db.models import Q
 from typing import List, Optional
@@ -42,7 +41,7 @@ def retrieve_and_chain_resources() -> List:  # pyre-ignore[24]
     return list(chain(how_tos, case_studies))
 
 
-def filter_and_cluster_resources(search_term: Optional[str], order_by: str) -> List:  # pyre-ignore[24]
+def filter_and_cluster_resources(search_term: Optional[str], order_by: Optional[str]) -> List:  # pyre-ignore[24]
     how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
                                    | Q(summary__icontains=search_term)
                                    | Q(tags__name__icontains=search_term)).distinct()

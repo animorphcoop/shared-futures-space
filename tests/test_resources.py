@@ -37,8 +37,8 @@ def test_resource_search(client, test_how_to_resource, test_case_study_resource)
     assert test_case_study_resource.title in resource_page
     
     # we can't test the search with a request because it's done client-side by htmx requesting filter_and_cluster_resources after /resources/ loads
-    assert test_how_to_resource in filter_and_cluster_resources(test_how_to_resource.title)
-    assert test_case_study_resource in filter_and_cluster_resources(test_case_study_resource.title)
+    assert test_how_to_resource in filter_and_cluster_resources(test_how_to_resource.title, order_by = 'oldest')
+    assert test_case_study_resource in filter_and_cluster_resources(test_case_study_resource.title, order_by = 'oldest')
 
 '''
 def test_resource_item(client, test_how_to_resource, test_case_study_resource):
