@@ -101,7 +101,7 @@ function getPasswordFeedback() {
             passwordFeedbackOne.innerText = '';
         }
         else {
-            passwordFeedbackOne.innerText = 'Please improve your password!';
+            passwordFeedbackOne.innerText = 'Strengthen your password; at least 10 characters using a mix of lowercase, uppercase, numbers, and special characters.';
         }
         comparePasswords();
     }

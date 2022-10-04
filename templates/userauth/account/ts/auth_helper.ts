@@ -129,9 +129,7 @@ function getPasswordFeedback() {
             passwordFeedbackOne.innerText = ''
 
         } else {
-            passwordFeedbackOne.innerText = 'Please improve your password!'
-            //    Update text to provide pointers for secure passwords, not sure what the rules are but something like:
-            //    Strengthen your password; use lowercase, uppercase, numbers, special characters, and at least X characters.
+            passwordFeedbackOne.innerText = 'Strengthen your password; at least 10 characters using a mix of lowercase, uppercase, numbers, and special characters.'
         }
         comparePasswords()
 
