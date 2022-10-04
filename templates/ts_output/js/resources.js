@@ -46,3 +46,14 @@ function buttonTagSearch(tag) {
     console.log('search');
     //searching(true)
 }
+function setResultCount(count) {
+    let elem = document.getElementById("result-count");
+    if (elem != null) {
+        if (count == 1) {
+            elem.innerHTML = count.toString() + " result available";
+        }
+        else {
+            elem.innerHTML = count.toString() + " results available";
+        }
+    }
+}

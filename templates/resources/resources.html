@@ -17,18 +17,14 @@
         </div>
         <div class="h-4"></div>
         <div class="px-4.5">
-            {#Not sure how the numbers will arrive, but separated number from the results sentence...but then I guess there's no 's' if it's only 1...#}
-            {% include 'partials/text-style/meta-lowercase.html' with text="125" %}
-            {% include 'partials/text-style/meta-lowercase.html' with text=" results available" %}
+            {% include 'partials/text-style/meta-lowercase.html' with id="result-count" %}
         </div>
         <div class="h-3"></div>
     </section>
 
     {#Results#}
     <section>
-        <ul id="search-results" class="">
-            {% include "resources/partials/search_results.html" with resource=result %}
-        </ul>
+        <ul id="search-results" class=""></ul>
     </section>
 
     {% block scripts %}
