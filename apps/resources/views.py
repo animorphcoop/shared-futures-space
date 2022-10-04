@@ -7,7 +7,7 @@ from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
 
-from analytics.models import log_resource_access  # pyre-ignore[21]
+from analytics.models import AnalyticsEvent, log_resource_access  # pyre-ignore[21]
 
 from django.db.models import Q
 from typing import List, Optional
@@ -29,8 +29,8 @@ def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
 
 def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
-
-    results = filter_and_cluster_resources(search_text)
+    order_by = request.POST.get('order_by')
+    results = filter_and_cluster_resources(search_text, order_by)
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)
 
@@ -41,7 +41,7 @@ def retrieve_and_chain_resources() -> List:  # pyre-ignore[24]
     return list(chain(how_tos, case_studies))
 
 
-def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ignore[24]
+def filter_and_cluster_resources(search_term: Optional[str], order_by: Optional[str]) -> List:  # pyre-ignore[24]
     how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
                                    | Q(summary__icontains=search_term)
                                    | Q(tags__name__icontains=search_term)).distinct()
@@ -52,7 +52,20 @@ def filter_and_cluster_resources(search_term: Optional[str]) -> List:  # pyre-ig
     # can iterate over tags only after filtering
     how_tos = objects_tags_cluster_list_overwrite(how_tos)
     case_studies = objects_tags_cluster_list_overwrite(case_studies)
-    return list(chain(how_tos, case_studies))
+    results = list(chain(how_tos, case_studies))
+    if order_by == 'newest':
+        results.sort(key = lambda r: r.published_on, reverse = True)
+    elif order_by == 'oldest':
+        results.sort(key = lambda r: r.published_on)
+    elif order_by == 'most useful':
+        results.sort(key = lambda r: len(FoundUseful.objects.filter(useful_resource = r)), reverse = True)
+    elif order_by == 'least useful':
+        results.sort(key = lambda r: len(FoundUseful.objects.filter(useful_resource = r)))
+    elif order_by == 'most viewed':
+        results.sort(key = lambda r: len(AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.RESOURCE, target_resource = r)), reverse = True)
+    elif order_by == 'least viewed':
+        results.sort(key = lambda r: len(AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.RESOURCE, target_resource = r)))
+    return results
 
 
 # single resource item
