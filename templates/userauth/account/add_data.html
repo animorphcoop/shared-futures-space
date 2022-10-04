@@ -103,13 +103,28 @@
             <div class="px-4 pb-9">
 
                 <div id="organisation-starter" class="w-full">
-                    <label class="block uppercase font-kanit-400 font-medium text-xxs tracking-widest text-black-text"
-                           id="organisation-label" for="organisation-checkbox">
-                        Will you be representing your organisation on Shared Futures?
-                    </label>
+                    {% include "partials/input-label.html" with label="Organisation" %}
+                    <div class="h-6"></div>
 
-                    <input class="block rounded-full bg-gray-light shadow-input border border-solid border-gray-light w-18 h-18"
-                           type="checkbox" id="organisation-checkbox" onclick="toggleOrganisationsAdd()">
+                    <div class="flex flex-col">
+                        <p class="block font-garamond-500 text-22 text-black-large text-center">
+                            Will you be representing your organisation on Shared Futures?
+                        </p>
+                        <div class="h-4"></div>
+                        <div class="flex justify-center items-center">
+                            <input class="rounded-full purple bg-blue-second border border-solid border-blue-second w-18 h-18
+                                    focus:outline-none focus:ring-white
+                                    {# checked:bg-none #} checked:bg-purple checked:bg-[url('data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='4.5' cy='4.5' r='4.5' fill='%239759FF'/%3E%3C/svg%3E')]
+                                    focus:checked:bg-purple hover:checked:bg-purple"
+                                   type="checkbox" id="organisation-checkbox" onclick="toggleOrganisationsAdd()">
+                            <div class="w-1.5"></div>
+                            <label class="uppercase font-kanit-400 text-xxs text-black-text text-center tracking-widest"
+                                   id="organisation-label" for="organisation-checkbox">
+                                Yes
+                            </label>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div id="organisation-data" class="hidden">
@@ -144,12 +159,7 @@
             <div class="px-5 pb-9">
                 <button type="submit"
                         onclick="event.preventDefault(); validateFields()"
-                        class="inline-block rounded-full px-4 py-3.5
-                        font-kanit-700 uppercase font-medium text-xxs tracking-widest
-                        text-purple bg-resources-one
-                        hover:bg-blue-done focus:bg-blue-done
-                        transition ease-out duration-300
-                        disabled:bg-gray-light">
+                        class="button button-on-white">
                     SUBMIT
                 </button>
             </div>
