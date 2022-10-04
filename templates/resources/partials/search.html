@@ -8,12 +8,9 @@
          name="search"
          placeholder=" Type to search...">
   <select id="orderby" name="order_by">
-    <option value="oldest">oldest</option>
-    <option value="newest">newest</option>
-    <option value="most useful">most useful</option>
-    <option value="least useful">least useful</option>
+    <option value="latest">latest</option>
+    <option value="most saved">most saved</option>
     <option value="most viewed">most viewed</option>
-    <option value="least viewed">least viewed</option>
   </select>
 </form>
 {% comment %}In case the user calls it via resource_tag view we want to immediately filter and then mask the tag from the url & history{% endcomment %}

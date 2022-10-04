@@ -53,18 +53,12 @@ def filter_and_cluster_resources(search_term: Optional[str], order_by: Optional[
     how_tos = objects_tags_cluster_list_overwrite(how_tos)
     case_studies = objects_tags_cluster_list_overwrite(case_studies)
     results = list(chain(how_tos, case_studies))
-    if order_by == 'newest':
+    if order_by == 'latest':
         results.sort(key = lambda r: r.published_on, reverse = True)
-    elif order_by == 'oldest':
-        results.sort(key = lambda r: r.published_on)
-    elif order_by == 'most useful':
+    elif order_by == 'most saved':
         results.sort(key = lambda r: len(FoundUseful.objects.filter(useful_resource = r)), reverse = True)
-    elif order_by == 'least useful':
-        results.sort(key = lambda r: len(FoundUseful.objects.filter(useful_resource = r)))
     elif order_by == 'most viewed':
         results.sort(key = lambda r: len(AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.RESOURCE, target_resource = r)), reverse = True)
-    elif order_by == 'least viewed':
-        results.sort(key = lambda r: len(AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.RESOURCE, target_resource = r)))
     return results
 
 

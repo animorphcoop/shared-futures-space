@@ -66,7 +66,6 @@
             <div class="h-4"></div>
         {% endif %}
 
-        {% comment %}        {% include 'partials/button.html' with style='primary_white' button='I found this useful' %}{% endcomment %}
         {% if user.is_authenticated %}
             {% if useful %}
                 {% include 'partials/button-hx.html' with resource_id=resource.id status='found_useful' %}
