@@ -13,6 +13,7 @@ from userauth.models import CustomUser # pyre-ignore[21]
 from messaging.models import Chat # pyre-ignore[21]
 from messaging.util import send_system_message # pyre-ignore[21]
 from poll.models import Poll # pyre-ignore[21]
+from area.models import Area # pyre-ignore[21]
 from urllib.parse import quote
 from hashlib import shake_256
 
@@ -70,6 +71,10 @@ class ProjectMembership(models.Model):
 class ProjectTag(TaggedItemBase):
     content_object = ParentalKey('project.Project', on_delete=models.CASCADE, related_name='tagged_items')
 
+def get_default_other_area():
+    # this is bad, instead should not need a default but should specify every time a project is created
+    return Area.objects.get_or_create(name='Other')[0].pk
+
 class Project(ClusterableModel):
     class Stage(models.TextChoices):
         ENVISION = 'envision'
@@ -79,6 +84,7 @@ class Project(ClusterableModel):
     slug: models.CharField = models.CharField(max_length=100, default='')
     name: models.CharField = models.CharField(max_length=100)
     description: models.CharField = models.CharField(max_length=2000)
+    area: models.ForeignKey = models.ForeignKey(Area, on_delete = models.CASCADE, default = get_default_other_area) # TODO this is a bad default which should be replaced by forcing an area to be provided on creation
     tags = ClusterTaggableManager(through=ProjectTag, blank=True)
     envision_stage: models.ForeignKey = models.ForeignKey(EnvisionStage, null = True, default = None, on_delete = models.SET_NULL)
     plan_stage: models.ForeignKey = models.ForeignKey(PlanStage, null = True, default = None, on_delete = models.SET_NULL)

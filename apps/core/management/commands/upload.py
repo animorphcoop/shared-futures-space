@@ -49,7 +49,7 @@ def add_projects(projects_data):
     for project_data in projects_data:
         try:
             new_project = \
-                Project.objects.get_or_create(name=project_data['name'], description=project_data['description'])[0]
+                Project.objects.get_or_create(name=project_data['name'], description=project_data['description'], area=Area.objects.get_or_create(name=project_data['area'])[0])[0]
             for tag in project_data['tags']:
                 new_project.tags.add(tag)
             new_project.save()

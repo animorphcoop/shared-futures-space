@@ -17,6 +17,7 @@ from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from messaging.views import ChatView # pyre-ignore[21]
 from action.util import send_offer # pyre-ignore[21]
 from action.models import Action # pyre-ignore[21]
+from area.models import Area # pyre-ignore[21]
 from messaging.util import send_system_message # pyre-ignore[21]
 from typing import Dict, List, Any
 
@@ -47,18 +48,12 @@ class ProjectView(DetailView): # pyre-ignore[24]
         context['members'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
-class AllProjectsView(TemplateView):
-    def post(self, request: WSGIRequest) -> HttpResponse: # needed to receive post with to_view as mentioned in get_context_data below
-        return super().get(request)
+class SpringView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         # TODO?: actual search of projects?
-        if ('to_view' in self.request.POST and self.request.POST['to_view'] == 'mine'):
-            context['projects'] = [ownership.project for ownership in
-                                   ProjectMembership.objects.filter(user=self.request.user)]
-            context['viewing'] = 'mine'
-        else:
-            context['projects'] = Project.objects.all()
+        context['rivers'] = Project.objects.filter(area = Area.objects.get(uuid=self.kwargs['uuid']))
+        print(context)
         return context
 
 class EditProjectView(UpdateView): # pyre-ignore[24]
