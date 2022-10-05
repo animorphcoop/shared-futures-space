@@ -14,7 +14,19 @@ from area.models import Area # pyre-ignore[21]
 from userauth.models import CustomUser # pyre-ignore[21]
 from resources.models import Resource # pyre-ignore[21]
 
+####
+## HOW THIS WORKS
+#
+# when an event that we want to record for analytic purposes occurs, a corresponding function in the LOGGING FUNCTIONS section should be invoked.
+# this can happen either by catching a signal (as shown in the case of log_login) or simply by calling the function from whatever bit of code is
+# responsible for making the event to be logged happen (as with eg. log_signup in the save function of CustomSignupForm in userauth/forms.py).
+# these functions are responsible for recording the relevant information as an AnalyticsEvent, specifying who did what and when.
+# the logging functions are very simple, but they are written here rather than in the places they get invoked from to ensure we know in a single place
+# what events are logged and how.
 
+####
+## LOGGING FUNCTIONS
+#
 
 # we take request as an argument so that we can log the session if that turns out later to be necessary
 # this is also why we can't hook a post_save signal for this, it doesn't have access to the request
@@ -33,7 +45,12 @@ def log_resource_access(resource: Resource, user: CustomUser) -> None: # pyre-ig
     if not AnalyticsEvent.objects.filter(session = analyticsSession, type = AnalyticsEvent.EventType.RESOURCE, target_resource = resource).exists():
         AnalyticsEvent.objects.create(session = analyticsSession, date = date.today(), type = AnalyticsEvent.EventType.RESOURCE, target_resource = resource)
 
+####
+## MODELS
+#
 
+# an AnalyticsSession records a single user on a single day, without revealing which user but recording their broad location in case it's of interest. we don't
+# connect the same user's activity between days, for privacy reasons
 class AnalyticsSession(models.Model):
     sessid_hash: models.CharField = models.CharField(max_length = 128) # hash of user.display_name salted with date.today(), so unique per user per day
     area: models.ForeignKey = models.ForeignKey(Area, on_delete = models.CASCADE, null = True)
