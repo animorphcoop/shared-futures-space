@@ -52,7 +52,7 @@ class SpringView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         # TODO?: actual search of projects?
-        context['rivers'] = Project.objects.filter(area = Area.objects.get(uuid=self.kwargs['uuid']))
+        context['projects'] = Project.objects.filter(area = Area.objects.get(uuid=self.kwargs['uuid']))
         print(context)
         return context
 

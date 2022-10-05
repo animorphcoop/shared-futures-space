@@ -7,7 +7,7 @@ from django.urls import reverse
 from project.models import Project, ProjectMembership
 
 def test_project_view(client, test_project):
-    projects_page = client.get(reverse('all_projects'))
+    projects_page = client.get(reverse('spring', args=[test_project.area.uuid]))
     projects_page_html = bs4.BeautifulSoup(projects_page.content, features='html5lib')
     projects = projects_page_html.find('table', attrs={'id':'projects'}).tbody.find_all('tr')[1:] # drop the headings row
     test_project_row = [p for p in projects if p.find('td').text == test_project.name]

@@ -71,7 +71,7 @@ class ProjectMembership(models.Model):
 class ProjectTag(TaggedItemBase):
     content_object = ParentalKey('project.Project', on_delete=models.CASCADE, related_name='tagged_items')
 
-def get_default_other_area():
+def get_default_other_area() -> int:
     # this is bad, instead should not need a default but should specify every time a project is created
     return Area.objects.get_or_create(name='Other')[0].pk
 
