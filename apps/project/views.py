@@ -19,6 +19,7 @@ from action.util import send_offer # pyre-ignore[21]
 from action.models import Action # pyre-ignore[21]
 from area.models import Area # pyre-ignore[21]
 from messaging.util import send_system_message # pyre-ignore[21]
+from core.utils.tags_declusterer import tag_cluster_to_list # pyre-ignore[21]
 from typing import Dict, List, Any
 
 class ProjectView(DetailView): # pyre-ignore[24]
@@ -52,8 +53,12 @@ class SpringView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
         # TODO?: actual search of projects?
-        context['projects'] = Project.objects.filter(area = Area.objects.get(uuid=self.kwargs['uuid']))
-        print(context)
+        area = Area.objects.get(uuid=self.kwargs['uuid'])
+        context['projects'] = Project.objects.filter(area = area)
+        for project in context['projects']:
+            project.tags = tag_cluster_to_list(project.tags)
+        context['swimmers'] = ProjectMembership.objects.filter(project__in = Project.objects.filter(area = area)).values_list('user', flat=True).distinct().count()
+        print(context['swimmers'])
         return context
 
 class EditProjectView(UpdateView): # pyre-ignore[24]
