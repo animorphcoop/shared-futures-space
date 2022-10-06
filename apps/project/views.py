@@ -30,12 +30,12 @@ class ProjectView(DetailView): # pyre-ignore[24]
             membership = ProjectMembership.objects.get(user=request.user, project=project)
             if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
                 membership.delete()
-                print('!!! WARNING C !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                print('!!! WARNING C !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
                 # send_system_message(project.chat, 'left_project', context_project = project, context_user_a = request.user)
         if (request.POST['action'] == 'join'):
             if len(ProjectMembership.objects.filter(user=request.user, project=project)) == 0:
                 ProjectMembership.objects.create(user=request.user, project=project, owner=False, champion=False)
-                print('!!! WARNING D !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                print('!!! WARNING D !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
                 #send_system_message(project.chat, 'joined_project', context_project = project, context_user_a = request.user)
         # TESTING PURPOSES ONLY!! TODO # # # # # # # # # #
         if (request.POST['action'] == 'start_envision'): #
@@ -76,7 +76,7 @@ class EditProjectView(UpdateView): # pyre-ignore[24]
                     my_membership = ProjectMembership.objects.get(project=project, user=request.user, owner=True)
                     my_membership.owner = False
                     my_membership.save()
-                    print('!!! WARNING E !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                    print('!!! WARNING E !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
                     #send_system_message(project.chat, 'lost_ownership', context_user_a = request.user)
             project.name = request.POST['name']
             project.description = request.POST['description']
@@ -104,7 +104,7 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
             elif (request.POST['action'] == 'remove_championship'):
                 if membership.champion:
                     membership.champion = False
-                    print('!!! WARNING F !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                    print('!!! WARNING F !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
                     #send_system_message(project.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
                     send_system_message(get_userpair(request.user, membership.user).chat, 'lost_championship_notification', context_user_a = request.user, context_project = membership.project)
             membership.save()
