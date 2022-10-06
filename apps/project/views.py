@@ -17,7 +17,9 @@ from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from messaging.views import ChatView # pyre-ignore[21]
 from action.util import send_offer # pyre-ignore[21]
 from action.models import Action # pyre-ignore[21]
+from area.models import Area # pyre-ignore[21]
 from messaging.util import send_system_message # pyre-ignore[21]
+from core.utils.tags_declusterer import tag_cluster_to_list # pyre-ignore[21]
 from typing import Dict, List, Any
 
 class ProjectView(DetailView): # pyre-ignore[24]
@@ -28,12 +30,12 @@ class ProjectView(DetailView): # pyre-ignore[24]
             membership = ProjectMembership.objects.get(user=request.user, project=project)
             if not membership.owner: # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
                 membership.delete()
-                print('!!! WARNING C !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                print('!!! WARNING C !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
                 # send_system_message(project.chat, 'left_project', context_project = project, context_user_a = request.user)
         if (request.POST['action'] == 'join'):
             if len(ProjectMembership.objects.filter(user=request.user, project=project)) == 0:
                 ProjectMembership.objects.create(user=request.user, project=project, owner=False, champion=False)
-                print('!!! WARNING D !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                print('!!! WARNING D !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
                 #send_system_message(project.chat, 'joined_project', context_project = project, context_user_a = request.user)
         # TESTING PURPOSES ONLY!! TODO # # # # # # # # # #
         if (request.POST['action'] == 'start_envision'): #
@@ -47,18 +49,18 @@ class ProjectView(DetailView): # pyre-ignore[24]
         context['members'] = ProjectMembership.objects.filter(project=context['object'].pk)
         return context
 
-class AllProjectsView(TemplateView):
-    def post(self, request: WSGIRequest) -> HttpResponse: # needed to receive post with to_view as mentioned in get_context_data below
-        return super().get(request)
+class SpringView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
-        # TODO?: actual search of projects?
-        if ('to_view' in self.request.POST and self.request.POST['to_view'] == 'mine'):
-            context['projects'] = [ownership.project for ownership in
-                                   ProjectMembership.objects.filter(user=self.request.user)]
-            context['viewing'] = 'mine'
-        else:
-            context['projects'] = Project.objects.all()
+        area = Area.objects.get(uuid=self.kwargs['uuid'])
+        context['projects'] = Project.objects.filter(area = area)
+        for project in context['projects']:
+            project.tags = tag_cluster_to_list(project.tags)
+            project.swimmers = ProjectMembership.objects.filter(project = project).values_list('user', flat=True)
+        context['num_swimmers'] = ProjectMembership.objects.filter(project__in = Project.objects.filter(area = area)).values_list('user', flat=True).distinct().count()
+        # context is:
+        #   'projects' -> list of projects with .tags and .swimmers set appropriately
+        #   'num_swimmers' -> number of distinct swimmers involved in all projects in this spring
         return context
 
 class EditProjectView(UpdateView): # pyre-ignore[24]
@@ -76,7 +78,7 @@ class EditProjectView(UpdateView): # pyre-ignore[24]
                     my_membership = ProjectMembership.objects.get(project=project, user=request.user, owner=True)
                     my_membership.owner = False
                     my_membership.save()
-                    print('!!! WARNING E !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                    print('!!! WARNING E !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
                     #send_system_message(project.chat, 'lost_ownership', context_user_a = request.user)
             project.name = request.POST['name']
             project.description = request.POST['description']
@@ -104,7 +106,7 @@ class ManageProjectView(DetailView): # pyre-ignore[24]
             elif (request.POST['action'] == 'remove_championship'):
                 if membership.champion:
                     membership.champion = False
-                    print('!!! WARNING F !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+                    print('!!! WARNING F !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
                     #send_system_message(project.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
                     send_system_message(get_userpair(request.user, membership.user).chat, 'lost_championship_notification', context_user_a = request.user, context_project = membership.project)
             membership.save()
