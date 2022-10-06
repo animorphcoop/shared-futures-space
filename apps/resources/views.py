@@ -94,9 +94,7 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
 
 
 def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpResponse:
-    print('here')
     resource_id = res_id
-    print(resource_id)
     current_user = request.user
     current_resource = None
 
@@ -113,17 +111,12 @@ def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpRe
     useful_instance = None
     try:
         useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
-        print(useful_instance)
-
         useful_instance.delete()
-        print('deleted')
     except FoundUseful.DoesNotExist:
         print('no useful match')
         FoundUseful.objects.create(useful_resource=current_resource,
                                    found_useful_by=current_user)
         found_useful = 'found_useful'
-
-    print('done')
 
     context = {
         'resource_id': res_id,

@@ -80,7 +80,6 @@ def test_data_add(client, test_user):
 
 def test_account_info(client, test_user):
     info_page = client.get(reverse('user_detail', args=[f'{test_user.display_name.replace(" ", "-")}-{test_user.pk}']))
-    print(info_page.content.decode('utf-8'))
     assert test_user.display_name in info_page.content.decode('utf-8')
     # assert str(test_user.year_of_birth) in info_page.content.decode('utf-8')
     # assert test_user.post_code.code in info_page.content.decode('utf-8')

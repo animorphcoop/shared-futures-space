@@ -69,13 +69,11 @@ class CustomAddDataView(TemplateView):
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
         form = CustomUserAddDataForm(request.POST)  # pyre-ignore[6]
-        # print(form.is_valid())
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         else:
             if form.is_valid():
-                # print(form.cleaned_data)
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
@@ -219,7 +217,6 @@ class UserAllChatsView(TemplateView):
 
 # helper for inspecting db whether user exists
 def check_email(request: WSGIRequest) -> HttpResponse:
-    # print(request.META.get('HTTP_REFERER'))
     if request.POST.getlist('email'):
         user_mail = request.POST.getlist('email')[0]
         request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
@@ -284,7 +281,6 @@ class CustomUserPersonalView(TemplateView):
 
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
         current_user = self.request.user
-        print(current_user)
         data = QueryDict(request.body).dict()
         if data.get('display_name'):
             form = CustomUserNameUpdateForm(data, instance=current_user)

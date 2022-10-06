@@ -24,15 +24,12 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     try:
         useful_resources = FoundUseful.objects.filter(found_useful_by=current_user).values()
         for resource in useful_resources:
-            print(resource)
-            print(resource['useful_resource_id'])
             resource_object = Resource.objects.get(pk=resource['useful_resource_id'])
             resources.append(resource_object)
 
     except FoundUseful.DoesNotExist:
         print('no favourites')
 
-    print(useful_resources)
     context = {
         'messages': messages,
         'notifications': notifications,
