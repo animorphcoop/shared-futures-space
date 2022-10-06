@@ -126,7 +126,6 @@ class Project(ClusterableModel):
             self.save()
     def start_act(self) -> None:
         if self.current_stage == self.Stage.PLAN:
-            print(self.plan_stage.general_poll.closed)
             if (self.plan_stage.general_poll is None or not self.plan_stage.general_poll.closed or
                 self.plan_stage.funding_poll is None or not self.plan_stage.funding_poll.closed or
                 self.plan_stage.location_poll is None or not self.plan_stage.location_poll.closed or
