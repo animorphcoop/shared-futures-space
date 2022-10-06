@@ -52,13 +52,15 @@ class ProjectView(DetailView): # pyre-ignore[24]
 class SpringView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         context = super().get_context_data(**kwargs)
-        # TODO?: actual search of projects?
         area = Area.objects.get(uuid=self.kwargs['uuid'])
         context['projects'] = Project.objects.filter(area = area)
         for project in context['projects']:
             project.tags = tag_cluster_to_list(project.tags)
-        context['swimmers'] = ProjectMembership.objects.filter(project__in = Project.objects.filter(area = area)).values_list('user', flat=True).distinct().count()
-        print(context['swimmers'])
+            project.swimmers = ProjectMembership.objects.filter(project = project).values_list('user', flat=True)
+        context['num_swimmers'] = ProjectMembership.objects.filter(project__in = Project.objects.filter(area = area)).values_list('user', flat=True).distinct().count()
+        # context is:
+        #   'projects' -> list of projects with .tags and .swimmers set appropriately
+        #   'num_swimmers' -> number of distinct swimmers involved in all projects in this spring
         return context
 
 class EditProjectView(UpdateView): # pyre-ignore[24]
