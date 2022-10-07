@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.conf import settings
 from django.urls import reverse
+from itertools import chain
 
 from .models import Project, ProjectMembership
 from messaging.models import Chat, Message # pyre-ignore[21]
@@ -19,6 +20,7 @@ from action.util import send_offer # pyre-ignore[21]
 from action.models import Action # pyre-ignore[21]
 from area.models import Area # pyre-ignore[21]
 from messaging.util import send_system_message # pyre-ignore[21]
+from resources.views import filter_and_cluster_resources # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list # pyre-ignore[21]
 from typing import Dict, List, Any
 
@@ -47,6 +49,8 @@ class ProjectView(DetailView): # pyre-ignore[24]
         context['owners'] = ProjectMembership.objects.filter(project=context['object'].pk, owner = True)
         context['champions'] = ProjectMembership.objects.filter(project=context['object'].pk, champion = True)
         context['members'] = ProjectMembership.objects.filter(project=context['object'].pk)
+        context['object'].tags = tag_cluster_to_list(context['object'].tags)
+        context['resources'] = list(chain(*[filter_and_cluster_resources(tag, 'latest') for tag in map(lambda t: t.name, context['object'].tags)]))
         return context
 
 class SpringView(TemplateView):
