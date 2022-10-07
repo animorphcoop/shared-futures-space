@@ -34,7 +34,7 @@ def invoke_action(action: Action) -> None: # pyre-ignore[11]
         if not membership.owner:
             membership.owner = True
             membership.save()
-            print('!!! WARNING B !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+            print('!!! WARNING B !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
             #send_system_message(action.param_project.chat, 'new_owner',
             #                    context_user_a = action.receiver, context_user_b = action.creator)
     elif (action.kind == 'become_champion'):
@@ -42,7 +42,7 @@ def invoke_action(action: Action) -> None: # pyre-ignore[11]
         if not membership.champion:
             membership.champion = True
             membership.save()
-            print('!!! WARNING A !!! not sending a message to the project to inform people of the new champion, because projects no longer have one central chat. how to disseminate that information?')
+            print('!!! WARNING A !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
             #send_system_message(action.param_project.chat, 'new_champion',
             #                    context_user_a = action.receiver, context_user_b = action.creator)
     elif (action.kind.startswith('user_request_')):
