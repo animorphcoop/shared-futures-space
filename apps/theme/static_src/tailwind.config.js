@@ -128,6 +128,7 @@ module.exports = {
     safelist: [
         "h-9",
         "h-7",
+        "bg-purple/25",
         "bg-north-belfast",
         "bg-east-belfast",
         "bg-south-belfast",
