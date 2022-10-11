@@ -22,7 +22,11 @@
         text-white
     }
     .input-text {
-
+        @apply block w-full px-3 py-3 font-garamond-500 text-black-text placeholder:text-black-meta
+        bg-blue-second bg-clip-padding border border-solid border-white
+        transition ease-in-out
+        focus:text-black-text focus:border-purple focus:ring-0
+        invalid:border-red-important focus:invalid:ring-red-important borken:border-red-important focus:borken:ring-red-important
     }
 }
 
