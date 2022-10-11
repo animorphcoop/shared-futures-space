@@ -14,30 +14,37 @@
 
             {% block title %}{% include "partials/title.html" with title="Confirm e-mail address" %}{% endblock %}
 
+            <div class="h-3"></div>
+
             {% user_display confirmation.email_address.user as user_display %}
 
-            <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+            <p class="font-garamond-500 text-black-large text-xl text-22 px-4">
                 Please confirm that you registered for a profile on Shared Futures using an e-mail address starting with
                 “{{ user_display }}”
             </p>
 
-            <form class="px-4" method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+            <div class="h-9"></div>
+
+            <form class="px-4 m-0" method="post" action="{% url 'account_confirm_email' confirmation.key %}">
                 {% csrf_token %}
                 <button type="submit"
-                    class="inline-block mb-2 bg-blue-button px-4 py-3.5 hover:bg-blue-done transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full disabled:bg-gray-light">
+                        class="button button-on-white">
                     Confirm
                 </button>
             </form>
+
+            <div class="h-9"></div>
 
         {% else %}
 
             {% url 'account_email' as email_url %}
 
-            <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+            <p class="font-garamond-500 text-black-large text-xl text-22 px-4 pb-9">
                 This e-mail confirmation link has expired or is invalid. Please attempt <a href="{{ email_url }}">to
-                    login to
-                    issue a new e-mail confirmation request</a>.
+                login to issue a new e-mail confirmation request</a>.
             </p>
+
+            <div class="h-9"></div>
 
         {% endif %}
 
