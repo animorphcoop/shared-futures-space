@@ -1,68 +1,91 @@
 @font-face {
-  font-family: "EB_Garamond_Regular";
-  src: url("../fonts/EBGaramond-Regular.ttf") format("truetype");
-  font-weight: 400;
+    font-family: "EB_Garamond_Regular";
+    src: url("../fonts/EBGaramond-Regular.ttf") format("truetype");
+    font-weight: 400;
 }
 
 @font-face {
-  font-family: "EB_Garamond_Medium";
-  src: url("../fonts/EBGaramond-Medium.ttf") format("truetype");
-  font-weight: 500;
+    font-family: "EB_Garamond_Medium";
+    src: url("../fonts/EBGaramond-Medium.ttf") format("truetype");
+    font-weight: 500;
 }
 
 @font-face {
-  font-family: "Kanit_Regular";
-  src: url("../fonts/Kanit-Regular.ttf") format("truetype");
-  font-weight: 400;
+    font-family: "Kanit_Regular";
+    src: url("../fonts/Kanit-Regular.ttf") format("truetype");
+    font-weight: 400;
 }
 
 @font-face {
-  font-family: "Kanit_Medium";
-  src: url("../fonts/Kanit-Medium.ttf") format("truetype");
-  font-weight: 500;
+    font-family: "Kanit_Medium";
+    src: url("../fonts/Kanit-Medium.ttf") format("truetype");
+    font-weight: 500;
 }
 
 @font-face {
-  font-family: "Kanit_SemiBold";
-  src: url("../fonts/Kanit-SemiBold.ttf") format("truetype");
-  font-weight: 600;
+    font-family: "Kanit_SemiBold";
+    src: url("../fonts/Kanit-SemiBold.ttf") format("truetype");
+    font-weight: 600;
 }
 
 @font-face {
-  font-family: "Kanit_Bold";
-  src: url("../fonts/Kanit-Bold.ttf") format("truetype");
-  font-weight: 700;
+    font-family: "Kanit_Bold";
+    src: url("../fonts/Kanit-Bold.ttf") format("truetype");
+    font-weight: 700;
 }
 
 @keyframes slideInFromLeft {
-  0% {
-    transform: translateX(-250px);
-  }
-  100% {
-    transform: translateX(0);
-  }
+    0% {
+        transform: translateX(-250px);
+    }
+    100% {
+        transform: translateX(0);
+    }
 }
 
 .fish {
-  animation: 1s ease-out 0s 1 slideInFromLeft;
-  animation-fill-mode: forwards;
+    animation: 1s ease-out 0s 1 slideInFromLeft;
+    animation-fill-mode: forwards;
 }
 
 /* flickity carousel dots */
 /* position dots in carousel */
 .flickity-page-dots {
-  bottom: 500px;
+    bottom: 500px;
 }
+
 /* circles */
 .flickity-page-dots .dot {
-  width: 6px;
-  height: 6px;
-  opacity: 1;
-  background: rgba(0, 0, 0, 0.30);
-  border: none;
-  margin: 0 2px;
+    width: 6px;
+    height: 6px;
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.30);
+    border: none;
+    margin: 0 2px;
 }
+
 /* fill-in selected dot */
 .flickity-page-dots .dot.is-selected {
-  background: #9759FF; /* purple */
+    background: #9759FF; /* purple */
+}
+
+/* clears the ‘X’ from Internet Explorer */
+input[type=search]::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+input[type=search]::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* clears the ‘X’ from Chrome */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+    display: none;
 }
