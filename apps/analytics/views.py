@@ -63,4 +63,7 @@ class AnalyticsView(TemplateView):
                           for area in Area.objects.all()]
         swimmers_scale = int(max(map(lambda t: t[1], swimmers_area)))+1
         ctx['graphs'].append(BarGraph('average swimmers/project', swimmers_area, swimmers_scale))
-        return ctx
+        if self.request.user.is_superuser: # pyre-ignore[16]
+            return ctx
+        else:
+            return {'unauthenticated': True}
