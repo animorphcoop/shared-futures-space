@@ -1,0 +1,8 @@
+<h1>analytics</h1>
+
+{% for graph in graphs %}
+  <h3>{{graph.title}}</h3>
+  <p>{{graph.visualise|safe}}</p>
+  <p><i>total: {{graph.total}}</i></p>
+  <p><i>average: {{graph.average}}</i></p>
+{% endfor %}
