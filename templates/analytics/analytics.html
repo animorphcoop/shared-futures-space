@@ -1,13 +1,6 @@
 <h1>analytics</h1>
 
-{% for name,area in areas.items %}
-  <h3>{{name}}</h3>
-  {% for name,data_kind in area.items %}
-    <h5>{{data_kind}}</h5>
-    <ul>
-    {% for data_point in data_kind %}
-      <li>{{data_point}}</li>
-    {% endfor %}
-    </ul>
-  {% endfor %}
+{% for graph in graphs %}
+  <h3>{{graph.title}}</h3>
+  {{graph.visualise|safe}}
 {% endfor %}
