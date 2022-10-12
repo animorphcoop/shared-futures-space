@@ -7,20 +7,20 @@ from area.models import Area # pyre-ignore[21]
 from project.models import Project, ProjectMembership # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list # pyre-ignore[21]
 
-from typing import Dict, Any
+from typing import Dict, List, Tuple, Any
 
 class Graph():
-    def __init__(self, title, data):
+    def __init__(self, title: str, data: List[Tuple[str,int]]) -> None:
         self.title = title
         self.data = data
-    def visualise(self):
-        pass
+    def visualise(self) -> str:
+        return "[default graph object doesn't contain a working visualisation method]"
 
 class BarGraph(Graph):
-    def __init__(self, title, data, scale):
+    def __init__(self, title: str, data: List[Tuple[str,int]], scale: int) -> None:
         super().__init__(title, data)
         self.scale = scale
-    def visualise(self):
+    def visualise(self) -> str:
         height = 200
         width = 60+(len(self.data)*80)
         svg = f'<svg height={height} width={width} style="stroke:black;stroke-width:1"><line x1=30 y1=30 x2=30 y2={height-10}></line><line x1=10 y1={height-30} x2={width-30} y2={height-30}></line>'
@@ -32,9 +32,9 @@ class BarGraph(Graph):
             svg += f'<rect x={30+((width-30)*n/len(self.data))} y={(height-30)-((height-30)*bar/self.scale)} width=10 height={((height-30)*bar/self.scale)}></rect>'
         svg += f'</svg>'
         return svg
-    def total(self):
+    def total(self) -> int:
         return sum(map(lambda t: t[1], self.data))
-    def average(self):
+    def average(self) -> float:
         return self.total() / len(self.data)
 
 class AnalyticsView(TemplateView):
