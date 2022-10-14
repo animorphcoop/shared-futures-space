@@ -28,6 +28,9 @@
         focus:text-black-text focus:border-purple focus:ring-0
         invalid:border-red-important focus:invalid:ring-red-important borken:border-red-important focus:borken:ring-red-important
     }
+    .text-name {
+        @apply uppercase text-black-text font-kanit-400 text-[9px] leading-3 tracking-widest
+    }
 }
 
 @tailwind utilities; /* after layer so they can still be overwritten by utilities */
