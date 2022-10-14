@@ -19,7 +19,7 @@
                 <div class="px-3">
                     {% include "landing/main-heading.html" with title="We offer smart resources throughout the project." %}
                 </div>
-                {% include "partials/horizontal-spacer.html" with space="6" %}
+                {% include "partials/vertical-spacer.html" with space="6" %}
 
                 {# WET SALMON #}
                 <section class="flex flex-col items-center">
@@ -37,27 +37,41 @@
                          class="fish w-36 h-auto">
                 </section>
 
-                {% include "partials/horizontal-spacer.html" with space="4" %}
+                {% include "partials/vertical-spacer.html" with space="4" %}
                 <div class="flex flex-col gap-4.5 items-start">
                     {% include "partials/button.html" with url="the_url" style="primary_colour" button="Funding 💰" %}
                     {% include "partials/button.html" with url="the_url" style="primary_colour" button="Project management 🚧" %}
                     {% include "partials/button.html" with url="the_url" style="primary_colour" button="Community business 💰" %}
                 </div>
             </div>
+
             <div x-show="openTab === 'two'">
                 <div class="px-3">
                     {% include "landing/main-heading.html" with title="Stages, polls, and dedicated chats to help keep projects on track." %}
                 </div>
-                {% include "partials/horizontal-spacer.html" with space="6" %}
+                {% include "partials/vertical-spacer.html" with space="6" %}
+                <div class="bg-yellow rounded-t-xl shadow-xl">
+                    <div class="flex gap-2 items-center justify-center">
+                        <img src="{% static 'images/avatars/salmon_1.png' %}">
+                        <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text py-5 text-center">
+                            Time to decide on the vision
+                        </h3>
+                    </div>
+                </div>
+                <div class="bg-yellow/50">
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                </div>
             </div>
+
             <div x-show="openTab === 'three'">
                 <div class="px-3">
                     {% include "landing/main-heading.html" with title="Find like-minded people in your area and together make a change." %}
                 </div>
-                {% include "partials/horizontal-spacer.html" with space="6" %}
+                {% include "partials/vertical-spacer.html" with space="6" %}
                 <div>
                     <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
-                        Hi all! I am starting a new project to create a new community garden and teach children how to cook.
+                        Hi all! I am starting a new project to create a new community garden and teach children how to
+                        cook.
                     </p>
                     <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
                     <div class="flex gap-1 items-center">
@@ -65,7 +79,7 @@
                         <span class="text-name">Grace Campbell</span>
                     </div>
                 </div>
-                {% include "partials/horizontal-spacer.html" with space="6" %}
+                {% include "partials/vertical-spacer.html" with space="6" %}
                 <div class="flex flex-col items-end">
                     <p class="bg-white font-garamond-500 text-black-large text-right text-base px-3 py-2.5 rounded-xl leading-tight">
                         Hi Grace, amazing! I am keen to see where we can take this!
