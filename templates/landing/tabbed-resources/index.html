@@ -14,7 +14,7 @@
                 {% include "landing/tabbed-resources/title.html" with title="co creation" %}
             </li>
         </ul>
-        <div :class="`bg-resources-${openTab}`" class="w-full py-6 px-4.5">
+        <div :class="`bg-resources-${openTab}`" class="w-full pt-6 pb-9 px-4.5 min-h-[486px]">
             <div x-show="openTab === 'one'">
                 <div class="px-3">
                     {% include "landing/main-heading.html" with title="We offer smart resources throughout the project." %}
@@ -49,17 +49,72 @@
                 <div class="px-3">
                     {% include "landing/main-heading.html" with title="Stages, polls, and dedicated chats to help keep projects on track." %}
                 </div>
+
                 {% include "partials/vertical-spacer.html" with space="6" %}
+
                 <div class="bg-yellow rounded-t-xl shadow-xl">
                     <div class="flex gap-2 items-center justify-center">
                         <img src="{% static 'images/avatars/salmon_1.png' %}">
-                        <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text py-5 text-center">
+                        <h3 class="text-header py-5 text-center">
                             Time to decide on the vision
                         </h3>
                     </div>
                 </div>
+
                 <div class="bg-yellow/50">
-                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    {% include "partials/vertical-spacer.html" with space="5" %}
+                    <span class="text-large text-black-text px-3.5 block">
+                        Are you happy to continue with the project vision?
+                    </span>
+
+                    {% include "partials/vertical-spacer.html" with space="5" %}
+
+                    <div class="flex justify-between items-center px-3.5">
+                        <span class="button button-on-colour inline-block">
+                            Yes
+                        </span>
+                        <div class="flex items-center gap-4">
+                            <span class="text-meta font-kanit-700">
+                                5
+                            </span>
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                                      fill="#9759FF"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {% include "partials/vertical-spacer.html" with space="3" %}
+
+                    <div class="flex justify-between items-center px-3.5">
+                        <span class="button button-on-colour inline-block">
+                            No
+                        </span>
+                        <div class="flex items-center gap-4">
+                            <span class="text-meta font-kanit-700">
+                                1
+                            </span>
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                                      fill="#9759FF"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                     {% include "partials/vertical-spacer.html" with space="3" %}
+
+                    <span class="block text-meta px-3.5">
+                        Please vote. 4 more vote are needed for a final outcome. This vote will run out in 4 days and 2 hours.
+                    </span>
+                    {% include "partials/vertical-spacer.html" with space="3" %}
+                    <span class="flex gap-2 text-meta uppercase text-black/30 px-3.5">
+                        <span>Wise Salmon</span>
+                        <span>11:12</span>
+                        <span>15/11/2022</span>
+                    </span>
+                    {% include "partials/vertical-spacer.html" with space="3" %}
                 </div>
             </div>
 
@@ -76,7 +131,7 @@
                     <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
                     <div class="flex gap-1 items-center">
                         <img src="{% static 'images/avatars/shrimp.png' %}">
-                        <span class="text-name">Grace Campbell</span>
+                        <span class="text-meta-label">Grace Campbell</span>
                     </div>
                 </div>
                 {% include "partials/vertical-spacer.html" with space="6" %}
@@ -87,7 +142,7 @@
                     <div class="mr-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
                     <div class="flex gap-1 items-center">
                         <img src="{% static 'images/avatars/trout.png' %}">
-                        <span class="text-name">Tom Bell</span>
+                        <span class="text-meta-label">Tom Bell</span>
                     </div>
                 </div>
             </div>
