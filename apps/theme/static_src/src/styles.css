@@ -33,8 +33,17 @@
     }
 
     /* --- TYPOGRAPHY ----------------------------------------------------------------------------------------------- */
-    .text-name {
-        @apply uppercase text-black-text font-kanit-400 text-[9px] leading-3 tracking-widest
+    .text-large { /* mobile/28 Prompts + Descriptions */
+        @apply text-black-large font-garamond-500 text-black-large text-[22px] leading-7/*28px*/
+    }
+    .text-header { /* mobile/10 Headers */
+        @apply uppercase text-black-text font-kanit-600 text-[10px] tracking-widest
+    }
+    .text-meta { /* mobile/meta/9 lowercase Reg: meta */
+        @apply text-black-text font-kanit-400 text-[9px] leading-3 tracking-[0.03em]
+    }
+    .text-meta-label { /* mobile/meta/9 allcap Reg: tags and names */
+        @apply uppercase text-black-text font-kanit-400 text-[9px] leading-[12px] tracking-widest
     }
 }
 
