@@ -1,7 +1,7 @@
 {% load static %}
 
 <div x-data="{ open: false, toggle() { this.open = ! this.open } }" :class="{'fixed top-0 right-6.5': open == true}"
-    class="w-full absolute pointer-events-auto">
+    class="w-full sm:w-[360px] absolute pointer-events-auto">
     <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
         @click="toggle(), menu = !menu">
         <span class="sr-only">Open main menu</span>
@@ -92,7 +92,7 @@
                     <a href="{% url 'account_logout' %}">Logout</a>
                 </li>
             </ul>
-            <ul class="p-4">
+            <ul class="p-4 bg-white">
                 <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
                     Get in touch
                 </li>
