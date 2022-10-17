@@ -1,5 +1,6 @@
 "use strict";
 /* Needs auth-helper to run */
+const signupForm = document.getElementById("signup_form");
 // triggered from x-init on the form
 function setupObserversSignup() {
     if (inputFeedback == null)
@@ -15,10 +16,23 @@ function setupObserversSignup() {
 function evaluateButtonSignup() {
     if (inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
         return;
-    if (inputFeedback.innerText === '' && passwordFeedbackOne.innerText === '' && passwordFeedbackTwo.innerText === '') {
+    if (inputFeedback.innerText === '' || passwordFeedbackOne.innerText === '' || passwordFeedbackTwo.innerText === '') {
         toggleSubmitButton(true);
     }
     else {
         toggleSubmitButton(false);
     }
+}
+function validateSignup() {
+    console.log('form triggered');
+    if (emailInput == null || passwordInputOne == null || passwordInputTwo == null || inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
+        return;
+    let errorCount = 0;
+    errorCount += validateInputFeedback(emailInput, inputFeedback);
+    errorCount += validateInputFeedback(passwordInputOne, passwordFeedbackOne);
+    errorCount += validateInputFeedback(passwordInputTwo, passwordFeedbackTwo);
+    return errorCount == 0;
+    /*    if (errorCount == 0) {
+            signupForm.submit()
+        }*/
 }
