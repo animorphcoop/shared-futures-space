@@ -31,9 +31,16 @@
 
         <div class="h-4"></div>
 
-        <p class="mb-0.5 font-garamond-500 text-black-text text-base leading-5 whitespace-normal">
-            {{ resource.summary }}
-        </p>
+        {% if resource.body %}
+            <div class="mb-0.5 font-garamond-500 text-black-text text-base leading-5 whitespace-normal">
+                {{ resource.body }}
+            </div>
+            <div class="h-4"></div>
+        {% else %}
+            <p class="mb-0.5 font-garamond-500 text-black-text text-base leading-5 whitespace-normal">
+                {{ resource.summary }}
+            </p>
+        {% endif %}
 
         <div class="h-4"></div>
 
@@ -56,13 +63,6 @@
                 </svg>
 
             </a>
-            <div class="h-4"></div>
-        {% endif %}
-
-        {% if resource.body %}
-            <div class="p-6">
-                <p class='leading-normal'>{{ resource.body }}</p>
-            </div>
             <div class="h-4"></div>
         {% endif %}
 
