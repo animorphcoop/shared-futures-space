@@ -17,36 +17,20 @@ function evaluateButtonSignup() {
     if (inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
         return;
     if (inputFeedback.innerText === '' || passwordFeedbackOne.innerText === '' || passwordFeedbackTwo.innerText === '') {
-        console.log('about to enable');
         toggleSubmitButton(true);
     }
     else {
-        console.log('about to disable');
         toggleSubmitButton(false);
     }
 }
 function validateSignup() {
-    if (emailInput == null || passwordInputOne == null || passwordInputTwo == null)
+    if (emailInput == null || passwordInputOne == null || passwordInputTwo == null || inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
         return;
-    if (inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
-        return;
-    console.log(emailInput);
-    let readyToGo = true;
-    if (emailInput.value.length < 1 || inputFeedback.innerText != '') {
-        //emailInput.setAttribute("required", "");
-        emailInput.setAttribute("borken", "true");
-        readyToGo = false;
-    }
-    if (passwordInputOne.value.length < 1 || passwordFeedbackOne.innerText != '') {
-        passwordInputOne.setAttribute("borken", "true");
-        readyToGo = false;
-    }
-    if (passwordInputTwo.value.length < 1 || passwordFeedbackTwo.innerText != '') {
-        passwordInputTwo.setAttribute("borken", "true");
-        readyToGo = false;
-    }
-    console.log('not going');
-    if (readyToGo) {
+    let errorCount = 0;
+    errorCount += validateInputFeedback(emailInput, inputFeedback);
+    errorCount += validateInputFeedback(passwordInputOne, passwordFeedbackOne);
+    errorCount += validateInputFeedback(passwordInputTwo, passwordFeedbackTwo);
+    if (errorCount == 0) {
         signupForm.submit();
     }
 }
