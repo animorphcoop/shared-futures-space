@@ -12,7 +12,8 @@
 
         {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
 
-        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}"
+        <form class="signup" id="signup_form" onsubmit="return validateSignup()" method="post"
+              action="{% url 'account_signup' %}"
               x-init="setupObserversSignup()">
 
             {% csrf_token %}
@@ -47,7 +48,7 @@
             </div>
 
             <div class="px-4 pb-6">
-                <button id="submit-button"
+                {% comment %}                <button id="submit-button"
                         disabled
                         type="submit"
                         onclick="event.preventDefault(); validateSignup()"
@@ -59,11 +60,9 @@
                         disabled:bg-gray-light
                         cursor-not-allowed">
                     Sign Up
-                </button>
+                </button>{% endcomment %}
 
-                {% comment %}
-                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" onclick="validateSignup()" %}
-{% endcomment %}
+                {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" %}
 
 
             </div>

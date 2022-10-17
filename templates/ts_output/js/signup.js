@@ -24,13 +24,15 @@ function evaluateButtonSignup() {
     }
 }
 function validateSignup() {
+    console.log('form triggered');
     if (emailInput == null || passwordInputOne == null || passwordInputTwo == null || inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
         return;
     let errorCount = 0;
     errorCount += validateInputFeedback(emailInput, inputFeedback);
     errorCount += validateInputFeedback(passwordInputOne, passwordFeedbackOne);
     errorCount += validateInputFeedback(passwordInputTwo, passwordFeedbackTwo);
-    if (errorCount == 0) {
-        signupForm.submit();
-    }
+    return errorCount == 0;
+    /*    if (errorCount == 0) {
+            signupForm.submit()
+        }*/
 }

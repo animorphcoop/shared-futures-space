@@ -33,8 +33,6 @@ function evaluateButtonSignup() {
 
 
 function validateSignup() {
-
-
     if (emailInput == null || passwordInputOne == null || passwordInputTwo == null || inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null) return
 
     let errorCount = 0
@@ -42,9 +40,8 @@ function validateSignup() {
     errorCount += validateInputFeedback(passwordInputOne, passwordFeedbackOne)
     errorCount += validateInputFeedback(passwordInputTwo, passwordFeedbackTwo)
 
-    if (errorCount == 0) {
-        signupForm.submit()
-    }
+    return errorCount == 0
+
 
 
 }
