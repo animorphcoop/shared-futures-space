@@ -12,8 +12,9 @@
 
         {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
 
-        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}"
-            x-init="setupObserversSignup()">
+        <form class="signup" id="signup_form" onsubmit="return validateSignup()" method="post"
+              action="{% url 'account_signup' %}"
+              x-init="setupObserversSignup()">
 
             {% csrf_token %}
 
@@ -24,7 +25,8 @@
 
                 {% comment %}controlled via js/ts{% endcomment %}
                 <span id="email-feedback"
-                    class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 1</span>
+                      class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 1</span>
+
             </div>
 
 
@@ -34,7 +36,8 @@
 
 
                 <span id="password-feedback1"
-                    class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 2</span>
+                      class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 2</span>
+
             </div>
 
             <div class="px-4 pb-9">
@@ -43,11 +46,11 @@
 
 
                 <span id="password-feedback2"
-                    class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 3</span>
+                      class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 3</span>
+
             </div>
 
             <div class="px-4 pb-6">
-
                 {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" %}
 
             </div>
@@ -55,7 +58,9 @@
         </form>
 
         <div class="flex flex-col flex-grow justify-end">
-            <section class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_41.67%)] flex flex-grow flex-col items-center">
+            <section
+                    class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_41.67%)] flex flex-grow flex-col items-center">
+
                 {% include "socialaccount/partials/provider_list.html" with process="login" %}
             </section>
 

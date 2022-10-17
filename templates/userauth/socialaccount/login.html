@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% comment %}{{ provider.name }} SLOW{% endcomment %}
+    <div class="hidden">
+        <span>About to redirect to {{ provider.name }} authentication...</span>
+
+        <form method="post" id="social-sign">
+            {% csrf_token %}
+            <button type="submit"></button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('social-sign').submit()
+    </script>
+{% endblock %}
+

@@ -89,6 +89,15 @@ function validateEmail(address: string) {
 }
 
 
+function validateInputFeedback(input: HTMLInputElement, feedback: HTMLElement,) {
+    if (input.value.length < 1 || feedback.innerText != '') {
+        input.setAttribute("borken", "true");
+        return 1
+    } else {
+        return 0
+    }
+}
+
 function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null) return
 
