@@ -108,12 +108,12 @@ module.exports = {
             },
             backgroundImage: {
                 "landing-enter": "linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.4)), url('/static/images/landing/landing-temporary.gif'), url('/static/images/landing/landing-temporary.png')",
-                "north-belfast": "url('/static/images/landing/areas/northbelfast.png')",
-                "east-belfast": "url('/static/images/landing/areas/eastbelfast.png')",
-                "south-belfast": "url('/static/images/landing/areas/southbelfast.png')",
-                "west-belfast": "url('/static/images/landing/areas/westbelfast.png')",
-                "derry-londonderry": "url('/static/images/landing/areas/derrylondonderry.png')",
-                "arranmore": "url('/static/images/landing/areas/arranmore.png')",
+                "north-belfast": "url('/static/images/landing/areas/northbelfast.jpg')",
+                "east-belfast": "url('/static/images/landing/areas/eastbelfast.jpg')",
+                "south-belfast": "url('/static/images/landing/areas/southbelfast.jpg')",
+                "west-belfast": "url('/static/images/landing/areas/westbelfast.jpg')",
+                "derry-londonderry": "url('/static/images/landing/areas/derrylondonderry.jpg')",
+                "arranmore": "url('/static/images/landing/areas/arranmore.jpg')",
             },
         },
         fontFamily: {
