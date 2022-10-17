@@ -1,17 +1,40 @@
-<form hx-post="{% url 'resource_search' %}" hx-trigger="change, load, keyup, search" hx-include="#searchbar, #orderby" hx-target="#search-results" onsubmit="return false;">
-  <input id="searchbar"
-         class="w-full px-3 py-3 font-garamond-500 text-black-text placeholder:text-black-meta
-         bg-blue-second bg-clip-padding border border-solid border-transparent
-         transition ease-in-out m-0
-         focus:text-black-text focus:border-purple focus:ring-0"
-         type="search"
-         name="search"
-         placeholder=" Type to search...">
-  <select id="orderby" name="order_by">
-    <option value="latest">latest</option>
-    <option value="most saved">most saved</option>
-    <option value="most viewed">most viewed</option>
-  </select>
+<form hx-post="{% url 'resource_search' %}"
+      hx-trigger="change, load, keyup, search"
+      hx-include="#searchbar, #orderby"
+      hx-target="#search-results"
+      onsubmit="return false;"
+      class="mb-0">
+
+    <div class="relative">
+        <input id="searchbar"
+               class="input-text"
+               type="search"
+               name="search"
+               placeholder=" Type to search...">
+        <svg class="absolute top-4 right-4" width="18" height="18" viewBox="0 0 18 18" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z"
+                  fill="#9759FF"/>
+        </svg>
+    </div>
+
+    {% include "partials/vertical-spacer.html" with space="4" %}
+
+    {# Result count and filter #}
+    <div class="flex justify-between items-center text-meta">
+        <div>
+            <label for="order_by" class="-mr-0.5">Sort: </label>
+            <select class="text-meta m-0 p-0 border-none focus:border-none active:border-none bg-none focus:ring-0"
+                    id="orderby" name="order_by">
+                <option value="latest">latest</option>
+                <option value="most saved">most saved</option>
+                <option value="most viewed">most viewed</option>
+            </select>
+        </div>
+        <span id="result-count"></span>
+    </div>
+
+    {% include "partials/vertical-spacer.html" with space="3" %}
 </form>
 {% comment %}In case the user calls it via resource_tag view we want to immediately filter and then mask the tag from the url & history{% endcomment %}
 {% if tag %}
@@ -22,10 +45,5 @@
              hx-trigger="load">
     </section>
 {% endif %}
-<svg class="absolute top-4 right-8" width="18" height="18" viewBox="0 0 18 18" fill="none"
-     xmlns="http://www.w3.org/2000/svg">
-    <path d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z"
-          fill="#9759FF"/>
-</svg>
 
 {% comment %}//hx-push-url="/resources/"{% endcomment %}

@@ -9,22 +9,17 @@
 
     {% block title %}{% include "partials/title.html" with title="Resources" %}{% endblock %}
 
-    {#Search, number of results, and filter#}
+    {# Search, number of results, and filter #}
     <section class="bg-gradient-to-b from-gray-light via-white">
-        <div class="h-6"></div>
-        <div class="px-4.5 h-11 relative">
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        <div class="px-4.5">
             {% include 'resources/partials/search.html' %}
         </div>
-        <div class="h-4"></div>
-        <div class="px-4.5">
-            {% include 'partials/text-style/meta-lowercase.html' with id="result-count" %}
-        </div>
-        <div class="h-3"></div>
     </section>
 
-    {#Results#}
+    {# Results #}
     <section>
-        <ul id="search-results" class=""></ul>
+        <ul id="search-results" class="px-1.5"></ul>
     </section>
 
     {% block scripts %}

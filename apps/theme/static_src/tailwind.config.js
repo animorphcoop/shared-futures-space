@@ -126,7 +126,10 @@ module.exports = {
         },
     },
     safelist: [
+        "h-3",
+        "h-4",
         "h-5",
+        "h-6",
         "h-7",
         "h-9",
         "bg-purple/25",
