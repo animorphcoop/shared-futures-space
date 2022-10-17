@@ -90,6 +90,7 @@ function validateEmail(address: string) {
 }
 
 
+
 function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null) return
 
