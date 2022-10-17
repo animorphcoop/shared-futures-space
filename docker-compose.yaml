@@ -15,7 +15,7 @@ services:
              python3 manage.py makemigrations --no-input &&
              python3 manage.py migrate --no-input &&
              python3 manage.py collectstatic --noinput &&
-             python3 manage.py runserver 0.0.0.0:9000"
+             uwsgi --module=sfs.wsgi:application --env DJANGO_SETTINGS_MODULE=sfs.settings.settings --master --pidfile=/tmp/project-master.pid --vacuum --http :9000"
     env_file:
       - variables.env
     depends_on:
