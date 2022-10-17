@@ -1,6 +1,4 @@
 /* Needs auth-helper to run */
-const signupForm: HTMLFormElement = (<HTMLFormElement>document.getElementById("signup_form"))
-
 
 // triggered from x-init on the form
 function setupObserversSignup() {
@@ -33,6 +31,7 @@ function evaluateButtonSignup() {
 
 
 function validateSignup() {
+
     if (emailInput == null || passwordInputOne == null || passwordInputTwo == null || inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null) return
 
     let errorCount = 0
@@ -41,7 +40,5 @@ function validateSignup() {
     errorCount += validateInputFeedback(passwordInputTwo, passwordFeedbackTwo)
 
     return errorCount == 0
-
-
 
 }
