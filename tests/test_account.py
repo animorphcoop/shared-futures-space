@@ -8,7 +8,7 @@ import re
 from django.urls import reverse
 from userauth.models import CustomUser
 from action.models import Action
-from userauth.util import get_system_user
+from userauth.util import get_system_user, user_to_slug, slug_to_user
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
@@ -103,7 +103,7 @@ def test_user_request_flow(client, test_user, admin_client):
     assert test_user.display_name + ' made a request: user_request_make_editor, because: pls' in requests_html.text
     action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
     admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
-    messages = client.get(reverse('user_chat', args=[get_system_user().uuid]))
+    messages = client.get(reverse('user_chat', args=[user_to_slug(get_system_user())]))
     assert 'your request to become an editor has been granted' in str(messages.content)
 
 

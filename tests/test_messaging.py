@@ -4,6 +4,7 @@ import pytest
 import bs4
 
 from project.models import ProjectMembership
+from userauth.util import slug_to_user, user_to_slug
 
 from django.urls import reverse
 
@@ -60,20 +61,20 @@ def test_project_chat_interface(client, test_user, test_project):
 def test_direct_chat_basics(client, test_user, other_test_user):
     from userauth.util import get_userpair # import here because importing from util is side-effecting on the db the first time it happens and pytest doesn't like that
     pair = get_userpair(other_test_user, test_user)
-    chat_url = reverse('user_chat', args=[other_test_user.uuid])
+    chat_url = reverse('user_chat', args=[user_to_slug(other_test_user)])
     client.force_login(test_user)
     chat_page = client.get(chat_url)
     assert b'Private chat' in chat_page.content
     client.post(chat_url, {'message': 'test message'})
     client.force_login(other_test_user)
-    chat_page = client.get(reverse('user_chat', args=[test_user.uuid]))
+    chat_page = client.get(reverse('user_chat', args=[user_to_slug(test_user)]))
     assert b'Private chat' in chat_page.content
     assert b'test message' in chat_page.content
 
 def test_direct_chat_interface(client, test_user, other_test_user):
     from userauth.util import get_userpair # import here because importing from util is side-effecting on the db the first time it happpens and pytest doesn't like that
     pair = get_userpair(test_user, other_test_user)
-    chat_url = reverse('user_chat', args=[other_test_user.uuid])
+    chat_url = reverse('user_chat', args=[user_to_slug(other_test_user)])
     client.force_login(test_user)
     for i in range(10):
         client.post(chat_url, {'message': 'test message ' + str(i)})
