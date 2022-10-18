@@ -5,16 +5,13 @@ import bs4
 
 from django.urls import reverse
 from project.models import Project, ProjectMembership
+from userauth.util import user_to_slug
 
 def test_project_view(client, test_project):
     projects_page = client.get(reverse('spring', args=[test_project.area.uuid]))
-    projects_page_html = bs4.BeautifulSoup(projects_page.content, features='html5lib')
-    projects = projects_page_html.find('table', attrs={'id':'projects'}).tbody.find_all('tr')[1:] # drop the headings row
-    test_project_row = [p for p in projects if p.find('td').text == test_project.name]
-    assert len(test_project_row) == 1
-    single_project_view = client.get(test_project_row[0].find('a')['href'])
-    single_project_html = bs4.BeautifulSoup(single_project_view.content, features='html5lib')
-    assert single_project_html.find('h3').text == f"Project: {test_project.name}"
+    assert test_project.name in projects_page.content.decode('utf-8')
+    single_project_view = client.get(reverse('view_project', args=[test_project.slug]))
+    assert test_project.description in single_project_view.content.decode('utf-8')
 
 def test_project_edit(client, test_user, test_project):
     ProjectMembership.objects.create(user = test_user, project = test_project, owner = True)
@@ -87,7 +84,7 @@ def test_project_management(client, test_user, other_test_user, test_project):
     client.post(reverse('manage_project', args=[test_project.slug]), {'membership': other_membership.id,
                                                                       'action': 'offer_championship'})
     client.force_login(other_test_user)
-    user_chat = client.get(reverse('user_chat', args=[test_user.uuid]))
+    user_chat = client.get(reverse('user_chat', args=[user_to_slug(test_user)]))
     user_chat_html = bs4.BeautifulSoup(user_chat.content, features='html5lib')
     action_id = user_chat_html.find('input', attrs={'type':'hidden', 'name':'action_id'})['value']
     client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})

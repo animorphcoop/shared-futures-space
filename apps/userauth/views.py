@@ -13,6 +13,7 @@ from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginF
 from django.http.request import QueryDict
 
 from .tasks import send_after
+from .util import user_to_slug, slug_to_user
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
@@ -40,16 +41,8 @@ import random
 # redirecting to the profile url using the request data
 def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
     if request.user.is_authenticated:
-        # we extended the user model so can ignore
-        display_name = str(request.user.display_name)  # pyre-ignore[16]
-        if ' ' in display_name:
-            name = display_name.replace(' ', '-')
-        else:
-            name = display_name
-
-        slug = f"{name}-{str(request.user.pk)}".lower()
+        slug = user_to_slug(request.user) # pyre-ignore[6]
         return redirect('user_detail', slug)
-
     else:
         return HttpResponseRedirect(reverse_lazy('account_login'))
     # return render(request, 'account/view.html')
@@ -183,22 +176,24 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
 
 
 class UserChatView(ChatView):
-    def post(self, request: WSGIRequest, other_uuid: UUID) -> HttpResponse:
-        [user1, user2] = sorted([request.user.uuid, other_uuid])  # pyre-ignore[16]
+    def post(self, request: WSGIRequest, user_path: str) -> HttpResponse:
+        other_user = slug_to_user(user_path)
+        [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
                                                      user2=CustomUser.objects.get(uuid=user2))
-        return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[other_uuid]),  # pyre-ignore[16]
+        return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[user_path]),  # pyre-ignore[16]
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']])  # pyre-ignore[16]
+        other_user = slug_to_user(kwargs['user_path']) # pyre-ignore[6]
+        [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
                                                      user2=CustomUser.objects.get(uuid=user2))
         # pyre-ignore[16]:
-        context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[kwargs['other_uuid']]),
+        context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[kwargs['user_path']]),
                                            members=[CustomUser.objects.get(uuid=user1),
                                                     CustomUser.objects.get(uuid=user2)])
-        context['other_user'] = CustomUser.objects.get(uuid=kwargs['other_uuid'])
+        context['other_user'] = other_user
         # due to the page being login_required, there should never be anonymous users seeing the page
         # due to request.user being in members, there should never be non-members seeing the page
         return context
@@ -254,30 +249,19 @@ class CustomUserPersonalView(TemplateView):
         return context
 
     def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[HttpResponse, HttpResponseRedirect]:
-        split_slug = str(kwargs['slug']).rsplit('-')
-        pk = split_slug[-1]
         try:
-            int(pk)
+            user = slug_to_user(str(kwargs['slug']))
         except:
             return HttpResponseRedirect(reverse('404'))
 
-        display_name = [' '.join(split_slug[:-1])]
+        context = {'user': user}
+        context['user'].signup_date = user.signup_date.year
+        if self.request.user == user:
+            context['self'] = True # pyre-ignore[6]
+            context['organisations'] = Organisation.objects.all() # pyre-ignore[6]
+            context['avatars'] = UserAvatar.objects.all() # pyre-ignore[6]
 
-        if CustomUser.objects.filter(pk=pk).exists():
-            user = get_object_or_404(CustomUser, pk=pk)
-            if str(user.display_name).lower() == display_name[0].lower():
-                context = {'user': user}
-                context['user'].signup_date = user.signup_date.year
-                if self.request.user == user:
-                    context['self'] = True # pyre-ignore[6]
-                    context['organisations'] = Organisation.objects.all() # pyre-ignore[6]
-                    context['avatars'] = UserAvatar.objects.all() # pyre-ignore[6]
-
-                return render(request, 'account/view.html', context)
-            else:
-                return HttpResponseRedirect(reverse('404'))
-        else:
-            return HttpResponseRedirect(reverse('404'))
+        return render(request, 'account/view.html', context)
 
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
         current_user = self.request.user
