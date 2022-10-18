@@ -41,7 +41,7 @@ import random
 # redirecting to the profile url using the request data
 def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
     if request.user.is_authenticated:
-        slug = user_to_slug(request.user)
+        slug = user_to_slug(request.user) # pyre-ignore[6]
         return redirect('user_detail', slug)
     else:
         return HttpResponseRedirect(reverse_lazy('account_login'))
@@ -185,7 +185,7 @@ class UserChatView(ChatView):
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        other_user = slug_to_user(kwargs['user_path'])
+        other_user = slug_to_user(kwargs['user_path']) # pyre-ignore[6]
         [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
                                                      user2=CustomUser.objects.get(uuid=user2))
