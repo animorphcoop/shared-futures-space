@@ -115,6 +115,10 @@ module.exports = {
                 "derry-londonderry": "url('/static/images/landing/areas/derrylondonderry.jpg')",
                 "arranmore": "url('/static/images/landing/areas/arranmore.jpg')",
             },
+            opacity: {
+                '55': '.55',
+                '75': '.75',
+            }
         },
         fontFamily: {
             "kanit-400": ["Kanit_Regular", "sans-serif"],

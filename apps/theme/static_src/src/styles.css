@@ -43,6 +43,9 @@
     .text-header { /* mobile/10 Headers */
         @apply uppercase text-black-text font-kanit-600 text-[10px] tracking-widest leading-normal
     }
+    .text-body { /* mobile/15 Body */
+        @apply font-garamond-500 text-black-text text-base leading-5 whitespace-normal
+    }
     .text-meta { /* mobile/meta/9 lowercase Reg: meta */
         @apply text-black-text font-kanit-400 text-[9px] leading-3 tracking-[0.03em]
     }
