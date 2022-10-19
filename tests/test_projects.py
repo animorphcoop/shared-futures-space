@@ -8,7 +8,7 @@ from project.models import Project, ProjectMembership
 from userauth.util import user_to_slug
 
 def test_project_view(client, test_project):
-    projects_page = client.get(reverse('spring', args=[test_project.area.uuid]))
+    projects_page = client.get(reverse('spring', args=[test_project.area.name]))
     assert test_project.name in projects_page.content.decode('utf-8')
     single_project_view = client.get(reverse('view_project', args=[test_project.slug]))
     assert test_project.description in single_project_view.content.decode('utf-8')

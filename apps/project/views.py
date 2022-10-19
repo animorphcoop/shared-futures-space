@@ -193,14 +193,15 @@ class ProjectChatView(ChatView):  # pyre-ignore[11]
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
         project = Project.objects.get(slug=slug)
         chat = self.get_chat(project, stage, topic)
+        # pyre-ignore[16]
         return super().post(request, chat=chat, url=request.get_full_path(), members=list(
-            map(lambda x: x.user, ProjectMembership.objects.filter(project=project))))  # pyre-ignore[16]
-
+            map(lambda x: x.user, ProjectMembership.objects.filter(project=project))))
     def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
         project = Project.objects.get(slug=slug)
+        # pyre-ignore[16]
         ctx = super().get_context_data(chat=self.get_chat(project, stage, topic), url=self.request.get_full_path(),
                                        members=list(map(lambda x: x.user, ProjectMembership.objects.filter(
-                                           project=project))))  # pyre-ignore[16]
+                                           project=project))))
         return ctx
 
 
