@@ -14,6 +14,5 @@ def get_areas() -> List[str]:
         if area.name != 'Other':
             areas.append(area.name)
     areas.sort()
-    print(type(areas))
     return areas
 

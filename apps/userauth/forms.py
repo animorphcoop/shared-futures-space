@@ -5,7 +5,7 @@ from analytics.models import log_signup  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
-from allauth.account.forms import SignupForm, LoginForm, ResetPasswordForm
+from allauth.account.forms import SignupForm, LoginForm, ResetPasswordForm, ChangePasswordForm
 from wagtail.users.forms import UserEditForm, UserCreationForm
 
 from typing import Type, List, Any, Dict
@@ -99,7 +99,6 @@ class CustomUserAddDataForm(forms.Form):
 class CustomLoginForm(LoginForm):
     error_messages = {
         "email_password_mismatch": "The e-mail address and/or password you provided are not correct, please try again."
-
     }
 
     class Meta:
@@ -110,6 +109,11 @@ class CustomLoginForm(LoginForm):
         super(CustomLoginForm, self).__init__(*args, **kwargs)
         self.fields['login'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
         self.fields['password'].widget.attrs = {'borken': 'false', }
+
+
+class CustomChangePasswordForm(ChangePasswordForm):
+    pass
+
 
 
 class CustomResetPasswordForm(ResetPasswordForm):
