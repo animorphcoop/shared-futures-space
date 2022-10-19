@@ -1,14 +1,23 @@
 {% load static %}
-<div style='border-style:solid'>
-    <b>
-        {% if message.sender != request.user %}
-            <a href="{% url 'user_chat' message.sender.uuid %}">{{ message.sender.display_name }}</a>
-        {% else %}
-            {{ message.sender.display_name }}
-        {% endif %}:
-    </b>
-    <br/>
-    {% include "account/partials/avatar_image.html" with image_url=message.sender.avatar.image_url %}
+<div style=''>
 
-    {{ message.text }}
+    {% include "account/partials/avatar_image.html" with image_url=message.sender.avatar.image_url direction=direction%}
+
+    <div id="message-content">
+        {{ message.text }}
+    </div>
+
+    <div id="sender">
+        {% if message.sender != request.user %}
+            {{ message.sender.display_name }}
+        {% endif %}
+    </div>
+
+    <div id="time">
+        {{ message.timestamp|date:"G:i" }}
+    </div>
+
+    <div id="date">{{ message.timestamp|date:"d/m/y" }}</div>
+
+
 </div>
