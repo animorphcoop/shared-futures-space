@@ -102,6 +102,7 @@ module.exports = {
             },
             spacing: {
                 4.5: ["1.125em"],
+                7.5: ["1.875em"],
             },
             boxShadow: {
                 input: "0px 1px 1px 0px rgba(0, 0, 0, 0.15) inset",
@@ -143,6 +144,7 @@ module.exports = {
         "bg-west-belfast",
         "bg-derry-londonderry",
         "bg-arranmore",
+        "w-7.5"
     ],
     variants: {
         extend: {},
