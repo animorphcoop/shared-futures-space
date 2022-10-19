@@ -68,56 +68,9 @@
                          x-transition:leave="transition ease-in duration-150"
                          x-transition:leave-start="opacity-100"
                          x-transition:leave-end="opacity-0">
-                        <ul class="list-non text-black-meta" aria-labelledby="dropdownLargeButton">
-                            {% comment %}TODO: LIST ITEMS ONLY{% endcomment %}
 
-                            {% if user.is_authenticated %}
-                                <li class="px-4 py-3 pt-6 text-black-text">
-                                    <a href="{% url "spring" 'Colin' %}"><span>Your spring: </span>Colin</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="{% url "spring" 'North-Belfast' %}">North Belfast</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="{% url "spring" 'East-Belfast' %}">East Belfast</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="{% url "spring" 'West-Belfast' %}">West Belfast</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="{% url "spring" 'South-Belfast' %}">South Belfast</a>
-                                </li>
-                                <li class="px-4 py-3">
-                                    <a href="{% url "spring" 'Derry~Londonderry' %}">Derry~Londonderry</a>
-                                </li>
-                                <li class="px-4 py-3 pb-0">
-                                    <a href="{% url "spring" 'Arranmore' %}">Donegal</a>
-                                </li>
-                            {% else %}
-                                <li class="px-4 py-3 pt-6 text-black-text">
-                                    <a href="{% url "spring" 'Colin' %}">Colin</a>
-                                </li>
-                                <li class="px-4 py-3 text-black-text">
-                                    <a href="{% url "spring" 'North-Belfast' %}">North Belfast</a>
-                                </li>
-                                <li class="px-4 py-3 text-black-text">
-                                    <a href="{% url "spring" 'East-Belfast' %}">East Belfast</a>
-                                </li>
-                                <li class="px-4 py-3 text-black-text">
-                                    <a href="{% url "spring" 'West-Belfast' %}">West Belfast</a>
-                                </li>
-                                <li class="px-4 py-3 text-black-text">
-                                    <a href="{% url "spring" 'South-Belfast' %}">South Belfast</a>
-                                </li>
-                                <li class="px-4 py-3 text-black-text">
-                                    <a href="{% url "spring" 'Derry~Londonderry' %}">Derry~Londonderry</a>
-                                </li>
-                                <li class="px-4 py-3 pb-0 text-black-text">
-                                    <a href="{% url "spring" 'Arranmore' %}">Donegal</a>
-                                </li>
-                            {% endif %}
+                        {% include 'partials/nav-areas.html'%}
 
-                        </ul>
                     </div>
                 </li>
                 {% if user.is_authenticated %}
