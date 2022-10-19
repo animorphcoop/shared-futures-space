@@ -1,11 +1,14 @@
+{% load static %}
 <div style='border-style:solid'>
     <b>
         {% if message.sender != request.user %}
-            <a href="{% url 'user_chat' message.sender.uuid %}">{{message.sender.display_name}}</a>
+            <a href="{% url 'user_chat' message.sender.uuid %}">{{ message.sender.display_name }}</a>
         {% else %}
-            {{message.sender.display_name}}
+            {{ message.sender.display_name }}
         {% endif %}:
     </b>
     <br/>
-    {{message.text}}
+    {% include "account/partials/avatar_image.html" with image_url=message.sender.avatar.image_url %}
+
+    {{ message.text }}
 </div>
