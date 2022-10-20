@@ -5,23 +5,21 @@
 function setupObserversReset() {
 
     if (inputFeedback == null) return
-    newObserver(emailInput, inputFeedback, evaluateButtonReset)
-
+    newObserver(emailInput, inputFeedback, ()=>{})
+    toggleSubmitButton(true)
 
 }
 
 
 
-function evaluateButtonReset() {
+function validateReset() {
 
     if (inputFeedback === null) return
-    if (inputFeedback.innerText === '') {
-        toggleSubmitButton(true)
-    } else {
-        toggleSubmitButton(false)
-    }
-
+    let errorCount = 0
+    errorCount += validateInputFeedback(emailInput, inputFeedback)
+    return errorCount == 0
 
 }
+
 
 
