@@ -178,7 +178,7 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
 
 def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
     if request.user.is_authenticated:
-        slug = user_to_slug(CustomUser.objects.filter(uuid=uuid)[0])  # pyre-ignore[6]
+        slug = user_to_slug(CustomUser.objects.filter(uuid=uuid)[0])
         return redirect('user_chat', slug)
     else:
         return HttpResponseRedirect(reverse_lazy('account_login'))
@@ -324,8 +324,9 @@ class CustomUserPersonalView(TemplateView):
             if form.is_valid():
                 lower_org_name = form.cleaned_data.get('organisation_name').lower()
                 if Organisation.objects.filter(name__iexact=lower_org_name).exists():
+                    # pyre-ignore[16]
                     current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get(
-                        'organisation_name'))  # pyre-ignore[16]
+                        'organisation_name'))
                 else:
                     new_organisation = \
                         Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
