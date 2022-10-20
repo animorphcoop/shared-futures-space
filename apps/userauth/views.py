@@ -9,7 +9,7 @@ from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm, \
-    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -28,7 +28,7 @@ from typing import Type, List, Dict, Union, Any
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
-from allauth.account.views import LoginView, SignupView, PasswordResetView, PasswordChangeView
+from allauth.account.views import LoginView, SignupView, PasswordResetView, PasswordChangeView, PasswordResetFromKeyView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
@@ -143,7 +143,7 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
         send_after.delay(5, msg)
 
 
-@login_required(login_url='/account/login/')
+@login_required(login_url='/profile/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
 
@@ -236,6 +236,10 @@ class CustomPasswordChangeView(PasswordChangeView):
 
 class CustomPasswordResetView(PasswordResetView):
     form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
+
+class CustomPasswordResetFromKeyView(PasswordResetFromKeyView):
+    form_class: Type[CustomResetPasswordKeyForm] = CustomResetPasswordKeyForm
+
 
 
 class CustomUserPersonalView(TemplateView):

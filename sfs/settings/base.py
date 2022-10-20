@@ -220,7 +220,7 @@ BASE_URL: str = 'https://sharedfutures.space'
 CSRF_TRUSTED_ORIGINS = ['https://dev.sharedfutures.space', 'https://sharedfutures.space']
 
 # for @login_required
-LOGIN_URL = '/account/login/'
+LOGIN_URL = '/profile/login/'
 
 # Redis & Celery configuration
 CELERY_BROKER_URL: str = "redis://redis:6379"

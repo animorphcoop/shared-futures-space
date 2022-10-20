@@ -14,7 +14,7 @@ def test_log_account_create(client):
     previous_events = AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.SIGNUP)
     assert len(previous_events) == 0
     exclude_list = [evt.id for evt in previous_events] # force evaluation of the queryset
-    client.post('/account/signup/', {'email': 'testemail@example.com',
+    client.post('/profile/signup/', {'email': 'testemail@example.com',
                                      'password1': 'test_password',
                                      'password2': 'test_password'})
     new_events = AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.SIGNUP).exclude(id__in = exclude_list)
@@ -25,7 +25,7 @@ def test_log_login(client, test_user):
     previous_events = AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.LOGIN)
     assert len(previous_events) == 0
     exclude_list = [evt.id for evt in previous_events] # force evaluation of the queryset
-    client.post('/account/login/', {'login': test_user.email,
+    client.post('/profile/login/', {'login': test_user.email,
                                     'password': 'test_password'}) # user passwords obviously not accessible as part of the object
     new_events = AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.LOGIN).exclude(id__in = exclude_list)
     assert len(new_events) == 1

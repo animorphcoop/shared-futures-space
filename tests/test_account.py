@@ -16,25 +16,25 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 @pytest.mark.usefixtures('celery_session_app')
 @pytest.mark.usefixtures('celery_session_worker')
 def test_create_account(client, mailoutbox):
-    email_free = client.post(reverse('check_email'), {'email': 'testemail@example.com'}, HTTP_REFERER = '/account/signup/')
+    email_free = client.post(reverse('check_email'), {'email': 'testemail@example.com'}, HTTP_REFERER = '/profile/signup/')
     assert '' == email_free.content.decode('utf-8')
-    response = client.post('/account/signup/', {'email': 'testemail@example.com',
+    response = client.post('/profile/signup/', {'email': 'testemail@example.com',
                                                 'password1': 'test_password',
                                                 'password2': 'test_password'})
     time.sleep(6)  # ensure email has sent properly
     assert len(mailoutbox) == 1
-    confirm_extraction = re.match('.*(/account/confirm-email/[_0-9a-zA-Z:-]+/).*', mailoutbox[0].body, re.S)
+    confirm_extraction = re.match('.*(/profile/confirm-email/[_0-9a-zA-Z:-]+/).*', mailoutbox[0].body, re.S)
     assert type(confirm_extraction) == re.Match
     confirm_link = confirm_extraction.group(1)
     confirm_page = client.get(confirm_link).content
     post_link = bs4.BeautifulSoup(confirm_page, 'html5lib').body.find('form', attrs={'method': 'post'}).attrs['action']
     client.post(post_link)  # confirm email
-    login_response = client.post('/account/login/', {'login': 'testemail@example.com',
+    login_response = client.post('/profile/login/', {'login': 'testemail@example.com',
                                                      'password': 'test_password'})
     assert login_response.status_code == 302
     assert login_response.url == '/dashboard/'
     email_free_now = client.post(reverse('check_email'), {'email': 'testemail@example.com'},
-                                 HTTP_REFERER='/account/signup/')
+                                 HTTP_REFERER='/profile/signup/')
     assert 'This address is taken, please choose a different one.' in email_free_now.content.decode('utf-8')
 
 
@@ -95,10 +95,10 @@ def test_user_request_flow(client, test_user, admin_client):
                                {'kind': 'make_editor',
                                 'reason': 'pls'})
     assert make_request.status_code == 302
-    # assert make_request.url == f'/account/update/'
+    # assert make_request.url == f'/profile/update/'
     assert len(Action.objects.filter(kind='user_request_make_editor')) == 1
 
-    requests_page = admin_client.get('/account/managerequests/')
+    requests_page = admin_client.get('/profile/managerequests/')
     requests_html = bs4.BeautifulSoup(requests_page.content, 'html5lib')
     assert test_user.display_name + ' made a request: user_request_make_editor, because: pls' in requests_html.text
     action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
