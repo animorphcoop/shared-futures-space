@@ -3,20 +3,31 @@
         hx-target="#useful-button"
         hx-swap="outerHTML"
         id="useful-button"
-        class="inline-block rounded-full px-4 py-4 max-h-12
-   font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-   transition ease-out duration-300
-   text-purple
+        class="inline-block button flex items-center
            {% if status == 'found_useful' %}
             {# found useful by the user #}
-             bg-yellow-pale hover:bg-blue-done focus:bg-blue-done
-
-
+             button-on-white-reverse
            {% else %}
             {# Show the danger style #}
-            bg-blue-second hover:bg-blue-done focus:bg-blue-done
-
+            button-on-white focus:bg-blue-pale active:bg-blue-pale
         {% endif %}">
 
-    Save to dashboard
+    {% if status == 'found_useful' %}
+        {# found useful by the user #}
+        Saved to dash
+        {% include "partials/horizontal-spacer.html" with space="1.5" %}
+        <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.6 0C10.208 0 8.872 0.706267 8 1.82234C7.128 0.706267 5.792 0 4.4 0C1.936 0 0 2.11008 0 4.79564C0 8.09155 2.72 10.7771 6.84 14.8578L8 16L9.16 14.849C13.28 10.7771 16 8.09155 16 4.79564C16 2.11008 14.064 0 11.6 0ZM8.08 13.5586L8 13.6458L7.92 13.5586C4.112 9.80054 1.6 7.31553 1.6 4.79564C1.6 3.05177 2.8 1.74387 4.4 1.74387C5.632 1.74387 6.832 2.60708 7.256 3.80163H8.752C9.168 2.60708 10.368 1.74387 11.6 1.74387C13.2 1.74387 14.4 3.05177 14.4 4.79564C14.4 7.31553 11.888 9.80054 8.08 13.5586Z"
+                 class="fill-purple" />
+        </svg>
+    {% else %}
+        {# not (yet!) found useful by the user #}
+        Save to dash
+        {% include "partials/horizontal-spacer.html" with space="1.5" %}
+        <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.6 0C10.208 0 8.872 0.706267 8 1.82234C7.128 0.706267 5.792 0 4.4 0C1.936 0 0 2.11008 0 4.79564C0 8.09155 2.72 10.7771 6.84 14.8578L8 16L9.16 14.849C13.28 10.7771 16 8.09155 16 4.79564C16 2.11008 14.064 0 11.6 0ZM8.08 13.5586L8 13.6458L7.92 13.5586C4.112 9.80054 1.6 7.31553 1.6 4.79564C1.6 3.05177 2.8 1.74387 4.4 1.74387C5.632 1.74387 6.832 2.60708 7.256 3.80163H8.752C9.168 2.60708 10.368 1.74387 11.6 1.74387C13.2 1.74387 14.4 3.05177 14.4 4.79564C14.4 7.31553 11.888 9.80054 8.08 13.5586Z"
+                  class="fill-purple"/>
+        </svg>
+    {% endif %}
 </button>

@@ -12,6 +12,9 @@
     .button-on-white {
         @apply bg-blue-second hover:bg-resources-one focus:bg-blue-done
     }
+    .button-on-white-reverse {
+        @apply bg-blue-done hover:bg-resources-one focus:bg-blue-done
+    }
     .button-on-colour {
         @apply bg-white hover:bg-resources-one focus:bg-blue-done
     }

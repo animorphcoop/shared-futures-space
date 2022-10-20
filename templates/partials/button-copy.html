@@ -1,13 +1,7 @@
 <button onclick="copyLink()"
-        class="inline-block rounded-full px-4 py-4 max-h-12
-   font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
-   transition ease-out duration-300
-   text-purple
-            bg-blue-second hover:bg-blue-done focus:bg-blue-done">
+        class="button button-on-white">
     {{ button }}
-
 </button>
-
 
 <script>
     function copyLink() {
@@ -19,6 +13,5 @@
         url.select();
         document.execCommand('copy');
         document.body.removeChild(url);
-
     }
 </script>
