@@ -1,23 +1,35 @@
 {% load static %}
-<div style=''>
 
-    {% include "account/partials/avatar_image.html" with image_url=message.sender.avatar.image_url direction=direction%}
-
-    <div id="message-content">
-        {{ message.text }}
-    </div>
-
-    <div id="sender">
-        {% if message.sender != request.user %}
-            {{ message.sender.display_name }}
-        {% endif %}
-    </div>
-
-    <div id="time">
-        {{ message.timestamp|date:"G:i" }}
-    </div>
-
-    <div id="date">{{ message.timestamp|date:"d/m/y" }}</div>
-
-
+<div>
+    {% if message.sender == request.user %}
+        <div class="flex justify-end">
+            {% include "partials/horizontal-spacer.html" with space="7.5" %}
+            <div class="flex flex-col w-full">
+                <span class="font-garamond-500 text-base leading-5 tracking-[0.01em] text-right">
+                    {{ message.text }}
+                </span>
+                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                <span class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase self-end">
+                    {{ message.timestamp|date:"G:i" }} {{ message.timestamp|date:"d/m/y" }}
+                </span>
+            </div>
+            {% include "partials/horizontal-spacer.html" with space="1.5" %}
+            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="user avatar">
+        </div>
+    {% else %}
+        <div class="flex">
+            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="user avatar">
+            {% include "partials/horizontal-spacer.html" with space="1.5" %}
+            <div class="flex flex-col w-full">
+                <span class="font-garamond-500 text-base leading-5 tracking-[0.01em]">
+                    {{ message.text }}
+                </span>
+                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                <span class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase">
+                    {{ message.sender.display_name }} {{ message.timestamp|date:"G:i" }} {{ message.timestamp|date:"d/m/y" }}
+                </span>
+            </div>
+            {% include "partials/horizontal-spacer.html" with space="7.5" %}
+        </div>
+    {% endif %}
 </div>
