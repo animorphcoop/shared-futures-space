@@ -11,11 +11,13 @@
 
     {% block title %}{% include "partials/title.html" with title=user.display_name dashboard=True %}{% endblock %}
 
-    <section>
-        <div id="initial" class="">
-            {% include 'dashboard/partials/location.html' %}
-        </div>
-    </section>
+    {% if request.user.post_code.area.name != 'Other' %}
+        <section>
+            <div id="initial" class="">
+                {% include 'dashboard/partials/location.html' %}
+            </div>
+        </section>
+    {% endif %}
 
     {# Messages #}
     <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
@@ -76,13 +78,16 @@
     </div>
 
     {#  Call to action partial, replace URL variable  #}
-    <section class="bg-resources-two">
-        {% url 'spring' as the_url %}
-        {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
-    </section>
+    {% if request.user.post_code.area.name != 'Other' %}
+        <section class="bg-resources-two">
+            {% url 'spring' as the_url %}
+            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
+        </section>
+    {% endif %}
 
-    {# Rivers #}
-    <div x-data="{selected:null}">
+    {% if request.user.post_code.area.name != 'Other' %}
+        {# Rivers #}
+        <div x-data="{selected:null}">
         <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
             <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
                 <h2 class="flex items-center justify-between">
@@ -100,23 +105,23 @@
                 </h2>
             </button>
         </div>
+    {% endif %}
+<div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
+     style=""
+     x-ref="resources"
+     x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
 
-        <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
-             style=""
-             x-ref="resources"
-             x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
+    {# If no rivers:  #}
+    {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
 
-            {# If no rivers:  #}
-            {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
+    {# If rivers, one looks like: #}
+    <div class="">
 
-            {# If rivers, one looks like: #}
-            <div class="">
-
-            </div>
-
-            <div class="h-8"></div>
-        </div>
     </div>
+
+    <div class="h-8"></div>
+</div>
+</div>
 
     {#    {% block rivers %}#}
     {#        {% include "dashboard/partials/accordion.html" with title="Status of your rivers" list_items=rivers %}#}
