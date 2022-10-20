@@ -143,8 +143,8 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
         fields: List[str] = ['password1', 'password2']
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        self.user = kwargs.pop("user", None)
-        self.temp_key = kwargs.pop("temp_key", None)
+        self.user = kwargs.pop("user", None)  # pyre-ignore[4]
+        self.temp_key = kwargs.pop("temp_key", None)  # pyre-ignore[4]
         super(ResetPasswordKeyForm, self).__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs = {'placeholder': 'Password', 'borken': 'false',
                                                  'onfocusout': 'getPasswordFeedback()'}

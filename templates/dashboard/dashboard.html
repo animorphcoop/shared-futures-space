@@ -21,7 +21,7 @@
 
     {# Messages #}
     <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
-        <button class="w-full py-4.5 px-4.5" type="button">
+        <a href="{% url "account_all_chats" %}" type="button" class="w-full py-4.5 px-4.5" >
             <h2 class="flex items-center justify-between">
                 <span class="text-header">
                     Your messages
@@ -33,8 +33,10 @@
                               fill="#9759FF"/>
                     </svg>
                 </div>
+
             </h2>
-        </button>
+
+        </a>
     </div>
 
     {#    {% block messages %}#}
