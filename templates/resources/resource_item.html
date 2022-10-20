@@ -45,14 +45,6 @@
             {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
 
-        {% if resource.case_study_image %}
-            <div class="w-full h-auto">
-                {% image resource.case_study_image max-750x400 %}
-                <img src="{{ resource.case_study_image }}" alt="" title="">
-            </div>
-            {% include "partials/vertical-spacer.html" with space="4" %}
-        {% endif %}
-
         {% if resource.link %}
             <a href="{{ resource.link }}"
                class="font-kanit-400 font-medium text-[9px] tracking-wide text-black-text leading-normal">
@@ -63,6 +55,14 @@
                           fill="#9759FF"/>
                 </svg>
             </a>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+        {% endif %}
+
+        {% if resource.case_study_image %}
+            <div class="w-full h-auto">
+                {% image resource.case_study_image max-750x400 %}
+                <img src="{{ resource.case_study_image }}" alt="" title="">
+            </div>
             {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
 
@@ -80,9 +80,6 @@
 
         {% include "partials/vertical-spacer.html" with space="4" %}
 
-        {% comment %}
-{% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
-{% endcomment %}
         {% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
 
         {% include "partials/vertical-spacer.html" with space="4" %}
