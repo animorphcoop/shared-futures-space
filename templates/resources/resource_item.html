@@ -84,8 +84,11 @@
 
         {% include "partials/vertical-spacer.html" with space="4" %}
 
-        {% include 'partials/text-style/meta-lowercase.html' with text="Published: " %}
-        {% include 'partials/text-style/meta-lowercase.html' with text=resource.published_on %}
+        <p class="text-meta">
+            Published: {{ resource.published_on }}
+        </p>
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
     </article>
 
 {% endblock %}
