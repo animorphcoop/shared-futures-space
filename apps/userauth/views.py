@@ -143,7 +143,7 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
         send_after.delay(5, msg)
 
 
-@login_required(login_url='/account/login/')
+@login_required(login_url='/profile/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
 

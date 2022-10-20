@@ -70,7 +70,7 @@ class CustomSignupForm(SignupForm):
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomSignupForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs = {'placeholder': 'Your E-mail', 'borken': 'false', 'hx-post': '/search/',
-                                             'hx-post': '/account/check_email/',
+                                             'hx-post': '/profile/check_email/',
                                              'hx-trigger': 'focusout[processEmailValue()] delay:500ms',
                                              'hx-target': '#email-feedback', 'hx-swap': 'innerHTML'}
         self.fields['password1'].widget.attrs = {'placeholder': 'Password', 'borken': 'false', 'onfocusout': 'getPasswordFeedback()'}
