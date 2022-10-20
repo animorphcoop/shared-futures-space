@@ -88,6 +88,13 @@
             Published: {{ resource.published_on }}
         </p>
 
+        {# When 'last edited' is a thing, uncomment the below and replace the {{  }} contents #}
+        {% comment %}{% include "partials/vertical-spacer.html" with space="4" %}
+
+        <p class="text-meta">
+            Last edited: {{ resource.published_on }}
+        </p>{% endcomment %}
+
         {% include "partials/vertical-spacer.html" with space="9" %}
     </article>
 
