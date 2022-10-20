@@ -69,12 +69,12 @@ class CustomSignupForm(SignupForm):
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomSignupForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs = {'borken': 'false', 'hx-post': '/search/',
+        self.fields['email'].widget.attrs = {'placeholder': 'Your E-mail', 'borken': 'false', 'hx-post': '/search/',
                                              'hx-post': '/account/check_email/',
                                              'hx-trigger': 'focusout[processEmailValue()] delay:500ms',
                                              'hx-target': '#email-feedback', 'hx-swap': 'innerHTML'}
-        self.fields['password1'].widget.attrs = {'borken': 'false', 'onfocusout': 'getPasswordFeedback()'}
-        self.fields['password2'].widget.attrs = {'borken': 'false', 'onfocusout': 'comparePasswords()'}
+        self.fields['password1'].widget.attrs = {'placeholder': 'Password', 'borken': 'false', 'onfocusout': 'getPasswordFeedback()'}
+        self.fields['password2'].widget.attrs = {'placeholder': 'Confirm Password', 'borken': 'false', 'onfocusout': 'comparePasswords()'}
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
@@ -107,8 +107,8 @@ class CustomLoginForm(LoginForm):
 
     def __init__(self, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomLoginForm, self).__init__(*args, **kwargs)
-        self.fields['login'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
-        self.fields['password'].widget.attrs = {'borken': 'false', }
+        self.fields['login'].widget.attrs = {'placeholder': 'Your E-mail', 'borken': 'false', 'onfocusout': 'processEmailValue()'}
+        self.fields['password'].widget.attrs = {'placeholder': 'Your password', 'borken': 'false', }
 
 
 class CustomChangePasswordForm(ChangePasswordForm):
@@ -118,8 +118,8 @@ class CustomChangePasswordForm(ChangePasswordForm):
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(ChangePasswordForm, self).__init__(*args, **kwargs)
-        self.fields['password1'].widget.attrs = {'borken': 'false', 'onfocusout': 'getPasswordFeedback()'}
-        self.fields['password2'].widget.attrs = {'borken': 'false', 'onfocusout': 'comparePasswords()'}
+        self.fields['password1'].widget.attrs = {'placeholder': 'Password', 'borken': 'false', 'onfocusout': 'getPasswordFeedback()'}
+        self.fields['password2'].widget.attrs = {'placeholder': 'Confirm Password', 'borken': 'false', 'onfocusout': 'comparePasswords()'}
 
 
 class CustomResetPasswordForm(ResetPasswordForm):
@@ -129,4 +129,4 @@ class CustomResetPasswordForm(ResetPasswordForm):
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomResetPasswordForm, self).__init__(*args, **kwargs)  # pyre-ignore[6]
-        self.fields['email'].widget.attrs = {'borken': 'false', 'onfocusout': 'processEmailValue()'}
+        self.fields['email'].widget.attrs = {'placeholder': 'Your E-mail', 'borken': 'false', 'onfocusout': 'processEmailValue()'}
