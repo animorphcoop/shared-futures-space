@@ -23,7 +23,8 @@
             <div class="flex flex-wrap gap-x-3 gap-y-2">
                 {% for tag in resource.tags %}
                     <button class="px-1.5 py-1 bg-blue-second rounded-sm">
-                        <a href="{% url "resources_tag" tag %}" class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                        <a href="{% url "resources_tag" tag %}"
+                           class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
                             {{ tag }}
                         </a>
                     </button>
@@ -44,14 +45,6 @@
             {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
 
-        {% if resource.case_study_image %}
-            <div class="w-full h-auto">
-                {% image resource.case_study_image max-750x400 %}
-                <img src="{{ resource.case_study_image }}" alt="" title="">
-            </div>
-            {% include "partials/vertical-spacer.html" with space="4" %}
-        {% endif %}
-
         {% if resource.link %}
             <a href="{{ resource.link }}"
                class="font-kanit-400 font-medium text-[9px] tracking-wide text-black-text leading-normal">
@@ -65,25 +58,28 @@
             {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
 
-        {% if user.is_authenticated %}
-            {% if useful %}
-                {% include 'partials/button-hx.html' with resource_id=resource.id status='found_useful' %}
-
-            {% else %}
-                {% include 'partials/button-hx.html' with resource_id=resource.id status='' %}
-            {% endif %}
-
+        {% if resource.case_study_image %}
+            <div class="w-full h-auto">
+                {% image resource.case_study_image max-750x400 %}
+                <img src="{{ resource.case_study_image }}" alt="" title="">
+            </div>
+            {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
-        {% comment %}
-        {% include 'partials/button.html' with style='primary_white' button='Share' icon='link' %}
-{% endcomment %}
-        {% include 'partials/button-copy.html' with button='Share' %}
 
-       {% include "partials/vertical-spacer.html" with space="4" %}
+        <div class="flex items-center">
+            {% if user.is_authenticated %}
+                {% if useful %}
+                    {% include 'partials/button-hx.html' with resource_id=resource.id status='found_useful' %}
+                {% else %}
+                    {% include 'partials/button-hx.html' with resource_id=resource.id status='' %}
+                {% endif %}
+            {% endif %}
+            {% include "partials/horizontal-spacer.html" with space="1.5" %}
+            {% include 'partials/button-copy.html' with button='Share' icon='link' %}
+        </div>
 
-        {% comment %}
-{% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
-{% endcomment %}
+        {% include "partials/vertical-spacer.html" with space="4" %}
+
         {% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
 
         {% include "partials/vertical-spacer.html" with space="4" %}
