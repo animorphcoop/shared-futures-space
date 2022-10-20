@@ -9,7 +9,7 @@ from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm, \
-    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -28,7 +28,7 @@ from typing import Type, List, Dict, Union, Any
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
-from allauth.account.views import LoginView, SignupView, PasswordResetView
+from allauth.account.views import LoginView, SignupView, PasswordResetView, PasswordChangeView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
@@ -229,6 +229,9 @@ def check_email(request: WSGIRequest) -> HttpResponse:
 
 class CustomLoginView(LoginView):
     form_class: Type[CustomLoginForm] = CustomLoginForm
+
+class CustomPasswordChangeView(PasswordChangeView):
+    form_class: Type[CustomChangePasswordForm] = CustomChangePasswordForm
 
 
 class CustomPasswordResetView(PasswordResetView):

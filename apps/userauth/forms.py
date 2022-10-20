@@ -112,8 +112,14 @@ class CustomLoginForm(LoginForm):
 
 
 class CustomChangePasswordForm(ChangePasswordForm):
-    pass
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['oldpassword', 'password1', 'password2']
 
+    def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+        super(ChangePasswordForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs = {'borken': 'false', 'onfocusout': 'getPasswordFeedback()'}
+        self.fields['password2'].widget.attrs = {'borken': 'false', 'onfocusout': 'comparePasswords()'}
 
 
 class CustomResetPasswordForm(ResetPasswordForm):
