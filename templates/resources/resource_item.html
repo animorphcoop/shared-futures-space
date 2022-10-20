@@ -73,8 +73,8 @@
                 {% else %}
                     {% include 'partials/button-hx.html' with resource_id=resource.id status='' %}
                 {% endif %}
+                {% include "partials/horizontal-spacer.html" with space="1.5" %}
             {% endif %}
-            {% include "partials/horizontal-spacer.html" with space="1.5" %}
             {% include 'partials/button-copy.html' with button='Share' icon='link' %}
         </div>
 
