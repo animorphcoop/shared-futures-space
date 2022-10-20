@@ -73,8 +73,8 @@
                 {% else %}
                     {% include 'partials/button-hx.html' with resource_id=resource.id status='' %}
                 {% endif %}
+                {% include "partials/horizontal-spacer.html" with space="1.5" %}
             {% endif %}
-            {% include "partials/horizontal-spacer.html" with space="1.5" %}
             {% include 'partials/button-copy.html' with button='Share' icon='link' %}
         </div>
 
@@ -84,8 +84,18 @@
 
         {% include "partials/vertical-spacer.html" with space="4" %}
 
-        {% include 'partials/text-style/meta-lowercase.html' with text="Published: " %}
-        {% include 'partials/text-style/meta-lowercase.html' with text=resource.published_on %}
+        <p class="text-meta">
+            Published: {{ resource.published_on }}
+        </p>
+
+        {# When 'last edited' is a thing, uncomment the below and replace the {{  }} contents #}
+        {% comment %}{% include "partials/vertical-spacer.html" with space="4" %}
+
+        <p class="text-meta">
+            Last edited: {{ resource.published_on }}
+        </p>{% endcomment %}
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
     </article>
 
 {% endblock %}
