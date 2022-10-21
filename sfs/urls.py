@@ -21,11 +21,12 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('documents/', include(wagtaildocs_urls)),
 
     path('search/', search_views.search, name='search'),
-    path('account/', include('userauth.urls')),
+    path('profile/', include('userauth.urls')),
     path('dashboard/', include('dashboard.urls'), name='dashboard'),
     path('projects/', include('project.urls'), name='projects'),
     path('action/', include('action.urls')),
     path('poll/', include('poll.urls')),
+    path('analytics/', include('analytics.urls')),
 
     path("__reload__/", include("django_browser_reload.urls")),
 

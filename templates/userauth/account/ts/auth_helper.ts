@@ -13,7 +13,6 @@ const passwordFeedbackTwo: HTMLElement | null = document.getElementById("passwor
 const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
 
 
-
 function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () => void) {
     console.log('setting up input')
     const observerEmail = new MutationObserver(function (mutations) {
@@ -90,6 +89,15 @@ function validateEmail(address: string) {
 }
 
 
+function validateInputFeedback(input: HTMLInputElement, feedback: HTMLElement,) {
+    if (input.value.length < 1 || feedback.innerText != '') {
+        input.setAttribute("borken", "true");
+        return 1
+    } else {
+        return 0
+    }
+}
+
 function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null) return
 
@@ -130,8 +138,7 @@ function getPasswordFeedback() {
             passwordFeedbackOne.innerText = ''
 
         } else {
-            passwordFeedbackOne.innerText = 'Please improve your password!'
-
+            passwordFeedbackOne.innerText = 'Strengthen your password; at least 10 characters using a mix of lowercase, uppercase, numbers, and special characters.'
         }
         comparePasswords()
 

@@ -39,7 +39,7 @@
 
 
                 {% comment %}controlled via js/ts{% endcomment %}
-                <span id="email-feedback" class="hidden block text-red-600 font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
+                <span id="email-feedback" class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
             </div>
 
             <div class="px-4 pb-4.5">
@@ -56,9 +56,11 @@
             </div>
 
             <a href="{% url 'account_reset_password' %}"
-                class="flex items-center px-4 pb-9 font-kanit-600 text-xxxs tracking-wide text-purple">
+               class="inline-block px-4 font-kanit-600 text-xxxs tracking-wide text-purple">
                 Forgot your password?
             </a>
+
+            <div class="h-9"></div>
 
             <div class="px-4 pb-9">
 
@@ -73,9 +75,7 @@
 
         <div class="flex flex-col flex-grow justify-end">
             <section
-                class="bg-gradient-to-b from-blue-second to-white flex flex-grow flex-col justify-end items-center">
-                <h2 class="pt-10 mx-auto inline-block pb-8 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                    Alternatively log in with</h2>
+                    class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_41.67%)] flex flex-grow flex-col items-center">
                 {% include "socialaccount/partials/provider_list.html" with process="login" %}
             </section>
 
@@ -86,7 +86,7 @@
 
                 {# TODO: Name not available due to lack of urls entry, consider overriding #}
                 {# {% url 'account_login' as the_url %} #}
-                {% include "partials/button.html" with url="/account/signup/" style="primary_colour" button="Sign up" %}
+                {% include "partials/button.html" with url="/profile/signup/" style="primary_colour" button="Sign up" %}
 
                 <div class="pb-3"></div>
             </div>

@@ -8,41 +8,41 @@
 
 {% block content %}
 
-    {% block title %}{% include "partials/title.html" with title="Resources" %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title="Resource" extra_title=resource.title %}{% endblock %}
 
     <article class="px-4.5">
-        <div class="h-2"></div>
+        {% include "partials/vertical-spacer.html" with space="2" %}
 
-        <h1 class="font-kanit-500 text-xl text-black-large leading-tight">
+        <h1 class="text-title text-black/55">
             {{ resource.title }}
         </h1>
 
-        <div class="h-4"></div>
+        {% include "partials/vertical-spacer.html" with space="4" %}
 
         {% if resource.tags %}
             <div class="flex flex-wrap gap-x-3 gap-y-2">
                 {% for tag in resource.tags %}
-                    <button class="whitespace-normal px-1.5 py-1 bg-blue-second text-black-large font-kanit-400 text-xxxs uppercase leading-none tracking-widest rounded-sm">
-                        <a href="{% url "resources_tag" tag %}">{{ tag }}</a>
+                    <button class="px-1.5 py-1 bg-blue-second rounded-sm">
+                        <a href="{% url "resources_tag" tag %}"
+                           class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                            {{ tag }}
+                        </a>
                     </button>
                 {% endfor %}
             </div>
+            {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
 
-        <div class="h-4"></div>
-
-        <p class="mb-0.5 font-garamond-500 text-black-text text-base leading-5 whitespace-normal">
-            {{ resource.summary }}
-        </p>
-
-        <div class="h-4"></div>
-
-        {% if resource.case_study_image %}
-            <div class="w-full h-auto">
-                {% image resource.case_study_image max-750x400 %}
-                <img src="{{ resource.case_study_image }}" alt="" title="">
+        {% if resource.body %}
+            <div class="text-body">
+                {{ resource.body }}
             </div>
-            <div class="h-4"></div>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+        {% else %}
+            <p class="text-body">
+                {{ resource.summary }}
+            </p>
+            {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
 
         {% if resource.link %}
@@ -54,46 +54,48 @@
                     <path d="M0.817121 10L0 9.18288L8.01556 1.16732H0.661479V0H10V9.33852H8.83268V1.98444L0.817121 10Z"
                           fill="#9759FF"/>
                 </svg>
-
             </a>
-            <div class="h-4"></div>
+            {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
 
-        {% if resource.body %}
-            <div class="p-6">
-                <p class='leading-normal'>{{ resource.body }}</p>
+        {% if resource.case_study_image %}
+            <div class="w-full h-auto">
+                {% image resource.case_study_image max-750x400 %}
+                <img src="{{ resource.case_study_image }}" alt="" title="">
             </div>
-            <div class="h-4"></div>
+            {% include "partials/vertical-spacer.html" with space="4" %}
         {% endif %}
 
-        {% comment %}        {% include 'partials/button.html' with style='primary_white' button='I found this useful' %}{% endcomment %}
-        {% if user.is_authenticated %}
-            {% if useful %}
-                {% include 'partials/button-hx.html' with resource_id=resource.id status='found_useful' %}
-
-
-
-            {% else %}
-                {% include 'partials/button-hx.html' with resource_id=resource.id status='' %}
+        <div class="flex items-center">
+            {% if user.is_authenticated %}
+                {% if useful %}
+                    {% include 'partials/button-hx.html' with resource_id=resource.id status='found_useful' %}
+                {% else %}
+                    {% include 'partials/button-hx.html' with resource_id=resource.id status='' %}
+                {% endif %}
+                {% include "partials/horizontal-spacer.html" with space="1.5" %}
             {% endif %}
+            {% include 'partials/button-copy.html' with button='Share' icon='link' %}
+        </div>
 
-        {% endif %}
-        {% comment %}
-        {% include 'partials/button.html' with style='primary_white' button='Share' icon='link' %}
-{% endcomment %}
-        {% include 'partials/button-copy.html' with button='Share' %}
+        {% include "partials/vertical-spacer.html" with space="4" %}
 
-        <div class="h-4"></div>
-
-        {% comment %}
-{% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
-{% endcomment %}
         {% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
 
-        <div class="h-4"></div>
+        {% include "partials/vertical-spacer.html" with space="4" %}
 
-        {% include 'partials/text-style/meta-lowercase.html' with text="Published: " %}
-        {% include 'partials/text-style/meta-lowercase.html' with text=resource.published_on %}
+        <p class="text-meta">
+            Published: {{ resource.published_on }}
+        </p>
+
+        {# When 'last edited' is a thing, uncomment the below and replace the {{  }} contents #}
+        {% comment %}{% include "partials/vertical-spacer.html" with space="4" %}
+
+        <p class="text-meta">
+            Last edited: {{ resource.published_on }}
+        </p>{% endcomment %}
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
     </article>
 
 {% endblock %}

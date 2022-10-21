@@ -2,12 +2,14 @@
 
 {% comment %} Page: a messages- direct chat exchanges with another user {% endcomment %}
 
-{% block content %}
 
+{% block content %}
 
     {% block title %}{% include "partials/title.html" with title="Private chat" %}{% endblock %}
 
-    {{ other_user.display_name }}
-    {% include 'messaging/chatbox_snippet.html' %}
+    <div class="mx-4.5">
+        {{ other_user.display_name }}
+        {% include 'messaging/chatbox_snippet.html' %}
+    </div>
 
 {% endblock %}

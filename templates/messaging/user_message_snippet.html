@@ -1,11 +1,35 @@
-<div style='border-style:solid'>
-    <b>
-        {% if message.sender != request.user %}
-            <a href="{% url 'user_chat' message.sender.uuid %}">{{message.sender.display_name}}</a>
-        {% else %}
-            {{message.sender.display_name}}
-        {% endif %}:
-    </b>
-    <br/>
-    {{message.text}}
+{% load static %}
+
+<div>
+    {% if message.sender == request.user %}
+        <div class="flex justify-end">
+            {% include "partials/horizontal-spacer.html" with space="7.5" %}
+            <div class="flex flex-col w-full">
+                <span class="font-garamond-500 text-base leading-5 tracking-[0.01em] text-right">
+                    {{ message.text }}
+                </span>
+                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                <span class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase self-end">
+                    {{ message.timestamp|date:"G:i" }} {{ message.timestamp|date:"d/m/y" }}
+                </span>
+            </div>
+            {% include "partials/horizontal-spacer.html" with space="1.5" %}
+            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="user avatar">
+        </div>
+    {% else %}
+        <div class="flex">
+            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="user avatar">
+            {% include "partials/horizontal-spacer.html" with space="1.5" %}
+            <div class="flex flex-col w-full">
+                <span class="font-garamond-500 text-base leading-5 tracking-[0.01em]">
+                    {{ message.text }}
+                </span>
+                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                <span class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase">
+                    {{ message.sender.display_name }} {{ message.timestamp|date:"G:i" }} {{ message.timestamp|date:"d/m/y" }}
+                </span>
+            </div>
+            {% include "partials/horizontal-spacer.html" with space="7.5" %}
+        </div>
+    {% endif %}
 </div>

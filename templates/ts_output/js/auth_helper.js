@@ -71,6 +71,15 @@ function validateEmail(address) {
     }
     return false;
 }
+function validateInputFeedback(input, feedback) {
+    if (input.value.length < 1 || feedback.innerText != '') {
+        input.setAttribute("borken", "true");
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
 function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null)
         return;
@@ -101,7 +110,7 @@ function getPasswordFeedback() {
             passwordFeedbackOne.innerText = '';
         }
         else {
-            passwordFeedbackOne.innerText = 'Please improve your password!';
+            passwordFeedbackOne.innerText = 'Strengthen your password; at least 10 characters using a mix of lowercase, uppercase, numbers, and special characters.';
         }
         comparePasswords();
     }

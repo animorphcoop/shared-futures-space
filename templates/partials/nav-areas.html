@@ -1,0 +1,34 @@
+{% comment %}uses area_delaits simple tag from area/templatetages{% endcomment %}
+{% load area_details %}
+{% get_areas as areas %}
+<ul class="list-non text-black/30 -mt-2" aria-labelledby="dropdownLargeButton">
+
+    {% if user.is_authenticated %}
+        {% for area in areas %}
+
+            {% if area == user.post_code.area.name %}
+                <li class="px-4 py-3 text-black/75">
+                    <a href="{% url "spring" area %}">
+                        <span>Your spring: </span>{{ area }}
+                    </a>
+                </li>
+            {% else %}
+                <li class="px-4 py-3">
+                    <a href="{% url "spring" area %}">
+                        {{ area }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+    {% else %}
+        {% for area in areas %}
+            <li class="px-4 py-3">
+                <a href="{% url "spring" area %}">
+                    {{ area }}
+                </a>
+            </li>
+        {% endfor %}
+    {% endif %}
+
+</ul>

@@ -102,19 +102,24 @@ module.exports = {
             },
             spacing: {
                 4.5: ["1.125em"],
+                7.5: ["1.875em"],
             },
             boxShadow: {
                 input: "0px 1px 1px 0px rgba(0, 0, 0, 0.15) inset",
             },
             backgroundImage: {
-                "landing-enter": "linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.4)), url('/static/images/landing/landing-temporary.png')",
-                "north-belfast": "url('/static/images/landing/areas/northbelfast.png')",
-                "east-belfast": "url('/static/images/landing/areas/eastbelfast.png')",
-                "south-belfast": "url('/static/images/landing/areas/southbelfast.png')",
-                "west-belfast": "url('/static/images/landing/areas/westbelfast.png')",
-                "derry-londonderry": "url('/static/images/landing/areas/derrylondonderry.png')",
-                "arranmore": "url('/static/images/landing/areas/arranmore.png')",
+                "landing-enter": "linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.4)), url('/static/images/landing/landing-temporary.gif'), url('/static/images/landing/landing-temporary.png')",
+                "north-belfast": "url('/static/images/landing/areas/northbelfast.jpg')",
+                "east-belfast": "url('/static/images/landing/areas/eastbelfast.jpg')",
+                "south-belfast": "url('/static/images/landing/areas/southbelfast.jpg')",
+                "west-belfast": "url('/static/images/landing/areas/westbelfast.jpg')",
+                "derry-londonderry": "url('/static/images/landing/areas/derrylondonderry.jpg')",
+                "arranmore": "url('/static/images/landing/areas/arranmore.jpg')",
             },
+            opacity: {
+                '55': '.55',
+                '75': '.75',
+            }
         },
         fontFamily: {
             "kanit-400": ["Kanit_Regular", "sans-serif"],
@@ -126,14 +131,20 @@ module.exports = {
         },
     },
     safelist: [
-        "h-9",
+        "h-3",
+        "h-4",
+        "h-5",
+        "h-6",
         "h-7",
+        "h-9",
+        "bg-purple/25",
         "bg-north-belfast",
         "bg-east-belfast",
         "bg-south-belfast",
         "bg-west-belfast",
         "bg-derry-londonderry",
         "bg-arranmore",
+        "w-7.5"
     ],
     variants: {
         extend: {},

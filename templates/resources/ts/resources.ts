@@ -5,10 +5,18 @@ const initial = document.getElementById("initial-list")
 const results = document.getElementById("search-results")
 
 const searchbar = <HTMLInputElement>document.getElementById("searchbar")
-
+const order_by = <HTMLElement>document.getElementById("orderby")
 
 let flipped: boolean = false
 
+/*
+order_by.addEventListener('input', function (evt) {
+    if (flipped) {
+        searching(true);
+    } else {
+        
+    }
+}
 
 searchbar.addEventListener('input', function (evt) {
     if (searchbar.value.length > 2) {
@@ -35,9 +43,20 @@ function searching(displayResults: boolean) {
         }
     }
 }
-
+*/
 function buttonTagSearch(tag: string) {
     searchbar.value = tag
     console.log('search')
-    searching(true)
+    //searching(true)
+}
+
+function setResultCount(count: number) {
+  let elem = document.getElementById("result-count");
+  if (elem != null) {
+    if (count == 1) {
+      elem.innerHTML = count.toString() + " result available";
+    } else {
+      elem.innerHTML = count.toString() + " results available";
+    }
+  }
 }

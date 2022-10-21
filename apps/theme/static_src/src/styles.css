@@ -1,15 +1,60 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
-@font-face {
-  font-family: "EB_Garamond_Regular";
-  src: url("/fonts/EBGaramond-Regular.ttf") format("truetype");
-  font-weight: 500;
+@layer components { /* layer so they're on included if used */
+    /* --- BUTTONS -------------------------------------------------------------------------------------------------- */
+    .button {
+        @apply inline-block rounded-full px-4 py-4 max-h-12
+        font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
+        transition ease-out duration-300
+        text-purple;
+    }
+    .button-on-white {
+        @apply bg-blue-second hover:bg-resources-one focus:bg-blue-done
+    }
+    .button-on-white-reverse {
+        @apply bg-blue-done hover:bg-resources-one focus:bg-blue-done
+    }
+    .button-on-colour {
+        @apply bg-white hover:bg-resources-one focus:bg-blue-done
+    }
+    .button-important {
+        @apply bg-yellow-pale hover:bg-yellow focus:bg-red-important
+    }
+    .button-danger {
+        @apply bg-red-important hover:bg-purple focus:bg-purple
+        text-white
+    }
+
+    /* --- FORMS ---------------------------------------------------------------------------------------------------- */
+    .input-text {
+        @apply block w-full px-3 py-3 font-garamond-500 text-black-text placeholder:text-black-meta
+        bg-blue-second bg-clip-padding border border-solid border-transparent
+        transition ease-in-out
+        focus:text-black-text focus:border-purple focus:ring-0
+        /*invalid:border-red-important focus:invalid:ring-red-important*/
+        borken:border-red-important focus:borken:ring-red-important
+    }
+
+    /* --- TYPOGRAPHY ----------------------------------------------------------------------------------------------- */
+    .text-large { /* mobile/28 Prompts + Descriptions */
+        @apply text-black-large font-garamond-500 text-black-large text-[22px] leading-7/*28px*/
+    }
+    .text-title { /* menu headers */
+        @apply font-kanit-500 text-black-text text-xl
+    }
+    .text-header { /* mobile/10 Headers */
+        @apply uppercase text-black-text font-kanit-600 text-[10px] tracking-widest leading-normal
+    }
+    .text-body { /* mobile/15 Body */
+        @apply font-garamond-500 text-black-text text-base leading-5 whitespace-normal
+    }
+    .text-meta { /* mobile/meta/9 lowercase Reg: meta */
+        @apply text-black-text font-kanit-400 text-[9px] leading-3 tracking-[0.03em]
+    }
+    .text-meta-label { /* mobile/meta/9 allcap Reg: tags and names */
+        @apply uppercase text-black-text font-kanit-400 text-[9px] leading-[12px] tracking-widest
+    }
 }
 
-@font-face {
-  font-family: "Kanit_Regular";
-  src: url("/fonts/Kanit-Regular.ttf") format("truetype");
-  font-weight: 600;
-}
+@tailwind utilities; /* after layer so they can still be overwritten by utilities */

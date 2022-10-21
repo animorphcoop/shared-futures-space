@@ -1,3 +1,4 @@
 {% for result in results %}
     {% include "resources/partials/resources-card.html" with resource=result %}
 {% endfor %}
+<script>setResultCount({{results|length}})</script>

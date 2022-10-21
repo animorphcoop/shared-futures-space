@@ -1,6 +1,6 @@
 {% extends "account/base.html" %}
 
-{% comment %} Delete your account page /account/delete/ {% endcomment %}
+{% comment %} Delete your profile page /profile/delete/ {% endcomment %}
 
 {% block content %}
 
@@ -8,21 +8,31 @@
 
         {% block title %}{% include "partials/title.html" with title="Delete profile" %}{% endblock %}
 
-        <form method="post">
+        <div class="h-3"></div>
+
+        <form method="post" class="px-4 m-0">
             {% csrf_token %}
-            <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
+
+            <p class="font-garamond-500 text-black-large text-xl text-22">
                 Are you sure you want to delete the profile associated with the email <span
                     class="">{{ user.email }}</span>?
             </p>
 
-            <a href="{% url 'account_view' %}" class="inline-block mx-4 px-4 py-3.5 transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-blue-button disabled:bg-gray-light">
-                Back to profile
-            </a>
-            <button type="submit" name=confirm value=confirm
-                class="inline-block mx-4 px-4 py-3.5 transition ease-out duration-300 text-white font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-red-600 disabled:bg-gray-light">
-                Delete
-            </button>
+            <div class="h-9"></div>
+
+            <div class="flex items-center">
+                <a href="{% url 'account_view' %}" class="button button-on-white">
+                    Back to profile
+                </a>
+                <div class="w-4"></div>
+                <button type="submit" name=confirm value=confirm
+                        class="button button-danger">
+                    Delete
+                </button>
+            </div>
         </form>
+
+        <div class="h-9"></div>
 
         {% include "partials/footer-gradient.html" %}
     </div>

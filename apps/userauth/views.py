@@ -9,10 +9,11 @@ from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm, \
-    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
+from .util import user_to_slug, slug_to_user
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
@@ -27,7 +28,7 @@ from typing import Type, List, Dict, Union, Any
 
 from allauth.account.models import EmailAddress
 from allauth.account.signals import email_confirmed
-from allauth.account.views import LoginView, SignupView, PasswordResetView
+from allauth.account.views import LoginView, SignupView, PasswordResetView, PasswordChangeView, PasswordResetFromKeyView
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.utils import timezone
@@ -40,16 +41,8 @@ import random
 # redirecting to the profile url using the request data
 def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
     if request.user.is_authenticated:
-        # we extended the user model so can ignore
-        display_name = str(request.user.display_name)  # pyre-ignore[16]
-        if ' ' in display_name:
-            name = display_name.replace(' ', '-')
-        else:
-            name = display_name
-
-        slug = f"{name}-{str(request.user.pk)}".lower()
+        slug = user_to_slug(request.user)  # pyre-ignore[6]
         return redirect('user_detail', slug)
-
     else:
         return HttpResponseRedirect(reverse_lazy('account_login'))
     # return render(request, 'account/view.html')
@@ -69,13 +62,11 @@ class CustomAddDataView(TemplateView):
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         current_user: CustomUser = request.user  # pyre-ignore[9]
         form = CustomUserAddDataForm(request.POST)  # pyre-ignore[6]
-        # print(form.is_valid())
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         else:
             if form.is_valid():
-                # print(form.cleaned_data)
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
@@ -152,7 +143,7 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
         send_after.delay(5, msg)
 
 
-@login_required(login_url='/account/login/')
+@login_required(login_url='/profile/login/')
 def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
     if (httpreq.method == 'POST'):
 
@@ -184,26 +175,39 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
             return {}
 
 
+
+def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
+    if request.user.is_authenticated:
+        slug = user_to_slug(CustomUser.objects.filter(uuid=uuid)[0])
+        return redirect('user_chat', slug)
+    else:
+        return HttpResponseRedirect(reverse_lazy('account_login'))
+    # return render(request, 'account/view.html')
+
+
 class UserChatView(ChatView):
-    def post(self, request: WSGIRequest, other_uuid: UUID) -> HttpResponse:
-        [user1, user2] = sorted([request.user.uuid, other_uuid])  # pyre-ignore[16]
+    def post(self, request: WSGIRequest, user_path: str) -> HttpResponse:
+        other_user = slug_to_user(user_path)
+        [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
                                                      user2=CustomUser.objects.get(uuid=user2))
-        return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[other_uuid]),  # pyre-ignore[16]
+        return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[user_path]),  # pyre-ignore[16]
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        [user1, user2] = sorted([self.request.user.uuid, kwargs['other_uuid']])  # pyre-ignore[16]
+        other_user = slug_to_user(kwargs['user_path'])  # pyre-ignore[6]
+        [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
                                                      user2=CustomUser.objects.get(uuid=user2))
         # pyre-ignore[16]:
-        context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[kwargs['other_uuid']]),
+        context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[kwargs['user_path']]),
                                            members=[CustomUser.objects.get(uuid=user1),
                                                     CustomUser.objects.get(uuid=user2)])
-        context['other_user'] = CustomUser.objects.get(uuid=kwargs['other_uuid'])
+        context['other_user'] = other_user
         # due to the page being login_required, there should never be anonymous users seeing the page
         # due to request.user being in members, there should never be non-members seeing the page
         return context
+
 
 
 class UserAllChatsView(TemplateView):
@@ -219,7 +223,6 @@ class UserAllChatsView(TemplateView):
 
 # helper for inspecting db whether user exists
 def check_email(request: WSGIRequest) -> HttpResponse:
-    # print(request.META.get('HTTP_REFERER'))
     if request.POST.getlist('email'):
         user_mail = request.POST.getlist('email')[0]
         request_source_url = request.META.get('HTTP_REFERER').rsplit('/', 2)[1]
@@ -239,8 +242,16 @@ class CustomLoginView(LoginView):
     form_class: Type[CustomLoginForm] = CustomLoginForm
 
 
+class CustomPasswordChangeView(PasswordChangeView):
+    form_class: Type[CustomChangePasswordForm] = CustomChangePasswordForm
+
+
 class CustomPasswordResetView(PasswordResetView):
     form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
+
+
+class CustomPasswordResetFromKeyView(PasswordResetFromKeyView):
+    form_class: Type[CustomResetPasswordKeyForm] = CustomResetPasswordKeyForm
 
 
 class CustomUserPersonalView(TemplateView):
@@ -256,40 +267,29 @@ class CustomUserPersonalView(TemplateView):
         context = super(CustomUserPersonalView, self).get_context_data(**kwargs)
         return context
 
-    def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[HttpResponse, HttpResponseRedirect]:
-        split_slug = str(kwargs['slug']).rsplit('-')
-        pk = split_slug[-1]
+    def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[
+        HttpResponse, HttpResponseRedirect]:
         try:
-            int(pk)
+            user = slug_to_user(str(kwargs['slug']))
         except:
             return HttpResponseRedirect(reverse('404'))
 
-        display_name = [' '.join(split_slug[:-1])]
+        context = {'user': user}
+        context['user'].signup_date = user.signup_date.year
+        if self.request.user == user:
+            context['self'] = True  # pyre-ignore[6]
+            context['organisations'] = Organisation.objects.all()  # pyre-ignore[6]
+            context['avatars'] = UserAvatar.objects.all()  # pyre-ignore[6]
 
-        if CustomUser.objects.filter(pk=pk).exists():
-            user = get_object_or_404(CustomUser, pk=pk)
-            if str(user.display_name).lower() == display_name[0].lower():
-                context = {'user': user}
-                context['user'].signup_date = user.signup_date.year
-                if self.request.user == user:
-                    context['self'] = True # pyre-ignore[6]
-                    context['organisations'] = Organisation.objects.all() # pyre-ignore[6]
-                    context['avatars'] = UserAvatar.objects.all() # pyre-ignore[6]
-
-                return render(request, 'account/view.html', context)
-            else:
-                return HttpResponseRedirect(reverse('404'))
-        else:
-            return HttpResponseRedirect(reverse('404'))
+        return render(request, 'account/view.html', context)
 
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
         current_user = self.request.user
-        print(current_user)
         data = QueryDict(request.body).dict()
         if data.get('display_name'):
             form = CustomUserNameUpdateForm(data, instance=current_user)
             if form.is_valid():
-                current_user.display_name = form.cleaned_data.get('display_name') # pyre-ignore[16]
+                current_user.display_name = form.cleaned_data.get('display_name')  # pyre-ignore[16]
                 current_user.save()
                 return HttpResponseRedirect(reverse('account_view'))
             else:
@@ -299,7 +299,7 @@ class CustomUserPersonalView(TemplateView):
             form = CustomUserAvatarUpdateForm(data, instance=current_user)
             if form.is_valid():
                 form.full_clean()
-                current_user.avatar = form.cleaned_data.get('avatar') # pyre-ignore[16]
+                current_user.avatar = form.cleaned_data.get('avatar')  # pyre-ignore[16]
                 current_user.save()
                 context = {
                     'image_url': current_user.avatar.image_url  # pyre-ignore[16]
@@ -312,7 +312,9 @@ class CustomUserPersonalView(TemplateView):
             if form.is_valid():
                 lower_org_name = form.cleaned_data.get('organisation_name').lower()
                 if Organisation.objects.filter(name__iexact=lower_org_name).exists():
-                    current_user.organisation =  get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))  # pyre-ignore[16]
+                    # pyre-ignore[16]
+                    current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get(
+                        'organisation_name'))
                 else:
                     new_organisation = \
                         Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
@@ -321,8 +323,8 @@ class CustomUserPersonalView(TemplateView):
 
                 current_user.save()
                 context = {
-                    'name': current_user.organisation.name, # pyre-ignore[16]
-                    'link': current_user.organisation.link # pyre-ignore[16]
+                    'name': current_user.organisation.name,  # pyre-ignore[16]
+                    'link': current_user.organisation.link  # pyre-ignore[16]
                 }
                 return render(request, 'account/partials/organisation_name_link.html', context)
             else:

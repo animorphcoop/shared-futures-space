@@ -1,0 +1,12 @@
+<h1>analytics</h1>
+
+{% if unauthenticated %}
+  <p>sorry, only staff can access this page</p>
+{% else %}
+  {% for graph in graphs %}
+    <h3>{{graph.title}}</h3>
+    <p>{{graph.visualise|safe}}</p>
+    <p><i>total: {{graph.total}}</i></p>
+    <p><i>average: {{graph.average}}</i></p>
+  {% endfor %}
+{% endif %}

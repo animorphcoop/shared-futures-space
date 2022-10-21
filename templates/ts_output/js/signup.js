@@ -15,10 +15,19 @@ function setupObserversSignup() {
 function evaluateButtonSignup() {
     if (inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
         return;
-    if (inputFeedback.innerText === '' && passwordFeedbackOne.innerText === '' && passwordFeedbackTwo.innerText === '') {
+    if (inputFeedback.innerText === '' || passwordFeedbackOne.innerText === '' || passwordFeedbackTwo.innerText === '') {
         toggleSubmitButton(true);
     }
     else {
         toggleSubmitButton(false);
     }
+}
+function validateSignup() {
+    if (emailInput == null || passwordInputOne == null || passwordInputTwo == null || inputFeedback === null || passwordFeedbackOne === null || passwordFeedbackTwo === null)
+        return;
+    let errorCount = 0;
+    errorCount += validateInputFeedback(emailInput, inputFeedback);
+    errorCount += validateInputFeedback(passwordInputOne, passwordFeedbackOne);
+    errorCount += validateInputFeedback(passwordInputTwo, passwordFeedbackTwo);
+    return errorCount == 0;
 }

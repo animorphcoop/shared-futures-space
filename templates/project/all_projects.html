@@ -1,18 +1,52 @@
-{% if not request.user.is_anonymous %}
-    <form method=post>
-        {% csrf_token %}
-        <button name=to_view value={% if viewing == 'mine' %}all>View All{% else %}mine>View My Projects{% endif %}</button>
-    </form>
-{% endif %}
-<table id=projects>
-    <tr>
-        <th>Project Name</th>
-        <th></th>
-    </tr>
-    {% for project in projects %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+    {% block title %}{% include "partials/title.html" with title=area.name|add:' Spring' %}{% endblock %}
+
+    {% include "partials/horizontal-spacer.html" with space="12" %}
+
+    {% comment %} {% if not request.user.is_anonymous %}
+        <form method=post>
+            {% csrf_token %}
+            <button name=to_view value={% if viewing == 'mine' %}all>View All{% else %}mine>View My Projects{% endif %}</button>
+        </form>
+    {% endif %}
+    <table id=projects>
         <tr>
-            <td>{{ project.name }}</td>
-            <td><a href={% url 'view_project' project.slug %}>View Project</a></td>
+            <th>Project Name</th>
+            <th></th>
         </tr>
-    {% endfor %}
-</table>
+        {% for project in projects %}
+            <tr>
+                <td>{{ project.name }}</td>
+                <td><a href={% url 'view_project' project.slug %}>View Project</a></td>
+            </tr>
+        {% endfor %}
+    </table> {% endcomment %}
+
+    {% include "partials/horizontal-spacer.html" with space="12" %}
+
+    <div class="flex flex-col gap-6">
+
+        {% for avatar in avatars %}
+            <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
+        {% endfor %}
+
+
+        {% for project in projects %}
+{% comment %}
+            <a href={% url 'view_project' project.slug %}>View Project</a>
+{% endcomment %}
+            {% include "project/project_card.html" with project=project %}
+        {% endfor %}
+    </div>
+
+
+{% endblock content %}

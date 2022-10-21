@@ -11,19 +11,21 @@
 
     {% block title %}{% include "partials/title.html" with title=user.display_name dashboard=True %}{% endblock %}
 
-    <section>
-        <img src="{% static 'images/dashboard/mobius.gif' %}" alt="mobius temp" class="w-full">
-
-        <div id="initial" class="">
-            {% include 'dashboard/partials/location.html' %}
-        </div>
-    </section>
+    {% if request.user.post_code.area.name != 'Other' %}
+        <section>
+            <div id="initial" class="">
+                {% include 'dashboard/partials/location.html' %}
+            </div>
+        </section>
+    {% endif %}
 
     {# Messages #}
     <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
-        <button class="w-full" type="button">
-            <h2 class="py-4.5 px-4.5 flex items-center justify-between">
-                {% include "partials/text-style/header.html" with text="Your messages" %}
+        <a href="{% url "account_all_chats" %}" type="button" class="w-full py-4.5 px-4.5" >
+            <h2 class="flex items-center justify-between">
+                <span class="text-header">
+                    Your messages
+                </span>
                 <div class="w-[12] h-[8] -rotate-90 transition duration-500 ease-out">
                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
@@ -31,8 +33,10 @@
                               fill="#9759FF"/>
                     </svg>
                 </div>
+
             </h2>
-        </button>
+
+        </a>
     </div>
 
     {#    {% block messages %}#}
@@ -41,11 +45,12 @@
 
     {# Notifications #}
     <div x-data="{selected:null}">
-        {# Custom gradients https://www.hyperui.dev/blog/custom-gradients-with-tailwindcss-jit #}
         <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
-            <button class="w-full" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
-                <h2 class="py-4.5 px-4.5 flex items-center justify-between">
-                    {% include "partials/text-style/header.html" with text="Notifications" %}
+            <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+                <h2 class="flex items-center justify-between">
+                    <span class="text-header">
+                        Notifications
+                    </span>
                     <div class="w-[12] h-[8] transition duration-500 ease-out"
                          :class="{'-rotate-180': selected}">
                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
@@ -75,18 +80,23 @@
     </div>
 
     {#  Call to action partial, replace URL variable  #}
-    <section class="bg-resources-two">
-        {% url 'all_projects' as the_url %}
-        {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
-    </section>
+    {% if request.user.post_code.area.name != 'Other' %}
+        <section class="bg-resources-two">
 
-    {# Rivers #}
-    <div x-data="{selected:null}">
-        {# Custom gradients https://www.hyperui.dev/blog/custom-gradients-with-tailwindcss-jit #}
+            {% url 'spring' request.user.post_code.area.name as the_url %}
+            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
+        </section>
+    {% endif %}
+
+    {% if request.user.post_code.area.name != 'Other' %}
+        {# Rivers #}
+        <div x-data="{selected:null}">
         <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
-            <button class="w-full" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
-                <h2 class="py-4.5 px-4.5 flex items-center justify-between">
-                    {% include "partials/text-style/header.html" with text="Your rivers" %}
+            <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+                <h2 class="flex items-center justify-between">
+                    <span class="text-header">
+                        Your rivers
+                    </span>
                     <div class="w-[12] h-[8] transition duration-500 ease-out"
                          :class="{'-rotate-180': selected}">
                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
@@ -98,23 +108,23 @@
                 </h2>
             </button>
         </div>
+    {% endif %}
+<div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
+     style=""
+     x-ref="resources"
+     x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
 
-        <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
-             style=""
-             x-ref="resources"
-             x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
+    {# If no rivers:  #}
+    {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
 
-            {# If no rivers:  #}
-            {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
+    {# If rivers, one looks like: #}
+    <div class="">
 
-            {# If rivers, one looks like: #}
-            <div class="">
-
-            </div>
-
-            <div class="h-8"></div>
-        </div>
     </div>
+
+    <div class="h-8"></div>
+</div>
+</div>
 
     {#    {% block rivers %}#}
     {#        {% include "dashboard/partials/accordion.html" with title="Status of your rivers" list_items=rivers %}#}
@@ -122,11 +132,12 @@
 
     {# Resources #}
     <div x-data="{selected:null}">
-        {# Custom gradients https://www.hyperui.dev/blog/custom-gradients-with-tailwindcss-jit #}
         <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
-            <button class="w-full" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
-                <h2 class="py-4.5 px-4.5 flex items-center justify-between">
-                    {% include "partials/text-style/header.html" with text="Bookmarked resources" %}
+            <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+                <h2 class="flex items-center justify-between">
+                    <span class="text-header">
+                        Saved resources
+                    </span>
                     <div class="w-[12] h-[8] transition duration-500 ease-out"
                          :class="{'-rotate-180': selected}">
                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
@@ -145,7 +156,9 @@
              x-bind:style="selected == 1 ? 'max-height: ' + $refs.resources.scrollHeight + 'px' : ''">
 
             {# If no resources:  #}
-            {% include "partials/salmon-of-knowledge.html" with text="Resources you've marked as helpful are saved here in your Dashboard." %}
+            {% if resources|length == 0 %}
+                {% include "partials/salmon-of-knowledge.html" with text="Resources you've saved are available here in your Dashboard." %}
+            {% endif %}
             <div class="h-8"></div>
             {% for resource in resources %}
 
@@ -193,11 +206,12 @@
 
     {# Get in touch #}
     <div x-data="{selected:null}">
-        {# Custom gradients https://www.hyperui.dev/blog/custom-gradients-with-tailwindcss-jit #}
         <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
-            <button class="w-full" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
-                <h2 class="py-4.5 px-4.5 flex items-center justify-between">
-                    {% include "partials/text-style/header.html" with text="Get in touch" %}
+            <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+                <h2 class="flex items-center justify-between">
+                    <span class="text-header">
+                        Get in touch
+                    </span>
                     <div class="w-[12] h-[8] transition duration-500 ease-out"
                          :class="{'-rotate-180': selected}">
                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"

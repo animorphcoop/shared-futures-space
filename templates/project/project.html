@@ -4,6 +4,7 @@
 <p>owners: {{owners|attrmap:'user'|join:', '}}</p>
 <p>champions: {{champions|attrmap:'user'|join:', '}}</p>
 <p>all members: {{members|attrmap:'user'|join:', '}}</p>
+<p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
 <hr>
 <p>{{object.description}}</p>
 <hr>
@@ -37,3 +38,5 @@
 {% if object.reflect_stage is not None %}
     <p><a href="{% url 'view_reflect' object.slug %}">Reflect Stage</a></p>
 {% endif %}
+<hr>
+<p>associated resources: {{resources}}</p>

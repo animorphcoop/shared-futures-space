@@ -9,7 +9,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from userauth.models import CustomUser # pyre-ignore[21]
 from resources.models import Resource, FoundUseful # pyre-ignore[21]
 
-@login_required(login_url='/account/login/')  # redirect when user is not logged in
+@login_required(login_url='/profile/login/')  # redirect when user is not logged in
 def dashboard(request: HttpRequest) -> HttpResponse:
     current_user = request.user
     if not current_user.added_data: # pyre-ignore[16]
@@ -24,15 +24,12 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     try:
         useful_resources = FoundUseful.objects.filter(found_useful_by=current_user).values()
         for resource in useful_resources:
-            print(resource)
-            print(resource['useful_resource_id'])
             resource_object = Resource.objects.get(pk=resource['useful_resource_id'])
             resources.append(resource_object)
 
     except FoundUseful.DoesNotExist:
         print('no favourites')
 
-    print(useful_resources)
     context = {
         'messages': messages,
         'notifications': notifications,
