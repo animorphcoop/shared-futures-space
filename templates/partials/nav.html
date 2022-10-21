@@ -3,6 +3,7 @@
 <div x-data="{ open: false, toggle() { this.open = ! this.open } }" :class="{'fixed top-0 right-6.5': open == true}"
      class="w-full sm:w-[360px] absolute pointer-events-auto">
 
+    {#  Burger-cross icon  #}
     <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
             @click="toggle(), menu = !menu">
         <span class="sr-only">Open main menu</span>
@@ -19,6 +20,7 @@
         </div>
     </button>
 
+    {#  Menu window  #}
     <div x-show="open"
          x-transition:enter="transition ease-out duration-500"
          x-transition:enter-start="opacity-0"
@@ -31,7 +33,9 @@
 
         {#  Menu list  #}
         <nav class="w-full min-h-full font-kanit-500 text-xl text-black-text flex flex-col">
-            <h1 class="bg-white p-4 py-2.5 text-purple">Menu</h1>
+            <h1 class="bg-white p-4 py-2.5 text-purple">
+                Menu
+            </h1>
             {% if not user.is_authenticated %}
                 <div class="bg-blue-done">
                     {% url 'account_login' as the_url2 %}
@@ -46,13 +50,14 @@
                     {% else %}
                         <a href="{% url 'landing' %}">Landing page</a>
                     {% endif %}
-
                 </li>
 
-                <li class="p-4 pb-5" x-data="{ drop: false }">
-                    <button class="flex items-center justify-between w-full" @click="drop = !drop">
+                <div x-data="{selected:null}">
+                    <button class="w-full p-4 pb-5 flex items-center justify-between" type="button"
+                            @click="selected !== 1 ? selected = 1 : selected = null">
                         Springs
-                        <div class="transition duration-500 ease-out" :class="{'-rotate-180': drop}">
+                        <div class="w-[12] h-[8] transition duration-500 ease-out"
+                             :class="{'-rotate-180': selected}">
                             <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
@@ -60,19 +65,15 @@
                             </svg>
                         </div>
                     </button>
-                    <!-- Dropdown menu -->
-                    <div x-show="drop"
-                         x-transition:enter="transition ease-out duration-400"
-                         x-transition:enter-start="opacity-0"
-                         x-transition:enter-end="opacity-100"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100"
-                         x-transition:leave-end="opacity-0">
+                    <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
+                         style=""
+                         x-ref="springs"
+                         x-bind:style="selected == 1 ? 'max-height: ' + $refs.springs.scrollHeight + 'px' : ''">
 
-                        {% include 'partials/nav-areas.html'%}
-
+                        {% include 'partials/nav-areas.html' %}
                     </div>
-                </li>
+                </div>
+
                 {% if user.is_authenticated %}
                     <li class="p-4 pb-5">
                         <a href="{% url 'account_all_chats' %}">Messages</a>
@@ -81,9 +82,11 @@
                         <a href="{% url 'account_view' %}">Profile</a>
                     </li>
                 {% endif %}
+
                 <li class="p-4 pb-5">
                     <a href="{% url 'resources' %}">Resources</a>
                 </li>
+
                 <li class="p-4 pb-5">
                     {% if user.is_authenticated %}
                         <form method="post" action="{% url 'account_logout' %}">
@@ -92,15 +95,10 @@
                                 Log out
                             </button>
                         </form>
-                        {% comment %}
-                        {% else %}
-                        <a href="{% url 'account_login' %}">Log in</a>
-                        {% endcomment %}
                     {% endif %}
                 </li>
-
-
             </ul>
+
             <ul class="p-4 bg-white">
                 <li class="text-purple font-kanit-600 text-xxxs tracking-wide inline-block mr-2.5">
                     Get in touch
