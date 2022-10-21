@@ -19,40 +19,27 @@
         <form class="" method="POST" action="{% url 'account_login' %}" x-init="setupObserversLogin()">
             {% csrf_token %}
 
+            {% include "partials/vertical-spacer.html" with space="4" %}
+
             {% if form.non_field_errors %}
-                <div class="mx-4 mb-4 font-garamond-500 bg-red-100">
+                <div class="text-large text-center bg-red-important/30 p-4 px-6 mx-4">
                     {% for error in form.non_field_errors %}
-                        <p class="px-4 py-3">{{ error }}</p>
+                        <p>{{ error }}</p>
                     {% endfor %}
                 </div>
+                {% include "partials/vertical-spacer.html" with space="9" %}
             {% endif %}
 
-            <div class="pt-4 px-4 pb-9">
-                {% comment %}                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                    Email
-                </label>{% endcomment %}
-                {% comment %}
-                {% render_field form.login id="email-input" onfocusout="processEmailValue()" class="form-control block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
-        {% endcomment %}
+            <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="email-input" label="Email" %}
                 {% include "partials/input-text.html" with field=form.login id="email-input" name="email-input" type="text" %}
-
-
                 {% comment %}controlled via js/ts{% endcomment %}
                 <span id="email-feedback" class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
             </div>
 
             <div class="px-4 pb-4.5">
-                {% comment %}
- <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
-                    Password
-                </label>
-                {% render_field form.password id="password-input" class="form-control block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0" %}
-            {% endcomment %}
                 {% include "partials/input-label.html" with for="password-input" label="Password" %}
                 {% include "partials/input-text.html" with field=form.password id="password-input" name="password-input" type="password" %}
-
-
             </div>
 
             <a href="{% url 'account_reset_password' %}"
@@ -60,43 +47,33 @@
                 Forgot your password?
             </a>
 
-            <div class="h-9"></div>
+            {% include "partials/vertical-spacer.html" with space="9" %}
 
             <div class="px-4 pb-9">
-
                 {% include "partials/input-submit.html" with button="Log in" id="submit-button" type="submit" %}
-                {% comment %}                <button id="submit-button" disabled
-                        class="cursor-not-allowed inline-block px-4 py-3.5 transition ease-out duration-300 text-purple font-kanit-700 font-medium uppercase text-xxs tracking-widest rounded-full bg-blue-button disabled:bg-gray-light"
-                        type="submit">Log in
-                </button>{% endcomment %}
             </div>
 
         </form>
 
         <div class="flex flex-col flex-grow justify-end">
-            <section
-                    class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_41.67%)] flex flex-grow flex-col items-center">
+            <section class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_41.67%)] flex flex-grow flex-col items-center">
                 {% include "socialaccount/partials/provider_list.html" with process="login" %}
             </section>
 
             <div class="bg-yellow text-center">
-                <h2 class="py-3 font-kanit-400 text-xxxs tracking-wide text-black-text">
+                <h2 class="py-3 text-meta">
                     Don't have a Shared Futures account?
                 </h2>
-
                 {# TODO: Name not available due to lack of urls entry, consider overriding #}
                 {# {% url 'account_login' as the_url %} #}
                 {% include "partials/button.html" with url="/profile/signup/" style="primary_colour" button="Sign up" %}
-
-                <div class="pb-3"></div>
+                {% include "partials/vertical-spacer.html" with space="3" %}
             </div>
         </div>
 
         {% block scripts %}
             <script src="{% static 'js/auth_helper.js' %}"></script>
-
             <script src="{% static 'js/login.js' %}"></script>
-
         {% endblock %}
     </div>
 
