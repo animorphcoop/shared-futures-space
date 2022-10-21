@@ -60,6 +60,7 @@ class ProjectView(DetailView):  # pyre-ignore[24]
         return context
 
 
+#TODO: Write a helper method for parsing paths if there are whitespaces?
 class SpringView(TemplateView):
     def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[
         HttpResponse, HttpResponseRedirect]:
@@ -69,22 +70,34 @@ class SpringView(TemplateView):
             name = slug.replace('-', ' ')
         else:
             name = slug
-        print(slug)
 
         if Area.objects.filter(name__iexact=name).exists():
             area = Area.objects.get(name__iexact=name)
-            print(area)
         else:
             return HttpResponseRedirect(reverse('404'))
 
         projects = Project.objects.filter(area=area)
         #projects = Project.objects.all()
+        #members = []
         for project in projects:
             project.tags = tag_cluster_to_list(project.tags)
+
+            project.us = ProjectMembership.objects.filter(project=project)
             project.swimmers = ProjectMembership.objects.filter(project=project).values_list('user', flat=True)
+
+            #TEMP - comment below
+            project.membership = ProjectMembership.objects.filter(project=project)
+            '''
+            for projectmemb in ProjectMembership.objects.filter(project=project):
+                print(projectmemb.user)
+                members.append(projectmemb.user)
+            project.members = members
+            '''
         num_swimmers = ProjectMembership.objects.filter(
             project__in=Project.objects.filter(area=area)).values_list('user', flat=True).distinct().count()
 
+
+        #TODO: Add all members, owner and champions to the context 'project.swimmers' being ints; temp members
         context = {
             'area': area,
             'projects': projects,

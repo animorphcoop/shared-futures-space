@@ -209,18 +209,6 @@ class UserChatView(ChatView):
         return context
 
 
-'''
-    def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[HttpResponse, HttpResponseRedirect]:
-
-        try:
-            user_path = slug_to_user(str(kwargs['user_path']))
-        except:
-            return HttpResponseRedirect(reverse('404'))
-
-
-        return render(request, 'account/user_chat.html', args=[user_path])
-'''
-
 
 class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:

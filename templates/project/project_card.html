@@ -7,7 +7,6 @@
         </div>
 
         {% include "partials/horizontal-spacer.html" with space="6" %}
-
         <div class="flex flex-row gap-1.5">
 
             {% for tag in project.tags %}
@@ -19,18 +18,34 @@
 
         <div class="flex justify-between">
             <div class="flex">
+                {% for member in project.membership %}
+                    {% if member.owner %}
+
+                        {% comment %}TODO: RETRIEVE INFO FROM VIEW{% endcomment %}
+                        <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
+                        {% comment %}
                 <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>
-                {% include "partials/vertical-spacer.html" with space="4" %}
-                <div class="flex flex-col">
-                    <span class="uppercase font-kanit-400 text-[9px] leading-3 tracking-widest text-black-text">Jack McKinnon</span>
-                    <span class="font-kanit-400 text-[9px] leading-3 tracking-[0.03em] text-black-meta">Started 4 months ago</span>
-                    <span class="font-kanit-400 text-[9px] leading-3 tracking-[0.03em] text-black-meta">Stage 3: Act</span>
+{% endcomment %}
+                        {% include "partials/vertical-spacer.html" with space="4" %}
+                        <div class="flex flex-col">
+                        <span class="uppercase font-kanit-400 text-[9px] leading-3 tracking-widest text-black-text">{{ member.user.display_name }}</span>
+                    {% endif %}
+                {% endfor %}
+                <span class="font-kanit-400 text-[9px] leading-3 tracking-[0.03em] text-black-meta">Started 4 months ago</span>
+                <span class="font-kanit-400 text-[9px] leading-3 tracking-[0.03em] text-black-meta">Stage 3: Act</span>
                 </div>
             </div>
             <div class="flex gap-1.5">
+                                {% for member in project.membership|slice:3 %}
+                                <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
+
+                {% endfor %}
+{% comment %}
+
+
                 <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>
                 <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>
-                <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>
+                <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>{% endcomment %}
             </div>
         </div>
 

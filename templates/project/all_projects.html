@@ -8,6 +8,7 @@
 {% endblock extra_css %}
 
 {% block content %}
+    {% block title %}{% include "partials/title.html" with title=area.name|add:' Spring' %}{% endblock %}
 
     {% include "partials/horizontal-spacer.html" with space="12" %}
 
