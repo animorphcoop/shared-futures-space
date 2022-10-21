@@ -8,7 +8,7 @@
 
 {% block content %}
 
-    {% block title %}{% include "partials/title.html" with title="Resources" %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title="Resource" extra_title=resource.title %}{% endblock %}
 
     <article class="px-4.5">
         {% include "partials/vertical-spacer.html" with space="2" %}
