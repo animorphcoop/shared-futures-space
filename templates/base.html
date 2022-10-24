@@ -38,7 +38,7 @@
     </head>
     <script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
-    <body class="antialiased sm:bg-black/20 sm:flex sm:flex-col sm:items-center" x-data="{ menu: false }" >
+    <body class="antialiased w-full sm:bg-black/20 sm:flex sm:flex-col sm:items-center" x-data="{ menu: false }" >
 
         {% comment %} URL-dependent navbar {% endcomment %}
         <div hx-get="/core/check_url_nav/"

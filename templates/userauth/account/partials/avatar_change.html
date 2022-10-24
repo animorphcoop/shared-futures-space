@@ -12,7 +12,7 @@
         <div class="flex flex-wrap gap-5 -m-1">
             {% for avatar in avatars %}
                 <button id="button-{{ avatar.pk }}"
-                        onclick="event.preventDefault(); changeAvatar(this.id, {{ avatar.pk }})"
+                        onclick="event.preventDefault(); changeAvatar(this.id, {{ avatar.pk }});"
                         class="rounded-full p-0.5">
                     <img class="inline w-6 h-6" src="{{ avatar.image_url|default_if_none:'#' }}" alt="">
                 </button>
@@ -23,13 +23,13 @@
 
         <form hx-put="{% url 'account_update' %}" hx-target="#avatar-holder"
               class="flex items-center justify-center">
-            <button onclick="toggleAvatar()"
+            <button onclick="toggleAvatar(); enableBodyScroll();"
                     type="button"
                     class="button button-on-white">
                 Back
             </button>
             {% include "partials/horizontal-spacer.html" with space="4.5" %}
-            <button onclick="toggleAvatar()"
+            <button onclick="toggleAvatar(); enableBodyScroll();"
                     type="submit"
                     class="button button-on-white">
                 Confirm
@@ -41,9 +41,5 @@
 </section>
 
 {% block scripts %}
-    <script>
-
-    </script>
     <script src="{% static 'js/avatar_selection.js' %}"></script>
-
 {% endblock %}
