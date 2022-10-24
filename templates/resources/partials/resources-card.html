@@ -10,20 +10,10 @@
     {% if user.is_authenticated %}
 
         {% if resource.useful %}
-            Saved
-        {% else %}
-            Not
+            <div id="heart-icon">
+            <img src="{% static 'images/resources/heart_icon.png' %}" class="" alt="resource saved">
+            </div>
         {% endif %}
-        <div>
-            {% comment %}
-        <div id="heart-block-{{ resource.id }}" x-init="swapHearts({{ resource.useful_to }}.toString(), $el.id);">
-{% endcomment %}
-
-            {% comment %}
-                <img src="{% static 'images/resources/heart_icon.png' %}" class="fill-blue-500" alt="resource saved">
-{% endcomment %}
-        </div>
-
     {% endif %}
 
     {% if resource.tags %}

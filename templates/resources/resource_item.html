@@ -20,11 +20,10 @@
         {% include "partials/vertical-spacer.html" with space="4" %}
 
         {% if user.is_authenticated %}
-            <div id="heart-block">
-                 Saved
-            {% comment %}
+
+            <div id="heart-icon" class="hidden">
                 <img src="{% static 'images/resources/heart_icon.png' %}" class="fill-blue-500" alt="resource saved">
-{% endcomment %}
+
             </div>
 
         {% endif %}

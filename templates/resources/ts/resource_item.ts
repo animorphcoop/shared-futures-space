@@ -1,13 +1,14 @@
-function swapHearts(buttonText: string, heartId: string) {
-    console.log(buttonText)
-    console.log(heartId)
-    const heart = document.getElementById(heartId)
+function swapHearts(buttonText: string) {
+    const heart = document.getElementById('heart-icon')
     if (heart == null) return
     if (buttonText.includes("SAVED")) {
-        heart.innerText = 'saved'
-        console.log('HIGHLIGHT')
+        if (heart.classList.contains('hidden')) {
+            heart.classList.remove('hidden')
+        }
+
     } else {
-        heart.innerText = 'not saved'
-        console.log('NOT')
+        if (!heart.classList.contains('hidden')) {
+            heart.classList.add('hidden')
+        }
     }
 }

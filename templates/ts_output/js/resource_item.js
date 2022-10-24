@@ -1,16 +1,14 @@
 "use strict";
-function swapHearts(buttonText, heartId) {
-    console.log(buttonText);
-    console.log(heartId);
-    const heart = document.getElementById(heartId);
+function swapHearts(buttonText) {
+    const heart = document.getElementById('heart-icon');
     if (heart == null)
         return;
     if (buttonText.includes("SAVED")) {
-        heart.innerText = 'saved';
-        console.log('HIGHLIGHT');
+        console.log('ok');
+        heart.classList.remove('hidden');
     }
     else {
-        heart.innerText = 'not saved';
-        console.log('NOT');
+        console.log('nook');
+        heart.hidden = false;
     }
 }
