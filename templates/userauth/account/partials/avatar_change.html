@@ -8,7 +8,8 @@
             Change your avatar
         </h2>
         {% include "partials/vertical-spacer.html" with space="6" %}
-        <ul class="max-h-72 overflow-y-auto">
+        {% include "partials/input-label.html" with for="post_code" label="New avatar" %}
+        <div class="flex flex-wrap gap-5 -m-1">
             {% for avatar in avatars %}
                 <button id="button-{{ avatar.pk }}"
                         onclick="event.preventDefault(); changeAvatar(this.id, {{ avatar.pk }})"
@@ -16,7 +17,7 @@
                     <img class="inline w-6 h-6" src="{{ avatar.image_url|default_if_none:'#' }}" alt="">
                 </button>
             {% endfor %}
-        </ul>
+        </div>
 
         {% include "partials/vertical-spacer.html" with space="4" %}
 
