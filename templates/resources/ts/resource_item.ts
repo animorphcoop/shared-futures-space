@@ -9,7 +9,5 @@ function swapHearts(buttonText: string, heartId: string) {
     } else {
         heart.innerText = 'not saved'
         console.log('NOT')
-
     }
-
 }

@@ -31,6 +31,16 @@ def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
     order_by = request.POST.get('order_by')
     results = filter_and_cluster_resources(search_text, order_by)
+
+    if request.user.is_authenticated:
+        current_user = request.user
+        for resource_card in results:
+            try:
+                useful_instance = FoundUseful.objects.get(useful_resource=resource_card, found_useful_by=current_user)
+                resource_card.useful = useful_instance
+            except FoundUseful.DoesNotExist:
+                pass
+
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)
 
@@ -54,11 +64,13 @@ def filter_and_cluster_resources(search_term: Optional[str], order_by: Optional[
     case_studies = objects_tags_cluster_list_overwrite(case_studies)
     results = list(chain(how_tos, case_studies))
     if order_by == 'latest':
-        results.sort(key = lambda r: r.published_on, reverse = True)
+        results.sort(key=lambda r: r.published_on, reverse=True)
     elif order_by == 'most saved':
-        results.sort(key = lambda r: len(FoundUseful.objects.filter(useful_resource = r)), reverse = True)
+        results.sort(key=lambda r: len(FoundUseful.objects.filter(useful_resource=r)), reverse=True)
     elif order_by == 'most viewed':
-        results.sort(key = lambda r: len(AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.RESOURCE, target_resource = r)), reverse = True)
+        results.sort(
+            key=lambda r: len(AnalyticsEvent.objects.filter(type=AnalyticsEvent.EventType.RESOURCE, target_resource=r)),
+            reverse=True)
     return results
 
 

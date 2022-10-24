@@ -1,9 +1,30 @@
+{% load static %}
+
 <li class="px-3 pt-3 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#e5f1f800_15.62%)] rounded-t-xl rounded-t-xl">
     <h2 class="font-kanit-500 text-xl text-black-large leading-tight">
         {{ resource.title }}
     </h2>
 
     <div class="h-4"></div>
+
+    {% if user.is_authenticated %}
+
+        {% if resource.useful %}
+            Saved
+        {% else %}
+            Not
+        {% endif %}
+        <div>
+            {% comment %}
+        <div id="heart-block-{{ resource.id }}" x-init="swapHearts({{ resource.useful_to }}.toString(), $el.id);">
+{% endcomment %}
+
+            {% comment %}
+                <img src="{% static 'images/resources/heart_icon.png' %}" class="fill-blue-500" alt="resource saved">
+{% endcomment %}
+        </div>
+
+    {% endif %}
 
     {% if resource.tags %}
         <div class="flex flex-wrap gap-x-3 gap-y-2">
@@ -31,3 +52,4 @@
 
     <div class="h-9"></div>
 </li>
+
