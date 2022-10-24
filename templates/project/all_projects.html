@@ -32,19 +32,27 @@
     </table> {% endcomment %}
 
     <div class="flex flex-col gap-6">
-
         {% for avatar in avatars %}
             <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
         {% endfor %}
 
-
         {% for project in projects %}
-{% comment %}
-            <a href={% url 'view_project' project.slug %}>View Project</a>
-{% endcomment %}
+            {% comment %}
+                <a href={% url 'view_project' project.slug %}>View Project</a>
+            {% endcomment %}
             {% include "project/project_card.html" with project=project %}
         {% endfor %}
     </div>
+
+    {% include "partials/vertical-spacer.html" with space="4.5" %}
+
+    {# Calls to action need real links #}
+    <section class="bg-resources-two">
+        {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url="/" info="" %}
+    </section>
+    <section class="bg-yellow">
+        {% include "partials/call-to-action.html" with main="Are you interested in rivers from other areas? " button="Explore other areas" url="/" info="" %}
+    </section>
 
 
 {% endblock content %}
