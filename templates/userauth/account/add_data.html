@@ -33,7 +33,7 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="display_name" label="Name" %}
-                <input class="input-text"
+                <input class="input-text input-text-invalid"
                        id=display_name name=display_name type=text placeholder="Your name" value=""
                        pattern="[a-zA-Z][a-zA-Z\s]*">
                 <div class="h-1.5"></div>
@@ -43,7 +43,7 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="year_of_birth" label="Year of birth" %}
-                <input class="input-text"
+                <input class="input-text input-text-invalid"
                        id=year_of_birth name=year_of_birth type="number" min="1900" max="2022"
                        placeholder="Year you were born"
                        value="">
@@ -53,7 +53,7 @@
 
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="post_code" label="Postcode" %}
-                <input class="input-text"
+                <input class="input-text input-text-invalid"
                        id=post_code name=post_code type=text placeholder="Your postcode"
                        pattern="([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)([0-9][a-zA-Z]{2})?" value="">
                 <div class="h-1.5"></div>
@@ -108,7 +108,7 @@
                     <div class="h-9"></div>
                     {% include "partials/input-label.html" with for="organisation" label="You organisation" %}
                     <div class="">
-                        <input class="input-text bg-white"
+                        <input class="input-text input-text-invalid bg-white"
                                id="organisation_name" onfocus="blur()" name="organisation_name" type=text value="">
 
                         {% comment %}taking on the value of the organisation url via organisation_name_enter modal field{% endcomment %}
