@@ -2,6 +2,7 @@
         hx-post="/resources/found_useful/{{ resource_id }}/"
         hx-target="#useful-button"
         hx-swap="outerHTML"
+        x-init="swapHearts($el.innerText, 'heart-block');"
         id="useful-button"
         class="inline-block button flex items-center
            {% if status == 'found_useful' %}
