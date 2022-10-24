@@ -19,17 +19,15 @@
 
         {% include "partials/vertical-spacer.html" with space="4" %}
 
-        {% if user.is_authenticated %}
+        <div class="flex flex-wrap gap-x-3 gap-y-2">
+            {% if user.is_authenticated %}
+                <div id="heart-icon" class="inline-block hidden">
+                    <img src="{% static 'images/resources/heart_icon.png' %}" class=""
+                         alt="resource saved">
+                </div>
+            {% endif %}
 
-            <div id="heart-icon" class="hidden">
-                <img src="{% static 'images/resources/heart_icon.png' %}" class="fill-blue-500" alt="resource saved">
-
-            </div>
-
-        {% endif %}
-
-        {% if resource.tags %}
-            <div class="flex flex-wrap gap-x-3 gap-y-2">
+            {% if resource.tags %}
                 {% for tag in resource.tags %}
                     <button class="px-1.5 py-1 bg-blue-second rounded-sm">
                         <a href="{% url "resources_tag" tag %}"
@@ -38,9 +36,9 @@
                         </a>
                     </button>
                 {% endfor %}
-            </div>
-            {% include "partials/vertical-spacer.html" with space="4" %}
-        {% endif %}
+                {% include "partials/vertical-spacer.html" with space="4" %}
+            {% endif %}
+        </div>
 
         {% if resource.body %}
             <div class="text-body">

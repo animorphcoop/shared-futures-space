@@ -7,17 +7,16 @@
 
     <div class="h-4"></div>
 
-    {% if user.is_authenticated %}
-
-        {% if resource.useful %}
-            <div id="heart-icon">
-            <img src="{% static 'images/resources/heart_icon.png' %}" class="" alt="resource saved">
-            </div>
+    <div class="flex flex-wrap gap-x-3 gap-y-2">
+        {% if user.is_authenticated %}
+            {% if resource.useful %}
+                <div id="heart-icon" class="inline-block">
+                    <img src="{% static 'images/resources/heart_icon.png' %}" class="" alt="resource saved">
+                </div>
+            {% endif %}
         {% endif %}
-    {% endif %}
 
-    {% if resource.tags %}
-        <div class="flex flex-wrap gap-x-3 gap-y-2">
+        {% if resource.tags %}
             {% for tag in resource.tags %}
                 <button class="whitespace-normal px-1.5 py-1 bg-blue-second text-black-large font-kanit-400 text-xxxs uppercase leading-none tracking-widest rounded-sm"
                         onclick="buttonTagSearch('{{ tag }}')"
@@ -26,8 +25,8 @@
                     {{ tag }}
                 </button>
             {% endfor %}
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 
     <div class="h-6"></div>
 
