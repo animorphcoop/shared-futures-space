@@ -19,6 +19,15 @@
 
         {% include "partials/vertical-spacer.html" with space="4" %}
 
+        {% if user.is_authenticated %}
+
+            <div id="heart-icon" class="hidden">
+                <img src="{% static 'images/resources/heart_icon.png' %}" class="fill-blue-500" alt="resource saved">
+
+            </div>
+
+        {% endif %}
+
         {% if resource.tags %}
             <div class="flex flex-wrap gap-x-3 gap-y-2">
                 {% for tag in resource.tags %}
@@ -84,9 +93,17 @@
 
         {% include "partials/vertical-spacer.html" with space="4" %}
 
+
         <p class="text-meta">
             Published: {{ resource.published_on }}
         </p>
+
+        {% include "partials/vertical-spacer.html" with space="2" %}
+
+        <p class="text-meta">
+            Last edited: {{ resource.edited_on }}
+        </p>
+
 
         {# When 'last edited' is a thing, uncomment the below and replace the {{  }} contents #}
         {% comment %}{% include "partials/vertical-spacer.html" with space="4" %}
@@ -97,5 +114,9 @@
 
         {% include "partials/vertical-spacer.html" with space="9" %}
     </article>
+
+    {% block scripts %}
+        <script src="{% static 'js/resource_item.js' %}"></script>
+    {% endblock scripts %}
 
 {% endblock %}
