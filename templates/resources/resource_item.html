@@ -17,7 +17,7 @@
             {{ resource.title }}
         </h1>
 
-        {% include "partials/vertical-spacer.html" with space="4" %}
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         <div class="flex flex-wrap gap-x-3 gap-y-2">
             {% if user.is_authenticated %}
@@ -36,20 +36,20 @@
                         </a>
                     </button>
                 {% endfor %}
-                {% include "partials/vertical-spacer.html" with space="4" %}
             {% endif %}
         </div>
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         {% if resource.body %}
             <div class="text-body">
                 {{ resource.body }}
             </div>
-            {% include "partials/vertical-spacer.html" with space="4" %}
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
         {% else %}
             <p class="text-body">
                 {{ resource.summary }}
             </p>
-            {% include "partials/vertical-spacer.html" with space="4" %}
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
         {% endif %}
 
         {% if resource.link %}
@@ -62,7 +62,7 @@
                           fill="#9759FF"/>
                 </svg>
             </a>
-            {% include "partials/vertical-spacer.html" with space="4" %}
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
         {% endif %}
 
         {% if resource.case_study_image %}
@@ -70,7 +70,7 @@
                 {% image resource.case_study_image max-750x400 %}
                 <img src="{{ resource.case_study_image }}" alt="" title="">
             </div>
-            {% include "partials/vertical-spacer.html" with space="4" %}
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
         {% endif %}
 
         <div class="flex items-center">
@@ -85,30 +85,21 @@
             {% include 'partials/button-copy.html' with button='Share' icon='link' %}
         </div>
 
-        {% include "partials/vertical-spacer.html" with space="4" %}
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         {% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
 
-        {% include "partials/vertical-spacer.html" with space="4" %}
-
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         <p class="text-meta">
             Published: {{ resource.published_on }}
         </p>
 
-        {% include "partials/vertical-spacer.html" with space="2" %}
+        {% include "partials/vertical-spacer.html" with space="3" %}
 
         <p class="text-meta">
             Last edited: {{ resource.edited_on }}
         </p>
-
-
-        {# When 'last edited' is a thing, uncomment the below and replace the {{  }} contents #}
-        {% comment %}{% include "partials/vertical-spacer.html" with space="4" %}
-
-        <p class="text-meta">
-            Last edited: {{ resource.published_on }}
-        </p>{% endcomment %}
 
         {% include "partials/vertical-spacer.html" with space="9" %}
     </article>
