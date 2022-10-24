@@ -10,7 +10,7 @@
 {% block content %}
     {% block title %}{% include "partials/title.html" with title=area.name|add:' Spring' %}{% endblock %}
 
-    {% include "partials/horizontal-spacer.html" with space="12" %}
+    {% include "partials/vertical-spacer.html" with space="2" %}
 
     {% comment %} {% if not request.user.is_anonymous %}
         <form method=post>
@@ -30,8 +30,6 @@
             </tr>
         {% endfor %}
     </table> {% endcomment %}
-
-    {% include "partials/horizontal-spacer.html" with space="12" %}
 
     <div class="flex flex-col gap-6">
 
