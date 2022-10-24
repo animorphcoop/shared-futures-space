@@ -1,42 +1,43 @@
 {% load static %}
 
-<section class="z-20 flex justify-center items-center flex-col h-full absolute left-0 top-0 backdrop-blur bg-blue-blur">
-    <div class="rounded-t-xl w-full px-5 mb-5">
-        <div class="bg-yellow-pale rounded-t-xl shadow-xl">
-            <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-large px-3 py-5">
-                Change your displayed name
-            </h3>
-        </div>
-        <p>You are currently known as {{ name }}. Would you like to change it?</p>
-    </div>
+<section class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
+    <div class="bg-white mx-2.5 px-5">
+        {% include "partials/vertical-spacer.html" with space="7.5" %}
+        <h2 class="text-large w-full">
+                Change your display name
+            </h2>
+        {% include "partials/vertical-spacer.html" with space="6" %}
 
 
-    {% comment %}
+        {% comment %}
         TODO: Adjust endpoint processing and container on view as well as ts file
         {% endcomment %}
 
-    <form method="post" action="{% url 'account_update' %}">
-        {% csrf_token %}
+        <form method="post" action="{% url 'account_update' %}" class="mb-0">
+            {% csrf_token %}
 
-        <input class="input-text"
-               id=display_name name=display_name type=text placeholder="Your new name" value=""
-               pattern="[a-zA-Z][a-zA-Z\s]*">
-        {% include "partials/input-note.html" with for="display_name" label="It will change web address of your profile" %}
-
-
-        <button onclick="toggleNameChange()"
-                type="submit"
-                class="button button-on-white">
-            Confirm
-        </button>
-
-    </form>
-    <div class="flex items-center justify-center mb-5">
-        <button onclick="toggleNameChange()"
-                type="submit"
-                class="button button-on-white">
-            Back
-        </button>
+            {% include "partials/input-label.html" with for="organisation" label="New display name" %}
+            <input class="input-text"
+                   id=display_name name=display_name type=text placeholder="{{ name }}" value=""
+                   pattern="[a-zA-Z][a-zA-Z\s]*">
+            {% include "partials/vertical-spacer.html" with space="1.5" %}
+            {% include "partials/input-note.html" with for="display_name" label="Changing your name will change the URL of your profile" %}
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
+            <div class="flex items-center justify-center">
+                <button onclick="toggleNameChange()"
+                        type="button"
+                        class="button button-on-white">
+                    Back
+                </button>
+                {% include "partials/horizontal-spacer.html" with space="4.5" %}
+                <button onclick="toggleNameChange()"
+                        type="submit"
+                        class="button button-on-white">
+                    Change name
+                </button>
+            </div>
+            {% include "partials/vertical-spacer.html" with space="7.5" %}
+        </form>
     </div>
 </section>
 

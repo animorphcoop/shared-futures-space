@@ -136,6 +136,7 @@ module.exports = {
         "h-5",
         "h-6",
         "h-7",
+        "h-7.5",
         "h-9",
         "bg-purple/25",
         "bg-north-belfast",
@@ -144,6 +145,7 @@ module.exports = {
         "bg-west-belfast",
         "bg-derry-londonderry",
         "bg-arranmore",
+        "w-4.5",
         "w-7.5"
     ],
     variants: {
