@@ -1,40 +1,40 @@
 {% load static %}
 
-<section class="z-20 flex justify-center items-center flex-col h-full absolute left-0 top-0 backdrop-blur bg-blue-blur">
-    <div class="rounded-t-xl w-full px-5 mb-5">
-        <div class="bg-yellow-pale rounded-t-xl shadow-xl">
-            <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-large px-3 py-5">
-                Avatars
-            </h3>
-        </div>
-        <ul class="bg-white max-h-72 overflow-y-auto shadow-xl">
+<section
+        class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
+    <div class="bg-white mx-2.5 px-5">
+        {% include "partials/vertical-spacer.html" with space="7.5" %}
+        <h2 class="text-large text-center w-full">
+            Change your avatar
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        <ul class="max-h-72 overflow-y-auto">
             {% for avatar in avatars %}
-
-
                 <button id="button-{{ avatar.pk }}"
-                        onclick="event.preventDefault(); changeAvatar(this.id, {{ avatar.pk }})" class="m-2">
-                    <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
+                        onclick="event.preventDefault(); changeAvatar(this.id, {{ avatar.pk }})"
+                        class="rounded-full p-0.5">
+                    <img class="inline w-6 h-6" src="{{ avatar.image_url|default_if_none:'#' }}" alt="">
                 </button>
             {% endfor %}
         </ul>
-    </div>
-    <div class="flex items-center justify-center mb-5">
-        <button onclick="toggleAvatar()"
-                type="submit"
-                class="button button-on-white">
-            Back
-        </button>
 
+        {% include "partials/vertical-spacer.html" with space="4" %}
 
-        <form hx-put="{% url 'account_update' %}" hx-target="#avatar-holder">
-
+        <form hx-put="{% url 'account_update' %}" hx-target="#avatar-holder"
+              class="flex items-center justify-center">
+            <button onclick="toggleAvatar()"
+                    type="button"
+                    class="button button-on-white">
+                Back
+            </button>
+            {% include "partials/horizontal-spacer.html" with space="4.5" %}
             <button onclick="toggleAvatar()"
                     type="submit"
                     class="button button-on-white">
                 Confirm
             </button>
             <input id="avatar" type="text" name="avatar" value="1" class="hidden">
-
+            {% include "partials/vertical-spacer.html" with space="7.5" %}
         </form>
     </div>
 </section>
