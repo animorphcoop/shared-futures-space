@@ -50,6 +50,9 @@ class Resource(ClusterableModel):
     published_on: models.DateTimeField = models.DateTimeField(
         auto_now_add=True
     )
+    edited_on: models.DateTimeField = models.DateTimeField(
+        auto_now=True
+    )
     slug: models.SlugField = models.SlugField(
         max_length=100,
         unique=True,
