@@ -30,6 +30,15 @@
 
         <section id="profile-view">
 
+            {#  Password change success message  #}
+            {% if password_changed %}
+
+                <div class="text-large text-center bg-blue-done p-4 px-6">
+                    <p>You have successfully changed your password.</p>
+                </div>
+                {% include "partials/vertical-spacer.html" with space="9" %}
+            {% endif %}
+
             {% comment %}    {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}{% endcomment %}
 
             <div id="profile-data" class="">

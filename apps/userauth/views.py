@@ -175,7 +175,6 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
             return {}
 
 
-
 def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
     if request.user.is_authenticated:
         slug = user_to_slug(CustomUser.objects.filter(uuid=uuid)[0])
@@ -207,7 +206,6 @@ class UserChatView(ChatView):
         # due to the page being login_required, there should never be anonymous users seeing the page
         # due to request.user being in members, there should never be non-members seeing the page
         return context
-
 
 
 class UserAllChatsView(TemplateView):
@@ -245,6 +243,11 @@ class CustomLoginView(LoginView):
 class CustomPasswordChangeView(PasswordChangeView):
     form_class: Type[CustomChangePasswordForm] = CustomChangePasswordForm
 
+    # success_url = reverse_lazy("account_view")
+    def get_success_url(self):
+        self.request.session['password_changed'] = 'success'
+        return reverse_lazy("account_view")
+
 
 class CustomPasswordResetView(PasswordResetView):
     form_class: Type[CustomResetPasswordForm] = CustomResetPasswordForm
@@ -280,7 +283,10 @@ class CustomUserPersonalView(TemplateView):
             context['self'] = True  # pyre-ignore[6]
             context['organisations'] = Organisation.objects.all()  # pyre-ignore[6]
             context['avatars'] = UserAvatar.objects.all()  # pyre-ignore[6]
-
+            if self.request.session.has_key('password_changed'):
+                password_changed = self.request.session['password_changed']
+                context['password_changed'] = password_changed
+                del self.request.session['password_changed']
         return render(request, 'account/view.html', context)
 
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:

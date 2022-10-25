@@ -37,9 +37,8 @@
         {% endfor %}
 
         {% for project in projects %}
-            {% comment %}
-                <a href={% url 'view_project' project.slug %}>View Project</a>
-            {% endcomment %}
+
+
             {% include "project/project_card.html" with project=project %}
         {% endfor %}
     </div>
