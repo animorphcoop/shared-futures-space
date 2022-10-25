@@ -138,11 +138,6 @@ class CustomResetPasswordForm(ResetPasswordForm):
 
 
 class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
-    '''
-    error_messages = {
-        "passwords_mismatch": "The passwords you entered do not match, please try again."
-    }
-    '''
 
     class Meta:
         model: Type[CustomUser] = CustomUser
@@ -157,15 +152,3 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
         self.fields['password2'].widget.attrs = {'placeholder': 'Confirm Password', 'borken': 'false',
                                                  'onfocusout': 'comparePasswords()'}
 
-    '''
-    def clean(self):
-        cleaned_data = super(CustomResetPasswordKeyForm, self).clean()
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
-        print(password1)
-        if password1 != password2:
-            print('wtf')
-            raise forms.ValidationError(self.error_messages["passwords_mismatch"])
-        return cleaned_data
-
-    '''
