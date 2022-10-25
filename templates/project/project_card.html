@@ -2,19 +2,20 @@
     <div class="absolute bg-gradient-to-b from-[rgba(219,243,237,0.78)] to-white h-12 w-full rounded-xl"></div>
     <div class="p-3 relative">
         <div class="flex justify-between">
-            <h2 class="relative font-kanit-500 text-xl leading-6 text-black-large">{{ project.name }}</h2>
+            <h2 class="relative text-title text-black/55">
+                {{ project.name }}
+            </h2>
             <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-[22px] w-[22px]"></div>
         </div>
 
-        {% include "partials/horizontal-spacer.html" with space="6" %}
+        {% include "partials/vertical-spacer.html" with space="6" %}
         <div class="flex flex-row gap-1.5">
-
             {% for tag in project.tags %}
                 {% include "project/project_tag.html" with title=tag %}
             {% endfor %}
         </div>
 
-        {% include "partials/horizontal-spacer.html" with space="6" %}
+        {% include "partials/vertical-spacer.html" with space="6" %}
 
         <div class="flex justify-between">
             <div class="flex">
@@ -23,43 +24,37 @@
 
                         {% comment %}TODO: RETRIEVE INFO FROM VIEW{% endcomment %}
                         <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
-                        {% comment %}
-                <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>
-{% endcomment %}
-                        {% include "partials/vertical-spacer.html" with space="4" %}
+
+                        {% include "partials/horizontal-spacer.html" with space="4" %}
                         <div class="flex flex-col">
-                        <span class="uppercase font-kanit-400 text-[9px] leading-3 tracking-widest text-black-text">{{ member.user.display_name }}</span>
+                        <span class="text-meta uppercase tracking-widest">
+                            {{ member.user.display_name }}
+                        </span>
                     {% endif %}
                 {% endfor %}
-                <span class="font-kanit-400 text-[9px] leading-3 tracking-[0.03em] text-black-meta">Started 4 months ago</span>
-                <span class="font-kanit-400 text-[9px] leading-3 tracking-[0.03em] text-black-meta">Stage 3: Act</span>
+                <span class="text-meta text-black/30">Started 4 months ago</span>
+                <span class="text-meta text-black/30">Stage 3: Act</span>
                 </div>
             </div>
             <div class="flex gap-1.5">
-                                {% for member in project.membership|slice:3 %}
-                                <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
-
+                {% for member in project.membership|slice:3 %}
+                    <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
                 {% endfor %}
-{% comment %}
-
-
-                <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>
-                <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>
-                <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-6 w-6"></div>{% endcomment %}
             </div>
         </div>
 
-        {% include "partials/horizontal-spacer.html" with space="6" %}
+        {% include "partials/vertical-spacer.html" with space="6" %}
 
         <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-[262px] w-full rounded-[10px_10px_0_0]"></div>
 
-        {% include "partials/horizontal-spacer.html" with space="4.5" %}
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-        <p class="font-garamond-500 text-base leading-5 text-black-text">{{ project.description }}</p>
+        <p class="font-garamond-500 text-base leading-5 text-black/75">{{ project.description }}</p>
 
-        {% include "partials/horizontal-spacer.html" with space="4.5" %}
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         {% include "partials/button.html" with url=the_url style="important" button="Join" %}
+        {% url 'view_project' project.slug as the_url %}
         {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
     </div>
 </div>

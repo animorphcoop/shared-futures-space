@@ -8,41 +8,38 @@
             Change your avatar
         </h2>
         {% include "partials/vertical-spacer.html" with space="6" %}
-        <ul class="max-h-72 overflow-y-auto">
+        {% include "partials/input-label.html" with for="post_code" label="New avatar" %}
+        <div class="flex flex-wrap gap-5 -m-1">
             {% for avatar in avatars %}
                 <button id="button-{{ avatar.pk }}"
-                        onclick="event.preventDefault(); changeAvatar(this.id, {{ avatar.pk }})"
+                        onclick="event.preventDefault(); changeAvatar(this.id, {{ avatar.pk }});"
                         class="rounded-full p-0.5">
                     <img class="inline w-6 h-6" src="{{ avatar.image_url|default_if_none:'#' }}" alt="">
                 </button>
             {% endfor %}
-        </ul>
+        </div>
 
         {% include "partials/vertical-spacer.html" with space="4" %}
 
         <form hx-put="{% url 'account_update' %}" hx-target="#avatar-holder"
-              class="flex items-center justify-center">
-            <button onclick="toggleAvatar()"
+              class="flex items-center justify-center mb-0">
+            <button onclick="toggleAvatar(); enableBodyScroll();"
                     type="button"
                     class="button button-on-white">
                 Back
             </button>
             {% include "partials/horizontal-spacer.html" with space="4.5" %}
-            <button onclick="toggleAvatar()"
+            <button onclick="toggleAvatar(); enableBodyScroll();"
                     type="submit"
                     class="button button-on-white">
-                Confirm
+                Change avatar
             </button>
             <input id="avatar" type="text" name="avatar" value="1" class="hidden">
-            {% include "partials/vertical-spacer.html" with space="7.5" %}
         </form>
+    {% include "partials/vertical-spacer.html" with space="7.5" %}
     </div>
 </section>
 
 {% block scripts %}
-    <script>
-
-    </script>
     <script src="{% static 'js/avatar_selection.js' %}"></script>
-
 {% endblock %}

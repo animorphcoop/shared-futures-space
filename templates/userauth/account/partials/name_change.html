@@ -1,7 +1,7 @@
 {% load static %}
 
-<section class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
-    <div class="bg-white mx-2.5 px-5">
+<section class="z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
+    <div class="bg-white mx-2.5 px-5 grow">
         {% include "partials/vertical-spacer.html" with space="7.5" %}
         <h2 class="text-large text-center w-full">
                 Change your display name
@@ -24,13 +24,13 @@
             {% include "partials/input-note.html" with for="display_name" label="Changing your name will change the URL of your profile" %}
             {% include "partials/vertical-spacer.html" with space="4.5" %}
             <div class="flex items-center justify-center">
-                <button onclick="toggleNameChange()"
+                <button onclick="toggleNameChange(); enableBodyScroll();"
                         type="button"
                         class="button button-on-white">
                     Back
                 </button>
                 {% include "partials/horizontal-spacer.html" with space="4.5" %}
-                <button onclick="toggleNameChange()"
+                <button onclick="toggleNameChange(); enableBodyScroll();"
                         type="submit"
                         class="button button-on-white">
                     Change name

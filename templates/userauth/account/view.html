@@ -48,7 +48,7 @@
                         {% endif %}
                         {% if self %}
                             {% comment %}pencil edit for avatar{% endcomment %}
-                            <button onclick="toggleAvatar();"
+                            <button onclick="toggleAvatar(); stopBodyScroll();"
                                     class="absolute bottom-0 -right-1.5 bg-blue-pale rounded-full py-1.5 px-2.5">
                                 <svg width="13" height="12" viewBox="0 0 13 12" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +68,7 @@
                         </span>
                         {% if self %}
                             {% comment %}pencil edit for name{% endcomment %}
-                            <button onclick="toggleNameChange()"
+                            <button onclick="toggleNameChange(); stopBodyScroll();"
                                     class="bg-blue-pale rounded-full py-1.5 px-2.5">
                                 <svg width="13" height="12" viewBox="0 0 13 12" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -188,4 +188,12 @@
         {% include "partials/footer-gradient.html" %}
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+    {# Wanted to refer to the functions about disabling and enabling scroll when
+    modals are open, which was written first for organisations, so included this script.
+    Would like to extract into it's own lil file that can be referred to for all modals,
+    but not today satan #}
+    <script src="{% static 'js/organisation_list_add.js' %}"></script>
 {% endblock %}
