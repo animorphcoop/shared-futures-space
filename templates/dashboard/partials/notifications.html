@@ -1,0 +1,7 @@
+{% extends "partials/drawer.html" %}
+
+{% block drawer_content %}
+    {% block notifications %}
+        {% include "dashboard/partials/accordion.html" with title="Notifications" list_items=notifications %}
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "partials/drawer.html" %}
+
+{% block drawer_content %}
+    {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
+    {# If rivers, one looks like: #}
+
+    {% for river in rivers %}
+        <div class="">{{river}}</div>
+    {% endfor %}
+{% endblock %}
