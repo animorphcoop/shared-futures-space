@@ -244,7 +244,7 @@ class CustomPasswordChangeView(PasswordChangeView):
     form_class: Type[CustomChangePasswordForm] = CustomChangePasswordForm
 
     # success_url = reverse_lazy("account_view")
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         self.request.session['password_changed'] = 'success'
         return reverse_lazy("account_view")
 

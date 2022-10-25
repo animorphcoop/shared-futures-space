@@ -1,8 +1,8 @@
 import re
-from area.models import PostCode
+from area.models import PostCode # pyre-ignore[21]
 
 
-def filter_postcode(typed_postcode):
+def filter_postcode(typed_postcode) -> str:
     # strip from whitespaces
     entered_postcode = typed_postcode.replace(" ", "")
     active_postcodes = PostCode.objects.all().values_list('code')
