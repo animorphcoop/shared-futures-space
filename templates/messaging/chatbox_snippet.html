@@ -1,3 +1,5 @@
+{% load widget_tweaks %}
+
 
 {% if more_back %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ back_from }}">Earlier Messages</a>
@@ -24,9 +26,10 @@
     {% if direct %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            {% render_field form.text %}
+            {% render_field form.image %}
 
-            {{ form.as_p }}
-{% comment %}            <textarea name=message></textarea>
+            {% comment %}            <textarea name=message></textarea>
             <input type="file" id="image" name="image">{% endcomment %}
 
             <button type="submit">Send</button>

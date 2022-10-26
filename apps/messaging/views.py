@@ -18,16 +18,15 @@ from .models import Chat, Message
 
 class ChatView(TemplateView):
     def post(self, request: WSGIRequest, chat: Chat, members: List[CustomUser], url: str) -> HttpResponse: # pyre-ignore[11] - says CustomUser isn't defined as a type?
-        print('lol')
-        msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieve
+        msg_from, msg_no = 0, 50 # how many messages back to begin, and how many to retrieved
         if ('from' in self.request.GET and self.request.GET['from'].isdigit()):
             msg_from = int(self.request.GET['from'])
         if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
             msg_no = int(self.request.GET['interval'])
         if (request.user in members and 'text' in request.POST):
             print('posting')
-            print(request.POST['image'])
-            new_msg = Message(sender=request.user, text=request.POST['text'], chat=chat)
+            print(request.FILES['image'])
+            new_msg = Message(sender=request.user, text=request.POST['text'], image=request.FILES['image'], chat=chat)
             new_msg.save()
         if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
             msg_from = 0 # drop to current position in chat if not there already after sending a message
