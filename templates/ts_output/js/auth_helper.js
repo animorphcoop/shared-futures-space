@@ -8,7 +8,6 @@ const passwordInputTwo = document.getElementById("password-input2");
 const passwordFeedbackTwo = document.getElementById("password-feedback2");
 const submitButton = document.getElementById("submit-button");
 function newObserver(input, feedback, action) {
-    console.log('setting up input');
     const observerEmail = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
             if (feedback.innerText === '') {

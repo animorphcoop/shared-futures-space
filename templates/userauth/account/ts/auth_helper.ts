@@ -14,7 +14,6 @@ const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementBy
 
 
 function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () => void) {
-    console.log('setting up input')
     const observerEmail = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
             if (feedback.innerText === '') {
