@@ -18,7 +18,7 @@ class Message(models.Model):
     context_user_a: models.ForeignKey = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL, related_name = 'user_a')
     context_user_b: models.ForeignKey = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL, related_name = 'user_b')
     context_bool: models.BooleanField = models.BooleanField(default=False)
-    context_poll: models.ForeignKey = models.ForeignKey('poll.Poll', null = True, on_delete = models.SET_NULL)
+    context_poll: models.ForeignKey = models.ForeignKey('poll.BasePoll', null = True, on_delete = models.SET_NULL)
 
 class Chat(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4, editable = False)

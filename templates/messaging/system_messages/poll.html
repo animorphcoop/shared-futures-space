@@ -5,7 +5,7 @@
     expiry date: {{ message.context_poll.expires }}
 {% endif %}
 <table>
-    {% for name, count in message.context_poll.current_results.items %}
+    {% for name, count in message.context_poll.specific.current_results.items %}
         <tr>
             <td>{{ name }}</td>
             <td>{{ count }}</td>
