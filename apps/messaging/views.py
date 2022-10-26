@@ -25,7 +25,6 @@ class ChatView(TemplateView):
             msg_no = int(self.request.GET['interval'])
         if (request.user in members and 'text' in request.POST):
             image = request.FILES.get('image', None)
-            #request.FILES.get['image']
             if image:
                 new_msg = Message(sender=request.user, text=request.POST['text'], image=image, chat=chat)
             else:

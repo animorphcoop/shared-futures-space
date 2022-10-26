@@ -5,7 +5,7 @@ from django.template import Template, Context
 from messaging.models import Message, Chat # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from userauth.models import CustomUser # pyre-ignore[21]
-from poll.models import Poll # pyre-ignore[21]
+from poll.models import BasePoll # pyre-ignore[21]
 from uuid import UUID
 
 
@@ -14,7 +14,7 @@ from typing import Union, Optional
 def send_system_message(chat: Chat, kind: str, # pyre-ignore[11]
                         context_action: Optional['action.Action'] = None, context_project: Optional['project.Project'] = None, # pyre-ignore[11]
                         context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None, # pyre-ignore[11]
-                        context_poll: Optional[Poll] = None) -> None: # pyre-ignore[11]
+                        context_poll: Optional[BasePoll] = None) -> None: # pyre-ignore[11]
     Message.objects.create(sender = get_system_user(), text='',
                            snippet = {'offer_of_ownership': 'messaging/system_messages/offer_of_ownership.html',
                                       'offer_of_championship': 'messaging/system_messages/offer_of_championship.html',

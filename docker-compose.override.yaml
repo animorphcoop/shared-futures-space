@@ -1,4 +1,4 @@
-# this is needed so we can easily change the port for deployment
+# this is needed so we can easily change the port and server for deployment
 
 services:
   app:
