@@ -83,7 +83,6 @@ function findWeatherIcon(currentWeather) {
     }
     if (imgUrl == "")
         imgUrl = backupWeatherIcon;
-    console.log(`assigned ${imgUrl}`);
     return imgUrl;
 }
 async function getWeather(postcode) {
@@ -94,9 +93,8 @@ async function getWeather(postcode) {
         return '[]';
     }
     else {
-        let temp = getWeatherDetails(response).toString();
         //console.log(`returning ${temp} temperature`);
-        return temp;
+        return getWeatherDetails(response).toString();
     }
 }
 function getWeatherDetails(toProcess) {

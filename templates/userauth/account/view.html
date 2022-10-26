@@ -194,6 +194,25 @@
 
         </section>
 
+
+        {% if user.is_authenticated %}
+
+            {% if not self %}
+                <div>
+                    <p>
+                        Get in touch with {{ user.display_name }}</p>
+                    </br>
+                    <a href="{% url 'user_chat_path' user.uuid %}">Message</a>
+                </div>
+
+            {% endif %}
+
+
+        {% endif %}
+
+
+
+
         {% include "partials/footer-gradient.html" %}
     </div>
 
