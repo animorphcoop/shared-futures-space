@@ -292,6 +292,7 @@ class CustomUserPersonalView(TemplateView):
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
         current_user = self.request.user
         data = QueryDict(request.body).dict()
+        print('wtf?')
         if data.get('display_name'):
             form = CustomUserNameUpdateForm(data, instance=current_user)
             if form.is_valid():

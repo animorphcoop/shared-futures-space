@@ -4,8 +4,8 @@
     <div class="bg-white mx-2.5 px-5 grow">
         {% include "partials/vertical-spacer.html" with space="7.5" %}
         <h2 class="text-large text-center w-full">
-                Change your display name
-            </h2>
+            Change your display name
+        </h2>
         {% include "partials/vertical-spacer.html" with space="6" %}
 
 
@@ -13,24 +13,24 @@
         TODO: Adjust endpoint processing and container on view as well as ts file
         {% endcomment %}
 
-        <form method="post" action="{% url 'account_update' %}" class="mb-0">
+        <form method="post" action="{% url 'account_update' %}" onsubmit="return validateName()" class="mb-0">
             {% csrf_token %}
 
             {% include "partials/input-label.html" with for="organisation" label="New display name" %}
-            <input class="input-text"
-                   id=display_name name=display_name type=text placeholder="{{ name }}" value=""
-                   pattern="[a-zA-Z][a-zA-Z\s]*">
+            <input id=display_name name=display_name type=text placeholder="{{ name }}" value=""
+                   pattern="[a-zA-Z][a-zA-Z\s]*"
+                   class="input-text input-text-invalid">
             {% include "partials/vertical-spacer.html" with space="1.5" %}
             {% include "partials/input-note.html" with for="display_name" label="Changing your name will change the URL of your profile" %}
             {% include "partials/vertical-spacer.html" with space="4.5" %}
             <div class="flex items-center justify-center">
-                <button onclick="toggleNameChange(); enableBodyScroll();"
+                <button onclick=""
                         type="button"
                         class="button button-on-white">
                     Back
                 </button>
                 {% include "partials/horizontal-spacer.html" with space="4.5" %}
-                <button onclick="toggleNameChange(); enableBodyScroll();"
+                <button onclick=""
                         type="submit"
                         class="button button-on-white">
                     Change name
@@ -47,6 +47,21 @@
             const nameContainer = document.getElementById("name-change")
             nameContainer.classList.toggle('hidden')
 
+
+        }
+
+        function validateName() {
+            let nameInput = document.getElementById("display_name")
+            let errorCount = 0
+            if (nameInput.value.length < 1) {
+                nameInput.setAttribute("required", "");
+                errorCount++
+            }
+            else{
+                toggleNameChange();
+            }
+            console.log('lol')
+            return errorCount == 0
         }
     </script>
     {% comment %}
