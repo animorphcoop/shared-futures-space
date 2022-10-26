@@ -26,7 +26,6 @@ const enableBodyScroll = () => {
 }
 window.addEventListener('scroll', () => {
     document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
-    console.log('live ' + scrollY)
 });
 
 function toggleOrganisationsAdd() {
@@ -34,11 +33,9 @@ function toggleOrganisationsAdd() {
 
     if (checkbox.checked) {
         organisationList.classList.remove('hidden')
-        console.log('toggleOrganisationsAdd if checkbox.checked stopBodyScroll')
         stopBodyScroll();
     } else {
-        console.log('toggleOrganisationsAdd checkbox.checked not enableBodyScroll')
-        // enableBodyScroll();
+
         organisationList.classList.add('hidden')
         organisationDataBlock.classList.add('hidden')
         selectedOrganisation = 'None'
@@ -51,7 +48,6 @@ function toggleOrganisationsChange() {
     organisationDataBlock.classList.remove('hidden')
 
     organisationList.classList.remove('hidden')
-    console.log('toggleOrganisationsChange stopBodyScroll')
     stopBodyScroll();
 
     /*
@@ -75,15 +71,11 @@ function backFromOrganisations() {
 
             if (organisationCheckboxBlock.classList.contains('hidden')) {
                 organisationCheckboxBlock.classList.remove('hidden')
-                console.log('backFromOrganisations if checkbox checked stopBodyScroll')
                 stopBodyScroll();
             }
         }
 
-    } else {
-        console.log('in another dimension')
     }
-    console.log('backFromOrganisations if checkbox checked enableBodyScroll')
     enableBodyScroll();
     organisationList.classList.add('hidden')
     selectedOrganisation = 'None'
@@ -97,10 +89,10 @@ function selectOrganisation(orgName: string, orgUrl: string) {
 }
 
 function submitOrganisation() {
-    console.log('are you submitting or whatt')
 
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
-    console.log('submitting')
+
+    if (organisationNameInput.value == "") return
 
     organisationNameInput.value = selectedOrganisation
     organisationNameInput.classList.add('cursor-not-allowed')
@@ -109,7 +101,6 @@ function submitOrganisation() {
 
     organisationDataBlock.classList.remove('hidden')
 
-    console.log('submitOrganisation')
     enableBodyScroll();
     organisationList.classList.add('hidden')
 
@@ -137,10 +128,10 @@ function goBack() {
     if (organisationList == null) return
 
     organisationList.classList.remove('hidden')
-    console.log('goBack stopBodyScroll')
     stopBodyScroll();
 
     uncoverNewOrgTyping(false)
 }
+
 
 

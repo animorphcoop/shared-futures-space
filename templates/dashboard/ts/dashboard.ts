@@ -89,7 +89,6 @@ function findWeatherIcon(currentWeather: string) {
         }
     }
     if (imgUrl == "") imgUrl = backupWeatherIcon
-    console.log(`assigned ${imgUrl}`)
     return imgUrl
 }
 
