@@ -24,13 +24,13 @@
             {% include "partials/input-note.html" with for="display_name" label="Changing your name will change the URL of your profile" %}
             {% include "partials/vertical-spacer.html" with space="4.5" %}
             <div class="flex items-center justify-center">
-                <button onclick=""
+                <button onclick="toggleNameChange()"
                         type="button"
                         class="button button-on-white">
                     Back
                 </button>
                 {% include "partials/horizontal-spacer.html" with space="4.5" %}
-                <button onclick=""
+                <button
                         type="submit"
                         class="button button-on-white">
                     Change name
@@ -43,29 +43,9 @@
 
 {% block scripts %}
     <script>
-        function toggleNameChange() {
-            const nameContainer = document.getElementById("name-change")
-            nameContainer.classList.toggle('hidden')
 
-
-        }
-
-        function validateName() {
-            let nameInput = document.getElementById("display_name")
-            let errorCount = 0
-            if (nameInput.value.length < 1) {
-                nameInput.setAttribute("required", "");
-                errorCount++
-            }
-            else{
-                toggleNameChange();
-            }
-            console.log('lol')
-            return errorCount == 0
-        }
     </script>
-    {% comment %}
-    <script src="{% static 'js/name_change.js' %}"></script>
-{% endcomment %}
+        <script src="{% static 'js/name_change.js' %}"></script>
+
 
 {% endblock %}
