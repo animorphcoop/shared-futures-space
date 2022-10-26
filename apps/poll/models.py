@@ -8,7 +8,7 @@ from uuid import uuid4
 
 from userauth.models import CustomUser # pyre-ignore[21]
 
-from typing import List, Dict
+from typing import List, Dict, Union
 
 class BaseVote(models.Model):
     user: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
@@ -45,6 +45,13 @@ class BasePoll(models.Model):
         from project.models import ProjectMembership # pyre-ignore[21] this is considered bad form, but as far as i can tell necessary to avoid a circular import
         for voter in ProjectMembership.objects.filter(project = project):
             self.vote_kind.objects.create(user = voter.user, poll = self, choice = None if self.vote_kind == SingleVote else [])
+    @property
+    def specific(self) -> Union['SingleChoicePoll', 'MultipleChoicePoll']:
+        if hasattr(self, 'multiplechoicepoll'):
+            return self.multiplechoicepoll
+        elif hasattr(self, 'singlechoicepoll'):
+            return self.singlechoicepoll
+        
 
 class SingleChoicePoll(BasePoll):
     vote_kind = SingleVote

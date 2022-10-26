@@ -63,7 +63,7 @@ def test_singlechoicepoll(db):
     return SingleChoicePoll.objects.create(question='is this a test question?', options = ['option 1', 'option 2'], expires = timezone.now() + timezone.timedelta(days=1))
 
 @pytest.fixture(scope='function')
-def testmultiplechoicepoll(db):
+def test_multiplechoicepoll(db):
     return MultipleChoicePoll.objects.create(question='which options?', options = ['option A', 'option B'], expires = timezone.now() + timezone.timedelta(days=1))
 
 @pytest.fixture(scope='function')
