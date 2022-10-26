@@ -39,7 +39,7 @@ class BasePoll(models.Model):
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
     expires: models.DateTimeField = models.DateTimeField()
     closed: models.BooleanField = models.BooleanField(default = False)
-    vote_kind: models.Model = BaseVote
+    vote_kind: models.Model = BaseVote # pyre-ignore[8]
     # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
     def make_votes(self, project) -> None: # pyre-ignore[2] can't import Project for this, see next line
         from project.models import ProjectMembership # pyre-ignore[21] this is considered bad form, but as far as i can tell necessary to avoid a circular import
@@ -48,13 +48,13 @@ class BasePoll(models.Model):
     @property
     def specific(self) -> Union['SingleChoicePoll', 'MultipleChoicePoll']:
         if hasattr(self, 'multiplechoicepoll'):
-            return self.multiplechoicepoll
-        elif hasattr(self, 'singlechoicepoll'):
-            return self.singlechoicepoll
+            return self.multiplechoicepoll # pyre-ignore[16]
+        else:
+            return self.singlechoicepoll # pyre-ignore[16]
         
 
 class SingleChoicePoll(BasePoll):
-    vote_kind = SingleVote
+    vote_kind = SingleVote # pyre-ignore[15]
     @property
     def current_results(self) -> Dict[str,List[CustomUser]]: # pyre-ignore[11]
         votes = SingleVote.objects.filter(poll = self, choice__isnull = False)
@@ -80,9 +80,9 @@ class SingleChoicePoll(BasePoll):
                 return False
 
 class MultipleChoicePoll(BasePoll):
-    vote_kind = MultipleVote
+    vote_kind = MultipleVote # pyre-ignore[15]
     @property
-    def current_results(self) -> Dict[str,List[CustomUser]]: # pyre-ignore[11]
+    def current_results(self) -> Dict[str,List[CustomUser]]:
         votes = MultipleVote.objects.filter(~models.Q(choice = []), poll = self)
         results = {self.options[n-1] if n != 0 else 'poll is wrong':[] for n in range(len(self.options) + 1)}
         for vote in votes:
