@@ -2,15 +2,15 @@
 from django import forms
 from .models import CustomUser, Organisation, UserAvatar
 from analytics.models import log_signup  # pyre-ignore[21]
+from messaging.models import Message
 
 from django.utils.translation import gettext_lazy as _
 
 from allauth.account.forms import SignupForm, LoginForm, ResetPasswordForm, ChangePasswordForm, ResetPasswordKeyForm
 from wagtail.users.forms import UserEditForm, UserCreationForm
 
-from typing import Type, List, Any, Dict
+from typing import Type, List, Any, Dict, Tuple
 from django.http import HttpRequest
-from typing import Tuple
 
 '''
 Resolving the first&last name issue, reference
@@ -152,3 +152,10 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
         self.fields['password2'].widget.attrs = {'placeholder': 'Confirm Password', 'borken': 'false',
                                                  'onfocusout': 'comparePasswords()'}
 
+
+class ChatForm(forms.ModelForm):
+    class Meta:
+        model: Type[Message] = Message
+        fields: List[str] = ['text', 'image']
+    def __init__(self, *args, **kwargs):
+        super(ChatForm, self).__init__(*args, **kwargs)

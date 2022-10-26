@@ -9,6 +9,8 @@ class Message(models.Model):
     timestamp: models.DateTimeField = models.DateTimeField(default=timezone.now)
     sender: models.ForeignKey = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL)
     text: models.CharField = models.CharField(max_length = 2000, default = '')
+    image: models.ImageField = models.ImageField(upload_to='messages/images/', blank=True)
+    file: models.FileField = models.FileField(upload_to='messages/files/', blank=True)
     snippet: models.CharField = models.CharField(max_length = 2000, default = '')
     reply_to: models.ForeignKey = models.ForeignKey('messaging.Message', null=True, on_delete = models.SET_NULL)
     chat: models.ForeignKey = models.ForeignKey('messaging.Chat', on_delete = models.CASCADE)

@@ -1,3 +1,4 @@
+
 {% if more_back %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ back_from }}">Earlier Messages</a>
 {% endif %}
@@ -20,9 +21,25 @@
 {% elif request.user not in members %}
     {{ not_member_message }}
 {% else %}
-    <form method=POST>
-        {% csrf_token %}
-        <textarea name=message></textarea>
-        <button>send</button>
-    </form>
+    {% if direct %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+{% comment %}            <textarea name=message></textarea>
+            <input type="file" id="image" name="image">{% endcomment %}
+
+            <button type="submit">Send</button>
+
+        </form>
+    {% else %}
+        <form method=POST>
+            {% csrf_token %}
+            <textarea name=text></textarea>
+            <input type="file" id="image" name="image">
+
+            <button type="submit">Send</button>
+
+        </form>
+    {% endif %}
 {% endif %}

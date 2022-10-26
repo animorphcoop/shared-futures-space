@@ -9,7 +9,7 @@ from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm, \
-    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm, ChatForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -45,10 +45,9 @@ def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpRespon
         return redirect('user_detail', slug)
     else:
         return HttpResponseRedirect(reverse_lazy('account_login'))
-    # return render(request, 'account/view.html')
 
 
-# adding all the data required via /account/add_data/
+# adding all the data required via /profile/add_data/
 class CustomAddDataView(TemplateView):
     model: Type[CustomUser] = CustomUser
     form_class: Type[CustomUserAddDataForm] = CustomUserAddDataForm
@@ -185,6 +184,15 @@ def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, Ht
 
 
 class UserChatView(ChatView):
+    form_class: Type[ChatForm] = ChatForm
+
+
+    '''
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super(UserChatView, self).get_form_kwargs(*args, **kwargs)
+        kwargs['pk'] = self.kwargs['pk']
+        return kwargs
+    '''
     def post(self, request: WSGIRequest, user_path: str) -> HttpResponse:
         other_user = slug_to_user(user_path)
         [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
@@ -194,6 +202,7 @@ class UserChatView(ChatView):
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        #context = super(UserChatView, self).get_context_data(**kwargs)
         other_user = slug_to_user(kwargs['user_path'])  # pyre-ignore[6]
         [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
@@ -203,6 +212,7 @@ class UserChatView(ChatView):
                                            members=[CustomUser.objects.get(uuid=user1),
                                                     CustomUser.objects.get(uuid=user2)])
         context['other_user'] = other_user
+        context['form'] = ChatForm
         # due to the page being login_required, there should never be anonymous users seeing the page
         # due to request.user being in members, there should never be non-members seeing the page
         return context

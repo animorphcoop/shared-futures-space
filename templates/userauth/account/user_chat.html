@@ -9,7 +9,7 @@
 
     <div class="mx-4.5">
         {{ other_user.display_name }}
-        {% include 'messaging/chatbox_snippet.html' %}
+        {% include 'messaging/chatbox_snippet.html' with direct=True %}
     </div>
 
 {% endblock %}
