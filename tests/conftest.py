@@ -9,7 +9,7 @@ from io import BytesIO
 from project.models import Project
 from area.models import PostCode, Area
 from resources.models import HowTo, CaseStudy
-from poll.models import Poll
+from poll.models import SingleChoicePoll, MultipleChoicePoll
 from userauth.models import UserAvatar
 from allauth.account.admin import EmailAddress
 
@@ -59,8 +59,12 @@ def test_case_study_resource(db):
                                     link='https://animorph.coop/')
 
 @pytest.fixture(scope='function')
-def test_poll(db):
-    return Poll.objects.create(question='is this a test question?', options = ['option 1', 'option 2'], expires = timezone.now() + timezone.timedelta(days=1))
+def test_singlechoicepoll(db):
+    return SingleChoicePoll.objects.create(question='is this a test question?', options = ['option 1', 'option 2'], expires = timezone.now() + timezone.timedelta(days=1))
+
+@pytest.fixture(scope='function')
+def testmultiplechoicepoll(db):
+    return MultipleChoicePoll.objects.create(question='which options?', options = ['option A', 'option B'], expires = timezone.now() + timezone.timedelta(days=1))
 
 @pytest.fixture(scope='function')
 def test_image(db):
