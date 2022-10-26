@@ -24,9 +24,12 @@ class ChatView(TemplateView):
         if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
             msg_no = int(self.request.GET['interval'])
         if (request.user in members and 'text' in request.POST):
-            print('posting')
-            print(request.FILES['image'])
-            new_msg = Message(sender=request.user, text=request.POST['text'], image=request.FILES['image'], chat=chat)
+            image = request.FILES.get('image', None)
+            #request.FILES.get['image']
+            if image:
+                new_msg = Message(sender=request.user, text=request.POST['text'], image=image, chat=chat)
+            else:
+                new_msg = Message(sender=request.user, text=request.POST['text'], chat=chat)
             new_msg.save()
         if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
             msg_from = 0 # drop to current position in chat if not there already after sending a message
