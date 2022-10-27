@@ -2,7 +2,7 @@
 
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
 from django.db.models.fields import CharField
@@ -12,6 +12,7 @@ from django.conf import settings
 from django.urls import reverse
 from itertools import chain
 
+from .forms import CreateProjectForm
 from .models import Project, ProjectMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -256,3 +257,8 @@ class ReflectView(TemplateView):
         ctx = super().get_context_data(*args, **kwargs)
         ctx['project'] = Project.objects.get(slug=self.kwargs['slug'])
         return ctx
+
+
+class ProjectStartView(CreateView):
+    form_class = CreateProjectForm
+    #success_url = reverse('landing')
