@@ -22,13 +22,13 @@
         <br/>
         Tags
         <div class="flex flex-wrap gap-5 -m-1">
-            {% if resource.tags %}
-                {% for tag in resource.tags %}
+            {% if tags %}
+                {% for tag in tags %}
                     <button class="px-1.5 py-1 bg-blue-second rounded-sm">
-                        <a href="{% url "resources_tag" tag %}"
+                        <span
                            class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
                             {{ tag }}
-                        </a>
+                        </span>
                     </button>
                 {% endfor %}
             {% endif %}

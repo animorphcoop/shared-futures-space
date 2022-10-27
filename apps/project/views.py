@@ -22,9 +22,8 @@ from action.models import Action  # pyre-ignore[21]
 from area.models import Area  # pyre-ignore[21]
 from messaging.util import send_system_message  # pyre-ignore[21]
 from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
-from core.utils.tags_declusterer import tag_cluster_to_list  # pyre-ignore[21]
+from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 from typing import Dict, List, Any, Union
-
 
 class ProjectView(DetailView):  # pyre-ignore[24]
     model = Project
@@ -262,17 +261,18 @@ class ReflectView(TemplateView):
 class ProjectStartView(CreateView): # pyre-ignore[24]
     form_class = CreateProjectForm
 
-    '''
-            for project in projects:
-            project.tags = tag_cluster_to_list(project.tags)
-    '''
-
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(*args, **kwargs)
         projects = Project.objects.all()
+        #projects = objects_tags_cluster_list_overwrite(Project.objects.all())
+        tags = []
         for project in projects:
-            #project.tags = tag_cluster_to_list(project.tags)
-            context['tags'] = context['tags'].append(project.tags)
+            for tag in project.tags.all():
+                tags.append(tag)
+            # print(project.tags.names())
+            #single_object_tags_cluster_overwrite
+           # tags.append(tag_cluster_to_list(project.tags))
+        context['tags'] = tags
         return context
 
     def get_success_url(self) -> str:
