@@ -11,7 +11,6 @@ from messaging.models import Chat  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
 
 from typing import List, Optional, Any, Dict, Optional
-from django.utils import timezone
 
 
 class Organisation(models.Model):
