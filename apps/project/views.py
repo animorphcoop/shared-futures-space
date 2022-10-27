@@ -9,7 +9,7 @@ from django.db.models.fields import CharField
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.conf import settings
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from itertools import chain
 
 from .forms import CreateProjectForm
@@ -261,4 +261,7 @@ class ReflectView(TemplateView):
 
 class ProjectStartView(CreateView):
     form_class = CreateProjectForm
-    #success_url = reverse('landing')
+
+    def get_success_url(self) -> str:
+        ProjectMembership.objects.create(user=self.request.user, project=self.object, owner=True, champion=False)
+        return reverse_lazy("view_project", args=[self.object.slug])

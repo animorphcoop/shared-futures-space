@@ -1,1 +1,32 @@
-heheheheh
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+    {% block title %}{% include "partials/title.html" with title='hehehe' %}{% endblock %}
+
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            Yer name
+            {% render_field form.name %}
+        <br/>
+            Descr
+            {% render_field form.description %}
+
+            {% comment %}            <textarea name=message></textarea>
+            <input type="file" id="image" name="image">{% endcomment %}
+        <br/>
+
+            <button type="submit">Send</button>
+
+        </form>
+
+
+{% endblock content %}
