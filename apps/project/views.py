@@ -259,9 +259,9 @@ class ReflectView(TemplateView):
         return ctx
 
 
-class ProjectStartView(CreateView):
+class ProjectStartView(CreateView): # pyre-ignore[24]
     form_class = CreateProjectForm
 
     def get_success_url(self) -> str:
         ProjectMembership.objects.create(user=self.request.user, project=self.object, owner=True, champion=False)
-        return reverse_lazy("view_project", args=[self.object.slug])
+        return reverse_lazy("view_project", args=[self.object.slug]) # pyre-ignore[16]
