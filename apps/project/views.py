@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.fields import CharField
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
 from itertools import chain
@@ -21,6 +22,7 @@ from action.models import Action  # pyre-ignore[21]
 from area.models import Area  # pyre-ignore[21]
 from messaging.util import send_system_message  # pyre-ignore[21]
 from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
+from poll.models import SingleChoicePoll # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list  # pyre-ignore[21]
 from typing import Dict, List, Any, Union
 
@@ -215,6 +217,30 @@ class ProjectChatView(ChatView):  # pyre-ignore[11]
         ctx = super().get_context_data(chat=self.get_chat(project, stage, topic), url=self.request.get_full_path(),
                                        members=list(map(lambda x: x.user, ProjectMembership.objects.filter(
                                            project=project))))
+        return ctx
+
+class CreateEnvisionPollView(TemplateView):
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        project = Project.objects.get(slug = slug)
+        if project.current_stage == Project.Stage.ENVISION:
+            if project.envision_stage.poll is None:
+                if 'description' in request.POST:
+                    try:
+                        poll = SingleChoicePoll.objects.create(question = 'Is this an acceptable vision: "' + request.POST['description'] + '"?', options = ['yes', 'no'],
+                                                               invalid_option = False, expires = timezone.now() + timezone.timedelta(days=3))
+                        send_system_message(chat = project.envision_stage.chat, kind = 'poll', context_poll = poll)
+                        return HttpResponseRedirect(reverse('view_envision', args=[project.slug]))
+                    except Exception as e:
+                        return HttpResponse('could not create poll, unknown error: ' + str(e))
+                else:
+                    return HttpResponse('could not create poll, no description supplied')
+            else:
+                return HttpResponse('could not create poll, another poll is still not closed')
+        else:
+            return HttpResponse('could not create poll, envision stage is finished')
+    def get_context_data(self, slug: str) -> Dict[str,Any]: # pyre-ignore[14]
+        ctx = super().get_context_data()
+        ctx['project'] = Project.objects.get(slug = slug)
         return ctx
 
 
