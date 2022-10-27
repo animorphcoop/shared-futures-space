@@ -112,9 +112,10 @@ class Project(ClusterableModel):
     slug: models.CharField = models.CharField(max_length=100, default='')
     name: models.CharField = models.CharField(max_length=100)
     description: models.CharField = models.CharField(max_length=2000)
-    area: models.ForeignKey = models.ForeignKey(Area, on_delete=models.CASCADE,
-                                                default=get_default_other_area)  # TODO this is a bad default which should be replaced by forcing an area to be provided on creation
     tags = ClusterTaggableManager(through=ProjectTag, blank=True)
+    image: models.ImageField = models.ImageField(upload_to='rivers/images/', blank=True)
+    area: models.ForeignKey = models.ForeignKey(Area, on_delete=models.CASCADE,
+                                            default=get_default_other_area)  # TODO this is a bad default which should be replaced by forcing an area to be provided on creation
     envision_stage: models.ForeignKey = models.ForeignKey(EnvisionStage, null=True, default=None,
                                                           on_delete=models.SET_NULL)
     plan_stage: models.ForeignKey = models.ForeignKey(PlanStage, null=True, default=None, on_delete=models.SET_NULL)

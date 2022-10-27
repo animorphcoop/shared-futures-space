@@ -262,6 +262,19 @@ class ReflectView(TemplateView):
 class ProjectStartView(CreateView): # pyre-ignore[24]
     form_class = CreateProjectForm
 
+    '''
+            for project in projects:
+            project.tags = tag_cluster_to_list(project.tags)
+    '''
+
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        context = super().get_context_data(*args, **kwargs)
+        projects = Project.objects.all()
+        for project in projects:
+            #project.tags = tag_cluster_to_list(project.tags)
+            context['tags'] = context['tags'].append(project.tags)
+        return context
+
     def get_success_url(self) -> str:
         ProjectMembership.objects.create(user=self.request.user, project=self.object, owner=True, champion=False)
         return reverse_lazy("view_project", args=[self.object.slug]) # pyre-ignore[16]

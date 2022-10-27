@@ -12,21 +12,39 @@
     {% block title %}{% include "partials/title.html" with title='hehehe' %}{% endblock %}
 
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            Yer name
-            {% render_field form.name %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        Yer name
+        {% render_field form.name %}
         <br/>
-            Descr
-            {% render_field form.description %}
+        Descr
+        {% render_field form.description %}
+        <br/>
+        Tags
+        <div class="flex flex-wrap gap-5 -m-1">
+            {% if resource.tags %}
+                {% for tag in resource.tags %}
+                    <button class="px-1.5 py-1 bg-blue-second rounded-sm">
+                        <a href="{% url "resources_tag" tag %}"
+                           class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                            {{ tag }}
+                        </a>
+                    </button>
+                {% endfor %}
+            {% endif %}
+        </div>
 
-            {% comment %}            <textarea name=message></textarea>
+        {% render_field form.tags %}
+        <br/>
+        Image
+        {% render_field form.image %}
+        {% comment %}            <textarea name=message></textarea>
             <input type="file" id="image" name="image">{% endcomment %}
         <br/>
 
-            <button type="submit">Send</button>
+        <button type="submit">Send</button>
 
-        </form>
+    </form>
 
 
 {% endblock content %}
