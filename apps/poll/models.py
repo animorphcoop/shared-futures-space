@@ -40,6 +40,7 @@ class BasePoll(models.Model):
     expires: models.DateTimeField = models.DateTimeField()
     closed: models.BooleanField = models.BooleanField(default = False)
     vote_kind: models.Model = BaseVote # pyre-ignore[8]
+    invalid_option: models.BooleanField = models.BooleanField(default = True)
     # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
     def make_votes(self, project) -> None: # pyre-ignore[2] can't import Project for this, see next line
         from project.models import ProjectMembership # pyre-ignore[21] this is considered bad form, but as far as i can tell necessary to avoid a circular import
@@ -51,6 +52,9 @@ class BasePoll(models.Model):
             return self.multiplechoicepoll # pyre-ignore[16]
         else:
             return self.singlechoicepoll # pyre-ignore[16]
+    def close(self) -> None:
+        pass # how?
+            
         
 
 class SingleChoicePoll(BasePoll):
@@ -58,7 +62,9 @@ class SingleChoicePoll(BasePoll):
     @property
     def current_results(self) -> Dict[str,List[CustomUser]]: # pyre-ignore[11]
         votes = SingleVote.objects.filter(poll = self, choice__isnull = False)
-        results = {self.options[n-1] if n != 0 else 'poll is wrong':[] for n in range(len(self.options) + 1)}
+        results = {option:[] for option in self.options}
+        if self.invalid_option:
+            results['poll is wrong'] = []
         for vote in votes:
             results[self.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
         return results
@@ -67,6 +73,7 @@ class SingleChoicePoll(BasePoll):
             return True
         elif self.expires < timezone.now():
             self.closed = True
+            self.close()
             self.save()
             return True
         else:
@@ -74,6 +81,7 @@ class SingleChoicePoll(BasePoll):
             if vote_nums[0] > vote_nums[1] + len(SingleVote.objects.filter(poll = self, choice__isnull = True)):
                 # if all remaining votes went to the current second-place option it still wouldn't equal the top option
                 self.closed = True
+                self.close()
                 self.save()
                 return True
             else:
@@ -84,7 +92,9 @@ class MultipleChoicePoll(BasePoll):
     @property
     def current_results(self) -> Dict[str,List[CustomUser]]:
         votes = MultipleVote.objects.filter(~models.Q(choice = []), poll = self)
-        results = {self.options[n-1] if n != 0 else 'poll is wrong':[] for n in range(len(self.options) + 1)}
+        results = {option:[] for option in self.options}
+        if self.invalid_option:
+            results['poll is wrong'] = []
         for vote in votes:
             for choice in vote.choice:
                 results[self.options[choice - 1] if choice != 0 else 'poll is wrong'].append(vote.user)

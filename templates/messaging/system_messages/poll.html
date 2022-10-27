@@ -9,7 +9,7 @@
         <tr>
             <td>{{ name }}</td>
             <td>{{ count }}</td>
-            {% if request.user.is_active and not poll_closed %}
+            {% if request.user.is_active and not message.context_poll.closed %}
                 <td><form method=POST action="{% url 'poll_view' message.context_poll.uuid %}"><button>vote</button><input type=hidden name=choice value="{{ name }}"></input>{% csrf_token %}</form></td>
             {% endif %}
             <tr>

@@ -35,6 +35,7 @@ class EnvisionStage(models.Model):
         REVIEW = '3', 'review tags and image'
     chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT)
     step: models.CharField = models.CharField(max_length = 1, choices = Step.choices, default = Step.GET_TO_KNOW)
+    poll: models.ForeignKey = models.ForeignKey(SingleChoicePoll, null = True, default = None, on_delete = models.SET_NULL)
 
 class PlanStage(models.Model):
     general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT, related_name = 'plan_general_chat')
