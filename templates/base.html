@@ -1,9 +1,9 @@
 {% load static wagtailcore_tags wagtailuserbar %}
-{% load static tailwind_tags %}
+{% load tailwind_tags %}
 <html class="no-js" lang="en">
-    <head>
-        <meta charset="utf-8"/>
-        {% comment %}
+<head>
+    <meta charset="utf-8"/>
+    {% comment %}
     <title>
       {% block title %}
             {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
@@ -14,58 +14,66 @@
         {% endblock %}
     </title>
     {% endcomment %}
-        <meta name="description" content=""/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/sfs.css' %}">
+    {# Global stylesheets #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sfs.css' %}">
 
-        {% block extra_css %}
-            {# Override this in templates to add extra stylesheets #}
+    {% block extra_css %}
+        {# Override this in templates to add extra stylesheets #}
 
-        {% endblock %}
-        {% tailwind_css %}
+    {% endblock %}
+    {% tailwind_css %}
 
-        <!--TODO: COPY TO STATIC FILES-->
-        <script src="https://unpkg.com/htmx.org@1.8.0"></script>
 
-        <!--Alpine JS-->
-        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {% comment %}HTMX{% endcomment %}
 
-        <!--Flickity CSS+JS-->
-        <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-        <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-    </head>
-    <script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
+    {% comment %}<script src="https://unpkg.com/htmx.org@1.8.0"></script>{% endcomment %}
+    <script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>
 
-    <body class="antialiased w-full sm:bg-black/20 sm:flex sm:flex-col sm:items-center" x-data="{ menu: false }" >
+    <!--Alpine JS-->
+    {% comment %}<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>{% endcomment %}
+    <script src="{% static 'packages/alpinejs/alpinejs_3.10.5_min.js' %}" defer></script>
 
-        {% comment %} URL-dependent navbar {% endcomment %}
-        <div hx-get="/core/check_url_nav/"
-            hx-trigger="load"
-            hx-swap="outerHTML"
-        >
-        </div>
+    <!--Flickity CSS+JS-->
+    {% comment %}<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>{% endcomment %}
+    <link rel="stylesheet" type="text/css" href="{% static 'packages/flickity/flickity_2.3.0_min.css' %}">
+    <script src="{% static 'packages/flickity/flickity_2.3.0_min.js' %}" defer></script>
 
-        <section class="block bg-white sm:w-[360px]" :class="{'hidden': menu == true}">
-            {% wagtailuserbar %}
+</head>
 
-            {% block content %}
+<script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
-            {% endblock %}
-        </section>
+<body class="antialiased w-full sm:bg-black/20 sm:flex sm:flex-col sm:items-center" x-data="{ menu: false }">
 
-        {# Global javascript #}
+{% comment %} URL-dependent navbar {% endcomment %}
+<div hx-get="/core/check_url_nav/"
+     hx-trigger="load"
+     hx-swap="outerHTML"
+>
+</div>
 
-        {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
-        {% endblock %}
+<section class="block bg-white sm:w-[360px]" :class="{'hidden': menu == true}">
+    {% wagtailuserbar %}
 
-    </body>
+    {% block content %}
 
-    <script>
-        document.body.addEventListener('htmx:configRequest', (event) => {
-            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-        })
-    </script>
+    {% endblock %}
+</section>
+
+{# Global javascript #}
+
+{% block extra_js %}
+    {# Override this in templates to add extra javascript #}
+{% endblock %}
+
+</body>
+
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    })
+</script>
 </html>

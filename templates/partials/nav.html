@@ -1,7 +1,7 @@
 {% load static %}
 
 <div x-data="{ open: false, toggle() { this.open = ! this.open } }" :class="{'fixed top-0 right-6.5': open == true}"
-     class="w-full sm:w-[360px] absolute pointer-events-auto hidden">
+     class="w-full sm:w-[360px] absolute pointer-events-auto">
 
     {#  Burger-cross icon  #}
     <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
