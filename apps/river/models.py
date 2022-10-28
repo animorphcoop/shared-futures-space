@@ -89,8 +89,7 @@ class ReflectStage(models.Model):
 class RiverMembership(models.Model):
     river: models.ForeignKey = models.ForeignKey('river.River', on_delete=models.CASCADE)
     user: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
-    owner: models.BooleanField = models.BooleanField(default=False)
-    champion: models.BooleanField = models.BooleanField(default=False)
+    starter: models.BooleanField = models.BooleanField(default=False)
 
 
 class RiverTag(TaggedItemBase):

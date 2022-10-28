@@ -1,5 +1,5 @@
 {% load custom_filters %}
-{% if request.user in ownerships|attrmap:'user' %}
+{% if request.user in starters|attrmap:'user' %}
     <table id=members>
         <tr>
             <th>Member</th>
@@ -12,10 +12,9 @@
                 <input type=hidden name=membership value={{membership.id}}></input>
                 <tr>
                     <td>{{membership.user.display_name}}</td>
-                    <td>{% if membership.owner %}Owner{% endif %} {% if membership.champion %}Champion{% endif %}</td>
+                    <td>{% if membership.starter %}Starter{% endif %}</td>
                     <td>
-                        {% if membership.champion %}<button name=action value=remove_championship>remove championship</button>{% elif request.user != membership.user %}<button name=action value=offer_championship>offer championship</button>{% endif %}
-                        {% if not membership.owner %}<button name=action value=offer_ownership>offer ownership</button>{% endif %}
+                        {% if not membership.starter %}<button name=action value=offer_ownership>offer ownership</button>{% endif %}
                     </tr>
                 </form>
         {% endfor %}

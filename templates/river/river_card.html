@@ -20,7 +20,7 @@
         <div class="flex justify-between">
             <div class="flex">
                 {% for member in river.membership %}
-                    {% if member.owner %}
+                    {% if member.starter %}
 
                         {% comment %}TODO: RETRIEVE INFO FROM VIEW{% endcomment %}
                         <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
