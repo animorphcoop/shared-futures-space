@@ -2,7 +2,7 @@
 
 from userauth.util import get_system_user, get_userpair # pyre-ignore[21]
 from django.core.handlers.wsgi import WSGIRequest
-from project.models import ProjectMembership # pyre-ignore[21]
+from river.models import RiverMembership # pyre-ignore[21]
 from django.http import HttpResponse
 from messaging.models import Message # pyre-ignore[21]
 from messaging.util import send_system_message # pyre-ignore[21]
@@ -30,20 +30,20 @@ def invoke_action_view(request: WSGIRequest) -> HttpResponse:
 
 def invoke_action(action: Action) -> None: # pyre-ignore[11]
     if (action.kind == 'become_owner'):
-        membership = ProjectMembership.objects.get(user=action.receiver, project=action.param_project)
+        membership = RiverMembership.objects.get(user=action.receiver, river=action.param_river)
         if not membership.owner:
             membership.owner = True
             membership.save()
-            print('!!! WARNING B !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
-            #send_system_message(action.param_project.chat, 'new_owner',
+            print('!!! WARNING B !!! not sending a message to the river, because projects no longer have one central chat. how to disseminate that information?')
+            #send_system_message(action.param_river.chat, 'new_owner',
             #                    context_user_a = action.receiver, context_user_b = action.creator)
     elif (action.kind == 'become_champion'):
-        membership = ProjectMembership.objects.get(user=action.receiver, project=action.param_project)
+        membership = RiverMembership.objects.get(user=action.receiver, river=action.param_river)
         if not membership.champion:
             membership.champion = True
             membership.save()
-            print('!!! WARNING A !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
-            #send_system_message(action.param_project.chat, 'new_champion',
+            print('!!! WARNING A !!! not sending a message to the river, because projects no longer have one central chat. how to disseminate that information?')
+            #send_system_message(action.param_river.chat, 'new_champion',
             #                    context_user_a = action.receiver, context_user_b = action.creator)
     elif (action.kind.startswith('user_request_')):
         # TODO: actions have the option to automatically do the thing based on info given by user

@@ -1,6 +1,6 @@
 # pyre-strict
 """
-WSGI config for sfs project.
+WSGI config for sfs river.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

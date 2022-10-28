@@ -16,7 +16,7 @@ class Message(models.Model):
     chat: models.ForeignKey = models.ForeignKey('messaging.Chat', on_delete = models.CASCADE)
     # context_* values are nullable fields used to fill in the gaps in system messages
     context_action: models.ForeignKey = models.ForeignKey('action.Action', null = True, on_delete = models.SET_NULL)
-    context_project: models.ForeignKey = models.ForeignKey('project.Project', null = True, on_delete = models.SET_NULL)
+    context_river: models.ForeignKey = models.ForeignKey('river.River', null = True, on_delete = models.SET_NULL)
     context_user_a: models.ForeignKey = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL, related_name = 'user_a')
     context_user_b: models.ForeignKey = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL, related_name = 'user_b')
     context_bool: models.BooleanField = models.BooleanField(default=False)

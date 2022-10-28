@@ -8,11 +8,11 @@
     {% elif message.context_action.result == 'rescinded' %}
         offer of championship rescinded
     {% elif request.user.id == message.context_action.receiver.id %}
-        {{message.context_action.creator.display_name}} has offered you championship of {{message.context_action.param_project.name}}.
+        {{message.context_action.creator.display_name}} has offered you championship of {{message.context_action.param_river.name}}.
         <button name=choice value=invoke>Accept</button>
         <button name=choice value=reject>Reject</button>
     {% elif request.user.id == message.context_action.creator.id %}
-        you offered {{message.context_action.receiver.display_name}} championship of {{message.context_action.param_project.name}}.
+        you offered {{message.context_action.receiver.display_name}} championship of {{message.context_action.param_river.name}}.
         <button name=choice value=retract>Retract</button>
     {% endif %}
 </form>

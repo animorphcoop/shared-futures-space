@@ -1,7 +1,7 @@
 # pyre-strict
 
 from django.db import models
-from project.models import Project # pyre-ignore[21]
+from river.models import River # pyre-ignore[21]
 from uuid import uuid4
 
 class Action(models.Model):
@@ -12,5 +12,5 @@ class Action(models.Model):
     result: models.CharField = models.CharField(max_length = 10, null = True) # once set, describes what happened - 'invoked', 'rejected' or 'rescinded'
 
     # the following entries are optional parameters that some kinds of action need
-    param_project: models.ForeignKey = models.ForeignKey('project.Project', null = True, on_delete = models.CASCADE)
+    param_river: models.ForeignKey = models.ForeignKey('river.River', null = True, on_delete = models.CASCADE)
     param_str: models.CharField = models.CharField(max_length = 2000, null = True)

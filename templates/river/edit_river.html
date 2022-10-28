@@ -3,20 +3,20 @@
     <form method=post>
         {% csrf_token %}
         <p>
-            <label for=name>Project Name:</label>
+            <label for=name>River Name:</label>
             <input type=text name=name id=name value="{{object.name}}"></input>
         </p>
         <p>
-            <label for=description>Project Description:</label>
+            <label for=description>River Description:</label>
             <textarea name=description id=description>{{object.description}}</textarea>
         </p>
-        <button>Update Project</button>
+        <button>Update River</button>
         {% if ownerships|length > 1 %}
             <button name=abdicate value=abdicate>Rescind Ownership</button>
         {% else %}
-            <p>As you are the only owner of this project, you cannot rescind ownership<p>
+            <p>As you are the only owner of this river, you cannot rescind ownership<p>
         {% endif %}
     </form>
 {% else %}
-    you are not authorised to edit this project
+    you are not authorised to edit this river
 {% endif %}

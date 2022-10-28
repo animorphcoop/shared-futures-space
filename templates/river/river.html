@@ -1,6 +1,6 @@
 
 {% load custom_filters %}
-<h3>Project: {{object.name}}</h3>
+<h3>River: {{object.name}}</h3>
 <p>owners: {{owners|attrmap:'user'|join:', '}}</p>
 <p>champions: {{champions|attrmap:'user'|join:', '}}</p>
 <p>all members: {{members|attrmap:'user'|join:', '}}</p>
@@ -9,15 +9,15 @@
 <p>{{object.description}}</p>
 <hr>
 {% if request.user in owners|attrmap:'user' %}
-    <p><a href="{% url 'edit_project' object.slug %}">Edit Project</a></p>
-    <p><a href="{% url 'manage_project' object.slug %}">Manage Project</a></p>
+    <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
+    <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
 {% elif not request.user.is_anonymous %}
     <form method=post>
         {% csrf_token %}
         {% if request.user in members|attrmap:'user' %}
-            <button name=action value=leave>leave project</button>
+            <button name=action value=leave>leave river</button>
         {% else %}
-            <button name=action value=join>join project</button>
+            <button name=action value=join>join river</button>
         {% endif %}
     </form>
 {% endif %}

@@ -9,7 +9,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         Organisation.objects.all().delete()
         orgs_names = [
-            'Belfast Interface Project', 'Cooperation Ireland', 'SEUPB', 'Animorph', 'Darwin Awards'
+            'Belfast Interface River', 'Cooperation Ireland', 'SEUPB', 'Animorph', 'Darwin Awards'
 
         ]
 

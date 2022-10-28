@@ -86,23 +86,23 @@ class ReflectStage(models.Model):
 
 # PROJECTS
 
-class ProjectMembership(models.Model):
-    project: models.ForeignKey = models.ForeignKey('project.Project', on_delete=models.CASCADE)
+class RiverMembership(models.Model):
+    river: models.ForeignKey = models.ForeignKey('river.River', on_delete=models.CASCADE)
     user: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
     owner: models.BooleanField = models.BooleanField(default=False)
     champion: models.BooleanField = models.BooleanField(default=False)
 
 
-class ProjectTag(TaggedItemBase):
-    content_object = ParentalKey('project.Project', on_delete=models.CASCADE, related_name='tagged_items')
+class RiverTag(TaggedItemBase):
+    content_object = ParentalKey('river.River', on_delete=models.CASCADE, related_name='tagged_items')
 
 
 def get_default_other_area() -> int:
-    # this is bad, instead should not need a default but should specify every time a project is created
+    # this is bad, instead should not need a default but should specify every time a river is created
     return Area.objects.get_or_create(name='Other')[0].pk
 
 
-class Project(ClusterableModel):
+class River(ClusterableModel):
     class Stage(models.TextChoices):
         ENVISION = 'envision'
         PLAN = 'plan'
@@ -112,7 +112,7 @@ class Project(ClusterableModel):
     slug: models.CharField = models.CharField(max_length=100, default='')
     name: models.CharField = models.CharField(max_length=100)
     description: models.CharField = models.CharField(max_length=2000)
-    tags = ClusterTaggableManager(through=ProjectTag, blank=True)
+    tags = ClusterTaggableManager(through=RiverTag, blank=True)
     image: models.ImageField = models.ImageField(upload_to='rivers/images/', blank=True)
     area: models.ForeignKey = models.ForeignKey(Area, on_delete=models.CASCADE,
                                             default=get_default_other_area)  # TODO this is a bad default which should be replaced by forcing an area to be provided on creation

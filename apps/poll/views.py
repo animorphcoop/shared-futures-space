@@ -12,7 +12,7 @@ from uuid import UUID
 from typing import Dict, Any
 
 from .models import BasePoll, SingleChoicePoll, MultipleChoicePoll, BaseVote, SingleVote, MultipleVote
-from project.models import Project, ProjectMembership # pyre-ignore[21]
+from river.models import River, RiverMembership # pyre-ignore[21]
 
 class PollView(TemplateView):
     def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponseRedirect:
@@ -52,7 +52,7 @@ class PollView(TemplateView):
         return ctx
 
 class PollCreateForm(ModelForm):
-    project = ModelChoiceField(queryset=Project.objects.all()) # should only be projects you're a member of
+    river = ModelChoiceField(queryset=River.objects.all()) # should only be projects you're a member of
     kind = ChoiceField(choices = [('SINGLE', 'single-choice'), ('MULTIPLE', 'multiple-choice')])
     class Meta:
         model = SingleChoicePoll
@@ -66,7 +66,7 @@ class PollCreateView(CreateView): # pyre-ignore[24]
             new_poll = SingleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires)
         elif form.cleaned_data['kind'] == 'MULTIPLE':
             new_poll = MultipleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires)
-        new_poll.make_votes(form.cleaned_data['project'])
+        new_poll.make_votes(form.cleaned_data['river'])
         return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
     def get_success_url(self) -> str:
         return reverse('poll_view', args=[self.object.uuid]) # pyre-ignore[16]
