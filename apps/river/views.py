@@ -229,6 +229,7 @@ class CreateEnvisionPollView(TemplateView):
                     try:
                         poll = SingleChoicePoll.objects.create(question = 'Is this an acceptable vision: "' + request.POST['description'] + '"?', options = ['yes', 'no'],
                                                                invalid_option = False, expires = timezone.now() + timezone.timedelta(days=3))
+                        poll.make_votes(river)
                         send_system_message(chat = river.envision_stage.chat, kind = 'poll', context_poll = poll)
                         return HttpResponseRedirect(reverse('view_envision', args=[river.slug]))
                     except Exception as e:
@@ -253,6 +254,7 @@ class EnvisionView(TemplateView):
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
+        ctx['owners'] = RiverMembership.objects.filter(river = ctx['river']).values_list('user', flat=True)
         return ctx
 
 

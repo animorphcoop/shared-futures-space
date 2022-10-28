@@ -35,7 +35,7 @@ def validate_poll_options(value: List[str]) -> bool:
 
 class BasePoll(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4)
-    question: models.CharField = models.CharField(max_length = 100)
+    question: models.CharField = models.CharField(max_length = 2200) # question must be long enough to include the full text of any river description
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
     expires: models.DateTimeField = models.DateTimeField()
     closed: models.BooleanField = models.BooleanField(default = False)

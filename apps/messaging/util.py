@@ -12,7 +12,7 @@ from uuid import UUID
 from typing import Union, Optional
 
 def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
-                        context_action: Optional['action.Action'] = None, context_project: Optional[
+                        context_action: Optional['action.Action'] = None, context_river: Optional[
             'river.River'] = None,  # pyre-ignore[11]
                         context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None,  # pyre-ignore[11]
                         context_poll: Optional[BasePoll] = None) -> None: # pyre-ignore[11]
@@ -33,7 +33,7 @@ def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                                       }[kind],
                            chat=chat,
                            context_action = context_action,
-                           context_project = context_project,
+                           context_river = context_river,
                            context_user_a = context_user_a,
                            context_user_b = context_user_b,
                            context_poll = context_poll)

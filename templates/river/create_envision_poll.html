@@ -1,0 +1,6 @@
+<h1>create poll for vision</h1>
+<form method=POST>
+ {% csrf_token %}
+ <textarea name=description>{{river.description}}</textarea>
+ <button type=submit>create</button>
+</form>
