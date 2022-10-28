@@ -769,7 +769,7 @@
           "Economic",
           "Sustainability",
           "Planning",
-          "Socialeconomy", 
+          "Socialeconomy",
           "Group"
         ]
       },
@@ -905,7 +905,7 @@
           "Service"
         ]
       },
-            {
+      {
         "title": "Fablab Belfast",
         "summary": "This resources links you to a makerspace in North Belfast.",
         "link": "https://www.fablabni.com/centre/fablab-belfast.html",
@@ -917,7 +917,7 @@
           "Social Economy"
         ]
       },
-            {
+      {
         "title": "Farset Labs",
         "summary": "This resources links you to a set of labs that are a place for creativity and technological tinkering and are open to all no matter what they want to do.",
         "link": "http://farsetlabs.org.uk/",
@@ -930,7 +930,7 @@
           "Social Economy"
         ]
       },
-            {
+      {
         "title": "Bannana Block",
         "summary": "This resource links you to a shared community enterprise space.",
         "link": "https://bananablock.org/",
@@ -944,7 +944,7 @@
           "Shared Space"
         ]
       },
-            {
+      {
         "title": "Social Economy Village",
         "summary": "This resources links you to an award winning organisation which supports businesses on their entrepreneurial journeys by delivering mentoring and training for aspiring and existing private and social entrepreneurs in West Belfast and beyond.",
         "link": "http://www.workwest.co.uk/",
@@ -956,7 +956,7 @@
           "Enterprise"
         ]
       },
-            {
+      {
         "title": "Bobbins Café",
         "summary": "This resources links you to a social economy café designed to support investment in tourism infrastructur.",
         "link": "https://www.sustainableni.org/case-study/social-enterprise-caf%C3%A9-belfast-city-hall",
@@ -969,7 +969,7 @@
           "Social Economy"
         ]
       },
-            {
+      {
         "title": "Belrast Tool Library",
         "summary": "This resource links you to a tool library in Belfast.",
         "link": "https://www.belfasttoollibrary.com/",
@@ -981,7 +981,8 @@
           "Social Economy"
         ]
       }
-    ],
+    ]
+  },
   "Organisations": [
     {
       "name": "Refresh Café",
