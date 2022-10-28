@@ -68,6 +68,7 @@ class BasePoll(models.Model):
                 river = River.objects.get(envision_stage = es)
                 river.start_plan()
                 river.description = self.question[31:-2] # oof, extracting the new description back out of the question is not a good way to do it
+                river.save()
                 send_system_message(kind = 'finished_envision', chat = river.envision_stage.chat, context_river = river)
 
 class SingleChoicePoll(BasePoll):
