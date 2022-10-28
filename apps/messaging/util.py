@@ -29,7 +29,8 @@ def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                                       'user_request': 'messaging/system_messages/user_request.html',
                                       'request_accepted': 'messaging/system_messages/request_accepted.html',
                                       'request_rejected': 'messaging/system_messages/request_rejected.html',
-                                      'poll': 'messaging/system_messages/poll.html'
+                                      'poll': 'messaging/system_messages/poll.html',
+                                      'finished_envision': 'messaging/system_messages/finished_envision.html',
                                       }[kind],
                            chat=chat,
                            context_action = context_action,
