@@ -42,9 +42,9 @@ class BasePoll(models.Model):
     vote_kind: models.Model = BaseVote # pyre-ignore[8]
     invalid_option: models.BooleanField = models.BooleanField(default = True)
     # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
-    def make_votes(self, project) -> None: # pyre-ignore[2] can't import Project for this, see next line
-        from project.models import ProjectMembership # pyre-ignore[21] this is considered bad form, but as far as i can tell necessary to avoid a circular import
-        for voter in ProjectMembership.objects.filter(project = project):
+    def make_votes(self, river) -> None: # pyre-ignore[2] can't import River for this, see next line
+        from river.models import RiverMembership # pyre-ignore[21] this is considered bad form, but as far as i can tell necessary to avoid a circular import
+        for voter in RiverMembership.objects.filter(river = river):
             self.vote_kind.objects.create(user = voter.user, poll = self, choice = None if self.vote_kind == SingleVote else [])
     @property
     def specific(self) -> Union['SingleChoicePoll', 'MultipleChoicePoll']:

@@ -3,15 +3,15 @@
     <div class="p-3 relative">
         <div class="flex justify-between">
             <h2 class="relative text-title text-black/55">
-                {{ project.name }}
+                {{ river.name }}
             </h2>
             <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-[22px] w-[22px]"></div>
         </div>
 
         {% include "partials/vertical-spacer.html" with space="6" %}
         <div class="flex flex-row gap-1.5">
-            {% for tag in project.tags %}
-                {% include "project/project_tag.html" with title=tag %}
+            {% for tag in river.tags %}
+                {% include "river/river_tag.html" with title=tag %}
             {% endfor %}
         </div>
 
@@ -19,7 +19,7 @@
 
         <div class="flex justify-between">
             <div class="flex">
-                {% for member in project.membership %}
+                {% for member in river.membership %}
                     {% if member.owner %}
 
                         {% comment %}TODO: RETRIEVE INFO FROM VIEW{% endcomment %}
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="flex gap-1.5">
-                {% for member in project.membership|slice:3 %}
+                {% for member in river.membership|slice:3 %}
                     <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
                 {% endfor %}
             </div>
@@ -49,12 +49,12 @@
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-        <p class="font-garamond-500 text-base leading-5 text-black/75">{{ project.description }}</p>
+        <p class="font-garamond-500 text-base leading-5 text-black/75">{{ river.description }}</p>
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         {% include "partials/button.html" with url=the_url style="important" button="Join" %}
-        {% url 'view_project' project.slug as the_url %}
+        {% url 'view_river' river.slug as the_url %}
         {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
     </div>
 </div>

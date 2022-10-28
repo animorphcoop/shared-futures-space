@@ -13,8 +13,8 @@ from django.conf import settings
 from django.urls import reverse, reverse_lazy
 from itertools import chain
 
-from .forms import CreateProjectForm
-from .models import Project, ProjectMembership
+from .forms import CreateRiverForm
+from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
 from messaging.views import ChatView  # pyre-ignore[21]
@@ -28,35 +28,35 @@ from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluste
 
 from typing import Dict, List, Any, Union
 
-class ProjectView(DetailView):  # pyre-ignore[24]
-    model = Project
+class RiverView(DetailView):  # pyre-ignore[24]
+    model = River
 
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        project = Project.objects.get(slug=slug)
+        river = River.objects.get(slug=slug)
         if (request.POST['action'] == 'leave'):
-            membership = ProjectMembership.objects.get(user=request.user, project=project)
+            membership = RiverMembership.objects.get(user=request.user, river=river)
             if not membership.owner:  # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
                 membership.delete()
                 print(
-                    '!!! WARNING C !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
-                # send_system_message(project.chat, 'left_project', context_project = project, context_user_a = request.user)
+                    '!!! WARNING C !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
+                # send_system_message(river.chat, 'left_river', context_river = river, context_user_a = request.user)
         if (request.POST['action'] == 'join'):
-            if len(ProjectMembership.objects.filter(user=request.user, project=project)) == 0:
-                ProjectMembership.objects.create(user=request.user, project=project, owner=False, champion=False)
+            if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0:
+                RiverMembership.objects.create(user=request.user, river=river, owner=False, champion=False)
                 print(
-                    '!!! WARNING D !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
-                # send_system_message(project.chat, 'joined_project', context_project = project, context_user_a = request.user)
+                    '!!! WARNING D !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
+                # send_system_message(river.chat, 'joined_river', context_river = river, context_user_a = request.user)
         # TESTING PURPOSES ONLY!! TODO # # # # # # # # # #
         if (request.POST['action'] == 'start_envision'):  #
-            project.start_envision()  #
+            river.start_envision()  #
         # # # # # # # # # # # # # # # # # # # # # # # # #
         return super().get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['owners'] = ProjectMembership.objects.filter(project=context['object'].pk, owner=True)
-        context['champions'] = ProjectMembership.objects.filter(project=context['object'].pk, champion=True)
-        context['members'] = ProjectMembership.objects.filter(project=context['object'].pk)
+        context['owners'] = RiverMembership.objects.filter(river=context['object'].pk, owner=True)
+        context['champions'] = RiverMembership.objects.filter(river=context['object'].pk, champion=True)
+        context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
         context['resources'] = list(chain(
             *[filter_and_cluster_resources(tag, 'latest') for tag in map(lambda t: t.name, context['object'].tags)]))
@@ -79,43 +79,43 @@ class SpringView(TemplateView):
         else:
             return HttpResponseRedirect(reverse('404'))
 
-        projects = Project.objects.filter(area=area)
-        #projects = Project.objects.all()
+        rivers = River.objects.filter(area=area)
+        #rivers = River.objects.all()
         #members = []
-        for project in projects:
-            project.tags = tag_cluster_to_list(project.tags)
+        for river in rivers:
+            river.tags = tag_cluster_to_list(river.tags)
 
-            project.us = ProjectMembership.objects.filter(project=project)
-            project.swimmers = ProjectMembership.objects.filter(project=project).values_list('user', flat=True)
+            river.us = RiverMembership.objects.filter(river=river)
+            river.swimmers = RiverMembership.objects.filter(river=river).values_list('user', flat=True)
 
             #TEMP - comment below
-            project.membership = ProjectMembership.objects.filter(project=project)
+            river.membership = RiverMembership.objects.filter(river=river)
             '''
-            for projectmemb in ProjectMembership.objects.filter(project=project):
-                print(projectmemb.user)
-                members.append(projectmemb.user)
-            project.members = members
+            for rivermemb in RiverMembership.objects.filter(river=river):
+                print(rivermemb.user)
+                members.append(rivermemb.user)
+            river.members = members
             '''
-        num_swimmers = ProjectMembership.objects.filter(
-            project__in=Project.objects.filter(area=area)).values_list('user', flat=True).distinct().count()
+        num_swimmers = RiverMembership.objects.filter(
+            river__in=River.objects.filter(area=area)).values_list('user', flat=True).distinct().count()
 
 
-        #TODO: Add all members, owner and champions to the context 'project.swimmers' being ints; temp members
+        #TODO: Add all members, owner and champions to the context 'river.swimmers' being ints; temp members
         context = {
             'area': area,
-            'projects': projects,
+            'rivers': rivers,
             'num_swimmers': num_swimmers
         }
 
         # context is:
-        #   'projects' -> list of projects with .tags and .swimmers set appropriately
-        #   'num_swimmers' -> number of distinct swimmers involved in all projects in this spring
+        #   'rivers' -> list of rivers with .tags and .swimmers set appropriately
+        #   'num_swimmers' -> number of distinct swimmers involved in all rivers in this spring
 
-        return render(request, 'project/all_projects.html', context)
+        return render(request, 'river/all_rivers.html', context)
 
 
-class EditProjectView(UpdateView):  # pyre-ignore[24]
-    model = Project
+class EditRiverView(UpdateView):  # pyre-ignore[24]
+    model = River
     fields = ['name', 'description']
 
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
@@ -123,114 +123,114 @@ class EditProjectView(UpdateView):  # pyre-ignore[24]
         return login_required(super().get)(*args, **kwargs)  # pyre-ignore[6]
 
     def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]) -> HttpResponse:  # pyre-ignore[14]
-        project = Project.objects.get(slug=slug)
-        if (ProjectMembership.objects.get(project=project, user=request.user).owner == True):
+        river = River.objects.get(slug=slug)
+        if (RiverMembership.objects.get(river=river, user=request.user).owner == True):
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'):
-                ownerships = ProjectMembership.objects.filter(project=project, owner=True)
+                ownerships = RiverMembership.objects.filter(river=river, owner=True)
                 if (
-                        len(ownerships) >= 2):  # won't be orphaning the project (TODO: allow projects to be shut down, in which case they can be orphaned)
-                    my_membership = ProjectMembership.objects.get(project=project, user=request.user, owner=True)
+                        len(ownerships) >= 2):  # won't be orphaning the river (TODO: allow rivers to be shut down, in which case they can be orphaned)
+                    my_membership = RiverMembership.objects.get(river=river, user=request.user, owner=True)
                     my_membership.owner = False
                     my_membership.save()
                     print(
-                        '!!! WARNING E !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
-                    # send_system_message(project.chat, 'lost_ownership', context_user_a = request.user)
-            project.name = request.POST['name']
-            project.description = request.POST['description']
-            project.save()
-        return redirect(reverse('view_project', args=[slug]))
+                        '!!! WARNING E !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
+                    # send_system_message(river.chat, 'lost_ownership', context_user_a = request.user)
+            river.name = request.POST['name']
+            river.description = request.POST['description']
+            river.save()
+        return redirect(reverse('view_river', args=[slug]))
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['ownerships'] = ProjectMembership.objects.filter(project=context['object'], owner=True)
+        context['ownerships'] = RiverMembership.objects.filter(river=context['object'], owner=True)
         return context
 
 
-class ManageProjectView(DetailView):  # pyre-ignore[24]
-    model = Project
+class ManageRiverView(DetailView):  # pyre-ignore[24]
+    model = River
 
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        project = Project.objects.get(slug=slug)
-        membership = ProjectMembership.objects.get(id=request.POST['membership'])
+        river = River.objects.get(slug=slug)
+        membership = RiverMembership.objects.get(id=request.POST['membership'])
         # security checks
-        if (ProjectMembership.objects.get(user=request.user, project=project).owner == True
-                and membership.project == Project.objects.get(slug=slug)):  # since the form takes any uid
+        if (RiverMembership.objects.get(user=request.user, river=river).owner == True
+                and membership.river == River.objects.get(slug=slug)):  # since the form takes any uid
             if (request.POST['action'] == 'offer_ownership'):
                 if not membership.owner:  # not an owner already
-                    send_offer(request.user, membership.user, 'become_owner', param_project=project)
+                    send_offer(request.user, membership.user, 'become_owner', param_river=river)
             elif (request.POST['action'] == 'offer_championship'):
                 if not membership.champion:
-                    send_offer(request.user, membership.user, 'become_champion', param_project=project)
+                    send_offer(request.user, membership.user, 'become_champion', param_river=river)
             elif (request.POST['action'] == 'remove_championship'):
                 if membership.champion:
                     membership.champion = False
                     print(
-                        '!!! WARNING F !!! not sending a message to the project, because projects no longer have one central chat. how to disseminate that information?')
-                    # send_system_message(project.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
+                        '!!! WARNING F !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
+                    # send_system_message(river.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
                     send_system_message(get_userpair(request.user, membership.user).chat,
                                         'lost_championship_notification', context_user_a=request.user,
-                                        context_project=membership.project)
+                                        context_river=membership.river)
             membership.save()
         return self.get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['ownerships'] = ProjectMembership.objects.filter(project=context['object'].pk, owner=True)
-        context['memberships'] = ProjectMembership.objects.filter(project=context['object'].pk)
+        context['ownerships'] = RiverMembership.objects.filter(river=context['object'].pk, owner=True)
+        context['memberships'] = RiverMembership.objects.filter(river=context['object'].pk)
         return context
 
 
-class ProjectChatView(ChatView):  # pyre-ignore[11]
-    def get_chat(self, project: Project, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
+class RiverChatView(ChatView):  # pyre-ignore[11]
+    def get_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
         if stage == 'envision':
-            chat = project.envision_stage.chat
+            chat = river.envision_stage.chat
         elif stage == 'plan':
             if topic == 'general':
-                chat = project.plan_stage.general_chat
+                chat = river.plan_stage.general_chat
             elif topic == 'funding':
-                chat = project.plan_stage.funding_chat
+                chat = river.plan_stage.funding_chat
             elif topic == 'location':
-                chat = project.plan_stage.location_chat
+                chat = river.plan_stage.location_chat
             elif topic == 'dates':
-                chat = project.plan_stage.dates_chat
+                chat = river.plan_stage.dates_chat
         elif stage == 'act':
             if topic == 'general':
-                chat = project.act_stage.general_chat
+                chat = river.act_stage.general_chat
             elif topic == 'funding':
-                chat = project.act_stage.funding_chat
+                chat = river.act_stage.funding_chat
             elif topic == 'location':
-                chat = project.act_stage.location_chat
+                chat = river.act_stage.location_chat
             elif topic == 'dates':
-                chat = project.act_stage.dates_chat
+                chat = river.act_stage.dates_chat
         elif stage == 'reflect':
-            chat = project.reflect_stage.chat
+            chat = river.reflect_stage.chat
         return chat  # pyre-ignore[61]
 
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
-        project = Project.objects.get(slug=slug)
-        chat = self.get_chat(project, stage, topic)
+        river = River.objects.get(slug=slug)
+        chat = self.get_chat(river, stage, topic)
         # pyre-ignore[16]
         return super().post(request, chat=chat, url=request.get_full_path(), members=list(
-            map(lambda x: x.user, ProjectMembership.objects.filter(project=project))))
+            map(lambda x: x.user, RiverMembership.objects.filter(river=river))))
     def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
-        project = Project.objects.get(slug=slug)
+        river = River.objects.get(slug=slug)
         # pyre-ignore[16]
-        ctx = super().get_context_data(chat=self.get_chat(project, stage, topic), url=self.request.get_full_path(),
-                                       members=list(map(lambda x: x.user, ProjectMembership.objects.filter(
-                                           project=project))))
+        ctx = super().get_context_data(chat=self.get_chat(river, stage, topic), url=self.request.get_full_path(),
+                                       members=list(map(lambda x: x.user, RiverMembership.objects.filter(
+                                           river=river))))
         return ctx
 
 class CreateEnvisionPollView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        project = Project.objects.get(slug = slug)
-        if project.current_stage == Project.Stage.ENVISION:
-            if project.envision_stage.poll is None:
+        river = River.objects.get(slug = slug)
+        if river.current_stage == River.Stage.ENVISION:
+            if river.envision_stage.poll is None:
                 if 'description' in request.POST:
                     try:
                         poll = SingleChoicePoll.objects.create(question = 'Is this an acceptable vision: "' + request.POST['description'] + '"?', options = ['yes', 'no'],
                                                                invalid_option = False, expires = timezone.now() + timezone.timedelta(days=3))
-                        send_system_message(chat = project.envision_stage.chat, kind = 'poll', context_poll = poll)
-                        return HttpResponseRedirect(reverse('view_envision', args=[project.slug]))
+                        send_system_message(chat = river.envision_stage.chat, kind = 'poll', context_poll = poll)
+                        return HttpResponseRedirect(reverse('view_envision', args=[river.slug]))
                     except Exception as e:
                         return HttpResponse('could not create poll, unknown error: ' + str(e))
                 else:
@@ -241,67 +241,67 @@ class CreateEnvisionPollView(TemplateView):
             return HttpResponse('could not create poll, envision stage is finished')
     def get_context_data(self, slug: str) -> Dict[str,Any]: # pyre-ignore[14]
         ctx = super().get_context_data()
-        ctx['project'] = Project.objects.get(slug = slug)
+        ctx['river'] = River.objects.get(slug = slug)
         return ctx
 
 
 class EnvisionView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        Project.objects.get(slug=slug).start_plan()  # TODO TESTING PURPOSES ONLY
+        River.objects.get(slug=slug).start_plan()  # TODO TESTING PURPOSES ONLY
         return super().get(request, slug)
 
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
-        ctx['project'] = Project.objects.get(slug=self.kwargs['slug'])
+        ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
         return ctx
 
 
 class PlanView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        Project.objects.get(slug=slug).start_act()  # TODO TESTING PURPOSES ONLY
+        River.objects.get(slug=slug).start_act()  # TODO TESTING PURPOSES ONLY
         return super().get(request, slug)
 
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
-        ctx['project'] = Project.objects.get(slug=self.kwargs['slug'])
+        ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
         return ctx
 
 
 class ActView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        Project.objects.get(slug=slug).start_reflect()  # TODO TESTING PURPOSES ONLY
+        River.objects.get(slug=slug).start_reflect()  # TODO TESTING PURPOSES ONLY
         return super().get(request, slug)
 
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
-        ctx['project'] = Project.objects.get(slug=self.kwargs['slug'])
+        ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
         return ctx
 
 
 class ReflectView(TemplateView):
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
-        ctx['project'] = Project.objects.get(slug=self.kwargs['slug'])
+        ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
         return ctx
 
 
-class ProjectStartView(CreateView): # pyre-ignore[24]
-    form_class = CreateProjectForm
+class RiverStartView(CreateView): # pyre-ignore[24]
+    form_class = CreateRiverForm
 
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(*args, **kwargs)
-        projects = Project.objects.all()
-        #projects = objects_tags_cluster_list_overwrite(Project.objects.all())
+        rivers = River.objects.all()
+        #rivers = objects_tags_cluster_list_overwrite(River.objects.all())
         tags = []
-        for project in projects:
-            for tag in project.tags.all():
+        for river in rivers:
+            for tag in river.tags.all():
                 tags.append(tag)
-            # print(project.tags.names())
+            # print(river.tags.names())
             #single_object_tags_cluster_overwrite
-           # tags.append(tag_cluster_to_list(project.tags))
+           # tags.append(tag_cluster_to_list(river.tags))
         context['tags'] = tags
         return context
 
     def get_success_url(self) -> str:
-        ProjectMembership.objects.create(user=self.request.user, project=self.object, owner=True, champion=False)
-        return reverse_lazy("view_project", args=[self.object.slug]) # pyre-ignore[16]
+        RiverMembership.objects.create(user=self.request.user, river=self.object, owner=True, champion=False)
+        return reverse_lazy("view_river", args=[self.object.slug]) # pyre-ignore[16]

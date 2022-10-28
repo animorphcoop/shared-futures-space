@@ -10,7 +10,7 @@ import json
 
 from resources.models import HowTo, CaseStudy  # pyre-ignore[21]
 from userauth.models import CustomUser, UserPair, Organisation, UserAvatar  # pyre-ignore[21]
-from project.models import Project, ProjectMembership  # pyre-ignore[21]
+from river.models import River, ProjectMembership  # pyre-ignore[21]
 from messaging.models import Message  # pyre-ignore[21]
 from area.models import PostCode, Area  # pyre-ignore[21]
 
@@ -49,20 +49,20 @@ def add_projects(projects_data):
     for project_data in projects_data:
         try:
             new_project = \
-                Project.objects.get_or_create(name=project_data['name'], description=project_data['description'], area=Area.objects.get_or_create(name=project_data['area'])[0])[0]
+                River.objects.get_or_create(name=project_data['name'], description=project_data['description'], area=Area.objects.get_or_create(name=project_data['area'])[0])[0]
             for tag in project_data['tags']:
                 new_project.tags.add(tag)
             new_project.save()
             for member in project_data['swimmers']:
-                ProjectMembership.objects.get_or_create(project=new_project,
+                ProjectMembership.objects.get_or_create(river=new_project,
                                                         user=CustomUser.objects.get(display_name=member), owner=False,
                                                         champion=False)[0]
             for member in project_data['champions']:
-                ProjectMembership.objects.get_or_create(project=new_project,
+                ProjectMembership.objects.get_or_create(river=new_project,
                                                         user=CustomUser.objects.get(display_name=member), owner=False,
                                                         champion=True)[0]
             for member in project_data['owners']:
-                ProjectMembership.objects.get_or_create(project=new_project,
+                ProjectMembership.objects.get_or_create(river=new_project,
                                                         user=CustomUser.objects.get(display_name=member), owner=True,
                                                         champion=True)[0]
             if 'envision' in project_data:
@@ -104,7 +104,7 @@ def add_projects(projects_data):
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
                                                   text=message['content'], chat=new_project.reflect_stage.chat)
         except Exception as e:
-            print('could not add project with definition: ' + str(project_data) + '\nerror given: ' + repr(e))
+            print('could not add river with definition: ' + str(project_data) + '\nerror given: ' + repr(e))
 
 
 def add_organisations(data):

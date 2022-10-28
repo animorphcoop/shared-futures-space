@@ -1,8 +1,8 @@
 from django import forms
-from .models import Project
+from .models import River
 from typing import List
 
-class CreateProjectForm(forms.ModelForm):
+class CreateRiverForm(forms.ModelForm):
     class Meta:
-        model = Project
+        model = River
         fields: List[str] = ['name', 'description', 'tags', 'image']

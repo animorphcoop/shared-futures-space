@@ -1,0 +1,10 @@
+plan view
+
+<p><a href="{% url 'river_chat' river.slug 'plan' 'general' %}">Plan General Chat</a></p>
+<p><a href="{% url 'river_chat' river.slug 'plan' 'funding' %}">Plan Funding Chat</a></p>
+<p><a href="{% url 'river_chat' river.slug 'plan' 'location' %}">Plan Location Chat</a></p>
+<p><a href="{% url 'river_chat' river.slug 'plan' 'dates' %}">Plan Dates Chat</a></p>
+
+{% if river.current_stage == river.Stage.PLAN %}
+    <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Act Stage</button></form>
+{% endif %}

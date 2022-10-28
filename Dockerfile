@@ -53,6 +53,6 @@ USER root
 # no need for temp dependencies anymore
 # RUN apk del .tmp-build-deps
 
-# all future commands should run as the user in project directory
+# all future commands should run as the user in river directory
 USER $user
 WORKDIR $project

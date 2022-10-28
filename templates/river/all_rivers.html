@@ -18,15 +18,15 @@
             <button name=to_view value={% if viewing == 'mine' %}all>View All{% else %}mine>View My Projects{% endif %}</button>
         </form>
     {% endif %}
-    <table id=projects>
+    <table id=rivers>
         <tr>
-            <th>Project Name</th>
+            <th>River Name</th>
             <th></th>
         </tr>
-        {% for project in projects %}
+        {% for river in rivers %}
             <tr>
-                <td>{{ project.name }}</td>
-                <td><a href={% url 'view_project' project.slug %}>View Project</a></td>
+                <td>{{ river.name }}</td>
+                <td><a href={% url 'view_river' river.slug %}>View River</a></td>
             </tr>
         {% endfor %}
     </table> {% endcomment %}
@@ -36,10 +36,10 @@
             <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
         {% endfor %}
 
-        {% for project in projects %}
+        {% for river in rivers %}
 
 
-            {% include "project/project_card.html" with project=project %}
+            {% include "river/river_card.html" with river=river %}
         {% endfor %}
     </div>
 
@@ -47,7 +47,7 @@
 
     {# Calls to action need real links #}
     <section class="bg-resources-two">
-        {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url3='start_project' info="" %}
+        {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url3='start_river' info="" %}
     </section>
     <section class="bg-yellow">
         {% include "partials/call-to-action.html" with main="Are you interested in rivers from other areas? " button="Explore other areas" url="/" info="" %}

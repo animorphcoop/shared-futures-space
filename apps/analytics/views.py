@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateView
 
 from userauth.models import CustomUser # pyre-ignore[21]
 from area.models import Area # pyre-ignore[21]
-from project.models import Project, ProjectMembership # pyre-ignore[21]
+from river.models import River, RiverMembership # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list # pyre-ignore[21]
 
 from typing import Dict, List, Tuple, Any
@@ -44,25 +44,25 @@ class AnalyticsView(TemplateView):
         users_area = [(area.name, len(CustomUser.objects.filter(post_code__area = area))) for area in Area.objects.all()]
         users_scale = max(map(lambda t: t[1], users_area))
         ctx['graphs'].append(BarGraph('users/area', users_area, users_scale))
-        projects_area = [(area.name, len(Project.objects.filter(area=area))) for area in Area.objects.all()]
+        projects_area = [(area.name, len(River.objects.filter(area=area))) for area in Area.objects.all()]
         project_scale = max(map(lambda t: t[1], projects_area))
         ctx['graphs'].append(BarGraph('projects/area', projects_area, project_scale))
-        ctx['graphs'].append(BarGraph('projects/stages - overall', [('not begun', len(Project.objects.filter(current_stage = None))),
-                                                                    ('envision', len(Project.objects.filter(current_stage = Project.Stage.ENVISION))),
-                                                                    ('plan', len(Project.objects.filter(current_stage = Project.Stage.PLAN))),
-                                                                    ('act', len(Project.objects.filter(current_stage = Project.Stage.ACT))),
-                                                                    ('reflect', len(Project.objects.filter(current_stage = Project.Stage.REFLECT)))], project_scale))
+        ctx['graphs'].append(BarGraph('projects/stages - overall', [('not begun', len(River.objects.filter(current_stage = None))),
+                                                                    ('envision', len(River.objects.filter(current_stage = River.Stage.ENVISION))),
+                                                                    ('plan', len(River.objects.filter(current_stage = River.Stage.PLAN))),
+                                                                    ('act', len(River.objects.filter(current_stage = River.Stage.ACT))),
+                                                                    ('reflect', len(River.objects.filter(current_stage = River.Stage.REFLECT)))], project_scale))
         for area in Area.objects.all():
-            ctx['graphs'].append(BarGraph('projects/stages - ' + area.name, [('not begun', len(Project.objects.filter(area = area, current_stage = None))),
-                                                                             ('envision', len(Project.objects.filter(area = area, current_stage = Project.Stage.ENVISION))),
-                                                                             ('plan', len(Project.objects.filter(area = area, current_stage = Project.Stage.PLAN))),
-                                                                             ('act', len(Project.objects.filter(area = area, current_stage = Project.Stage.ACT))),
-                                                                             ('reflect', len(Project.objects.filter(area = area, current_stage = Project.Stage.REFLECT)))], project_scale))
-        swimmers_area = [(area.name, (len(ProjectMembership.objects.filter(project__in = Project.objects.filter(area=area))) / len(Project.objects.filter(area=area)))
-                           if len(Project.objects.filter(area=area)) != 0 else 0)
+            ctx['graphs'].append(BarGraph('projects/stages - ' + area.name, [('not begun', len(River.objects.filter(area = area, current_stage = None))),
+                                                                             ('envision', len(River.objects.filter(area = area, current_stage = River.Stage.ENVISION))),
+                                                                             ('plan', len(River.objects.filter(area = area, current_stage = River.Stage.PLAN))),
+                                                                             ('act', len(River.objects.filter(area = area, current_stage = River.Stage.ACT))),
+                                                                             ('reflect', len(River.objects.filter(area = area, current_stage = River.Stage.REFLECT)))], project_scale))
+        swimmers_area = [(area.name, (len(RiverMembership.objects.filter(project__in = River.objects.filter(area=area))) / len(River.objects.filter(area=area)))
+                           if len(River.objects.filter(area=area)) != 0 else 0)
                           for area in Area.objects.all()]
         swimmers_scale = int(max(map(lambda t: t[1], swimmers_area)))+1
-        ctx['graphs'].append(BarGraph('average swimmers/project', swimmers_area, swimmers_scale))
+        ctx['graphs'].append(BarGraph('average swimmers/river', swimmers_area, swimmers_scale))
         if self.request.user.is_superuser: # pyre-ignore[16]
             return ctx
         else:

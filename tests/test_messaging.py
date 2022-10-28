@@ -3,17 +3,17 @@
 import pytest
 import bs4
 
-from project.models import ProjectMembership
+from river.models import ProjectMembership
 from userauth.util import slug_to_user, user_to_slug
 
 from django.urls import reverse
 
 import datetime
-# !! project tests no longer applicable with no longer just the one chat per project, but needs to be replaced with something that checks all the stage chats
+# !! river tests no longer applicable with no longer just the one chat per river, but needs to be replaced with something that checks all the stage chats
 
-def test_project_chat_basics(client, test_user, test_project):
-    test_project.start_envision()
-    chat_url = reverse('project_chat', args=[test_project.slug, 'envision', 'general'])
+def test_project_chat_basics(client, test_user, test_river):
+    test_river.start_envision()
+    chat_url = reverse('river_chat', args=[test_river.slug, 'envision', 'general'])
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     assert '(you are not logged in)' in chat_page_html.text
@@ -27,7 +27,7 @@ def test_project_chat_basics(client, test_user, test_project):
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     assert 'test message' not in chat_page_html.text
     assert '(you are not a member of this chat)' in chat_page_html.text
-    ProjectMembership.objects.create(project=test_project, user=test_user, champion=False, owner=False)
+    ProjectMembership.objects.create(river=test_river, user=test_user, champion=False, owner=False)
     client.post(chat_url, {'message': 'test message'})
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
@@ -38,11 +38,11 @@ def test_project_chat_basics(client, test_user, test_project):
     assert str(datetime.date.today().day) in  chat_page_html.text
     assert 'test message' in chat_page_html.text
 
-def test_project_chat_interface(client, test_user, test_project):
-    test_project.start_envision()
-    test_project.start_plan()
-    chat_url = reverse('project_chat', args=[test_project.slug, 'plan', 'funding'])
-    ProjectMembership.objects.create(project=test_project, user=test_user, champion=False, owner=False)
+def test_project_chat_interface(client, test_user, test_river):
+    test_river.start_envision()
+    test_river.start_plan()
+    chat_url = reverse('river_chat', args=[test_river.slug, 'plan', 'funding'])
+    ProjectMembership.objects.create(river=test_river, user=test_user, champion=False, owner=False)
     client.force_login(test_user)
     for i in range(10):
         client.post(chat_url, {'message': 'test message ' + str(i)})

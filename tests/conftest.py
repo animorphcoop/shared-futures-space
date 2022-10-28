@@ -6,7 +6,7 @@ from wagtail.images.models import Image
 from django.utils import timezone
 from io import BytesIO
 
-from project.models import Project
+from river.models import River
 from area.models import PostCode, Area
 from resources.models import HowTo, CaseStudy
 from poll.models import SingleChoicePoll, MultipleChoicePoll
@@ -43,8 +43,8 @@ def other_test_user(db, django_user_model):
 
 # items to use during testing
 @pytest.fixture(scope='function')
-def test_project(db):
-    return Project.objects.create(name='some project', description='project to do something')
+def test_river(db):
+    return River.objects.create(name='some river', description='river to do something')
 
 
 @pytest.fixture(scope='function')
