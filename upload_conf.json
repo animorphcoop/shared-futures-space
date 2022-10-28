@@ -544,64 +544,34 @@
   ],
   "User Avatars": [
     {
-      "avatar": "angler.png"
+      "avatar": "avatar_1.png"
     },
     {
-      "avatar": "crab_1.png"
+      "avatar": "avatar_2.png"
     },
     {
-      "avatar": "crab_2.png"
+      "avatar": "avatar_3.png"
     },
     {
-      "avatar": "dolphin.png"
+      "avatar": "avatar_4.png"
     },
     {
-      "avatar": "fish_1.png"
+      "avatar": "avatar_5.png"
     },
     {
-      "avatar": "fish_2.png"
+      "avatar": "avatar_6.png"
     },
     {
-      "avatar": "fish_3.png"
+      "avatar": "avatar_7.png"
     },
     {
-      "avatar": "fish_4.png"
+      "avatar": "avatar_8.png"
     },
     {
-      "avatar": "fish_5.png"
+      "avatar": "avatar_9.png"
     },
     {
-      "avatar": "goldfish.png"
-    },
-    {
-      "avatar": "octopus.png"
-    },
-    {
-      "avatar": "red_snapper.png"
-    },
-    {
-      "avatar": "salmon_1.png"
-    },
-    {
-      "avatar": "salmon_2.png"
-    },
-    {
-      "avatar": "sardine.png"
-    },
-    {
-      "avatar": "saury.png"
-    },
-    {
-      "avatar": "shell_1.png"
-    },
-    {
-      "avatar": "shell_2.png"
-    },
-    {
-      "avatar": "shrimp.png"
-    },
-    {
-      "avatar": "trout.png"
+      "avatar": "avatar_10.png"
     }
   ],
   "Users": [
@@ -610,7 +580,7 @@
       "email": "fmarg72@gmail.com",
       "year of birth": 1972,
       "postcode": "BT17",
-      "avatar": 14,
+      "avatar": 9,
       "editor": true,
       "organisation": "",
       "password": "TopSecret2022"
@@ -640,7 +610,7 @@
       "email": "hellothere94357@msn.com",
       "year of birth": 1984,
       "postcode": "BT13",
-      "avatar": 13,
+      "avatar": 8,
       "editor": false,
       "organisation": "Marrowbone Community Hub",
       "password": "345nilhgualCM"
@@ -720,7 +690,7 @@
       "email": "dulfgt57905345@gmail.com",
       "year of birth": 1978,
       "postcode": "BT11",
-      "avatar": 10,
+      "avatar": 1,
       "editor": false,
       "organisation": "",
       "password": "&3DfghaveSmells09!"
@@ -730,7 +700,7 @@
       "email": "kar.emn.we2@outlook.com",
       "year of birth": 2000,
       "postcode": "BT12",
-      "avatar": 11,
+      "avatar": 2,
       "editor": false,
       "organisation": "",
       "password": "fgh12345G6785690"
@@ -740,7 +710,7 @@
       "email": "nothisispatrick@hotmail.com",
       "year of birth": 1975,
       "postcode": "BT9",
-      "avatar": 12,
+      "avatar": 3,
       "editor": false,
       "organisation": "",
       "password": "qwerty"
@@ -750,7 +720,7 @@
       "email": "myincomprehensibleself123@hotmail.com",
       "year of birth": 1995,
       "postcode": "BT10",
-      "avatar": 12,
+      "avatar": 2,
       "editor": false,
       "organisation": "",
       "password": "sdf43qwerty"
@@ -760,7 +730,7 @@
       "email": "just_aharmless423_potato@gmail.com",
       "year of birth": 2002,
       "postcode": "BT7",
-      "avatar": 12,
+      "avatar": 4,
       "editor": false,
       "organisation": "South Belfast Foodbank",
       "password": "elementarymydearwatson"
@@ -770,7 +740,7 @@
       "email": "c.telainy@posteo.net",
       "year of birth": 1999,
       "postcode": "F92",
-      "avatar": 13,
+      "avatar": 6,
       "editor": true,
       "organisation": "",
       "password": "yohy!"
@@ -795,7 +765,7 @@
       "champions": [
         "Aoife Wilson"
       ],
-      "owners": [
+      "starters": [
         "Dan O’Callaghan"
       ],
       "envision": {
@@ -884,7 +854,7 @@
       "champions": [
         "Aoife Wilson"
       ],
-      "owners": [
+      "starters": [
         "conor telainy"
       ]
     },
@@ -898,8 +868,7 @@
         "Training"
       ],
       "swimmers": [],
-      "champions": [],
-      "owners": [
+      "starters": [
         "Desmond Telainy"
       ]
     },
@@ -915,12 +884,10 @@
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
-        "Dan O’Callaghan"
-      ],
-      "champions": [
+        "Dan O’Callaghan",
         "Aoife Wilson"
       ],
-      "owners": [
+      "starters": [
         "conor telainy"
       ]
     },
@@ -938,10 +905,7 @@
         "Darren Wayne",
         "Dan O’Callaghan"
       ],
-      "champions": [
-        "Aoife Wilson"
-      ],
-      "owners": [
+      "starters": [
         "Carla Owen"
       ]
     },
@@ -957,12 +921,10 @@
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
-        "Dan O’Callaghan"
-      ],
-      "champions": [
+        "Dan O’Callaghan",
         "Sean Walsh"
       ],
-      "owners": [
+      "starters": [
         "Aoife Wilson"
       ]
     },
@@ -976,8 +938,7 @@
         "Education"
       ],
       "swimmers": [],
-      "champions": [],
-      "owners": []
+      "starters": []
     },
     {
       "name": "Colin's New Man Shed",
@@ -993,10 +954,7 @@
         "Darren Wayne",
         "Dan O’Callaghan"
       ],
-      "champions": [
-        "Aoife Wilson"
-      ],
-      "owners": [
+      "starters": [
         "Margaret Cloud"
       ]
     },
@@ -1014,10 +972,7 @@
         "Darren Wayne",
         "Lauren Kirst"
       ],
-      "champions": [
-        "Aoife Wilson"
-      ],
-      "owners": [
+      "starters": [
         "Keith Warren"
       ]
     },
@@ -1031,8 +986,7 @@
         "Courses"
       ],
       "swimmers": [],
-      "champions": [],
-      "owners": []
+      "starters": []
     },
     {
       "name": "Donegal Pass Community Centre - 2x Positions",
@@ -1044,8 +998,7 @@
         "Courses"
       ],
       "swimmers": [],
-      "champions": [],
-      "owners": []
+      "starters": []
     },
     {
       "name": "New Seeds – Help co-design and plant new flower beds at the end of Eureka Drive",
@@ -1057,12 +1010,10 @@
         "Gettogether"
       ],
       "swimmers": [
-        "Carla Owen"
-      ],
-      "champions": [
+        "Carla Owen",
         "Emma McLaughlin"
       ],
-      "owners": [
+      "starters": [
         "Joe Blues"
       ]
     }
