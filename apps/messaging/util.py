@@ -12,8 +12,7 @@ from uuid import UUID
 from typing import Union, Optional
 
 def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
-                        context_action: Optional['action.Action'] = None, context_river: Optional[
-            'river.River'] = None,  # pyre-ignore[11]
+                        context_action: Optional['action.Action'] = None, context_river: Optional['river.River'] = None,  # pyre-ignore[11]
                         context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None,  # pyre-ignore[11]
                         context_poll: Optional[BasePoll] = None) -> None: # pyre-ignore[11]
     Message.objects.create(sender = get_system_user(), text='',

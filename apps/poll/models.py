@@ -53,18 +53,17 @@ class BasePoll(models.Model):
         else:
             return self.singlechoicepoll # pyre-ignore[16]
     def close(self) -> None:
-        from river.models import River, EnvisionStage # pyre-ignore[21] - bad practice, but need to avoid circular imports
+        from river.models import River, EnvisionStage
         from messaging.util import send_system_message # pyre-ignore[21]
         print(1)
-        if self.singlechoicepoll:
+        if self.singlechoicepoll: # pyre-ignore[16]
             print(2)
             es = EnvisionStage.objects.filter(poll = self.singlechoicepoll)
             print(es)
             if len(es) != 0:
                 es = es[0]
             # this poll is the active poll of the envision stage of some river
-            print(sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0])
-            if sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0][0] == 'yes':
+            if sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0][0] == 'yes': # pyre-ignore[16]
                 # poll has passed
                 river = River.objects.get(envision_stage = es)
                 river.start_plan()

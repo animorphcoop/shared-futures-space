@@ -45,7 +45,7 @@ def test_river_chat_interface(client, test_user, test_river):
     RiverMembership.objects.create(river=test_river, user=test_user, champion=False, owner=False)
     client.force_login(test_user)
     for i in range(10):
-        client.post(chat_url, {'message': 'test message ' + str(i)})
+        client.post(chat_url, {'text': 'test message ' + str(i)})
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     for i in range(10):
@@ -70,7 +70,7 @@ def test_direct_chat_basics(client, test_user, other_test_user):
     client.force_login(test_user)
     chat_page = client.get(chat_url)
     assert b'Private chat' in chat_page.content
-    client.post(chat_url, {'message': 'test message'})
+    client.post(chat_url, {'text': 'test message'})
     client.force_login(other_test_user)
     chat_page = client.get(reverse('user_chat', args=[user_to_slug(test_user)]))
     assert b'Private chat' in chat_page.content
@@ -82,7 +82,7 @@ def test_direct_chat_interface(client, test_user, other_test_user):
     chat_url = reverse('user_chat', args=[user_to_slug(other_test_user)])
     client.force_login(test_user)
     for i in range(10):
-        client.post(chat_url, {'message': 'test message ' + str(i)})
+        client.post(chat_url, {'text': 'test message ' + str(i)})
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     for i in range(10):
