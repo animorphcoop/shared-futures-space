@@ -2,7 +2,7 @@
 
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
 from django.db.models.fields import CharField
@@ -10,9 +10,10 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.conf import settings
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from itertools import chain
 
+from .forms import CreateProjectForm
 from .models import Project, ProjectMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -23,9 +24,9 @@ from area.models import Area  # pyre-ignore[21]
 from messaging.util import send_system_message  # pyre-ignore[21]
 from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
 from poll.models import SingleChoicePoll # pyre-ignore[21]
-from core.utils.tags_declusterer import tag_cluster_to_list  # pyre-ignore[21]
-from typing import Dict, List, Any, Union
+from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 
+from typing import Dict, List, Any, Union
 
 class ProjectView(DetailView):  # pyre-ignore[24]
     model = Project
@@ -282,3 +283,25 @@ class ReflectView(TemplateView):
         ctx = super().get_context_data(*args, **kwargs)
         ctx['project'] = Project.objects.get(slug=self.kwargs['slug'])
         return ctx
+
+
+class ProjectStartView(CreateView): # pyre-ignore[24]
+    form_class = CreateProjectForm
+
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        context = super().get_context_data(*args, **kwargs)
+        projects = Project.objects.all()
+        #projects = objects_tags_cluster_list_overwrite(Project.objects.all())
+        tags = []
+        for project in projects:
+            for tag in project.tags.all():
+                tags.append(tag)
+            # print(project.tags.names())
+            #single_object_tags_cluster_overwrite
+           # tags.append(tag_cluster_to_list(project.tags))
+        context['tags'] = tags
+        return context
+
+    def get_success_url(self) -> str:
+        ProjectMembership.objects.create(user=self.request.user, project=self.object, owner=True, champion=False)
+        return reverse_lazy("view_project", args=[self.object.slug]) # pyre-ignore[16]

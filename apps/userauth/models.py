@@ -23,7 +23,7 @@ class Organisation(models.Model):
 
 
 class UserAvatar(models.Model):
-    avatar: models.ImageField = models.ImageField(upload_to='accounts/avatars/', max_length=100, null=True, blank=True)
+    avatar: models.ImageField = models.ImageField(upload_to='profile/avatars/', max_length=100, null=True, blank=True)
 
     @property
     def image_url(self) -> Optional[str]:

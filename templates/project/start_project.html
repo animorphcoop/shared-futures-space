@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+    {% block title %}{% include "partials/title.html" with title='hehehe' %}{% endblock %}
+
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        Yer name
+        {% render_field form.name %}
+        <br/>
+        Descr
+        {% render_field form.description %}
+        <br/>
+        Tags
+        <div class="flex flex-wrap gap-5 -m-1">
+            {% if tags %}
+                {% for tag in tags %}
+                    <button class="px-1.5 py-1 bg-blue-second rounded-sm">
+                        <span
+                           class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                            {{ tag }}
+                        </span>
+                    </button>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {% render_field form.tags %}
+        <br/>
+        Image
+        {% render_field form.image %}
+        {% comment %}            <textarea name=message></textarea>
+            <input type="file" id="image" name="image">{% endcomment %}
+        <br/>
+
+        <button type="submit">Send</button>
+
+    </form>
+
+
+{% endblock content %}

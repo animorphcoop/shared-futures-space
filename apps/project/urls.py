@@ -1,7 +1,7 @@
 # pyre-strict
 
 from django.urls import path, URLResolver, URLPattern
-from .views import SpringView, ProjectView, EditProjectView, ManageProjectView, EnvisionView, PlanView, ActView, ReflectView, ProjectChatView, CreateEnvisionPollView
+from .views import SpringView, ProjectView, EditProjectView, ManageProjectView, EnvisionView, PlanView, ActView, ReflectView, ProjectChatView, ProjectStartView, CreateEnvisionPollView
 from django.contrib.auth.decorators import login_required
 from typing import List, Union
 
@@ -9,6 +9,7 @@ from typing import List, Union
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     #path('spring/<uuid:uuid>', SpringView.as_view(template_name='all_projects.html'), name='spring'),
+    path('create/', ProjectStartView.as_view(template_name='start_project.html'), name='start_project'),
     path('view/<str:slug>/', ProjectView.as_view(template_name='project.html'), name='view_project'),
     path('view/<str:slug>/envision/', EnvisionView.as_view(template_name='envision_view.html'), name='view_envision'),
     path('view/<str:slug>/plan/',PlanView.as_view(template_name='plan_view.html'), name='view_plan'),
