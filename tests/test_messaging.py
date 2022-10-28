@@ -17,18 +17,18 @@ def test_river_chat_basics(client, test_user, test_river):
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     assert '(you are not logged in)' in chat_page_html.text
-    client.post(chat_url, {'message': 'test message'})
+    client.post(chat_url, {'text': 'test message'})
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     assert 'test message' not in chat_page_html.text # can't send message while not logged in
     client.force_login(test_user)
-    client.post(chat_url, {'message': 'test message'})
+    client.post(chat_url, {'text': 'test message'})
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     assert 'test message' not in chat_page_html.text
     assert '(you are not a member of this chat)' in chat_page_html.text
     RiverMembership.objects.create(river=test_river, user=test_user, champion=False, owner=False)
-    client.post(chat_url, {'message': 'test message'})
+    client.post(chat_url, {'text': 'test message'})
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     # name might not be displayed if it was you? Something to test differently (like in template checking who's issuing the request)
