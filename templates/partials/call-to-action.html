@@ -20,6 +20,13 @@
                 {{ button2 }}
             </a>
         {% endif %}
+
+            {% if url3 %}
+            <a href="{% url url3 %}"
+               class="button button-on-colour inline-block">
+                {{ button }}
+            </a>
+        {% endif %}
     </div>
 
     {% if info %}

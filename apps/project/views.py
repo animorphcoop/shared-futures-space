@@ -2,16 +2,18 @@
 
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
 from django.db.models.fields import CharField
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.conf import settings
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from itertools import chain
 
+from .forms import CreateProjectForm
 from .models import Project, ProjectMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -21,9 +23,10 @@ from action.models import Action  # pyre-ignore[21]
 from area.models import Area  # pyre-ignore[21]
 from messaging.util import send_system_message  # pyre-ignore[21]
 from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
-from core.utils.tags_declusterer import tag_cluster_to_list  # pyre-ignore[21]
-from typing import Dict, List, Any, Union
+from poll.models import SingleChoicePoll # pyre-ignore[21]
+from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 
+from typing import Dict, List, Any, Union
 
 class ProjectView(DetailView):  # pyre-ignore[24]
     model = Project
@@ -217,6 +220,30 @@ class ProjectChatView(ChatView):  # pyre-ignore[11]
                                            project=project))))
         return ctx
 
+class CreateEnvisionPollView(TemplateView):
+    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+        project = Project.objects.get(slug = slug)
+        if project.current_stage == Project.Stage.ENVISION:
+            if project.envision_stage.poll is None:
+                if 'description' in request.POST:
+                    try:
+                        poll = SingleChoicePoll.objects.create(question = 'Is this an acceptable vision: "' + request.POST['description'] + '"?', options = ['yes', 'no'],
+                                                               invalid_option = False, expires = timezone.now() + timezone.timedelta(days=3))
+                        send_system_message(chat = project.envision_stage.chat, kind = 'poll', context_poll = poll)
+                        return HttpResponseRedirect(reverse('view_envision', args=[project.slug]))
+                    except Exception as e:
+                        return HttpResponse('could not create poll, unknown error: ' + str(e))
+                else:
+                    return HttpResponse('could not create poll, no description supplied')
+            else:
+                return HttpResponse('could not create poll, another poll is still not closed')
+        else:
+            return HttpResponse('could not create poll, envision stage is finished')
+    def get_context_data(self, slug: str) -> Dict[str,Any]: # pyre-ignore[14]
+        ctx = super().get_context_data()
+        ctx['project'] = Project.objects.get(slug = slug)
+        return ctx
+
 
 class EnvisionView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
@@ -256,3 +283,25 @@ class ReflectView(TemplateView):
         ctx = super().get_context_data(*args, **kwargs)
         ctx['project'] = Project.objects.get(slug=self.kwargs['slug'])
         return ctx
+
+
+class ProjectStartView(CreateView): # pyre-ignore[24]
+    form_class = CreateProjectForm
+
+    def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        context = super().get_context_data(*args, **kwargs)
+        projects = Project.objects.all()
+        #projects = objects_tags_cluster_list_overwrite(Project.objects.all())
+        tags = []
+        for project in projects:
+            for tag in project.tags.all():
+                tags.append(tag)
+            # print(project.tags.names())
+            #single_object_tags_cluster_overwrite
+           # tags.append(tag_cluster_to_list(project.tags))
+        context['tags'] = tags
+        return context
+
+    def get_success_url(self) -> str:
+        ProjectMembership.objects.create(user=self.request.user, project=self.object, owner=True, champion=False)
+        return reverse_lazy("view_project", args=[self.object.slug]) # pyre-ignore[16]

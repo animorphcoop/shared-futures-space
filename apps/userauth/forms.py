@@ -2,14 +2,14 @@
 from django import forms
 from .models import CustomUser, Organisation, UserAvatar
 from analytics.models import log_signup  # pyre-ignore[21]
-from messaging.models import Message
+from messaging.models import Message # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
 from allauth.account.forms import SignupForm, LoginForm, ResetPasswordForm, ChangePasswordForm, ResetPasswordKeyForm
 from wagtail.users.forms import UserEditForm, UserCreationForm
 
-from typing import Type, List, Any, Dict, Tuple
+from typing import Type, List, Any, Dict, Tuple, Optional
 from django.http import HttpRequest
 
 '''
@@ -155,7 +155,7 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
 
 class ChatForm(forms.ModelForm):
     class Meta:
-        model: Type[Message] = Message
+        model: Type[Message] = Message  # pyre-ignore[11]
         fields: List[str] = ['text', 'image']
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Optional[Any], **kwargs: Dict[str, Any]) -> None:
         super(ChatForm, self).__init__(*args, **kwargs)
