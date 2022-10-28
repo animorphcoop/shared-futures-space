@@ -1,5 +1,5 @@
 {% load custom_filters %}
-{% if request.user in ownerships|attrmap:'user' %}
+{% if request.user in starters|attrmap:'user' %}
     <form method=post>
         {% csrf_token %}
         <p>
@@ -11,10 +11,10 @@
             <textarea name=description id=description>{{object.description}}</textarea>
         </p>
         <button>Update River</button>
-        {% if ownerships|length > 1 %}
-            <button name=abdicate value=abdicate>Rescind Ownership</button>
+        {% if starters|length > 1 %}
+            <button name=abdicate value=abdicate>Rescind Starter status</button>
         {% else %}
-            <p>As you are the only owner of this river, you cannot rescind ownership<p>
+            <p>As you are the only starter of this river, you cannot rescind your status<p>
         {% endif %}
     </form>
 {% else %}

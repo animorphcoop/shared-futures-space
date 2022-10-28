@@ -27,7 +27,7 @@ def test_project_chat_basics(client, test_user, test_river):
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     assert 'test message' not in chat_page_html.text
     assert '(you are not a member of this chat)' in chat_page_html.text
-    ProjectMembership.objects.create(river=test_river, user=test_user, champion=False, owner=False)
+    ProjectMembership.objects.create(river=test_river, user=test_user, starter=False)
     client.post(chat_url, {'message': 'test message'})
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
@@ -42,7 +42,7 @@ def test_project_chat_interface(client, test_user, test_river):
     test_river.start_envision()
     test_river.start_plan()
     chat_url = reverse('river_chat', args=[test_river.slug, 'plan', 'funding'])
-    ProjectMembership.objects.create(river=test_river, user=test_user, champion=False, owner=False)
+    ProjectMembership.objects.create(river=test_river, user=test_user, starter=False)
     client.force_login(test_user)
     for i in range(10):
         client.post(chat_url, {'message': 'test message ' + str(i)})

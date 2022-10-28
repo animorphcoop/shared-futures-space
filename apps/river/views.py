@@ -35,14 +35,14 @@ class RiverView(DetailView):  # pyre-ignore[24]
         river = River.objects.get(slug=slug)
         if (request.POST['action'] == 'leave'):
             membership = RiverMembership.objects.get(user=request.user, river=river)
-            if not membership.owner:  # reject owners attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last owner left. TODO: allow owners to leave as well if they're not the last owner
+            if not membership.starter:  # reject starter's attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last starter left. TODO: allow starters to leave as well if they're not the last starter
                 membership.delete()
                 print(
                     '!!! WARNING C !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                 # send_system_message(river.chat, 'left_river', context_river = river, context_user_a = request.user)
         if (request.POST['action'] == 'join'):
             if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0:
-                RiverMembership.objects.create(user=request.user, river=river, owner=False, champion=False)
+                RiverMembership.objects.create(user=request.user, river=river, starter=False)
                 print(
                     '!!! WARNING D !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                 # send_system_message(river.chat, 'joined_river', context_river = river, context_user_a = request.user)
@@ -54,8 +54,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['owners'] = RiverMembership.objects.filter(river=context['object'].pk, owner=True)
-        context['champions'] = RiverMembership.objects.filter(river=context['object'].pk, champion=True)
+        context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
         context['resources'] = list(chain(
@@ -100,7 +99,7 @@ class SpringView(TemplateView):
             river__in=River.objects.filter(area=area)).values_list('user', flat=True).distinct().count()
 
 
-        #TODO: Add all members, owner and champions to the context 'river.swimmers' being ints; temp members
+        #TODO: Add all members, starter and champions to the context 'river.swimmers' being ints; temp members
         context = {
             'area': area,
             'rivers': rivers,
@@ -124,13 +123,13 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
 
     def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]) -> HttpResponse:  # pyre-ignore[14]
         river = River.objects.get(slug=slug)
-        if (RiverMembership.objects.get(river=river, user=request.user).owner == True):
+        if (RiverMembership.objects.get(river=river, user=request.user).starter == True):
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'):
-                ownerships = RiverMembership.objects.filter(river=river, owner=True)
+                starters = RiverMembership.objects.filter(river=river, starter=True)
                 if (
-                        len(ownerships) >= 2):  # won't be orphaning the river (TODO: allow rivers to be shut down, in which case they can be orphaned)
-                    my_membership = RiverMembership.objects.get(river=river, user=request.user, owner=True)
-                    my_membership.owner = False
+                        len(starters) >= 2):  # won't be orphaning the river (TODO: allow rivers to be shut down, in which case they can be orphaned)
+                    my_membership = RiverMembership.objects.get(river=river, user=request.user, starter=True)
+                    my_membership.starter = False
                     my_membership.save()
                     print(
                         '!!! WARNING E !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
@@ -142,7 +141,7 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['ownerships'] = RiverMembership.objects.filter(river=context['object'], owner=True)
+        context['starters'] = RiverMembership.objects.filter(river=context['object'], starter=True)
         return context
 
 
@@ -153,29 +152,18 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
         river = River.objects.get(slug=slug)
         membership = RiverMembership.objects.get(id=request.POST['membership'])
         # security checks
-        if (RiverMembership.objects.get(user=request.user, river=river).owner == True
+        if (RiverMembership.objects.get(user=request.user, river=river).starter == True
                 and membership.river == River.objects.get(slug=slug)):  # since the form takes any uid
             if (request.POST['action'] == 'offer_ownership'):
-                if not membership.owner:  # not an owner already
-                    send_offer(request.user, membership.user, 'become_owner', param_river=river)
-            elif (request.POST['action'] == 'offer_championship'):
-                if not membership.champion:
-                    send_offer(request.user, membership.user, 'become_champion', param_river=river)
-            elif (request.POST['action'] == 'remove_championship'):
-                if membership.champion:
-                    membership.champion = False
-                    print(
-                        '!!! WARNING F !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
-                    # send_system_message(river.chat, 'lost_championship', context_user_a = membership.user, context_user_b = request.user)
-                    send_system_message(get_userpair(request.user, membership.user).chat,
-                                        'lost_championship_notification', context_user_a=request.user,
-                                        context_river=membership.river)
+                if not membership.starter:  # not an starter already
+                    send_offer(request.user, membership.user, 'become_starter', param_river=river)
+                    #send_system_message(get_userpair(request.user, membership.user).chat,'lost_championship_notification', context_user_a=request.user,context_river=membership.river)
             membership.save()
         return self.get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['ownerships'] = RiverMembership.objects.filter(river=context['object'].pk, owner=True)
+        context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['memberships'] = RiverMembership.objects.filter(river=context['object'].pk)
         return context
 
@@ -303,5 +291,5 @@ class RiverStartView(CreateView): # pyre-ignore[24]
         return context
 
     def get_success_url(self) -> str:
-        RiverMembership.objects.create(user=self.request.user, river=self.object, owner=True, champion=False)
+        RiverMembership.objects.create(user=self.request.user, river=self.object, starter=True)
         return reverse_lazy("view_river", args=[self.object.slug]) # pyre-ignore[16]

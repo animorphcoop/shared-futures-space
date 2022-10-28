@@ -29,21 +29,13 @@ def invoke_action_view(request: WSGIRequest) -> HttpResponse:
     return HttpResponse("the one-time action view expects a POST request (if this doesn't make sense to you, you probably shouldn't be here")
 
 def invoke_action(action: Action) -> None: # pyre-ignore[11]
-    if (action.kind == 'become_owner'):
+    if (action.kind == 'become_starter'):
         membership = RiverMembership.objects.get(user=action.receiver, river=action.param_river)
-        if not membership.owner:
-            membership.owner = True
+        if not membership.starter:
+            membership.starter = True
             membership.save()
             print('!!! WARNING B !!! not sending a message to the river, because projects no longer have one central chat. how to disseminate that information?')
             #send_system_message(action.param_river.chat, 'new_owner',
-            #                    context_user_a = action.receiver, context_user_b = action.creator)
-    elif (action.kind == 'become_champion'):
-        membership = RiverMembership.objects.get(user=action.receiver, river=action.param_river)
-        if not membership.champion:
-            membership.champion = True
-            membership.save()
-            print('!!! WARNING A !!! not sending a message to the river, because projects no longer have one central chat. how to disseminate that information?')
-            #send_system_message(action.param_river.chat, 'new_champion',
             #                    context_user_a = action.receiver, context_user_b = action.creator)
     elif (action.kind.startswith('user_request_')):
         # TODO: actions have the option to automatically do the thing based on info given by user

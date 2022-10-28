@@ -55,16 +55,10 @@ def add_rivers(rivers_data):
             new_project.save()
             for member in river_data['swimmers']:
                 RiverMembership.objects.get_or_create(river=new_project,
-                                                        user=CustomUser.objects.get(display_name=member), owner=False,
-                                                        champion=False)[0]
-            for member in river_data['champions']:
+                                                        user=CustomUser.objects.get(display_name=member), starter=False)[0]
+            for member in river_data['starters']:
                 RiverMembership.objects.get_or_create(river=new_project,
-                                                        user=CustomUser.objects.get(display_name=member), owner=False,
-                                                        champion=True)[0]
-            for member in river_data['owners']:
-                RiverMembership.objects.get_or_create(river=new_project,
-                                                        user=CustomUser.objects.get(display_name=member), owner=True,
-                                                        champion=True)[0]
+                                                        user=CustomUser.objects.get(display_name=member), starter=True)[0]
             if 'envision' in river_data:
                 new_project.start_envision()
                 for message in river_data['envision']['chat']:

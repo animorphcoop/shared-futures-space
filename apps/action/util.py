@@ -13,8 +13,5 @@ def send_offer(user_from, user_to, kind, param_project = None):
         offer.result = 'rescinded'
         offer.save()
     action = Action.objects.create(creator=user_from, receiver=user_to, kind=kind, param_project=param_project)   
-    if kind == 'become_owner':
+    if kind == 'become_starter':
         send_system_message(get_userpair(user_from, user_to).chat, 'offer_of_ownership', context_action = action)
-    elif kind == 'become_champion':
-        send_system_message(get_userpair(user_from, user_to).chat, 'offer_of_championship', context_action = action)
-    

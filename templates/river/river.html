@@ -1,14 +1,13 @@
 
 {% load custom_filters %}
 <h3>River: {{object.name}}</h3>
-<p>owners: {{owners|attrmap:'user'|join:', '}}</p>
-<p>champions: {{champions|attrmap:'user'|join:', '}}</p>
+<p>starters: {{starters|attrmap:'user'|join:', '}}</p>
 <p>all members: {{members|attrmap:'user'|join:', '}}</p>
 <p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
 <hr>
 <p>{{object.description}}</p>
 <hr>
-{% if request.user in owners|attrmap:'user' %}
+{% if request.user in starters|attrmap:'user' %}
     <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
     <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
 {% elif not request.user.is_anonymous %}
