@@ -7,7 +7,7 @@ from userauth.util import get_system_user # pyre-ignore[21]
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from typing import Dict, List, Any
-from .models import Chat, Message
+from .models import Chat, Message, Flag
 
 # usage note: you must redefine post and get_context_data
 # both need to be passed three kwargs:
@@ -54,4 +54,5 @@ class ChatView(TemplateView):
         context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
         context['members'] = kwargs['members']
         context['system_user'] = get_system_user()
+        context['my_flags'] = [flag.message.uuid for flag in Flag.objects.filter(flagged_by = self.request.user)]
         return context

@@ -4,8 +4,6 @@ from django.utils import timezone
 from django.db import models
 from uuid import uuid4
 
-from userauth.models import CustomUser # pyre-ignore[21]
-
 class Message(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4, editable = False)
     timestamp: models.DateTimeField = models.DateTimeField(default=timezone.now)
@@ -25,16 +23,17 @@ class Message(models.Model):
     context_bool: models.BooleanField = models.BooleanField(default=False)
     context_poll: models.ForeignKey = models.ForeignKey('poll.BasePoll', null = True, on_delete = models.SET_NULL)
 
-    def flagged(self, user: CustomUser):
+    def flagged(self, user):
+        from userauth.models import CustomUser # pyre-ignore[21] don't like it but there's so many things defined in terms of each other
         existing = Flag.objects.filter(message = self, flagged_by = user)
         if len(existing) == 0:
             Flag.objects.create(message = self, flagged_by = user)
-            if len(Flag.objects.filter(message = self) >= 3:
+            if len(Flag.objects.filter(message = self)) >= 3:
                    self.hidden = True
                    self.save()
         else:
             existing[0].delete()
-            if len(Flag.objects.filter(message = self) < 3:
+            if len(Flag.objects.filter(message = self)) < 3:
                    self.hidden = False
                    self.save()
 
@@ -43,4 +42,4 @@ class Chat(models.Model):
 
 class Flag(models.Model):
     message: models.ForeignKey = models.ForeignKey(Message, on_delete = models.CASCADE)
-    flagged_by: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.SET_NULL, null = True)
+    flagged_by: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete = models.SET_NULL, null = True)

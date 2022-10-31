@@ -73,7 +73,7 @@ def new_chat() -> int:  # required because a plain Chat.objects.create or a lamb
 class UserPair(models.Model):
     user1: models.ForeignKey = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='first_user')
     user2: models.ForeignKey = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='second_user')
-    chat: models.ForeignKey = models.ForeignKey('messaging.Chat', null=True, on_delete=models.SET_NULL,
+    chat: models.ForeignKey = models.ForeignKey(Chat, null=True, on_delete=models.SET_NULL,
                                                 default=new_chat)  # I'm guessing that if for some reason a chat is deleted, that means we want to purge it and replace it with a new one
 
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
