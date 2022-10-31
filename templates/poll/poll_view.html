@@ -8,7 +8,7 @@
     {#  Ignore, just for help styling  #}
 
     <div x-data="{selected:null}">
-        <div class="bg-yellow rounded-t-xl flex items-center justify-between h-12 px-3.5 ">
+        <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-black/30{% else %}bg-yellow{% endif %}">
             <button class="w-full" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
                 <h2 class="flex items-center justify-between">
                     <div class="flex gap-2 items-center">
@@ -40,42 +40,66 @@
              x-ref="poll" x-bind:style="selected == 1 ? 'max-height: ' + $refs.poll.scrollHeight + 'px' : ''">
             {#  TODO: "poll" in x-ref and in x-bind as the poll's uuid  #}
 
-            <div class="bg-yellow/50">
+            <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}">
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <p class="text-large text-black-text px-3.5 block">
-                    [[ DESCRIPTION I am not a description, but I will be, truly I will, watch this space, so much description will
-                    occur ]] {#  TODO: Add description ]]  #}
+                    [[ DESCRIPTION I am not a description, but I will be, truly I will, watch this space, so much
+                    description will
+                    occur ]] {#  TODO: Link to actual description #}
                 </p>
 
                 {% include "partials/vertical-spacer.html" with space="5" %}
 
                 <ul>
                     {% for name, count in poll_results.items %}
-                        <li class="flex justify-between items-center px-3.5">
-                            {% if request.user.is_active and not poll_closed %}
-                                <form method=POST class="m-0">
-                                    <button class="button button-on-colour inline-block">
+                        <li x-data="{selected:null}">
+                            <div class="flex justify-between items-center px-3.5">
+                                {% if request.user.is_active and not poll_closed %}
+                                    <form method=POST class="m-0">
+                                        <button class="button button-on-colour inline-block" type="submit">
+                                            {{ name }}
+                                        </button>
+                                        <input type=hidden name=choice value="{{ name }}">
+                                        {% csrf_token %}
+                                    </form>
+                                {% else %}
+                                    <span class="text-button text-black/30 inline-block"> {#  TODO: Winning option is text-red-important  #}
                                         {{ name }}
-                                    </button>
-                                    <input type=hidden name=choice value="{{ name }}">
-                                    {% csrf_token %}
-                                </form>
-                            {% else %}
-                                <span class="button button-on-colour inline-block">
-                                    {{ name }} not close
-                                </span>
-                            {% endif %}
-                            <div class="flex items-center gap-4">
-                                <span class="text-meta font-kanit-700">
-                                    {{ count|length }}
-                                </span>
-                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                          fill="#9759FF"/>
-                                </svg>
+                                    </span>
+                                {% endif %}
+                                <button class="flex items-center gap-4"
+                                        @click="selected !== 1 ? selected = 1 : selected = null">
+                                    <span class="text-meta font-kanit-700"> {#  TODO: Winning option on a closed poll is is text-red-important  #}
+                                        {{ count|length }}
+                                    </span>
+                                    <div class="w-[12] h-[8] transition duration-500 ease-out"
+                                         :class="{'-rotate-180': selected}">
+                                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                                                  fill="#9759FF"/>
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="relative overflow-hidden transition-all max-h-0 duration-500"
+                                 style=""
+                                 x-ref="name"
+                                 x-bind:style="selected == 1 ? 'max-height: ' + $refs.name.scrollHeight + 'px' : ''">
+                                <div class="px-5">
+                                    {% for user in count %}
+                                        <div class="flex justify-between items-center pt-3">
+                                            <div class="flex gap-2 items-center">
+                                                <img class="h-6 w-6" src={{ user.avatar.image_url }}> {#  TODO: Add voter avatar  #}
+                                                <span class="text-meta-label">User name</span> {#  TODO: Add voter dispaly name  #}
+                                            </div>
+                                            <p class="text-meta text-black/30">[[ Joined X time ago ]]</p> {#  TODO: Add timesince user joined this river  #}
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </li>
+
                         {% include "partials/vertical-spacer.html" with space="3" %}
                     {% endfor %}
                 </ul>
@@ -83,17 +107,21 @@
                 <p class="block text-meta px-3.5">
                     {% if poll_closed %}
                         This poll finished at {{ poll_expires|date:"G:i" }} {{ poll_expires|date:"d/m/y" }}.
-                            {% else %}
+                    {% else %}
                         Please cast your vote. This vote will close in {{ poll_expires|timeuntil }}.
                     {% endif %}
                 </p>
 
                 {% include "partials/vertical-spacer.html" with space="3" %}
+
+
                 <p class="flex gap-2 text-meta uppercase text-black/30 px-3.5">
                     <span>[[ POLL CREATOR ]]</span>
                     <span>[[ POLL CREATED TIME ]]</span>
                     <span>[[ POLL CREATED DATE ]]</span>
                 </p>
+                {#  TODO: Add poll creator name, time and date created at  #}
+
                 {% include "partials/vertical-spacer.html" with space="3" %}
             </div>
         </div>
