@@ -14,7 +14,7 @@ ENV PYTHONUNBUFFERED 1
 
 #non-alpine install of npm
 RUN apt-get update && apt-get install -y \
-    && apt-get -yq install curl gnupg ca-certificates \
+    && apt-get -yq install curl gnupg ca-certificates\
     && curl -L https://deb.nodesource.com/setup_16.x | bash \
     && apt-get install -yq nodejs
 

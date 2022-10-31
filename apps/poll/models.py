@@ -35,7 +35,7 @@ def validate_poll_options(value: List[str]) -> bool:
 
 class BasePoll(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4)
-    question: models.CharField = models.CharField(max_length = 100)
+    question: models.CharField = models.CharField(max_length = 2200) # question must be long enough to include the full text of any river description
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
     expires: models.DateTimeField = models.DateTimeField()
     closed: models.BooleanField = models.BooleanField(default = False)
@@ -53,9 +53,23 @@ class BasePoll(models.Model):
         else:
             return self.singlechoicepoll # pyre-ignore[16]
     def close(self) -> None:
-        pass # how?
-            
-        
+        from river.models import River, EnvisionStage
+        from messaging.util import send_system_message # pyre-ignore[21]
+        print(1)
+        if self.singlechoicepoll: # pyre-ignore[16]
+            print(2)
+            es = EnvisionStage.objects.filter(poll = self.singlechoicepoll)
+            print(es)
+            if len(es) != 0:
+                es = es[0]
+            # this poll is the active poll of the envision stage of some river
+            if sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0][0] == 'yes': # pyre-ignore[16]
+                # poll has passed
+                river = River.objects.get(envision_stage = es)
+                river.start_plan()
+                river.description = self.question[31:-2] # oof, extracting the new description back out of the question is not a good way to do it
+                river.save()
+                send_system_message(kind = 'finished_envision', chat = river.envision_stage.chat, context_river = river)
 
 class SingleChoicePoll(BasePoll):
     vote_kind = SingleVote # pyre-ignore[15]
