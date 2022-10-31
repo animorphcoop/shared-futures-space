@@ -32,6 +32,8 @@ class ChatView(TemplateView):
             new_msg.save()
         if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
             msg_from = 0 # drop to current position in chat if not there already after sending a message
+        if 'flag' in request.POST and request.user.is_authenticated:
+            Message.objects.get(uuid = request.POST['flag']).flagged(request.user)
         # redirect so reloading the page doesn't resend the message
         return redirect(url + '?interval=' + str(msg_no) + '&from=' + str(msg_from))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
