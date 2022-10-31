@@ -49,7 +49,7 @@ docker-compose exec app pyre
 
 Uploading Data
 
-Fetch zip with autoupload directory to be dropped into repo's root: https://hub.animorph.coop/f/249157
+Fetch zip with autoupload directory to be dropped into repo's root: https://hub.animorph.coop/f/258184
 
 ```
 docker-compose exec app ./manage.py upload_dev [filename.json]
