@@ -12,6 +12,7 @@
             <button class="w-full" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
                 <h2 class="flex items-center justify-between">
                     <div class="flex gap-2 items-center">
+                        {#  TODO: [[ POLL CREATOR AVATAR, user or salmon ]]  #}
                         <img src="{% static 'images/avatars/salmon_1.png' %}">
                         <p class="text-header text-center">
                             {{ poll_name }}
@@ -19,7 +20,7 @@
                     </div>
                     <div class="flex items-center gap-4">
                         <span class="text-header">
-                            6/12
+                            [[ voted / total ]] {#  TODO: cast votes out of total possible votes ]]  #}
                         </span>
                         <div class="w-[12] h-[8] transition duration-500 ease-out"
                              :class="{'-rotate-180': selected}">
@@ -37,72 +38,65 @@
         <div class="relative overflow-hidden transition-all max-h-0 duration-500"
              style=""
              x-ref="poll" x-bind:style="selected == 1 ? 'max-height: ' + $refs.poll.scrollHeight + 'px' : ''">
+            {#  TODO: "poll" in x-ref and in x-bind as the poll's uuid  #}
 
-        <div class="bg-yellow/50">
-            {% include "partials/vertical-spacer.html" with space="3" %}
-            <p class="text-large text-black-text px-3.5 block">
-                I am not a description, but I will be, truly I will, watch this space, so much description will occur
-            </p>
+            <div class="bg-yellow/50">
+                {% include "partials/vertical-spacer.html" with space="3" %}
+                <p class="text-large text-black-text px-3.5 block">
+                    [[ DESCRIPTION I am not a description, but I will be, truly I will, watch this space, so much description will
+                    occur ]] {#  TODO: Add description ]]  #}
+                </p>
 
-            {% include "partials/vertical-spacer.html" with space="5" %}
+                {% include "partials/vertical-spacer.html" with space="5" %}
 
-            <ul>
-                {% for name, count in poll_results.items %}
-                    <li class="flex justify-between items-center px-3.5">
-                        {% if request.user.is_active and not poll_closed %}
-                            <form method=POST class="m-0">
-                        <span class="button button-on-colour inline-block">
-                            {{ name }}
-                        </span>
-                                <input type=hidden name=choice value="{{ name }}">
-                                {% csrf_token %}
-                            </form>
-                        {% else %}
-                            <span class="button button-on-colour inline-block">
-                        {{ name }} not close
-                    </span>
-                        {% endif %}
-                        <div class="flex items-center gap-4">
-                        <span class="text-meta font-kanit-700">
-                            {{ count }}
-                        </span>
-                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                      fill="#9759FF"/>
-                            </svg>
-                        </div>
-                        {% if request.user.is_active and not poll_closed %}
-                            <td>
-                                <form method=POST>
-                                    <button>vote</button>
-                                    <input type=hidden name=choice value="{{ name }}"></input>{% csrf_token %}</form>
-                            </td>
-                        {% endif %}
-                    </li>
-                    {% include "partials/vertical-spacer.html" with space="3" %}
-                {% endfor %}
-            </ul>
+                <ul>
+                    {% for name, count in poll_results.items %}
+                        <li class="flex justify-between items-center px-3.5">
+                            {% if request.user.is_active and not poll_closed %}
+                                <form method=POST class="m-0">
+                                    <button class="button button-on-colour inline-block">
+                                        {{ name }}
+                                    </button>
+                                    <input type=hidden name=choice value="{{ name }}">
+                                    {% csrf_token %}
+                                </form>
+                            {% else %}
+                                <span class="button button-on-colour inline-block">
+                                    {{ name }} not close
+                                </span>
+                            {% endif %}
+                            <div class="flex items-center gap-4">
+                                <span class="text-meta font-kanit-700">
+                                    {{ count|length }}
+                                </span>
+                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                                          fill="#9759FF"/>
+                                </svg>
+                            </div>
+                        </li>
+                        {% include "partials/vertical-spacer.html" with space="3" %}
+                    {% endfor %}
+                </ul>
 
-            <span class="block text-meta px-3.5">
-            Please vote. [[NUMBER]]] more vote are needed for a final outcome. This vote will close [[WHEN/WHY]].
-        </span>
+                <p class="block text-meta px-3.5">
+                    {% if poll_closed %}
+                        This poll finished at {{ poll_expires|date:"G:i" }} {{ poll_expires|date:"d/m/y" }}.
+                            {% else %}
+                        Please cast your vote. This vote will close in {{ poll_expires|timeuntil }}.
+                    {% endif %}
+                </p>
 
-            {% if poll_closed %}
-                POLL CLOSED
-            {% else %}
-                expiry date: {{ poll_expires }}
-            {% endif %}
-
-            {% include "partials/vertical-spacer.html" with space="3" %}
-            <span class="flex gap-2 text-meta uppercase text-black/30 px-3.5">
-        <span>Wise Salmon</span>
-        <span>11:12</span>
-        <span>15/11/2022</span>
-    </span>
-            {% include "partials/vertical-spacer.html" with space="3" %}
+                {% include "partials/vertical-spacer.html" with space="3" %}
+                <p class="flex gap-2 text-meta uppercase text-black/30 px-3.5">
+                    <span>[[ POLL CREATOR ]]</span>
+                    <span>[[ POLL CREATED TIME ]]</span>
+                    <span>[[ POLL CREATED DATE ]]</span>
+                </p>
+                {% include "partials/vertical-spacer.html" with space="3" %}
+            </div>
         </div>
-    </div>
     </div>
 
 
