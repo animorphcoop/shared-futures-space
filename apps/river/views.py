@@ -57,8 +57,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
-        context['resources'] = list(chain(
-            *[filter_and_cluster_resources(tag, 'latest') for tag in map(lambda t: t.title, context['object'].tags)]))
+        context['resources'] = list(chain(*[filter_and_cluster_resources(tag, 'latest') for tag in map(lambda t: t.title, context['object'].tags)]))
         return context
 
 
@@ -284,10 +283,10 @@ class RiverStartView(CreateView): # pyre-ignore[24]
         context = super().get_context_data(*args, **kwargs)
         rivers = River.objects.all()
         #rivers = objects_tags_cluster_list_overwrite(River.objects.all())
-        tags = []
-        for river in rivers:
-            for tag in river.tags.all():
-                tags.append(tag)
+        tags = ['health', 'skills', 'enterprise', 'health', 'mental health', 'youth', 'training', 'skills', 'older people', 'tourism']
+        #for river in rivers:
+            #for tag in river.tags.all():
+                #tags.append(tag)
             # print(river.tags.names())
             #single_object_tags_cluster_overwrite
            # tags.append(tag_cluster_to_list(river.tags))

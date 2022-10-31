@@ -9,24 +9,26 @@
 {% endblock extra_css %}
 
 {% block content %}
-    {% block title %}{% include "partials/title.html" with title='hehehe' %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title='Start a River' %}{% endblock %}
 
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        Yer name
-        {% render_field form.name %}
+        Title
+        {% render_field form.title %}
         <br/>
-        Descr
+        Description
         {% render_field form.description %}
         <br/>
         Tags
         <div class="flex flex-wrap gap-5 -m-1">
             {% if tags %}
                 {% for tag in tags %}
-                    <button class="px-1.5 py-1 bg-blue-second rounded-sm">
+                    <button id="button-{{ tag.split.0 }}"
+                            onclick="event.preventDefault(); selectTag(this.id, {{ tag }})"
+                            class="px-1.5 py-1 bg-blue-second rounded-sm">
                         <span
-                           class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                                class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
                             {{ tag }}
                         </span>
                     </button>
@@ -42,9 +44,19 @@
             <input type="file" id="image" name="image">{% endcomment %}
         <br/>
 
-        <button type="submit">Send</button>
+        <button type="submit">Publish</button>
 
     </form>
 
 
+    <script>
+        function selectTag(tagElemId, tagName) {
+            console.log(tagElemId)
+            console.log(tagName)
+
+            //let currentResourceElem = document.getElementById(tagElemId)
+            //console.log(currentResourceElem)
+
+        }
+    </script>
 {% endblock content %}
