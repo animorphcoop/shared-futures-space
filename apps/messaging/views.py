@@ -54,5 +54,6 @@ class ChatView(TemplateView):
         context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
         context['members'] = kwargs['members']
         context['system_user'] = get_system_user()
-        context['my_flags'] = [flag.message.uuid for flag in Flag.objects.filter(flagged_by = self.request.user)]
+        if self.request.user.is_authenticated:
+            context['my_flags'] = [flag.message.uuid for flag in Flag.objects.filter(flagged_by = self.request.user)]
         return context

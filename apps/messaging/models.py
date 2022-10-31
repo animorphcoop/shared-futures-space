@@ -23,7 +23,7 @@ class Message(models.Model):
     context_bool: models.BooleanField = models.BooleanField(default=False)
     context_poll: models.ForeignKey = models.ForeignKey('poll.BasePoll', null = True, on_delete = models.SET_NULL)
 
-    def flagged(self, user):
+    def flagged(self, user) -> None: # pyre-ignore[2]
         from userauth.models import CustomUser # pyre-ignore[21] don't like it but there's so many things defined in terms of each other
         existing = Flag.objects.filter(message = self, flagged_by = user)
         if len(existing) == 0:
