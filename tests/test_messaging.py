@@ -27,8 +27,8 @@ def test_river_chat_basics(client, test_user, test_river):
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     assert 'test message' not in chat_page_html.text
     assert '(you are not a member of this chat)' in chat_page_html.text
-    ProjectMembership.objects.create(river=test_river, user=test_user, starter=False)
-    client.post(chat_url, {'message': 'test message'})
+    RiverMembership.objects.create(river=test_river, user=test_user, starter=False)
+    client.post(chat_url, {'text': 'test message'})
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     # name might not be displayed if it was you? Something to test differently (like in template checking who's issuing the request)
@@ -42,7 +42,7 @@ def test_river_chat_interface(client, test_user, test_river):
     test_river.start_envision()
     test_river.start_plan()
     chat_url = reverse('river_chat', args=[test_river.slug, 'plan', 'funding'])
-    ProjectMembership.objects.create(river=test_river, user=test_user, starter=False)
+    RiverMembership.objects.create(river=test_river, user=test_user, starter=False)
     client.force_login(test_user)
     for i in range(10):
         client.post(chat_url, {'text': 'test message ' + str(i)})
