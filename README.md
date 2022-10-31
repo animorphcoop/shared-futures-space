@@ -52,14 +52,14 @@ Uploading Data
 Fetch zip with autoupload directory to be dropped into repo's root: https://hub.animorph.coop/f/249157
 
 ```
-docker-compose exec app ./manage.py upload [filename.json]
+docker-compose exec app ./manage.py upload_dev [filename.json]
 ```
 
 put data from [filename.json] in the db. filename defaults to `upload_conf.json`, which contains some default debugging data.
 
 
 With the current file it is:
-```docker-compose exec app python3 manage.py upload upload_conf.json```
+```docker-compose exec app python3 manage.py upload_dev upload_conf_dev.json```
 
 
 ---

@@ -91,6 +91,7 @@ class CaseStudy(Resource):
         'wagtailimages.Image',
         null=True,
         blank=False,
+        max_length=200,
         on_delete=models.SET_NULL,
         related_name='+',
     )

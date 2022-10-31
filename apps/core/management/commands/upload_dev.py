@@ -28,37 +28,49 @@ def add_resources(resource_data):
         except Exception as e:
             print('could not add howto with definition: ' + str(new_howto_data) + '\nerror given: ' + repr(e))
     for new_casestudy_data in resource_data['Case Study']:
-        try:
-            with open(image_dir + new_casestudy_data['image'], 'rb') as f:
-                pimg = PillowImage.open(image_dir + new_casestudy_data['image'])
-                img = Image.objects.get_or_create(file=ImageFile(BytesIO(f.read()), name=new_casestudy_data['image']),
-                                                  width=pimg.width, height=pimg.height)[0]
+        if new_casestudy_data['image'] != "":
+            try:
+                with open(image_dir + new_casestudy_data['image'], 'rb') as f:
+                    pimg = PillowImage.open(image_dir + new_casestudy_data['image'])
+                    img = \
+                        Image.objects.get_or_create(file=ImageFile(BytesIO(f.read()), name=new_casestudy_data['image']),
+                                                    width=pimg.width, height=pimg.height)[0]
+                    new_casestudy = \
+                        CaseStudy.objects.get_or_create(title=new_casestudy_data['title'],
+                                                        summary=new_casestudy_data['summary'],
+                                                        case_study_image=img, link=new_casestudy_data['link'])[0]
+            except Exception as e:
+                print('could not load case study image: ' + str(new_casestudy_data['title']) + '\nerror given: ' + repr(
+                    e))
+        else:
+            print(str(new_casestudy_data['title']) + " has no image")
             new_casestudy = \
                 CaseStudy.objects.get_or_create(title=new_casestudy_data['title'],
-                                                summary=new_casestudy_data['summary'],
-                                                case_study_image=img, link=new_casestudy_data['link'])[0]
-            new_casestudy.body.append(('body_text', {'content': RichText(new_casestudy_data['body'])}))
-            for tag in new_casestudy_data['tags']:
-                new_casestudy.tags.add(tag)
-            new_casestudy.save()
-        except Exception as e:
-            print('could not add case study with definition: ' + str(new_casestudy_data) + '\nerror given: ' + repr(e))
+                                                summary=new_casestudy_data['summary'], link=new_casestudy_data['link'])[
+                    0]
+
+        new_casestudy.body.append(('body_text', {'content': RichText(new_casestudy_data['body'])}))
+
+        for tag in new_casestudy_data['tags']:
+            new_casestudy.tags.add(tag)
+        new_casestudy.save()
 
 
 def add_rivers(rivers_data):
     for river_data in rivers_data:
         try:
             new_project = \
-                River.objects.get_or_create(name=river_data['name'], description=river_data['description'], area=Area.objects.get_or_create(name=river_data['area'])[0])[0]
+                River.objects.get_or_create(name=river_data['name'], description=river_data['description'],
+                                            area=Area.objects.get_or_create(name=river_data['area'])[0])[0]
             for tag in river_data['tags']:
                 new_project.tags.add(tag)
             new_project.save()
             for member in river_data['swimmers']:
                 RiverMembership.objects.get_or_create(river=new_project,
-                                                        user=CustomUser.objects.get(display_name=member), starter=False)[0]
+                                                      user=CustomUser.objects.get(display_name=member), starter=False)[0]
             for member in river_data['starters']:
                 RiverMembership.objects.get_or_create(river=new_project,
-                                                        user=CustomUser.objects.get(display_name=member), starter=True)[0]
+                                                      user=CustomUser.objects.get(display_name=member), starter=True)[0]
             if 'envision' in river_data:
                 new_project.start_envision()
                 for message in river_data['envision']['chat']:
