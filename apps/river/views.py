@@ -58,7 +58,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
         context['resources'] = list(chain(
-            *[filter_and_cluster_resources(tag, 'latest') for tag in map(lambda t: t.name, context['object'].tags)]))
+            *[filter_and_cluster_resources(tag, 'latest') for tag in map(lambda t: t.title, context['object'].tags)]))
         return context
 
 
@@ -115,7 +115,7 @@ class SpringView(TemplateView):
 
 class EditRiverView(UpdateView):  # pyre-ignore[24]
     model = River
-    fields = ['name', 'description']
+    fields = ['title', 'description']
 
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
         # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
@@ -134,7 +134,7 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
                     print(
                         '!!! WARNING E !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                     # send_system_message(river.chat, 'lost_ownership', context_user_a = request.user)
-            river.name = request.POST['name']
+            river.title = request.POST['title']
             river.description = request.POST['description']
             river.save()
         return redirect(reverse('view_river', args=[slug]))
