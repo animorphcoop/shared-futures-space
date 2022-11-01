@@ -69,6 +69,7 @@ INSTALLED_APPS: List[str] = [
     'river',
     'resources',
     'search',
+    'spring',
     'core',
     'poll',
 

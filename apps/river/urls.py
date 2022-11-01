@@ -19,6 +19,6 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('view/<str:slug>/chat/<str:stage>/<str:topic>/', RiverChatView.as_view(template_name ='messaging/chatbox_snippet.html'), name='river_chat'), # pyre-ignore[16]
     path('edit/<str:slug>/', login_required(EditRiverView.as_view(template_name='edit_river.html')), name='edit_river'),
     path('manage/<str:slug>/', login_required(ManageRiverView.as_view(template_name='manage_river.html')), name='manage_river'),
-    path('<str:slug>/', SpringView.as_view(template_name='all_rivers.html'), name='spring'),
+    #path('<str:slug>/', SpringView.as_view(template_name='all_rivers.html'), name='spring'),
 
 ]
