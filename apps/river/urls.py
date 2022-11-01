@@ -9,7 +9,7 @@ from typing import List, Union
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     #path('spring/<uuid:uuid>', SpringView.as_view(template_name='all_rivers.html'), name='spring'),
-    path('create/', RiverStartView.as_view(template_name='start_river.html'), name='start_river'),
+    path('create/', login_required(RiverStartView.as_view(template_name='start_river.html')), name='start_river'),
     path('view/<str:slug>/', RiverView.as_view(template_name='river.html'), name='view_river'),
     path('view/<str:slug>/envision/', EnvisionView.as_view(template_name='envision_view.html'), name='view_envision'),
     path('view/<str:slug>/plan/',PlanView.as_view(template_name='plan_view.html'), name='view_plan'),
