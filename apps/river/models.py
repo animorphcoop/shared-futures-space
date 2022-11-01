@@ -124,6 +124,7 @@ class River(ClusterableModel):
 
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super().save(*args, **kwargs)  # save first or we won't have an id
+        print('are we triggered?')
         if (self.slug == ''):
             title_slug = slugify(self.title)
             random_string = generate_random_string()

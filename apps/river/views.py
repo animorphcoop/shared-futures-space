@@ -57,6 +57,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
+        print(context['object'].tags.names())
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
         context['resources'] = list(chain(
             *[filter_and_cluster_resources(tag, 'latest') for tag in map(lambda t: t.title, context['object'].tags)]))
@@ -290,21 +291,38 @@ class ReflectView(TemplateView):
 class RiverStartView(CreateView):  # pyre-ignore[24]
     form_class = CreateRiverForm
 
+
+    # TODO: river saving tags (though not fully correctly if there's a bunch) and creates TWO instances of the river
+    def form_valid(self, form):
+
+        if form.cleaned_data['image']:
+            new_river = River.objects.create(title=form.cleaned_data['title'],
+                                             description=form.cleaned_data['description'],
+                                             image=form.cleaned_data['image'])
+        else:
+            new_river = River.objects.create(title=form.cleaned_data['title'],
+                                             description=form.cleaned_data['description'])
+
+        for tag in form.cleaned_data['tags']:
+            new_river.tags.add(tag)
+
+        new_river.save()
+
+        return super(RiverStartView, self).form_valid(form)
+
+
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(*args, **kwargs)
         tags = []
         resources = Resource.objects.all()
 
-        print(len(resources))
         for resource in resources:
             for tag in resource.tags.names():
                 if tag.lower() not in tags:
                     tags.append(tag.lower())
-                    print(tag)
 
         rivers = River.objects.all()
         # rivers = objects_tags_cluster_list_overwrite(River.objects.all())
-
 
         # for river in rivers:
         # for tag in river.tags.all():
