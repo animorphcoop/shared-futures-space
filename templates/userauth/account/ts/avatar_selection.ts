@@ -11,8 +11,6 @@ function toggleAvatar() {
 }
 
 function changeAvatar(avatarElemId: string, avatarPk: string) {
-    console.log(avatarPk)
-
     if (avatarClicked != null) {
         avatarClicked.classList.remove("bg-purple/25")
     }

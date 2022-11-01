@@ -1,5 +1,5 @@
 "use strict";
-//getWeather()
+//TODO: Move ID into conf file
 const appid = 'f477b3ea5b7d6c3e35e9f9fc5b9b03ef';
 const backupWeatherIcon = 'https://openweathermap.org/img/wn/01d@2x.png';
 const weatherTypes = {
