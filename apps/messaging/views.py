@@ -9,8 +9,8 @@ from django.http import HttpResponse
 from typing import Dict, List, Any
 
 from .models import Chat, Message, Flag
-from river.util import get_chat_containing_river
-from river.models import RiverMembership
+from river.util import get_chat_containing_river # pyre-ignore[21]
+from river.models import RiverMembership # pyre-ignore[21]
 
 # usage note: you must redefine post and get_context_data
 # both need to be passed three kwargs:
@@ -60,8 +60,8 @@ class ChatView(TemplateView):
         context['back_from'] = int(min(msg_from + (msg_no/2), len(messages)))
         context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
         context['members'] = kwargs['members']
-        print(get_chat_containing_river(kwargs['chat']))
-        context['starter'] = RiverMembership.objects.filter(starter = True, river = get_chat_containing_river(kwargs['chat']))[0].user
+        starter_membership = RiverMembership.objects.filter(starter = True, river = get_chat_containing_river(kwargs['chat']))
+        context['starter'] = starter_membership[0].user if len(starter_membership) != 0 else None
         context['system_user'] = get_system_user()
         context['my_flags'] = [flag.message.uuid for flag in Flag.objects.filter(flagged_by = self.request.user)] if self.request.user.is_authenticated else []
         return context
