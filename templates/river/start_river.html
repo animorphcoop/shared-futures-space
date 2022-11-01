@@ -15,16 +15,18 @@
     <form method="post" enctype="multipart/form-data" class="m-0 px-4.5">
         {% csrf_token %}
         {% include "partials/input-label.html" with for="id_title" label="Title" %}
-        {% render_field form.title %}
+        {% render_field form.title class="input-text" %}
 
         {% include "partials/vertical-spacer.html" with space="9" %}
 
         {% include "partials/input-label.html" with for="id_description" label="Description" %}
-        {% render_field form.description %}
+        {% render_field form.description class="input-text" %}
 
         {% include "partials/vertical-spacer.html" with space="9" %}
-        {% include "partials/input-label.html" with for="id_tags" label="Tags" %}
-        <span class="text-header text-black/30" id="counter">choose 3</span>
+        <div class="inline-block">
+            {% include "partials/input-label.html" with for="id_tags" label="Tags" %}
+        </div>
+        <span class="text-header text-black/30 pl-2" id="counter">choose 3</span>
         {% include "partials/vertical-spacer.html" with space="3" %}
         <div class="flex flex-wrap gap-5 -m-1">
             {% if tags %}
@@ -33,18 +35,15 @@
 
                         <button id="button-{{ counter }}"
                                 onclick="event.preventDefault(); selectTag(this.id, '{{ tag }}')"
-                                class="px-1.5 py-1 rounded-sm">
-                        <span
-                                class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
-                            {{ tag }}
-                        </span>
+                                class="px-1.5 py-1 bg-blue-pale rounded-sm">
+                            <span class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">{{ tag }}</span>
                         </button>
                     {% endwith %}
 
                 {% endfor %}
             {% endif %}
         </div>
-        {% include "partials/vertical-spacer.html" with space="9" %}
+        {% include "partials/vertical-spacer.html" with space="12" %}
         {% include "partials/input-label.html" with for="id_image" label="Upload an image" %}
         <div class="text-meta text-black/30">
             {% render_field form.image %}
