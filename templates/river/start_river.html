@@ -9,42 +9,53 @@
 {% endblock extra_css %}
 
 {% block content %}
-    {% block title %}{% include "partials/title.html" with title='hehehe' %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title='Start a River' %}{% endblock %}
 
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        Yer name
-        {% render_field form.name %}
+        Title
+        {% render_field form.title %}
         <br/>
-        Descr
+        Description
         {% render_field form.description %}
         <br/>
         Tags
+        <span id="counter">choose 3</span>
         <div class="flex flex-wrap gap-5 -m-1">
             {% if tags %}
                 {% for tag in tags %}
-                    <button class="px-1.5 py-1 bg-blue-second rounded-sm">
+                    {% with counter=forloop.counter0 %}
+
+                        <button id="button-{{ counter }}"
+                                onclick="event.preventDefault(); selectTag(this.id, '{{ tag }}')"
+                                class="px-1.5 py-1 bg-blue-second rounded-sm">
                         <span
-                           class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                                class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
                             {{ tag }}
                         </span>
-                    </button>
+                        </button>
+                    {% endwith %}
+
                 {% endfor %}
             {% endif %}
         </div>
-
-        {% render_field form.tags %}
         <br/>
         Image
         {% render_field form.image %}
+
+        <input id="tags_input" name=tags type=text value="" class="hidden">
+
         {% comment %}            <textarea name=message></textarea>
             <input type="file" id="image" name="image">{% endcomment %}
         <br/>
 
-        <button type="submit">Send</button>
+        <button type="submit">Publish</button>
 
     </form>
 
 
+    {% block scripts %}
+        <script src="{% static 'js/start_river.js' %}"></script>
+    {% endblock %}
 {% endblock content %}
