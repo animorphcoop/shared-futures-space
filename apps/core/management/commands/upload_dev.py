@@ -39,6 +39,12 @@ def add_resources(resource_data):
                         CaseStudy.objects.get_or_create(title=new_casestudy_data['title'],
                                                         summary=new_casestudy_data['summary'],
                                                         case_study_image=img, link=new_casestudy_data['link'])[0]
+                    new_casestudy.body.append(('body_text', {'content': RichText(new_casestudy_data['body'])}))
+
+                    for tag in new_casestudy_data['tags']:
+                        new_casestudy.tags.add(tag)
+                    new_casestudy.save()
+
             except Exception as e:
                 print('could not load case study image: ' + str(new_casestudy_data['title']) + '\nerror given: ' + repr(
                     e))
@@ -48,12 +54,11 @@ def add_resources(resource_data):
                 CaseStudy.objects.get_or_create(title=new_casestudy_data['title'],
                                                 summary=new_casestudy_data['summary'], link=new_casestudy_data['link'])[
                     0]
+            new_casestudy.body.append(('body_text', {'content': RichText(new_casestudy_data['body'])}))
 
-        new_casestudy.body.append(('body_text', {'content': RichText(new_casestudy_data['body'])}))
-
-        for tag in new_casestudy_data['tags']:
-            new_casestudy.tags.add(tag)
-        new_casestudy.save()
+            for tag in new_casestudy_data['tags']:
+                new_casestudy.tags.add(tag)
+            new_casestudy.save()
 
 
 def add_rivers(rivers_data):
@@ -202,5 +207,5 @@ class Command(BaseCommand):
         add_organisations(data['Organisations'])
         add_avatars(data['User Avatars'])
         add_users(data['Users'])
-        add_rivers(data['Projects'])
+        add_rivers(data['Rivers'])
         add_relations(data['Relations'])
