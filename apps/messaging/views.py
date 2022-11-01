@@ -34,6 +34,7 @@ class ChatView(TemplateView):
             msg_from = 0 # drop to current position in chat if not there already after sending a message
         if 'flag' in request.POST and request.user.is_authenticated:
             Message.objects.get(uuid = request.POST['flag']).flagged(request.user)
+        if 'starter_hide' in request.POST and RiverMembership.objects.filter(user = request.user, starter = True, project__in = Project.objects.filter() # TODO make a rivers/util to fetch the project a chat belongs to, if any
         # redirect so reloading the page doesn't resend the message
         return redirect(url + '?interval=' + str(msg_no) + '&from=' + str(msg_from))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
