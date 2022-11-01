@@ -25,26 +25,27 @@
         <div class="flex flex-wrap gap-5 -m-1">
             {% if tags %}
                 {% for tag in tags %}
-                        {% with counter=forloop.counter0 %}
+                    {% with counter=forloop.counter0 %}
 
-                    <button id="button-{{counter}}"
-                            onclick="event.preventDefault(); selectTag(this.id, '{{ tag }}')"
-                            class="px-1.5 py-1 bg-blue-second rounded-sm">
+                        <button id="button-{{ counter }}"
+                                onclick="event.preventDefault(); selectTag(this.id, '{{ tag }}')"
+                                class="px-1.5 py-1 bg-blue-second rounded-sm">
                         <span
                                 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
                             {{ tag }}
                         </span>
-                    </button>
-                        {% endwith %}
+                        </button>
+                    {% endwith %}
 
                 {% endfor %}
             {% endif %}
         </div>
-
-        {% render_field form.tags %}
         <br/>
         Image
         {% render_field form.image %}
+
+        <input id="tags_input" name=tags type=text value="" class="hidden">
+
         {% comment %}            <textarea name=message></textarea>
             <input type="file" id="image" name="image">{% endcomment %}
         <br/>
