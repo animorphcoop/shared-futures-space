@@ -162,7 +162,6 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
             if (request.POST['action'] == 'remove_swimmer'):
                 if not membership.starter:
                     send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river', context_user_a = request.user, context_user_b = membership.user, context_river = river)
-                    print(membership)
                     membership.delete()
             
         return self.get(request, slug)

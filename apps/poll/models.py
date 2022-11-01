@@ -55,11 +55,8 @@ class BasePoll(models.Model):
     def close(self) -> None:
         from river.models import River, EnvisionStage
         from messaging.util import send_system_message # pyre-ignore[21]
-        print(1)
         if self.singlechoicepoll: # pyre-ignore[16]
-            print(2)
             es = EnvisionStage.objects.filter(poll = self.singlechoicepoll)
-            print(es)
             if len(es) != 0:
                 es = es[0]
             # this poll is the active poll of the envision stage of some river
@@ -79,8 +76,11 @@ class SingleChoicePoll(BasePoll):
         results = {option:[] for option in self.options}
         if self.invalid_option:
             results['poll is wrong'] = []
-        for vote in votes:
-            results[self.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
+            for vote in votes:
+                results[self.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
+        else:
+            for vote in votes:
+                results[self.options[vote.choice - 1]].append(vote.user)
         return results
     def check_closed(self) -> bool:
         if self.closed:
@@ -109,9 +109,13 @@ class MultipleChoicePoll(BasePoll):
         results = {option:[] for option in self.options}
         if self.invalid_option:
             results['poll is wrong'] = []
-        for vote in votes:
-            for choice in vote.choice:
-                results[self.options[choice - 1] if choice != 0 else 'poll is wrong'].append(vote.user)
+            for vote in votes:
+                for choice in vote.choice:
+                    results[self.options[choice - 1] if choice != 0 else 'poll is wrong'].append(vote.user)
+        else:
+            for vote in votes:
+                for choice in vote.choice:
+                    results[self.options[choice - 1]].append(vote.user)
         return results
     def check_closed(self) -> bool:
         if self.closed:
