@@ -9,7 +9,8 @@ from userauth.util import user_to_slug
 
 def test_river_view(client, test_river):
     rivers_page = client.get(reverse('spring', args=[test_river.area.name]))
-    assert test_river.name in rivers_page.content.decode('utf-8')
+    print(rivers_page.content.decode('utf-8'))
+    assert test_river.title in rivers_page.content.decode('utf-8')
     single_river_view = client.get(reverse('view_river', args=[test_river.slug]))
     assert test_river.description in single_river_view.content.decode('utf-8')
 
@@ -20,9 +21,9 @@ def test_river_edit(client, test_user, test_river):
     client.force_login(test_user)
     attempt_logged_in = client.get(reverse('edit_river', args=[test_river.slug]))
     assert attempt_logged_in.status_code == 200
-    client.post(reverse('edit_river', args=[test_river.slug]), {'name': 'new edited name',
+    client.post(reverse('edit_river', args=[test_river.slug]), {'title': 'new edited name',
                                                                   'description': 'new edited description'})
-    assert River.objects.get(pk=test_river.id).name == 'new edited name'
+    assert River.objects.get(pk=test_river.id).title == 'new edited name'
 
 def test_river_membership(client, test_user, other_test_user, test_river):
     # non-starter members
@@ -55,7 +56,7 @@ def test_river_membership(client, test_user, other_test_user, test_river):
     edit_page_html = bs4.BeautifulSoup(edit_page.content, features='html5lib')
     abdicate_button = edit_page_html.find('button', attrs={'name': 'abdicate'})
     assert abdicate_button.text == 'Rescind Starter status'
-    client.post(reverse('edit_river', args=[test_river.slug]), {'name': test_river.name,
+    client.post(reverse('edit_river', args=[test_river.slug]), {'title': test_river.title,
                                                                 'description': test_river.description,
                                                                 'abdicate': 'abdicate'})
     assert RiverMembership.objects.get(user=test_user, river=test_river).starter == False
@@ -66,7 +67,7 @@ def test_river_membership(client, test_user, other_test_user, test_river):
     edit_page_last_owner = client.get(reverse('edit_river', args=[test_river.slug]))
     edit_page_last_owner_html = bs4.BeautifulSoup(edit_page_last_owner.content, features='html5lib')
     assert 1 == len([p for p in edit_page_last_owner_html.find_all('p') if p.text == 'As you are the only starter of this river, you cannot rescind your status'])
-    client.post(reverse('edit_river', args=[test_river.slug]), {'name': test_river.name,
+    client.post(reverse('edit_river', args=[test_river.slug]), {'title': test_river.title,
                                                                   'description': test_river.description,
                                                                   'abdicate': 'abdicate'}) # should be rejected
     assert RiverMembership.objects.get(user=other_test_user, river=test_river).starter == True

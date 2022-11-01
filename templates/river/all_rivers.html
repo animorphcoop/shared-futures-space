@@ -25,7 +25,7 @@
         </tr>
         {% for river in rivers %}
             <tr>
-                <td>{{ river.name }}</td>
+                <td>{{ river.title }}</td>
                 <td><a href={% url 'view_river' river.slug %}>View River</a></td>
             </tr>
         {% endfor %}

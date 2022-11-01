@@ -44,7 +44,7 @@ def other_test_user(db, django_user_model):
 # items to use during testing
 @pytest.fixture(scope='function')
 def test_river(db):
-    return River.objects.create(name='some river', description='river to do something')
+    return River.objects.create(title='some river', description='river to do something')
 
 
 @pytest.fixture(scope='function')

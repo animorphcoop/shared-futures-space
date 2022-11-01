@@ -25,7 +25,7 @@ from messaging.util import send_system_message  # pyre-ignore[21]
 from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
 from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
-from resources.models import Resource
+from resources.models import Resource # pyre-ignore[21]
 from typing import Dict, List, Any, Union
 
 
