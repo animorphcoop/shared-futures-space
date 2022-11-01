@@ -15,7 +15,6 @@ def test_create_poll(client, test_user, test_river):
     new_poll_redirect = client.get(new_poll.url)
     assert 'is this a test poll?' in new_poll_redirect.content.decode('utf-8')
     assert 'answer 1' in new_poll_redirect.content.decode('utf-8')
-    assert 'poll is wrong' in new_poll_redirect.content.decode('utf-8')
     assert SingleChoicePoll.objects.filter(question = 'is this a test poll?').exists()
     # multiple choice
     new_poll = client.post(reverse('poll_create'), {'question': 'which of the following?', 'kind': 'MULTIPLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
@@ -23,7 +22,6 @@ def test_create_poll(client, test_user, test_river):
     new_poll_redirect = client.get(new_poll.url)
     assert 'which of the following?' in new_poll_redirect.content.decode('utf-8')
     assert 'answer 1' in new_poll_redirect.content.decode('utf-8')
-    assert 'poll is wrong' in new_poll_redirect.content.decode('utf-8')
     assert MultipleChoicePoll.objects.filter(question = 'which of the following?').exists()
     
 
@@ -37,7 +35,6 @@ def test_vote_poll_single(client, test_user, other_test_user, test_singlechoicep
     send_system_message(test_river.envision_stage.chat, 'poll', context_poll = test_singlechoicepoll)
     chat_view = client.get(reverse('river_chat', args=[test_river.slug, 'envision', 'general']))
     assert 'is this a test question?' in chat_view.content.decode('utf-8')
-    assert 'poll is wrong' in chat_view.content.decode('utf-8')
     # can vote on the poll, and it won't close
     client.post(reverse('poll_view', args=[test_singlechoicepoll.uuid]), {'choice': test_singlechoicepoll.options[0]})
     assert len(SingleVote.objects.filter(poll = test_singlechoicepoll, choice = 1)) == 1
@@ -64,7 +61,6 @@ def test_vote_poll_multiple(client, test_user, other_test_user, test_multiplecho
     send_system_message(test_river.envision_stage.chat, 'poll', context_poll = test_multiplechoicepoll)
     chat_view = client.get(reverse('river_chat', args=[test_river.slug, 'envision', 'general']))
     assert 'which options?' in chat_view.content.decode('utf-8')
-    assert 'poll is wrong' in chat_view.content.decode('utf-8')
     # can vote on the poll, and it won't close
     client.post(reverse('poll_view', args=[test_multiplechoicepoll.uuid]), {'choice': test_multiplechoicepoll.options[0]})
     assert len(MultipleVote.objects.filter(poll = test_multiplechoicepoll, choice__contains = [1])) == 1

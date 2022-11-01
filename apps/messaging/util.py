@@ -17,7 +17,7 @@ def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                         context_poll: Optional[BasePoll] = None) -> None: # pyre-ignore[11]
     Message.objects.create(sender = get_system_user(), text='',
                            snippet = {'offer_of_ownership': 'messaging/system_messages/offer_of_ownership.html',
-                                      'offer_of_championship': 'messaging/system_messages/offer_of_championship.html',
+                                      'removed_from_river': 'messaging/system_messages/removed_from_river.html',
                                       'new_owner': 'messaging/system_messages/new_owner.html',
                                       'left_project': 'messaging/system_messages/left_project.html',
                                       'joined_project': 'messaging/system_messages/joined_project.html',
