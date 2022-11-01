@@ -293,8 +293,8 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
         print(len(resources))
         for resource in resources:
             for tag in resource.tags.names():
-                if tag not in tags:
-                    tags.append(tag)
+                if tag.lower() not in tags:
+                    tags.append(tag.lower())
                     print(tag)
 
         rivers = River.objects.all()

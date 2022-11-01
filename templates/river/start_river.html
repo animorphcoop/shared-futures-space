@@ -20,18 +20,22 @@
         Description
         {% render_field form.description %}
         <br/>
-        Tags
+        Tags - choose <span id="counter">3</span>
         <div class="flex flex-wrap gap-5 -m-1">
             {% if tags %}
                 {% for tag in tags %}
-                    <button id="button-{{ tag.split.0 }}"
-                            onclick="event.preventDefault(); selectTag(this.id, {{ tag }})"
+                        {% with counter=forloop.counter0 %}
+
+                    <button id="button-{{counter}}"
+                            onclick="event.preventDefault(); selectTag(this.id, '{{ tag }}')"
                             class="px-1.5 py-1 bg-blue-second rounded-sm">
                         <span
                                 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
                             {{ tag }}
                         </span>
                     </button>
+                        {% endwith %}
+
                 {% endfor %}
             {% endif %}
         </div>
@@ -49,14 +53,7 @@
     </form>
 
 
-    <script>
-        function selectTag(tagElemId, tagName) {
-            console.log(tagElemId)
-            console.log(tagName)
-
-            //let currentResourceElem = document.getElementById(tagElemId)
-            //console.log(currentResourceElem)
-
-        }
-    </script>
+    {% block scripts %}
+        <script src="{% static 'js/start_river.js' %}"></script>
+    {% endblock %}
 {% endblock content %}
