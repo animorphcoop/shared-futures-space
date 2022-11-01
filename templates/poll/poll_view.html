@@ -7,10 +7,10 @@
     {% include "partials/vertical-spacer.html" with space="12" %}
     {#  Ignore above now and delete later, just for help styling  #}
 
-    <div x-data="{selected:true}"> {#  Poll wrapper, links header to body  #}
+    <div> {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
         {#  Poll header  #}
         <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-black/30{% else %}bg-yellow{% endif %}">
-            <button class="w-full" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+            <button class="w-full" type="button"> {# removed collapsable @click="selected !== 1 ? selected = 1 : selected = null" #}
                 <h3 class="flex items-center justify-between">
                     {#  User icon and poll header text  #}
                     <div class="flex gap-2 items-center">
@@ -25,7 +25,7 @@
                         <span class="text-header">
                             [[ voted / total ]] {#  TODO: cast votes out of total possible votes ]]  #}
                         </span>
-                        <div class="w-[12] h-[8] transition duration-500 ease-out"
+                        <div class="w-[12] h-[8] transition duration-500 ease-out invisible" {#  removed collapsible, added invisible  #}
                              :class="{'-rotate-180': selected}">
                             <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -38,9 +38,7 @@
             </button>
         </div>
         {#  Poll body  #}
-        <div class="relative overflow-hidden transition-all max-h-0 duration-500"
-             style=""
-             x-ref="poll" x-bind:style="selected == 1 ? 'max-height: ' + $refs.poll.scrollHeight + 'px' : ''">
+        <div> {# removed collapsable class="relative overflow-hidden transition-all max-h-0 duration-500" style="" x-ref="poll" x-bind:style="selected == 1 ? 'max-height: ' + $refs.poll.scrollHeight + 'px' : ''" #}
             {#  TODO: "poll" in x-ref and in x-bind as the poll's uuid  #}
             {#  Poll description  #}
             <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}">
