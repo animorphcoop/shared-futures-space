@@ -1,4 +1,31 @@
-<form method="post">{% csrf_token %}
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Save">
+
+    {% include "partials/input-label.html" with for="question" label="Description" %}
+    {% include "partials/input-text.html" with field=form.question id="question" name="question" type="text" %}
+    {% include "partials/vertical-spacer.html" with space="4.5" %}
+    <h2 class="text-header">
+        Voting options
+    </h2>
+    {% include "partials/vertical-spacer.html" with space="3" %}
+    <ul class="text-header text-black/30">
+        <li>
+            Agree
+        </li>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <li>
+            Disagree
+        </li>
+    </ul>
+    {% include "partials/vertical-spacer.html" with space="4.5" %}
+    <input type="submit" value="Create poll" class="button button-important">
 </form>
+
+{% endblock %}
