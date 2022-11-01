@@ -10,18 +10,24 @@
 
 {% block content %}
     {% block title %}{% include "partials/title.html" with title='Start a River' %}{% endblock %}
+    {% include "partials/vertical-spacer.html" with space="3" %}
 
-
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" class="m-0 px-4.5">
         {% csrf_token %}
-        Title
-        {% render_field form.title %}
-        <br/>
-        Description
-        {% render_field form.description %}
-        <br/>
-        Tags
-        <span id="counter">choose 3</span>
+        {% include "partials/input-label.html" with for="id_title" label="Title" %}
+        {% render_field form.title class="input-text" %}
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+        {% include "partials/input-label.html" with for="id_description" label="Description" %}
+        {% render_field form.description class="input-text" %}
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+        <div class="inline-block">
+            {% include "partials/input-label.html" with for="id_tags" label="Tags" %}
+        </div>
+        <span class="text-header text-black/30 pl-2" id="counter">choose 3</span>
+        {% include "partials/vertical-spacer.html" with space="3" %}
         <div class="flex flex-wrap gap-5 -m-1">
             {% if tags %}
                 {% for tag in tags %}
@@ -29,31 +35,32 @@
 
                         <button id="button-{{ counter }}"
                                 onclick="event.preventDefault(); selectTag(this.id, '{{ tag }}')"
-                                class="px-1.5 py-1 bg-blue-second rounded-sm">
-                        <span
-                                class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
-                            {{ tag }}
-                        </span>
+                                class="px-1.5 py-1 bg-blue-pale rounded-sm">
+                            <span class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">{{ tag }}</span>
                         </button>
                     {% endwith %}
 
                 {% endfor %}
             {% endif %}
         </div>
-        <br/>
-        Image
-        {% render_field form.image %}
+        {% include "partials/vertical-spacer.html" with space="12" %}
+        {% include "partials/input-label.html" with for="id_image" label="Upload an image" %}
+        <div class="text-meta text-black/30">
+            {% render_field form.image %}
+        </div>
 
         <input id="tags_input" name=tags type=text value="" class="hidden">
 
         {% comment %}            <textarea name=message></textarea>
             <input type="file" id="image" name="image">{% endcomment %}
-        <br/>
+        {% include "partials/vertical-spacer.html" with space="9" %}
 
-        <button type="submit">Publish</button>
-
+        <button class="button button-important" type="submit">
+            Publish
+        </button>
     </form>
 
+    {% include "partials/vertical-spacer.html" with space="6" %}
 
     {% block scripts %}
         <script src="{% static 'js/start_river.js' %}"></script>
