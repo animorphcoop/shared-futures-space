@@ -14,6 +14,7 @@ class Message(models.Model):
     snippet: models.CharField = models.CharField(max_length = 2000, default = '')
     reply_to: models.ForeignKey = models.ForeignKey('messaging.Message', null=True, on_delete = models.SET_NULL)
     chat: models.ForeignKey = models.ForeignKey('messaging.Chat', on_delete = models.CASCADE)
+    hidden: models.BooleanField = models.BooleanField(default = False)
     # context_* values are nullable fields used to fill in the gaps in system messages
     context_action: models.ForeignKey = models.ForeignKey('action.Action', null = True, on_delete = models.SET_NULL)
     context_river: models.ForeignKey = models.ForeignKey('river.River', null = True, on_delete = models.SET_NULL)
@@ -22,5 +23,23 @@ class Message(models.Model):
     context_bool: models.BooleanField = models.BooleanField(default=False)
     context_poll: models.ForeignKey = models.ForeignKey('poll.BasePoll', null = True, on_delete = models.SET_NULL)
 
+    def flagged(self, user) -> None: # pyre-ignore[2]
+        from userauth.models import CustomUser # pyre-ignore[21] don't like it but there's so many things defined in terms of each other
+        existing = Flag.objects.filter(message = self, flagged_by = user)
+        if len(existing) == 0:
+            Flag.objects.create(message = self, flagged_by = user)
+            if len(Flag.objects.filter(message = self)) >= 3:
+                   self.hidden = True
+                   self.save()
+        else:
+            existing[0].delete()
+            if len(Flag.objects.filter(message = self)) < 3:
+                   self.hidden = False
+                   self.save()
+
 class Chat(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4, editable = False)
+
+class Flag(models.Model):
+    message: models.ForeignKey = models.ForeignKey(Message, on_delete = models.CASCADE)
+    flagged_by: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete = models.SET_NULL, null = True)
