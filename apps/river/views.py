@@ -158,12 +158,13 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
                 if not membership.starter:  # not an starter already
                     send_offer(request.user, membership.user, 'become_starter', param_river=river)
                     #send_system_message(get_userpair(request.user, membership.user).chat,'lost_championship_notification', context_user_a=request.user,context_river=membership.river)
+            membership.save() # IMPORTANT: happens here because if membership.save is called after membership.delete, it reinstantiates a new identical membership. spent a while chasing that one.
             if (request.POST['action'] == 'remove_swimmer'):
                 if not membership.starter:
                     send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river', context_user_a = request.user, context_user_b = membership.user, context_river = river)
                     print(membership)
                     membership.delete()
-            membership.save()
+            
         return self.get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:

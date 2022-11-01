@@ -91,7 +91,6 @@ class RiverMembership(models.Model):
     user: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
     starter: models.BooleanField = models.BooleanField(default=False)
 
-
 class RiverTag(TaggedItemBase):
     content_object = ParentalKey('river.River', on_delete=models.CASCADE, related_name='tagged_items')
 
