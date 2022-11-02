@@ -2,7 +2,7 @@
 
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView, CreateView, _ModelFormT
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
 from django.db.models.fields import CharField
@@ -57,10 +57,8 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
-        print(context['object'].tags.names())
+        context['resources'] = list(chain(*[filter_and_cluster_resources(tag, 'latest') for tag in context['object'].tags.names()]))
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
-        context['resources'] = list(chain(
-            *[filter_and_cluster_resources(tag, 'latest') for tag in map(lambda t: t.title, context['object'].tags)]))
         return context
 
 
@@ -291,24 +289,14 @@ class ReflectView(TemplateView):
 class RiverStartView(CreateView):  # pyre-ignore[24]
     form_class = CreateRiverForm
 
-
-    # TODO: river saving tags (though not fully correctly if there's a bunch) and creates TWO instances of the river
-    def form_valid(self, form):
-
-        if form.cleaned_data['image']:
-            new_river = River.objects.create(title=form.cleaned_data['title'],
-                                             description=form.cleaned_data['description'],
-                                             image=form.cleaned_data['image'])
-        else:
-            new_river = River.objects.create(title=form.cleaned_data['title'],
-                                             description=form.cleaned_data['description'])
-
+    def form_valid(self, form: _ModelFormT) -> HttpResponse:
+        r = super(RiverStartView, self).form_valid(form)
         for tag in form.cleaned_data['tags']:
-            new_river.tags.add(tag)
+            self.object.tags.add(tag) # pyre-ignore[16]
 
-        new_river.save()
+        self.object.save() # pyre-ignore[16]
 
-        return super(RiverStartView, self).form_valid(form)
+        return r
 
 
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:

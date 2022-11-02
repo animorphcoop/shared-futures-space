@@ -6,10 +6,10 @@ from django.shortcuts import render
 
 
 from typing import Dict, List, Any, Union
-from core.utils.tags_declusterer import tag_cluster_to_list
+from core.utils.tags_declusterer import tag_cluster_to_list # pyre-ignore[21]
 
-from area.models import Area
-from river.models import River, RiverMembership
+from area.models import Area # pyre-ignore[21]
+from river.models import River, RiverMembership # pyre-ignore[21]
 
 
 # TODO: THIS CLASS WILL BE REMOVED AND MADE ACCESSIBLE VIA SPRING APP
