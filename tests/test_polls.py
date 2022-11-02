@@ -23,6 +23,7 @@ def test_create_poll(client, test_user, test_river):
     assert 'which of the following?' in new_poll_redirect.content.decode('utf-8')
     assert 'answer 1' in new_poll_redirect.content.decode('utf-8')
     assert MultipleChoicePoll.objects.filter(question = 'which of the following?').exists()
+    assert MultipleChoicePoll.objects.get(question = 'which of the following?').created_by == test_user
     
 
 def test_vote_poll_single(client, test_user, other_test_user, test_singlechoicepoll, test_river):

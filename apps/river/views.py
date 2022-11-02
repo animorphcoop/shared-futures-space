@@ -2,7 +2,7 @@
 
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView, CreateView, _ModelFormT
+from django.views.generic.edit import UpdateView, CreateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
 from django.db.models.fields import CharField
@@ -289,7 +289,7 @@ class ReflectView(TemplateView):
 class RiverStartView(CreateView):  # pyre-ignore[24]
     form_class = CreateRiverForm
 
-    def form_valid(self, form: _ModelFormT) -> HttpResponse:
+    def form_valid(self, form) -> HttpResponse: # pyre-ignore[2]
         r = super(RiverStartView, self).form_valid(form)
         for tag in form.cleaned_data['tags']:
             self.object.tags.add(tag) # pyre-ignore[16]

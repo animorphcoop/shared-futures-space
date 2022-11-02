@@ -41,6 +41,7 @@ class BasePoll(models.Model):
     closed: models.BooleanField = models.BooleanField(default = False)
     vote_kind: models.Model = BaseVote # pyre-ignore[8]
     invalid_option: models.BooleanField = models.BooleanField(default = False)
+    created_by: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.SET_NULL, null = True)
     # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
     def make_votes(self, river) -> None: # pyre-ignore[2] can't import River for this, see next line
         from river.models import RiverMembership # pyre-ignore[21] this is considered bad form, but as far as i can tell necessary to avoid a circular import

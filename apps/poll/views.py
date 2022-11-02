@@ -63,9 +63,9 @@ class PollCreateView(CreateView): # pyre-ignore[24]
     form_class = PollCreateForm
     def form_valid(self, form) -> HttpResponseRedirect: # pyre-ignore[2] - the type of the form argument is some weird private thing that i can't seem to get hold of
         if form.cleaned_data['kind'] == 'SINGLE':
-            new_poll = SingleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires)
+            new_poll = SingleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, created_by = self.request.user)
         elif form.cleaned_data['kind'] == 'MULTIPLE':
-            new_poll = MultipleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires)
+            new_poll = MultipleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, created_by = self.request.user)
         new_poll.make_votes(form.cleaned_data['river'])
         return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
     def get_success_url(self) -> str:
