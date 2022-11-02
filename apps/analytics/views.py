@@ -44,21 +44,21 @@ class AnalyticsView(TemplateView):
         users_area = [(area.name, len(CustomUser.objects.filter(post_code__area = area))) for area in Area.objects.all()]
         users_scale = max(map(lambda t: t[1], users_area))
         ctx['graphs'].append(BarGraph('users/area', users_area, users_scale))
-        projects_area = [(area.name, len(River.objects.filter(area=area))) for area in Area.objects.all()]
-        project_scale = max(map(lambda t: t[1], projects_area))
-        ctx['graphs'].append(BarGraph('projects/area', projects_area, project_scale))
-        ctx['graphs'].append(BarGraph('projects/stages - overall', [('not begun', len(River.objects.filter(current_stage = None))),
+        river_area = [(area.name, len(River.objects.filter(area=area))) for area in Area.objects.all()]
+        river_scale = max(map(lambda t: t[1], river_area))
+        ctx['graphs'].append(BarGraph('river/area', river_area, river_scale))
+        ctx['graphs'].append(BarGraph('river/stages - overall', [('not begun', len(River.objects.filter(current_stage = None))),
                                                                     ('envision', len(River.objects.filter(current_stage = River.Stage.ENVISION))),
                                                                     ('plan', len(River.objects.filter(current_stage = River.Stage.PLAN))),
                                                                     ('act', len(River.objects.filter(current_stage = River.Stage.ACT))),
-                                                                    ('reflect', len(River.objects.filter(current_stage = River.Stage.REFLECT)))], project_scale))
+                                                                    ('reflect', len(River.objects.filter(current_stage = River.Stage.REFLECT)))], river_scale))
         for area in Area.objects.all():
-            ctx['graphs'].append(BarGraph('projects/stages - ' + area.name, [('not begun', len(River.objects.filter(area = area, current_stage = None))),
+            ctx['graphs'].append(BarGraph('river/stages - ' + area.name, [('not begun', len(River.objects.filter(area = area, current_stage = None))),
                                                                              ('envision', len(River.objects.filter(area = area, current_stage = River.Stage.ENVISION))),
                                                                              ('plan', len(River.objects.filter(area = area, current_stage = River.Stage.PLAN))),
                                                                              ('act', len(River.objects.filter(area = area, current_stage = River.Stage.ACT))),
-                                                                             ('reflect', len(River.objects.filter(area = area, current_stage = River.Stage.REFLECT)))], project_scale))
-        swimmers_area = [(area.name, (len(RiverMembership.objects.filter(project__in = River.objects.filter(area=area))) / len(River.objects.filter(area=area)))
+                                                                             ('reflect', len(River.objects.filter(area = area, current_stage = River.Stage.REFLECT)))], river_scale))
+        swimmers_area = [(area.name, (len(RiverMembership.objects.filter(river__in = River.objects.filter(area=area))) / len(River.objects.filter(area=area)))
                            if len(River.objects.filter(area=area)) != 0 else 0)
                           for area in Area.objects.all()]
         swimmers_scale = int(max(map(lambda t: t[1], swimmers_area)))+1

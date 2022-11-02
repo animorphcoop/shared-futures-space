@@ -13,7 +13,7 @@
         @apply uppercase text-black-text font-kanit-600 text-[10px] tracking-widest leading-normal
     }
     .text-body { /* mobile/15 Body */
-        @apply font-garamond-500 text-black/75 text-base leading-5 whitespace-normal
+        @apply font-garamond-500 text-black/75 text-base leading-5 whitespace-normal tracking-[0.01em]
     }
     .text-button { /* mobile/10 Button */
         @apply font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4

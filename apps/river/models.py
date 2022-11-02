@@ -91,7 +91,6 @@ class RiverMembership(models.Model):
     user: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
     starter: models.BooleanField = models.BooleanField(default=False)
 
-
 class RiverTag(TaggedItemBase):
     content_object = ParentalKey('river.River', on_delete=models.CASCADE, related_name='tagged_items')
 
@@ -109,7 +108,7 @@ class River(ClusterableModel):
         REFLECT = 'reflect'
 
     slug: models.CharField = models.CharField(max_length=100, default='')
-    name: models.CharField = models.CharField(max_length=100)
+    title: models.CharField = models.CharField(max_length=100)
     description: models.CharField = models.CharField(max_length=2000)
     tags = ClusterTaggableManager(through=RiverTag, blank=True)
     image: models.ImageField = models.ImageField(upload_to='rivers/images/', blank=True)
@@ -125,8 +124,9 @@ class River(ClusterableModel):
 
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super().save(*args, **kwargs)  # save first or we won't have an id
+        print('are we triggered?')
         if (self.slug == ''):
-            title_slug = slugify(self.name)
+            title_slug = slugify(self.title)
             random_string = generate_random_string()
             self.slug = title_slug + "-" + random_string
         super().save()  # without args because they tell it that it's the first time saving
