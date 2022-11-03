@@ -53,7 +53,7 @@ class BasePoll(models.Model):
         else:
             return self.singlechoicepoll # pyre-ignore[16]
     def close(self) -> None:
-        from river.models import River, EnvisionStage
+        from river.models import River, EnvisionStage # pyre-ignore[21]
         from messaging.util import send_system_message # pyre-ignore[21]
         if self.singlechoicepoll: # pyre-ignore[16]
             es = EnvisionStage.objects.filter(poll = self.singlechoicepoll)
@@ -137,15 +137,15 @@ class MultipleChoicePoll(BasePoll):
 
 # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
 @receiver(post_save, sender=SingleChoicePoll)
-def make_votes_single(sender, instance, created, **kwargs): # pyre-ignore[2] can't import River for this, see next line
-    from river.models import RiverMembership # pyre-ignore[21]
+def make_votes_single(sender, instance, created, **kwargs) -> None: # pyre-ignore[2]
+    from river.models import RiverMembership
     if created:
         for voter in RiverMembership.objects.filter(river = instance.basepoll_ptr.river):
             instance.vote_kind.objects.create(user = voter.user, poll = instance, choice = None)
             
 @receiver(post_save, sender=MultipleChoicePoll)
-def make_votes_multiple(sender, instance, created, **kwargs): # pyre-ignore[2] can't import River for this, see next line
-    from river.models import RiverMembership # pyre-ignore[21]
+def make_votes_multiple(sender, instance, created, **kwargs) -> None: # pyre-ignore[2]
+    from river.models import RiverMembership
     if created:
         for voter in RiverMembership.objects.filter(river = instance.basepoll_ptr.river):
             instance.vote_kind.objects.create(user = voter.user, poll = instance, choice = [])

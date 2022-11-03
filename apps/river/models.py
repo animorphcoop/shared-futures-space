@@ -174,7 +174,7 @@ class River(ClusterableModel):
             self.save()
 
     def start_act(self) -> None:
-        from poll.models import SingleChoicePoll # pyre-ignore[21]
+        from poll.models import SingleChoicePoll
         if self.current_stage == self.Stage.PLAN:
             if (self.plan_stage.general_poll is None or not self.plan_stage.general_poll.closed or
                     self.plan_stage.funding_poll is None or not self.plan_stage.funding_poll.closed or
