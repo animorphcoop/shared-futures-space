@@ -1,3 +1,5 @@
+{% url 'view_river' river.slug as view_url %}
+
 <div class="mx-1.5 relative">
     <div class="absolute bg-gradient-to-b from-[rgba(219,243,237,0.78)] to-white h-12 w-full rounded-xl"></div>
     <div class="p-3 relative">
@@ -5,7 +7,8 @@
             <h2 class="relative text-title text-black/55">
                 {{ river.title }}
             </h2>
-            <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-[22px] w-[22px]"></div>
+            {% include 'partials/button-copy.html' with icon='link' path=view_url %}
+
         </div>
 
         {% include "partials/vertical-spacer.html" with space="6" %}
@@ -54,7 +57,7 @@
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         {% include "partials/button.html" with url=the_url style="important" button="Join" %}
-        {% url 'view_river' river.slug as the_url %}
-        {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
+
+        {% include "partials/button.html" with url=view_url style="primary_white" button="Learn more" %}
     </div>
 </div>
