@@ -24,7 +24,7 @@
                     {#  Poll vote counter and drop down arrow  #}
                     <div class="flex items-center gap-4">
                         <span class="text-header">
-                            [[ voted / total ]] {#  TODO: cast votes out of total possible votes ]]  #}
+                            {{poll_votes_cast}} / {{poll_total_votes}} {#  TODO: cast votes out of total possible votes ]]  #}
                         </span>
                         <div class="w-[12] h-[8] transition duration-500 ease-out invisible" {#  removed collapsible, added invisible  #}
                              :class="{'-rotate-180': selected}">

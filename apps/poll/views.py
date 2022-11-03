@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.forms import ChoiceField, ModelChoiceField, ModelForm
 from uuid import UUID
+from itertools import chain
 
 from typing import Dict, Any
 
@@ -44,12 +45,12 @@ class PollView(TemplateView):
             poll = poll.multiplechoicepoll
         elif hasattr(poll, 'singlechoicepoll'):
             poll = poll.singlechoicepoll
-        votes = BaseVote.objects.filter(poll = poll)
-        ctx['poll'] = poll
         ctx['poll_name'] = poll.question
         ctx['poll_results'] = poll.current_results
         ctx['poll_closed'] = poll.check_closed()
         ctx['poll_expires'] = poll.expires
+        ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll = poll))
+        ctx['poll_votes_cast'] = len(list(chain(*ctx['poll_results'].values())))
         return ctx
 
 class PollCreateForm(ModelForm):
