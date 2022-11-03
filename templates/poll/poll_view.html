@@ -15,6 +15,7 @@
                     {#  User icon and poll header text  #}
                     <div class="flex gap-2 items-center">
                         {#  TODO: [[ POLL CREATOR AVATAR, user or salmon ]]  #}
+                        <i>created by {{poll.created_by.display_name}}</i>
                         <img src="{% static 'images/avatars/salmon_1.png' %}">
                         <p class="text-header text-center">
                             {{ poll_name }}

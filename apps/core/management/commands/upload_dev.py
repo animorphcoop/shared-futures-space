@@ -65,7 +65,7 @@ def add_rivers(rivers_data):
     for river_data in rivers_data:
         try:
             new_project = \
-                River.objects.get_or_create(name=river_data['name'], description=river_data['description'],
+                River.objects.get_or_create(title=river_data['name'], description=river_data['description'],
                                             area=Area.objects.get_or_create(name=river_data['area'])[0])[0]
             for tag in river_data['tags']:
                 new_project.tags.add(tag)

@@ -45,6 +45,7 @@ class PollView(TemplateView):
         elif hasattr(poll, 'singlechoicepoll'):
             poll = poll.singlechoicepoll
         votes = BaseVote.objects.filter(poll = poll)
+        ctx['poll'] = poll
         ctx['poll_name'] = poll.question
         ctx['poll_results'] = poll.current_results
         ctx['poll_closed'] = poll.check_closed()
