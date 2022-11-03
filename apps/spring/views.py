@@ -39,22 +39,26 @@ class SpringView(TemplateView):
             river.swimmers = RiverMembership.objects.filter(river=river).values_list('user', flat=True)
             print(river.title)
             print(river.swimmers)
+            print(len(river.swimmers))
+            river.extra_swimmers = 0
+            if len(river.swimmers) > 4:
+                river.extra_swimmers = len(river.swimmers) - 4
+
+
             # TEMP - comment below
             river.membership = RiverMembership.objects.filter(river=river)
-            '''
-            for rivermemb in RiverMembership.objects.filter(river=river):
-                print(rivermemb.user)
-                members.append(rivermemb.user)
-            river.members = members
-            '''
+
+        # This is total number for the spring
         num_swimmers = RiverMembership.objects.filter(
             river__in=River.objects.filter(area=area)).values_list('user', flat=True).distinct().count()
 
-        # TODO: Add all members, starter and champions to the context 'river.swimmers' being ints; temp members
+        # TODO: Add when started and which stage
         context = {
             'area': area,
             'rivers': rivers,
+
             'num_swimmers': num_swimmers
+
         }
 
         # context is:
