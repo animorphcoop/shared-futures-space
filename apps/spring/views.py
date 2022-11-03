@@ -32,11 +32,13 @@ class SpringView(TemplateView):
         # rivers = River.objects.all()
         # members = []
         for river in rivers:
+            print(river.image)
             river.tags = tag_cluster_to_list(river.tags)
 
             river.us = RiverMembership.objects.filter(river=river)
             river.swimmers = RiverMembership.objects.filter(river=river).values_list('user', flat=True)
-
+            print(river.title)
+            print(river.swimmers)
             # TEMP - comment below
             river.membership = RiverMembership.objects.filter(river=river)
             '''

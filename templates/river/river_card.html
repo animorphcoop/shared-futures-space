@@ -1,3 +1,6 @@
+{% load static %}
+
+
 {% url 'view_river' river.slug as view_url %}
 
 <div class="mx-1.5 relative">
@@ -48,7 +51,19 @@
 
         {% include "partials/vertical-spacer.html" with space="6" %}
 
-        <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-[262px] w-full rounded-[10px_10px_0_0]"></div>
+        <div class="h-[262px] w-full rounded-[10px_10px_0_0]">
+            {% if river.image %}
+
+                <img src="{{river.image.url }}" alt="" title="">
+
+
+            {% else %}
+                <img src="{% static 'images/spring/spring_image_placeholder.png' %}" alt="Spring image" class="">
+
+            {% endif %}
+
+
+        </div>
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
