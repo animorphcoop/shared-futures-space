@@ -98,8 +98,7 @@
                                                 <img class="h-6 w-6" src={{ user.avatar.image_url }}>
                                                 <span class="text-meta-label">{{user.display_name}}</span>
                                             </div>
-                                            <p class="text-meta text-black/30">[[ Joined X time ago ]]</p>
-                                            {#  TODO: Add timesince user joined this river  #}
+                                            <p class="text-meta text-black/30">joined {{user.join_date}}</p>
                                         </div>
                                     {% endfor %}
                                 </div>
