@@ -96,9 +96,7 @@
                                         <div class="flex justify-between items-center pt-3">
                                             <div class="flex gap-2 items-center">
                                                 <img class="h-6 w-6" src={{ user.avatar.image_url }}>
-                                                {#  TODO: Add voter avatar  #}
-                                                <span class="text-meta-label">User name</span>
-                                                {#  TODO: Add voter dispaly name  #}
+                                                <span class="text-meta-label">{{user.display_name}}</span>
                                             </div>
                                             <p class="text-meta text-black/30">[[ Joined X time ago ]]</p>
                                             {#  TODO: Add timesince user joined this river  #}
@@ -122,9 +120,9 @@
                 {#  User info of the vote triggerer  #}
                 {#  TODO: Add poll creator name, time and date created at  #}
                 <p class="flex gap-2 text-meta uppercase text-black/30 px-3.5">
-                    <span>[[ POLL CREATOR ]]</span>
-                    <span>[[ POLL CREATED TIME ]]</span>
-                    <span>[[ POLL CREATED DATE ]]</span>
+                    <span>{{poll.created_by.display_name}} created poll at</span>
+                    <span>{{poll.created.time}}</span> {# created time #}
+                    <span>{{poll.created.date}}</span> {# created date #}
                 </p>
                 {% include "partials/vertical-spacer.html" with space="3" %}
             </div>

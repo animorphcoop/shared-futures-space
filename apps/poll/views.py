@@ -45,6 +45,7 @@ class PollView(TemplateView):
             poll = poll.multiplechoicepoll
         elif hasattr(poll, 'singlechoicepoll'):
             poll = poll.singlechoicepoll
+        ctx['poll'] = poll
         ctx['poll_name'] = poll.question
         ctx['poll_results'] = poll.current_results
         ctx['poll_closed'] = poll.check_closed()

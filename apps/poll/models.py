@@ -38,6 +38,7 @@ class BasePoll(models.Model):
     question: models.CharField = models.CharField(max_length = 2200) # question must be long enough to include the full text of any river description
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
     expires: models.DateTimeField = models.DateTimeField()
+    created: models.DateTimeField = models.DateTimeField(default = timezone.now)
     closed: models.BooleanField = models.BooleanField(default = False)
     vote_kind: models.Model = BaseVote # pyre-ignore[8]
     invalid_option: models.BooleanField = models.BooleanField(default = False)
