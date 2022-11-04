@@ -108,6 +108,7 @@ class River(ClusterableModel):
         REFLECT = 'reflect'
 
     slug: models.CharField = models.CharField(max_length=100, default='')
+    started_on: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     title: models.CharField = models.CharField(max_length=100)
     description: models.CharField = models.CharField(max_length=2000)
     tags = ClusterTaggableManager(through=RiverTag, blank=True)
@@ -121,6 +122,22 @@ class River(ClusterableModel):
     reflect_stage: models.ForeignKey = models.ForeignKey(ReflectStage, null=True, default=None,
                                                          on_delete=models.SET_NULL)
     current_stage: models.CharField = models.CharField(choices=Stage.choices, max_length=8, null=True, default=None)
+
+    @property
+    def get_current_stage_string(self) -> str:
+        stage_switch = {
+            "envision": 'Stage 1: Envision',
+            "plan": 'Stage 1: Plan',
+            "act": 'Stage 1: Act',
+            "reflect": 'Stage 1: Reflect'
+        }
+        return stage_switch.get(self.current_stage, "")
+
+    @property
+    def get_started_months_ago(self):
+        print(timezone.now() - self.started_on)
+        return timezone.now().month - self.started_on.month
+
 
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super().save(*args, **kwargs)  # save first or we won't have an id

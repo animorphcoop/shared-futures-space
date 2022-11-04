@@ -28,8 +28,6 @@
                 {% for member in river.membership %}
                     <span></span>
                     {% if member.starter %}
-
-                        {% comment %}TODO: RETRIEVE INFO FROM VIEW{% endcomment %}
                         <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
 
                         {% include "partials/horizontal-spacer.html" with space="4" %}
@@ -39,11 +37,13 @@
                         </span>
                     {% endif %}
                 {% endfor %}
-                {% comment %}
-                TODO: REAL TIME
-            {% endcomment %}
-                <span class="text-meta text-black/30">Started 4 months ago</span>
-                <span class="text-meta text-black/30">Stage 3: Act</span>
+                {% if river.months_since != 0 %}
+                    <span class="text-meta text-black/30">Started {{ river.months_since }} months ago</span>
+                {% endif %}
+
+                {% if river.current_stage != "" %}
+                    <span class="text-meta text-black/30">{{ river.current_stage }}</span>
+                {% endif %}
                 </div>
             </div>
             <div class="flex gap-1.5">
@@ -53,7 +53,7 @@
                     {% endif %}
                 {% endfor %}
                 {% if river.extra_swimmers != 0 %}
-                    +{{ river.extra_swimmers }}
+                    <span class="uppercase text-center text-black-text font-kanit-600 tracking-widest"> +{{ river.extra_swimmers }}</span>
                 {% endif %}
             </div>
         </div>
