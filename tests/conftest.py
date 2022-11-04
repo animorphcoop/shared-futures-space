@@ -59,12 +59,12 @@ def test_case_study_resource(db):
                                     link='https://animorph.coop/')
 
 @pytest.fixture(scope='function')
-def test_singlechoicepoll(db):
-    return SingleChoicePoll.objects.create(question='is this a test question?', options = ['option 1', 'option 2'], expires = timezone.now() + timezone.timedelta(days=1))
+def test_singlechoicepoll(db, test_river):
+    return SingleChoicePoll.objects.create(question='is this a test question?', options = ['option 1', 'option 2'], expires = timezone.now() + timezone.timedelta(days=1), river=test_river)
 
 @pytest.fixture(scope='function')
-def test_multiplechoicepoll(db):
-    return MultipleChoicePoll.objects.create(question='which options?', options = ['option A', 'option B'], expires = timezone.now() + timezone.timedelta(days=1))
+def test_multiplechoicepoll(db, test_river):
+    return MultipleChoicePoll.objects.create(question='which options?', options = ['option A', 'option B'], expires = timezone.now() + timezone.timedelta(days=1), river=test_river)
 
 @pytest.fixture(scope='function')
 def test_image(db):
