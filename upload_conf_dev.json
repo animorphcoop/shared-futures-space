@@ -1227,6 +1227,7 @@
         "Food",
         "Community"
       ],
+      "image": "spring_image_placeholder_inverted.png",
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
@@ -1317,6 +1318,8 @@
         "Food",
         "Training"
       ],
+      "image": "spring_image_placeholder_inverted.png",
+
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
@@ -1338,6 +1341,7 @@
         "Education",
         "Training"
       ],
+      "image": "spring_image_placeholder_purplehue.png",
       "swimmers": [],
       "starters": [
         "Desmond Telainy"
@@ -1352,6 +1356,7 @@
         "Community",
         "Waste Management"
       ],
+      "image": "spring_image_placeholder_purplehue.png",
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
@@ -1371,6 +1376,7 @@
         "Youth Centre",
         "Running"
       ],
+      "image": "spring_image_placeholder_purplehue.png",
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
@@ -1389,6 +1395,7 @@
         "Food Security",
         "Community Support"
       ],
+      "image": "spring_image_placeholder_inverted.png",
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
@@ -1408,8 +1415,11 @@
         "Communication",
         "Education"
       ],
+      "image": "spring_image_placeholder_inverted.png",
       "swimmers": [],
-      "starters": []
+      "starters": [
+        "Aoife Wilson"
+      ]
     },
     {
       "name": "Colin's New Man Shed",
@@ -1420,13 +1430,14 @@
         "Community",
         "DIY"
       ],
+      "image": "spring_image_placeholder_purplehue.png",
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
         "Dan O’Callaghan"
       ],
       "starters": [
-        "Margaret Cloud"
+        "Patrick Casey"
       ]
     },
     {
@@ -1438,6 +1449,7 @@
         "Days Out",
         "Park Activities"
       ],
+      "image": "",
       "swimmers": [
         "Patrick Casey",
         "Darren Wayne",
@@ -1456,8 +1468,11 @@
         "Training",
         "Courses"
       ],
+      "image": "spring_image_placeholder_inverted.png",
       "swimmers": [],
-      "starters": []
+      "starters": [
+        "Margaret Cloud"
+      ]
     },
     {
       "name": "Donegal Pass Community Centre - 2x Positions",
@@ -1468,8 +1483,14 @@
         "Training",
         "Courses"
       ],
-      "swimmers": [],
-      "starters": []
+      "image": "",
+      "swimmers": [
+        "Darren Wayne",
+        "Dan O’Callaghan"
+      ],
+      "starters": [
+        "Joe Blues"
+      ]
     },
     {
       "name": "New Seeds – Help co-design and plant new flower beds at the end of Eureka Drive",
@@ -1480,6 +1501,7 @@
         "Tea&Biscuits",
         "Gettogether"
       ],
+      "image": "",
       "swimmers": [
         "Carla Owen",
         "Emma McLaughlin"

@@ -15,6 +15,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     if not current_user.added_data: # pyre-ignore[16]
         return HttpResponseRedirect(reverse('account_add_data'))
 
+    #TODO: Load real content
     messages = ['message one', 'message two', 'message three', 'message four', 'message five']
     notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new river. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
     rivers = ['rivers one', 'rivers two', 'rivers three']

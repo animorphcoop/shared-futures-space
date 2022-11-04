@@ -64,58 +64,72 @@ def add_resources(resource_data):
 def add_rivers(rivers_data):
     for river_data in rivers_data:
         try:
-            new_project = \
+
+            new_river = \
                 River.objects.get_or_create(title=river_data['name'], description=river_data['description'],
                                             area=Area.objects.get_or_create(name=river_data['area'])[0])[0]
+
             for tag in river_data['tags']:
-                new_project.tags.add(tag)
-            new_project.save()
+                new_river.tags.add(tag)
+
+            if river_data['image'] != "":
+                with open(image_dir + river_data['image'], 'rb') as f:
+                    new_river.image = ImageFile(f)
+                    new_river.save()
+            else:
+                new_river.save()
+
             for member in river_data['swimmers']:
-                RiverMembership.objects.get_or_create(river=new_project,
-                                                      user=CustomUser.objects.get(display_name=member), starter=False)[0]
+                RiverMembership.objects.get_or_create(river=new_river,
+                                                      user=CustomUser.objects.get(display_name=member),
+                                                      starter=False)[0]
             for member in river_data['starters']:
-                RiverMembership.objects.get_or_create(river=new_project,
-                                                      user=CustomUser.objects.get(display_name=member), starter=True)[0]
+                RiverMembership.objects.get_or_create(river=new_river,
+                                                      user=CustomUser.objects.get(display_name=member),
+                                                      starter=True)[0]
             if 'envision' in river_data:
-                new_project.start_envision()
+                new_river.start_envision()
                 for message in river_data['envision']['chat']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.envision_stage.chat)
+                                                  text=message['content'], chat=new_river.envision_stage.chat)
             if 'plan' in river_data:
-                new_project.start_plan()
+                new_river.start_plan()
                 for message in river_data['plan']['general']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.plan_stage.general_chat)
+                                                  text=message['content'], chat=new_river.plan_stage.general_chat)
                 for message in river_data['plan']['funding']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.plan_stage.funding_chat)
+                                                  text=message['content'], chat=new_river.plan_stage.funding_chat)
                 for message in river_data['plan']['location']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.plan_stage.location_chat)
+                                                  text=message['content'],
+                                                  chat=new_river.plan_stage.location_chat)
                 for message in river_data['plan']['dates']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.plan_stage.dates_chat)
+                                                  text=message['content'], chat=new_river.plan_stage.dates_chat)
             if 'act' in river_data:
-                new_project.start_act()
+                new_river.start_act()
                 for message in river_data['act']['general']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.act_stage.general_chat)
+                                                  text=message['content'], chat=new_river.act_stage.general_chat)
                 for message in river_data['act']['funding']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.act_stage.funding_chat)
+                                                  text=message['content'], chat=new_river.act_stage.funding_chat)
                 for message in river_data['act']['location']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.act_stage.location_chat)
+                                                  text=message['content'], chat=new_river.act_stage.location_chat)
                 for message in river_data['act']['dates']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.act_stage.dates_chat)
+                                                  text=message['content'], chat=new_river.act_stage.dates_chat)
             if 'reflect' in river_data:
-                new_project.start_reflect()
+                new_river.start_reflect()
                 for message in river_data['reflect']['chat']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_project.reflect_stage.chat)
+                                                  text=message['content'], chat=new_river.reflect_stage.chat)
+
         except Exception as e:
-            print('could not add river with definition: ' + str(river_data) + '\nerror given: ' + repr(e))
+            print('could not load river image: ' + str(river_data['name']) + '\nerror given: ' + repr(
+                e))
 
 
 def add_organisations(data):
