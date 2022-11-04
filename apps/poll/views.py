@@ -48,11 +48,14 @@ class PollView(TemplateView):
         ctx['poll'] = poll
         ctx['poll_name'] = poll.question
         ctx['poll_results'] = poll.current_results
+        for result in ctx['poll_results'].values():
+            for user in result:
+                user.join_date = RiverMembership.objects.get(user = user, river = poll.river).join_date
         ctx['poll_closed'] = poll.check_closed()
         ctx['poll_expires'] = poll.expires
         ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll = poll))
         ctx['poll_votes_cast'] = len(list(chain(*ctx['poll_results'].values())))
-        ctx['poll_results_winners'] = get_winners(list(poll.current_results.items()))
+        ctx['poll_results_winners'] = get_winners(list(ctx['poll_results'].items()))
         return ctx
 
 def get_winners(options: List[Tuple[str,List[Any]]], winners: List[Tuple[str,List[Any]]] = []) -> List[str]: # pyre-ignore[2] Any is actually CustomUser, but for some reason we can't get hold of that
