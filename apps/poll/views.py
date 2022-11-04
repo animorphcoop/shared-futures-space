@@ -52,7 +52,21 @@ class PollView(TemplateView):
         ctx['poll_expires'] = poll.expires
         ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll = poll))
         ctx['poll_votes_cast'] = len(list(chain(*ctx['poll_results'].values())))
+        ctx['poll_results_winners'] = get_winners(list(poll.current_results.items()))
         return ctx
+
+def get_winners(options, winners = []):
+    # get a list of equally-most-highly voted results, in case of a draw
+    if len(options) == 0:
+        return list(map(lambda pair: pair[0], winners))
+    else:
+        current_max = len(winners[0][1]) if len(winners) > 0 else 0
+        if len(options[0][1]) > current_max:
+           return get_winners(options[1:], [options[0]])
+        elif len(options[0][1]) == current_max:
+            return get_winners(options[1:], winners + [options[0]])
+        else:
+            return get_winners(options[1:], winners)
 
 class PollCreateForm(ModelForm):
     river = ModelChoiceField(queryset=River.objects.all()) # should only be projects you're a member of
