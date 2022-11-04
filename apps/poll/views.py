@@ -10,11 +10,10 @@ from django.forms import ChoiceField, ModelChoiceField, ModelForm
 from uuid import UUID
 from itertools import chain
 
-from typing import Dict, Any
+from typing import Dict, Any, List, Tuple
 
 from .models import BasePoll, SingleChoicePoll, MultipleChoicePoll, BaseVote, SingleVote, MultipleVote
 from river.models import River, RiverMembership # pyre-ignore[21]
-from river.util import get_chat_containing_river # pyre-ignore[21]
 
 class PollView(TemplateView):
     def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponseRedirect:
@@ -49,9 +48,6 @@ class PollView(TemplateView):
         ctx['poll'] = poll
         ctx['poll_name'] = poll.question
         ctx['poll_results'] = poll.current_results
-        for result in ctx['poll_results'].values():
-            for user in result:
-                user.join_date = RiverMembership.objects.get(user = user, river = poll.river).join_date
         ctx['poll_closed'] = poll.check_closed()
         ctx['poll_expires'] = poll.expires
         ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll = poll))
@@ -59,7 +55,7 @@ class PollView(TemplateView):
         ctx['poll_results_winners'] = get_winners(list(poll.current_results.items()))
         return ctx
 
-def get_winners(options, winners = []):
+def get_winners(options: List[Tuple[str,List[Any]]], winners: List[Tuple[str,List[Any]]] = []) -> List[str]: # pyre-ignore[2] Any is actually CustomUser, but for some reason we can't get hold of that
     # get a list of equally-most-highly voted results, in case of a draw
     if len(options) == 0:
         return list(map(lambda pair: pair[0], winners))
@@ -84,9 +80,10 @@ class PollCreateView(CreateView): # pyre-ignore[24]
     form_class = PollCreateForm
     def form_valid(self, form) -> HttpResponseRedirect: # pyre-ignore[2] - the type of the form argument is some weird private thing that i can't seem to get hold of
         if form.cleaned_data['kind'] == 'SINGLE':
-            new_poll = SingleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, created_by = self.request.user, river = form.cleaned_data['river'])
+            new_poll = SingleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, created_by = self.request.user)
         elif form.cleaned_data['kind'] == 'MULTIPLE':
-            new_poll = MultipleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, created_by = self.request.user, river = form.cleaned_data['river'])
+            new_poll = MultipleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, created_by = self.request.user)
+        new_poll.make_votes(form.cleaned_data['river'])
         return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
     def get_success_url(self) -> str:
         return reverse('poll_view', args=[self.object.uuid]) # pyre-ignore[16]
