@@ -128,8 +128,8 @@ class River(ClusterableModel):
         stage_switch = {
             "envision": 'Stage 1: Envision',
             "plan": 'Stage 2: Plan',
-            "act": 'Stage 2: Act',
-            "reflect": 'Stage 3: Reflect'
+            "act": 'Stage 3: Act',
+            "reflect": 'Stage 4: Reflect'
         }
         return stage_switch.get(self.current_stage, "")
 
