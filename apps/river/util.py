@@ -1,6 +1,4 @@
 # pyre-strict
-from django.utils import timezone
-
 from django.db.models import Q
 
 from .models import River, EnvisionStage, PlanStage, ActStage, ReflectStage
@@ -23,19 +21,3 @@ def get_chat_containing_river(chat: Chat) -> Optional[River]: # pyre-ignore[11]
     if len(reflect) != 0:
         return River.objects.get(reflect_stage = reflect[0])
     return None
-
-'''
-def get_current_stage_string(current_stage) -> str:
-    stage_switch= {
-      "envision":'Stage 1: Envision',
-      "plan":'Stage 1: Plan',
-      "act":'Stage 1: Act',
-      "reflect":'Stage 1: Reflect'
-      }
-    return stage_switch.get(current_stage, "")
-
-
-def get_started_months_ago(started_on):
-    print(timezone.now()-started_on)
-    return timezone.now().month - started_on.month
-'''
