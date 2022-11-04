@@ -134,8 +134,7 @@ class River(ClusterableModel):
         return stage_switch.get(self.current_stage, "")
 
     @property
-    def get_started_months_ago(self):
-        print(timezone.now() - self.started_on)
+    def get_started_months_ago(self) -> int:
         return timezone.now().month - self.started_on.month
 
 
