@@ -8,7 +8,6 @@ function toggleAvatar() {
     avatars.classList.toggle('hidden');
 }
 function changeAvatar(avatarElemId, avatarPk) {
-    console.log(avatarPk);
     if (avatarClicked != null) {
         avatarClicked.classList.remove("bg-purple/25");
     }

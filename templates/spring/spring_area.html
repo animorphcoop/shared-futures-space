@@ -1,11 +1,4 @@
-
-
 {% extends "base.html" %}
-{% comment %}
-DEFUNCT
-Please refer to spring/spring_area.html
-{% endcomment %}
-
 {% load static %}
 
 {% block body_class %}template-homepage{% endblock %}
@@ -19,33 +12,12 @@ Please refer to spring/spring_area.html
 
     {% include "partials/vertical-spacer.html" with space="2" %}
 
-    {% comment %} {% if not request.user.is_anonymous %}
-        <form method=post>
-            {% csrf_token %}
-            <button name=to_view value={% if viewing == 'mine' %}all>View All{% else %}mine>View My Projects{% endif %}</button>
-        </form>
-    {% endif %}
-    <table id=rivers>
-        <tr>
-            <th>River Name</th>
-            <th></th>
-        </tr>
-        {% for river in rivers %}
-            <tr>
-                <td>{{ river.title }}</td>
-                <td><a href={% url 'view_river' river.slug %}>View River</a></td>
-            </tr>
-        {% endfor %}
-    </table> {% endcomment %}
-
     <div class="flex flex-col gap-6">
         {% for avatar in avatars %}
             <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
         {% endfor %}
 
         {% for river in rivers %}
-
-
             {% include "river/river_card.html" with river=river %}
         {% endfor %}
     </div>

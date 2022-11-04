@@ -7,16 +7,18 @@
             <th></th>
         </tr>
         {% for membership in memberships %}
+        <tr>
+          <td>{{membership.user.display_name}}</td>
+          <td>{% if membership.starter %}Starter{% endif %}</td>
+          <td>
             <form method=POST>
-                {% csrf_token %}
-                <input type=hidden name=membership value={{membership.id}}></input>
-                <tr>
-                    <td>{{membership.user.display_name}}</td>
-                    <td>{% if membership.starter %}Starter{% endif %}</td>
-                    <td>
-                        {% if not membership.starter %}<button name=action value=offer_ownership>offer ownership</button>{% endif %}
-                    </tr>
-                </form>
+              {% csrf_token %}
+              <input type=hidden name=membership value={{membership.id}}></input>
+              {% if not membership.starter %}<button name=action value=offer_ownership>offer ownership</button>{% endif %}
+              {% if not membership.starter %}<button name=action value=remove_swimmer>remove</button>{% endif %}
+            </form>
+          </td>
+        </tr>
         {% endfor %}
     </table>
 {% else %}

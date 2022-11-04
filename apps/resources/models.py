@@ -18,14 +18,9 @@ from django.utils.text import slugify
 from apps.core.utils.slugifier import generate_random_string
 from typing import Optional
 
-# you need to specify each model's tag system seperately because the db doesn't have a notion of inheritance
-# thy still autocomplete tags that were defined on other models though
-class HowToTag(TaggedItemBase):
-    content_object = ParentalKey('resources.HowTo', on_delete=models.CASCADE, related_name='tagged_items')
 
-
-class CaseStudyTag(TaggedItemBase):
-    content_object = ParentalKey('resources.CaseStudy', on_delete=models.CASCADE, related_name='tagged_items')
+class ResourceTag(TaggedItemBase):
+    content_object = ParentalKey('resources.Resource', on_delete=models.CASCADE, related_name='tagged_items')
 
 
 class FoundUseful(models.Model):
@@ -69,18 +64,17 @@ class Resource(ClusterableModel):
         null=False,
     )
     link: models.CharField = models.CharField(
-        max_length=100,
+        max_length=150,
         blank=True,
         null=True,
     )
+    tags = ClusterTaggableManager(through=ResourceTag, blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}"
 
 
 class HowTo(Resource):
-    tags = ClusterTaggableManager(through=HowToTag, blank=True)
-
     class Meta:
         verbose_name = 'How To'
         verbose_name_plural = 'How Tos'
@@ -103,8 +97,6 @@ class CaseStudy(Resource):
     content_panels = [
         FieldPanel("body"),
     ]
-
-    tags = ClusterTaggableManager(through=CaseStudyTag, blank=True)
 
     class Meta:
         verbose_name = 'Case Study'

@@ -89,3 +89,9 @@ input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
     display: none;
 }
+
+/* Input text messages */
+textarea.input-text-messages {
+    height: 48px;
+    max-height: 150px;
+}

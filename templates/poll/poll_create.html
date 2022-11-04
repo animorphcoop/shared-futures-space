@@ -1,4 +1,47 @@
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
-</form>
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+    {#  Modal blurred backerground overlay  #}
+    <section class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur">
+        {#  White modal background  #}
+        <div class="bg-white m-2.5 sm:w-[360px]">
+            <div class="p-2.5">
+                {#  Modal title  #}
+                <h1 class="text-large text-black/75">
+                    Create a poll
+                </h1>
+                {% include "partials/vertical-spacer.html" with space="4.5" %}
+                <form method="post">
+                    {% csrf_token %}
+                    {#  Description  #}
+                    {% include "partials/input-label.html" with for="question" label="Description" %}
+                    {% include "partials/input-text.html" with field=form.question id="question" name="question" type="text" %} {#  TODO: Textarea  #}
+                    {% include "partials/vertical-spacer.html" with space="4.5" %}
+                    {#  Voting options  #}
+                    <h2 class="text-header">
+                        Voting options
+                    </h2>
+                    {% include "partials/vertical-spacer.html" with space="3" %}
+                    <ul class="text-header text-black/30">
+                        <li>
+                            Agree
+                        </li>
+                        {% include "partials/vertical-spacer.html" with space="3" %}
+                        <li>
+                            Disagree
+                        </li>
+                    </ul>
+                    {% include "partials/vertical-spacer.html" with space="4.5" %}
+                    <input type="submit" value="Create poll" class="button button-important">
+
+                    {% include "partials/vertical-spacer.html" with space="12" %}
+                    {{ form.as_p }}
+                </form>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

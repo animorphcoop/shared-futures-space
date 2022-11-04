@@ -6,32 +6,39 @@
 
     {% block title %}{% include "partials/title.html" with title="Your Messages" %}{% endblock %}
 
+    {% include "partials/vertical-spacer.html" with space="4" %}
+
     {% for user in users_with_chats %}
-        <p><a href="{% url 'user_chat_path' user.uuid %}">{{user.display_name}}</a></p>
-    {% endfor %}
-
-    {% include "partials/vertical-spacer.html" with space="6" %}
-
-    <div class="mx-4">
-        {% with icon_width="30px"%}
-            <div class="flex space-between relative">
-                <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-[{{ icon_width }}] w-[{{ icon_width }}]"></div>
-                <div class="bg-gray-light rounded-[50px] px-9 py-3 w-[calc(100%-{{ icon_width }})]">
-                    <span class="uppercase font-kanit-700 text-black-meta text-[9px] tracking-widest">Sean</span>
-                    {% include "partials/vertical-spacer.html" with space="1.5" %}
-                    <p class="font-garamond-500 text-black-text text-base leading-5 tracking-[0.01em]">Hi John! Thank you for your interest in the river! cut off 2 line</p>
-                    {% include "partials/vertical-spacer.html" with space="1.5" %}
-                    <div class="flex gap-3">
-                        <span class="font-kanit-400 text-black-meta leading-3 tracking-wide text-[9px]">11:12</span>
-                        <span class="font-kanit-400 text-black-meta leading-3 tracking-wide text-[9px]">15/11/2021 </span>
-                        <button>
-                            <span class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">Block</span>
-                        </button>
+        <a href="{% url 'user_chat_path' user.uuid %}">
+            <div class="mx-4">
+                {% with icon_width="30px" %}
+                    <div class="flex space-between items-start relative">
+                        <div class="h-[{{ icon_width }}] w-[{{ icon_width }}]">
+                            <img src="{{ user.avatar.image_url }}" class="w-7.5 h-7.5"> {# TODO: fetch message user's avatar url #}
+                        </div>
+                        <div class="bg-gray-light rounded-[50px] px-9 py-3 w-[calc(100%-{{ icon_width }})]">
+                            <h2 class="text-meta-label font-kanit-700 text-black/30">
+                                {{ user.display_name }}
+                            </h2>
+                            {% include "partials/vertical-spacer.html" with space="1.5" %}
+                            <p class="text-body">
+                                [[ Hi John! Thank you for your interest in the river! cut off 2 line ]] {# TODO: fetch first 50ch of latest message #}
+                            </p>
+                            {% include "partials/vertical-spacer.html" with space="1.5" %}
+                            <div class="flex gap-3">
+                                <span class="text-meta-label text-black/30">[[ 11:12 ]]</span> {# TODO: fetch time of latest message #}
+                                <span class="text-meta-label text-black/30" >[[ 15/11/2021 ]]</span> {# TODO: fetch date of latest message #}
+                                <span class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
+                                    Block {# TODO: launch block modal #}
+                                </span>
+                            </div>
+                        </div>
+                        <span class="font-kanit-700 text-[9px] text-white absolute rounded-sm bg-red-important py-[3px] px-1.5 right-0">1</span>
                     </div>
-                </div>
-                <span class="font-kanit-700 text-[9px] text-white absolute rounded-sm bg-red-important py-[3px] px-1.5 right-0">1</span>
+                {% endwith %}
             </div>
-        {% endwith %}
-    </div>
+        </a>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+    {% endfor %}
 
 {% endblock %}

@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from uuid import uuid4
 
 from userauth.models import CustomUser # pyre-ignore[21]
@@ -38,14 +40,12 @@ class BasePoll(models.Model):
     question: models.CharField = models.CharField(max_length = 2200) # question must be long enough to include the full text of any river description
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
     expires: models.DateTimeField = models.DateTimeField()
+    created: models.DateTimeField = models.DateTimeField(default = timezone.now)
     closed: models.BooleanField = models.BooleanField(default = False)
     vote_kind: models.Model = BaseVote # pyre-ignore[8]
-    invalid_option: models.BooleanField = models.BooleanField(default = True)
-    # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
-    def make_votes(self, river) -> None: # pyre-ignore[2] can't import River for this, see next line
-        from river.models import RiverMembership # pyre-ignore[21] this is considered bad form, but as far as i can tell necessary to avoid a circular import
-        for voter in RiverMembership.objects.filter(river = river):
-            self.vote_kind.objects.create(user = voter.user, poll = self, choice = None if self.vote_kind == SingleVote else [])
+    invalid_option: models.BooleanField = models.BooleanField(default = False)
+    created_by: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.SET_NULL, null = True)
+    river: models.ForeignKey = models.ForeignKey('river.River', on_delete = models.CASCADE)
     @property
     def specific(self) -> Union['SingleChoicePoll', 'MultipleChoicePoll']:
         if hasattr(self, 'multiplechoicepoll'):
@@ -53,13 +53,10 @@ class BasePoll(models.Model):
         else:
             return self.singlechoicepoll # pyre-ignore[16]
     def close(self) -> None:
-        from river.models import River, EnvisionStage
+        from river.models import River, EnvisionStage # pyre-ignore[21]
         from messaging.util import send_system_message # pyre-ignore[21]
-        print(1)
         if self.singlechoicepoll: # pyre-ignore[16]
-            print(2)
             es = EnvisionStage.objects.filter(poll = self.singlechoicepoll)
-            print(es)
             if len(es) != 0:
                 es = es[0]
             # this poll is the active poll of the envision stage of some river
@@ -79,8 +76,11 @@ class SingleChoicePoll(BasePoll):
         results = {option:[] for option in self.options}
         if self.invalid_option:
             results['poll is wrong'] = []
-        for vote in votes:
-            results[self.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
+            for vote in votes:
+                results[self.options[vote.choice - 1] if vote.choice != 0 else 'poll is wrong'].append(vote.user)
+        else:
+            for vote in votes:
+                results[self.options[vote.choice - 1]].append(vote.user)
         return results
     def check_closed(self) -> bool:
         if self.closed:
@@ -109,9 +109,13 @@ class MultipleChoicePoll(BasePoll):
         results = {option:[] for option in self.options}
         if self.invalid_option:
             results['poll is wrong'] = []
-        for vote in votes:
-            for choice in vote.choice:
-                results[self.options[choice - 1] if choice != 0 else 'poll is wrong'].append(vote.user)
+            for vote in votes:
+                for choice in vote.choice:
+                    results[self.options[choice - 1] if choice != 0 else 'poll is wrong'].append(vote.user)
+        else:
+            for vote in votes:
+                for choice in vote.choice:
+                    results[self.options[choice - 1]].append(vote.user)
         return results
     def check_closed(self) -> bool:
         if self.closed:
@@ -129,3 +133,19 @@ class MultipleChoicePoll(BasePoll):
                 return True
             else:
                 return False
+
+
+# initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
+@receiver(post_save, sender=SingleChoicePoll)
+def make_votes_single(sender, instance, created, **kwargs) -> None: # pyre-ignore[2]
+    from river.models import RiverMembership
+    if created:
+        for voter in RiverMembership.objects.filter(river = instance.basepoll_ptr.river):
+            instance.vote_kind.objects.create(user = voter.user, poll = instance, choice = None)
+            
+@receiver(post_save, sender=MultipleChoicePoll)
+def make_votes_multiple(sender, instance, created, **kwargs) -> None: # pyre-ignore[2]
+    from river.models import RiverMembership
+    if created:
+        for voter in RiverMembership.objects.filter(river = instance.basepoll_ptr.river):
+            instance.vote_kind.objects.create(user = voter.user, poll = instance, choice = [])

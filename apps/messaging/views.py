@@ -7,7 +7,10 @@ from userauth.util import get_system_user # pyre-ignore[21]
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from typing import Dict, List, Any
-from .models import Chat, Message
+
+from .models import Chat, Message, Flag
+from river.util import get_chat_containing_river # pyre-ignore[21]
+from river.models import RiverMembership # pyre-ignore[21]
 
 # usage note: you must redefine post and get_context_data
 # both need to be passed three kwargs:
@@ -32,6 +35,12 @@ class ChatView(TemplateView):
             new_msg.save()
         if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
             msg_from = 0 # drop to current position in chat if not there already after sending a message
+        if 'flag' in request.POST and request.user.is_authenticated:
+            Message.objects.get(uuid = request.POST['flag']).flagged(request.user)
+        if 'starter_hide' in request.POST and RiverMembership.objects.filter(user = request.user, starter = True, river = get_chat_containing_river(chat)).exists():
+            m = Message.objects.get(uuid = request.POST['starter_hide'])
+            m.hidden = not m.hidden
+            m.save()
         # redirect so reloading the page doesn't resend the message
         return redirect(url + '?interval=' + str(msg_no) + '&from=' + str(msg_from))
     def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
@@ -51,5 +60,8 @@ class ChatView(TemplateView):
         context['back_from'] = int(min(msg_from + (msg_no/2), len(messages)))
         context['forward_from'] = int(max(msg_from - (msg_no/2), 0))
         context['members'] = kwargs['members']
+        starter_membership = RiverMembership.objects.filter(starter = True, river = get_chat_containing_river(kwargs['chat']))
+        context['starter'] = starter_membership[0].user if len(starter_membership) != 0 else None
         context['system_user'] = get_system_user()
+        context['my_flags'] = [flag.message.uuid for flag in Flag.objects.filter(flagged_by = self.request.user)] if self.request.user.is_authenticated else []
         return context

@@ -1,11 +1,17 @@
-<div class="mx-1.5 relative">
+{% load static %}
+
+
+{% url 'view_river' river.slug as view_url %}
+
+<div class="mx-1.5 relative" x-init="swimmerCounter({{ river.num_swimmers }})">
     <div class="absolute bg-gradient-to-b from-[rgba(219,243,237,0.78)] to-white h-12 w-full rounded-xl"></div>
     <div class="p-3 relative">
         <div class="flex justify-between">
             <h2 class="relative text-title text-black/55">
-                {{ river.name }}
+                {{ river.title }}
             </h2>
-            <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-[22px] w-[22px]"></div>
+            {% include 'partials/button-copy.html' with icon='link' path=view_url %}
+
         </div>
 
         {% include "partials/vertical-spacer.html" with space="6" %}
@@ -20,9 +26,8 @@
         <div class="flex justify-between">
             <div class="flex">
                 {% for member in river.membership %}
+                    <span></span>
                     {% if member.starter %}
-
-                        {% comment %}TODO: RETRIEVE INFO FROM VIEW{% endcomment %}
                         <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
 
                         {% include "partials/horizontal-spacer.html" with space="4" %}
@@ -32,20 +37,42 @@
                         </span>
                     {% endif %}
                 {% endfor %}
-                <span class="text-meta text-black/30">Started 4 months ago</span>
-                <span class="text-meta text-black/30">Stage 3: Act</span>
+                {% if river.months_since != 0 %}
+                    <span class="text-meta text-black/30">Started {{ river.months_since }} months ago</span>
+                {% endif %}
+
+                {% if river.current_stage != "" %}
+                    <span class="text-meta text-black/30">{{ river.current_stage }}</span>
+                {% endif %}
                 </div>
             </div>
             <div class="flex gap-1.5">
                 {% for member in river.membership|slice:3 %}
-                    <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
+                    {% if not member.starter %}
+                        <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
+                    {% endif %}
                 {% endfor %}
+                {% if river.extra_swimmers != 0 %}
+                    <span class="uppercase text-center text-black-text font-kanit-600 tracking-widest"> +{{ river.extra_swimmers }}</span>
+                {% endif %}
             </div>
         </div>
 
         {% include "partials/vertical-spacer.html" with space="6" %}
 
-        <div class="bg-[url('/static/images/dashboard/dashboard_location_pin_icon.png')] h-[262px] w-full rounded-[10px_10px_0_0]"></div>
+        <div class="h-[262px] w-full rounded-[10px_10px_0_0]">
+            {% if river.image %}
+
+                <img src="{{ river.image.url }}" alt="" title="">
+
+
+            {% else %}
+                <img src="{% static 'images/spring/spring_image_placeholder.png' %}" alt="Spring image" class="">
+
+            {% endif %}
+
+
+        </div>
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
@@ -54,7 +81,14 @@
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         {% include "partials/button.html" with url=the_url style="important" button="Join" %}
-        {% url 'view_river' river.slug as the_url %}
-        {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
+
+        {% include "partials/button.html" with url=view_url style="primary_white" button="Learn more" %}
     </div>
 </div>
+{% block scripts %}
+    <script>
+        function swimmerCounter(swimmerNumber) {
+            console.log(swimmerNumber)
+        }
+    </script>
+{% endblock %}

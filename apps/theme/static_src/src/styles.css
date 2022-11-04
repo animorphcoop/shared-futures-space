@@ -2,12 +2,34 @@
 @tailwind components;
 
 @layer components { /* layer so they're on included if used */
+    /* --- TYPOGRAPHY ----------------------------------------------------------------------------------------------- */
+    .text-large { /* mobile/28 Prompts + Descriptions */
+        @apply text-black/55 font-garamond-500 text-black-large text-[22px] leading-7/*28px*/
+    }
+    .text-title { /* menu headers */
+        @apply font-kanit-500 text-black/75 text-xl leading-6
+    }
+    .text-header { /* mobile/10 Headers */
+        @apply uppercase text-black-text font-kanit-600 text-[10px] tracking-widest leading-normal
+    }
+    .text-body { /* mobile/15 Body */
+        @apply font-garamond-500 text-black/75 text-base leading-5 whitespace-normal tracking-[0.01em]
+    }
+    .text-button { /* mobile/10 Button */
+        @apply font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
+    }
+    .text-meta { /* mobile/meta/9 lowercase Reg: meta */
+        @apply text-black/75 font-kanit-400 text-[9px] leading-3 tracking-[0.03em]
+    }
+    .text-meta-label { /* mobile/meta/9 allcap Reg: tags and names */
+        @apply uppercase text-black/75 font-kanit-400 text-[9px] leading-[12px] tracking-widest
+    }
+
     /* --- BUTTONS -------------------------------------------------------------------------------------------------- */
     .button {
         @apply inline-block rounded-full px-4 py-4 max-h-12
-        font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
         transition ease-out duration-300
-        text-purple;
+        text-button text-purple;
     }
     .button-on-white {
         @apply bg-blue-second hover:bg-resources-one focus:bg-blue-done
@@ -36,26 +58,6 @@
     }
     .input-text-invalid {
         @apply invalid:border-red-important focus:invalid:ring-red-important
-    }
-
-    /* --- TYPOGRAPHY ----------------------------------------------------------------------------------------------- */
-    .text-large { /* mobile/28 Prompts + Descriptions */
-        @apply text-black/55 font-garamond-500 text-black-large text-[22px] leading-7/*28px*/
-    }
-    .text-title { /* menu headers */
-        @apply font-kanit-500 text-black/75 text-xl leading-6
-    }
-    .text-header { /* mobile/10 Headers */
-        @apply uppercase text-black-text font-kanit-600 text-[10px] tracking-widest leading-normal
-    }
-    .text-body { /* mobile/15 Body */
-        @apply font-garamond-500 text-black/75 text-base leading-5 whitespace-normal
-    }
-    .text-meta { /* mobile/meta/9 lowercase Reg: meta */
-        @apply text-black/75 font-kanit-400 text-[9px] leading-3 tracking-[0.03em]
-    }
-    .text-meta-label { /* mobile/meta/9 allcap Reg: tags and names */
-        @apply uppercase text-black/75 font-kanit-400 text-[9px] leading-[12px] tracking-widest
     }
 }
 
