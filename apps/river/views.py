@@ -215,6 +215,7 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         ctx = super().get_context_data(chat=self.get_chat(river, stage, topic), url=self.request.get_full_path(),
                                        members=list(map(lambda x: x.user, RiverMembership.objects.filter(
                                            river=river))))
+        ctx['form'] = RiverChatForm
         ctx['slug'] = river.slug
         return ctx
 
