@@ -1,12 +1,31 @@
 
-<h1>envision view</h1>
+{% block content %}
 
+<div id="envision-chat" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
+     hx-trigger="load"
+     hx-target="#envision-chat"
+>
+
+</div>
+
+{% comment %}
 <p><a href="{% url 'river_chat' river.slug 'envision' 'general' %}">Envision Chat</a></p>
+{% endcomment %}
 
-{% if river.current_stage == river.Stage.ENVISION %}
-    <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Plan Stage</button></form>
-{% endif %}
 
+{% comment %}{% if river.current_stage == river.Stage.ENVISION %}
+    <form method=POST>{% csrf_token %}
+        <button name=action value=start_plan>[TESTING] Start Plan Stage</button>
+    </form>
+{% endif %}{% endcomment %}
+<br/><br/>
+<br/>
+<br/>
+<br/>
+{{ river.current_stage  }}
 {% if river.current_stage == river.Stage.ENVISION and request.user.id in owners %}
- <a href="{% url 'create_envision_poll' river.slug %}">Create Poll For Vision</a>
+
+    <a href="{% url 'create_envision_poll' river.slug %}">Create Poll For Envision</a>
 {% endif %}
+
+{% endblock content %}

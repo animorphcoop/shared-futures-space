@@ -1,2 +1,18 @@
-<h3>River Chat: {{river.name}}</h3>
-{% include 'messaging/chatbox_snippet.html' %}
+
+{% block content %}
+    <div class="mx-4.5">
+        {{ other_user.display_name }}
+        {% include 'messaging/chatbox_snippet.html' with direct=False slug=slug %}
+    </div>
+
+
+
+
+    {% if not user.is_authenticated %}
+        <div class="bg-blue-done">
+            {% url 'account_login' as the_url %}
+            {% include "partials/call-to-action.html" with main="To participate in the project you need to be logged in." button="Log in" url=the_url  bg='done' %}
+        </div>
+    {% endif %}
+
+{% endblock %}

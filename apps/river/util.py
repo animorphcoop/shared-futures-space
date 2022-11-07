@@ -1,5 +1,4 @@
 # pyre-strict
-
 from django.db.models import Q
 
 from .models import River, EnvisionStage, PlanStage, ActStage, ReflectStage

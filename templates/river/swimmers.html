@@ -1,0 +1,11 @@
+{% extends "partials/drawer.html" %}
+
+{% block drawer_content %}
+    {% for member in members %}
+        <div class="flex items-center">
+            <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
+            {% include "partials/horizontal-spacer.html" with space="3" %}
+            <span class="uppercase font-kanit-400 text-[9px] leading-3 tracking-widest">{{member.user.display_name}}</span>
+        </div>
+    {% endfor %}
+{% endblock %}
