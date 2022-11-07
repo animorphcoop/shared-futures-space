@@ -31,13 +31,13 @@ class ChatView(TemplateView):
         if (request.user in members and 'text' in request.POST):
             image = request.FILES.get('image', None)
             file = request.FILES.get('file', None)
-            print(file)
-            if image:
-                new_msg = Message(sender=request.user, text=request.POST['text'], image=image, chat=chat)
-            elif file:
-                new_msg = Message(sender=request.user, text=request.POST['text'], file=file, chat=chat)
-            elif file and image:
+            if file and image:
                 new_msg = Message(sender=request.user, text=request.POST['text'], image=image, file=file, chat=chat)
+            elif image:
+                new_msg = Message(sender=request.user, text=request.POST['text'], image=image, chat=chat)
+            elif file and image:
+                new_msg = Message(sender=request.user, text=request.POST['text'], file=file, chat=chat)
+
             else:
                 new_msg = Message(sender=request.user, text=request.POST['text'], chat=chat)
             new_msg.save()
@@ -47,7 +47,7 @@ class ChatView(TemplateView):
             Message.objects.get(uuid=request.POST['flag']).flagged(request.user)
         if 'starter_hide' in request.POST and RiverMembership.objects.filter(user=request.user, starter=True,
                                                                              river=get_chat_containing_river(
-                                                                                     chat)).exists():
+                                                                                 chat)).exists():
             m = Message.objects.get(uuid=request.POST['starter_hide'])
             m.hidden = not m.hidden
             m.save()
