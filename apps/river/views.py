@@ -201,6 +201,7 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         return chat  # pyre-ignore[61]
 
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
+        print('htmx calling')
         river = River.objects.get(slug=slug)
         chat = self.get_chat(river, stage, topic)
         # pyre-ignore[16]
@@ -209,10 +210,12 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
 
     def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
         river = River.objects.get(slug=slug)
+
         # pyre-ignore[16]
         ctx = super().get_context_data(chat=self.get_chat(river, stage, topic), url=self.request.get_full_path(),
                                        members=list(map(lambda x: x.user, RiverMembership.objects.filter(
                                            river=river))))
+        ctx['slug'] = river.slug
         return ctx
 
 

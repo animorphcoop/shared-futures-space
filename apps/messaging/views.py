@@ -56,6 +56,7 @@ class ChatView(TemplateView):
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
+
         msg_from, msg_no = 0, 50  # how many messages back to begin, and how many to retrieve
         if ('from' in self.request.GET and self.request.GET['from'].isdigit()):
             msg_from = int(self.request.GET['from'])

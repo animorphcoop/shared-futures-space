@@ -1,18 +1,13 @@
 
 {% block content %}
-
+{{ slug }}
     {% block title %}{% include "partials/title.html" with title="River chat" partial=True %}{% endblock %}
     <div class="mx-4.5">
         {{ other_user.display_name }}
-        {% include 'messaging/chatbox_snippet.html' with direct=False %}
+        {% include 'messaging/chatbox_snippet.html' with direct=False slug=slug %}
     </div>
 
-    {% if user in owners %}
-        <button>        hehehe
-</button>
-        {% else %}
-        WTF
-    {% endif %}
+
 
 
     {% if not user.is_authenticated %}
