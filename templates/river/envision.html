@@ -1,12 +1,10 @@
 {% extends "partials/drawer.html" %}
 
 {% block drawer_content %}
-    <div class="mt-3" >
-    <div id="envision-view" hx-get="{% url 'view_envision' object.slug %}"
-     hx-trigger="load"
-     hx-target="#envision-view"
->
-
-</div>
+    <div class="mt-3 -mx-4.5" >
+        <div id="envision-view" hx-get="{% url 'view_envision' object.slug %}"
+            hx-trigger="load"
+            hx-target="#envision-view"
+        ></div>
     </div>
 {% endblock %}

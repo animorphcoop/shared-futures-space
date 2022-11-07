@@ -162,7 +162,7 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
                 if not membership.starter:
                     send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river', context_user_a = request.user, context_user_b = membership.user, context_river = river)
                     membership.delete()
-            
+
         return self.get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
@@ -215,6 +215,7 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         ctx = super().get_context_data(chat=self.get_chat(river, stage, topic), url=self.request.get_full_path(),
                                        members=list(map(lambda x: x.user, RiverMembership.objects.filter(
                                            river=river))))
+        ctx['form'] = RiverChatForm
         ctx['slug'] = river.slug
         return ctx
 
