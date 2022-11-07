@@ -21,8 +21,8 @@ from river.models import RiverMembership  # pyre-ignore[21]
 # your get_context_data should define user_anonymous_message and not_member_message in context
 
 class ChatView(TemplateView):
-    def post(self, request: WSGIRequest, chat: Chat, members: List[CustomUser],
-             url: str) -> HttpResponse:  # pyre-ignore[11] - says CustomUser isn't defined as a type?
+    def post(self, request: WSGIRequest, chat: Chat, members: List[CustomUser], # pyre-ignore[11] - says CustomUser isn't defined as a type?
+             url: str) -> HttpResponse:
         msg_from, msg_no = 0, 50  # how many messages back to begin, and how many to retrieved
         if ('from' in self.request.GET and self.request.GET['from'].isdigit()):
             msg_from = int(self.request.GET['from'])
