@@ -1256,7 +1256,7 @@
             "from": "Caitlin Healy",
             "content": "We are still looking for  3rd, do you ahve anyone in mind?"
           },
-                    {
+          {
             "from": "Dan O’Callaghan",
             "content": "yes this is a realistic depiction of my body, wanna dive in"
           },
@@ -1289,6 +1289,46 @@
             "content": "Let's vote!"
           }
         ]
+      }
+    },
+    {
+      "name": "Health & Hygiene Training – Available to Bogside residents",
+      "area": "Derry~Londonderry",
+      "description": "There is free Health & Hygiene Cert training available for most residents in the Bogside area. If you are interested please contact me via the platform or message directly, there will be a short questionnaire you will need to fill which I can also share here. From our account I hope to keep everyone informed of timings and logistics once we reach minimum numbers of 13 attendees. Please drop me a line if interested or better yet complete the questionnaire and send back to me! ",
+      "tags": [
+        "Qualification",
+        "Food",
+        "Training"
+      ],
+      "image": "spring_image_placeholder_inverted.png",
+      "swimmers": [
+        "Patrick Casey",
+        "Darren Wayne",
+        "Dan O’Callaghan"
+      ],
+      "champions": [
+        "Aoife Wilson"
+      ],
+      "starters": [
+        "conor telainy"
+      ]
+    },
+    {
+      "name": "Árainn Mhór Arts Club",
+      "area": "Donegal",
+      "description": "I’ve been an art teacher for most of my professional career and look to start an informal but hopefully lively Art’s Club for the Island, mainly to have fun and to keep me out of trouble! \nAll ages and abilities are welcome! \nThe syllabus is as a follows: \n1. Fundamental techniques - Watercolours\n2. Basic clay sculptures – Glazing and Firing your finished piece  \n3. Anime crash course  - One stop shop to get your anime inked and digitised\n5. Photoshop painting – I’m offering a basic course in how to draw digitally using Adobe software, limited spaces due to tablets!\n6. Basic Video editing – Using the computers in the Hub on every other Sunday we’ll be running basic editing skills for any video content you want to showcase.\nLet’s get our hands dirty!\n",
+      "tags": [
+        "Art",
+        "Education",
+        "Training"
+      ],
+      "image": "spring_image_placeholder_purplehue.png",
+      "swimmers": [],
+      "starters": [
+        "Desmond Telainy"
+      ],
+      "envision": {
+        "chat": []
       },
       "plan": {
         "general": [
@@ -1349,45 +1389,8 @@
             "content": "so, how do we think that went?"
           }
         ]
-      }
-    },
-    {
-      "name": "Health & Hygiene Training – Available to Bogside residents",
-      "area": "Derry~Londonderry",
-      "description": "There is free Health & Hygiene Cert training available for most residents in the Bogside area. If you are interested please contact me via the platform or message directly, there will be a short questionnaire you will need to fill which I can also share here. From our account I hope to keep everyone informed of timings and logistics once we reach minimum numbers of 13 attendees. Please drop me a line if interested or better yet complete the questionnaire and send back to me! ",
-      "tags": [
-        "Qualification",
-        "Food",
-        "Training"
-      ],
-      "image": "spring_image_placeholder_inverted.png",
-      "swimmers": [
-        "Patrick Casey",
-        "Darren Wayne",
-        "Dan O’Callaghan"
-      ],
-      "champions": [
-        "Aoife Wilson"
-      ],
-      "starters": [
-        "conor telainy"
-      ]
-    },
-    {
-      "name": "Árainn Mhór Arts Club",
-      "area": "Donegal",
-      "description": "I’ve been an art teacher for most of my professional career and look to start an informal but hopefully lively Art’s Club for the Island, mainly to have fun and to keep me out of trouble! \nAll ages and abilities are welcome! \nThe syllabus is as a follows: \n1. Fundamental techniques - Watercolours\n2. Basic clay sculptures – Glazing and Firing your finished piece  \n3. Anime crash course  - One stop shop to get your anime inked and digitised\n5. Photoshop painting – I’m offering a basic course in how to draw digitally using Adobe software, limited spaces due to tablets!\n6. Basic Video editing – Using the computers in the Hub on every other Sunday we’ll be running basic editing skills for any video content you want to showcase.\nLet’s get our hands dirty!\n",
-      "tags": [
-        "Art",
-        "Education",
-        "Training"
-      ],
-      "image": "spring_image_placeholder_purplehue.png",
-      "swimmers": [],
-      "starters": [
-        "Desmond Telainy"
-      ]
-    },
+      },
+
     {
       "name": "Tidy Up! Campaign",
       "area": "Donegal",
