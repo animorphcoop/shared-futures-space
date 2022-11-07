@@ -13,7 +13,7 @@ from django.conf import settings
 from django.urls import reverse, reverse_lazy
 from itertools import chain
 
-from .forms import CreateRiverForm
+from .forms import CreateRiverForm, RiverChatForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -26,7 +26,7 @@ from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
 from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 from resources.models import Resource # pyre-ignore[21]
-from typing import Dict, List, Any, Union
+from typing import Dict, List, Any, Union, Type
 
 
 class RiverView(DetailView):  # pyre-ignore[24]
@@ -173,6 +173,8 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
 
 
 class RiverChatView(ChatView):  # pyre-ignore[11]
+    form_class: Type[RiverChatForm] = RiverChatForm
+
     def get_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
         if stage == 'envision':
             chat = river.envision_stage.chat

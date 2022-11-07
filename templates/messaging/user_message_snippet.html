@@ -12,6 +12,9 @@
                 {% if message.image %}
                     <img src="{{ message.image.url }}" alt="none">
                 {% endif %}
+                            {% if message.file %}
+                    file it is
+                {% endif %}
 
                 {% include "partials/vertical-spacer.html" with space="1.5" %}
                 <span class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase self-end">
