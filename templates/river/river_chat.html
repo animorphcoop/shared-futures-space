@@ -1,12 +1,4 @@
-{% extends "base.html" %}
-{% load static %}
-{% load widget_tweaks %}
 
-{% block body_class %}template-homepage{% endblock %}
-
-{% block extra_css %}
-
-{% endblock extra_css %}
 {% block content %}
 
     {% block title %}{% include "partials/title.html" with title="River chat" partial=True %}{% endblock %}
@@ -14,6 +6,14 @@
         {{ other_user.display_name }}
         {% include 'messaging/chatbox_snippet.html' with direct=False %}
     </div>
+
+    {% if user in owners %}
+        <button>        hehehe
+</button>
+        {% else %}
+        WTF
+    {% endif %}
+
 
     {% if not user.is_authenticated %}
         <div class="bg-blue-done">
