@@ -1,12 +1,4 @@
-{% extends "base.html" %}
-{% load static %}
-{% load widget_tweaks %}
 
-{% block body_class %}template-homepage{% endblock %}
-
-{% block extra_css %}
-
-{% endblock extra_css %}
 {% block content %}
 
 <div id="envision-chat" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"

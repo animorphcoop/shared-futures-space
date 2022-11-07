@@ -1,6 +1,5 @@
 
 {% block content %}
-    {% block title %}{% include "partials/title.html" with title="River chat" partial=True %}{% endblock %}
     <div class="mx-4.5">
         {{ other_user.display_name }}
         {% include 'messaging/chatbox_snippet.html' with direct=False slug=slug %}
