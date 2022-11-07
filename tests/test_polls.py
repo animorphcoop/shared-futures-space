@@ -10,14 +10,14 @@ def test_create_poll(client, test_user, test_river):
     client.get(reverse('poll_create')) # make sure form doesn't crash while rendering
     client.force_login(test_user)
     # single choice
-    new_poll = client.post(reverse('poll_create'), {'question': 'is this a test poll?', 'kind': 'SINGLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
+    new_poll = client.post(reverse('poll_create'), {'question': 'is this a test poll?', 'description': 'a test poll', 'kind': 'SINGLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
     assert new_poll.status_code == 302
     new_poll_redirect = client.get(new_poll.url)
     assert 'is this a test poll?' in new_poll_redirect.content.decode('utf-8')
     assert 'answer 1' in new_poll_redirect.content.decode('utf-8')
     assert SingleChoicePoll.objects.filter(question = 'is this a test poll?').exists()
     # multiple choice
-    new_poll = client.post(reverse('poll_create'), {'question': 'which of the following?', 'kind': 'MULTIPLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
+    new_poll = client.post(reverse('poll_create'), {'question': 'which of the following?', 'description': 'which indeed?', 'kind': 'MULTIPLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
     assert new_poll.status_code == 302
     new_poll_redirect = client.get(new_poll.url)
     assert 'which of the following?' in new_poll_redirect.content.decode('utf-8')

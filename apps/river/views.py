@@ -222,7 +222,8 @@ class CreateEnvisionPollView(TemplateView):
                 if 'description' in request.POST:
                     try:
                         poll = SingleChoicePoll.objects.create(
-                            question='Is this an acceptable vision: "' + request.POST['description'] + '"?',
+                            question='is this an acceptable vision?',
+                            description=request.POST['description'],
                             options=['yes', 'no'],
                             invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
                             river=river)

@@ -45,9 +45,7 @@
             <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}">
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <p class="text-body px-3.5 block">
-                    [[ DESCRIPTION I am not a description, but I will be, truly I will, watch this space, so much
-                    description will
-                    occur ]] {#  TODO: Link to actual description #}
+                    {{poll_description}}
                 </p>
                 {% include "partials/vertical-spacer.html" with space="5" %}
                 {#  Vote options list  #}
