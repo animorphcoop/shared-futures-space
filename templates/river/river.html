@@ -1,41 +1,63 @@
-
+{% extends "base.html" %}
 {% load custom_filters %}
-<h3>River: {{object.name}}</h3>
-<p>starters: {{starters|attrmap:'user'|join:', '}}</p>
-<p>all members: {{members|attrmap:'user'|join:', '}}</p>
-<p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
-<hr>
-<p>{{object.description}}</p>
-<hr>
-{% if request.user in starters|attrmap:'user' %}
-    <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
-    <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
-{% elif not request.user.is_anonymous %}
-    <form method=post>
-        {% csrf_token %}
-        {% if request.user in members|attrmap:'user' %}
-            <button name=action value=leave>leave river</button>
-        {% else %}
-            <button name=action value=join>join river</button>
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+    <div class="mx-4.5">
+        {% include "partials/vertical-spacer.html" with space="9" %}
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+        <div class="-mx-4.5">
+            {% include "river/swimmers.html" with title="swimmers" reference="swimmers" %}
+            {% include "river/description.html" with title="description" reference="description" %}
+        </div>
+
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+        <h3>River: {{object.name}}</h3>
+        <p>starters: {{starters|attrmap:'user'|join:', '}}</p>
+        <p>all members: {{members|attrmap:'user'|join:', '}}</p>
+        <p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
+        <hr>
+        <p>{{object.description}}</p>
+        <hr>
+        {% if request.user in starters|attrmap:'user' %}
+            <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
+            <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
+        {% elif not request.user.is_anonymous %}
+            <form method=post>
+                {% csrf_token %}
+                {% if request.user in members|attrmap:'user' %}
+                    <button name=action value=leave>leave river</button>
+                {% else %}
+                    <button name=action value=join>join river</button>
+                {% endif %}
+            </form>
         {% endif %}
-    </form>
-{% endif %}
-<!-- TESTING PURPOSES ONLY -->
-{% if object.current_stage is None %}
-    <form method=POST>{% csrf_token %}<button name='action' value='start_envision'>[TESTING] Start Envision Stage</button></form>
-{% endif %}
-<!-- -->
-{% if object.envision_stage is not None %}
-    <p><a href="{% url 'view_envision' object.slug %}">Envision Stage</a></p>
-{% endif %}
-{% if object.plan_stage is not None %}
-    <p><a href="{% url 'view_plan' object.slug %}">Plan Stage</a></p>
-{% endif %}
-{% if object.act_stage is not None %}
-    <p><a href="{% url 'view_act' object.slug %}">Act Stage</a></p>
-{% endif %}
-{% if object.reflect_stage is not None %}
-    <p><a href="{% url 'view_reflect' object.slug %}">Reflect Stage</a></p>
-{% endif %}
-<hr>
-<p>associated resources: {{resources}}</p>
+        <!-- TESTING PURPOSES ONLY -->
+        {% if object.current_stage is None %}
+            <form method=POST>{% csrf_token %}<button name='action' value='start_envision'>[TESTING] Start Envision Stage</button></form>
+        {% endif %}
+        <!-- -->
+        {% if object.envision_stage is not None %}
+            <p><a href="{% url 'view_envision' object.slug %}">Envision Stage</a></p>
+        {% endif %}
+        {% if object.plan_stage is not None %}
+            <p><a href="{% url 'view_plan' object.slug %}">Plan Stage</a></p>
+        {% endif %}
+        {% if object.act_stage is not None %}
+            <p><a href="{% url 'view_act' object.slug %}">Act Stage</a></p>
+        {% endif %}
+        {% if object.reflect_stage is not None %}
+            <p><a href="{% url 'view_reflect' object.slug %}">Reflect Stage</a></p>
+        {% endif %}
+        <hr>
+        <p>associated resources: {{resources}}</p>
+    </>
+{% endblock content %}
