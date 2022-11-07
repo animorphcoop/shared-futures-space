@@ -10,14 +10,18 @@
         TODO: emojii
         {% endcomment %}
     </h1>
+{% elif partial %}
+    <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5">
+        {{ title }}
+    </h1>
 {% else %}
 
     <title>
         {% if extra_title %}
             Shared Futures Space - {{ title }} - {{ extra_title }}
         {% else %}
-        Shared Futures Space - {{ title }}
-            {% endif %}
+            Shared Futures Space - {{ title }}
+        {% endif %}
     </title>
 
     <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5">

@@ -13,7 +13,7 @@ from django.conf import settings
 from django.urls import reverse, reverse_lazy
 from itertools import chain
 
-from .forms import CreateRiverForm
+from .forms import CreateRiverForm, RiverChatForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -26,7 +26,7 @@ from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
 from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 from resources.models import Resource # pyre-ignore[21]
-from typing import Dict, List, Any, Union
+from typing import Dict, List, Any, Union, Type
 
 
 class RiverView(DetailView):  # pyre-ignore[24]
@@ -173,6 +173,8 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
 
 
 class RiverChatView(ChatView):  # pyre-ignore[11]
+    form_class: Type[RiverChatForm] = RiverChatForm
+
     def get_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
         if stage == 'envision':
             chat = river.envision_stage.chat
@@ -199,6 +201,7 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         return chat  # pyre-ignore[61]
 
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
+        print('htmx calling')
         river = River.objects.get(slug=slug)
         chat = self.get_chat(river, stage, topic)
         # pyre-ignore[16]
@@ -207,10 +210,12 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
 
     def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
         river = River.objects.get(slug=slug)
+
         # pyre-ignore[16]
         ctx = super().get_context_data(chat=self.get_chat(river, stage, topic), url=self.request.get_full_path(),
                                        members=list(map(lambda x: x.user, RiverMembership.objects.filter(
                                            river=river))))
+        ctx['slug'] = river.slug
         return ctx
 
 
