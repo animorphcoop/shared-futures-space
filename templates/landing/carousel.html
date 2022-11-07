@@ -1,8 +1,44 @@
+{% load wagtailimages_tags %}
+
+{% load case_studies %}
+{% get_case_studies as studies %}
+
 <div class="-mx-4.5">
     <div class="main-carousel w-full" data-flickity='{ "prevNextButtons": false, "wrapAround": true }'>
-        <div class="w-full">
+
+        {% for study in studies %}
+            <div class="w-full">
+                <div class="mx-4.5">
+                    <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+                        {{ study.title }}
+                    </h2>
+                    {% include "partials/vertical-spacer.html" with space="3" %}
+                    <p class="font-garamond-500 text-base text-black-large text-center leading-5">
+                        {{ study.summary }}
+                    </p>
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div class="w-full flex justify-center">
+
+                        {% url 'resource_item' study.slug as resource_url %}
+                        {% include "partials/button.html" with url=resource_url style="primary_white" button="Find out more" %}
+                    </div>
+
+
+                    {% image study.case_study_image max-1920x1080 as study_img %}
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div class="w-full max-h-fit">
+                        <img src="{{ study_img.url }}" class="object-contain h-48 w-96">
+                    </div>
+
+
+                </div>
+            </div>
+        {% endfor %}
+
+        {% comment %} <div class="w-full">
             <div class="mx-4.5">
                 <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+
                     Community Counselling
                 </h2>
                 {% include "partials/vertical-spacer.html" with space="3" %}
@@ -50,6 +86,6 @@
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 <div class="bg-[url('/static/images/landing/case-studies/South_Belfast_How_to_Employability_South.png')] bg-center bg-cover -mx-4.5 h-[100vw] sm:h-[400px]"></div>
             </div>
-        </div>
+        </div>{% endcomment %}
     </div>
 </div>
