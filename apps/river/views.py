@@ -42,7 +42,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
                     '!!! WARNING C !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                 # send_system_message(river.chat, 'left_river', context_river = river, context_user_a = request.user)
         if (request.POST['action'] == 'join'):
-            if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0:
+            if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0 and request.user.post_code.area == river.area:
                 RiverMembership.objects.create(user=request.user, river=river, starter=False)
                 print(
                     '!!! WARNING D !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
