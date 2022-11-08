@@ -60,7 +60,7 @@ put data from [filename.json] in the db. filename defaults to `upload_conf.json`
 
 With the current file it is:
 ```docker-compose exec app python3 manage.py upload_dev upload_conf_dev.json```
-
+docker-compose exec app python3 manage.py upload_prod upload_conf_prod.json
 
 ---
 
