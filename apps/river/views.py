@@ -27,6 +27,7 @@ from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 from resources.models import Resource # pyre-ignore[21]
 from typing import Dict, List, Any, Union, Type
+from area.models import PostCode  # pyre-ignore[21]
 
 
 class RiverView(DetailView):  # pyre-ignore[24]
@@ -298,8 +299,22 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
 
     def form_valid(self, form) -> HttpResponse: # pyre-ignore[2]
         r = super(RiverStartView, self).form_valid(form)
+
+        print(r)
+        print(self.object.area)
+
         for tag in form.cleaned_data['tags']:
+            print('adding tags')
             self.object.tags.add(tag) # pyre-ignore[16]
+        try:
+            post_code = PostCode.objects.all().filter(code=self.request.user.post_code)[0]
+            self.object.area = post_code.area
+            print('saving')
+            print(post_code.area)
+        except PostCode.DoesNotExist:
+            print('not found')
+            pass
+        #self.object.area = lol
         self.object.save() # pyre-ignore[16]
         self.object.start_envision() # pyre-ignore[16]
 

@@ -28,6 +28,10 @@ class SpringView(TemplateView):
         else:
             return HttpResponseRedirect(reverse('404'))
 
+        all_riv = River.objects.all()
+        for river in all_riv:
+            print(river.title)
+            print(river.area)
         rivers = River.objects.filter(area=area)
         # rivers = River.objects.all()
         # members = []
