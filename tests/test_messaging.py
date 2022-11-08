@@ -26,7 +26,7 @@ def test_river_chat_basics(client, test_user, test_river):
     chat_page = client.get(chat_url)
     chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
     assert 'test message' not in chat_page_html.text
-    assert '(you are not a member of this chat)' in chat_page_html.text
+    assert 'Join the river to get involved in the conversation!' in chat_page_html.text
     RiverMembership.objects.create(river=test_river, user=test_user, starter=False)
     client.post(chat_url, {'text': 'test message'})
     chat_page = client.get(chat_url)

@@ -299,22 +299,16 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
 
     def form_valid(self, form) -> HttpResponse: # pyre-ignore[2]
         r = super(RiverStartView, self).form_valid(form)
-
-        print(r)
-        print(self.object.area)
-
         for tag in form.cleaned_data['tags']:
-            print('adding tags')
             self.object.tags.add(tag) # pyre-ignore[16]
         try:
             post_code = PostCode.objects.all().filter(code=self.request.user.post_code)[0]
             self.object.area = post_code.area
-            print('saving')
-            print(post_code.area)
+
         except PostCode.DoesNotExist:
-            print('not found')
+
             pass
-        #self.object.area = lol
+
         self.object.save() # pyre-ignore[16]
         self.object.start_envision() # pyre-ignore[16]
 
@@ -331,14 +325,6 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
                 if tag.lower() not in tags:
                     tags.append(tag.lower())
 
-        # rivers = objects_tags_cluster_list_overwrite(River.objects.all())
-
-        # for river in rivers:
-        # for tag in river.tags.all():
-        # tags.append(tag)
-        # print(river.tags.names())
-        # single_object_tags_cluster_overwrite
-        # tags.append(tag_cluster_to_list(river.tags))
         tags.sort()
         context['tags'] = tags
         return context

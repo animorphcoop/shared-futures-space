@@ -27,15 +27,16 @@
 {% endcomment %}
 
         {% if request.user in starters|attrmap:'user' %}
-            <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
-            <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
+            {% comment %}            <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
+            <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>{% endcomment %}
         {% elif not request.user.is_anonymous %}
             <form method=post>
                 {% csrf_token %}
                 {% if request.user in members|attrmap:'user' %}
-                    <button name=action value=leave>leave river</button>
+
+                    <button name=action value=leave class="button button-on-white">Leave River</button>
                 {% elif request.user.post_code.area == river.area %}
-                    <button name=action value=join>join river</button>
+                    <button name=action value=join class="button button-on-white">Join River</button>
                 {% endif %}
             </form>
         {% endif %}
