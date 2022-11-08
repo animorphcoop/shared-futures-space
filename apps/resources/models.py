@@ -64,7 +64,7 @@ class Resource(ClusterableModel):
         null=False,
     )
     link: models.CharField = models.CharField(
-        max_length=150,
+        max_length=200,
         blank=True,
         null=True,
     )
