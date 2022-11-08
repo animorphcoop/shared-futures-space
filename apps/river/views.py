@@ -235,7 +235,7 @@ class CreateEnvisionPollView(TemplateView):
                             river=river)
                         river.envision_stage.poll = poll
                         river.envision_stage.save()
-                        send_system_message(chat=river.envision_stage.chat, kind='poll', context_poll=poll)
+                        #send_system_message(chat=river.envision_stage.chat, kind='poll', context_poll=poll) current poll apppears at the bottom of the chat, not as part of it
                         return HttpResponseRedirect(reverse('view_envision', args=[river.slug]))
                     except Exception as e:
                         return HttpResponse('could not create poll, unknown error: ' + str(e))
