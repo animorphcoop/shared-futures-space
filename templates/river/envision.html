@@ -15,13 +15,12 @@
         {% comment %}https://htmx.org/events/{% endcomment %}
         document.addEventListener('htmx:afterSwap', function () {
             if (envisionDrawer != null) {
-                var computedStyle = getComputedStyle(envisionDrawer);
+                let computedStyle = getComputedStyle(envisionDrawer);
                 //console.log(computedStyle.getPropertyValue('height'));
                 if (computedStyle.getPropertyValue('height') !== "0px") {
                     //console.log('open')
                     setTimeout(() => {
                         envisionDrawer.style.maxHeight = envisionDrawer.scrollHeight + 'px';
-
                     }, 500)
                 }
 

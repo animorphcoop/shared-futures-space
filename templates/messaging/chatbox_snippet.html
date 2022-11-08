@@ -1,9 +1,9 @@
 {% load widget_tweaks %}
 
 
-{% if more_back %}
+{% comment %}{% if more_back %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ back_from }}">Earlier Messages</a>
-{% endif %}
+{% endif %}{% endcomment %}
 <div class="bg-gray-light -mx-4.5 px-4.5 py-4">
 
 
@@ -18,9 +18,9 @@
     {% endfor %}
 </div>
 
-{% if from != 0 %}
+{% comment %}{% if from != 0 %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ forward_from }}">Later Messages</a>
-{% endif %}
+{% endif %}{% endcomment %}
 
 {% if request.user.is_anonymous %}
     {{ user_anonymous_message }}
@@ -79,17 +79,12 @@
 
 
             {% comment %} https://stackoverflow.com/questions/1804745/get-the-filename-of-a-fileupload-in-a-document-through-javascript {% endcomment %}
-
+            {% comment %}
             <div class="text-meta invisible max-w-full">
                 {% render_field form.file %}
             </div>
 
             <div class="">
-                {% comment %}
-                        Note that this only provides a hint to the browser as to what file-types to display to the user,
-                        but this can be easily circumvented, so you should always validate the uploaded file on the server also.
-                    {% endcomment %}
-
                 <label class="cursor-pointer" for="id_file">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M16 2V16H2V2H16ZM16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM11.14 8.86L8.14 12.73L6 10.14L3 14H15L11.14 8.86Z"
@@ -98,6 +93,7 @@
                 </label>
 
             </div>
+            {% endcomment %}
 
 
             <div class="text-meta invisible max-w-full">
@@ -138,14 +134,7 @@
             </div>
 
         </form>
-        {% comment %}        <form method=POST>
-            {% csrf_token %}
-            <textarea name=text></textarea>
-            <input type="file" id="image" name="image">
 
-            <button type="submit">Send</button>
-
-        </form>{% endcomment %}
     {% endif %}
 {% endif %}
 

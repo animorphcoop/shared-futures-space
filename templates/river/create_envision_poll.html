@@ -1,3 +1,29 @@
+{#  Modal blurred backerground overlay  #}
+<section class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur">
+    {#  White modal background  #}
+    <div class="bg-white m-2.5 w-4/5 h-1/2">
+        <div class="p-2.5">
+            {#  Modal title  #}
+            <h1 class="text-large text-black/75">
+                Approve project goal
+            </h1>
+                                {% include "partials/vertical-spacer.html" with space="4.5" %}
+
+            <form hx-post="{% url 'create_envision_poll' river.slug %}" hx-target="#vision-poll-wrapper">
+                {% csrf_token %}
+                <textarea class="block w-full h-2/3 px-3 py-1.5 rounded" name=description>{{ river.description }}</textarea>
+
+                {% include "partials/vertical-spacer.html" with space="6" %}
+
+                <input type="submit" value="Create poll" class="button button-important">
+
+            </form>
+        </div>
+    </div>
+</section>
+
+
+{% comment %}
 <div id="vision-poll-wrapper">
   <h1>create poll for vision</h1>
   <form hx-post="{% url 'create_envision_poll' river.slug %}" hx-target="#vision-poll-wrapper">
@@ -6,3 +32,4 @@
    <button type=submit>create</button>
   </form>
 </div>
+{% endcomment %}
