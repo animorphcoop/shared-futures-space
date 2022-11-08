@@ -19,9 +19,23 @@
         </h1>
 
 
-        {% include "partials/vertical-spacer.html" with space="9" %}
+          {% include "partials/vertical-spacer.html" with space="6" %}
+
+        <div class="h-[262px] w-full rounded-[10px_10px_0_0]">
+            {% if river.image %}
+
+                <img src="{{ river.image.url }}" alt="" title="">
 
 
+            {% else %}
+                <img src="{% static 'images/spring/spring_image_placeholder.png' %}" alt="Spring image" class="">
+
+            {% endif %}
+
+
+        </div>
+
+{% include "partials/vertical-spacer.html" with space="3" %}
         {% comment %}
         <p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
 {% endcomment %}
@@ -40,7 +54,7 @@
                 {% endif %}
             </form>
         {% endif %}
-        {% include "partials/vertical-spacer.html" with space="9" %}
+        {% include "partials/vertical-spacer.html" with space="3" %}
 
         <div class="-mx-4.5">
             {% include "river/swimmers.html" with title="swimmers" reference="swimmers" %}

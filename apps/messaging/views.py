@@ -63,7 +63,7 @@ class ChatView(TemplateView):
         if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
             msg_no = int(self.request.GET['interval'])
         messages = Message.objects.filter(chat=kwargs['chat']).order_by('timestamp')
-        context['user_anonymous_message'] = 'Please log in to participate'
+        #context['user_anonymous_message'] = 'Please log in to participate'
         context['not_member_message'] = 'Join the river to get involved in the conversation!'
         context['messages'] = messages[max(0, len(messages) - (msg_no + msg_from)): len(messages) - msg_from]
         context['more_back'] = msg_no + msg_from < len(messages)

@@ -63,56 +63,6 @@ class RiverView(DetailView):  # pyre-ignore[24]
         return context
 
 
-# TODO: Write a helper method for parsing paths if there are whitespaces?
-class SpringView(TemplateView):
-    def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[
-        HttpResponse, HttpResponseRedirect]:
-        # RETURN URL PATH
-        slug = str(kwargs['slug'])
-        if '-' in slug:
-            name = slug.replace('-', ' ')
-        else:
-            name = slug
-
-        if Area.objects.filter(name__iexact=name).exists():
-            area = Area.objects.get(name__iexact=name)
-        else:
-            return HttpResponseRedirect(reverse('404'))
-
-        rivers = River.objects.filter(area=area)
-        # rivers = River.objects.all()
-        # members = []
-        for river in rivers:
-            river.tags = tag_cluster_to_list(river.tags)
-
-            river.us = RiverMembership.objects.filter(river=river)
-            river.swimmers = RiverMembership.objects.filter(river=river).values_list('user', flat=True)
-
-            # TEMP - comment below
-            river.membership = RiverMembership.objects.filter(river=river)
-            '''
-            for rivermemb in RiverMembership.objects.filter(river=river):
-                print(rivermemb.user)
-                members.append(rivermemb.user)
-            river.members = members
-            '''
-        num_swimmers = RiverMembership.objects.filter(
-            river__in=River.objects.filter(area=area)).values_list('user', flat=True).distinct().count()
-
-        # TODO: Add all members, starter and champions to the context 'river.swimmers' being ints; temp members
-        context = {
-            'area': area,
-            'rivers': rivers,
-            'num_swimmers': num_swimmers
-        }
-
-        # context is:
-        #   'rivers' -> list of rivers with .tags and .swimmers set appropriately
-        #   'num_swimmers' -> number of distinct swimmers involved in all rivers in this spring
-
-        return render(request, 'river/all_rivers.html', context)
-
-
 class EditRiverView(UpdateView):  # pyre-ignore[24]
     model = River
     fields = ['title', 'description']
@@ -202,7 +152,6 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         return chat  # pyre-ignore[61]
 
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
-        print('htmx calling')
         river = River.objects.get(slug=slug)
         chat = self.get_chat(river, stage, topic)
         # pyre-ignore[16]
