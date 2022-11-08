@@ -37,7 +37,8 @@ class PollView(TemplateView):
             elif hasattr(poll, 'singlechoicepoll'):
                 SingleVote.objects.filter(poll = poll, user = request.user).update(choice = choice)
             poll.check_closed()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        return self.render_to_response(self.get_context_data(uuid = uuid, request = request))
+        #return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     def get_context_data(self, uuid: UUID, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(**kwargs)
         poll = BasePoll.objects.get(uuid = uuid)
