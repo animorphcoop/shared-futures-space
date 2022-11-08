@@ -1,15 +1,24 @@
-
 {% block content %}
 
-<div id="envision-chat" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-     hx-trigger="load"
-     hx-target="this">
-</div>
+    <div id="envision-chat" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
+         hx-trigger="load"
+         hx-target="this">
+    </div>
 
-{% if river.envision_stage.poll != None %}
-  <div id="poll-wrapper"><div hx-trigger="load" hx-target="#poll-wrapper" hx-get="{% url 'poll_view' river.envision_stage.poll.uuid %}"></div></div>
-{% elif river.current_stage == river.Stage.ENVISION and request.user.id in owners %}
-  <div id="button-wrapper"><button hx-get="{% url 'create_envision_poll' river.slug %}" hx-target="#button-wrapper">Create Poll For Envision</button></div>
-{% endif %}
+    {% if river.envision_stage.poll != None %}
+        <div id="poll-wrapper">
+            <div hx-trigger="load" hx-target="#poll-wrapper"
+                 hx-get="{% url 'poll_view' river.envision_stage.poll.uuid %}"></div>
+        </div>
+    {% elif river.current_stage == river.Stage.ENVISION and request.user.id in owners %}
+        <div id="button-wrapper">
+            <button hx-get="{% url 'create_envision_poll' river.slug %}" hx-target="#button-wrapper">Create Poll For
+                Envision
+            </button>
+        </div>
+    {% endif %}
 
+    <script>
+
+    </script>
 {% endblock %}
