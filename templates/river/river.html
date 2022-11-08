@@ -8,16 +8,24 @@
 {% endblock extra_css %}
 
 {% block content %}
+
+    {% block title %}{% include "partials/title.html" with title="River" extra_title=object.title %}{% endblock %}
+
     <div class="mx-4.5">
+        {% include "partials/vertical-spacer.html" with space="2" %}
+
+        <h1 class="text-title text-black/55">
+            {{ object.title }}
+        </h1>
+
+
         {% include "partials/vertical-spacer.html" with space="9" %}
-        <h3>River: {{object.title}}</h3>
-        {% include "partials/vertical-spacer.html" with space="9" %}
-        <p>starters: {{starters|attrmap:'user'|join:', '}}</p>
-        <p>all members: {{members|attrmap:'user'|join:', '}}</p>
+
+
+        {% comment %}
         <p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
-        <hr>
-        <p>{{object.description}}</p>
-        <hr>
+{% endcomment %}
+
         {% if request.user in starters|attrmap:'user' %}
             <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
             <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
@@ -36,8 +44,10 @@
         <div class="-mx-4.5">
             {% include "river/swimmers.html" with title="swimmers" reference="swimmers" %}
             {% include "river/description.html" with title="description" reference="description" %}
-            {% include "river/envision.html" with title="envision" reference="envision" %}
-            {% include "dashboard/partials/resources.html" with title="resources" reference="resources" %}
+            {% include "dashboard/partials/resources.html" with title="associated resources" reference="resources" %}
+            {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" %}
         </div>
+            <div class="-mx-4.5">
+            </div>
     </div>
 {% endblock content %}

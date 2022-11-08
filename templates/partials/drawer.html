@@ -19,6 +19,7 @@
 
     <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
         style=""
+         id="{{ id }}"
         x-ref={{ reference }}
         x-bind:style="selected == 1 ? 'max-height: ' + $refs.{{ reference }}.scrollHeight + 'px' : ''">
 
