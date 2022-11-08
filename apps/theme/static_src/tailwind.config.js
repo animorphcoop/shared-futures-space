@@ -108,7 +108,7 @@ module.exports = {
                 input: "0px 1px 1px 0px rgba(0, 0, 0, 0.15) inset",
             },
             backgroundImage: {
-                "landing-enter": "linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.4)), url('/static/images/landing/landing-temporary.gif'), url('/static/images/landing/landing-temporary.png')",
+                "landing-enter": "linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.4)), url('/static/images/landing/landing-temporary.png'), url('/static/images/landing/landing-temporary.png')",
                 "north-belfast": "url('/static/images/landing/areas/northbelfast.jpg')",
                 "east-belfast": "url('/static/images/landing/areas/eastbelfast.jpg')",
                 "south-belfast": "url('/static/images/landing/areas/southbelfast.jpg')",
