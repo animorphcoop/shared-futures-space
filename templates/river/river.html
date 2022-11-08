@@ -10,17 +10,8 @@
 {% block content %}
     <div class="mx-4.5">
         {% include "partials/vertical-spacer.html" with space="9" %}
+        <h3>River: {{object.title}}</h3>
         {% include "partials/vertical-spacer.html" with space="9" %}
-
-        <div class="-mx-4.5">
-            {% include "river/swimmers.html" with title="swimmers" reference="swimmers" %}
-            {% include "river/description.html" with title="description" reference="description" %}
-            {% include "river/envision.html" with title="envision" reference="envision" %}
-        </div>
-
-
-        {% include "partials/vertical-spacer.html" with space="9" %}
-        <h3>River: {{object.name}}</h3>
         <p>starters: {{starters|attrmap:'user'|join:', '}}</p>
         <p>all members: {{members|attrmap:'user'|join:', '}}</p>
         <p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
@@ -40,24 +31,13 @@
                 {% endif %}
             </form>
         {% endif %}
-        <!-- TESTING PURPOSES ONLY -->
-        {% if object.current_stage is None %}
-            <form method=POST>{% csrf_token %}<button name='action' value='start_envision'>[TESTING] Start Envision Stage</button></form>
-        {% endif %}
-        <!-- -->
-        {% if object.envision_stage is not None %}
-            <p><a href="{% url 'view_envision' object.slug %}">Envision Stage</a></p>
-        {% endif %}
-        {% if object.plan_stage is not None %}
-            <p><a href="{% url 'view_plan' object.slug %}">Plan Stage</a></p>
-        {% endif %}
-        {% if object.act_stage is not None %}
-            <p><a href="{% url 'view_act' object.slug %}">Act Stage</a></p>
-        {% endif %}
-        {% if object.reflect_stage is not None %}
-            <p><a href="{% url 'view_reflect' object.slug %}">Reflect Stage</a></p>
-        {% endif %}
-        <hr>
-        <p>associated resources: {{resources}}</p>
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+        <div class="-mx-4.5">
+            {% include "river/swimmers.html" with title="swimmers" reference="swimmers" %}
+            {% include "river/description.html" with title="description" reference="description" %}
+            {% include "river/envision.html" with title="envision" reference="envision" %}
+            {% include "dashboard/partials/resources.html" with title="resources" reference="resources" %}
+        </div>
     </div>
 {% endblock content %}
