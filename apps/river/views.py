@@ -301,7 +301,7 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
         for tag in form.cleaned_data['tags']:
             self.object.tags.add(tag) # pyre-ignore[16]
         self.object.save() # pyre-ignore[16]
-        self.object.start_envision()
+        self.object.start_envision() # pyre-ignore[16]
 
         return r
 
