@@ -19,4 +19,4 @@
 -->
 {% load static %}
 <script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>
-<div hx-get="{% url 'poll_view' message.context_poll.uuid %}" hx-trigger="load" hx-swap="outerHTML"></div>
+<div id="poll-wrapper"><div hx-get="{% url 'poll_view' message.context_poll.uuid %}" hx-target="#poll-wrapper" hx-trigger="load"></div></div>
