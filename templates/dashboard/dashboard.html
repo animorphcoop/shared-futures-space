@@ -63,11 +63,12 @@
     {% comment %}
     TODO: Is this true?
     {% endcomment %}
+    {% comment %}
     {% if user.is_staff %}
         <br/>
         <a href="{% url 'account_request_panel' %}">Manage User Requests</a>
     {% endif %}
-
+{% endcomment %}
     {% include "dashboard/partials/get_in_touch.html" with title="Get in touch" reference="get_in_touch" %}
 
     <script src="{% static 'js/dashboard.js' %}"></script>
