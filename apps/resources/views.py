@@ -30,7 +30,8 @@ def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
 def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
     order_by = request.POST.get('order_by')
-    results = filter_and_cluster_resources(search_text, order_by)
+    print(search_text)
+    results = filter_and_cluster_resources(search_text, order_by) if search_text != '' else retrieve_and_chain_resources()
 
     if request.user.is_authenticated:
         current_user = request.user
@@ -42,8 +43,7 @@ def resource_search(request: HttpRequest) -> HttpResponse:
                 pass
 
     context = {'results': results}
-    return render(request, 'resources/partials/search_results.html', context)
-
+    return render(request, 'resources/partials/search_results.html', context)    
 
 def retrieve_and_chain_resources() -> List:  # pyre-ignore[24]
     how_tos = objects_tags_cluster_list_overwrite(HowTo.objects.all())
