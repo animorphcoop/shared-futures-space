@@ -28,6 +28,7 @@ class SpringView(TemplateView):
         else:
             return HttpResponseRedirect(reverse('404'))
 
+
         rivers = River.objects.filter(area=area)
         # rivers = River.objects.all()
         # members = []
@@ -37,11 +38,9 @@ class SpringView(TemplateView):
             river.us = RiverMembership.objects.filter(river=river)
             river.swimmers = RiverMembership.objects.filter(river=river).values_list('user', flat=True)
 
-            #river.current_stage = get_current_stage_string(river.current_stage)
             river.current_stage = river.get_current_stage_string
             river.months_since = river.get_started_months_ago
-            #print(river.started_on)
-            #print(get_started_months_ago(river.started_on))
+
             river.extra_swimmers = 0
             if len(river.swimmers) > 4:
                 river.extra_swimmers = len(river.swimmers) - 4
@@ -62,9 +61,5 @@ class SpringView(TemplateView):
 
         }
 
-        # context is:
-        #   'rivers' -> list of rivers with .tags and .swimmers set appropriately
-        #   'num_swimmers' -> number of distinct swimmers involved in all rivers in this spring
-
-        return render(request, 'river/all_rivers.html', context)
+        return render(request, 'spring/spring_area.html', context)
 

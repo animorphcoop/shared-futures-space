@@ -1,3 +1,4 @@
+{% comment %}
 act view
 
 <p><a href="{% url 'river_chat' river.slug 'act' 'general' %}">Act General Chat</a></p>
@@ -8,3 +9,5 @@ act view
 {% if river.current_stage == river.Stage.ACT %}
     <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Reflect Stage</button></form>
 {% endif %}
+{% endcomment %}
+

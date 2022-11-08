@@ -29,11 +29,11 @@ def test_river_membership(client, test_user, other_test_user, test_river):
     # non-starter members
     client.force_login(test_user)
     river_page = client.get(reverse('view_river', args=[test_river.slug]))
-    assert 'join river' in river_page.content.decode('utf-8')
+    assert 'Join River' in river_page.content.decode('utf-8')
     client.post(reverse('view_river', args=[test_river.slug]), {'action': 'join'})
     assert len(RiverMembership.objects.filter(user=test_user, river=test_river)) == 1
     river_page_member = client.get(reverse('view_river', args=[test_river.slug]))
-    assert 'leave river' in river_page_member.content.decode('utf-8')
+    assert 'Leave River' in river_page_member.content.decode('utf-8')
     client.post(reverse('view_river', args=[test_river.slug]), {'action': 'leave'})
     assert len(RiverMembership.objects.filter(user=test_user, river=test_river)) == 0
     # chat part no longer applicable now river chats are more complex, needs to be replaced once the new chat system is in place
@@ -46,6 +46,8 @@ def test_river_membership(client, test_user, other_test_user, test_river):
     other_ownership.save()
     river_page_starter = client.get(reverse('view_river', args=[test_river.slug]))
     river_page_starter_html = bs4.BeautifulSoup(river_page_starter.content, features='html5lib')
+    # commented out for now in the template so cannot access it that way - to be reinstated when we have frontend parts there
+    '''
     edit_link = river_page_starter_html.find_all('a')[0]
     assert edit_link.text == 'Edit River'
     edit_page = client.get(reverse('edit_river', args=[test_river.slug]))
@@ -67,7 +69,7 @@ def test_river_membership(client, test_user, other_test_user, test_river):
                                                                   'description': test_river.description,
                                                                   'abdicate': 'abdicate'}) # should be rejected
     assert RiverMembership.objects.get(user=other_test_user, river=test_river).starter == True
-
+    '''
 def test_river_management(client, test_user, other_test_user, test_river):
     membership = RiverMembership(user=test_user, river=test_river, starter=True)
     other_membership = RiverMembership(user=other_test_user, river=test_river, starter=False)

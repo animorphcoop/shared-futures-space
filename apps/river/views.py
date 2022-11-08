@@ -27,6 +27,7 @@ from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 from resources.models import Resource # pyre-ignore[21]
 from typing import Dict, List, Any, Union, Type
+from area.models import PostCode
 
 
 class RiverView(DetailView):  # pyre-ignore[24]
@@ -60,56 +61,6 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context['resources'] = list(chain(*[filter_and_cluster_resources(tag, 'latest') for tag in context['object'].tags.names()]))
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
         return context
-
-
-# TODO: Write a helper method for parsing paths if there are whitespaces?
-class SpringView(TemplateView):
-    def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[
-        HttpResponse, HttpResponseRedirect]:
-        # RETURN URL PATH
-        slug = str(kwargs['slug'])
-        if '-' in slug:
-            name = slug.replace('-', ' ')
-        else:
-            name = slug
-
-        if Area.objects.filter(name__iexact=name).exists():
-            area = Area.objects.get(name__iexact=name)
-        else:
-            return HttpResponseRedirect(reverse('404'))
-
-        rivers = River.objects.filter(area=area)
-        # rivers = River.objects.all()
-        # members = []
-        for river in rivers:
-            river.tags = tag_cluster_to_list(river.tags)
-
-            river.us = RiverMembership.objects.filter(river=river)
-            river.swimmers = RiverMembership.objects.filter(river=river).values_list('user', flat=True)
-
-            # TEMP - comment below
-            river.membership = RiverMembership.objects.filter(river=river)
-            '''
-            for rivermemb in RiverMembership.objects.filter(river=river):
-                print(rivermemb.user)
-                members.append(rivermemb.user)
-            river.members = members
-            '''
-        num_swimmers = RiverMembership.objects.filter(
-            river__in=River.objects.filter(area=area)).values_list('user', flat=True).distinct().count()
-
-        # TODO: Add all members, starter and champions to the context 'river.swimmers' being ints; temp members
-        context = {
-            'area': area,
-            'rivers': rivers,
-            'num_swimmers': num_swimmers
-        }
-
-        # context is:
-        #   'rivers' -> list of rivers with .tags and .swimmers set appropriately
-        #   'num_swimmers' -> number of distinct swimmers involved in all rivers in this spring
-
-        return render(request, 'river/all_rivers.html', context)
 
 
 class EditRiverView(UpdateView):  # pyre-ignore[24]
@@ -201,7 +152,6 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         return chat  # pyre-ignore[61]
 
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
-        print('htmx calling')
         river = River.objects.get(slug=slug)
         chat = self.get_chat(river, stage, topic)
         # pyre-ignore[16]
@@ -300,6 +250,14 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
         r = super(RiverStartView, self).form_valid(form)
         for tag in form.cleaned_data['tags']:
             self.object.tags.add(tag) # pyre-ignore[16]
+        try:
+            post_code = PostCode.objects.all().filter(code=self.request.user.post_code)[0] # pyre-ignore[16]
+            self.object.area = post_code.area
+
+        except PostCode.DoesNotExist:
+
+            pass
+
         self.object.save() # pyre-ignore[16]
         self.object.start_envision() # pyre-ignore[16]
 
@@ -316,14 +274,6 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
                 if tag.lower() not in tags:
                     tags.append(tag.lower())
 
-        # rivers = objects_tags_cluster_list_overwrite(River.objects.all())
-
-        # for river in rivers:
-        # for tag in river.tags.all():
-        # tags.append(tag)
-        # print(river.tags.names())
-        # single_object_tags_cluster_overwrite
-        # tags.append(tag_cluster_to_list(river.tags))
         tags.sort()
         context['tags'] = tags
         return context

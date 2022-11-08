@@ -25,11 +25,12 @@
 
 
                     {% image study.case_study_image max-1920x1080 as study_img %}
+                    {% if study_img %}
                     {% include "partials/vertical-spacer.html" with space="6" %}
                     <div class="w-full max-h-fit">
                         <img src="{{ study_img.url }}" class="object-contain h-48 w-96">
                     </div>
-
+                    {% endif %}
 
                 </div>
             </div>

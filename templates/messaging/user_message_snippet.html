@@ -26,11 +26,11 @@
 
             </div>
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
-            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="user avatar">
+            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="useravatar">
         </div>
     {% else %}
         <div class="flex">
-            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="user avatar">
+            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="useravatar">
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
             <div class="flex flex-col w-full">
                 <span class="font-garamond-500 text-base leading-5 tracking-[0.01em]">
@@ -48,11 +48,13 @@
                 {% include "partials/vertical-spacer.html" with space="1.5" %}
                 <span class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase">
                     {{ message.sender.display_name }} {{ message.timestamp|date:"G:i" }} {{ message.timestamp|date:"d/m/y" }} <form
-                        method=POST>{% csrf_token %}
+                        method=POST hx-post="{% url "river_chat"  slug 'envision' 'general' %}"
+                >
+        {% csrf_token %}
                     <button name=flag value="{{ message.uuid }}">{% if message.uuid in my_flags %}un{% endif %}
                         flag</button>{% if request.user == starter %}
-                        <button name=starter_hide value="{{ message.uuid }}">{% if message.hidden %}un{% endif %}
-                            hide</button>{% endif %}</form>
+                    <button name=starter_hide value="{{ message.uuid }}">{% if message.hidden %}un{% endif %}
+                        hide</button>{% endif %}</form>
                 </span>
             </div>
             {% include "partials/horizontal-spacer.html" with space="7.5" %}
