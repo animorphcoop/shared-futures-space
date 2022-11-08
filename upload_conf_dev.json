@@ -1345,9 +1345,6 @@
         "Darren Wayne",
         "Dan O’Callaghan"
       ],
-      "champions": [
-        "Aoife Wilson"
-      ],
       "starters": [
         "conor telainy"
       ]
@@ -1362,35 +1359,42 @@
         "Training"
       ],
       "image": "spring_image_placeholder_purplehue.png",
-      "swimmers": [],
+      "swimmers": [
+        "Aoife Wilson"
+      ],
       "starters": [
         "Desmond Telainy"
       ],
       "envision": {
-        "chat": []
+        "chat": [
+          {
+            "from": "Desmond Telainy",
+            "content": "Let's vote now!"
+          }
+        ]
       },
       "plan": {
         "general": [
           {
-            "from": "Dan O’Callaghan",
+            "from": "Desmond Telainy",
             "content": "this is the general chat for the plan stage"
           }
         ],
         "funding": [
           {
-            "from": "Dan O’Callaghan",
+            "from": "Aoife Wilson",
             "content": "this is the funding chat for the plan stage"
           }
         ],
         "location": [
           {
-            "from": "Dan O’Callaghany",
+            "from": "Desmond Telainy",
             "content": "this is the location chat for the plan stage"
           }
         ],
         "dates": [
           {
-            "from": "Dan O’Callaghan",
+            "from": "Aoife Wilson",
             "content": "this is the dates chat for the plan stage"
           }
         ]
@@ -1398,7 +1402,7 @@
       "act": {
         "general": [
           {
-            "from": "Aoife Wilson",
+            "from": "Desmond Telainy",
             "content": "this is the general chat for the act stage"
           }
         ],
@@ -1410,7 +1414,7 @@
         ],
         "location": [
           {
-            "from": "Aoife Wilson",
+            "from": "Desmond Telainy",
             "content": "this is the location chat for the act stage"
           }
         ],
