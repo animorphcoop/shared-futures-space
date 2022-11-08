@@ -1,6 +1,8 @@
-<h1>create poll for vision</h1>
-<form method=POST>
- {% csrf_token %}
- <textarea name=description>{{river.description}}</textarea>
- <button type=submit>create</button>
-</form>
+<div id="vision-poll-wrapper">
+  <h1>create poll for vision</h1>
+  <form hx-post="{% url 'create_envision_poll' river.slug %}" hx-target="#vision-poll-wrapper">
+   {% csrf_token %}
+   <textarea name=description>{{river.description}}</textarea>
+   <button type=submit>create</button>
+  </form>
+</div>
