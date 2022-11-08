@@ -258,6 +258,30 @@
           "Skills",
           "Planning"
         ]
+      },
+      {
+        "title": "Work West Enterprise Agency",
+        "summary": "This resource links you to an agency supporting businesses on their entrepreneurial journeys.",
+        "link": "https://workwest.co.uk/",
+        "tags": [
+          "Enterprise",
+          "Economic",
+          "All",
+          "Regeneration",
+          "Planning"
+        ]
+      },
+      {
+        "title": "Community Capacity Building",
+        "summary": "This resource links you to a community capacity- building programme including OCN courses, personal development, empowerment programmes, community relations, civic leadership and community resilience.",
+        "link": "https://www.facebook.com/colinneighbourhoodpartnership/posts/a-big-thank-you-to-digiskills-for-helping-us-learn-how-to-use-social-media-and-z/4590891624300878/",
+        "tags": [
+          "Group",
+          "Economic",
+          "All",
+          "Skills",
+          "Support"
+        ]
       }
     ],
     "Case Study": [
@@ -462,7 +486,7 @@
         "title": "Eastside Voices Tour",
         "summary": "This resource links you to a tour involving authentic stories of conflict, division and pain that came to these streets from local guides who have been personally affected but yet remained resilient against adversity.",
         "link": "http://www.eastsidevoices.com/",
-        "image": "East_Belfast_Case_Study_Eastside_Voices Tour.png",
+        "image": "East_Belfast_Case_Study_Eastside_VoicesTour.jpg",
         "body": "Hear authentic stories of conflict, division and pain that came to these streets from local guides who have been personally affected but yet remained resilient against adversity; as they guide you on a journey of discovery, understanding, and awareness of how communities who were once at war are now working together to promote community-led tourism and peacebuilding.",
         "tags": [
           "Culture",
