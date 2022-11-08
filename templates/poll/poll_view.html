@@ -1,5 +1,5 @@
-{% extends "base.html" %}
 {% load static %}
+<script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>
 
 {% block content %}
 
@@ -7,7 +7,7 @@
     {% include "partials/vertical-spacer.html" with space="12" %}
     {#  Ignore above now and delete later, just for help styling  #}
 
-    <div> {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
+    <div class='poll-wrapper'> {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
         {#  Poll header  #}
         <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-black/30{% else %}bg-yellow{% endif %}">
             <button class="w-full" type="button"> {# removed collapsable @click="selected !== 1 ? selected = 1 : selected = null" #}
@@ -55,7 +55,7 @@
                             {#  Vote option  #}
                             <div class="flex justify-between items-center px-3.5">
                                 {% if request.user.is_active and not poll_closed %}
-                                    <form method=POST class="m-0">
+                                    <form hx-post="{% url 'poll_view' poll.uuid %}" hx-target="closest .poll-wrapper" hx-swap="outerHTML" class="m-0">
                                         <button class="button button-on-colour inline-block" type="submit">
                                             {{ name }}
                                         </button>

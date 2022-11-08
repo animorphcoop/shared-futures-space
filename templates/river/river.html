@@ -35,7 +35,7 @@
                 {% csrf_token %}
                 {% if request.user in members|attrmap:'user' %}
                     <button name=action value=leave>leave river</button>
-                {% else %}
+                {% elif request.user.post_code.area == river.area %}
                     <button name=action value=join>join river</button>
                 {% endif %}
             </form>

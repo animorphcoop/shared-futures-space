@@ -48,13 +48,14 @@
         {{ area.name }}
     {% endfor %}{% endcomment %}
         <div class="grid grid-cols-2 gap-5">
-
+          {% if areas|length >= 6 %} {# this is to stop it complaining when there's no areas loaded, such as during tests #}
             {% include "landing/rounded-image.html" with image="derry-londonderry" title=areas.0 %}
             {% include "landing/rounded-image.html" with image="donegal" title=areas.1 %}
             {% include "landing/rounded-image.html" with image="east-belfast" title=areas.2 %}
             {% include "landing/rounded-image.html" with image="north-belfast" title=areas.3 %}
             {% include "landing/rounded-image.html" with image="south-belfast" title=areas.4 %}
             {% include "landing/rounded-image.html" with image="west-belfast" title=areas.5 %}
+          {% endif %}
         </div>
         {% include "partials/vertical-spacer.html" with space="9" %}
 

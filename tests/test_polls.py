@@ -29,7 +29,8 @@ def test_create_poll(client, test_user, test_river):
 def test_vote_poll_single(client, test_user, other_test_user, test_singlechoicepoll, test_river):
     test_river.start_envision()
     client.force_login(test_user)
-    RiverMembership.objects.create(river = test_river, user = test_user) # so we can see the chat with the poll in
+    RiverMembership.objects.create(river = test_river, user = test_user)
+    RiverMembership.objects.create(river = test_river, user = other_test_user)
     SingleVote.objects.create(poll = test_singlechoicepoll, user = test_user, choice = None)
     SingleVote.objects.create(poll = test_singlechoicepoll, user = other_test_user, choice = None)
     # can see the poll in chat

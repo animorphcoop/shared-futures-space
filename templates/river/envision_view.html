@@ -3,29 +3,13 @@
 
 <div id="envision-chat" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
      hx-trigger="load"
-     hx-target="#envision-chat"
->
-
+     hx-target="this">
 </div>
 
-{% comment %}
-<p><a href="{% url 'river_chat' river.slug 'envision' 'general' %}">Envision Chat</a></p>
-{% endcomment %}
-
-
-{% comment %}{% if river.current_stage == river.Stage.ENVISION %}
-    <form method=POST>{% csrf_token %}
-        <button name=action value=start_plan>[TESTING] Start Plan Stage</button>
-    </form>
-{% endif %}{% endcomment %}
-<br/><br/>
-<br/>
-<br/>
-<br/>
-{{ river.current_stage  }}
-{% if river.current_stage == river.Stage.ENVISION and request.user.id in owners %}
-
-    <a href="{% url 'create_envision_poll' river.slug %}">Create Poll For Envision</a>
+{% if river.envision_stage.poll != None %}
+  <div id="poll-wrapper"><div hx-trigger="load" hx-target="#poll-wrapper" hx-get="{% url 'poll_view' river.envision_stage.poll.uuid %}"></div></div>
+{% elif river.current_stage == river.Stage.ENVISION and request.user.id in owners %}
+  <div id="button-wrapper"><button hx-get="{% url 'create_envision_poll' river.slug %}" hx-target="#button-wrapper">Create Poll For Envision</button></div>
 {% endif %}
 
-{% endblock content %}
+{% endblock %}

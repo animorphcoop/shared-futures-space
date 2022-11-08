@@ -42,7 +42,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
                     '!!! WARNING C !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                 # send_system_message(river.chat, 'left_river', context_river = river, context_user_a = request.user)
         if (request.POST['action'] == 'join'):
-            if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0:
+            if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0 and request.user.post_code.area == river.area: # pyre-ignore[16]
                 RiverMembership.objects.create(user=request.user, river=river, starter=False)
                 print(
                     '!!! WARNING D !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
@@ -235,8 +235,8 @@ class CreateEnvisionPollView(TemplateView):
                             river=river)
                         river.envision_stage.poll = poll
                         river.envision_stage.save()
-                        send_system_message(chat=river.envision_stage.chat, kind='poll', context_poll=poll)
-                        return HttpResponseRedirect(reverse('view_envision', args=[river.slug]))
+                        #send_system_message(chat=river.envision_stage.chat, kind='poll', context_poll=poll) current poll apppears at the bottom of the chat, not as part of it
+                        return HttpResponseRedirect(reverse('poll_view', args=[poll.uuid]))
                     except Exception as e:
                         return HttpResponse('could not create poll, unknown error: ' + str(e))
                 else:
