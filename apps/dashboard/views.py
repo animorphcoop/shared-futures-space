@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from userauth.models import CustomUser # pyre-ignore[21]
-from resources.models import Resource, FoundUseful # pyre-ignore[21]
+from resources.models import Resource, SavedResource # pyre-ignore[21]
+from river.models import River, RiverMembership # pyre-ignore[21]
 
 @login_required(login_url='/profile/login/')  # redirect when user is not logged in
 def dashboard(request: HttpRequest) -> HttpResponse:
@@ -16,24 +17,37 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         return HttpResponseRedirect(reverse('account_add_data'))
 
     #TODO: Load real content
-    messages = ['message one', 'message two', 'message three', 'message four', 'message five']
-    notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new river. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
-    rivers = ['rivers one', 'rivers two', 'rivers three']
+    #notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new river. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
+    rivers = []
+
+    all_rivers = River.objects.all()
+
+    for river in all_rivers:
+        try:
+            membership = RiverMembership.objects.get(user=request.user, river=river)
+            rivers.append(river)
+        except RiverMembership.DoesNotExist:
+            pass
+
+
+
+
+
     #resources = ['fav resource one', 'fav resource two', 'fav resource three', 'fav resource four']
     resources = []
-    useful_resources = None
+    saved_resources = None
     try:
-        useful_resources = FoundUseful.objects.filter(found_useful_by=current_user).values()
-        for resource in useful_resources:
-            resource_object = Resource.objects.get(pk=resource['useful_resource_id'])
+        saved_resources = SavedResource.objects.filter(saved_by=current_user).values()
+        for resource in saved_resources:
+            resource_object = Resource.objects.get(pk=resource['saved_resource_id'])
             resources.append(resource_object)
 
-    except FoundUseful.DoesNotExist:
+    except SavedResource.DoesNotExist:
         print('no favourites')
 
+
+
     context = {
-        'messages': messages,
-        'notifications': notifications,
         'rivers': rivers,
         'resources': resources,
         'user': request.user,

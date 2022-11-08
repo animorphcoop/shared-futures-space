@@ -41,7 +41,10 @@
     {#        {% include "dashboard/partials/accordion.html" with title="Messages" list_items=messages %}#}
     {#    {% endblock %}#}
 
+    {% comment %}Include in v2{% endcomment %}
+{% comment %}
     {% include "dashboard/partials/notifications.html" with title="Notifications" reference="notifications" %}
+{% endcomment %}
 
     {#  Call to action partial, replace URL variable  #}
     {% if request.user.post_code.area.name != 'Other' %}

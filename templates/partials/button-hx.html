@@ -1,20 +1,20 @@
 <button
-        hx-post="/resources/found_useful/{{ resource_id }}/"
-        hx-target="#useful-button"
+        hx-post="/resources/saved_resource/{{ resource_id }}/"
+        hx-target="#save-button"
         hx-swap="outerHTML"
         x-init="swapHearts($el.innerText, );"
-        id="useful-button"
+        id="save-button"
         class="inline-block button flex items-center
-           {% if status == 'found_useful' %}
-            {# found useful by the user #}
+           {% if status == 'saved_resource' %}
+            {# saved by the user #}
              button-on-white-reverse
            {% else %}
             {# Show the danger style #}
             button-on-white focus:bg-blue-pale active:bg-blue-pale
         {% endif %}">
 
-    {% if status == 'found_useful' %}
-        {# found useful by the user #}
+    {% if status == 'saved_resource' %}
+        {# saved by the user #}
         Saved to dash
         {% include "partials/horizontal-spacer.html" with space="1.5" %}
         <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -22,7 +22,7 @@
                  class="fill-purple" />
         </svg>
     {% else %}
-        {# not (yet!) found useful by the user #}
+        {# not (yet!) saved by the user #}
         Save to dash
         {% include "partials/horizontal-spacer.html" with space="1.5" %}
         <svg class="inline-block" width="16" height="16" viewBox="0 0 16 16"

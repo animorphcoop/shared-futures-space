@@ -1,55 +1,39 @@
+{% load wagtailimages_tags %}
+
+{% load case_studies %}
+{% get_case_studies as studies %}
+
 <div class="-mx-4.5">
     <div class="main-carousel w-full" data-flickity='{ "prevNextButtons": false, "wrapAround": true }'>
-        <div class="w-full">
-            <div class="mx-4.5">
-                <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-                    Community Counselling
-                </h2>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="font-garamond-500 text-base text-black-large text-center leading-5">
-                    This resource links you to a community-focused service providing accessible, confidential counselling in East Belfast
-                </p>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div class="w-full flex justify-center">
-                    {% include "partials/button.html" with url="the_url" style="primary_white" button="Find out more" %}
+
+        {% for study in studies %}
+            <div class="w-full">
+                <div class="mx-4.5">
+                    <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+                        {{ study.title }}
+                    </h2>
+                    {% include "partials/vertical-spacer.html" with space="3" %}
+                    <p class="font-garamond-500 text-base text-black-large text-center leading-5">
+                        {{ study.summary }}
+                    </p>
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div class="w-full flex justify-center">
+
+                        {% url 'resource_item' study.slug as resource_url %}
+                        {% include "partials/button.html" with url=resource_url style="primary_white" button="Find out more" %}
+                    </div>
+
+
+                    {% image study.case_study_image max-1920x1080 as study_img %}
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div class="w-full max-h-fit">
+                        <img src="{{ study_img.url }}" class="object-contain h-48 w-96">
+                    </div>
+
+
                 </div>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div class="bg-[url('/static/images/landing/case-studies/East_Belfast_Case_Study_Community_Counselling.jpeg')] bg-center bg-cover -mx-4.5 h-[100vw] sm:h-[400px]"></div>
             </div>
-        </div>
-        <div class="w-full">
-            <div class="mx-4.5">
-                <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-                    Peace Walls River
-                </h2>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="font-garamond-500 text-base text-black-large text-center leading-5">
-                    Assisting interface communities impacted by the peace walls and physical barriers, providing confidence and relationship building interventions.
-                </p>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div class="w-full flex justify-center">
-                    {% include "partials/button.html" with url="the_url" style="primary_white" button="Find out more" %}
-                </div>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div class="bg-[url('/static/images/landing/case-studies/North_Belfast_Case_Study_Peace_Walls_Project.png')] bg-center bg-cover -mx-4.5 h-100vw sm:h-[400px]"></div>
-            </div>
-        </div>
-        <div class="w-full">
-            <div class="mx-4.5">
-                <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-                    Employability South
-                </h2>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="font-garamond-500 text-base text-black-large text-center leading-5">
-                    A market development association designed to offer support to individuals from the local communities of South Belfast.
-                </p>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div class="w-full flex justify-center">
-                    {% include "partials/button.html" with url="the_url" style="primary_white" button="Find out more" %}
-                </div>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div class="bg-[url('/static/images/landing/case-studies/South_Belfast_How_to_Employability_South.png')] bg-center bg-cover -mx-4.5 h-[100vw] sm:h-[400px]"></div>
-            </div>
-        </div>
+        {% endfor %}
+
     </div>
 </div>

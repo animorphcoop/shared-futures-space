@@ -23,15 +23,15 @@ class ResourceTag(TaggedItemBase):
     content_object = ParentalKey('resources.Resource', on_delete=models.CASCADE, related_name='tagged_items')
 
 
-class FoundUseful(models.Model):
-    useful_resource: models.ForeignKey = models.ForeignKey('resources.Resource',
-                                        on_delete=models.CASCADE)
-    found_useful_by: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
+class SavedResource(models.Model):
+    saved_resource: models.ForeignKey = models.ForeignKey('resources.Resource',
+                                                          on_delete=models.CASCADE)
+    saved_by: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
 
     @property
-    def useful_to(self) -> Optional[str]:
-        if self.found_useful_by and hasattr(self.found_useful_by, 'pk'):
-            return self.found_useful_by.pk
+    def relevant_to(self) -> Optional[str]:
+        if self.saved_by and hasattr(self.saved_by, 'pk'):
+            return self.saved_by.pk
 
 
 

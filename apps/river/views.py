@@ -316,7 +316,6 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
                 if tag.lower() not in tags:
                     tags.append(tag.lower())
 
-        rivers = River.objects.all()
         # rivers = objects_tags_cluster_list_overwrite(River.objects.all())
 
         # for river in rivers:
