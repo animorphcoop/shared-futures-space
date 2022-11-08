@@ -14,5 +14,10 @@ def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     else:
         return render(request, 'landing/landing.html')
 
+
+def privacy(request: HttpRequest) -> HttpResponse:
+    return render(request, 'landing/privacy.html')
+
+
 def handle_404(request: HttpRequest) -> HttpResponse:
     return render(request, '404.html')

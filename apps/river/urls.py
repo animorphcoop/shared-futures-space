@@ -16,7 +16,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('view/<str:slug>/act/', ActView.as_view(template_name='act_view.html'), name='view_act'),
     path('view/<str:slug>/reflect/', ReflectView.as_view(template_name='reflect_view.html'), name='view_reflect'),
     path('view/<str:slug>/envision/createpoll/', CreateEnvisionPollView.as_view(template_name = 'create_envision_poll.html'), name='create_envision_poll'),
-    path('view/<str:slug>/chat/<str:stage>/<str:topic>/', RiverChatView.as_view(template_name ='messaging/chatbox_snippet.html'), name='river_chat'), # pyre-ignore[16]
+    path('view/<str:slug>/chat/<str:stage>/<str:topic>/', RiverChatView.as_view(template_name ='river_chat.html'), name='river_chat'), # pyre-ignore[16]
     path('edit/<str:slug>/', login_required(EditRiverView.as_view(template_name='edit_river.html')), name='edit_river'),
     path('manage/<str:slug>/', login_required(ManageRiverView.as_view(template_name='manage_river.html')), name='manage_river'),
     #path('<str:slug>/', SpringView.as_view(template_name='all_rivers.html'), name='spring'),

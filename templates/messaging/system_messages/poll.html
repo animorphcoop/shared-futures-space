@@ -1,3 +1,4 @@
+<!--
 <h3>{{ message.context_poll.question }}</h3>
 {% if message.context_poll.closed %}
     POLL CLOSED
@@ -15,4 +16,7 @@
             <tr>
     {% endfor %}
 </table>
-
+-->
+{% load static %}
+<script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>
+<div id="poll-wrapper"><div hx-get="{% url 'poll_view' message.context_poll.uuid %}" hx-target="#poll-wrapper" hx-trigger="load"></div></div>

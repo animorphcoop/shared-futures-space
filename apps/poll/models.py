@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from uuid import uuid4
 
 from userauth.models import CustomUser # pyre-ignore[21]
+from userauth.util import get_system_user # pyre-ignore[21]
 
 from typing import List, Dict, Union
 
@@ -37,14 +38,15 @@ def validate_poll_options(value: List[str]) -> bool:
 
 class BasePoll(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4)
-    question: models.CharField = models.CharField(max_length = 2200) # question must be long enough to include the full text of any river description
+    question: models.CharField = models.CharField(max_length = 100, default = "")
+    description: models.CharField = models.CharField(max_length = 2000, default = "") # description must be long enough to include the full text of any river description
     options: models.JSONField = models.JSONField(validators = [validate_poll_options])
     expires: models.DateTimeField = models.DateTimeField()
     created: models.DateTimeField = models.DateTimeField(default = timezone.now)
     closed: models.BooleanField = models.BooleanField(default = False)
     vote_kind: models.Model = BaseVote # pyre-ignore[8]
     invalid_option: models.BooleanField = models.BooleanField(default = False)
-    created_by: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.SET_NULL, null = True)
+    created_by: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.SET_NULL, null = True, default = 0)
     river: models.ForeignKey = models.ForeignKey('river.River', on_delete = models.CASCADE)
     @property
     def specific(self) -> Union['SingleChoicePoll', 'MultipleChoicePoll']:
@@ -59,14 +61,18 @@ class BasePoll(models.Model):
             es = EnvisionStage.objects.filter(poll = self.singlechoicepoll)
             if len(es) != 0:
                 es = es[0]
-            # this poll is the active poll of the envision stage of some river
-            if sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0][0] == 'yes': # pyre-ignore[16]
-                # poll has passed
-                river = River.objects.get(envision_stage = es)
-                river.start_plan()
-                river.description = self.question[31:-2] # oof, extracting the new description back out of the question is not a good way to do it
-                river.save()
-                send_system_message(kind = 'finished_envision', chat = river.envision_stage.chat, context_river = river)
+                # this poll is the active poll of the envision stage of some river
+                if sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0][0] == 'yes': # pyre-ignore[16]
+                    # poll has passed
+                    river = River.objects.get(envision_stage = es)
+                    river.start_plan()
+                    river.description = self.description
+                    river.save()
+                    send_system_message(kind = 'finished_envision', chat = river.envision_stage.chat, context_river = river)
+                else:
+                    river = River.objects.get(envision_stage = es)
+                    river.envision_stage.poll = None
+                    river.envision_stage.save()
 
 class SingleChoicePoll(BasePoll):
     vote_kind = SingleVote # pyre-ignore[15]

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.urls import include, path, re_path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
 from .views import CustomUserDeleteView, profile_view, user_request_view, AdminRequestView, \
-    CustomUserPersonalView, CustomLoginView, UserChatView, UserAllChatsView, check_email, \
+    CustomUserPersonalView, CustomSignupView, CustomLoginView, UserChatView, UserAllChatsView, check_email, \
     CustomPasswordResetView, CustomAddDataView, CustomPasswordChangeView, CustomPasswordResetFromKeyView, chat_view
 from typing import List, Union
 from uuid import UUID
@@ -11,6 +11,8 @@ from uuid import UUID
 
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
+    path('signup/', CustomSignupView.as_view(), name='account_signup'),
+
     path('login/', CustomLoginView.as_view(), name='account_login'),
     path('password/change/', CustomPasswordChangeView.as_view(), name='account_password_change'),
 

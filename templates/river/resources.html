@@ -3,7 +3,7 @@
 {% block drawer_content %}
     {# If no resources:  #}
     {% if resources|length == 0 %}
-        {% include "partials/salmon-of-knowledge.html" with text="Resources you've saved are available here in your Dashboard." %}
+        {% include "partials/salmon-of-knowledge.html" with text="No associated resources found." %}
     {% endif %}
     {% for resource in resources %}
         {# If resources, one looks like: #}

@@ -136,6 +136,7 @@ module.exports = {
         "h-5",
         "h-6",
         "h-7",
+        "h-8",
         "h-7.5",
         "h-9",
         "bg-purple/25",

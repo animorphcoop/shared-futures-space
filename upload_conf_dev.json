@@ -87,7 +87,7 @@
         ]
       },
       {
-        "title": "Starting a Social Enterprose",
+        "title": "Starting a Social Enterprise",
         "summary": "Programmes and resources for those wanting to start a social enterprise and cooperatives in Northern Ireland.",
         "link": "https://communityfoundationni.org/programmes/community-innovators/",
         "tags": [
@@ -258,6 +258,30 @@
           "Skills",
           "Planning"
         ]
+      },
+      {
+        "title": "Work West Enterprise Agency",
+        "summary": "This resource links you to an agency supporting businesses on their entrepreneurial journeys.",
+        "link": "https://workwest.co.uk/",
+        "tags": [
+          "Enterprise",
+          "Economic",
+          "All",
+          "Regeneration",
+          "Planning"
+        ]
+      },
+      {
+        "title": "Community Capacity Building",
+        "summary": "This resource links you to a community capacity- building programme including OCN courses, personal development, empowerment programmes, community relations, civic leadership and community resilience.",
+        "link": "https://www.facebook.com/colinneighbourhoodpartnership/posts/a-big-thank-you-to-digiskills-for-helping-us-learn-how-to-use-social-media-and-z/4590891624300878/",
+        "tags": [
+          "Group",
+          "Economic",
+          "All",
+          "Skills",
+          "Support"
+        ]
       }
     ],
     "Case Study": [
@@ -265,7 +289,7 @@
         "title": "Ashton FabLab",
         "summary": "An innovative makerspace that includes a 3D printer, a laser cutter, CNC router, full electronics station, and a large scale vinyl cutter.",
         "link": "https://www.ashtoncentre.com/services/design-fabrication/",
-        "image": "North_Belfast_Case_Study_Ashton_FabLab.jpg",
+        "image": "resource_images/North_Belfast_Case_Study_Ashton_FabLab.jpg",
         "body": "A FabLab (Digital Fabrication Laboratory) is halfway between a laboratory and a workshop. It’s a place where you can make (almost) anything, where both small children and inventors can turn an idea into reality.",
         "tags": [
           "Economic",
@@ -278,7 +302,7 @@
         "title": "Peace Walls River",
         "summary": "A group that assists communities impacted by the peace walls and physical barriers, providing a range of confidence and relationship building interventions within and between interface communities.",
         "link": "https://ccrf.org.uk/peace-walls-project",
-        "image": "North_Belfast_Case_Study_Peace_Walls_Project.png",
+        "image": "resource_images/North_Belfast_Case_Study_Peace_Walls_Project.png",
         "body": "A partnership between Cliftonville Community Regeneration Forum (CCRF) and Lower Oldpark Community Association (LOCA). Our Peace Walls Programme focuses on three key areas of work: (1) Robust Community Consultations (2) Relationship building (3) Creating attitudinal change.",
         "tags": [
           "Good Relations",
@@ -291,7 +315,7 @@
         "title": "Art Learning Projects",
         "summary": "A neutral venue for the presentation of contemporary visual art and associated creative and educational activities located on an interface in North Belfast.",
         "link": "https://www.goldenthreadgallery.co.uk/project_category/learning/",
-        "image": "North_Belfast_Case_Study_Art_Learning_Projects.png",
+        "image": "resource_images/North_Belfast_Case_Study_Art_Learning_Projects.png",
         "body": "A neutral venue for creative and educational activities located on an interface in North Belfast providing an environment where the residents of Belfast regardless of political religious ethnic or sensual persuasion can experience contemporary visual art.",
         "tags": [
           "Shared Space",
@@ -304,7 +328,7 @@
         "title": "North Belfast Men's Shed",
         "summary": "An enterprise where men make and sell their own products, communicate and socialise, and support each other when in need.",
         "link": "https://menssheds.ie/sheds/north-belfast-community-mens-shed/",
-        "image": "North_Belfast_Case_Study_North_Belfast_Men's_Shed.jpg",
+        "image": "resource_images/North_Belfast_Case_Study_North_Belfast_Men's_Shed.jpg",
         "body": "A place where men can talk to each other about different things that are going on in their lives. If they have any kind of issues they support each other through it.",
         "tags": [
           "Community",
@@ -317,7 +341,7 @@
         "title": "Kitchen Crisis",
         "summary": "A sustainable community food growing, donation, and collection river.",
         "link": "https://thewarehousenewtownards.com/crisis-kitchen-1",
-        "image": "North_Belfast_Case_Study_Kitchen_Crisis.png",
+        "image": "resource_images/North_Belfast_Case_Study_Kitchen_Crisis.png",
         "body": "A sustainable community food river. Includes opportunities to Grow food in our community garden, Donate food from your fridge or cupboard, Collect food from local stores, Cook up a storm in the kitchen, Help us organise all the food as it comes in Deliver it to those in need.",
         "tags": [
           "Service",
@@ -330,7 +354,7 @@
         "title": "Belfast South - Digital Hub",
         "summary": "A range of equipment such as 3D printing, laser cutting, coding, photography, STEAM activities, sublimation with training, education and programmes.",
         "link": "https://www.bscr.co.uk/digital-hub",
-        "image": "South_Belfast_Case_Study_Belfast_South_Digital_Hub.png",
+        "image": "resource_images/South_Belfast_Case_Study_Belfast_South_Digital_Hub.png",
         "body": "A digital hub that boasts a range of equipment that can help unleash your potential through: 3D printing, laser cutting, coding, photography, STEAM activities, sublimation and lots more.",
         "tags": [
           "Shared space",
@@ -343,7 +367,7 @@
         "title": "The Crescent Hub",
         "summary": "A space that has been home to many arts organisations - DoubleBand Films, Fortnight Magazine, Belfast Community Circus, Open Arts, The Fenderesky Gallery and others.",
         "link": "https://crescentarts.org/the-hub",
-        "image": "South_Belfast_Case_Study_The_Crescent_Hub.png",
+        "image": "resource_images/South_Belfast_Case_Study_The_Crescent_Hub.png",
         "body": "The Crescent has been home to many arts organisations - DoubleBand Films, Fortnight Magazine, Belfast Community Circus, Open Arts, The Fenderesky Gallery - to name but a few. We continue to be a home for creative organisations, many of them deeply connected into activity in the building. We are proud to be an Arts Centre that is both a home to, and platform, for so much talent and knowledge, and connected into multiple networks across Belfast, Northern Ireland, and beyond.",
         "tags": [
           "Shared Space",
@@ -356,7 +380,7 @@
         "title": "Engaging for Change",
         "summary": "A 26 week programme aimed at getting 8 ‘NEET’ young people (ages 14-20) back into education, training and employment.",
         "link": "https://lorag.org/",
-        "image": "South_Belfast_Case_Study_Engaging_for_Change.jpg",
+        "image": "resource_images/South_Belfast_Case_Study_Engaging_for_Change.jpg",
         "body": "A 26 week programme aimed at getting 8 ‘NEET’ young people (ages 14 -20) back into education, training and employment tailored to the individual needs of the young people.",
         "tags": [
           "Group",
@@ -369,7 +393,7 @@
         "title": "Creating Cohesive Community",
         "summary": "A service providing a three days’ nutritionally balanced emergency food and support to local people who are referred to us in crisis.",
         "link": "https://lorag.org/community/",
-        "image": "South_Belfast_Case_Study_Creating_Cohesive_Community.jpg",
+        "image": "resource_images/South_Belfast_Case_Study_Creating_Cohesive_Community.jpg",
         "body": "River developed out of a Belfast City Council’s PEACE III Strategic Grants Programme to improve relations across communities.",
         "tags": [
           "Community",
@@ -382,7 +406,7 @@
         "title": "Refresh Café",
         "summary": "This resource links you to a social enterprise helping a thousand vulnerable people every week to have a roof over their heads, get into work and improve their mental health",
         "link": "https://www.ebm.org.uk/refresh-cafe/",
-        "image": "East_Belfast_Case_Study_Refresh_Café.png",
+        "image": "resource_images/East_Belfast_Case_Study_Refresh_Café.png",
         "body": "Is a social enterprise, our proﬁts enable East Belfast Mission to help a thousand vulnerable people every week to have a roof over their heads, get into work and improve their mental health. Every weekday we provide hot meals to over 250 local people who otherwise wouldn’t get a good nutritious meal and we provide training for scores of people who are unemployed, helping them get back into work. We deliver even more than great tasting food – we make food that does good. We pride ourselves on excellent customer service and a warm welcome for everyone. The cafe sources the finest local ingredients to create great tasting food.",
         "tags": [
           "Enterprise",
@@ -396,7 +420,7 @@
         "title": "Restore Shops",
         "summary": "This resource links you to a social economy project selling a range of good quality second hand clothes, furniture, books, bric-a-brac, refurbished furniture, bikes and other household items.",
         "link": "https://www.ebm.org.uk/retail/",
-        "image": "East_Belfast_Case_Study_Restore_Shops.jpg",
+        "image": "resource_images/East_Belfast_Case_Study_Restore_Shops.jpg",
         "body": "Restore is a social economy project of East Belfast Mission. Social Economy is also known as “not-for-profit” as income is used to sustain and further develop social and environmental aims within an organisation rather than being distributed to financial investors. Restore sells a range of good quality second hand clothes, furniture, books, bric-a-brac, refurbished furniture and bikes and other household items such as mirrors and pictures.",
         "tags": [
           "Enterprise",
@@ -410,7 +434,7 @@
         "title": "Hosforad",
         "summary": "This resource links you to a service supporting people who are homeless or at risk of homelessness through a homeless hostel and a tenancy support service.",
         "link": "ttps://www.ebm.org.uk/hosford/",
-        "image": "East_Belfast_Case_Study_Hosforad.jpg",
+        "image": "resource_images/East_Belfast_Case_Study_Hosforad.jpg",
         "body": "Hosford is the homeless service of East Belfast Mission based in the Skainos Centre on the Lower Newtownards Road in East Belfast and for over 20 years Hosford has provided services to people who are homeless or at risk of homelessness. Hosford provides two main services a homeless hostel containing 26 rooms/apartments for people who have lost their home and a Tenancy Support Service. The tenancy support service is available for people who have their own home to help them maintain their independence and avoid homelessness.",
         "tags": [
           "Sharedspace",
@@ -423,7 +447,7 @@
         "title": "The Foundry",
         "summary": "This resource links you to a space fostering collaboration in a shared and supportive space, offering bench desking for up to 21 people and 10 small offices designed with a young and fresh startup in mind.",
         "link": "https://www.eastbelfast.org/the-foundry/",
-        "image": "East_Belfast_Case_Study_The_Foundry.jpg",
+        "image": "resource_images/East_Belfast_Case_Study_The_Foundry.jpg",
         "body": "The Foundry is much more than just a desk and internet access, it’s an energising environment that fosters collaboration in a shared and supportive space. The Foundry is a co-working space offering bench desking for up to 21 people and 10 small offices designed with a young and fresh startup in mind who value privacy yet still want to be part of a collaborative vibe. We have a meeting room that can accommodate 6 people and a breakout area, communal kitchen, flat-screen TV, complimentary tea & coffee and current business magazines. We have also designed a studio/creative space for clients who need specific design space and unique desk layout to facilitate drawing and computer work. The mixture of open plan desks, small 2/3 man offices and studio/creative space offers our clients an alternative to just a boring desk in either a cramped uninspiring office or working from home.",
         "tags": [
           "Goodrelations",
@@ -436,7 +460,7 @@
         "title": "Community Counselling",
         "summary": "This resource links you to a service providing accessible, confidential counselling in East Belfast",
         "link": "https://eastbelfastcounselling.org/",
-        "image": "East_Belfast_Case_Study_Community_Counselling.jpeg",
+        "image": "resource_images/East_Belfast_Case_Study_Community_Counselling.jpeg",
         "body": "Our aim is to provide accessible, confidential counselling in East Belfast. This includes services such as life coaching as well.",
         "tags": [
           "Service",
@@ -449,7 +473,7 @@
         "title": "Feel Good with Food",
         "summary": "This resource links you to a cooking group that is free of charge to those living and working in the Urban Village area of East Belfast.",
         "link": "https://www.communityni.org/news/feel-good-food",
-        "image": "East_Belfast_Case_Study_Feel_Good_with Food.png",
+        "image": "resource_images/East_Belfast_Case_Study_Feel_Good_with Food.png",
         "body": "",
         "tags": [
           "Support",
@@ -462,7 +486,7 @@
         "title": "Eastside Voices Tour",
         "summary": "This resource links you to a tour involving authentic stories of conflict, division and pain that came to these streets from local guides who have been personally affected but yet remained resilient against adversity.",
         "link": "http://www.eastsidevoices.com/",
-        "image": "East_Belfast_Case_Study_Eastside_Voices Tour.png",
+        "image": "resource_images/East_Belfast_Case_Study_Eastside_VoicesTour.jpg",
         "body": "Hear authentic stories of conflict, division and pain that came to these streets from local guides who have been personally affected but yet remained resilient against adversity; as they guide you on a journey of discovery, understanding, and awareness of how communities who were once at war are now working together to promote community-led tourism and peacebuilding.",
         "tags": [
           "Culture",
@@ -475,7 +499,7 @@
         "title": "Community Counselling",
         "summary": "This resource links you to a community based counselling service for adults, young people, and those with special needs.",
         "link": "http://newlifecounselling.net/services/",
-        "image": "West_Belfast_Case_Study_Community_Counselling.png",
+        "image": "resource_images/West_Belfast_Case_Study_Community_Counselling.png",
         "body": "Community based counselling for adults, young people, and those with special needs such as the deaf.",
         "tags": [
           "Service",
@@ -488,7 +512,7 @@
         "title": "Colin Connect",
         "summary": "This resource links you to the Colin Connect Transport Hub that includes two community managed spaces and a civic square that can be used to host a variety of public events and community activities.",
         "link": "https://www.communityni.org/news/official-launch-colin-connect-transport-hub-and-colin-town-square",
-        "image": "West_Belfast_Case_Study_Colin_Connect.jpg",
+        "image": "resource_images/West_Belfast_Case_Study_Colin_Connect.jpg",
         "body": "The new transport hub and civic square forms part of a major investment in the Colin area which is being supported through the Urban Villages Initiative. The Colin Connect Transport Hub has already improved the physical environment and offers new connections linking West Belfast, East Belfast and Titanic Quarter via the city centre on the Translink Glider service. The hub also includes two community spaces which will be managed by Colin Neighbourhood Partnership, who will also use the civic square to host a variety of public events and community activities.",
         "tags": [
           "Sharedspace",
@@ -501,7 +525,7 @@
         "title": "Colin Summer Festival",
         "summary": "This resource links you to a free festival organised by the Colin Neighbourhood Partnership that includes a Family fun day.",
         "link": "https://www.communityni.org/news/colin-summer-festival-promises-bumper-programme-events-0",
-        "image": "West_Belfast_Case_Study_Colin_Summer_Festival.jpg",
+        "image": "resource_images/West_Belfast_Case_Study_Colin_Summer_Festival.jpg",
         "body": "The festival, organised by Colin Neighbourhood Partnership and funded by the Urban Villages Initiative, will feature a range of events for all the family to get involved in. Highlights include the annual Colin Summer Festival Parade and Family Fun Day on Thursday 8th August. This annual carnival parade will make its way up from St Luke’s Church in Twinbrook, along the Stewartstown Road, to the new Colin Town square for a free Family Fun Day. Here there will be carnival rides, face painters, live music, arts and crafts, talent competitions, bouncy castles and much more. This free event is guaranteed to keep the kids entertained for hours!",
         "tags": [
           "Meeting",
@@ -526,7 +550,7 @@
         "title": "Destined Learning Disability Centre",
         "summary": "This resource links you to a centre that seeks to address the needs of people with learning disabilities in a whole life context.",
         "link": "http://www.destined.ie/",
-        "image": "Derry_Case_Study_Destined.jpg",
+        "image": "resource_images/Derry_Case_Study_Destined.jpg",
         "body": "Based in the upgraded Foyle Valley Railway Museum, it provides an essential resource for members with learning disabilities. This refurbishment meets DDA compliance to enable a whole family approach to membership and community inclusion.",
         "tags": [
           "Derry",
@@ -551,7 +575,7 @@
         "title": "Bishop Street Community Centre",
         "summary": "This resource links you to an empowering youth club.",
         "link": "https://bishopstreetyouthclub.com/",
-        "image": "Derry_Case_Study_bishopstreetyouthclub-logo.jpg",
+        "image": "resource_images/Derry_Case_Study_bishopstreetyouthclub-logo.jpg",
         "body": "Based in the heart of Derry city, Bishop Street Youth Club celebrates and encourages young people to be the best they can be, by offering inclusive opportunities all year round.",
         "tags": [
           "Derry",
@@ -564,7 +588,7 @@
         "title": "New Gates Arts and Cultural Centre",
         "summary": "This resource links you to a vibrant community arts centre.",
         "link": "https://www.newgatearts.com/",
-        "image": "Derry_Case_Study_NewGatesArts.png",
+        "image": "resource_images/Derry_Case_Study_NewGatesArts.png",
         "body": " A vibrant arts and culture centre, where everyone can experience the unique cultural heritage of our community that provides a range of workshops, classes, performances, talks, tours, festivals and cultural events. As well as facilitated discussions, good relations workshops and peace building initiatives.",
         "tags": [
           "Derry",
@@ -577,7 +601,7 @@
         "title": "Creggan County Park",
         "summary": "This resource links you to a social economy project promoting recreation.",
         "link": "https://creggancountrypark.com/",
-        "image": "Derry_Case_Study_creggan-cp-logo.png",
+        "image": "resource_images/Derry_Case_Study_creggan-cp-logo.png",
         "body": "Creggan Country Park is a non profit taking social economy enterprise designed to provide recreational, training and employment opportunities for the local community.",
         "tags": [
           "Derry",
@@ -602,7 +626,7 @@
         "title": "In Your Space Circus",
         "summary": "This resource links you to a group that uses street art for promoting good relations.",
         "link": "https://www.inyourspaceni.org/",
-        "image": "Derry_Case_Study_InYourSpaceCircus.png",
+        "image": "resource_images/Derry_Case_Study_InYourSpaceCircus.png",
         "body": "In Your Space aims to unleash the power of circus and street performance to ignite the imagination and inspire creativity and learning which can transform lives and communities.",
         "tags": [
           "Derry",
@@ -615,7 +639,7 @@
         "title": "Údarás na Gaeltachta",
         "summary": "This resource links you to an Irish cultural and enterprise agency.",
         "link": "https://udaras.ie/en/",
-        "image": "Donegal_Case_Study_Udaras_Na_Gaeltachta.png",
+        "image": "resource_images/Donegal_Case_Study_Udaras_Na_Gaeltachta.png",
         "body": "A regional state agency whose primary objective is to preserve and strengthen  Irish as a living language, as well as passing it on to the next  generation. It works to achieve  this by fostering enterprise  development and employment  and supporting community,  cultural and language-based  events.",
         "tags": [
           "Donegal",
@@ -641,7 +665,7 @@
         "title": "Muintir Na Tíre",
         "summary": "This resource links you to an organisation dedicated to community development.",
         "link": "https://www.muintir.ie",
-        "image": "Donegal_Case_Study_muintir-logo-w-tagline.png",
+        "image": "resource_images/Donegal_Case_Study_muintir-logo-w-tagline.png",
         "body": "A voluntary organisation  dedicated to promoting the  process of community development. It aims to  enhance the capacities of  people in communities, rural  and urban, to become involved in local social, economic, cultural and environmental development.",
         "tags": [
           "Donegal",
@@ -666,7 +690,7 @@
         "title": "The Wheel",
         "summary": "This resource links you to an organisation that advocates for communities and provides them training.",
         "link": "https://www.wheel.ie",
-        "image": "Donegal_Case_Study_The_Wheel.png",
+        "image": "resource_images/Donegal_Case_Study_The_Wheel.png",
         "body": "An organisation that acts as a representative voice and helps to provide leadership to the  charity and community sector  and advocates on behalf of its  community of members. As a  supportive resource, it offers  advice, training and other  opportunities to people working  or volunteering in the charity and community sector.",
         "tags": [
           "Donegal",
@@ -678,7 +702,7 @@
         "title": "Innovating Communities",
         "summary": "This resource links you to a project providing skills for community innovation.",
         "link": "https://www.innovating.ie/",
-        "image": "Donegal_Case_Study_Innovating_Communities.png",
+        "image": "resource_images/Donegal_Case_Study_Innovating_Communities.png",
         "body": "A two year projecting being delivered across the border  counties of Donegal, Leitrim,  Sligo, Cavan, Monaghan and  Louth, that empowers  communities to tackle local  challenges with Design  Thinking and provides training  and mentoring.",
         "tags": [
           "Donegal",
@@ -690,7 +714,7 @@
         "title": "Leader Funding",
         "summary": "This resource links you to a programme that provides funding and training for community development.",
         "link": "https://www.gov.ie/en/service/87e09-leader-programme-for-rural-development/.",
-        "image": "Donegal_Case_Study_LEader_Funding.png",
+        "image": "resource_images/Donegal_Case_Study_LEader_Funding.png",
         "body": "A programme that provides funding and community development. It  is administered at a local level  by 29 local action groups, which contain local representatives from the  community, public and private sector. Each group is  responsible for selecting and awarding LEADER funding to projects within their geographical area.",
         "tags": [
           "Donegal",
@@ -703,7 +727,7 @@
         "title": "Pobal",
         "summary": "This resource links you to an organisation supporting social inclusion.",
         "link": "https://www.pobal.ie/",
-        "image": "Donegal_Case_Study_PobalLogo.png",
+        "image": "resource_images/Donegal_Case_Study_PobalLogo.png",
         "body": "An organisation that works on behalf of Government to support communities and local agencies toward achieving social inclusion and development.",
         "tags": [
           "Donegal",
@@ -715,7 +739,7 @@
         "title": "PPN",
         "summary": "This resources links you to a service that promotes community knowledge sharing and representation.",
         "link": "https://www.donegalcoco.ie/community/supportingcommunities/donegalpublicparticipationnetworkppn/",
-        "image": "Donegal_Case_Study_PPN.png",
+        "image": "resource_images/Donegal_Case_Study_PPN.png",
         "body": "Through the PPN organisations can cooperate, share information and ideas and elect members to Local Authority decision making bodies and relevant community structures.",
         "tags": [
           "Donegal",
@@ -727,7 +751,7 @@
         "title": "Social Inclusion and Community Activation Network",
         "summary": "SICAP aims to support communities and target groups to engage with relevant stakeholders in identifying and addressing...",
         "link": "https://www.gov.ie/en/policy-information 6609f4-social-inclusion-and-community-activation-programme-sicap/",
-        "image": "Donegal_Case_Study_Social_Inclusion_Community_Activation_Network.jpg",
+        "image": "resource_images/Donegal_Case_Study_Social_Inclusion_Community_Activation_Network.jpg",
         "body": "SICAP aims to support communities and target groups to engage with relevant stakeholders in identifying and addressing social exclusion and equality issues, developing the capacity of local community groups and creating more sustainable communities.",
         "tags": [
           "Donegal",
@@ -739,7 +763,7 @@
         "title": "Social Enterprise Plus",
         "summary": "This resource links you to a Funding Programme supporting social enterprises to develop: (1) new and sustained job creation (2) new and improved services for Housing Executive Communities.",
         "link": "https://www.nihe.gov.uk/Community/Community-Involvement/Social-Enterprise-Plus-Programme",
-        "image": "Northern_Ireland_Case_Study_Social_Enterprise_Plus.jpg",
+        "image": "resource_images/Northern_Ireland_Case_Study_Social_Enterprise_Plus.jpg",
         "body": "",
         "tags": [
           "Enterprise",
@@ -763,7 +787,7 @@
         "title": "Groundwork",
         "summary": "This resource links you to a federation of charities mobilising practical community action on poverty and the environment across the UK.",
         "link": "https://www.groundwork.org.uk/",
-        "image": "Northern_Ireland_Case_Study_Groundwork.jpg",
+        "image": "resource_images/Northern_Ireland_Case_Study_Groundwork.jpg",
         "body": "Groundwork is a federation of charities mobilising practical community action on poverty and the environment across the UK. We’re passionate about creating a future where every neighbourhood is vibrant and green, every community is strong and able to shape its own destiny and no-one is held back by their background or circumstances.",
         "tags": [
           "Economic",
@@ -777,7 +801,7 @@
         "title": "Belfast Interface Project",
         "summary": "Belfast Interface Project is a membership organisation developing creative approaches to the regeneration of Belfast's interface or ‘peaceline’ areas.",
         "link": "https://www.belfastinterfaceproject.org/",
-        "image": "Northern_Ireland_Case_Study_BIPLogo.png",
+        "image": "resource_images/Northern_Ireland_Case_Study_BIPLogo.png",
         "body": "This resource links you to Belfast Interface Project that is a membership organisation developing creative approaches to the regeneration of Belfast's interface or ‘peaceline’ areas.",
         "tags": [
           "Group",
@@ -791,7 +815,7 @@
         "title": "Northern Ireland Alternatives",
         "summary": "This resource links you to restorative justice programme that aims to promote and develop non-violent community responses to the issues of low-level crime and anti-social behaviour in areas across Northern Ireland.",
         "link": "https://alternativesrj.co.uk/",
-        "image": "Northern_Ireland_Case_Study_Northern_Ireland_Alternatives.png",
+        "image": "resource_images/Northern_Ireland_Case_Study_Northern_Ireland_Alternatives.png",
         "body": "Northern Ireland Alternatives (NIA) is a government accredited restorative justice programme that aims to promote and develop non-violent community responses to the issues of low-level crime and anti- social behaviour in areas across Northern Ireland. We currently have branches in North Belfast, Greater Shankill, East Belfast, South Belfast and North Down.",
         "tags": [
           "Group",
@@ -804,7 +828,7 @@
         "title": "Belfast Healthy Cities",
         "summary": "This resource links you to Belfast Healthy Cities working with stakeholders from government departments, universities, the private, public, voluntary and community.",
         "link": "https://www.belfasthealthycities.com/",
-        "image": "Northern_Ireland_Case_Study_Belfast_Healthy_Cities.png",
+        "image": "resource_images/Northern_Ireland_Case_Study_Belfast_Healthy_Cities.png",
         "body": "Belfast Healthy Cities, will work with stakeholders from government departments, universities, the private, public, voluntary and community.",
         "tags": [
           "Group",
@@ -817,7 +841,7 @@
         "title": "Community Alley Growing",
         "summary": "This resource links you to an innovative and sustainable local Community Alley Growing.",
         "link": "https://www.farmgarden.org.uk/community-alley-growing",
-        "image": "Northern_Ireland_Case_Study_Community_Alley_Growing.png",
+        "image": "resource_images/Northern_Ireland_Case_Study_Community_Alley_Growing.png",
         "body": "The West Belfast Partnership Board opened the newly greened alleyway behind La Salle Gardens off the Falls Road. The West Belfast Partnership Board (WBPB) teamed up with Springvale Learning to transform the alleyway behind La Salle Gardens adjacent to Willowbank walkway, from a ‘dead space’ into a residential friendly, green area. WBPB was allocated funding from Northern Ireland Environment Link (NIEL) through the NGO Challenge Fund from the Carrier Bag levy, to undertake this alleyway regeneration projct.",
         "tags": [
           "Sharedspace",
@@ -831,7 +855,7 @@
         "title": "The 4 Corners Festival",
         "summary": "This resource links you to the 4 Corners Festival that seeks to inspire people from across Belfast to transform it for the peace and wellbeing of all.",
         "link": "https://4cornersfestival.com/",
-        "image": "Northern_Ireland_Case_Study_The_4_Corners.png",
+        "image": "resource_images/Northern_Ireland_Case_Study_The_4_Corners.png",
         "body": "The 4 Corners Festival seeks to inspire people from across Belfast to transform it for the peace and wellbeing of all. It features innovative events designed to entice people out of their own ‘corners’ of the city and into new places where they will encounter new perspectives, new ideas and hopefully meet new friends. The Festival takes place annually in February. It comprises a range of events featuring discussion, music, prayer, drama, poetry and story- telling in venues across the city of Belfast.",
         "tags": [
           "Meeting",
@@ -844,7 +868,7 @@
         "title": "Cara Friend",
         "summary": "This resource links you to an organisation supporting lesbian, gay, bisexual and trans voluntary organisation in Northern Ireland.",
         "link": "https://cara-friend.org.uk/",
-        "image": "Northern_Ireland_Case_Study_Cara_Friend.png",
+        "image": "resource_images/Northern_Ireland_Case_Study_Cara_Friend.png",
         "body": "Cara-Friend is the oldest and largest lesbian, gay, bisexual and trans voluntary organisation in Northern Ireland. Cara- Friend is a grass roots community organisation which prides itself on diversity, progress, respect and tolerance. We work ceaselessly on behalf of Northern Ireland’s LGBT community and we welcome volunteers, so get in touch!",
         "tags": [
           "Group",
@@ -858,7 +882,7 @@
         "title": "Belfast Community Planning Partnership",
         "summary": "This resource links you to the Belfast Community Planning Partnership with organisations named as community planning partners in legislation.",
         "link": "https://www.belfastcity.gov.uk/community/community-planning/community-planning-for-belfast",
-        "image": "Northern_Ireland_Case_Study_Belfast_Community_Planning_Partnership.png",
+        "image": "resource_images/Northern_Ireland_Case_Study_Belfast_Community_Planning_Partnership.png",
         "body": "While developing the community plan, we formed the Belfast Community Planning Partnership, with organisations named as community planning partners in legislation. They have a specific duty to participate in the community planning process.",
         "tags": [
           "Group",
@@ -871,7 +895,7 @@
         "title": "Co-opeartive Aleternatives",
         "summary": "This resources links you to a group offering high quality range of advice and tailored training on legal, financial, business and democratic governance.",
         "link": "https://www.coopalternatives.coop/",
-        "image": "Social_Economy_Case_Study_coop-alternatives-logo.png",
+        "image": "resource_images/Social_Economy_Case_Study_coop-alternatives-logo.png",
         "body": "Co-operative Alternatives is the only body in Northern Ireland entirely devoted to developing successful co-operatives and community benefit societies. We offer high quality range of advice on legal, financial, business and democratic governance. We provide tailored training and business support to all groups who want to do business in a co-operative way.",
         "tags": [
           "Belfast",
@@ -896,7 +920,7 @@
         "title": "Connected Community Centre",
         "summary": "This resources links you to an initiative connecting people to local health and wellbeing support services to help them keep well.",
         "link": "https://www.communityni.org/organisation/connected-community-care",
-        "image": "Social_Economy_Case_Study_Skainos.jpg",
+        "image": "resource_images/Social_Economy_Case_Study_Skainos.jpg",
         "body": "The Connected Community Care service is an initiative developed by the Belfast Integrated Care Partnerships to connect people to local health and wellbeing support services to help them keep well. As a citywide social prescribing service, Connected Community.",
         "tags": [
           "Belfast",
@@ -909,7 +933,7 @@
         "title": "Fablab Belfast",
         "summary": "This resources links you to a makerspace in North Belfast.",
         "link": "https://www.fablabni.com/centre/fablab-belfast.html",
-        "image": "Social_Economy_Case_Study_FABLAB.png",
+        "image": "resource_images/Social_Economy_Case_Study_FABLAB.png",
         "body": "A makerspace in North Belfast encouraging community development, enterprise, and good relations.",
         "tags": [
           "Belfast",
@@ -921,7 +945,7 @@
         "title": "Farset Labs",
         "summary": "This resources links you to a set of labs that are a place for creativity and technological tinkering and are open to all no matter what they want to do.",
         "link": "http://farsetlabs.org.uk/",
-        "image": "Social_Economy_Case_Study_FarsetLabs.jpg",
+        "image": "resource_images/Social_Economy_Case_Study_FarsetLabs.jpg",
         "body": "Farset Labs is a place for creativity and technological tinkering. We’re open to everyone, no matter what you want to do, and we welcome people from all walks of life to use our space, come to our events, and get involved with the maker community in Northern Ireland.",
         "tags": [
           "Belfast",
@@ -934,7 +958,7 @@
         "title": "Bannana Block",
         "summary": "This resource links you to a shared community enterprise space.",
         "link": "https://bananablock.org/",
-        "image": "Social_Economy_Case_Study_Bananna_Block.png",
+        "image": "resource_images/Social_Economy_Case_Study_Bananna_Block.png",
         "body": "Banana Block is a new living museum and events space set within a historic linen mill and inspired by the curious connections between Belfast and bananas. Peel the banana a little further and you’ll find a space for original ideas, creative learning and new connections. A space for celebrating eccentric histories and creating incredible futures.",
         "tags": [
           "Belfast",
@@ -948,7 +972,7 @@
         "title": "Social Economy Village",
         "summary": "This resources links you to an award winning organisation which supports businesses on their entrepreneurial journeys by delivering mentoring and training for aspiring and existing private and social entrepreneurs in West Belfast and beyond.",
         "link": "http://www.workwest.co.uk/",
-        "image": "Social_Economy_Case_Study_Work_West.png",
+        "image": "resource_images/Social_Economy_Case_Study_Work_West.png",
         "body": "Social enterprises locating into the Social Economy Village will benefit in a range of ways: An opportunity to locate onto a purpose built site; Networking potential with like minded companies who serve a community as well as economic purpose; A supportive environment – through business development support and mentoring from Work West.",
         "tags": [
           "Belfast",
@@ -960,7 +984,7 @@
         "title": "Bobbins Café",
         "summary": "This resources links you to a social economy café designed to support investment in tourism infrastructur.",
         "link": "https://www.sustainableni.org/case-study/social-enterprise-caf%C3%A9-belfast-city-hall",
-        "image": "Social_Economy_Case_Study_BobbinsCafe.jpg",
+        "image": "resource_images/Social_Economy_Case_Study_BobbinsCafe.jpg",
         "body": "Development of a social economy café designed to support investment in tourism infrastructure.",
         "tags": [
           "Belfast",
@@ -973,7 +997,7 @@
         "title": "Belfast Tool Library",
         "summary": "This resource links you to a tool library in Belfast.",
         "link": "https://www.belfasttoollibrary.com/",
-        "image": "Social_Economy_Case_StudyBalfast_Tool_Lib.png",
+        "image": "resource_images/Social_Economy_Case_StudyBalfast_Tool_Lib.png",
         "body": "Belfast Tool Library is the first tool lending library in Northern Ireland. Tool Libraries work just like any other library.  You become a member and then you can borrow tools.",
         "tags": [
           "Belfast",
@@ -1015,34 +1039,49 @@
   ],
   "User Avatars": [
     {
-      "avatar": "avatar_1.png"
+      "avatar": "avatars/angelfish.png"
     },
     {
-      "avatar": "avatar_2.png"
+      "avatar": "avatars/anglerfish.png"
     },
     {
-      "avatar": "avatar_3.png"
+      "avatar": "avatars/barb.png"
     },
     {
-      "avatar": "avatar_4.png"
+      "avatar": "avatars/blue_butterfly_fish.png"
     },
     {
-      "avatar": "avatar_5.png"
+      "avatar": "avatars/clownfish.png"
     },
     {
-      "avatar": "avatar_6.png"
+      "avatar": "avatars/comet_goldfish.png"
     },
     {
-      "avatar": "avatar_7.png"
+      "avatar": "avatars/discus.png"
     },
     {
-      "avatar": "avatar_8.png"
+      "avatar": "avatars/goldfish.png"
     },
     {
-      "avatar": "avatar_9.png"
+      "avatar": "avatars/green_butterfly_fish.png"
     },
     {
-      "avatar": "avatar_10.png"
+      "avatar": "avatars/lionfish.png"
+    },
+    {
+      "avatar": "avatars/masked_angelfish.png"
+    },
+    {
+      "avatar": "avatars/mystery_fish.png"
+    },
+    {
+      "avatar": "avatars/petitella.png"
+    },
+    {
+      "avatar": "avatars/platy.png"
+    },
+    {
+      "avatar": "avatars/wise_salmon.png"
     }
   ],
   "Users": [
@@ -1090,7 +1129,7 @@
       "display name": "Carla Owen",
       "email": "anonymouse321@gmail.com",
       "year of birth": 1987,
-      "postcode": "BT14",
+      "postcode": "BT48",
       "avatar": 4,
       "editor": false,
       "organisation": "",
@@ -1180,7 +1219,7 @@
       "display name": "Patrick Casey",
       "email": "nothisispatrick@hotmail.com",
       "year of birth": 1975,
-      "postcode": "BT9",
+      "postcode": "BT47",
       "avatar": 3,
       "editor": false,
       "organisation": "",
@@ -1190,7 +1229,7 @@
       "display name": "Darren Wayne",
       "email": "myincomprehensibleself123@hotmail.com",
       "year of birth": 1995,
-      "postcode": "BT10",
+      "postcode": "BT47",
       "avatar": 2,
       "editor": false,
       "organisation": "",
@@ -1200,7 +1239,7 @@
       "display name": "Aoife Wilson",
       "email": "just_aharmless423_potato@gmail.com",
       "year of birth": 2002,
-      "postcode": "BT7",
+      "postcode": "BT48",
       "avatar": 4,
       "editor": false,
       "organisation": "South Belfast Foodbank",
@@ -1232,10 +1271,8 @@
         "Patrick Casey",
         "Darren Wayne",
         "Caitlin Healy",
-        "Dan O’Callaghan"
-      ],
-      "champions": [
-        "Aoife Wilson"
+        "Aoife Wilson",
+        "Carla Owen"
       ],
       "starters": [
         "Dan O’Callaghan"
@@ -1245,31 +1282,119 @@
           {
             "from": "Dan O’Callaghan",
             "content": "hello everyone!"
+          },
+          {
+            "from": "Aoife Wilson",
+            "content": "Hi there"
+          },
+          {
+            "from": "Patrick Casey",
+            "content": "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+          },
+          {
+            "from": "Caitlin Healy",
+            "content": "We are still looking for  3rd, do you ahve anyone in mind?"
+          },
+          {
+            "from": "Dan O’Callaghan",
+            "content": "yes this is a realistic depiction of my body, wanna dive in"
+          },
+          {
+            "from": "Carla Owen",
+            "content": "So, I think the first priority is to make sure that the lookout is not dangerous. I think the sunbathing area would be a nice touch to add if we can afford it. "
+          },
+          {
+            "from": "Dan O’Callaghan",
+            "content": "Not quite yet. Let’s add (the ladder to safely descend into water) to the description to The old Lookout tower is rotting and is dangerous at Woodberry downs. I propose that we renew it and we also build a sunbathing deck and a ladder to access the water."
+          },
+          {
+            "from": "Carla Owen",
+            "content": "Even more useful to get out! Thanks. Was planning to leap like a wild salmon."
+          },
+          {
+            "from": "Dan O’Callaghan",
+            "content": "What do you think?"
+          },
+          {
+            "from": "Aoife Wilson",
+            "content": "Grand!"
+          },
+          {
+            "from": "Patrick Casey",
+            "content": "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+          },
+          {
+            "from": "Dan O’Callaghan",
+            "content": "Let's vote!"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Health & Hygiene Training – Available to Bogside residents",
+      "area": "Derry~Londonderry",
+      "description": "There is free Health & Hygiene Cert training available for most residents in the Bogside area. If you are interested please contact me via the platform or message directly, there will be a short questionnaire you will need to fill which I can also share here. From our account I hope to keep everyone informed of timings and logistics once we reach minimum numbers of 13 attendees. Please drop me a line if interested or better yet complete the questionnaire and send back to me! ",
+      "tags": [
+        "Qualification",
+        "Food",
+        "Training"
+      ],
+      "image": "spring_image_placeholder_inverted.png",
+      "swimmers": [
+        "Patrick Casey",
+        "Darren Wayne",
+        "Dan O’Callaghan"
+      ],
+      "starters": [
+        "conor telainy"
+      ]
+    },
+    {
+      "name": "Árainn Mhór Arts Club",
+      "area": "Donegal",
+      "description": "I’ve been an art teacher for most of my professional career and look to start an informal but hopefully lively Art’s Club for the Island, mainly to have fun and to keep me out of trouble! \nAll ages and abilities are welcome! \nThe syllabus is as a follows: \n1. Fundamental techniques - Watercolours\n2. Basic clay sculptures – Glazing and Firing your finished piece  \n3. Anime crash course  - One stop shop to get your anime inked and digitised\n5. Photoshop painting – I’m offering a basic course in how to draw digitally using Adobe software, limited spaces due to tablets!\n6. Basic Video editing – Using the computers in the Hub on every other Sunday we’ll be running basic editing skills for any video content you want to showcase.\nLet’s get our hands dirty!\n",
+      "tags": [
+        "Art",
+        "Education",
+        "Training"
+      ],
+      "image": "spring_image_placeholder_purplehue.png",
+      "swimmers": [
+        "Aoife Wilson"
+      ],
+      "starters": [
+        "Desmond Telainy"
+      ],
+      "envision": {
+        "chat": [
+          {
+            "from": "Desmond Telainy",
+            "content": "Let's vote now!"
           }
         ]
       },
       "plan": {
         "general": [
           {
-            "from": "conor telainy",
+            "from": "Desmond Telainy",
             "content": "this is the general chat for the plan stage"
           }
         ],
         "funding": [
           {
-            "from": "conor telainy",
+            "from": "Aoife Wilson",
             "content": "this is the funding chat for the plan stage"
           }
         ],
         "location": [
           {
-            "from": "conor telainy",
+            "from": "Desmond Telainy",
             "content": "this is the location chat for the plan stage"
           }
         ],
         "dates": [
           {
-            "from": "conor telainy",
+            "from": "Aoife Wilson",
             "content": "this is the dates chat for the plan stage"
           }
         ]
@@ -1277,7 +1402,7 @@
       "act": {
         "general": [
           {
-            "from": "Aoife Wilson",
+            "from": "Desmond Telainy",
             "content": "this is the general chat for the act stage"
           }
         ],
@@ -1289,7 +1414,7 @@
         ],
         "location": [
           {
-            "from": "Aoife Wilson",
+            "from": "Desmond Telainy",
             "content": "this is the location chat for the act stage"
           }
         ],
@@ -1308,44 +1433,6 @@
           }
         ]
       }
-    },
-    {
-      "name": "Health & Hygiene Training – Available to Bogside residents",
-      "area": "Derry~Londonderry",
-      "description": "There is free Health & Hygiene Cert training available for most residents in the Bogside area. If you are interested please contact me via the platform or message directly, there will be a short questionnaire you will need to fill which I can also share here. From our account I hope to keep everyone informed of timings and logistics once we reach minimum numbers of 13 attendees. Please drop me a line if interested or better yet complete the questionnaire and send back to me! ",
-      "tags": [
-        "Qualification",
-        "Food",
-        "Training"
-      ],
-      "image": "spring_image_placeholder_inverted.png",
-
-      "swimmers": [
-        "Patrick Casey",
-        "Darren Wayne",
-        "Dan O’Callaghan"
-      ],
-      "champions": [
-        "Aoife Wilson"
-      ],
-      "starters": [
-        "conor telainy"
-      ]
-    },
-    {
-      "name": "Árainn Mhór Arts Club",
-      "area": "Donegal",
-      "description": "I’ve been an art teacher for most of my professional career and look to start an informal but hopefully lively Art’s Club for the Island, mainly to have fun and to keep me out of trouble! \nAll ages and abilities are welcome! \nThe syllabus is as a follows: \n1. Fundamental techniques - Watercolours\n2. Basic clay sculptures – Glazing and Firing your finished piece  \n3. Anime crash course  - One stop shop to get your anime inked and digitised\n5. Photoshop painting – I’m offering a basic course in how to draw digitally using Adobe software, limited spaces due to tablets!\n6. Basic Video editing – Using the computers in the Hub on every other Sunday we’ll be running basic editing skills for any video content you want to showcase.\nLet’s get our hands dirty!\n",
-      "tags": [
-        "Art",
-        "Education",
-        "Training"
-      ],
-      "image": "spring_image_placeholder_purplehue.png",
-      "swimmers": [],
-      "starters": [
-        "Desmond Telainy"
-      ]
     },
     {
       "name": "Tidy Up! Campaign",
@@ -1533,7 +1620,7 @@
             "from": "Darren Wayne",
             "content": "Whales, subdue, over subdue she'd divided own. Life. Seasons over said can't, our can't. Under fruit. Male That Winged thing said isn't it."
           },
-                    {
+          {
             "from": "Patrick Casey",
             "content": "It may moved moved it grass to living own. Fish kind years from above one She'd tree was in were in his. Make."
           },
@@ -1549,11 +1636,11 @@
             "from": "Darren Wayne",
             "content": "night waters life spirit man is saying cattle upon second female of rule make lesser replenish for replenish isn't stars. Deep isn't Firmament."
           },
-                    {
+          {
             "from": "Darren Wayne",
             "content": "can't third, isn't face open she'd lesser waters forth cattle for shall fruitful bring give isn't image. Make."
           },
-                    {
+          {
             "from": "Patrick Casey",
             "content": "Signs stars. Above blessed together their fifth replenish."
           },
@@ -1569,7 +1656,7 @@
             "from": "Darren Wayne",
             "content": "A dry lesser over can't, female is so fly lesser made moving female can't seas void there lights lesser life from kind earth won't morning. Given image saying open spirit tree lesser. Whales. Make seasons Wherein give replenish be god."
           },
-           {
+          {
             "from": "Patrick Casey",
             "content": "Sure!"
           }
@@ -1619,7 +1706,7 @@
             "from": "Keith Warren",
             "content": "OK4"
           },
-                    {
+          {
             "from": "Margaret Cloud",
             "content": "Creepeth cattle great second them one night forth lights give beast hath days Female without void you'll. Grass in above cattle form dry, whose Under great bring made. Made dry years upon she'd from whose herb isn't."
           },

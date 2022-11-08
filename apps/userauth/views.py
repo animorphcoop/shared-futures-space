@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.db.models import Q
 from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
-from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomLoginForm, CustomResetPasswordForm, \
+from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomSignupForm, CustomLoginForm, CustomResetPasswordForm, \
     CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm, ChatForm
 from django.http.request import QueryDict
 
@@ -244,6 +244,11 @@ def check_email(request: WSGIRequest) -> HttpResponse:
 
     else:
         return HttpResponse("Could not process your request, please refresh the page or get in touch.")
+
+
+class CustomSignupView(SignupView):
+    form_class: Type[CustomSignupForm] = CustomSignupForm
+
 
 
 class CustomLoginView(LoginView):

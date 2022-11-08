@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block body_class %}template-homepage{% endblock %}
+
+
+{% block content %}
+    {% block title %}{% include "partials/title.html" with title="Privacy Policy" %}{% endblock %}
+
+    <div class="mx-4.5">
+
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        {% include "landing/main-heading.html" with title="This privacy policy explains how we use the personal data collected from you when you use Shared Futures Space platform published by Animorph Ltd." %}
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+            What data do we collect?
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="font-garamond-500 text-base text-black-large leading-5">
+            We only collect data about web usage from logged in members.
+
+            When you sign up for a Shared Futures account you provide us with:
+
+            <ul>
+                <li>— display name,</li>
+                <li>— postcode (only the area part of it),</li>
+                <li>— year of birth,</li>
+                <li>— organisation you are associated with (optional).</li>
+            </ul>
+
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            We record when you registered with us and allocate you a random unique user identifier. We also store
+            when you log in to Shared Futures Space.
+            {% include "partials/vertical-spacer.html" with space="3" %}
+
+            As a registered user you have a profile view which displays your display name, avatar of choice,
+            organisation (if you chose any) and the area you are associated with via postcode. We do not make your year
+            of birth and postcode available to the public.
+            {% include "partials/vertical-spacer.html" with space="3" %}
+
+            When you are logged in, you can interact with other users through rivers (projects), resources and direct
+            messaging. Here are the information we record about your participation in each of the three main modules:
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            {% include "landing/section-heading.html" with title="Rivers" %}
+            <ul>
+                <li>— chat contents,</li>
+                <li>— poll votes.</li>
+
+            </ul>
+
+            All information regarding rivers is visible to other users.
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            {% include "landing/section-heading.html" with title="Resources" %}
+            <ul>
+                <li>— saved resources,</li>
+                <li>— entered resources.</li>
+            </ul>
+
+            {% include "partials/vertical-spacer.html" with space="3" %}
+
+            {% include "landing/section-heading.html" with title="Direct messaging" %}
+            <ul>
+                <li>— direct messages you exchange with other users of the platform.</li>
+            </ul>
+        </div>
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+            How do we collect your data?
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="font-garamond-500 text-base text-black-large leading-5">
+            We collect the data and metadata as you used the platform when you are logged in. Everything we collect is
+            sent to our server located in the United Kingdom.
+        </div>
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+            How will we use your data?
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="font-garamond-500 text-base text-black-large leading-5">
+            We collect this data to better understand the needs of the Shared Futures stakeholders, and facilitate
+            discussions about future developments in your community.
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            We hold your data for the purpose of facilitating collaboration between the users (rivers with associated
+            chats and polls) as well as knowledge-sharing (through resources).
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            By submitting data, you consent to Animorph Ltd sharing it with our partner organisations, so that they may
+            use it to make community improvements in their work based on the content.
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            The platform was built with a generous support from Special European Union Programme Body. We are a part of
+            a consortium made of the following partner organisations:
+            <ul>
+                <li>— Co-operation Ireland,</li>
+                <li>— Belfast Interface Project,</li>
+                <li>— Donegal Youth Service,</li>
+                <li>— University of Essex.</li>
+            </ul>
+
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            Your data will not be used for any marketing purposes.
+        </div>
+        {% include "partials/vertical-spacer.html" with space="9" %}
+        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+            How do we store your data?
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="font-garamond-500 text-base text-black-large leading-5">
+            Your data are securely stored on our server, which is located in the United Kingdom.
+        </div>
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+            Your data protection rights
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="font-garamond-500 text-base text-black-large leading-5">
+
+            Animorph Ltd would like to make sure you are fully aware of all of your data protection rights. Every user
+            is
+            entitled to the following:
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            {% include "landing/section-heading.html" with title="The right to access" %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            You have the right to request copies of your personal data. We may charge you a small fee for this service.
+
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            {% include "landing/section-heading.html" with title="The right to rectification" %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            You have the right to request that we correct any information you believe is inaccurate. You also have the
+            right to request us to complete the information you believe is incomplete.
+
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            {% include "landing/section-heading.html" with title="TThe right to erasure" %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            You have the right to request that we erase your personal data, under certain conditions.
+
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            {% include "landing/section-heading.html" with title="The right to restrict processing" %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            You have the right to request that we restrict the processing of your personal data, under certain
+            conditions.
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            {% include "landing/section-heading.html" with title="The right to object to processing" %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            You have the right to object to our processing of your personal data, under certain conditions.
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            {% include "landing/section-heading.html" with title="The right to data portability" %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            You have the right to request that we transfer the data that we have collected to another organization, or
+            directly to you, under certain conditions.
+        </div>
+
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+            How to contact us
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="font-garamond-500 text-base text-black-large leading-5">
+            If you make a request, we have one month to respond to you. If you would like to exercise any of these
+            rights, please write to us via email: <a href="mailto:gdpr@sharedfutures.space?Subject=GDPR Rights">gdpr@sharedfutures.space</a>.
+        </div>
+
+
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+            How to contact the appropriate authority
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="font-garamond-500 text-base text-black-large leading-5">
+            Should you wish to report a complaint or if you feel that we have not addressed your concern in a
+            satisfactory manner, you may contact the Information Commissioner’s Office.
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            <ul>
+                <li>— Live chat: https://ico.org.uk/global/contact-us/live-chat</li>
+                <li>— Website: https://ico.org.uk/make-a-complaint](https://ico.org.uk/make-a-complaint</li>
+            </ul>
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            Address:
+            <br/>
+            Information Commissioner's Office,
+            <br/>
+
+            Office Wycliffe House, Water Lane,
+            <br/>
+
+            Wilmslow, Cheshire, SK9 5AF
+        </div>
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+    </div>
+{% endblock %}

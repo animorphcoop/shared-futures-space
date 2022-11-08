@@ -13,7 +13,7 @@ from django.conf import settings
 from django.urls import reverse, reverse_lazy
 from itertools import chain
 
-from .forms import CreateRiverForm
+from .forms import CreateRiverForm, RiverChatForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -26,7 +26,7 @@ from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
 from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 from resources.models import Resource # pyre-ignore[21]
-from typing import Dict, List, Any, Union
+from typing import Dict, List, Any, Union, Type
 
 
 class RiverView(DetailView):  # pyre-ignore[24]
@@ -42,7 +42,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
                     '!!! WARNING C !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                 # send_system_message(river.chat, 'left_river', context_river = river, context_user_a = request.user)
         if (request.POST['action'] == 'join'):
-            if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0:
+            if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0 and request.user.post_code.area == river.area: # pyre-ignore[16]
                 RiverMembership.objects.create(user=request.user, river=river, starter=False)
                 print(
                     '!!! WARNING D !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
@@ -162,7 +162,7 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
                 if not membership.starter:
                     send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river', context_user_a = request.user, context_user_b = membership.user, context_river = river)
                     membership.delete()
-            
+
         return self.get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
@@ -173,6 +173,8 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
 
 
 class RiverChatView(ChatView):  # pyre-ignore[11]
+    form_class: Type[RiverChatForm] = RiverChatForm
+
     def get_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
         if stage == 'envision':
             chat = river.envision_stage.chat
@@ -199,6 +201,7 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         return chat  # pyre-ignore[61]
 
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
+        print('htmx calling')
         river = River.objects.get(slug=slug)
         chat = self.get_chat(river, stage, topic)
         # pyre-ignore[16]
@@ -207,10 +210,13 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
 
     def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
         river = River.objects.get(slug=slug)
+
         # pyre-ignore[16]
         ctx = super().get_context_data(chat=self.get_chat(river, stage, topic), url=self.request.get_full_path(),
                                        members=list(map(lambda x: x.user, RiverMembership.objects.filter(
                                            river=river))))
+        ctx['form'] = RiverChatForm
+        ctx['slug'] = river.slug
         return ctx
 
 
@@ -222,14 +228,15 @@ class CreateEnvisionPollView(TemplateView):
                 if 'description' in request.POST:
                     try:
                         poll = SingleChoicePoll.objects.create(
-                            question='Is this an acceptable vision: "' + request.POST['description'] + '"?',
+                            question='is this an acceptable vision?',
+                            description=request.POST['description'],
                             options=['yes', 'no'],
                             invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
                             river=river)
                         river.envision_stage.poll = poll
                         river.envision_stage.save()
-                        send_system_message(chat=river.envision_stage.chat, kind='poll', context_poll=poll)
-                        return HttpResponseRedirect(reverse('view_envision', args=[river.slug]))
+                        #send_system_message(chat=river.envision_stage.chat, kind='poll', context_poll=poll) current poll apppears at the bottom of the chat, not as part of it
+                        return HttpResponseRedirect(reverse('poll_view', args=[poll.uuid]))
                     except Exception as e:
                         return HttpResponse('could not create poll, unknown error: ' + str(e))
                 else:
@@ -293,8 +300,8 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
         r = super(RiverStartView, self).form_valid(form)
         for tag in form.cleaned_data['tags']:
             self.object.tags.add(tag) # pyre-ignore[16]
-
         self.object.save() # pyre-ignore[16]
+        self.object.start_envision() # pyre-ignore[16]
 
         return r
 
@@ -309,7 +316,6 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
                 if tag.lower() not in tags:
                     tags.append(tag.lower())
 
-        rivers = River.objects.all()
         # rivers = objects_tags_cluster_list_overwrite(River.objects.all())
 
         # for river in rivers:

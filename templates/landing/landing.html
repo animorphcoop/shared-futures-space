@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% comment %}uses area_delaits simple tag from area/templatetages{% endcomment %}
+{% load area_details %}
+
+
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_css %}
@@ -8,10 +12,13 @@
 {% endblock extra_css %}
 
 {% block content %}
-
+    {% get_areas as areas %}
+    {% url 'account_signup' as signup_url %}
+    {% url 'account_login' as login_url %}
     {% block title %}{% include "partials/title.html" with title="Shared Futures" %}{% endblock %}
 
     <div class="mx-4.5">
+
 
         {% include "partials/vertical-spacer.html" with space="6" %}
 
@@ -21,10 +28,9 @@
         <div
                 class="bg-landing-enter bg-cover -mx-4.5 h-1/2 min-h-[180px] sm:h-auto sm:min-h-[400px] flex flex-row justify-center items-center"
         >
-            {% include "partials/button.html" with url="/profile/signup/" style="primary_colour" button="Sign up" %}
+            {% include "partials/button.html" with url=signup_url style="primary_colour" button="Sign up" %}
             {% include "partials/horizontal-spacer.html" with space="4" %}
-            {% url 'account_login' as the_url %}
-            {% include "partials/button.html" with url=the_url style="primary_colour" button="Log in" %}
+            {% include "partials/button.html" with url=login_url style="primary_colour" button="Log in" %}
         </div>
 
         {% include "partials/vertical-spacer.html" with space="9" %}
@@ -36,25 +42,33 @@
 
         {% include "landing/section-heading.html" with title="Where do we currently operate" %}
         {% include "partials/vertical-spacer.html" with space="9" %}
+        {% comment %}    {% get_areas as areas %}
 
+    {% for area in areas %}
+        {{ area.name }}
+    {% endfor %}{% endcomment %}
         <div class="grid grid-cols-2 gap-5">
-            {% include "landing/rounded-image.html" with image="derry-londonderry" title="Derry~Londonderry" %}
-            {% include "landing/rounded-image.html" with image="donegal" title="Donegal" %}
-            {% include "landing/rounded-image.html" with image="east-belfast" title="East Belfast" %}
-            {% include "landing/rounded-image.html" with image="north-belfast" title="North Belfast" %}
-            {% include "landing/rounded-image.html" with image="south-belfast" title="South Belfast" %}
-            {% include "landing/rounded-image.html" with image="west-belfast" title="West Belfast" %}
+          {% if areas|length >= 6 %} {# this is to stop it complaining when there's no areas loaded, such as during tests #}
+            {% include "landing/rounded-image.html" with image="derry-londonderry" title=areas.0 %}
+            {% include "landing/rounded-image.html" with image="donegal" title=areas.1 %}
+            {% include "landing/rounded-image.html" with image="east-belfast" title=areas.2 %}
+            {% include "landing/rounded-image.html" with image="north-belfast" title=areas.3 %}
+            {% include "landing/rounded-image.html" with image="south-belfast" title=areas.4 %}
+            {% include "landing/rounded-image.html" with image="west-belfast" title=areas.5 %}
+          {% endif %}
         </div>
         {% include "partials/vertical-spacer.html" with space="9" %}
 
         <section class="bg-resources-two -mx-4.5">
-            {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=the_url info="" %}
+            {% url 'resources' as resources_url %}
+
+            {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" %}
         </section>
-        <section class="bg-[rgba(121,203,208,1)] -mx-4.5">
+        {% comment %}        <section class="bg-[rgba(121,203,208,1)] -mx-4.5">
             {% include "partials/call-to-action.html" with main="Find a community river to join!" button="Go to your river" url=the_url info="" %}
-        </section>
+        </section>{% endcomment %}
         <section class="bg-yellow -mx-4.5">
-            {% include "partials/call-to-action.html" with main="Do you have a river in mind you would like to find like minded people to deliver?" button="Sign up" url=the_url info="" %}
+            {% include "partials/call-to-action.html" with main="Do you have a river in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" %}
         </section>
 
         {% include "partials/vertical-spacer.html" with space="9" %}
@@ -79,23 +93,29 @@
                 <h3 class="{{ h3_class }}">Funded by</h3>
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <p class="{{ p_class }}">Special EU Programmes Body</p>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="{{ p_class }}">National Lottery</p>
                 {% include "partials/vertical-spacer.html" with space="9" %}
 
                 <h3 class="{{ h3_class }}">River Team</h3>
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <p class="{{ p_class }}">Co-operation Ireland</p>
                 {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="{{ p_class }}">Belfast Interface River</p>
+                <p class="{{ p_class }}">Belfast Interface Project</p>
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <p class="{{ p_class }}">Animorph</p>
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <p class="{{ p_class }}">Essex University (prof. Peter Bloom)</p>
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <p class="{{ p_class }}">Donegal Youth Service</p>
-                {% include "partials/vertical-spacer.html" with space="9" %}
+
             </div>
         {% endwith %}
+        <div class="">
+            <a href="{% url 'privacy' %}"
+               class="text-purple text-sm font-semibold"
+            > Privacy Policy
+            </a>
+        </div>
+        {% include "partials/vertical-spacer.html" with space="6" %}
     </div>
+
 {% endblock content %}

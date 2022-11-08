@@ -10,14 +10,14 @@ def test_create_poll(client, test_user, test_river):
     client.get(reverse('poll_create')) # make sure form doesn't crash while rendering
     client.force_login(test_user)
     # single choice
-    new_poll = client.post(reverse('poll_create'), {'question': 'is this a test poll?', 'kind': 'SINGLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
+    new_poll = client.post(reverse('poll_create'), {'question': 'is this a test poll?', 'description': 'a test poll', 'kind': 'SINGLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
     assert new_poll.status_code == 302
     new_poll_redirect = client.get(new_poll.url)
     assert 'is this a test poll?' in new_poll_redirect.content.decode('utf-8')
     assert 'answer 1' in new_poll_redirect.content.decode('utf-8')
     assert SingleChoicePoll.objects.filter(question = 'is this a test poll?').exists()
     # multiple choice
-    new_poll = client.post(reverse('poll_create'), {'question': 'which of the following?', 'kind': 'MULTIPLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
+    new_poll = client.post(reverse('poll_create'), {'question': 'which of the following?', 'description': 'which indeed?', 'kind': 'MULTIPLE', 'options': '["answer 1","answer b","all of the above"]', 'expires': '01/02/2023 16:57', 'river': str(test_river.id)})
     assert new_poll.status_code == 302
     new_poll_redirect = client.get(new_poll.url)
     assert 'which of the following?' in new_poll_redirect.content.decode('utf-8')
@@ -29,7 +29,8 @@ def test_create_poll(client, test_user, test_river):
 def test_vote_poll_single(client, test_user, other_test_user, test_singlechoicepoll, test_river):
     test_river.start_envision()
     client.force_login(test_user)
-    RiverMembership.objects.create(river = test_river, user = test_user) # so we can see the chat with the poll in
+    RiverMembership.objects.create(river = test_river, user = test_user)
+    RiverMembership.objects.create(river = test_river, user = other_test_user)
     SingleVote.objects.create(poll = test_singlechoicepoll, user = test_user, choice = None)
     SingleVote.objects.create(poll = test_singlechoicepoll, user = other_test_user, choice = None)
     # can see the poll in chat

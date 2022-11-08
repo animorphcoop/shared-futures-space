@@ -16,7 +16,7 @@ from .models import BasePoll, SingleChoicePoll, MultipleChoicePoll, BaseVote, Si
 from river.models import River, RiverMembership # pyre-ignore[21]
 
 class PollView(TemplateView):
-    def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponseRedirect:
+    def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponse:
         poll = BasePoll.objects.get(uuid = uuid)
         if hasattr(poll, 'multiplechoicepoll'):
             poll = poll.multiplechoicepoll
@@ -37,7 +37,7 @@ class PollView(TemplateView):
             elif hasattr(poll, 'singlechoicepoll'):
                 SingleVote.objects.filter(poll = poll, user = request.user).update(choice = choice)
             poll.check_closed()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        return self.render_to_response(self.get_context_data(uuid = uuid, request = request)) # pyre-ignore[6]
     def get_context_data(self, uuid: UUID, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(**kwargs)
         poll = BasePoll.objects.get(uuid = uuid)
@@ -47,6 +47,7 @@ class PollView(TemplateView):
             poll = poll.singlechoicepoll
         ctx['poll'] = poll
         ctx['poll_name'] = poll.question
+        ctx['poll_description'] = poll.description
         ctx['poll_results'] = poll.current_results
         for result in ctx['poll_results'].values():
             for user in result:
@@ -76,16 +77,17 @@ class PollCreateForm(ModelForm):
     kind = ChoiceField(choices = [('SINGLE', 'single-choice'), ('MULTIPLE', 'multiple-choice')])
     class Meta:
         model = SingleChoicePoll
-        fields = ['question', 'options', 'expires']
+        fields = ['question', 'description', 'options', 'expires']
 
 class PollCreateView(CreateView): # pyre-ignore[24]
     model = SingleChoicePoll
     form_class = PollCreateForm
     def form_valid(self, form) -> HttpResponseRedirect: # pyre-ignore[2] - the type of the form argument is some weird private thing that i can't seem to get hold of
+        print(form.cleaned_data)
         if form.cleaned_data['kind'] == 'SINGLE':
-            new_poll = SingleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, created_by = self.request.user, river = form.cleaned_data['river'])
+            new_poll = SingleChoicePoll.objects.create(question = form.cleaned_data['question'], description = form.cleaned_data['description'], options = form.instance.options, expires = form.instance.expires, created_by = self.request.user, river = form.cleaned_data['river'])
         elif form.cleaned_data['kind'] == 'MULTIPLE':
-            new_poll = MultipleChoicePoll.objects.create(question = form.instance.question, options = form.instance.options, expires = form.instance.expires, created_by = self.request.user, river = form.cleaned_data['river'])
+            new_poll = MultipleChoicePoll.objects.create(question = form.cleaned_data['question'], description = form.cleaned_data['description'], options = form.instance.options, expires = form.instance.expires, created_by = self.request.user, river = form.cleaned_data['river'])
         return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
     def get_success_url(self) -> str:
         return reverse('poll_view', args=[self.object.uuid]) # pyre-ignore[16]

@@ -40,7 +40,7 @@
 
             </div>
 
-            <div class="px-4 pb-9">
+            <div class="px-4 pb-6">
                 {% include "partials/input-label.html" with for="password-input2" label="Repeat password" %}
                 {% include "partials/input-text.html" with field=form.password2 id="password-input2" name="password-input2" type="password" %}
 
@@ -50,6 +50,12 @@
 
             </div>
 
+            <span class="px-4 text-meta text-black/30">By registering with us you agree to our             <a
+                    href="{% url 'privacy' %}"
+
+            > Privacy Policy
+            </a>.</span>
+            {% include "partials/vertical-spacer.html" with space="6" %}
             <div class="px-4 pb-6">
                 {% include "partials/input-submit.html" with button="Sign up" id="submit-button" type="submit" %}
 

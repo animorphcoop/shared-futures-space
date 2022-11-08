@@ -16,9 +16,6 @@
                 {% include "partials/vertical-spacer.html" with space="4.5" %}
                 <form method="post">
                     {% csrf_token %}
-                    {#  Description  #}
-                    {% include "partials/input-label.html" with for="question" label="Description" %}
-                    {% include "partials/input-text.html" with field=form.question id="question" name="question" type="text" %} {#  TODO: Textarea  #}
                     {% include "partials/vertical-spacer.html" with space="4.5" %}
                     {#  Voting options  #}
                     <h2 class="text-header">

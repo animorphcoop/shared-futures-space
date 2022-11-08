@@ -41,7 +41,10 @@
     {#        {% include "dashboard/partials/accordion.html" with title="Messages" list_items=messages %}#}
     {#    {% endblock %}#}
 
+    {% comment %}Include in v2{% endcomment %}
+{% comment %}
     {% include "dashboard/partials/notifications.html" with title="Notifications" reference="notifications" %}
+{% endcomment %}
 
     {#  Call to action partial, replace URL variable  #}
     {% if request.user.post_code.area.name != 'Other' %}
@@ -60,11 +63,12 @@
     {% comment %}
     TODO: Is this true?
     {% endcomment %}
+    {% comment %}
     {% if user.is_staff %}
         <br/>
         <a href="{% url 'account_request_panel' %}">Manage User Requests</a>
     {% endif %}
-
+{% endcomment %}
     {% include "dashboard/partials/get_in_touch.html" with title="Get in touch" reference="get_in_touch" %}
 
     <script src="{% static 'js/dashboard.js' %}"></script>
