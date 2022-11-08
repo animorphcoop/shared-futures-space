@@ -2,7 +2,7 @@
 from django.http.request import HttpRequest
 from django.http import HttpResponse
 
-from .models import HowTo, CaseStudy, FoundUseful
+from .models import HowTo, CaseStudy, SavedResource
 from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
@@ -36,9 +36,9 @@ def resource_search(request: HttpRequest) -> HttpResponse:
         current_user = request.user
         for resource_card in results:
             try:
-                useful_instance = FoundUseful.objects.get(useful_resource=resource_card, found_useful_by=current_user)
-                resource_card.useful = useful_instance
-            except FoundUseful.DoesNotExist:
+                saved_instance = SavedResource.objects.get(saved_resource=resource_card, saved_by=current_user)
+                resource_card.saved = saved_instance
+            except SavedResource.DoesNotExist:
                 pass
 
     context = {'results': results}
@@ -66,7 +66,7 @@ def filter_and_cluster_resources(search_term: Optional[str], order_by: Optional[
     if order_by == 'latest':
         results.sort(key=lambda r: r.published_on, reverse=True)
     elif order_by == 'most saved':
-        results.sort(key=lambda r: len(FoundUseful.objects.filter(useful_resource=r)), reverse=True)
+        results.sort(key=lambda r: len(SavedResource.objects.filter(saved_resource=r)), reverse=True)
     elif order_by == 'most viewed':
         results.sort(
             key=lambda r: len(AnalyticsEvent.objects.filter(type=AnalyticsEvent.EventType.RESOURCE, target_resource=r)),
@@ -85,18 +85,18 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
         except CaseStudy.DoesNotExist:
             print('it is neither HowTo nor CaseStudy. Redirect to root url?')
 
-    useful_instance = None
+    saved_instance = None
 
     if request.user.is_authenticated:
         current_user = request.user
         try:
-            useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
-        except FoundUseful.DoesNotExist:
+            saved_instance = SavedResource.objects.get(saved_resource=current_resource, saved_by=current_user)
+        except SavedResource.DoesNotExist:
             print('does not exist')
 
     context = {
         'resource': single_object_tags_cluster_overwrite(current_resource),
-        'useful': useful_instance,
+        'saved': saved_instance,
     }
 
     if request.user.is_authenticated:
@@ -105,7 +105,7 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
     return render(request, 'resources/resource_item.html', context)
 
 
-def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpResponse:
+def resource_saved(request: HttpRequest, res_id: Optional[int]) -> HttpResponse:
     resource_id = res_id
     current_user = request.user
     current_resource = None
@@ -119,20 +119,20 @@ def resource_found_useful(request: HttpRequest, res_id: Optional[int]) -> HttpRe
         except CaseStudy.DoesNotExist:
             return render(request, 'partials/button-hx.html')
 
-    found_useful = ''
-    useful_instance = None
+    saved_resource = ''
+    saved_instance = None
     try:
-        useful_instance = FoundUseful.objects.get(useful_resource=current_resource, found_useful_by=current_user)
-        useful_instance.delete()
-    except FoundUseful.DoesNotExist:
-        print('no useful match')
-        FoundUseful.objects.create(useful_resource=current_resource,
-                                   found_useful_by=current_user)
-        found_useful = 'found_useful'
+        saved_instance = SavedResource.objects.get(saved_resource=current_resource, saved_by=current_user)
+        saved_instance.delete()
+    except SavedResource.DoesNotExist:
+        print('no saved match')
+        SavedResource.objects.create(saved_resource=current_resource,
+                                     saved_by=current_user)
+        saved_resource = 'saved_resource'
 
     context = {
         'resource_id': res_id,
-        'status': found_useful
+        'status': saved_resource
     }
 
     return render(request, 'partials/button-hx.html', context)

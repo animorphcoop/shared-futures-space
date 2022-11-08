@@ -9,7 +9,7 @@
 
     <div class="flex flex-wrap gap-x-3 gap-y-2">
         {% if user.is_authenticated %}
-            {% if resource.useful %}
+            {% if resource.saved %}
                 <div id="heart-icon" class="inline-block">
                     <img src="{% static 'images/resources/heart_icon.png' %}" class="" alt="resource saved">
                 </div>

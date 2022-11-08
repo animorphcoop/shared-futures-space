@@ -75,8 +75,8 @@
 
         <div class="flex items-center">
             {% if user.is_authenticated %}
-                {% if useful %}
-                    {% include 'partials/button-hx.html' with resource_id=resource.id status='found_useful' %}
+                {% if saved %}
+                    {% include 'partials/button-hx.html' with resource_id=resource.id status='saved_resource' %}
                 {% else %}
                     {% include 'partials/button-hx.html' with resource_id=resource.id status='' %}
                 {% endif %}
