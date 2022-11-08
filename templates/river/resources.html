@@ -1,0 +1,36 @@
+{% extends "partials/drawer.html" %}
+
+{% block drawer_content %}
+    {# If no resources:  #}
+    {% if resources|length == 0 %}
+        {% include "partials/salmon-of-knowledge.html" with text="No associated resources found." %}
+    {% endif %}
+    {% for resource in resources %}
+        {# If resources, one looks like: #}
+         {% comment %}TODO: Abstract into a component, review styles, restricted width of title in case it's long, pushed icons to top-right{% endcomment %}
+
+        {% url 'resource_item' resource.slug as the_url %}
+        <div class="bg-gradient-to-b from-gray-light via-white rounded-t-xl flex justify-between">
+
+            <div class="w-3/4 h-full pt-2">
+                <h3 class="font-kanit-500 text-black-large text-xl p-3">
+                    {{ resource.title }}
+                </h3>
+            </div>
+            <div class="relative">
+                {# Link icon opens the copy URL of that resource modal #}
+                <div class="absolute top-0 right-0">
+                    {% include 'partials/button-copy.html' with icon='link' path=the_url %}
+                    <a href="{{ the_url }}">
+                        <svg class="inline-block ml-4 mb-0.5" width="18" height="18" viewBox="0 0 18 18" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 1L7.59 2.41L13.17 8H1V10H13.17L7.59 15.59L9 17L17 9L9 1Z" fill="#9759FF"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="h-3"></div>
+
+    {% endfor %}
+{% endblock %}
