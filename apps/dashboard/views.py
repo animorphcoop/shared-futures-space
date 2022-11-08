@@ -8,7 +8,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from userauth.models import CustomUser # pyre-ignore[21]
 from resources.models import Resource, SavedResource # pyre-ignore[21]
-from river.models import River # pyre-ignore[21]
+from river.models import River, RiverMembership # pyre-ignore[21]
 
 @login_required(login_url='/profile/login/')  # redirect when user is not logged in
 def dashboard(request: HttpRequest) -> HttpResponse:
@@ -20,7 +20,16 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     #notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new river. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
     rivers = []
 
-    rivers = River.objects.all()
+    all_rivers = River.objects.all()
+
+    for river in all_rivers:
+        try:
+            membership = RiverMembership.objects.get(user=request.user, river=river)
+            rivers.append(river)
+        except RiverMembership.DoesNotExist:
+            pass
+
+
 
 
 
