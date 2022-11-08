@@ -46,8 +46,13 @@
             {% include "river/description.html" with title="description" reference="description" %}
             {% include "dashboard/partials/resources.html" with title="associated resources" reference="resources" %}
             {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" %}
+            {% include "river/act.html" with title="act stage" reference="act" locked=True %}
+            {% include "river/act.html" with title="plan stage" reference="plan" locked=True %}
+            {% include "river/act.html" with title="reflect stage" reference="reflect" locked=True %}
+
+
         </div>
-            <div class="-mx-4.5">
-            </div>
+        <div class="-mx-4.5">
+        </div>
     </div>
 {% endblock content %}
