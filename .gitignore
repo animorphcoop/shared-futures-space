@@ -126,9 +126,10 @@ apps/theme/static_src/node_modules/
 apps/theme/static/css/dist/*
 
 # migrations files
-**/migrations/*.py
-**/migrations/*.pyc
-!**/migrations/__init__.py
+# NO LONGER IGNORED BECAUSE WE'RE LIVE AND NEED TO KEEP THE DB CONSISTENT
+#**/migrations/*.py
+#**/migrations/*.pyc
+#!**/migrations/__init__.py
 
 # ignore for test upload
 ignore
