@@ -70,6 +70,7 @@ def test_river_membership(client, test_user, other_test_user, test_river):
                                                                   'abdicate': 'abdicate'}) # should be rejected
     assert RiverMembership.objects.get(user=other_test_user, river=test_river).starter == True
     '''
+
 def test_river_management(client, test_user, other_test_user, test_river):
     membership = RiverMembership(user=test_user, river=test_river, starter=True)
     other_membership = RiverMembership(user=other_test_user, river=test_river, starter=False)

@@ -107,23 +107,18 @@ def test_user_request_flow(client, test_user, admin_client):
     assert 'your request to become an editor has been granted' in str(messages.content)
 
 
-'''
+
 @pytest.mark.django_db
 def test_name_update_flow(client, test_user):
     client.force_login(test_user)
 
-    update_form = client.get(reverse('account_update'))
-    current_name = \
-    bs4.BeautifulSoup(update_form.content, features='html5lib').body.find("div").find("form").find("div").find("input",
-                                                                                                               attrs={
-                                                                                                                   'name': 'display_name'})[
-        'value']
-    assert current_name == test_user.display_name
-    # data = {'display_name': 'New Name', 'email': 'testemail@example.com',}
+    update_form = client.get(reverse('user_detail', args=[str(test_user.id)]))
+    current_name = test_user.display_name
+    assert current_name in update_form.content.decode('utf-8')
     data = 'display_name=New Name&email=testemail%40example.com&avatar=' + str(test_user.avatar.id)
     client.put(reverse('account_update'), data)
     assert CustomUser.objects.get(id=test_user.id).display_name == 'New Name'
-'''
+
 
 def test_delete_account(client, test_user):
     client.force_login(test_user)

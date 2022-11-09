@@ -31,8 +31,6 @@ def test_log_login(client, test_user):
     assert len(new_events) == 1
     assert new_events[0].session.sessid_hash == make_password(test_user.display_name, salt = str(date.today()))
 
-'''
-TODO: Forget me not
 def test_log_resource_access(client, test_user, other_test_user, test_how_to_resource):
     previous_events = AnalyticsEvent.objects.filter(type = AnalyticsEvent.EventType.RESOURCE)
     assert len(previous_events) == 0
@@ -58,7 +56,3 @@ def test_log_resource_access(client, test_user, other_test_user, test_how_to_res
     assert len(new_events) == 1 # but other users can still log their on accesses
     assert new_events[0].target_resource.title == test_how_to_resource.title
     assert new_events[0].session.sessid_hash == make_password(other_test_user.display_name, salt = str(date.today()))
-
-
-
-'''

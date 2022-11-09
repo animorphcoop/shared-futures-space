@@ -37,11 +37,11 @@ def test_resource_search(client, test_how_to_resource, test_case_study_resource)
     assert test_how_to_resource in filter_and_cluster_resources(test_how_to_resource.title, order_by = 'oldest')
     assert test_case_study_resource in filter_and_cluster_resources(test_case_study_resource.title, order_by = 'oldest')
 
-'''
+
 def test_resource_item(client, test_how_to_resource, test_case_study_resource):
     howto_item_page = client.get(reverse('resource_item', args=[test_how_to_resource.slug])).content.decode('utf-8')
     assert test_how_to_resource.title in howto_item_page
     casestudy_item_page = client.get(reverse('resource_item', args=[test_case_study_resource.slug])).content.decode('utf-8')
     assert test_case_study_resource.title in casestudy_item_page
 
-'''
+
