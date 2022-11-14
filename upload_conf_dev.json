@@ -1327,7 +1327,12 @@
             "from": "Dan O’Callaghan",
             "content": "Let's vote!"
           }
-        ]
+        ],
+        "poll": {
+          "description": "We plan on starting a community garden for all Bogside residents, with open access to locals and passers by. We plan to run informative classes and allow a space for community veg and flower beds. We need a space for a shed and seating area and are looking at putting in a proposal with the council for using land between Fern Rd and Glencow Park",
+          "yes": ["Carla Owen", "Aoife Wilson"],
+          "no": ["Dan O’Callaghan"]
+        }
       }
     },
     {
