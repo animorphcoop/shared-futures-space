@@ -3,6 +3,7 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialLogin
 from django.core.handlers.wsgi import WSGIRequest
+from django.urls import reverse
 from userauth.models import CustomUser # pyre-ignore[21]
 from typing import Dict
 
@@ -17,3 +18,8 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         if 'email' in data:
             u.email = data['email']
         return u
+    def get_login_redirect_url(self, request: WSGIRequest) -> str:
+        if 'next' in request.GET:
+            return request.GET['next']
+        else:
+            return reverse('dashboard')

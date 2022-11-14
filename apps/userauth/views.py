@@ -140,6 +140,11 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
     def send_mail(self, template_prefix: str, email: Union[str, List[str]], context: Dict[str, str]) -> None:
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
+    def get_login_redirect_url(self, request: WSGIRequest) -> str:
+        if 'next' in request.GET:
+            return request.GET['next']
+        else:
+            return reverse('dashboard')
 
 
 @login_required(login_url='/profile/login/')

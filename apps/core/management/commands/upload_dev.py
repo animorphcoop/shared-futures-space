@@ -3,16 +3,18 @@ from wagtail.core.rich_text import RichText
 from django.core.files.images import ImageFile
 from wagtail.images.models import Image
 from allauth.account.admin import EmailAddress
+from django.utils import timezone
 from io import BytesIO
 from PIL import Image as PillowImage
 import requests
+import time
 import json
 
 from resources.models import HowTo, CaseStudy  # pyre-ignore[21]
 from userauth.models import CustomUser, UserPair, Organisation, UserAvatar  # pyre-ignore[21]
 from river.models import River, RiverMembership  # pyre-ignore[21]
 from river.views import CreateEnvisionPollView # pyre-ignore[21]
-from poll.models import SingleVote # pyre-ignore[21]
+from poll.models import SingleVote,SingleChoicePoll # pyre-ignore[21]
 from messaging.models import Message  # pyre-ignore[21]
 from area.models import PostCode, Area  # pyre-ignore[21]
 
@@ -83,25 +85,30 @@ def add_rivers(rivers_data):
 
             for member in river_data['swimmers']:
                 RiverMembership.objects.get_or_create(river=new_river,
-                                                      user=CustomUser.objects.get(display_name=member),
-                                                      starter=False)[0]
+                                                      user=CustomUser.objects.get(display_name=member))[0]
             for member in river_data['starters']:
-                RiverMembership.objects.get_or_create(river=new_river,
-                                                      user=CustomUser.objects.get(display_name=member),
-                                                      starter=True)[0]
+                m = RiverMembership.objects.get_or_create(river=new_river,
+                                                          user=CustomUser.objects.get(display_name=member))[0]
+                m.starter = True
+                m.save()
             if 'envision' in river_data:
                 new_river.start_envision()
                 for message in river_data['envision']['chat']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
                                                   text=message['content'], chat=new_river.envision_stage.chat)
-                class FakeRequest:
-                    def __init__(self):
-                        self.POST = {'description': river_data['envision']['poll']['description']}
-                CreateEnvisionPollView.post(None, FakeRequest(), new_river.slug)
-                for option in ['yes', 'no']:
-                    for user in river_data['envision']['poll'][option]:
-                        SingleVote.objects.filter(user = CustomUser.objects.get_or_create(display_name = user)[0],
-                                                  poll = new_river.envision_stage.poll).update(choice = new_river.envision_stage.poll.options.index(option) + 1)
+                if 'poll' in river_data['envision']:
+                    poll = SingleChoicePoll.objects.create(
+                                question='is this an acceptable vision?',
+                                description=river_data['envision']['poll']['description'],
+                                options=['yes', 'no'],
+                                invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
+                                river=new_river)
+                    new_river.envision_stage.poll = poll
+                    new_river.envision_stage.save()
+                    for option in ['yes', 'no']:
+                        for user in river_data['envision']['poll'][option]:
+                            SingleVote.objects.filter(user = CustomUser.objects.get_or_create(display_name = user)[0],
+                                                      poll = new_river.envision_stage.poll).update(choice = new_river.envision_stage.poll.options.index(option) + 1)
 
             if 'plan' in river_data:
                 new_river.start_plan()
@@ -232,5 +239,5 @@ class Command(BaseCommand):
         add_organisations(data['Organisations'])
         add_avatars(data['User Avatars'])
         add_users(data['Users'])
-        add_rivers(data['Rivers'])
         add_relations(data['Relations'])
+        add_rivers(data['Rivers'])
