@@ -4,7 +4,7 @@
 {% comment %}{% if more_back %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ back_from }}">Earlier Messages</a>
 {% endif %}{% endcomment %}
-<div class="bg-gray-light -mx-4.5 px-4.5 py-4">
+<div class="bg-gray-light -mx-4.5 px-4.5 py-4 {% if direct %}pb-[76px]{% endif %}">
 
 
     {% for message in messages %}
@@ -29,7 +29,7 @@
 {% else %}
 
     {% if direct %}
-        <form method="post" enctype="multipart/form-data" class="relative -m-4.5 p-4.5">
+        <form method="post" enctype="multipart/form-data" class="-m-4.5 p-4.5 fixed bottom-4.5 backdrop-blur w-full sm:w-[360px]"">
             {% csrf_token %}
 
             <div class="text-meta invisible max-w-full">
@@ -56,7 +56,7 @@
 
                 <div class="w-full">
                     <textarea data-expandable
-                              class="input-text input-text-messages bg-yellow rounded-xl w-full max-w-full"
+                              class="input-text h-[50px] max-h-[150px] bg-yellow rounded-xl w-full max-w-full"
                               name=text></textarea>
 
                     {% comment %}            <textarea name=message></textarea>
@@ -141,8 +141,12 @@
 {# bg-blue-blur fixed bottom-4.5 resize-none #}
 
 {% block scripts %}
-
     <script>
-
+        {# Expandable text area need to un-JQuery this example https://codepen.io/Vanderson/pen/eYNQzdO #}
+        {#$('body').on('keydown input', 'textarea[data-expandable]', function () {#}
+        {#    // Auto-expanding textarea#}
+        {#    this.style.removeProperty('height');#}
+        {#    this.style.height = (this.scrollHeight + 2) + 'px';#}
+        {# })#}
     </script>
 {% endblock %}
