@@ -5,9 +5,9 @@
 
 {% block content %}
 
-    {% block title %}{% include "partials/title.html" with title="Private chat" %}{% endblock %}
+
+    {% block title %}{% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}{% endblock %}
     <div class="mx-4.5">
-        {{ other_user.display_name }}
         {% include 'messaging/chatbox_snippet.html' with direct=True %}
     </div>
 
