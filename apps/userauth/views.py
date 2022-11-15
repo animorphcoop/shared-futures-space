@@ -1,5 +1,6 @@
 # pyre-strict
 from allauth.utils import get_form_class
+from urllib.parse import urlparse, parse_qs
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy, reverse
@@ -141,8 +142,9 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
     def get_login_redirect_url(self, request: WSGIRequest) -> str:
-        if 'next' in request.GET:
-            return request.GET['next']
+        qs = parse_qs(urlparse(request.META['HTTP_REFERER']).query)
+        if 'next' in qs:
+            return qs['next'][0]
         else:
             return reverse('dashboard')
 

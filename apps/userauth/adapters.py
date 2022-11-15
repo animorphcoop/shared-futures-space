@@ -19,7 +19,8 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             u.email = data['email']
         return u
     def get_login_redirect_url(self, request: WSGIRequest) -> str:
-        if 'next' in request.GET:
-            return request.GET['next']
+        qs = parse_qs(urlparse(request.META['HTTP_REFERER']).query)
+        if 'next' in qs:
+            return qs['next'][0]
         else:
             return reverse('dashboard')

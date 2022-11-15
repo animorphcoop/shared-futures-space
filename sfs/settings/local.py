@@ -37,9 +37,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-LOGIN_REDIRECT_URL: str = '/dashboard/'
 LOGOUT_REDIRECT_URL: str = '/'
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL: Optional[str] = LOGIN_REDIRECT_URL
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL: Optional[str] = '/dashboard/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL: Optional[str] = None
 
 ACCOUNT_AUTHENTICATION_METHOD: str = 'email'
@@ -63,6 +62,7 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
 AUTH_USER_MODEL: str = 'userauth.CustomUser'
 
 #overriding default account
+ADAPTER: str = 'userauth.views.CustomAllauthAdapter'
 ACCOUNT_ADAPTER: str = 'userauth.views.CustomAllauthAdapter'
 SOCIALACCOUNT_ADAPTER = 'userauth.adapters.CustomSocialAccountAdapter'
 
