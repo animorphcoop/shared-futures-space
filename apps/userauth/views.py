@@ -142,7 +142,10 @@ class CustomAllauthAdapter(DefaultAccountAdapter):
         msg: EmailMessage = self.render_mail(template_prefix, email, context)
         send_after.delay(5, msg)
     def get_login_redirect_url(self, request: WSGIRequest) -> str:
-        qs = parse_qs(urlparse(request.META['HTTP_REFERER']).query)
+        if 'HTTP_REFERER' in request.META:
+            qs = parse_qs(urlparse(request.META['HTTP_REFERER']).query)
+        else:
+            qs = {}
         if 'next' in qs:
             return qs['next'][0]
         else:
@@ -314,7 +317,6 @@ class CustomUserPersonalView(TemplateView):
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
         current_user = self.request.user
         data = QueryDict(request.body).dict()
-        print('wtf?')
         if data.get('display_name'):
             form = CustomUserNameUpdateForm(data, instance=current_user)
             if form.is_valid():

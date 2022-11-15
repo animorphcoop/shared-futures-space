@@ -3,6 +3,7 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialLogin
 from django.core.handlers.wsgi import WSGIRequest
+from urllib.parse import urlparse, parse_qs
 from django.urls import reverse
 from userauth.models import CustomUser # pyre-ignore[21]
 from typing import Dict
@@ -19,7 +20,10 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             u.email = data['email']
         return u
     def get_login_redirect_url(self, request: WSGIRequest) -> str:
-        qs = parse_qs(urlparse(request.META['HTTP_REFERER']).query)
+        if 'HTTP_REFERER' in request.META:
+            qs = parse_qs(urlparse(request.META['HTTP_REFERER']).query)
+        else:
+            qs = {}
         if 'next' in qs:
             return qs['next'][0]
         else:
