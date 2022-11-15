@@ -4,7 +4,7 @@
 {% comment %}{% if more_back %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ back_from }}">Earlier Messages</a>
 {% endif %}{% endcomment %}
-<div class="bg-gray-light -mx-4.5 px-4.5 py-4 {% if direct %}pb-[76px]{% endif %}">
+<div class="-mx-4.5 px-4.5 py-4 {% if direct %}pb-[76px]{% endif %}">
 
 
     {% for message in messages %}
