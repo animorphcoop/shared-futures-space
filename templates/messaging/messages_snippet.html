@@ -1,0 +1,16 @@
+{% comment %}{% if more_back %}
+    <a href="{{ request.path }}?interval={{ interval }}&from={{ back_from }}">Earlier Messages</a>
+{% endif %}{% endcomment %}
+<div class="bg-gray-light -mx-4.5 px-4.5 py-4">
+    {% for message in messages %}
+        {% if message.sender == system_user %}
+            {% include 'messaging/system_message_snippet.html' %}
+        {% else %}
+            {% include 'messaging/user_message_snippet.html' %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+        {% endif %}
+    {% endfor %}
+</div>
+{% comment %}{% if from != 0 %}
+    <a href="{{ request.path }}?interval={{ interval }}&from={{ forward_from }}">Later Messages</a>
+{% endif %}{% endcomment %}

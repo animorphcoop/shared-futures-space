@@ -166,7 +166,10 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
                                        members=list(map(lambda x: x.user, RiverMembership.objects.filter(
                                            river=river))))
         ctx['form'] = RiverChatForm
-        ctx['slug'] = river.slug
+        ctx['slug'] = slug
+        ctx['stage'] = stage
+        ctx['topic'] = topic
+        print(ctx)
         return ctx
 
 
