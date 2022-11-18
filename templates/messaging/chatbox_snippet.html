@@ -74,7 +74,7 @@
     {% else %}
         <form method="post"
               hx-post="{% url "river_chat"  slug 'envision' 'general' %}"
-              enctype="multipart/form-data" class="-m-4.5 p-4.5 absolute bottom-4.5 backdrop-blur w-full sm:w-[360px]">
+              enctype="multipart/form-data" class="-m-4.5 p-4.5 sticky bottom-0 bottom-4.5 backdrop-blur bg-gradient-to-t from-white via-white/90 sm:w-[360px]">
             {% csrf_token %}
 
 

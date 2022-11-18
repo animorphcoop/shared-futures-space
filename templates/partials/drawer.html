@@ -1,6 +1,6 @@
 {% load static %}
 
-<div x-data="{selected:null}">
+<div x-data="{selected:null}" class="sticky top-0 bg-white">
     <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
         {% if not locked %}
         <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
