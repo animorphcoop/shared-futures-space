@@ -9,198 +9,267 @@
     {% block title %}{% include "partials/title.html" with title="Privacy Policy" %}{% endblock %}
 
     <div class="mx-4.5">
-
         {% include "partials/vertical-spacer.html" with space="6" %}
-        {% include "landing/main-heading.html" with title="This privacy policy explains how we use the personal data collected from you when you use Shared Futures Space platform published by Animorph Ltd." %}
-
-        {% include "partials/vertical-spacer.html" with space="9" %}
-        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-            What data do we collect?
-        </h2>
-        {% include "partials/vertical-spacer.html" with space="3" %}
+        <p class="text-large">
+            This privacy policy explains how we use the personal data collected from you when you use Shared Futures
+            Space platform published by Animorph Ltd.
+        </p>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        <div class="-mx-4.5 h-12 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#F0F0F0_1%,_#F0F0F000_15.62%)] flex flex-col justify-center">
+            <h2 class="text-header text-black/55 px-[18px]">
+                What data do we collect?
+            </h2>
+        </div>
         <div class="font-garamond-500 text-base text-black-large leading-5">
-            We only collect data about web usage from logged in members.
-
-            When you sign up for a Shared Futures account you provide us with:
-
-            <ul>
-                <li>— display name,</li>
-                <li>— postcode (only the area part of it),</li>
-                <li>— year of birth,</li>
-                <li>— organisation you are associated with (optional).</li>
+            <p>We only collect data about web usage from logged in members. When you sign up for a Shared Futures
+                account you provide us with:</p>
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            <ul class="list-disc list-inside">
+                <li>display name,</li>
+                <li>postcode (only the area part of it),</li>
+                <li>year of birth,</li>
+                <li>organisation you are associated with (optional).</li>
             </ul>
-
-            {% include "partials/vertical-spacer.html" with space="6" %}
-
-            We record when you registered with us and allocate you a random unique user identifier. We also store
-            when you log in to Shared Futures Space.
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <p>We record when you registered with us and allocate you a random unique user identifier. We also store
+                when you log in to Shared Futures Space.</p>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <p>As a registered user you have a profile view which displays your display name, avatar of choice,
+                organisation (if you chose any) and the area you are associated with via postcode. We do not make your
+                year of birth and postcode available to the public.</p>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <p>When you are logged in, you can interact with other users through rivers (projects), resources and direct
+                messaging. We record the following information about your participation in each of the three main
+                modules:</p>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    Rivers
+                </h3>
+            </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
-
-            As a registered user you have a profile view which displays your display name, avatar of choice,
-            organisation (if you chose any) and the area you are associated with via postcode. We do not make your year
-            of birth and postcode available to the public.
-            {% include "partials/vertical-spacer.html" with space="3" %}
-
-            When you are logged in, you can interact with other users through rivers (projects), resources and direct
-            messaging. Here are the information we record about your participation in each of the three main modules:
-            {% include "partials/vertical-spacer.html" with space="6" %}
-
-            {% include "landing/section-heading.html" with title="Rivers" %}
-            <ul>
-                <li>— chat contents,</li>
-                <li>— poll votes.</li>
-
+            <ul class="list-disc list-inside">
+                <li>chat contents,</li>
+                <li>poll votes.</li>
             </ul>
-
-            All information regarding rivers is visible to other users.
             {% include "partials/vertical-spacer.html" with space="3" %}
-            {% include "landing/section-heading.html" with title="Resources" %}
-            <ul>
-                <li>— saved resources,</li>
-                <li>— entered resources.</li>
+            <p>All information regarding rivers is visible to other users.</p>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    Resources
+                </h3>
+            </div>
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            <ul class="list-disc list-inside">
+                <li>saved resources,</li>
+                <li>entered resources.</li>
             </ul>
-
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    Direct Messages
+                </h3>
+            </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
-
-            {% include "landing/section-heading.html" with title="Direct messaging" %}
-            <ul>
-                <li>— direct messages you exchange with other users of the platform.</li>
+            <ul class="list-disc list-inside">
+                <li>direct messages you exchange with other users of the platform.</li>
             </ul>
         </div>
+        {% include "partials/vertical-spacer.html" with space="6" %}
 
-        {% include "partials/vertical-spacer.html" with space="9" %}
-
-        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-            How do we collect your data?
-        </h2>
-        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="-mx-4.5 h-12 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#F0F0F0_1%,_#F0F0F000_15.62%)] flex flex-col justify-center">
+            <h2 class="text-header text-black/55 px-[18px]">
+                How do we collect your data?
+            </h2>
+        </div>
         <div class="font-garamond-500 text-base text-black-large leading-5">
             We collect the data and metadata as you used the platform when you are logged in. Everything we collect is
             sent to our server located in the United Kingdom.
         </div>
+        {% include "partials/vertical-spacer.html" with space="6" %}
 
-        {% include "partials/vertical-spacer.html" with space="9" %}
-        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-            How will we use your data?
-        </h2>
-        {% include "partials/vertical-spacer.html" with space="3" %}
-        <div class="font-garamond-500 text-base text-black-large leading-5">
-            We collect this data to better understand the needs of the Shared Futures stakeholders, and facilitate
-            discussions about future developments in your community.
-            {% include "partials/vertical-spacer.html" with space="3" %}
-            We hold your data for the purpose of facilitating collaboration between the users (rivers with associated
-            chats and polls) as well as knowledge-sharing (through resources).
-            {% include "partials/vertical-spacer.html" with space="3" %}
-            By submitting data, you consent to Animorph Ltd sharing it with our partner organisations, so that they may
-            use it to make community improvements in their work based on the content.
-            {% include "partials/vertical-spacer.html" with space="3" %}
-            The platform was built with a generous support from Special European Union Programme Body. We are a part of
-            a consortium made of the following partner organisations:
-            <ul>
-                <li>— Co-operation Ireland,</li>
-                <li>— Belfast Interface Project,</li>
-                <li>— Donegal Youth Service,</li>
-                <li>— University of Essex.</li>
-            </ul>
-
-            {% include "partials/vertical-spacer.html" with space="3" %}
-            Your data will not be used for any marketing purposes.
+        <div class="-mx-4.5 h-12 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#F0F0F0_1%,_#F0F0F000_15.62%)] flex flex-col justify-center">
+            <h2 class="text-header text-black/55 px-[18px]">
+                How will we use your data?
+            </h2>
         </div>
-        {% include "partials/vertical-spacer.html" with space="9" %}
-        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-            How do we store your data?
-        </h2>
-        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="font-garamond-500 text-base text-black-large leading-5">
+            <p>We collect this data to better understand the needs of the Shared Futures stakeholders, and facilitate
+                discussions about future developments in your community.</p>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <p>We hold your data for the purpose of facilitating collaboration between the users (rivers with associated
+                chats and polls) as well as knowledge-sharing (through resources).</p>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <p>By submitting data, you consent to Animorph Ltd sharing it with our partner organisations, so that they
+                may
+                use it to make community improvements in their work based on the content.</p>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <p>The platform was built with a generous support from Special European Union Programme Body. We are a part
+                of
+                a consortium made of the following partner organisations:</p>
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            <ul class="list-disc list-inside">
+                <li>Co-operation Ireland,</li>
+                <li>Belfast Interface Project,</li>
+                <li>Donegal Youth Service,</li>
+                <li>University of Essex.</li>
+            </ul>
+            {% include "partials/vertical-spacer.html" with space="4" %}
+            <p>Your data will not be used for any marketing purposes.</p>
+        </div>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+
+        <div class="-mx-4.5 h-12 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#F0F0F0_1%,_#F0F0F000_15.62%)] flex flex-col justify-center">
+            <h2 class="text-header text-black/55 px-[18px]">
+                How do we store your data?
+            </h2>
+        </div>
         <div class="font-garamond-500 text-base text-black-large leading-5">
             Your data are securely stored on our server, which is located in the United Kingdom.
         </div>
+        {% include "partials/vertical-spacer.html" with space="6" %}
 
-        {% include "partials/vertical-spacer.html" with space="9" %}
-
-        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-            Your data protection rights
-        </h2>
-        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="-mx-4.5 h-12 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#F0F0F0_1%,_#F0F0F000_15.62%)] flex flex-col justify-center">
+            <h2 class="text-header text-black/55 px-[18px]">
+                Your data protection rights
+            </h2>
+        </div>
         <div class="font-garamond-500 text-base text-black-large leading-5">
 
-            Animorph Ltd would like to make sure you are fully aware of all of your data protection rights. Every user
-            is
-            entitled to the following:
+            <p>Animorph Ltd would like to make sure you are fully aware of all of your data protection rights. Every
+                user
+                is entitled to the following:</p>
             {% include "partials/vertical-spacer.html" with space="6" %}
 
-            {% include "landing/section-heading.html" with title="The right to access" %}
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    The right to access
+                </h3>
+            </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
-            You have the right to request copies of your personal data. We may charge you a small fee for this service.
 
+            <p>You have the right to request copies of your personal data. We may charge you a small fee for this
+                service.</p>
             {% include "partials/vertical-spacer.html" with space="6" %}
 
-            {% include "landing/section-heading.html" with title="The right to rectification" %}
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    The right to rectification
+                </h3>
+            </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
-            You have the right to request that we correct any information you believe is inaccurate. You also have the
-            right to request us to complete the information you believe is incomplete.
 
+            <p>You have the right to request that we correct any information you believe is inaccurate. You also have
+                the
+                right to request us to complete the information you believe is incomplete.</p>
             {% include "partials/vertical-spacer.html" with space="6" %}
 
-            {% include "landing/section-heading.html" with title="TThe right to erasure" %}
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    The right to erasure
+                </h3>
+            </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
-            You have the right to request that we erase your personal data, under certain conditions.
 
+            <p>You have the right to request that we erase your personal data, under certain conditions.</p>
             {% include "partials/vertical-spacer.html" with space="6" %}
 
-            {% include "landing/section-heading.html" with title="The right to restrict processing" %}
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    The right to restrict processing
+                </h3>
+            </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
-            You have the right to request that we restrict the processing of your personal data, under certain
-            conditions.
+
+            <p>You have the right to request that we restrict the processing of your personal data, under certain
+                conditions.</p>
             {% include "partials/vertical-spacer.html" with space="6" %}
-            {% include "landing/section-heading.html" with title="The right to object to processing" %}
+
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    The right to object to processing
+                </h3>
+            </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
-            You have the right to object to our processing of your personal data, under certain conditions.
+
+            <p>You have the right to object to our processing of your personal data, under certain conditions.</p>
             {% include "partials/vertical-spacer.html" with space="6" %}
-            {% include "landing/section-heading.html" with title="The right to data portability" %}
+
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    The right to data portability
+                </h3>
+            </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
-            You have the right to request that we transfer the data that we have collected to another organization, or
-            directly to you, under certain conditions.
+
+            <p>You have the right to request that we transfer the data that we have collected to another organization,
+                or
+                directly to you, under certain conditions.</p>
         </div>
+        {% include "partials/vertical-spacer.html" with space="6" %}
 
-
-        {% include "partials/vertical-spacer.html" with space="9" %}
-
-        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-            How to contact us
-        </h2>
-        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="-mx-4.5 h-12 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#F0F0F0_1%,_#F0F0F000_15.62%)] flex flex-col justify-center">
+            <h2 class="text-header text-black/55 px-[18px]">
+                How to contact us
+            </h2>
+        </div>
         <div class="font-garamond-500 text-base text-black-large leading-5">
             If you make a request, we have one month to respond to you. If you would like to exercise any of these
             rights, please write to us via email: <a href="mailto:gdpr@sharedfutures.space?Subject=GDPR Rights">gdpr@sharedfutures.space</a>.
         </div>
+        {% include "partials/vertical-spacer.html" with space="6" %}
 
-
-        {% include "partials/vertical-spacer.html" with space="9" %}
-
-        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-            How to contact the appropriate authority
-        </h2>
-        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="-mx-4.5 h-12 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#F0F0F0_1%,_#F0F0F000_15.62%)] flex flex-col justify-center">
+            <h2 class="text-header text-black/55 px-[18px]">
+                How to contact the appropriate authority
+            </h2>
+        </div>
         <div class="font-garamond-500 text-base text-black-large leading-5">
             Should you wish to report a complaint or if you feel that we have not addressed your concern in a
             satisfactory manner, you may contact the Information Commissioner’s Office.
             {% include "partials/vertical-spacer.html" with space="3" %}
-            <ul>
-                <li>— Live chat: https://ico.org.uk/global/contact-us/live-chat</li>
-                <li>— Website: https://ico.org.uk/make-a-complaint](https://ico.org.uk/make-a-complaint</li>
+            <ul class="">
+                <li>
+                    <a href="https://ico.org.uk/global/contact-us/live-chat"
+                       class="text-meta text-purple font-kanit-600">
+                        Live chat
+                        <svg class="ml-1 mb-1 inline-block" width="10" height="10" viewBox="0 0 10 10" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.817121 10L0 9.18288L8.01556 1.16732H0.661479V0H10V9.33852H8.83268V1.98444L0.817121 10Z"
+                                  fill="#9759FF"/>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://ico.org.uk/make-a-complaint](https://ico.org.uk/make-a-complaint"
+                       class="text-meta text-purple font-kanit-600">
+                        Website
+                        <svg class="ml-1 mb-1 inline-block" width="10" height="10" viewBox="0 0 10 10" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.817121 10L0 9.18288L8.01556 1.16732H0.661479V0H10V9.33852H8.83268V1.98444L0.817121 10Z"
+                                  fill="#9759FF"/>
+                        </svg>
+                    </a>
+                </li>
             </ul>
             {% include "partials/vertical-spacer.html" with space="6" %}
-            Address:
-            <br/>
+            <div class="px-1.5 py-1 bg-blue-second rounded-sm inline-block">
+                <h3 class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                    Address
+                </h3>
+            </div>
+            {% include "partials/vertical-spacer.html" with space="3" %}
             Information Commissioner's Office,
             <br/>
-
             Office Wycliffe House, Water Lane,
             <br/>
-
             Wilmslow, Cheshire, SK9 5AF
         </div>
         {% include "partials/vertical-spacer.html" with space="9" %}
 
+        {% include "partials/footer-text.html" %}
     </div>
+
+
 {% endblock %}

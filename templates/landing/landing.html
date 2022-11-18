@@ -88,33 +88,7 @@
 
         {% include "partials/vertical-spacer.html" with space="9" %}
 
-        {% with h3_class="uppercase font-kanit-700 text-black-large text-[9px] leading-3 tracking-widest" p_class="text-meta text-black/55" %}
-            <div class="bg-gradient-to-b from-blue-second to-white flex flex-col py-8 -mx-4.5 px-4.5">
-                <h3 class="{{ h3_class }}">Funded by</h3>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="{{ p_class }}">Special EU Programmes Body</p>
-                {% include "partials/vertical-spacer.html" with space="9" %}
-
-                <h3 class="{{ h3_class }}">River Team</h3>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="{{ p_class }}">Co-operation Ireland</p>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="{{ p_class }}">Belfast Interface Project</p>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="{{ p_class }}">Animorph</p>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="{{ p_class }}">Essex University (prof. Peter Bloom)</p>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="{{ p_class }}">Donegal Youth Service</p>
-
-            </div>
-        {% endwith %}
-        <div class="">
-            <a href="{% url 'privacy' %}" class="text-meta text-purple font-kanit-600 mr-2.5">
-                Privacy Policy
-            </a>
-        </div>
-        {% include "partials/vertical-spacer.html" with space="6" %}
+        {% include "partials/footer-text.html" %}
     </div>
 
 {% endblock content %}
