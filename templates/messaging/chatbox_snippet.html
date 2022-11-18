@@ -29,7 +29,7 @@
 {% else %}
 
     {% if direct %}
-        <form method="post" enctype="multipart/form-data" class="-m-4.5 p-4.5 fixed bottom-4.5 backdrop-blur w-full sm:w-[360px]"">
+        <form method="post" enctype="multipart/form-data" class="-m-4.5 p-4.5 fixed bottom-4.5 backdrop-blur w-full sm:w-[360px]">
             {% csrf_token %}
 
             <div class="text-meta invisible max-w-full">
@@ -74,7 +74,7 @@
     {% else %}
         <form method="post"
               hx-post="{% url "river_chat"  slug 'envision' 'general' %}"
-              enctype="multipart/form-data" class="relative -m-4.5 p-4.5">
+              enctype="multipart/form-data" class="-m-4.5 p-4.5 absolute bottom-4.5 backdrop-blur w-full sm:w-[360px]">
             {% csrf_token %}
 
 
@@ -118,7 +118,7 @@
                 <div class="w-full">
 
                     <textarea data-expandable
-                              class="input-text input-text-messages bg-yellow rounded-xl w-full max-w-full"
+                              class="input-text h-[50px] max-h-[150px] bg-yellow rounded-xl w-full max-w-full"
                               name=text></textarea>
 
                     {% comment %}            <textarea name=message></textarea>

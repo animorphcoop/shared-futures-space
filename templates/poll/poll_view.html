@@ -114,7 +114,7 @@
                 {#  TODO: Add poll creator name, time and date created at  #}
                 <p class="flex gap-2 text-meta uppercase text-black/30 px-3.5">
                     <span>{{ poll.created_by.display_name }}</span>
-                    <span>{{ poll.created.time|time:"H:i" }}</span> {# created time #}
+                    <span>{{ poll.created.time|time:"G:i" }}</span> {# created time #}
                     <span>{{ poll.created.date|date:"j/n/Y" }}</span> {# created date #}
                 </p>
                 {% include "partials/vertical-spacer.html" with space="3" %}
