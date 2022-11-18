@@ -19,12 +19,18 @@
     <title>
         {% if extra_title %}
             Shared Futures Space - {{ title }} - {{ extra_title }}
+        {% elif chat_title %}
+            Shared Futures Space - {{ title }} {{ chat_title }}
         {% else %}
             Shared Futures Space - {{ title }}
         {% endif %}
     </title>
 
     <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5">
-        {{ title }}
+        {% if chat_title %}
+            {{ title }} {{ chat_title }}
+        {% else %}
+            {{ title }}
+        {% endif %}
     </h1>
 {% endif %}

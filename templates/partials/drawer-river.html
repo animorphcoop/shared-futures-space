@@ -1,0 +1,40 @@
+{% load static %}
+
+<div x-data="{selected:null}" class="sticky top-[48px] max-height-[65vh] bg-white bg-[linear-gradient(180deg,_#E5F1F8_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]" :class="selected && 'rounded-t-xl'">
+    <div class="transition-all">
+        {% if not locked %}
+        <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+            {% else %}
+            <button class="w-full py-4.5 px-4.5" type="button">
+            {% endif %}
+            <h2 class="flex items-center justify-between">
+                <span class="text-header">
+                    {{ title }}
+                </span>
+                {% if not locked %}
+                    <div class="w-[12] h-[8] transition duration-500 ease-out"
+                         :class="{'-rotate-180': selected}">
+                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                                  fill="#9759FF"/>
+                        </svg>
+                    </div>
+                {% else %}
+                    <img src="{% static 'images/river/river_drawer_lock.png' %}" alt="locked">
+                {% endif %}
+            </h2>
+        </button>
+    </div>
+
+        <div class="px-4 relative overflow-hidden overflow-y-scroll transition-all max-h-0 duration-700"
+             style=""
+             id="{{ id }}"
+             x-ref={{ reference }}
+                     x-bind:style="selected == 1 ? 'max-height: 65vh' : ''">
+
+    {% block drawer_content %}
+    {% endblock %}
+    {% include "partials/vertical-spacer.html" with space="8" %}
+</div>
+</div>

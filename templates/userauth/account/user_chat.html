@@ -5,10 +5,14 @@
 
 {% block content %}
 
-    {% block title %}{% include "partials/title.html" with title="Private chat" %}{% endblock %}
-    <div class="mx-4.5">
-        {{ other_user.display_name }}
-        {% include 'messaging/chatbox_snippet.html' with direct=True %}
+    {% block title %}
+        {% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}
+    {% endblock %}
+
+    <div class="flex flex-col h-screen bg-gray-light">
+        <div class="mx-4.5">
+            {% include 'messaging/chatbox_snippet.html' with direct=True %}
+        </div>
     </div>
 
 {% endblock %}
