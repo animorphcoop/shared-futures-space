@@ -15,38 +15,40 @@
 
         <div class="-mx-4.5">
             <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
-                <img src="
-                        {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+                <img src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
                      class="object-cover w-full h-full" alt="" title="">
             </div>
         </div>
-        {% include "partials/vertical-spacer.html" with space="6" %}
-
-        <h1 class="text-title text-black/55">
-            {{ object.title }}
-        </h1>
 
         {% include "partials/vertical-spacer.html" with space="3" %}
-        {% comment %}
-        <p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
-        {% endcomment %}
+        <div class="flex items-center">
 
-        {% if request.user in starters|attrmap:'user' %}
+            <h1 class="text-title text-black/55">
+                {{ object.title }}
+            </h1>
+
             {% comment %}
-            <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
-            <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
+            <p>tags: {{object.tags|attrmap:'name'|join:', '}}</p>
             {% endcomment %}
-        {% elif not request.user.is_anonymous %}
-            <form method=post>
-                {% csrf_token %}
-                {% if request.user in members|attrmap:'user' %}
-                    <button name=action value=leave class="button button-on-white">Leave River</button>
-                {% elif request.user.post_code.area == river.area %}
-                    <button name=action value=join class="button button-on-white">Join River</button>
-                {% endif %}
-            </form>
-        {% endif %}
+
+            {% if request.user in starters|attrmap:'user' %}
+                {% comment %}
+                <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
+                <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
+                {% endcomment %}
+            {% elif not request.user.is_anonymous %}
+                <form method=post class="m-0">
+                    {% csrf_token %}
+                    {% if request.user in members|attrmap:'user' %}
+                        <button name=action value=leave class="button button-on-white">Leave River</button>
+                    {% elif request.user.post_code.area == river.area %}
+                        <button name=action value=join class="button button-on-white">Join River</button>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
         {% include "partials/vertical-spacer.html" with space="3" %}
+
         <div class="-mx-4.5">
             {% include "river/swimmers.html" with title="swimmers" reference="swimmers" %}
             {% include "river/description.html" with title="description" reference="description" %}
