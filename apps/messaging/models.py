@@ -27,7 +27,7 @@ class Message(models.Model):
         from userauth.models import CustomUser # pyre-ignore[21] don't like it but there's so many things defined in terms of each other
         existing = Flag.objects.filter(message = self, flagged_by = user)
         if len(existing) == 0:
-            Flag.objects.create(message = self, flagged_by = user)
+            f = Flag.objects.create(message = self, flagged_by = user)
             if len(Flag.objects.filter(message = self)) >= 3:
                    self.hidden = True
                    self.save()

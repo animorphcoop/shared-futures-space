@@ -1,13 +1,13 @@
 
 {% block content %}
     <div class="mx-4.5">
-{% url 'river_chat' slug stage topic %}
 	<form hx-post="{% url 'river_chat' slug stage topic %}" hx-trigger=load>
 	    <input name="retrieve_messages"></input>
             <input name="from" value=0></input>
-            <input name="interval" value=10></input> 
+            <input name="interval" value=10></input>
+            {% csrf_token %} 
         </form>
-        {% include 'messaging/chatbox_snippet.html' with direct=False %}
+        {% include 'messaging/chatbox_snippet.html' %}
     </div>
     {% if not user.is_authenticated %}
         <div class="bg-blue-done">

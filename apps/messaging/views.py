@@ -7,6 +7,7 @@ from userauth.models import CustomUser  # pyre-ignore[21]
 from userauth.util import get_system_user  # pyre-ignore[21]
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from django.urls import reverse
 from typing import Dict, List, Any
 
 from .models import Chat, Message, Flag
@@ -38,22 +39,25 @@ class ChatView(TemplateView):
                     new_msg = Message(sender=request.user, text=request.POST['text'], chat=chat)
                 new_msg.save()
             if 'flag' in request.POST:
-                Message.objects.get(uuid=request.POST['flag']).flagged(request.user)
+                m = Message.objects.get(uuid=request.POST['flag'])
+                m.flagged(request.user)
             if 'starter_hide' in request.POST and RiverMembership.objects.filter(user=request.user, starter=True,
                                                                                  river=get_chat_containing_river(chat)).exists():
                 m = Message.objects.get(uuid=request.POST['starter_hide'])
                 m.hidden = not m.hidden
                 m.save()
-            print(request.POST)
             if 'retrieve_messages' in request.POST:
-                print('TEST')
                 msg_from, msg_no = 0, 10  # how many messages back to begin, and how many to retrieved
                 if ('from' in self.request.POST and self.request.POST['from'].isdigit()):
                     msg_from = int(self.request.POST['from'])
                 if ('interval' in self.request.POST and self.request.POST['interval'].isdigit()):
                     msg_no = int(self.request.POST['interval'])
                 messages = Message.objects.filter(chat=chat).order_by('timestamp')
-                context = {'messages': messages[max(0, len(messages) - (msg_no + msg_from)): len(messages) - msg_from]}
+                starter_membership = RiverMembership.objects.filter(starter=True, river=get_chat_containing_river(chat))
+                context = {'messages': messages[max(0, len(messages) - (msg_no + msg_from)): len(messages) - msg_from], 'chat_view_url' : url,
+                           'my_flags' : [flag.message.uuid for flag in Flag.objects.filter(flagged_by=self.request.user)] if self.request.user.is_authenticated else [],
+                           'starter' : starter_membership[0].user if len(starter_membership) != 0 else None,
+                           'user' : request.user}
                 return HttpResponse(get_template('messaging/messages_snippet.html').render(context))
             else :
                 return super().post(request)
@@ -76,10 +80,5 @@ class ChatView(TemplateView):
         context['back_from'] = int(min(msg_from + (msg_no / 2), len(messages)))
         context['forward_from'] = int(max(msg_from - (msg_no / 2), 0))
         context['members'] = kwargs['members']
-        starter_membership = RiverMembership.objects.filter(starter=True,
-                                                            river=get_chat_containing_river(kwargs['chat']))
-        context['starter'] = starter_membership[0].user if len(starter_membership) != 0 else None
         context['system_user'] = get_system_user()
-        context['my_flags'] = [flag.message.uuid for flag in Flag.objects.filter(
-            flagged_by=self.request.user)] if self.request.user.is_authenticated else []
         return context
