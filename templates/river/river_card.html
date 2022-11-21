@@ -46,14 +46,14 @@
                 {% endif %}
                 </div>
             </div>
-            <div class="flex gap-1.5">
+            <div class="flex items-center gap-1.5">
                 {% for member in river.membership|slice:3 %}
                     {% if not member.starter %}
                         <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
                     {% endif %}
                 {% endfor %}
                 {% if river.extra_swimmers != 0 %}
-                    <span class="uppercase text-center text-black-text font-kanit-600 tracking-widest"> +{{ river.extra_swimmers }}</span>
+                    <span class="text-header"> +{{ river.extra_swimmers }}</span>
                 {% endif %}
             </div>
         </div>
