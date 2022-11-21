@@ -15,6 +15,7 @@ from django.http.request import QueryDict
 
 from .tasks import send_after
 from .util import user_to_slug, slug_to_user
+from messaging.models import Message
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
@@ -211,7 +212,7 @@ class UserChatView(ChatView):
         return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[user_path]),  # pyre-ignore[16]
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
 
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str, Any]:
         #context = super(UserChatView, self).get_context_data(**kwargs)
         other_user = slug_to_user(kwargs['user_path'])  # pyre-ignore[6]
         [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
@@ -223,6 +224,7 @@ class UserChatView(ChatView):
                                                     CustomUser.objects.get(uuid=user2)])
         context['other_user'] = other_user
         context['form'] = ChatForm
+        context['user_path'] = kwargs['user_path']
         # due to the page being login_required, there should never be anonymous users seeing the page
         # due to request.user being in members, there should never be non-members seeing the page
         return context
@@ -231,11 +233,15 @@ class UserChatView(ChatView):
 class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['users_with_chats'] = (
-                [pair.user2 for pair in  # in the case that a chat with yourself exists, ~Q... avoids retrieving it
-                 UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user)]
-                + [pair.user1 for pair in
-                   UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user)])
+        context['user_chats'] = []
+        for user_chat in UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user): # this user listed first
+            user_chat.user = user_chat.user2
+            user_chat.latest_message = Message.objects.filter(chat = user_chat.chat).latest('timestamp')
+            context['user_chats'].append(user_chat)
+        for user_chat in UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user): # this user listed second
+            user_chat.user = user_chat.user1
+            user_chat.latest_message = Message.objects.filter(chat = user_chat.chat).latest('timestamp')
+            context['user_chats'].append(user_chat)
         return context
 
 

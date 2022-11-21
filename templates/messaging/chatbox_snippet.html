@@ -49,7 +49,7 @@
 
         </form>
     {% else %}
-        <form hx-post="{% url "river_chat"  slug 'envision' 'general' %}"
+        <form hx-post="{{ message_post_url }}"
               hx-target="#messages"
               enctype="multipart/form-data" class="relative -m-4.5 p-4.5">
             {% csrf_token %}

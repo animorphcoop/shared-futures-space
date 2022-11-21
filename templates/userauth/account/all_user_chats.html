@@ -8,26 +8,26 @@
 
     {% include "partials/vertical-spacer.html" with space="4" %}
 
-    {% for user in users_with_chats %}
-        <a href="{% url 'user_chat_path' user.uuid %}">
+    {% for user_chat in user_chats %}
+        <a href="{% url 'user_chat_path' user_chat.user.uuid %}">
             <div class="mx-4">
                 {% with icon_width="30px" %}
                     <div class="flex space-between items-start relative">
                         <div class="h-[{{ icon_width }}] w-[{{ icon_width }}]">
-                            <img src="{{ user.avatar.image_url }}" class="w-7.5 h-7.5"> {# TODO: fetch message user's avatar url #}
+                            <img src="{{ user_chat.user.avatar.image_url }}" class="w-7.5 h-7.5">
                         </div>
                         <div class="bg-gray-light rounded-[50px] px-9 py-3 w-[calc(100%-{{ icon_width }})]">
                             <h2 class="text-meta-label font-kanit-700 text-black/30">
-                                {{ user.display_name }}
+                                {{ user_chat.user.display_name }}
                             </h2>
                             {% include "partials/vertical-spacer.html" with space="1.5" %}
                             <p class="text-body">
-                                [[ Hi John! Thank you for your interest in the river! cut off 2 line ]] {# TODO: fetch first 50ch of latest message #}
+                                {{ user_chat.latest_message.sender.display_name }} : {{ user_chat.latest_message.text|truncatechars:50 }}
                             </p>
                             {% include "partials/vertical-spacer.html" with space="1.5" %}
                             <div class="flex gap-3">
-                                <span class="text-meta-label text-black/30">[[ 11:12 ]]</span> {# TODO: fetch time of latest message #}
-                                <span class="text-meta-label text-black/30" >[[ 15/11/2021 ]]</span> {# TODO: fetch date of latest message #}
+                                <span class="text-meta-label text-black/30">{{user_chat.latest_message.timestamp.time}}</span>
+                                <span class="text-meta-label text-black/30" >{{user_chat.latest_message.timestamp.date}}</span>
                                 <span class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
                                     Block {# TODO: launch block modal #}
                                 </span>

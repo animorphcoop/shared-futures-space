@@ -53,6 +53,7 @@ class ChatView(TemplateView):
                 if ('interval' in self.request.POST and self.request.POST['interval'].isdigit()):
                     msg_no = int(self.request.POST['interval'])
                 messages = Message.objects.filter(chat=chat).order_by('timestamp')
+                print(chat)
                 starter_membership = RiverMembership.objects.filter(starter=True, river=get_chat_containing_river(chat))
                 context = {'messages': messages[max(0, len(messages) - (msg_no + msg_from)): len(messages) - msg_from], 'chat_view_url' : url,
                            'my_flags' : [flag.message.uuid for flag in Flag.objects.filter(flagged_by=self.request.user)] if self.request.user.is_authenticated else [],

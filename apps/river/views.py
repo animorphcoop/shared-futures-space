@@ -169,7 +169,6 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         ctx['slug'] = slug
         ctx['stage'] = stage
         ctx['topic'] = topic
-        print(ctx)
         return ctx
 
 
