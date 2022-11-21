@@ -1,4 +1,19 @@
 {% load custom_filters %}
-<div style='border-style:dashed'>
-    {% include message.snippet %}
+{% load static %}
+
+<div class="flex">
+    <img src="{% static 'images/avatars/salmon_1.png' %}" class="w-6 h-6">
+    {% include "partials/horizontal-spacer.html" with space="1.5" %}
+    <div class="flex flex-col w-full bg-yellow-pale rounded-xl">
+        <div class="text-body p-1.5 pb-0">
+            {% include message.snippet %}
+        </div>
+        <div class="text-meta text-black-meta uppercase flex p-1.5">
+            <p>{{ message.sender.display_name }}</p>
+            {% include "partials/horizontal-spacer.html" with space="1.5" %}
+            <p>{{ message.timestamp|date:"G:i" }}</p>
+            {% include "partials/horizontal-spacer.html" with space="1.5" %}
+            <p>{{ message.timestamp|date:"d/m/y" }}</p>
+        </div>
+    </div>
 </div>
