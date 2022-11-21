@@ -5,7 +5,6 @@
 {% elif request.user not in members %}
     {{ not_member_message }}
 {% else %}
-
     {% if direct %}
         <form method="post" enctype="multipart/form-data" class="relative -m-4.5 p-4.5">
             {% csrf_token %}
@@ -50,12 +49,11 @@
 
         </form>
     {% else %}
-        <form method="post"
-              hx-post="{% url "river_chat"  slug 'envision' 'general' %}"
+        <form hx-post="{% url "river_chat"  slug 'envision' 'general' %}"
+              hx-target="#messages"
               enctype="multipart/form-data" class="relative -m-4.5 p-4.5">
             {% csrf_token %}
-
-
+            <input type=hidden name="retrieve_messages"></input>
             {% comment %} https://stackoverflow.com/questions/1804745/get-the-filename-of-a-fileupload-in-a-document-through-javascript {% endcomment %}
             {% comment %}
             <div class="text-meta invisible max-w-full">
