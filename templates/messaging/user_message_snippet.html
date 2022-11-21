@@ -33,7 +33,7 @@
             <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="useravatar">
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
             <div class="flex flex-col w-full">
-                <span class="font-garamond-500 text-base leading-5 tracking-[0.01em]">
+                <span class="text-body">
                     {% if message.hidden %}
                         <span class="text-black/30">
                             Message hidden
