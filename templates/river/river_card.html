@@ -14,7 +14,7 @@
 
         </div>
 
-        {% include "partials/vertical-spacer.html" with space="6" %}
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
         <div class="flex flex-row gap-1.5">
             {% for tag in river.tags %}
                 {% include "river/river_tag.html" with title=tag %}
@@ -60,18 +60,9 @@
 
         {% include "partials/vertical-spacer.html" with space="6" %}
 
-        <div class="h-[262px] w-full rounded-[10px_10px_0_0]">
-            {% if river.image %}
-
-                <img src="{{ river.image.url }}" alt="" title="">
-
-
-            {% else %}
-                <img src="{% static 'images/spring/spring_image_placeholder.png' %}" alt="Spring image" class="">
-
-            {% endif %}
-
-
+        <div class="flex items-center justify-center overflow-hidden h-[262px] w-full rounded-[10px_10px_0_0]">
+            <img src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+                 class="object-cover w-full h-full" alt="" title="">
         </div>
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
