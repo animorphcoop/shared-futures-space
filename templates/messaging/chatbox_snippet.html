@@ -4,7 +4,7 @@
 {% comment %}{% if more_back %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ back_from }}">Earlier Messages</a>
 {% endif %}{% endcomment %}
-<div class="-mx-4.5 px-4.5 py-4 {% if direct %}pb-[76px]{% endif %}">
+<div class="-mx-4.5 px-4.5 py-4 {% if direct %}pb-[108px]{% endif %}">
 
 
     {% for message in messages %}
@@ -29,10 +29,10 @@
 {% else %}
 
     {% if direct %}
-        <form method="post" enctype="multipart/form-data" class="-m-4.5 p-4.5 fixed bottom-4.5 backdrop-blur w-full sm:w-[360px]">
+        <form method="post" enctype="multipart/form-data" class="-m-4.5 p-4.5 fixed bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] w-full sm:w-[360px]">
             {% csrf_token %}
 
-            <div class="text-meta invisible max-w-full">
+            <div class="text-meta invisible max-w-full h-0">
                 {% render_field form.image %}
             </div>
 

@@ -9,9 +9,11 @@
         {% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}
     {% endblock %}
 
-    <div class="flex flex-col h-screen bg-gray-light">
-        <div class="mx-4.5">
-            {% include 'messaging/chatbox_snippet.html' with direct=True %}
+    <div class="bg-gray-light bg-gray-light sm:w-[360px] flex flex-col w-screen h-screen fixed overflow-y-auto">
+        <div class="">
+            <div class="mx-4.5">
+                {% include 'messaging/chatbox_snippet.html' with direct=True %}
+            </div>
         </div>
     </div>
 
