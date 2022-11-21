@@ -1,6 +1,6 @@
 {% load static %}
 
-<div x-data="{selected:null}" class="sticky top-0 max-height-[85vh] bg-white bg-[linear-gradient(180deg,_#E5F1F8_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]" :class="selected && 'rounded-t-xl'">
+<div x-data="{selected:null}" class="sticky top-0 max-height-[100vh] bg-white bg-[linear-gradient(180deg,_#E5F1F8_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]" :class="selected && 'rounded-t-xl'">
     <div class="transition-all">
         {% if not locked %}
         <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
@@ -31,7 +31,7 @@
              style=""
              id="{{ id }}"
              x-ref={{ reference }}
-                     x-bind:style="selected == 1 ? 'max-height: 85vh' : ''">
+                     x-bind:style="selected == 1 ? 'max-height: 100vh' : ''">
 
     {% block drawer_content %}
     {% endblock %}
