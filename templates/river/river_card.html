@@ -6,12 +6,11 @@
 <div class="mx-1.5 relative" x-init="swimmerCounter({{ river.num_swimmers }})">
     <div class="absolute bg-gradient-to-b from-[rgba(219,243,237,0.78)] to-white h-12 w-full rounded-xl"></div>
     <div class="p-3 relative">
-        <div class="flex justify-between">
+        <div class="flex flex-start justify-between -mr-4.5">
             <h2 class="relative text-title text-black/55">
                 {{ river.title }}
             </h2>
             {% include 'partials/button-copy.html' with icon='link' path=view_url %}
-
         </div>
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
@@ -71,7 +70,10 @@
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-        {% include "partials/button.html" with url=the_url style="important" button="Join" %}
+{#      Removed Join button for unauthenticated users, but TODO: only show if you're in the right postcode? #}
+        {% if user.is_authenticated %}
+            {% include "partials/button.html" with url=the_url style="important" button="Join" %}
+        {% endif %}
 
         {% include "partials/button.html" with url=view_url style="primary_white" button="Learn more" %}
     </div>
