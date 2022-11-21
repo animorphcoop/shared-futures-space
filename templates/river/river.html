@@ -12,19 +12,22 @@
     {% block title %}{% include "partials/title.html" with title="River" extra_title=object.title %}{% endblock %}
 
     <div class="mx-4.5">
-        {% include "partials/vertical-spacer.html" with space="2" %}
 
-        <h1 class="text-title text-black/55">
-            {{ object.title }}
-        </h1>
+        <div class="-mx-4.5">
+        <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
+            <img src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+                 class="object-cover w-full h-full" alt="" title="">
+        </div>
+    </div>
 
 
           {% include "partials/vertical-spacer.html" with space="6" %}
 
-        <div class="flex items-center justify-center overflow-hidden h-[262px] w-full rounded-[10px_10px_0_0]">
-            <img src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
-                 class="object-cover w-full h-full" alt="" title="">
-        </div>
+
+
+    <h1 class="text-title text-black/55">
+            {{ object.title }}
+        </h1>
 
 {% include "partials/vertical-spacer.html" with space="3" %}
         {% comment %}
