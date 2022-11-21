@@ -1,3 +1,3 @@
-<p>{% if request.user == message.context_user_a %}you{% else %}<b>{{message.context_user_a.display_name}}</b>{% endif %}
-   removed {% if request.user == message.context_user_b %}you{% else %}<b>{{message.context_user_b.display_name}}</b>{% endif %} from the river
-   <b>{{message.context_river.name}}</b></p>
+<p>
+    {% if request.user == message.context_user_a %}You{% else %}{{ message.context_user_a.display_name }}{% endif %} removed {% if request.user == message.context_user_b %}you{% else %}{{ message.context_user_b.display_name }}{% endif %} from this river.
+</p>
