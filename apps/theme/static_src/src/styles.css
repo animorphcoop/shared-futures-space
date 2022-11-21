@@ -59,6 +59,11 @@
     .input-text-invalid {
         @apply invalid:border-red-important focus:invalid:ring-red-important
     }
+
+    /* --- DRAWERS -------------------------------------------------------------------------------------------------- */
+    .drawer-h-100vh {
+        max-height: calc(100vh-48px);
+    }
 }
 
 @tailwind utilities; /* after layer so they can still be overwritten by utilities */

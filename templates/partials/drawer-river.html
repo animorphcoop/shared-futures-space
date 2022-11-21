@@ -27,11 +27,11 @@
         </button>
     </div>
 
-        <div class="px-4 relative overflow-hidden overflow-y-scroll transition-all max-h-0 duration-700"
+        <div class="px-4 relative overflow-hidden overflow-y-auto transition-all max-h-0 duration-700"
              style=""
              id="{{ id }}"
              x-ref={{ reference }}
-                     x-bind:style="selected == 1 ? 'max-height: 100vh; margin-bottom: -48px;' : ''">
+                     x-bind:style="selected == 1 ? 'max-height: 100vh;' : ''">
 
     {% block drawer_content %}
     {% endblock %}
