@@ -55,10 +55,11 @@ class ChatView(TemplateView):
                 messages = Message.objects.filter(chat=chat).order_by('timestamp')
                 print(chat)
                 starter_membership = RiverMembership.objects.filter(starter=True, river=get_chat_containing_river(chat))
-                context = {'messages': messages[max(0, len(messages) - (msg_no + msg_from)): len(messages) - msg_from], 'chat_view_url' : url,
+                context = {'messages': messages[max(0, len(messages) - (msg_no + msg_from)): len(messages) - msg_from],
                            'my_flags' : [flag.message.uuid for flag in Flag.objects.filter(flagged_by=self.request.user)] if self.request.user.is_authenticated else [],
                            'starter' : starter_membership[0].user if len(starter_membership) != 0 else None,
-                           'user' : request.user}
+                           'user' : request.user,
+                           'from': msg_from}
                 return HttpResponse(get_template('messaging/messages_snippet.html').render(context))
             else :
                 return super().post(request)

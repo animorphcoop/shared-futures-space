@@ -2,13 +2,18 @@
 
 {% comment %} Page: a messages- direct chat exchanges with another user {% endcomment %}
 
-
 {% block content %}
 
     {% block title %}{% include "partials/title.html" with title="Private chat" %}{% endblock %}
     <div class="mx-4.5">
         {{ other_user.display_name }}
         {% url 'user_chat' user_path as message_post_url %}
+        <form hx-post="{{ message_post_url }}" hx-target="#insert_older_messages" hx-swap="outerHTML">
+          <input name="retrieve_messages"></input>
+          <input name="from" value="{{from|add:10}}"></input>
+          <input name="interval" value=10></input>
+          <button>older messages</button>
+        </form> 
         <form hx-post="{{ message_post_url }}" hx-trigger=load hx-target=this>
             <input name="retrieve_messages"></input>
             <input name="from" value=0></input>
