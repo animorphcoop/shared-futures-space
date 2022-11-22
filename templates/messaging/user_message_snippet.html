@@ -30,7 +30,7 @@
         </div>
     {% else %}
         <div class="flex">
-            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="useravatar">
+            <img class="h-6 w-6" src="{{ message.sender.avatar.image_url }}" alt="useravatar">
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
             <div class="flex flex-col w-full">
                 <span class="text-body">
@@ -48,6 +48,7 @@
                 {% endif %}
 
                 {% include "partials/vertical-spacer.html" with space="1.5" %}
+
                 <div class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase flex">
                     <p>{{ message.sender.display_name }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
@@ -55,8 +56,9 @@
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <p>{{ message.timestamp|date:"d/m/y" }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
-                    <form method=POST hx-post="{% url "river_chat"  slug 'envision' 'general' %}" class="flex font-kanit-600 tracking-[0.03em] text-red-important">
+                    <form method=POST hx-post="{{chat_view_url}}" class="flex font-kanit-600 tracking-[0.03em] text-red-important">
                         {% csrf_token %}
+                        <input type=hidden name="retrieve_messages"></input>
                         <button name=flag value="{{ message.uuid }}">
                             {% if message.uuid in my_flags %}
                                 Unflag
@@ -76,6 +78,7 @@
                         {% endif %}
                     </form>
                 </div>
+
             </div>
             {% include "partials/horizontal-spacer.html" with space="7.5" %}
         </div>

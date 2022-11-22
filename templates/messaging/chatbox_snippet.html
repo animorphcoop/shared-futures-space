@@ -1,22 +1,8 @@
 {% load widget_tweaks %}
 
-
 {% comment %}{% if more_back %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ back_from }}">Earlier Messages</a>
 {% endif %}{% endcomment %}
-<div class="-mx-4.5 px-4.5 py-4 {% if direct %}pb-[108px]{% endif %}">
-
-
-    {% for message in messages %}
-        {% if message.sender == system_user %}
-            {% include 'messaging/system_message_snippet.html' %}
-        {% else %}
-            {% include 'messaging/user_message_snippet.html' %}
-            {% include "partials/vertical-spacer.html" with space="6" %}
-        {% endif %}
-
-    {% endfor %}
-</div>
 
 {% comment %}{% if from != 0 %}
     <a href="{{ request.path }}?interval={{ interval }}&from={{ forward_from }}">Later Messages</a>
@@ -27,7 +13,6 @@
 {% elif request.user not in members %}
     {{ not_member_message }}
 {% else %}
-
     {% if direct %}
         <form method="post" enctype="multipart/form-data" class="-m-4.5 p-4.5 fixed bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] w-full sm:w-[360px]">
             {% csrf_token %}
@@ -72,12 +57,12 @@
 
         </form>
     {% else %}
-        <form method="post"
-              hx-post="{% url "river_chat"  slug 'envision' 'general' %}"
+        <form hx-post="{{ message_post_url }}"
+              hx-target="#messages"
               enctype="multipart/form-data" class="-m-4.5 p-4.5 sticky bottom-0 bottom-4.5 backdrop-blur bg-gradient-to-t from-white via-white/90 sm:w-[360px]">
+
             {% csrf_token %}
-
-
+            <input type=hidden name="retrieve_messages"></input>
             {% comment %} https://stackoverflow.com/questions/1804745/get-the-filename-of-a-fileupload-in-a-document-through-javascript {% endcomment %}
             {% comment %}
             <div class="text-meta invisible max-w-full">

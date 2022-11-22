@@ -1605,6 +1605,7 @@
   ],
   "Relations": {
     "User Chat": [
+      { "user1": "Patrick Casey", "user2": "Joe Blues", "messages": [{"from": "Joe Blues", "content": "hello"}]},
       {
         "user1": "Patrick Casey",
         "user2": "Darren Wayne",

@@ -15,10 +15,12 @@ from django.http.request import QueryDict
 
 from .tasks import send_after
 from .util import user_to_slug, slug_to_user
+from messaging.models import Message # pyre-ignore[21]
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
+from userauth.models import CustomUser # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -50,7 +52,7 @@ def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpRespon
 
 # adding all the data required via /profile/add_data/
 class CustomAddDataView(TemplateView):
-    model: Type[CustomUser] = CustomUser
+    model: Type[CustomUser] = CustomUser # pyre-ignore[11]
     form_class: Type[CustomUserAddDataForm] = CustomUserAddDataForm
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
@@ -60,41 +62,35 @@ class CustomAddDataView(TemplateView):
         return context
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
-        current_user: CustomUser = request.user  # pyre-ignore[9]
+        current_user: CustomUser = request.user
         form = CustomUserAddDataForm(request.POST)  # pyre-ignore[6]
-        if current_user.year_of_birth is not None or current_user.post_code is not None:
+        if current_user.year_of_birth is not None or current_user.post_code is not None: # pyre-ignore[16]
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         else:
             if form.is_valid():
                 form.full_clean()
-                current_user.display_name = str(form.cleaned_data.get('display_name'))
-                current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
-                current_user.post_code = \
-                    PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
+                current_user.display_name = str(form.cleaned_data.get('display_name')) # pyre-ignore[16]
+                current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth')) # pyre-ignore[16]
+                current_user.post_code = PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]  # pyre-ignore[16]
 
                 if len(form.cleaned_data.get('avatar')) > 0:
-                    current_user.avatar = \
-                        UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]
+                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]  # pyre-ignore[16]
                 else:
                     random_avatar = random.randint(1, UserAvatar.objects.count())
-                    current_user.avatar = \
-                        UserAvatar.objects.get_or_create(pk=random_avatar)[0]
+                    current_user.avatar = UserAvatar.objects.get_or_create(pk=random_avatar)[0]
 
                 if len(form.cleaned_data.get('organisation_name')) > 0:
                     lower_org_name = form.cleaned_data.get('organisation_name').lower()
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():
-                        current_user.organisation = \
-                            get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))
+                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name')) # pyre-ignore[16]
                     else:
-                        new_organisation = \
-                            Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
-                                                               link=form.cleaned_data.get('organisation_url'))[0]
+                        new_organisation = Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'), link=form.cleaned_data.get('organisation_url'))[0]
                         current_user.organisation = new_organisation
 
                 else:
                     current_user.organisation = None
-                current_user.added_data = True
+                current_user.added_data = True # pyre-ignore[16]
 
                 current_user.save()
 
@@ -160,7 +156,7 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
                                             kind='user_request_' + httpreq.POST['kind'],
                                             param_str=httpreq.POST['reason'])
         send_system_message(get_requests_chat(), 'user_request', context_action=new_request)
-        return redirect(reverse('account_update'))
+        return redirect(reverse('account_request'))
     else:
         return render(httpreq, 'account/make_request.html')
 
@@ -168,14 +164,14 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
 class AdminRequestView(ChatView):  # pyre-ignore[11]
     def post(self, request: WSGIRequest) -> HttpResponse:
         # pyre-ignore[16]:
-        return super().post(request, members=[], chat=get_requests_chat,
+        return super().post(request, members=CustomUser.objects.filter(is_superuser = True), chat=get_requests_chat(),
                             url=reverse('account_request_panel'))
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         # pyre-ignore[16]:
         if self.request.user.is_superuser:
             # pyre-ignore[16]:
-            context = super().get_context_data(members=[], chat=get_requests_chat(),
+            context = super().get_context_data(members=CustomUser.objects.filter(is_superuser = True), chat=get_requests_chat(),
                                                url=reverse('account_request_panel'))
             context['user_anonymous_message'] = ''
             context['not_member_message'] = ''
@@ -211,7 +207,7 @@ class UserChatView(ChatView):
         return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[user_path]),  # pyre-ignore[16]
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
 
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs: Dict[str,Any]) -> Dict[str, Any]:
         #context = super(UserChatView, self).get_context_data(**kwargs)
         other_user = slug_to_user(kwargs['user_path'])  # pyre-ignore[6]
         [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
@@ -223,6 +219,7 @@ class UserChatView(ChatView):
                                                     CustomUser.objects.get(uuid=user2)])
         context['other_user'] = other_user
         context['form'] = ChatForm
+        context['user_path'] = kwargs['user_path']
         # due to the page being login_required, there should never be anonymous users seeing the page
         # due to request.user being in members, there should never be non-members seeing the page
         return context
@@ -231,11 +228,17 @@ class UserChatView(ChatView):
 class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['users_with_chats'] = (
-                [pair.user2 for pair in  # in the case that a chat with yourself exists, ~Q... avoids retrieving it
-                 UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user)]
-                + [pair.user1 for pair in
-                   UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user)])
+        context['user_chats'] = []
+        for user_chat in UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user): # this user listed first
+            user_chat.user = user_chat.user2
+            messages_in_chat = Message.objects.filter(chat = user_chat.chat)
+            user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
+            context['user_chats'].append(user_chat)
+        for user_chat in UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user): # this user listed second
+            user_chat.user = user_chat.user1
+            messages_in_chat = Message.objects.filter(chat = user_chat.chat)
+            user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
+            context['user_chats'].append(user_chat)
         return context
 
 

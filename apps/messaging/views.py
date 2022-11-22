@@ -2,10 +2,12 @@
 
 from django.views.generic.base import TemplateView
 from django.core.handlers.wsgi import WSGIRequest
+from django.template.loader import get_template
 from userauth.models import CustomUser  # pyre-ignore[21]
 from userauth.util import get_system_user  # pyre-ignore[21]
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from django.urls import reverse
 from typing import Dict, List, Any
 
 from .models import Chat, Message, Flag
@@ -17,47 +19,62 @@ from river.models import RiverMembership  # pyre-ignore[21]
 # both need to be passed three kwargs:
 #   a list of users called 'members' which is the people allowed to post in the chat
 #   a Chat called 'chat'
-#   a str called 'url'
+#   a str called 'url' which is the url to post new chat requests to, ie. if htmx is in use it's the hx-post not the address bar url
 # your get_context_data should define user_anonymous_message and not_member_message in context
 
 class ChatView(TemplateView):
     def post(self, request: WSGIRequest, chat: Chat, members: List[CustomUser], # pyre-ignore[11] - says CustomUser isn't defined as a type?
              url: str) -> HttpResponse:
-        msg_from, msg_no = 0, 50  # how many messages back to begin, and how many to retrieved
-        if ('from' in self.request.GET and self.request.GET['from'].isdigit()):
-            msg_from = int(self.request.GET['from'])
-        if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
-            msg_no = int(self.request.GET['interval'])
-        if (request.user in members and 'text' in request.POST):
-            image = request.FILES.get('image', None)
-            file = request.FILES.get('file', None)
-            if file and image:
-                new_msg = Message(sender=request.user, text=request.POST['text'], image=image, file=file, chat=chat)
-            elif image:
-                new_msg = Message(sender=request.user, text=request.POST['text'], image=image, chat=chat)
-            elif file and image:
-                new_msg = Message(sender=request.user, text=request.POST['text'], file=file, chat=chat)
-
+        if request.user in members:
+            if 'text' in request.POST:
+                image = request.FILES.get('image', None)
+                file = request.FILES.get('file', None)
+                if file and image:
+                    new_msg = Message(sender=request.user, text=request.POST['text'], image=image, file=file, chat=chat)
+                elif image:
+                    new_msg = Message(sender=request.user, text=request.POST['text'], image=image, chat=chat)
+                elif file and image:
+                    new_msg = Message(sender=request.user, text=request.POST['text'], file=file, chat=chat)
+                else:
+                    new_msg = Message(sender=request.user, text=request.POST['text'], chat=chat)
+                new_msg.save()
+            if 'flag' in request.POST:
+                m = Message.objects.get(uuid=request.POST['flag'])
+                m.flagged(request.user)
+            if 'starter_hide' in request.POST and RiverMembership.objects.filter(user=request.user, starter=True,
+                                                                                 river=get_chat_containing_river(chat)).exists():
+                m = Message.objects.get(uuid=request.POST['starter_hide'])
+                m.hidden = not m.hidden
+                m.save()
+            if 'retrieve_messages' in request.POST:
+                msg_from, msg_no = 0, 10  # how many messages back to begin, and how many to retrieved
+                if ('from' in self.request.POST and self.request.POST['from'].isdigit()):
+                    msg_from = int(self.request.POST['from'])
+                if ('interval' in self.request.POST and self.request.POST['interval'].isdigit()):
+                    msg_no = int(self.request.POST['interval'])
+                messages = Message.objects.filter(chat=chat).order_by('timestamp')
+                starter_membership = RiverMembership.objects.filter(starter=True, river=get_chat_containing_river(chat))
+                context = {'messages': messages[max(0, len(messages) - (msg_no + msg_from)): max(0, len(messages) - msg_from)],
+                           'my_flags' : [flag.message.uuid for flag in Flag.objects.filter(flagged_by=self.request.user)] if self.request.user.is_authenticated else [],
+                           'starter' : starter_membership[0].user if len(starter_membership) != 0 else None,
+                           'user' : request.user,
+                           'from': msg_from,
+                           'more_back': msg_no + msg_from < len(messages),
+                           'message_post_url': url,
+                           'system_user': get_system_user()}
+                return HttpResponse(get_template('messaging/messages_snippet.html').render(context))
+            else :
+                return super().get(request)
+        else:
+            if 'retrieve_messages' in request.POST:
+                return HttpResponse(get_template('messaging/messages_snippet.html').render({}))
             else:
-                new_msg = Message(sender=request.user, text=request.POST['text'], chat=chat)
-            new_msg.save()
-        if ('from' in request.GET and request.GET['from'].isdigit() and int(request.GET['from']) != 0):
-            msg_from = 0  # drop to current position in chat if not there already after sending a message
-        if 'flag' in request.POST and request.user.is_authenticated:
-            Message.objects.get(uuid=request.POST['flag']).flagged(request.user)
-        if 'starter_hide' in request.POST and RiverMembership.objects.filter(user=request.user, starter=True,
-                                                                             river=get_chat_containing_river(
-                                                                                 chat)).exists():
-            m = Message.objects.get(uuid=request.POST['starter_hide'])
-            m.hidden = not m.hidden
-            m.save()
-        # redirect so reloading the page doesn't resend the message
-        return redirect(url + '?interval=' + str(msg_no) + '&from=' + str(msg_from))
+                return super().get(request)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
-        msg_from, msg_no = 0, 50  # how many messages back to begin, and how many to retrieve
+        msg_from, msg_no = 0, 10  # how many messages back to begin, and how many to retrieve
         if ('from' in self.request.GET and self.request.GET['from'].isdigit()):
             msg_from = int(self.request.GET['from'])
         if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
@@ -72,10 +89,5 @@ class ChatView(TemplateView):
         context['back_from'] = int(min(msg_from + (msg_no / 2), len(messages)))
         context['forward_from'] = int(max(msg_from - (msg_no / 2), 0))
         context['members'] = kwargs['members']
-        starter_membership = RiverMembership.objects.filter(starter=True,
-                                                            river=get_chat_containing_river(kwargs['chat']))
-        context['starter'] = starter_membership[0].user if len(starter_membership) != 0 else None
         context['system_user'] = get_system_user()
-        context['my_flags'] = [flag.message.uuid for flag in Flag.objects.filter(
-            flagged_by=self.request.user)] if self.request.user.is_authenticated else []
         return context

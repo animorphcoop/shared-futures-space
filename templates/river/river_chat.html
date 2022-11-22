@@ -1,12 +1,15 @@
 
 {% block content %}
     <div class="mx-4.5">
-        {{ other_user.display_name }}
-        {% include 'messaging/chatbox_snippet.html' with direct=False slug=slug %}
+	<form hx-post="{% url 'river_chat' slug stage topic %}" hx-trigger=load hx-target=this>
+	    <input name="retrieve_messages"></input>
+            <input name="from" value=0></input>
+            <input name="interval" value=10></input>
+            {% csrf_token %} 
+        </form>
     </div>
-
-
-
+    {% url 'river_chat' slug stage topic as message_post_url %}
+    {% include 'messaging/chatbox_snippet.html' with direct=False message_post_url=message_post_url %}
     {% if not user.is_authenticated %}
         <div class="bg-blue-done">
             {% url 'account_login' as the_url %}

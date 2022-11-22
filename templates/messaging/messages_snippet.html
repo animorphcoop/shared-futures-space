@@ -1,0 +1,18 @@
+<div id=messages class="-mx-4.5 px-4.5 py-4 {% if direct %}pb-[108px]{% endif %}">
+    {% if more_back %}
+       <form hx-post="{{ message_post_url }}" hx-target="this">
+            <input type=hidden name="retrieve_messages"></input>
+            <input type=hidden name="from" value="{{from|add:10}}"></input>
+            <input type=hidden name="interval" value=10></input>
+            <button>load older messages</button>
+        </form>
+    {% endif %}
+    {% for message in messages %}
+        {% if message.sender == system_user %}
+            {% include 'messaging/system_message_snippet.html' %}
+        {% else %}
+            {% include 'messaging/user_message_snippet.html' %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+        {% endif %}
+    {% endfor %}
+</div>
