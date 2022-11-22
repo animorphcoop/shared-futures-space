@@ -60,10 +60,16 @@ class ChatView(TemplateView):
                            'user' : request.user,
                            'from': msg_from,
                            'more_back': msg_no + msg_from < len(messages),
-                           'message_post_url': url}
+                           'message_post_url': url,
+                           'system_user': get_system_user()}
                 return HttpResponse(get_template('messaging/messages_snippet.html').render(context))
             else :
-                return super().post(request)
+                return super().get(request)
+        else:
+            if 'retrieve_messages' in request.POST:
+                return HttpResponse(get_template('messaging/messages_snippet.html').render({}))
+            else:
+                return super().get(request)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)

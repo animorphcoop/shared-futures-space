@@ -20,20 +20,21 @@
                             <h2 class="text-meta-label font-kanit-700 text-black/30">
                                 {{ user_chat.user.display_name }}
                             </h2>
-                            {% include "partials/vertical-spacer.html" with space="1.5" %}
-                            <p class="text-body">
-                                {{ user_chat.latest_message.sender.display_name }} : {{ user_chat.latest_message.text|truncatechars:50 }}
-                            </p>
-                            {% include "partials/vertical-spacer.html" with space="1.5" %}
-                            <div class="flex gap-3">
-                                <span class="text-meta-label text-black/30">{{user_chat.latest_message.timestamp.time}}</span>
-                                <span class="text-meta-label text-black/30" >{{user_chat.latest_message.timestamp.date}}</span>
-                                <span class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
-                                    Block {# TODO: launch block modal #}
-                                </span>
-                            </div>
+                            {% if user_chat.latest_message %}
+                                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                                <p class="text-body">
+                                    {{ user_chat.latest_message.sender.display_name }} : {{ user_chat.latest_message.text|truncatechars:50 }}
+                                </p>
+                                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                                <div class="flex gap-3">
+                                    <span class="text-meta-label text-black/30">{{user_chat.latest_message.timestamp.time}}</span>
+                                    <span class="text-meta-label text-black/30" >{{user_chat.latest_message.timestamp.date}}</span>
+                                    <span class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
+                                        Block {# TODO: launch block modal #}
+                                    </span>
+                                </div>
+                            {% endif %}
                         </div>
-                        <span class="font-kanit-700 text-[9px] text-white absolute rounded-sm bg-red-important py-[3px] px-1.5 right-0">1</span>
                     </div>
                 {% endwith %}
             </div>

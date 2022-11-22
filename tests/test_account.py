@@ -95,15 +95,14 @@ def test_user_request_flow(client, test_user, admin_client):
                                {'kind': 'make_editor',
                                 'reason': 'pls'})
     assert make_request.status_code == 302
-    # assert make_request.url == f'/profile/update/'
     assert len(Action.objects.filter(kind='user_request_make_editor')) == 1
 
-    requests_page = admin_client.get('/profile/managerequests/')
+    requests_page = admin_client.post(reverse('account_request_panel'), {'retrieve_messages': '', 'from': '0', 'interval': '10'})
     requests_html = bs4.BeautifulSoup(requests_page.content, 'html5lib')
     assert test_user.display_name + ' made a request: user_request_make_editor, because: pls' in requests_html.text
     action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
     admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
-    messages = client.get(reverse('user_chat', args=[user_to_slug(get_system_user())]))
+    messages = client.post(reverse('user_chat', args=[user_to_slug(get_system_user())]), {'retrieve_messages': '', 'from': '0', 'interval': '10'})
     assert 'your request to become an editor has been granted' in str(messages.content)
 
 

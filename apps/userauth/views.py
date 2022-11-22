@@ -20,6 +20,7 @@ from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
+from userauth.models import CustomUser # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -161,7 +162,7 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
                                             kind='user_request_' + httpreq.POST['kind'],
                                             param_str=httpreq.POST['reason'])
         send_system_message(get_requests_chat(), 'user_request', context_action=new_request)
-        return redirect(reverse('account_update'))
+        return redirect(reverse('account_request'))
     else:
         return render(httpreq, 'account/make_request.html')
 
@@ -169,14 +170,14 @@ def user_request_view(httpreq: WSGIRequest) -> HttpResponse:
 class AdminRequestView(ChatView):  # pyre-ignore[11]
     def post(self, request: WSGIRequest) -> HttpResponse:
         # pyre-ignore[16]:
-        return super().post(request, members=[], chat=get_requests_chat,
+        return super().post(request, members=CustomUser.objects.filter(is_superuser = True), chat=get_requests_chat(),
                             url=reverse('account_request_panel'))
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         # pyre-ignore[16]:
         if self.request.user.is_superuser:
             # pyre-ignore[16]:
-            context = super().get_context_data(members=[], chat=get_requests_chat(),
+            context = super().get_context_data(members=CustomUser.objects.filter(is_superuser = True), chat=get_requests_chat(),
                                                url=reverse('account_request_panel'))
             context['user_anonymous_message'] = ''
             context['not_member_message'] = ''
@@ -236,11 +237,13 @@ class UserAllChatsView(TemplateView):
         context['user_chats'] = []
         for user_chat in UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user): # this user listed first
             user_chat.user = user_chat.user2
-            user_chat.latest_message = Message.objects.filter(chat = user_chat.chat).latest('timestamp')
+            messages_in_chat = Message.objects.filter(chat = user_chat.chat)
+            user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
             context['user_chats'].append(user_chat)
         for user_chat in UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user): # this user listed second
             user_chat.user = user_chat.user1
-            user_chat.latest_message = Message.objects.filter(chat = user_chat.chat).latest('timestamp')
+            messages_in_chat = Message.objects.filter(chat = user_chat.chat)
+            user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
             context['user_chats'].append(user_chat)
         return context
 

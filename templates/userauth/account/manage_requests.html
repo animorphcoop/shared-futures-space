@@ -8,13 +8,16 @@ TODO: is that covered in Figma?
 {% block content %}
 
     {% block title %}{% include "partials/title.html" with title="Manage change requests" %}{% endblock %}
-
-
-
-
     {% if user.is_superuser %}
         <h3>Manage User Requests</h3>
-        {% include 'messaging/chatbox_snippet.html' %}
+        <div class="mx-4.5">
+            <form hx-post="{% url 'account_request_panel' %}" hx-trigger=load hx-target=this>
+                <input name="retrieve_messages"></input>
+                <input name="from" value=0></input>
+                <input name="interval" value=10></input>
+                {% csrf_token %}
+            </form>
+        </div> 
     {% else %}
         You are not an admin so you should not see this message, you should have been redirected already!
     {% endif %}

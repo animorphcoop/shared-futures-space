@@ -35,7 +35,7 @@ def test_vote_poll_single(client, test_user, other_test_user, test_singlechoicep
     SingleVote.objects.create(poll = test_singlechoicepoll, user = other_test_user, choice = None)
     # can see the poll in chat
     send_system_message(test_river.envision_stage.chat, 'poll', context_poll = test_singlechoicepoll)
-    chat_view = client.get(reverse('river_chat', args=[test_river.slug, 'envision', 'general']))
+    chat_view = client.post(reverse('river_chat', args=[test_river.slug, 'envision', 'general']), {'retrieve_messages': ''})
     assert 'is this a test question?' in chat_view.content.decode('utf-8')
     # can vote on the poll, and it won't close
     client.post(reverse('poll_view', args=[test_singlechoicepoll.uuid]), {'choice': test_singlechoicepoll.options[0]})
@@ -61,7 +61,7 @@ def test_vote_poll_multiple(client, test_user, other_test_user, test_multiplecho
     MultipleVote.objects.create(poll = test_multiplechoicepoll, user = other_test_user, choice = [])
     # can see the poll in chat
     send_system_message(test_river.envision_stage.chat, 'poll', context_poll = test_multiplechoicepoll)
-    chat_view = client.get(reverse('river_chat', args=[test_river.slug, 'envision', 'general']))
+    chat_view = client.post(reverse('river_chat', args=[test_river.slug, 'envision', 'general']), {'retrieve_messages': ''})
     assert 'which options?' in chat_view.content.decode('utf-8')
     # can vote on the poll, and it won't close
     client.post(reverse('poll_view', args=[test_multiplechoicepoll.uuid]), {'choice': test_multiplechoicepoll.options[0]})
