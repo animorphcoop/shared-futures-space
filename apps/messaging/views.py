@@ -19,7 +19,7 @@ from river.models import RiverMembership  # pyre-ignore[21]
 # both need to be passed three kwargs:
 #   a list of users called 'members' which is the people allowed to post in the chat
 #   a Chat called 'chat'
-#   a str called 'url'
+#   a str called 'url' which is the url to post new chat requests to, ie. if htmx is in use it's the hx-post not the address bar url
 # your get_context_data should define user_anonymous_message and not_member_message in context
 
 class ChatView(TemplateView):
@@ -53,13 +53,14 @@ class ChatView(TemplateView):
                 if ('interval' in self.request.POST and self.request.POST['interval'].isdigit()):
                     msg_no = int(self.request.POST['interval'])
                 messages = Message.objects.filter(chat=chat).order_by('timestamp')
-                print(chat)
                 starter_membership = RiverMembership.objects.filter(starter=True, river=get_chat_containing_river(chat))
-                context = {'messages': messages[max(0, len(messages) - (msg_no + msg_from)): len(messages) - msg_from],
+                context = {'messages': messages[max(0, len(messages) - (msg_no + msg_from)): max(0, len(messages) - msg_from)],
                            'my_flags' : [flag.message.uuid for flag in Flag.objects.filter(flagged_by=self.request.user)] if self.request.user.is_authenticated else [],
                            'starter' : starter_membership[0].user if len(starter_membership) != 0 else None,
                            'user' : request.user,
-                           'from': msg_from}
+                           'from': msg_from,
+                           'more_back': msg_no + msg_from < len(messages),
+                           'message_post_url': url}
                 return HttpResponse(get_template('messaging/messages_snippet.html').render(context))
             else :
                 return super().post(request)
@@ -67,7 +68,7 @@ class ChatView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
-        msg_from, msg_no = 0, 50  # how many messages back to begin, and how many to retrieve
+        msg_from, msg_no = 0, 10  # how many messages back to begin, and how many to retrieve
         if ('from' in self.request.GET and self.request.GET['from'].isdigit()):
             msg_from = int(self.request.GET['from'])
         if ('interval' in self.request.GET and self.request.GET['interval'].isdigit()):
