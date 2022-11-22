@@ -15,7 +15,7 @@ from django.http.request import QueryDict
 
 from .tasks import send_after
 from .util import user_to_slug, slug_to_user
-from messaging.models import Message
+from messaging.models import Message # pyre-ignore[21]
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
@@ -52,7 +52,7 @@ def profile_view(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpRespon
 
 # adding all the data required via /profile/add_data/
 class CustomAddDataView(TemplateView):
-    model: Type[CustomUser] = CustomUser
+    model: Type[CustomUser] = CustomUser # pyre-ignore[11]
     form_class: Type[CustomUserAddDataForm] = CustomUserAddDataForm
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
@@ -62,21 +62,21 @@ class CustomAddDataView(TemplateView):
         return context
 
     def post(self, request: WSGIRequest) -> Union[HttpResponse, HttpResponseRedirect]:
-        current_user: CustomUser = request.user  # pyre-ignore[9]
+        current_user: CustomUser = request.user
         form = CustomUserAddDataForm(request.POST)  # pyre-ignore[6]
-        if current_user.year_of_birth is not None or current_user.post_code is not None:
+        if current_user.year_of_birth is not None or current_user.post_code is not None: # pyre-ignore[16]
             return HttpResponse(
                 "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page.")
         else:
             if form.is_valid():
                 form.full_clean()
-                current_user.display_name = str(form.cleaned_data.get('display_name'))
-                current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))
-                current_user.post_code = \
+                current_user.display_name = str(form.cleaned_data.get('display_name')) # pyre-ignore[16]
+                current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth')) # pyre-ignore[16]
+                current_user.post_code = \ # pyre-ignore[16]
                     PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]
 
                 if len(form.cleaned_data.get('avatar')) > 0:
-                    current_user.avatar = \
+                    current_user.avatar = \ # pyre-ignore[16]
                         UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]
                 else:
                     random_avatar = random.randint(1, UserAvatar.objects.count())
