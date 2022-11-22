@@ -1,7 +1,7 @@
 {% load static %}
 
 <div>
-    {% if message.sender == request.user %}
+    {% if message.sender == user %}
         <div class="flex justify-end">
             {% include "partials/horizontal-spacer.html" with space="7.5" %}
             <div class="flex flex-col w-full">
@@ -66,7 +66,7 @@
                                 Flag
                             {% endif %}
                         </button>
-                        {% if request.user == starter %}
+                        {% if user == starter %}
                             {% include "partials/horizontal-spacer.html" with space="1.5" %}
                             <button name=starter_hide value="{{ message.uuid }}">
                                 {% if message.hidden %}
