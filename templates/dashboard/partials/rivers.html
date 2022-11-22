@@ -17,6 +17,25 @@
                     <h3 class="font-kanit-500 text-black-large text-xl p-3">
                         {{ river.title }}
                     </h3>
+                    {% comment %}                    {% if river.membership.starter %}
+
+                        river.membership.starter
+                    {% endif %}{% endcomment %}
+                    {% for member in river.membership %}
+                        {% if member.starter %}
+                            <p>            <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="useravatar">
+Starter: {{ member.user.display_name }}</p>
+                            <p> Your status:
+
+                                {% if member.user == request.user %}
+                                    YOU ARE STARTER SILLY {{ member.user.display_name }}
+                                {% else %}
+                                    Swimmer
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                <p>Stage: {{ river.current_stage|capfirst }}</p>
                 </div>
                 <div class="relative">
                     {# Link icon opens the copy URL of that resource modal #}

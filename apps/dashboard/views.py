@@ -24,7 +24,9 @@ def dashboard(request: HttpRequest) -> HttpResponse:
 
     for river in all_rivers:
         try:
-            membership = RiverMembership.objects.get(user=request.user, river=river)
+            # members = RiverMembership.objects.get(user=request.user, river=river)
+            members = RiverMembership.objects.filter(river=river)
+            river.membership = members
             rivers.append(river)
         except RiverMembership.DoesNotExist:
             pass
