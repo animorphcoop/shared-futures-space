@@ -16,7 +16,6 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     if not current_user.added_data: # pyre-ignore[16]
         return HttpResponseRedirect(reverse('account_add_data'))
 
-    #TODO: Load real content
     #notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new river. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
     rivers = []
 
@@ -27,6 +26,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
             # members = RiverMembership.objects.get(user=request.user, river=river)
             members = RiverMembership.objects.filter(river=river)
             river.membership = members
+            river.current_stage = river.get_current_stage_string
             rivers.append(river)
         except RiverMembership.DoesNotExist:
             pass
