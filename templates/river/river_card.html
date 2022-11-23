@@ -27,15 +27,16 @@
                 {% for member in river.membership %}
                     <span></span>
                     {% if member.starter %}
-                    <a href="{% url 'user_detail' member.user.user_slug %}">Profile</a>
+                        <a href="{% url 'user_detail' member.user.user_slug %}">
 
-                        <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
+                            <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
 
-                        {% include "partials/horizontal-spacer.html" with space="4" %}
-                        <div class="flex flex-col justify-center">
+                            {% include "partials/horizontal-spacer.html" with space="4" %}
+                            <div class="flex flex-col justify-center">
                         <span class="text-meta uppercase tracking-widest">
                             {{ member.user.display_name }}
                         </span>
+                        </a>
                     {% endif %}
                 {% endfor %}
                 {% if river.months_since != 0 %}
@@ -45,40 +46,42 @@
                 {% if river.current_stage != "" %}
                     <span class="text-meta text-black/30">{{ river.current_stage }}</span>
                 {% endif %}
-                </div>
             </div>
-            <div class="flex items-center gap-1.5">
-                {% for member in river.membership|slice:3 %}
-                    {% if not member.starter %}
-                        <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
-                    {% endif %}
-                {% endfor %}
-                {% if river.extra_swimmers != 0 %}
-                    <span class="text-header"> +{{ river.extra_swimmers }}</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+            {% for member in river.membership|slice:3 %}
+                {% if not member.starter %}
+                    <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
                 {% endif %}
-            </div>
+            {% endfor %}
+            {% if river.extra_swimmers != 0 %}
+                <span class="text-header"> +{{ river.extra_swimmers }}</span>
+            {% endif %}
         </div>
-
-        {% include "partials/vertical-spacer.html" with space="6" %}
-
-        <div class="flex items-center justify-center overflow-hidden h-[262px] w-full rounded-[10px_10px_0_0]">
-            <img src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
-                 class="object-cover w-full h-full" alt="" title="">
-        </div>
-
-        {% include "partials/vertical-spacer.html" with space="4.5" %}
-
-        <p class="font-garamond-500 text-base leading-5 text-black/75">{{ river.description }}</p>
-
-        {% include "partials/vertical-spacer.html" with space="4.5" %}
-
-{#      Removed Join button for unauthenticated users, but TODO: only show if you're in the right postcode? #}
-        {% if user.is_authenticated %}
-            {% include "partials/button.html" with url=the_url style="important" button="Join" %}
-        {% endif %}
-
-        {% include "partials/button.html" with url=view_url style="primary_white" button="Learn more" %}
     </div>
+
+    {% include "partials/vertical-spacer.html" with space="6" %}
+
+    <div class="flex items-center justify-center overflow-hidden h-[262px] w-full rounded-[10px_10px_0_0]">
+        <img src="
+
+                {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+             class="object-cover w-full h-full" alt="" title="">
+    </div>
+
+    {% include "partials/vertical-spacer.html" with space="4.5" %}
+
+    <p class="font-garamond-500 text-base leading-5 text-black/75">{{ river.description }}</p>
+
+    {% include "partials/vertical-spacer.html" with space="4.5" %}
+
+    {#      Removed Join button for unauthenticated users, but TODO: only show if you're in the right postcode? #}
+    {% if user.is_authenticated %}
+        {% include "partials/button.html" with url=the_url style="important" button="Join" %}
+    {% endif %}
+
+    {% include "partials/button.html" with url=view_url style="primary_white" button="Learn more" %}
+</div>
 </div>
 {% block scripts %}
     <script>
