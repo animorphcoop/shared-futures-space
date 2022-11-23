@@ -16,7 +16,7 @@
             <p class="text-meta text-black/30">Joined {{ member.join_date|date }}</p>
             {% if user in starters|attrmap:'user' %}
                 <form hx-post="{% url 'manage_river' slug %}" hx-target="closest #swimmers">
-                    <input type="hidden" name="membership" value="{{ member.id }}"></input>
+                    <input type="hidden" name="membership" value="{{ member.id }}">
                     <button name="action" value="remove_swimmer">Remove</button>
                     <button name="action" value="offer_starter">Offer Starter Status</button>
                 </form>
