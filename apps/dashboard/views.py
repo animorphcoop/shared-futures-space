@@ -26,6 +26,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
             # members = RiverMembership.objects.get(user=request.user, river=river)
             members = RiverMembership.objects.filter(river=river)
             river.membership = members
+            river.started_months_ago = river.get_started_months_ago
             river.current_stage = river.get_current_stage_string
             rivers.append(river)
         except RiverMembership.DoesNotExist:

@@ -36,6 +36,10 @@
                         {% endif %}
                     {% endfor %}
                     <p>Stage: {{ river.current_stage }}</p>
+                    {% comment %}TODO: Last activity, e.g. chat{% endcomment %}
+                    {% comment %}
+                        <p>Started {{ river.started_months_ago }} months ago</p>
+                    {% endcomment %}
                 </div>
                 <div class="relative">
                     {# Link icon opens the copy URL of that resource modal #}
