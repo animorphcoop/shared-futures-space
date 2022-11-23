@@ -56,9 +56,11 @@
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <p>{{ message.timestamp|date:"d/m/y" }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
-                    <form method=POST hx-post="{{message_post_url}}" class="flex font-kanit-600 tracking-[0.03em] text-red-important">
+                    <form method=POST hx-post="{{message_post_url}}" hx-target="closest #messages" hx-swap="outerHTML" class="flex font-kanit-600 tracking-[0.03em] text-red-important">
                         {% csrf_token %}
                         <input type=hidden name="retrieve_messages"></input>
+                        <input type=hidden name="from" value="{{from}}"></input>
+                        <input type=hidden name="interval" value="{{from|add:10}}"></input>
                         <button name=flag value="{{ message.uuid }}">
                             {% if message.uuid in my_flags %}
                                 Unflag
