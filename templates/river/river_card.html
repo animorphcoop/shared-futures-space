@@ -27,6 +27,8 @@
                 {% for member in river.membership %}
                     <span></span>
                     {% if member.starter %}
+                    <a href="{% url 'user_detail' member.user.user_slug %}">Profile</a>
+
                         <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
 
                         {% include "partials/horizontal-spacer.html" with space="4" %}

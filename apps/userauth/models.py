@@ -54,6 +54,12 @@ class CustomUser(AbstractUser):
     class Meta:
         ordering: List[str] = ['display_name']
 
+
+    @property
+    def user_slug(self) -> Optional[str]:
+        # TODO merge with .util import user_to_slug avoiding circular input
+        return f"{str(self.display_name).replace(' ', '-')}-{str(self.pk)}".lower()
+
     # to redirect to account profile page
     # def get_absolute_url(self) -> str:
     # suffix = f"{self.display_name}{self.pk}"
