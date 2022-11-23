@@ -229,7 +229,7 @@ class UserAllChatsView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['user_chats'] = []
         for user in CustomUser.objects.all():
-            if user.uuid < self.request.user.uuid:
+            if user.uuid < self.request.user.uuid: # pyre-ignore[16]
                 user_chat = UserPair.objects.filter(user1 = user, user2 = self.request.user)
             else:
                 user_chat = UserPair.objects.filter(user1 = self.request.user, user2 = user)
