@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse, reverse_lazy
 from itertools import chain
+from django.db.models import Q
 
 from .forms import CreateRiverForm, RiverChatForm
 from .models import River, RiverMembership
@@ -25,7 +26,7 @@ from messaging.util import send_system_message  # pyre-ignore[21]
 from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
 from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
-from resources.models import Resource # pyre-ignore[21]
+from resources.models import Resource, CaseStudy, HowTo # pyre-ignore[21]
 from typing import Dict, List, Any, Union, Type
 from area.models import PostCode
 
@@ -58,15 +59,12 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
-        tag_resources = {tag: filter_and_cluster_resources(tag, 'latest') for tag in context['object'].tags.names()}
-        context['resources'] = []
-        for tag in tag_resources:
-            for resource in tag_resources[tag]:
-                for other_tag in [k for k in tag_resources.keys() if k != tag]:
-                    if other_tag in resource.tags:
-                        context['resources'].append(resource)
-                        break
-        #context['resources'] = list(chain(*[filter_and_cluster_resources(tag, 'latest') for tag in context['object'].tags.names()]))
+        # wow this is ugly
+        context['resources'] = list(dict.fromkeys(chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)),
+                                                                     CaseStudy.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b))))
+                                for tag_a in self.object.tags.names() for tag_b in self.object.tags.names() if # pyre-ignore[16]
+                                tag_a != tag_b and tag_a > tag_b]))) # ensure we don't have (tag1, tag2) and (tag2, tag1) searched separately. they would be filtered out by fromkeys but might as well remove earlier on
+        print(context['resources'])
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
         return context
 
