@@ -1,31 +1,31 @@
 {% comment %}uses area_delaits simple tag from area/templatetages{% endcomment %}
 {% load area_details %}
-{% get_areas as areas %}
+{% get_areas as areas_dict %}
 <ul class="list-non text-black/30 -mt-2" aria-labelledby="dropdownLargeButton">
 
     {% if user.is_authenticated %}
-        {% for area in areas %}
+        {% for key, value in areas_dict.items %}
 
-            {% if area == user.post_code.area.name %}
+            {% if value == user.post_code.area.name %}
                 <li class="px-4 py-3 text-black/75">
-                    <a href="{% url "spring" area %}">
-                        <span>Your spring: </span>{{ area }}
+                    <a href="{% url "spring" key %}">
+                        <span>Your spring: </span>{{ value }}
                     </a>
                 </li>
             {% else %}
                 <li class="px-4 py-3">
-                    <a href="{% url "spring" area %}">
-                        {{ area }}
+                    <a href="{% url "spring" key %}">
+                        {{ value }}
                     </a>
                 </li>
             {% endif %}
         {% endfor %}
 
     {% else %}
-        {% for area in areas %}
+        {% for key, value in areas_dict.items %}
             <li class="px-4 py-3">
-                <a href="{% url "spring" area %}">
-                    {{ area }}
+                <a href="{% url "spring" key %}">
+                    {{ value }}
                 </a>
             </li>
         {% endfor %}

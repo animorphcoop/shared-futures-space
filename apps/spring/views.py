@@ -12,14 +12,16 @@ from area.models import Area # pyre-ignore[21]
 from river.models import River, RiverMembership # pyre-ignore[21]
 #from river.util import get_current_stage_string, get_started_months_ago
 
-# TODO: THIS CLASS WILL BE REMOVED AND MADE ACCESSIBLE VIA SPRING APP
 class SpringView(TemplateView):
     def get(self, request: HttpRequest, *args: List[Any], **kwargs: Dict[str, str]) -> Union[
         HttpResponse, HttpResponseRedirect]:
         # RETURN URL PATH
         slug = str(kwargs['slug'])
+        print(slug)
         if '-' in slug:
             name = slug.replace('-', ' ')
+        elif slug == 'derrylondonderry':
+            name = 'derry~londonderry'
         else:
             name = slug
 
@@ -45,7 +47,6 @@ class SpringView(TemplateView):
             if len(river.swimmers) > 4:
                 river.extra_swimmers = len(river.swimmers) - 4
 
-            # TEMP - comment below
             river.membership = RiverMembership.objects.filter(river=river)
 
         # This is total number for the spring
