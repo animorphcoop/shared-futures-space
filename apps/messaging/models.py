@@ -15,6 +15,7 @@ class Message(models.Model):
     reply_to: models.ForeignKey = models.ForeignKey('messaging.Message', null=True, on_delete = models.SET_NULL)
     chat: models.ForeignKey = models.ForeignKey('messaging.Chat', on_delete = models.CASCADE)
     hidden: models.BooleanField = models.BooleanField(default = False)
+    hidden_reason: models.CharField = models.CharField(max_length = 25, null = True, default = None)
     # context_* values are nullable fields used to fill in the gaps in system messages
     context_action: models.ForeignKey = models.ForeignKey('action.Action', null = True, on_delete = models.SET_NULL)
     context_river: models.ForeignKey = models.ForeignKey('river.River', null = True, on_delete = models.SET_NULL)
@@ -30,6 +31,7 @@ class Message(models.Model):
             f = Flag.objects.create(message = self, flagged_by = user)
             if len(Flag.objects.filter(message = self)) >= 3:
                    self.hidden = True
+                   self.hidden_reason = "due to flagging by users"
                    self.save()
         else:
             existing[0].delete()

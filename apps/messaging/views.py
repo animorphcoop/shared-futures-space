@@ -45,6 +45,7 @@ class ChatView(TemplateView):
                                                                                  river=get_chat_containing_river(chat)).exists():
                 m = Message.objects.get(uuid=request.POST['starter_hide'])
                 m.hidden = not m.hidden
+                m.hidden_reason = 'by the river starter'
                 m.save()
             if 'retrieve_messages' in request.POST:
                 msg_from, msg_no = 0, 10  # how many messages back to begin, and how many to retrieved

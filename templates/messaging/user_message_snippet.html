@@ -36,7 +36,7 @@
                 <span class="text-body">
                     {% if message.hidden %}
                         <span class="text-black/30">
-                            Message hidden
+                            Message hidden {{ message.hidden_reason }}
                         </span>
                     {% else %}
                         {{ message.text }}
