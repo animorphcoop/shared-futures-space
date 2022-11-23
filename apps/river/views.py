@@ -58,7 +58,15 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
-        context['resources'] = list(chain(*[filter_and_cluster_resources(tag, 'latest') for tag in context['object'].tags.names()]))
+        tag_resources = {tag: filter_and_cluster_resources(tag, 'latest') for tag in context['object'].tags.names()}
+        context['resources'] = []
+        for tag in tag_resources:
+            for resource in tag_resources[tag]:
+                for other_tag in [k for k in tag_resources.keys() if k != tag]:
+                    if other_tag in resource.tags:
+                        context['resources'].append(resource)
+                        break
+        #context['resources'] = list(chain(*[filter_and_cluster_resources(tag, 'latest') for tag in context['object'].tags.names()]))
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
         return context
 
