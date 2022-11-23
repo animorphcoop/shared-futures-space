@@ -17,7 +17,7 @@
                 <input type=hidden name="interval" value=10></input>
                 {% csrf_token %}
             </form>
-            {% include 'messaging/chatbox_snippet.html' with direct=False message_post_url=message_post_url %}
+            {% include 'messaging/chatbox_snippet.html' with direct=True message_post_url=message_post_url %}
         </div>
     </div>
 
