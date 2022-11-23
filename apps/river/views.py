@@ -59,12 +59,12 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['user'] = self.request.user
-        context['slug'] = self.object.slug
+        context['slug'] = self.object.slug #pyre-ignore[16]
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
         # wow this is ugly
         context['resources'] = list(dict.fromkeys(chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)),
                                                                      CaseStudy.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b))))
-                                for tag_a in self.object.tags.names() for tag_b in self.object.tags.names() if # pyre-ignore[16]
+                                for tag_a in self.object.tags.names() for tag_b in self.object.tags.names() if
                                 tag_a != tag_b and tag_a > tag_b]))) # ensure we don't have (tag1, tag2) and (tag2, tag1) searched separately. they would be filtered out by fromkeys but might as well remove earlier on
         print(context['resources'])
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
@@ -105,7 +105,7 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
         return context
 
 
-class ManageRiverView(TemplateView):  # pyre-ignore[24]
+class ManageRiverView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         river = River.objects.get(slug=slug)
         membership = RiverMembership.objects.get(id=request.POST['membership'])
