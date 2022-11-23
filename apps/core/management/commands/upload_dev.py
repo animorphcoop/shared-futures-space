@@ -12,6 +12,7 @@ import json
 
 from resources.models import HowTo, CaseStudy  # pyre-ignore[21]
 from userauth.models import CustomUser, UserPair, Organisation, UserAvatar  # pyre-ignore[21]
+from userauth.util import get_userpair # pyre-ignore[21]
 from river.models import River, RiverMembership  # pyre-ignore[21]
 from river.views import CreateEnvisionPollView # pyre-ignore[21]
 from poll.models import SingleVote,SingleChoicePoll # pyre-ignore[21]
@@ -206,8 +207,8 @@ def add_areas(areas_data):
 def add_relations(relations_data):
     for userchat_data in relations_data['User Chat']:
         try:
-            pair = UserPair.objects.get_or_create(user1=CustomUser.objects.get(display_name=userchat_data['user1']),
-                                                  user2=CustomUser.objects.get(display_name=userchat_data['user2']))[0]
+            pair = get_userpair(CustomUser.objects.get(display_name=userchat_data['user1']),
+                                CustomUser.objects.get(display_name=userchat_data['user2']))
             for message in userchat_data['messages']:
                 Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
                                               text=message['content'], chat=pair.chat)

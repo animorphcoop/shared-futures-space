@@ -21,6 +21,7 @@ from messaging.util import send_system_message, get_requests_chat  # pyre-ignore
 from action.models import Action  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
 from userauth.models import CustomUser # pyre-ignore[21]
+from userauth.util import get_userpair # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -202,8 +203,7 @@ class UserChatView(ChatView):
     def post(self, request: WSGIRequest, user_path: str) -> HttpResponse:
         other_user = slug_to_user(user_path)
         [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
-        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
-                                                     user2=CustomUser.objects.get(uuid=user2))
+        userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
         return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[user_path]),  # pyre-ignore[16]
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
 
@@ -211,8 +211,7 @@ class UserChatView(ChatView):
         #context = super(UserChatView, self).get_context_data(**kwargs)
         other_user = slug_to_user(kwargs['user_path'])  # pyre-ignore[6]
         [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
-        userpair, _ = UserPair.objects.get_or_create(user1=CustomUser.objects.get(uuid=user1),
-                                                     user2=CustomUser.objects.get(uuid=user2))
+        userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
         # pyre-ignore[16]:
         context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[kwargs['user_path']]),
                                            members=[CustomUser.objects.get(uuid=user1),
@@ -229,16 +228,17 @@ class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['user_chats'] = []
-        for user_chat in UserPair.objects.filter(~Q(user2=self.request.user), user1=self.request.user): # this user listed first
-            user_chat.user = user_chat.user2
-            messages_in_chat = Message.objects.filter(chat = user_chat.chat)
-            user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
-            context['user_chats'].append(user_chat)
-        for user_chat in UserPair.objects.filter(~Q(user1=self.request.user), user2=self.request.user): # this user listed second
-            user_chat.user = user_chat.user1
-            messages_in_chat = Message.objects.filter(chat = user_chat.chat)
-            user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
-            context['user_chats'].append(user_chat)
+        for user in CustomUser.objects.all():
+            if user.uuid < self.request.user.uuid:
+                user_chat = UserPair.objects.filter(user1 = user, user2 = self.request.user)
+            else:
+                user_chat = UserPair.objects.filter(user1 = self.request.user, user2 = user)
+            if user_chat.exists() and user != self.request.user:
+                user_chat = user_chat[0]
+                user_chat.user = user
+                messages_in_chat = Message.objects.filter(chat = user_chat.chat)
+                user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
+                context['user_chats'].append(user_chat)
         return context
 
 
