@@ -58,6 +58,8 @@ class RiverView(DetailView):  # pyre-ignore[24]
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
+        context['user'] = self.request.user
+        context['slug'] = self.object.slug
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
         # wow this is ugly
         context['resources'] = list(dict.fromkeys(chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)),
@@ -98,19 +100,19 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'], starter=True)
+        context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
+        context['user'] = self.request.user
         return context
 
 
-class ManageRiverView(DetailView):  # pyre-ignore[24]
-    model = River
-
+class ManageRiverView(TemplateView):  # pyre-ignore[24]
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
         river = River.objects.get(slug=slug)
         membership = RiverMembership.objects.get(id=request.POST['membership'])
         # security checks
         if (RiverMembership.objects.get(user=request.user, river=river).starter == True
                 and membership.river == River.objects.get(slug=slug)):  # since the form takes any uid
-            if (request.POST['action'] == 'offer_ownership'):
+            if (request.POST['action'] == 'offer_starter'):
                 if not membership.starter:  # not an starter already
                     send_offer(request.user, membership.user, 'become_starter', param_river=river)
                     #send_system_message(get_userpair(request.user, membership.user).chat,'lost_championship_notification', context_user_a=request.user,context_river=membership.river)
@@ -124,8 +126,11 @@ class ManageRiverView(DetailView):  # pyre-ignore[24]
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
-        context['memberships'] = RiverMembership.objects.filter(river=context['object'].pk)
+        river = River.objects.get(slug=kwargs['slug'])
+        context['starters'] = RiverMembership.objects.filter(river=river.pk, starter=True)
+        context['members'] = RiverMembership.objects.filter(river=river.pk)
+        context['slug'] = kwargs['slug']
+        print(context['members'])
         return context
 
 
