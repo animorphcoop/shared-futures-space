@@ -12,7 +12,7 @@
 {% endblock extra_css %}
 
 {% block content %}
-    {% get_areas as areas %}
+    {% get_areas as areas_dict %}
     {% url 'account_signup' as signup_url %}
     {% url 'account_login' as login_url %}
     {% block title %}{% include "partials/title.html" with title="Shared Futures" %}{% endblock %}
@@ -48,14 +48,14 @@
         {{ area.name }}
     {% endfor %}{% endcomment %}
         <div class="grid grid-cols-2 gap-5">
-          {% if areas|length >= 6 %} {# this is to stop it complaining when there's no areas loaded, such as during tests #}
-            {% include "landing/rounded-image.html" with image="derry-londonderry" title=areas.0 %}
-            {% include "landing/rounded-image.html" with image="donegal" title=areas.1 %}
-            {% include "landing/rounded-image.html" with image="east-belfast" title=areas.2 %}
-            {% include "landing/rounded-image.html" with image="north-belfast" title=areas.3 %}
-            {% include "landing/rounded-image.html" with image="south-belfast" title=areas.4 %}
-            {% include "landing/rounded-image.html" with image="west-belfast" title=areas.5 %}
-          {% endif %}
+            {% if areas_dict|length >= 6 %}
+                {# this is to stop it complaining when there's no areas loaded, such as during tests #}
+
+                {% for key, value in areas_dict.items %}
+                    {% include "landing/rounded-image.html" with image=key slug=key title=value %}
+
+                {% endfor %}
+            {% endif %}
         </div>
         {% include "partials/vertical-spacer.html" with space="9" %}
 

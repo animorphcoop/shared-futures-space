@@ -11,14 +11,9 @@ register = template.Library()
 # get areas, exclude 'other' from the list and sort alphabetically
 @register.simple_tag
 def get_areas() -> OD[str, str]:
-    areas = []
     areas_dict = OrderedDict()  # to remember order of inserting
-    for area in Area.objects.all():
+    for area in Area.objects.all().order_by('name'):
         if area.name != 'Other':
-            areas.append(area.name)
-    # sort alphabetically
-    areas.sort()
-    for area_name in areas:
-        areas_dict[slugify(area_name)] = area_name
+            areas_dict[slugify(area.name)] = area.name
     return areas_dict
 

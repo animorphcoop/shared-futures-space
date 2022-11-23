@@ -113,7 +113,7 @@ module.exports = {
                 "east-belfast": "url('/static/images/landing/areas/eastbelfast.jpg')",
                 "south-belfast": "url('/static/images/landing/areas/southbelfast.jpg')",
                 "west-belfast": "url('/static/images/landing/areas/westbelfast.jpg')",
-                "derry-londonderry": "url('/static/images/landing/areas/derrylondonderry.jpg')",
+                "derrylondonderry": "url('/static/images/landing/areas/derrylondonderry.jpg')",
                 "donegal": "url('/static/images/landing/areas/donegal.jpg')",
             },
             opacity: {
@@ -144,7 +144,7 @@ module.exports = {
         "bg-east-belfast",
         "bg-south-belfast",
         "bg-west-belfast",
-        "bg-derry-londonderry",
+        "bg-derrylondonderry",
         "bg-donegal",
         "w-4.5",
         "w-7.5"
