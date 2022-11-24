@@ -115,6 +115,7 @@ module.exports = {
                 "west-belfast": "url('/static/images/landing/areas/westbelfast.jpg')",
                 "derrylondonderry": "url('/static/images/landing/areas/derrylondonderry.jpg')",
                 "donegal": "url('/static/images/landing/areas/donegal.jpg')",
+                "location": "url('/static/images/dashboard/location.png')",
             },
             opacity: {
                 '55': '.55',
@@ -146,6 +147,7 @@ module.exports = {
         "bg-west-belfast",
         "bg-derrylondonderry",
         "bg-donegal",
+        "bg-location",
         "w-4.5",
         "w-7.5"
     ],
