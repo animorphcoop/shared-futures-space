@@ -1,62 +1,68 @@
 {% extends "partials/drawer.html" %}
 {% load static %}
 
-
-
 {% block drawer_content %}
-
     {% if rivers|length == 0 %}
-        {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
+        {% if request.user.post_code.area.name != 'Other' %}
+            {% url 'spring' request.user.post_code.area.name as the_url %}
+            {% include "partials/salmon-of-knowledge.html" with text="Don't be a hermit crab, join some rivers." url=the_url button="Go to the spring" %}
+        {% endif %}
     {% else %}
-        {% comment %}TODO: Replace with what's on Figma, copied template from resources.html partial for reference{% endcomment %}
         {% for river in rivers %}
             {% url 'view_river' river.slug as the_url %}
-            <div class="bg-gradient-to-b from-gray-light via-white rounded-t-xl flex justify-between">
-
-                <div class="w-3/4 h-full pt-2">
-                    <h3 class="font-kanit-500 text-black-large text-xl p-3">
+            {#  River title and starter #}
+            <div class="px-3 pb-0 bg-gradient-to-b from-blue-second via-white rounded-t-xl">
+                {% include "partials/vertical-spacer.html" with space="3" %}
+                <a href="{{ the_url }}" class="flex gap-4 justify-between">
+                    <h3 class="text-title text-black/55">
                         {{ river.title }}
                     </h3>
-                    {% comment %}                    {% if river.membership.starter %}
-
-                        river.membership.starter
-                    {% endif %}{% endcomment %}
+                    <div class="shrink-0 w-[18px] h-[18px]">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 1L7.59 2.41L13.17 8H1V10H13.17L7.59 15.59L9 17L17 9L9 1Z" fill="#9759FF"/>
+                        </svg>
+                    </div>
+                </a>
+                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                {% for member in river.membership %}
+                    {% if member.starter %}
+                        <div class="flex gap-3 items-center">
+                            <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="useravatar">
+                            <span class="text-meta-label">{{ member.user.display_name }}</span>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% include "partials/vertical-spacer.html" with space="0.5" %}
+            </div>
+            {#  River status #}
+            <div class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_25%)] flex text-meta px-3 py-1.5">
+                {#  Your status #}
+                <div class="w-1/2">
+                    <p class="text-black/30 pb-0.5">Your status</p>
                     {% for member in river.membership %}
                         {% if member.starter %}
-                            <p><img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="useravatar">
-                                Starter: {{ member.user.display_name }}</p>
                             <p>
-                                Your status:
                                 {% if member.user == request.user %}
-                                    YOU ARE STARTER {{ member.user.display_name }}
+                                    River Starter
                                 {% else %}
                                     Swimmer
                                 {% endif %}
                             </p>
                         {% endif %}
                     {% endfor %}
-                    <p>Stage: {{ river.current_stage }}</p>
-                    {% comment %}TODO: Last activity, e.g. chat{% endcomment %}
-                    {% comment %}
-                        <p>Started {{ river.started_months_ago }} months ago</p>
-                    {% endcomment %}
                 </div>
-                <div class="relative">
-                    {# Link icon opens the copy URL of that resource modal #}
-                    <div class="absolute top-0 right-0">
-                        {% include 'partials/button-copy.html' with icon='link' path=the_url %}
-                        <a href="{{ the_url }}">
-                            <svg class="inline-block ml-4 mb-0.5" width="18" height="18" viewBox="0 0 18 18" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 1L7.59 2.41L13.17 8H1V10H13.17L7.59 15.59L9 17L17 9L9 1Z" fill="#9759FF"/>
-                            </svg>
-                        </a>
-                    </div>
+                {#  River stage #}
+                <div class="w-1/2">
+                    <p class="text-black/30 pb-0.5">Stage</p>
+                    <p>{{ river.current_stage }}</p>
                 </div>
+                {% comment %}TODO: Last activity, e.g. chat{% endcomment %}
+                {% comment %}
+                    <p>Started {{ river.started_months_ago }} months ago</p>
+                {% endcomment %}
             </div>
-            <div class="h-3"></div>
-
-
+            {% include "partials/vertical-spacer.html" with space="6" %}
         {% endfor %}
     {% endif %}
 {% endblock %}

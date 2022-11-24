@@ -28,9 +28,9 @@
                 </span>
                 <div class="w-[12] h-[8] -rotate-90 transition duration-500 ease-out">
                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
+                         xmlns="http://www.w3.org/2000/svg">
                         <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                            fill="#9759FF"/>
+                              fill="#9759FF"/>
                     </svg>
                 </div>
             </h2>
@@ -42,7 +42,7 @@
     {#    {% endblock %}#}
 
     {% comment %}Include in v2{% endcomment %}
-{% comment %}
+    {% comment %}
     {% include "dashboard/partials/notifications.html" with title="Notifications" reference="notifications" %}
 {% endcomment %}
 
@@ -56,6 +56,22 @@
 
     {% if request.user.post_code.area.name != 'Other' %}
         {% include "dashboard/partials/rivers.html" with title="Your rivers" reference="rivers" %}
+    {% else %}
+        <section class="bg-resources-two">
+            <div class="flex flex-col gap-6 items-center py-9 px-4.5 text-center">
+                <p class="text-large text-22">
+                    Which spring would you like to explore?
+                </p>
+                {% load area_details %}
+                {% get_areas as areas_dict %}
+                {% for key, value in areas_dict.items %}
+                    <a href="{% url "spring" key %}"
+                       class="button button-on-colour inline-block">
+                        {{ value }}
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
     {% endif %}
 
     {% include "dashboard/partials/resources.html" with title="Saved resources" reference="resources" %}

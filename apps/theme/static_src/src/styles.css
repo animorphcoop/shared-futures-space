@@ -31,6 +31,9 @@
         transition ease-out duration-300
         text-button text-purple;
     }
+    .button-secondary {
+        @apply button px-3 py-1;
+    }
     .button-on-white {
         @apply bg-blue-second hover:bg-resources-one focus:bg-blue-done
     }
