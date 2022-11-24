@@ -75,13 +75,10 @@ class CustomAddDataView(TemplateView):
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))  # pyre-ignore[16]
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))  # pyre-ignore[16]
-                current_user.post_code = \
-                PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[
-                    0]  # pyre-ignore[16]
+                current_user.post_code = PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0] # pyre-ignore[16]
 
                 if len(form.cleaned_data.get('avatar')) > 0:
-                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[
-                        0]  # pyre-ignore[16]
+                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]  # pyre-ignore[16]
                 else:
                     random_avatar = random.randint(1, UserAvatar.objects.count())
                     current_user.avatar = UserAvatar.objects.get_or_create(pk=random_avatar)[0]
@@ -89,8 +86,7 @@ class CustomAddDataView(TemplateView):
                 if len(form.cleaned_data.get('organisation_name')) > 0:
                     lower_org_name = form.cleaned_data.get('organisation_name').lower()
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():
-                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get(
-                            'organisation_name'))  # pyre-ignore[16]
+                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name')) # pyre-ignore[16]
                     else:
                         new_organisation = \
                         Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
@@ -202,7 +198,7 @@ def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, Ht
 
 class UserChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm
-    current_user_path = ''
+    current_user_path = None
 
     '''
     def get_form_kwargs(self, *args, **kwargs):
@@ -225,13 +221,14 @@ class UserChatView(ChatView):
         # context = super(UserChatView, self).get_context_data(**kwargs)
         # TODO: Figure why is kwargs not returning after post and revert to better option
         # print(kwargs['user_path'])
-        other_user = slug_to_user(UserChatView.current_user_path)
+        if UserChatView.current_user_path != None:
+            other_user = slug_to_user(UserChatView.current_user_path)
         for key in kwargs:
             if key == 'user_path':
                 other_user = slug_to_user(kwargs['user_path'])
 
         print('no keys')
-        # other_user = slug_to_user(kwargs['user_path'])  # pyre-ignore[6]
+        # other_user = slug_to_user(kwargs['user_path'])
         [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
         # pyre-ignore[16]:
