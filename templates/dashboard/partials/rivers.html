@@ -1,17 +1,13 @@
 {% extends "partials/drawer.html" %}
 {% load static %}
 
-
-
 {% block drawer_content %}
-
     {% if rivers|length == 0 %}
         {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
     {% else %}
         {% comment %}TODO: Replace with what's on Figma, copied template from resources.html partial for reference{% endcomment %}
         {% for river in rivers %}
             {% url 'view_river' river.slug as the_url %}
-
             {#  River title and starter #}
             <div class="px-3 pb-0 bg-gradient-to-b from-blue-second via-white rounded-t-xl">
                 {% include "partials/vertical-spacer.html" with space="3" %}
@@ -37,40 +33,34 @@
                 {% endfor %}
                 {% include "partials/vertical-spacer.html" with space="0.5" %}
             </div>
-
             {#  River status #}
             <div class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_25%)] flex text-meta px-3 py-1.5">
                 {#  Your status #}
                 <div class="w-1/2">
                     <p class="text-black/30 pb-0.5">Your status</p>
                     {% for member in river.membership %}
-                            {% if member.starter %}
-                                <p>
-                                    {% if member.user == request.user %}
-                                        River Starter
-                                    {% else %}
-                                        Swimmer
-                                    {% endif %}
-                                </p>
-                            {% endif %}
-                        {% endfor %}
+                        {% if member.starter %}
+                            <p>
+                                {% if member.user == request.user %}
+                                    River Starter
+                                {% else %}
+                                    Swimmer
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    {% endfor %}
                 </div>
                 {#  River stage #}
                 <div class="w-1/2">
                     <p class="text-black/30 pb-0.5">Stage</p>
                     <p>{{ river.current_stage }}</p>
                 </div>
+                {% comment %}TODO: Last activity, e.g. chat{% endcomment %}
+                {% comment %}
+                    <p>Started {{ river.started_months_ago }} months ago</p>
+                {% endcomment %}
             </div>
-
-
-            {% comment %}TODO: Last activity, e.g. chat{% endcomment %}
-            {% comment %}
-                        <p>Started {{ river.started_months_ago }} months ago</p>
-                    {% endcomment %}
-
-            <div class="h-6"></div>
-
-
+            {% include "partials/vertical-spacer.html" with space="6" %}
         {% endfor %}
     {% endif %}
 {% endblock %}
