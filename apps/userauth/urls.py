@@ -4,7 +4,7 @@ from django.urls import include, path, re_path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
 from .views import CustomUserDeleteView, profile_view, user_request_view, AdminRequestView, \
     CustomUserPersonalView, CustomSignupView, CustomLoginView, UserChatView, UserAllChatsView, check_email, \
-    CustomPasswordResetView, CustomAddDataView, CustomPasswordChangeView, CustomPasswordResetFromKeyView, chat_view
+    CustomPasswordResetView, CustomAddDataView, CustomPasswordChangeView, CustomPasswordResetFromKeyView
 from typing import List, Union
 from uuid import UUID
 
@@ -31,7 +31,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
          name='account_delete'),
     path('chat/', login_required(UserAllChatsView.as_view(template_name='account/all_user_chats.html')),
          name='account_all_chats'),
-    path('chat_path/<str:uuid>/', chat_view, name='user_chat_path'),
+    # path('chat_path/<str:uuid>/', chat_view, name='user_chat_path'),
     path('chat/<str:user_path>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')), name='user_chat'),  # pyre-ignore[16]
 
     # add override of signup url with custom name so we dont hardcode paths

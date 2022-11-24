@@ -75,10 +75,13 @@ class CustomAddDataView(TemplateView):
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))  # pyre-ignore[16]
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))  # pyre-ignore[16]
-                current_user.post_code = PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0] # pyre-ignore[16]
+                current_user.post_code = \
+                    PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[
+                        0]  # pyre-ignore[16]
 
                 if len(form.cleaned_data.get('avatar')) > 0:
-                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]  # pyre-ignore[16]
+                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[
+                        0]  # pyre-ignore[16]
                 else:
                     random_avatar = random.randint(1, UserAvatar.objects.count())
                     current_user.avatar = UserAvatar.objects.get_or_create(pk=random_avatar)[0]
@@ -86,11 +89,12 @@ class CustomAddDataView(TemplateView):
                 if len(form.cleaned_data.get('organisation_name')) > 0:
                     lower_org_name = form.cleaned_data.get('organisation_name').lower()
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():
-                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name')) # pyre-ignore[16]
+                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get(
+                            'organisation_name'))  # pyre-ignore[16]
                     else:
                         new_organisation = \
-                        Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
-                                                           link=form.cleaned_data.get('organisation_url'))[0]
+                            Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
+                                                               link=form.cleaned_data.get('organisation_url'))[0]
                         current_user.organisation = new_organisation
 
                 else:
@@ -187,6 +191,7 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
             return {}
 
 
+'''
 def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
     if request.user.is_authenticated:
         slug = user_to_slug(CustomUser.objects.filter(uuid=uuid)[0])
@@ -194,6 +199,8 @@ def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, Ht
     else:
         return HttpResponseRedirect(reverse_lazy('account_login'))
     # return render(request, 'account/view.html')
+
+'''
 
 
 class UserChatView(ChatView):
@@ -209,6 +216,10 @@ class UserChatView(ChatView):
 
     def post(self, request: WSGIRequest, user_path: str) -> HttpResponse:
         print(user_path)
+        '''
+        return super().post(request, chat=chat, url=reverse('river_chat', args=[slug, stage, topic]), members=list(
+        map(lambda x: x.user, RiverMembership.objects.filter(river=river))))
+        '''
         UserChatView.current_user_path = user_path
         other_user = slug_to_user(user_path)
 
@@ -217,7 +228,10 @@ class UserChatView(ChatView):
         return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[other_user]),  # pyre-ignore[16]
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
 
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> HttpResponseRedirect:
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse_lazy('account_login'))
+
         # context = super(UserChatView, self).get_context_data(**kwargs)
         # TODO: Figure why is kwargs not returning after post and revert to better option
         # print(kwargs['user_path'])
@@ -237,7 +251,7 @@ class UserChatView(ChatView):
                                                     CustomUser.objects.get(uuid=user2)])
         context['other_user'] = other_user
         context['form'] = ChatForm
-        #context['user_path'] = kwargs['user_path']
+        # context['user_path'] = kwargs['user_path']
         context['user_path'] = user_to_slug(other_user)
         # due to the page being login_required, there should never be anonymous users seeing the page
         # due to request.user being in members, there should never be non-members seeing the page

@@ -189,7 +189,11 @@
                     <p>
                         Get in touch with {{ user.display_name }}</p>
                     </br>
-                    <a href="{% url 'user_chat_path' user.uuid %}">Message</a>
+                    {% with user_pk_string=user.pk|stringformat:'s' %}
+                        {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
+                            <a href="{% url 'user_chat' user_slug %}">Message</a>
+                        {% endwith %}
+                    {% endwith %}
                 </div>
 
             {% endif %}

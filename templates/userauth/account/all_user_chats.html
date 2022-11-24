@@ -9,7 +9,10 @@
     {% include "partials/vertical-spacer.html" with space="4" %}
 
     {% for user_chat in user_chats %}
-        <a href="{% url 'user_chat_path' user_chat.user.uuid %}">
+        {% with user_pk_string=user_chat.user.pk|stringformat:'s' %}
+        {% with user_slug=user_chat.user.display_name|add:" "|add:user_pk_string|slugify %}
+
+        <a href="{% url 'user_chat' user_slug %}">
             <div class="mx-4">
                 {% with icon_width="30px" %}
                     <div class="flex space-between items-start relative">
@@ -39,6 +42,8 @@
                 {% endwith %}
             </div>
         </a>
+        {% endwith %}
+                    {% endwith %}
         {% include "partials/vertical-spacer.html" with space="6" %}
     {% endfor %}
 
