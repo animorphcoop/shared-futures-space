@@ -20,22 +20,28 @@
             <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
         {% endfor %}
 
-        {% for river in rivers %}
-            {% include "river/river_card.html" with river=river %}
-        {% endfor %}
+        {% if rivers|length == 0 %}
+            {% if area.name == user.post_code.area.name %}
+                {% include "partials/salmon-of-knowledge.html" with text="No rivers in this spring yet. Will you start the first river?" %}
+            {% else %}
+                {% include "partials/salmon-of-knowledge.html" with text="No rivers in this spring yet. Who will start the first river?" %}
+            {% endif %}
+        {% else %}
+            {% for river in rivers %}
+                {% include "river/river_card.html" with river=river %}
+            {% endfor %}
+        {% endif %}
     </div>
 
-
     {% include "partials/vertical-spacer.html" with space="4.5" %}
+
     {% if area.name == user.post_code.area.name %}
         <section class="bg-resources-two">
             {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url3='start_river' info="" %}
         </section>
     {% endif %}
-{#    Hidden for now, unhide when Estuary exists! #}
-{#    <section class="bg-yellow">#}
-{#        {% include "partials/call-to-action.html" with main="Are you interested in rivers from other areas? Explore springs from top navigation!" %}#}
-{#    </section>#}
-
-
+    {#    Hidden for now, unhide when Estuary exists! #}
+    {#    <section class="bg-yellow">#}
+    {#        {% include "partials/call-to-action.html" with main="Are you interested in rivers from other areas? Explore springs from top navigation!" %}#}
+    {#    </section>#}
 {% endblock content %}
