@@ -4,7 +4,7 @@
 {% url 'view_river' river.slug as view_url %}
 
 <div class="mx-1.5 relative" x-init="swimmerCounter({{ river.num_swimmers }})">
-    <div class="absolute bg-gradient-to-b from-[rgba(219,243,237,0.78)] to-white h-12 w-full rounded-xl"></div>
+    <div class="absolute bg-gradient-to-b from-[#E5F1F8] to-white h-12 w-full rounded-xl"></div>
     <div class="p-3 relative">
         <div class="flex flex-start justify-between -mr-4.5">
             <h2 class="relative text-title text-black/55">
@@ -33,7 +33,7 @@
 
                             {% include "partials/horizontal-spacer.html" with space="4" %}
                             <div class="flex flex-col justify-center">
-                        <span class="text-meta uppercase tracking-widest">
+                        <span class="pl-2 text-meta uppercase tracking-widest">
                             {{ member.user.display_name }}
                         </span>
                         </a>
