@@ -11,7 +11,8 @@
     <div class="bg-gray-light bg-gray-light sm:w-[360px] flex flex-col w-screen h-screen fixed overflow-y-auto">
         <div class="mx-4.5">
             {% url 'user_chat' user_path as message_post_url %}
-            <form hx-post="{{ message_post_url }}" hx-trigger=load hx-target=this class="m-0">
+
+            <form hx-get="{{ message_post_url }}" hx-trigger=load hx-target=this class="m-0">
                 <input type=hidden name="retrieve_messages"></input>
                 <input type=hidden name="from" value=0></input>
                 <input type=hidden name="interval" value=10></input>
