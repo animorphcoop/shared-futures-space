@@ -223,9 +223,9 @@ class UserChatView(ChatView):
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         # context = super(UserChatView, self).get_context_data(**kwargs)
+        # TODO: Figure why is kwargs not returning after post and revert to better option
         # print(kwargs['user_path'])
         other_user = slug_to_user(UserChatView.current_user_path)
-
         for key in kwargs:
             if key == 'user_path':
                 other_user = slug_to_user(kwargs['user_path'])

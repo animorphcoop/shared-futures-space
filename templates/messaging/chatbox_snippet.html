@@ -14,7 +14,7 @@
     {{ not_member_message }}
 {% else %}
     {% if direct %}
-        {{ message_post_url }}
+
         <form method="post" enctype="multipart/form-data"
               class="-m-4.5 p-4.5 m-0 fixed bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] w-full sm:w-[360px]">
             {% csrf_token %}
