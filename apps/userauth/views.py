@@ -205,7 +205,7 @@ def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, Ht
 
 class UserChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm
-    #current_user_path = None
+    # current_user_path = None
 
     '''
     def get_form_kwargs(self, *args, **kwargs):
@@ -220,13 +220,17 @@ class UserChatView(ChatView):
         return super().post(request, chat=chat, url=reverse('river_chat', args=[slug, stage, topic]), members=list(
         map(lambda x: x.user, RiverMembership.objects.filter(river=river))))
         '''
-        #UserChatView.current_user_path = user_path
+        # UserChatView.current_user_path = user_path
         other_user = slug_to_user(user_path)
 
         [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
-        return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[user_to_slug(other_user)]),  # pyre-ignore[16]
+        return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[user_to_slug(other_user)]),
+                            # pyre-ignore[16]
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
+
+    def load_messages(self, request: WSGIRequest, **kwargs):
+        super().get_messages(request, **kwargs)
 
     def get_context_data(self, user_path: str) -> Dict[str, Any]:
         # context = super(UserChatView, self).get_context_data(**kwargs)
@@ -238,19 +242,35 @@ class UserChatView(ChatView):
         userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
         print('have the pair')
         # pyre-ignore[16]:
-        context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[user_to_slug(other_user)]),
-                                           members=[CustomUser.objects.get(uuid=user1),
-                                                    CustomUser.objects.get(uuid=user2)])
-        print('crashed yet?')
-        context['other_user'] = other_user
-        context['form'] = ChatForm
-        # context['user_path'] = kwargs['user_path']
-        context['user_path'] = user_to_slug(other_user)
-        # due to the page being login_required, there should never be anonymous users seeing the page
-        # due to request.user being in members, there should never be non-members seeing the page
-        print('about to retrieve')
-        return context
+        '''
+                context = super().get(chat=userpair.chat,
+                          members = [CustomUser.objects.get(uuid=user1),
+                                     CustomUser.objects.get(uuid=user2)],
+                                    url = reverse('user_chat', args=[user_to_slug(other_user)]))
+        '''
 
+        if 'retrieve_messages' in self.request.GET:
+            context = super().get_messages(chat=userpair.chat,
+                          members = [CustomUser.objects.get(uuid=user1),
+                                     CustomUser.objects.get(uuid=user2)],
+                                    url = reverse('user_chat', args=[user_to_slug(other_user)]))
+            for key in context:
+                print(key)
+            print('crashed yet?')
+            context['other_user'] = other_user
+            context['form'] = ChatForm
+            # context['user_path'] = kwargs['user_path']
+            context['user_path'] = user_to_slug(other_user)
+            # due to the page being login_required, there should never be anonymous users seeing the page
+            # due to request.user being in members, there should never be non-members seeing the page
+            print('about to retrieve')
+            return context
+        else:
+            context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[other_user]),
+                                               members=[CustomUser.objects.get(uuid=user1),
+                                                        CustomUser.objects.get(uuid=user2)])
+
+            return context
 
 class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:

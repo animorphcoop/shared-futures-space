@@ -12,10 +12,10 @@
         <div class="mx-4.5">
             {% url 'user_chat' user_path as message_post_url %}
 
-            <form hx-get="{{ message_post_url }}" hx-trigger=load hx-target=this class="m-0">
-                <input type=hidden name="retrieve_messages"></input>
-                <input type=hidden name="from" value=0></input>
-                <input type=hidden name="interval" value=10></input>
+            <form hx-get="{{ message_post_url }}" hx-params="retrieve_messages" hx-trigger=load hx-target=this class="m-0">
+                <input type=hidden name="retrieve_messages">
+                <input type=hidden name="from" value=0>
+                <input type=hidden name="interval" value=10>
                 {% csrf_token %}
             </form>
             {% include 'messaging/chatbox_snippet.html' with direct=True message_post_url=message_post_url %}

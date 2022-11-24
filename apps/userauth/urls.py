@@ -40,6 +40,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('check_email/', check_email, name='check_email'),
     #path('update_avatar/', login_required(CustomUserPersonalView.as_view(template_name='account/update.html')), name='account_update'),
     path('update_data/', login_required(CustomUserPersonalView.as_view()), name='account_update'),
+
     # add all paths that are not custom
     path('', include('allauth.urls')),
 
