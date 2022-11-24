@@ -3,9 +3,11 @@
 
 {% block drawer_content %}
     {% if rivers|length == 0 %}
-        {% include "partials/salmon-of-knowledge.html" with text="Rivers are projects running in your community. Rivers you have joined will be here." %}
+        {% if request.user.post_code.area.name != 'Other' %}
+            {% url 'spring' request.user.post_code.area.name as the_url %}
+            {% include "partials/salmon-of-knowledge.html" with text="Don't be a hermit crab, join some rivers." url=the_url button="Go to the spring" %}
+        {% endif %}
     {% else %}
-        {% comment %}TODO: Replace with what's on Figma, copied template from resources.html partial for reference{% endcomment %}
         {% for river in rivers %}
             {% url 'view_river' river.slug as the_url %}
             {#  River title and starter #}
