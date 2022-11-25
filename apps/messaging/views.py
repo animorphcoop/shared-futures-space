@@ -26,6 +26,35 @@ from river.models import RiverMembership  # pyre-ignore[21]
 
 
 from django.core.paginator import Paginator
+
+
+def paginated_messages(request, user_path):
+    other_user = slug_to_user(user_path)
+
+    [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+    userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
+    members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
+
+
+    message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
+
+    paginator = Paginator(message_list, 5)
+
+    if request.GET.get('page'):
+        page_number = request.GET.get('page')
+    else:
+        page_number = paginator.num_pages
+    page_obj = paginator.get_page(page_number)
+
+    context={
+        'members': members,
+        'page_obj': page_obj,
+        'page_count': paginator.num_pages,
+        'page_number': page_number
+    }
+
+    return render(request, 'messaging/message_list.html', context)
+
 def message_list(request, user_path):
     other_user = slug_to_user(user_path)
 
@@ -38,12 +67,17 @@ def message_list(request, user_path):
 
     paginator = Paginator(message_list, 5)
 
-    page_number = request.GET.get('page')
+    if request.GET.get('page'):
+        page_number = request.GET.get('page')
+    else:
+        page_number = paginator.num_pages
     page_obj = paginator.get_page(page_number)
 
     context={
         'members': members,
-        'page_obj': page_obj
+        'page_obj': page_obj,
+        'page_count': paginator.num_pages,
+        'page_number': page_number
     }
 
     return render(request, 'messaging/messages.html', context)

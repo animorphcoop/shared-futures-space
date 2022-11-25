@@ -1,0 +1,17 @@
+{% load static %}
+
+{% if page_obj.has_previous %}
+    {% with user_pk_string=members.0.pk|stringformat:'s' %}
+        {% with user_slug=members.0.display_name|add:" "|add:user_pk_string|slugify %}
+            <button hx-get="{% url 'previous_messages' user_slug %}"
+                    hx-vars="page:{{ page_obj.previous_page_number }}"
+                    hx-params="*"
+                    hx-trigger="click"
+                    hx-target="#messages"
+                    hx-swap="beforebegin"
+                    x-on:click="pageNumber--">
+                Previous messages
+            </button>
+        {% endwith %}
+    {% endwith %}
+{% endif %}

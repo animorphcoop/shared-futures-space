@@ -1,0 +1,67 @@
+{% load static %}
+
+<div>
+    <div x-data="{pageNumber: {{ page_number }}}">
+        <div x-show="pageNumber > 1 ">
+
+            {% include 'messaging/partials/pull_previous.html' %}
+        </div>
+
+
+    </div>
+    <div id="messages">
+
+        {% for message in page_obj %}
+            {% include 'messaging/user_message_snippet.html' %}
+        {% endfor %}
+    </div>
+
+    {% comment %}    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+
+
+
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>{% endcomment %}
+
+
+    {% comment %}            {% with user_pk_string=members.0.pk|stringformat:'s' %}
+                {% with user_slug=members.0.display_name|add:" "|add:user_pk_string|slugify %}
+                    <a href="{% url 'user_chat' user_slug %}">Message</a>
+                    <button hx-get="{% url 'user_chat' user_slug %}"
+                            hx-vars="page:{{ page_obj.next_page_number }}"
+                            hx-params="*"
+                            hx-trigger="click"
+                            hx-target="this"
+                            hx-swap="outerHTML">
+            heheheh
+        </button>
+                {% endwith %}
+            {% endwith %}{% endcomment %}
+
+
+    {% comment %}            <p>NEXT
+                   <button hx-get="{% '?page=page_obj.next_page_number' %}" hx-trigger="click"
+                    hx-target="div.table-container" hx-swap="outerHTML" hx-indicator=".progress" style="cursor: pointer;">
+            &laquo; first</button>
+            </p>{% endcomment %}
+    {% comment %}
+
+        {% endif %}
+    </span>
+{% endcomment %}
+
+
+</div>
+
+
