@@ -1,10 +1,11 @@
 # pyre-strict
+from django.shortcuts import render
 
 from django.views.generic.base import TemplateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.template.loader import get_template
 from userauth.models import CustomUser  # pyre-ignore[21]
-from userauth.util import get_system_user  # pyre-ignore[21]
+from userauth.util import get_system_user, user_to_slug, slug_to_user, get_userpair  # pyre-ignore[21]
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.urls import reverse
@@ -22,6 +23,33 @@ from river.models import RiverMembership  # pyre-ignore[21]
 #   a str called 'url' which is the url to post new chat requests to, ie. if htmx is in use it's the hx-post not the address bar url
 # your get_context_data should define user_anonymous_message and not_member_message in context
 
+
+
+from django.core.paginator import Paginator
+def message_list(request, user_path):
+    other_user = slug_to_user(user_path)
+
+    [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+    userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
+    members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
+
+
+    message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
+
+    paginator = Paginator(message_list, 5)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context={
+        'members': members,
+        'page_obj': page_obj
+    }
+
+    return render(request, 'messaging/messages.html', context)
+
+
+
 class ChatView(TemplateView):
     template_name = 'messaging/messages_snippet.html'
 
@@ -36,13 +64,13 @@ class ChatView(TemplateView):
             msg_no = int(self.request.GET['interval'])
         messages = Message.objects.filter(chat=kwargs['chat']).order_by('timestamp')
         # context['user_anonymous_message'] = 'Please log in to participate'
-        context['not_member_message'] = 'Join the river to get involved in the conversation!'
+        # context['not_member_message'] = 'Join the river to get involved in the conversation!'
         context['messages'] = messages[max(0, len(messages) - (msg_no + msg_from)): len(messages) - msg_from]
-        context['more_back'] = msg_no + msg_from < len(messages)
-        context['interval'] = msg_no
+        # context['more_back'] = msg_no + msg_from < len(messages)
+        # context['interval'] = msg_no
         context['from'] = msg_from
-        context['back_from'] = int(min(msg_from + (msg_no / 2), len(messages)))
-        context['forward_from'] = int(max(msg_from - (msg_no / 2), 0))
+        # context['back_from'] = int(min(msg_from + (msg_no / 2), len(messages)))
+        # context['forward_from'] = int(max(msg_from - (msg_no / 2), 0))
         context['members'] = kwargs['members']
         context['system_user'] = get_system_user()
         return context
