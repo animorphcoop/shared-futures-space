@@ -228,10 +228,10 @@ class UserChatView(ChatView):
         return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[user_to_slug(other_user)]),
                             # pyre-ignore[16]
                             members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
-
+    '''
     def load_messages(self, request: WSGIRequest, **kwargs):
         super().get_messages(request, **kwargs)
-
+    '''
     def get_context_data(self, user_path: str) -> Dict[str, Any]:
         # context = super(UserChatView, self).get_context_data(**kwargs)
         print(user_path)

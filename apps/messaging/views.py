@@ -9,13 +9,13 @@ from userauth.util import get_system_user, user_to_slug, slug_to_user, get_userp
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.urls import reverse
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Type
 
 from .models import Chat, Message, Flag
 from river.util import get_chat_containing_river  # pyre-ignore[21]
 from river.models import RiverMembership  # pyre-ignore[21]
 from django.core.paginator import Paginator
-
+from userauth.forms import ChatForm
 
 # usage note: you must redefine post and get_context_data
 # both need to be passed three kwargs:
@@ -26,6 +26,8 @@ from django.core.paginator import Paginator
 
 
 class ChatView(TemplateView):
+
+    form_class: Type[ChatForm] = ChatForm
 
     def get(self, request, user_path):
         other_user = slug_to_user(user_path)
@@ -49,12 +51,17 @@ class ChatView(TemplateView):
         context = {
             'members': members,
             'page_obj': page_obj,
-            'page_number': page_number
+            'page_number': page_number,
+            'form': ChatForm
         }
         if request.GET.get('page'):
             return render(request, 'messaging/message_list.html', context)
         else:
             return render(request, 'messaging/messages.html', context)
+
+    # TODO: POST STARTER - IMPLEMENT
+    def post(self, request: WSGIRequest, user_path) -> HttpResponse:
+        return HttpResponse('404')
 
 
 '''
