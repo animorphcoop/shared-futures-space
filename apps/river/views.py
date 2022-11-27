@@ -163,6 +163,7 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         return chat  # pyre-ignore[61]
 
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
+        print(slug)
         river = River.objects.get(slug=slug)
         chat = self.get_chat(river, stage, topic)
         # pyre-ignore[16]

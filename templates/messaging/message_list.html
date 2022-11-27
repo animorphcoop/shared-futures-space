@@ -1,0 +1,25 @@
+{% load static %}
+{% comment %}TODO: members.0 might be wrong - temporary{% endcomment %}
+<div>
+
+
+    <div x-data="{pageNumber: {{ page_number }}}">
+        <div x-show="pageNumber > 1 ">
+            {% include 'messaging/partials/pull_previous.html' %}
+        </div>
+
+    </div>
+
+    <div id="messages">
+
+        {% for message in page_obj %}
+            {% include 'messaging/user_message_snippet.html' %}
+        {% endfor %}
+    </div>
+
+
+
+
+</div>
+
+

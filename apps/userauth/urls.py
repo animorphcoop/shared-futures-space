@@ -6,8 +6,7 @@ from .views import CustomUserDeleteView, profile_view, user_request_view, AdminR
     CustomUserPersonalView, CustomSignupView, CustomLoginView, UserChatView, UserAllChatsView, check_email, \
     CustomPasswordResetView, CustomAddDataView, CustomPasswordChangeView, CustomPasswordResetFromKeyView
 from typing import List, Union
-from uuid import UUID
-
+from messaging.views import ChatView
 
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
@@ -32,7 +31,9 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('chat/', login_required(UserAllChatsView.as_view(template_name='account/all_user_chats.html')),
          name='account_all_chats'),
     # path('chat_path/<str:uuid>/', chat_view, name='user_chat_path'),
-    path('chat/<str:user_path>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')), name='user_chat'),  # pyre-ignore[16]
+    #path('chat/<str:user_path>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')),name='user_chat'),  # pyre-ignore[16]
+    #path('chat/<str:user_path>/', login_required(message_list), name='user_chat'),  # pyre-ignore[16]
+    path('chat/<str:user_path>/', login_required(ChatView.as_view(template_name='account/user_chat.html')),name='user_chat'),  # pyre-ignore[16]
 
     # add override of signup url with custom name so we dont hardcode paths
 
@@ -40,6 +41,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('check_email/', check_email, name='check_email'),
     #path('update_avatar/', login_required(CustomUserPersonalView.as_view(template_name='account/update.html')), name='account_update'),
     path('update_data/', login_required(CustomUserPersonalView.as_view()), name='account_update'),
+
     # add all paths that are not custom
     path('', include('allauth.urls')),
 

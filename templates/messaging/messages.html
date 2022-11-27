@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% include 'messaging/message_list.html' %}
+    <div>
+        {% with user_pk_string=members.0.pk|stringformat:'s' %}
+            {% with user_path=members.0.display_name|add:" "|add:user_pk_string|slugify %}
+                {% url 'user_chat' user_path as message_post_url %}
+                {% include 'messaging/chatbox_snippet.html' with direct=True message_post_url=message_post_url %}
+            {% endwith %}
+        {% endwith %}
+    </div>
+{% endblock %}
