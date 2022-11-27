@@ -17,6 +17,7 @@ from river.models import RiverMembership  # pyre-ignore[21]
 from django.core.paginator import Paginator
 from userauth.forms import ChatForm
 
+
 # usage note: you must redefine post and get_context_data
 # both need to be passed three kwargs:
 #   a list of users called 'members' which is the people allowed to post in the chat
@@ -26,13 +27,12 @@ from userauth.forms import ChatForm
 
 
 class ChatView(TemplateView):
-
     form_class: Type[ChatForm] = ChatForm
 
     def get(self, request, user_path):
         other_user = slug_to_user(user_path)
 
-        #other_user = slug_to_user(user_path)
+        # other_user = slug_to_user(user_path)
 
         [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
@@ -61,7 +61,46 @@ class ChatView(TemplateView):
 
     # TODO: POST STARTER - IMPLEMENT
     def post(self, request: WSGIRequest, user_path) -> HttpResponse:
-        return HttpResponse('404')
+
+        other_user = slug_to_user(user_path)
+
+        [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+        userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
+
+        chat = userpair.chat
+        url = reverse('user_chat', args=[other_user])  # pyre-ignore[16]
+        members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
+
+        if request.user in members:
+            if 'text' in request.POST:
+                image = request.FILES.get('image', None)
+                file = request.FILES.get('file', None)
+                if file and image:
+                    new_msg = Message(sender=request.user, text=request.POST['text'], image=image, file=file, chat=chat)
+                elif image:
+                    new_msg = Message(sender=request.user, text=request.POST['text'], image=image, chat=chat)
+                elif file and image:
+                    new_msg = Message(sender=request.user, text=request.POST['text'], file=file, chat=chat)
+                else:
+                    new_msg = Message(sender=request.user, text=request.POST['text'], chat=chat)
+                new_msg.save()
+            if 'flag' in request.POST:
+                m = Message.objects.get(uuid=request.POST['flag'])
+                m.flagged(request.user)
+            if 'starter_hide' in request.POST and RiverMembership.objects.filter(user=request.user, starter=True,
+                                                                                 river=get_chat_containing_river(
+                                                                                     chat)).exists():
+                m = Message.objects.get(uuid=request.POST['starter_hide'])
+                m.hidden = not m.hidden
+                m.hidden_reason = 'by the river starter'
+                m.save()
+            # return super().get(request)
+            return render(request, 'messaging/user_message_snippet.html', {'message': new_msg})
+        else:
+            if 'retrieve_messages' in request.POST:
+                return HttpResponse(get_template('messaging/messages_snippet.html').render({}))
+            else:
+                return super().get(request)
 
 
 '''

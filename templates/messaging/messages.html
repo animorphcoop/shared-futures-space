@@ -1,15 +1,25 @@
 {% extends "base.html" %}
 {% load static %}
 
+
 {% block content %}
 
-{% include 'messaging/message_list.html' %}
-    <div>
+{% block title %}
+
+    {% include "partials/title.html" with title="💬 with " chat_title=members.0.display_name %}
+{% endblock %}
+
+    <div class="bg-gray-light bg-gray-light sm:w-[360px] flex flex-col w-screen h-screen fixed overflow-y-auto">
+        <div class="mx-4.5">
+
+    {% include 'messaging/message_list.html' %}
+
         {% with user_pk_string=members.0.pk|stringformat:'s' %}
             {% with user_path=members.0.display_name|add:" "|add:user_pk_string|slugify %}
                 {% url 'user_chat' user_path as message_post_url %}
                 {% include 'messaging/chatbox_snippet.html' with direct=True message_post_url=message_post_url %}
             {% endwith %}
         {% endwith %}
+        </div>
     </div>
 {% endblock %}
