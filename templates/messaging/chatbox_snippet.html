@@ -15,10 +15,7 @@
 {% else %}
     {% if direct %}
 
-{% comment %}
-        <form method="post" enctype="multipart/form-data"
-              class="-m-4.5 p-4.5 m-0 fixed bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] w-full sm:w-[360px]">
-{% endcomment %}
+
         <form hx-post="{{ message_post_url }}"
               hx-target="#messages"
               hx-swap="beforeend"
@@ -38,7 +35,8 @@
                     {% endcomment %}
 
                     <label class="cursor-pointer" for="id_image">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M16 2V16H2V2H16ZM16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM11.14 8.86L8.14 12.73L6 10.14L3 14H15L11.14 8.86Z"
                                   fill="#9759FF"/>
                         </svg>
@@ -57,7 +55,8 @@
                                 <input type="file" id="image" name="image">{% endcomment %}
 
                     <button type="submit" class="absolute bottom-[34px] right-8">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 8L1.41 9.41L7 3.83V16H9V3.83L14.58 9.42L16 8L8 0L0 8Z" fill="#9759FF"/>
                         </svg>
                     </button>
@@ -103,7 +102,8 @@
                     {% endcomment %}
 
                     <label class="cursor-pointer" for="id_image">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M16 2V16H2V2H16ZM16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM11.14 8.86L8.14 12.73L6 10.14L3 14H15L11.14 8.86Z"
                                   fill="#9759FF"/>
                         </svg>
@@ -120,7 +120,8 @@
                                 <input type="file" id="image" name="image">{% endcomment %}
 
                     <button type="submit" class="absolute bottom-[34px] right-8">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 8L1.41 9.41L7 3.83V16H9V3.83L14.58 9.42L16 8L8 0L0 8Z" fill="#9759FF"/>
                         </svg>
 
@@ -131,6 +132,7 @@
         </form>
 
     {% endif %}
+
 {% endif %}
 
 {% block scripts %}
@@ -141,5 +143,18 @@
         {#    this.style.removeProperty('height');#}
         {#    this.style.height = (this.scrollHeight + 2) + 'px';#}
         {# })#}
+        //messages
+        let messages = document.getElementById("messages")
+
+        const observerMessages = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                for (const textInput of document.getElementsByTagName('textarea')) {
+                    textInput.value = ''
+                }
+            })
+        })
+        let configMessages = {childList: true};
+        observerMessages.observe(messages, configMessages);
+
     </script>
 {% endblock %}
