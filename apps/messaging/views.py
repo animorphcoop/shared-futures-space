@@ -79,7 +79,10 @@ class ChatView(TemplateView):
                     river=river)))
 
                 context = {
-                    'members': members
+                    'members': members,
+                    'slug': kwargs['slug'],
+                    'stage': kwargs['stage'],
+                    'topic': kwargs['topic']
 
                 }
 
@@ -94,21 +97,34 @@ class ChatView(TemplateView):
                 context['page_obj'] = page_obj
                 context['page_number'] = page_number
 
-            if request.GET.get('page'):
-                return render(request, 'messaging/message_list.html', context)
-            else:
-                return render(request, 'messaging/messages.html', context)
+                if request.GET.get('page'):
+                    return render(request, 'messaging/message_list.html', context)
+                else:
+                    return render(request, 'river/river_chat.html', context)
 
-    def post(self, request: WSGIRequest, user_path) -> HttpResponse:
+    def post(self, request: WSGIRequest, **kwargs: Dict[str, Any]):
+        for key in kwargs:
+            if key == 'user_path':
+                print(kwargs['user_path'])
+                user_path = kwargs['user_path']
+                other_user = slug_to_user(user_path)
 
-        other_user = slug_to_user(user_path)
 
-        [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
-        userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
+                [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+                userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
 
-        chat = userpair.chat
-        url = reverse('user_chat', args=[other_user])  # pyre-ignore[16]
-        members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
+                chat = userpair.chat
+                url = reverse('user_chat', args=[other_user])  # pyre-ignore[16]
+                members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
+            elif key == 'slug':
+                river = River.objects.get(slug=kwargs['slug'])
+                print(kwargs['slug'])
+                print(kwargs['stage'])
+                print(kwargs['topic'])
+                members = list(map(lambda x: x.user, RiverMembership.objects.filter(
+                    river=river)))
+                chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
+
 
         if request.user in members:
             if 'text' in request.POST:

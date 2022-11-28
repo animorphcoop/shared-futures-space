@@ -1,8 +1,7 @@
-
+{% load static %}
 {% block content %}
 
     {% url 'river_chat' slug stage topic as message_post_url %}
-    is this here?
 {% comment %}    {% include 'messaging/chatbox_snippet.html' with direct=False message_post_url=message_post_url %}{% endcomment %}
         {% include 'messaging/messages.html' with direct=False message_post_url=message_post_url%}
     {% if not user.is_authenticated %}

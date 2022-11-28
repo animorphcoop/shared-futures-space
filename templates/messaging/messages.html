@@ -25,7 +25,9 @@
             {% endwith %}
         </div>
     {% else %}
-        WTF
+        <div id="messages">
+            {% include 'messaging/message_list.html' %}
+        </div>
         {% url 'river_chat' slug stage topic as message_post_url %}
         {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
 

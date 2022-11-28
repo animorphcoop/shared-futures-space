@@ -65,6 +65,7 @@
 
         </form>
     {% else %}
+
         <form hx-post="{{ message_post_url }}"
               hx-target="#messages"
               hx-swap="beforeend"
@@ -139,7 +140,8 @@
     <script>
         let messages = document.getElementById("messages")
 
-        const observerMessages = new MutationObserver(function (mutations) {
+        if (messages != null){
+                    const observerMessages = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
                 for (const textInput of document.getElementsByTagName('textarea')) {
                     textInput.value = ''
@@ -148,6 +150,8 @@
         })
         let configMessages = {childList: true};
         observerMessages.observe(messages, configMessages);
+
+        }
 
     </script>
 {% endblock %}
