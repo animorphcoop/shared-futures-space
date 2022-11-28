@@ -181,9 +181,9 @@
 
         </section>
 
-        {# Message this user #}
         {% if user.is_authenticated %}
             {% if not self %}
+                {# Message this user #}
                 {# WET CALL TO ACTION #}
                 <section class="bg-resources-two">
                     <div class="flex flex-col items-center py-9 px-4.5 text-center">
@@ -199,10 +199,20 @@
                         {% endwith %}
                     </div>
                 </section>
+                {# Block this user #}
+                <section class="bg-yellow-pale">
+                    <div class="flex justify-center items-center gap-6 py-9 px-4.5 text-center">
+                        <p class="text-meta text-black/55">
+                            Would you like to block messages from {{ user.display_name }}?
+                        </p>
+                        {# TODO: Block modal #}
+                        <a href="#" class="button button-secondary button-danger">
+                            Block
+                        </a>
+                    </div>
+                </section>
             {% endif %}
         {% endif %}
-
-
 
 
         {% include "partials/footer-gradient.html" %}
