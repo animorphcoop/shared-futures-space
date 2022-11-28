@@ -7,7 +7,7 @@
     {% block title %}
         {% include "partials/title.html" with title="💬 with " chat_title=members.0.display_name %}
     {% endblock %}
-    {% include 'messaging/messages.html' with direct=True %}
+    {% include 'messaging/messages.html' with direct=direct %}
 
     {% comment %}
 

@@ -1,14 +1,15 @@
 {% load static %}
-{% comment %}TODO: members.0 might be wrong - temporary{% endcomment %}
-<div x-data="{pageNumber: {{ page_number }}}">
-    <div x-show="pageNumber > 1 ">
+
+
         {% include 'messaging/partials/pull_previous.html' %}
-    </div>
 
-
-</div>
 {% for message in page_obj %}
-    {% include 'messaging/user_message_snippet.html' %}
+    {% if message.sender == system_user %}
+        {% include 'messaging/system_message_snippet.html' %}
+    {% else %}
+        {% include 'messaging/user_message_snippet.html' %}
+    {% endif %}
+    {% include "partials/vertical-spacer.html" with space="6" %}
 {% endfor %}
 
 

@@ -3,7 +3,7 @@
 
     {% url 'river_chat' slug stage topic as message_post_url %}
 {% comment %}    {% include 'messaging/chatbox_snippet.html' with direct=False message_post_url=message_post_url %}{% endcomment %}
-        {% include 'messaging/messages.html' with direct=False message_post_url=message_post_url%}
+        {% include 'messaging/messages.html' with direct=direct message_post_url=message_post_url%}
     {% if not user.is_authenticated %}
 
         <div class="bg-blue-done">

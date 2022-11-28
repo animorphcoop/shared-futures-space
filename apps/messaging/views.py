@@ -48,6 +48,7 @@ class ChatView(TemplateView):
                 message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
 
                 paginator = Paginator(message_list, 10)
+                #paginator.object_list = list(reversed(paginator.object_list))
                 if request.GET.get('page'):
                     page_number = request.GET.get('page')
                 else:
@@ -56,11 +57,19 @@ class ChatView(TemplateView):
                 page_obj = paginator.get_page(page_number)
 
 
+                total_message_count = message_list.count()
+                messages_displayed_count = total_message_count - page_obj.start_index()
+                messages_left_count = total_message_count - (messages_displayed_count+1)
+
                 # print(request.GET.get('page'))
                 context = {
                     'members': members,
                     'page_obj': page_obj,
                     'page_number': page_number,
+                    'messages_displayed_count': messages_displayed_count,
+                    'messages_left_count': messages_left_count,
+
+                    'direct': True
                 }
                 if request.GET.get('page'):
                     return render(request, 'messaging/message_list.html', context)
@@ -82,7 +91,8 @@ class ChatView(TemplateView):
                     'members': members,
                     'slug': kwargs['slug'],
                     'stage': kwargs['stage'],
-                    'topic': kwargs['topic']
+                    'topic': kwargs['topic'],
+                    'direct': False
 
                 }
 
@@ -97,6 +107,7 @@ class ChatView(TemplateView):
                 context['page_obj'] = page_obj
                 context['page_number'] = page_number
 
+
                 if request.GET.get('page'):
                     return render(request, 'messaging/message_list.html', context)
                 else:
@@ -108,7 +119,6 @@ class ChatView(TemplateView):
                 print(kwargs['user_path'])
                 user_path = kwargs['user_path']
                 other_user = slug_to_user(user_path)
-
 
                 [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
                 userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
@@ -124,7 +134,6 @@ class ChatView(TemplateView):
                 members = list(map(lambda x: x.user, RiverMembership.objects.filter(
                     river=river)))
                 chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
-
 
         if request.user in members:
             if 'text' in request.POST:
@@ -151,11 +160,6 @@ class ChatView(TemplateView):
                 m.save()
             # return super().get(request)
             return render(request, 'messaging/user_message_snippet.html', {'message': new_msg})
-        else:
-            if 'retrieve_messages' in request.POST:
-                return HttpResponse(get_template('messaging/messages_snippet.html').render({}))
-            else:
-                return super().get(request)
 
     def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
         if stage == 'envision':
