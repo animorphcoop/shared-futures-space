@@ -191,72 +191,23 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
             return {}
 
 
-'''
-def chat_view(request: WSGIRequest, uuid: str) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
-    if request.user.is_authenticated:
-        slug = user_to_slug(CustomUser.objects.filter(uuid=uuid)[0])
-        return redirect('user_chat', slug)
-    else:
-        return HttpResponseRedirect(reverse_lazy('account_login'))
-    # return render(request, 'account/view.html')
-
-'''
-
 
 class UserChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm
-    current_user_path = None
+
 
     '''
-    def get_form_kwargs(self, *args, **kwargs):
-        kwargs = super(UserChatView, self).get_form_kwargs(*args, **kwargs)
-        kwargs['pk'] = self.kwargs['pk']
-        return kwargs
-    '''
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        print(kwargs['user_path'])
+        print('hehe')
+        context = super().get(self.request, user_path=kwargs['user_path'])
 
-    def post(self, request: WSGIRequest, user_path: str) -> HttpResponse:
-        print(user_path)
-        '''
-        return super().post(request, chat=chat, url=reverse('river_chat', args=[slug, stage, topic]), members=list(
-        map(lambda x: x.user, RiverMembership.objects.filter(river=river))))
-        '''
-        UserChatView.current_user_path = user_path
-        other_user = slug_to_user(user_path)
-
-        [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
-        userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
-        return super().post(request, chat=userpair.chat, url=reverse('user_chat', args=[other_user]),  # pyre-ignore[16]
-                            members=[CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)])
-
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> HttpResponseRedirect:
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(reverse_lazy('account_login'))
-
-        # context = super(UserChatView, self).get_context_data(**kwargs)
-        # TODO: Figure why is kwargs not returning after post and revert to better option
-        # print(kwargs['user_path'])
-        if UserChatView.current_user_path != None:
-            other_user = slug_to_user(UserChatView.current_user_path)
-        for key in kwargs:
-            if key == 'user_path':
-                other_user = slug_to_user(kwargs['user_path'])
-
-        print('no keys')
-        # other_user = slug_to_user(kwargs['user_path'])
-        [user1, user2] = sorted([self.request.user.uuid, other_user.uuid])  # pyre-ignore[16]
-        userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
-        # pyre-ignore[16]:
-        context = super().get_context_data(chat=userpair.chat, url=reverse('user_chat', args=[other_user]),
-                                           members=[CustomUser.objects.get(uuid=user1),
-                                                    CustomUser.objects.get(uuid=user2)])
-        context['other_user'] = other_user
-        context['form'] = ChatForm
-        # context['user_path'] = kwargs['user_path']
-        context['user_path'] = user_to_slug(other_user)
-        # due to the page being login_required, there should never be anonymous users seeing the page
-        # due to request.user being in members, there should never be non-members seeing the page
+    def get(self, request, **kwargs: Dict[str, Any]):
+        print('you crazy')
+        print(kwargs['user_path'])
+        super().get(self.request, user_path=kwargs['user_path'])
         return context
-
+    '''
 
 class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:

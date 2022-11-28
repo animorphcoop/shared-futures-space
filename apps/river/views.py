@@ -137,32 +137,10 @@ class ManageRiverView(TemplateView):
 class RiverChatView(ChatView):  # pyre-ignore[11]
     form_class: Type[RiverChatForm] = RiverChatForm
 
-    def get_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
-        if stage == 'envision':
-            chat = river.envision_stage.chat
-        elif stage == 'plan':
-            if topic == 'general':
-                chat = river.plan_stage.general_chat
-            elif topic == 'funding':
-                chat = river.plan_stage.funding_chat
-            elif topic == 'location':
-                chat = river.plan_stage.location_chat
-            elif topic == 'dates':
-                chat = river.plan_stage.dates_chat
-        elif stage == 'act':
-            if topic == 'general':
-                chat = river.act_stage.general_chat
-            elif topic == 'funding':
-                chat = river.act_stage.funding_chat
-            elif topic == 'location':
-                chat = river.act_stage.location_chat
-            elif topic == 'dates':
-                chat = river.act_stage.dates_chat
-        elif stage == 'reflect':
-            chat = river.reflect_stage.chat
-        return chat  # pyre-ignore[61]
 
+    '''
     def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
+        print(slug)
         river = River.objects.get(slug=slug)
         chat = self.get_chat(river, stage, topic)
         # pyre-ignore[16]
@@ -181,7 +159,7 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         ctx['stage'] = stage
         ctx['topic'] = topic
         return ctx
-
+    '''
 
 class CreateEnvisionPollView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
