@@ -41,6 +41,7 @@ class ChatView(TemplateView):
         message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
         paginator = Paginator(message_list, 5)
 
+        print(request.GET.get('page'))
         if request.GET.get('page'):
             page_number = request.GET.get('page')
         else:
@@ -59,7 +60,6 @@ class ChatView(TemplateView):
         else:
             return render(request, 'messaging/messages.html', context)
 
-    # TODO: POST STARTER - IMPLEMENT
     def post(self, request: WSGIRequest, user_path) -> HttpResponse:
 
         other_user = slug_to_user(user_path)
