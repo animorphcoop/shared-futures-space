@@ -9,13 +9,15 @@ from userauth.util import get_system_user, user_to_slug, slug_to_user, get_userp
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.urls import reverse
-from typing import Dict, List, Any, Type
+from typing import Dict, List, Any, Type, Optional
 
 from .models import Chat, Message, Flag
 from river.util import get_chat_containing_river  # pyre-ignore[21]
-from river.models import RiverMembership  # pyre-ignore[21]
+from river.models import RiverMembership, River  # pyre-ignore[21]
 from django.core.paginator import Paginator
-#from userauth.forms import ChatForm
+
+
+# from userauth.forms import ChatForm
 
 
 # usage note: you must redefine post and get_context_data
@@ -29,38 +31,73 @@ from django.core.paginator import Paginator
 class ChatView(TemplateView):
     # form_class: Type[ChatForm] = ChatForm
 
-    def get(self, request, user_path):
-        other_user = slug_to_user(user_path)
-        print('here')
-        print(request.GET.get('chat'))
-        # other_user = slug_to_user(user_path)
+    def get(self, request, **kwargs: Dict[str, Any]):
+        for key in kwargs:
+            if key == 'user_path':
+                print(kwargs['user_path'])
+                user_path = kwargs['user_path']
+                other_user = slug_to_user(user_path)
+                print('here')
+                print(request.GET.get('chat'))
+                # other_user = slug_to_user(user_path)
+
+                [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+                userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
+                members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
+
+                message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
+
+                paginator = Paginator(message_list, 10)
+                if request.GET.get('page'):
+                    page_number = request.GET.get('page')
+                else:
+                    page_number = paginator.num_pages
+
+                page_obj = paginator.get_page(page_number)
 
 
-        [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
-        userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
-        members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
+                # print(request.GET.get('page'))
+                context = {
+                    'members': members,
+                    'page_obj': page_obj,
+                    'page_number': page_number,
+                }
+                if request.GET.get('page'):
+                    return render(request, 'messaging/message_list.html', context)
+                else:
+                    return render(request, 'userauth/account/user_chat.html', context)
+            elif key == 'slug':
+                river = River.objects.get(slug=kwargs['slug'])
+                print(kwargs['slug'])
+                print(kwargs['stage'])
+                print(kwargs['topic'])
+                chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
+                url = reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']])
+                message_list = Message.objects.all().filter(chat=chat).order_by('timestamp')
 
-        message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
-        paginator = Paginator(message_list, 10)
+                members = list(map(lambda x: x.user, RiverMembership.objects.filter(
+                    river=river)))
 
-        print(request.GET.get('page'))
-        if request.GET.get('page'):
-            page_number = request.GET.get('page')
-        else:
-            page_number = paginator.num_pages
+                context = {
+                    'members': members
 
-        page_obj = paginator.get_page(page_number)
+                }
 
-        context = {
-            'members': members,
-            'page_obj': page_obj,
-            'page_number': page_number,
-            #'form': chat_form,
-        }
-        if request.GET.get('page'):
-            return render(request, 'messaging/message_list.html', context)
-        else:
-            return render(request, 'messaging/messages.html', context)
+                paginator = Paginator(message_list, 10)
+                if request.GET.get('page'):
+                    page_number = request.GET.get('page')
+                else:
+                    page_number = paginator.num_pages
+
+                page_obj = paginator.get_page(page_number)
+
+                context['page_obj'] = page_obj
+                context['page_number'] = page_number
+
+            if request.GET.get('page'):
+                return render(request, 'messaging/message_list.html', context)
+            else:
+                return render(request, 'messaging/messages.html', context)
 
     def post(self, request: WSGIRequest, user_path) -> HttpResponse:
 
@@ -104,6 +141,30 @@ class ChatView(TemplateView):
             else:
                 return super().get(request)
 
+    def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
+        if stage == 'envision':
+            chat = river.envision_stage.chat
+        elif stage == 'plan':
+            if topic == 'general':
+                chat = river.plan_stage.general_chat
+            elif topic == 'funding':
+                chat = river.plan_stage.funding_chat
+            elif topic == 'location':
+                chat = river.plan_stage.location_chat
+            elif topic == 'dates':
+                chat = river.plan_stage.dates_chat
+        elif stage == 'act':
+            if topic == 'general':
+                chat = river.act_stage.general_chat
+            elif topic == 'funding':
+                chat = river.act_stage.funding_chat
+            elif topic == 'location':
+                chat = river.act_stage.location_chat
+            elif topic == 'dates':
+                chat = river.act_stage.dates_chat
+        elif stage == 'reflect':
+            chat = river.reflect_stage.chat
+        return chat  # pyre-ignore[61]
 
 
 '''

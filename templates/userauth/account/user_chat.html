@@ -4,6 +4,13 @@
 
 {% block content %}
 
+        {% block title %}
+        {% include "partials/title.html" with title="💬 with " chat_title=members.0.display_name %}
+    {% endblock %}
+    {% include 'messaging/messages.html' %}
+
+{% comment %}
+
     {% block title %}
         {% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}
     {% endblock %}
@@ -21,5 +28,6 @@
             {% include 'messaging/chatbox_snippet.html' with direct=True message_post_url=message_post_url %}
         </div>
     </div>
+{% endcomment %}
 
 {% endblock %}

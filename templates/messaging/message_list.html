@@ -7,13 +7,9 @@
 
 
 </div>
-    {% for message in page_obj %}
-        {% include 'messaging/user_message_snippet.html' %}
-    {% endfor %}
-
-<script>
-
-</script>
+{% for message in page_obj %}
+    {% include 'messaging/user_message_snippet.html' %}
+{% endfor %}
 
 
 
