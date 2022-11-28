@@ -18,9 +18,12 @@ import requests
 def get_weather(postcode: str) -> Tuple[str,str,float]:
     # try postcode in ie
     code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',IE&appid=' + settings.WEATHER_API_KEY)
-    if code_location.status_code == 404:
+    if code_location.status_code != 200:
         # if not, try in gb
         code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',GB&appid=' + settings.WEATHER_API_KEY)
+        # if not, default out
+        if code_location.status_code != 200:
+            return ('[no weather]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no weather]')
     weather = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=' + str(code_location.json()['lat']) + '&lon=' + str(code_location.json()['lon']) + '&appid=' + settings.WEATHER_API_KEY).json()
 
     desc = weather['weather'][0]['description']

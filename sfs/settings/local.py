@@ -74,4 +74,4 @@ CELERY_RESULT_SERIALIZER: str = 'pickle'
 
 # weather map api for dashboard
 
-WEATHER_API_KEY = "f477b3ea5b7d6c3e35e9f9fc5b9b03ef"
+WEATHER_API_KEY = "<insert weather api key>"
