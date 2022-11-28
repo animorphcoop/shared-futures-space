@@ -181,24 +181,25 @@
 
         </section>
 
-
+        {# Message this user #}
         {% if user.is_authenticated %}
-
             {% if not self %}
-                <div>
-                    <p>
-                        Get in touch with {{ user.display_name }}</p>
-                    </br>
-                    {% with user_pk_string=user.pk|stringformat:'s' %}
-                        {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
-                            <a href="{% url 'user_chat' user_slug %}">Message</a>
+                {# WET CALL TO ACTION #}
+                <section class="bg-resources-two">
+                    <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                        <p class="text-large text-22 pb-6">
+                            Get in touch with {{ user.display_name }}!
+                        </p>
+                        {% with user_pk_string=user.pk|stringformat:'s' %}
+                            {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
+                                <a href="{% url 'user_chat' user_slug %}" class="button button-on-colour inline-block">
+                                    Message
+                                </a>
+                            {% endwith %}
                         {% endwith %}
-                    {% endwith %}
-                </div>
-
+                    </div>
+                </section>
             {% endif %}
-
-
         {% endif %}
 
 
