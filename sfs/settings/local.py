@@ -71,3 +71,7 @@ SOCIALACCOUNT_ADAPTER = 'userauth.adapters.CustomSocialAccountAdapter'
 CELERY_ACCEPT_CONTENT: List[str] = ['pickle']
 CELERY_TASK_SERIALIZER: str = 'pickle'
 CELERY_RESULT_SERIALIZER: str = 'pickle'
+
+# weather map api for dashboard
+
+WEATHER_API_KEY = "f477b3ea5b7d6c3e35e9f9fc5b9b03ef"

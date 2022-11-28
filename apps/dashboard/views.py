@@ -1,5 +1,6 @@
 # pyre-strict
 from django.shortcuts import render
+from django.conf import settings
 from django.urls import reverse
 
 from django.contrib.auth.decorators import login_required
@@ -9,6 +10,32 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from userauth.models import CustomUser # pyre-ignore[21]
 from resources.models import Resource, SavedResource # pyre-ignore[21]
 from river.models import River, RiverMembership # pyre-ignore[21]
+
+from typing import Tuple
+
+import requests
+
+def get_weather(postcode: str) -> Tuple[str,str,float]:
+    # try postcode in ie
+    code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',IE&appid=' + settings.WEATHER_API_KEY)
+    if code_location.status_code == 404:
+        # if not, try in gb
+        code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',GB&appid=' + settings.WEATHER_API_KEY)
+    weather = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=' + str(code_location.json()['lat']) + '&lon=' + str(code_location.json()['lon']) + '&appid=' + settings.WEATHER_API_KEY).json()
+
+    desc = weather['weather'][0]['description']
+    image = {'clear sky': 'https://openweathermap.org/img/wn/01d@2x.png',
+            'few clouds': 'https://openweathermap.org/img/wn/02d@2x.png',
+            'overcast clouds': 'https://openweathermap.org/img/wn/02d@2x.png',
+            'scattered clouds': 'https://openweathermap.org/img/wn/03d@2x.png',
+            'broken clouds': 'https://openweathermap.org/img/wn/04d@2x.png',
+            'shower rain': 'https://openweathermap.org/img/wn/09d@2x.png',
+            'rain': 'https://openweathermap.org/img/wn/10d@2x.png',
+            'thunderstorm': 'https://openweathermap.org/img/wn/11d@2x.png',
+            'snow': 'https://openweathermap.org/img/wn/13d@2x.png',
+            'mist': 'https://openweathermap.org/img/wn/50d@2x.png',}[desc]
+    temp = round(weather['main']['temp'] - 273.15, 1)
+    return (desc, image, temp)
 
 @login_required(login_url='/profile/login/')  # redirect when user is not logged in
 def dashboard(request: HttpRequest) -> HttpResponse:
@@ -48,12 +75,17 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     except SavedResource.DoesNotExist:
         print('no favourites')
 
-
-
     context = {
-        'rivers': rivers,
-        'resources': resources,
-        'user': request.user,
-    }
+            'rivers': rivers,
+            'resources': resources,
+            'user': request.user,
+            }
+
+    if current_user.post_code != None: # pyre-ignore[16]
+        weather_desc, weather_img, temperature = get_weather(current_user.post_code.code) # pyre-ignore[16]
+        context['temperature'] = temperature # pyre-ignore[6]
+        context['weather_img'] = weather_img # pyre-ignore[6]
+        context['weather_description'] = weather_desc # pyre-ignore[6]
+
     return render(request, 'dashboard/dashboard.html', context)
 

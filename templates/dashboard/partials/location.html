@@ -40,9 +40,8 @@
 
         {# Area weather #}
         <div id="dash-weather" class="flex justify-center items-center">
-        <span x-text="await getWeather('{{ user.post_code.code }}')"
-              class="text-meta-label"></span>
-            <img src="" alt="" id="weather-icon" class="h-6 w-auto">
+        <span class="text-meta-label">{{temperature}}°</span>
+            <img src="{{weather_img}}" alt="{{weather_description}}" id="weather-icon" class="h-6 w-auto">
         </div>
     </div>
 

@@ -30,7 +30,6 @@ def resource_tag(request: HttpRequest, tag: str) -> HttpResponse:
 def resource_search(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get('search')
     order_by = request.POST.get('order_by')
-    print(search_text)
     results = filter_and_cluster_resources(search_text, order_by) if search_text != '' else retrieve_and_chain_resources()
 
     if request.user.is_authenticated:
