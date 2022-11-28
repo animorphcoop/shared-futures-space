@@ -15,7 +15,9 @@
 
         <div class="-mx-4.5">
             <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
-                <img src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+                <img src="
+
+                        {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
                      class="object-cover w-full h-full" alt="" title="">
             </div>
         </div>
@@ -40,9 +42,24 @@
                 <form method=post class="m-0">
                     {% csrf_token %}
                     {% if request.user in members|attrmap:'user' %}
-                        <button name=action value=leave class="button button-on-white">Leave River</button>
+                        <div x-data="{ open: false }">
+                            <button onclick="stopBodyScroll();"
+                                    type="button"
+                                    x-on:click="open = ! open"
+                                    class="button button-on-white">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.9532 7.6535C11.9799 7.44016 11.9999 7.22683 11.9999 7.00016C11.9999 6.7735 11.9799 6.56016 11.9532 6.34683L13.3599 5.24683C13.4866 5.14683 13.5199 4.96683 13.4399 4.82016L12.1066 2.5135C12.0466 2.40683 11.9332 2.34683 11.8132 2.34683C11.7732 2.34683 11.7332 2.3535 11.6999 2.36683L10.0399 3.0335C9.69323 2.76683 9.31989 2.54683 8.91323 2.38016L8.65989 0.613496C8.63989 0.453496 8.49989 0.333496 8.33323 0.333496H5.66656C5.49989 0.333496 5.35989 0.453496 5.33989 0.613496L5.08656 2.38016C4.67989 2.54683 4.30656 2.7735 3.95989 3.0335L2.29989 2.36683C2.25989 2.3535 2.21989 2.34683 2.17989 2.34683C2.06656 2.34683 1.95323 2.40683 1.89323 2.5135L0.559893 4.82016C0.473226 4.96683 0.513226 5.14683 0.639893 5.24683L2.04656 6.34683C2.01989 6.56016 1.99989 6.78016 1.99989 7.00016C1.99989 7.22016 2.01989 7.44016 2.04656 7.6535L0.639893 8.7535C0.513226 8.8535 0.479893 9.0335 0.559893 9.18016L1.89323 11.4868C1.95323 11.5935 2.06656 11.6535 2.18656 11.6535C2.22656 11.6535 2.26656 11.6468 2.29989 11.6335L3.95989 10.9668C4.30656 11.2335 4.67989 11.4535 5.08656 11.6202L5.33989 13.3868C5.35989 13.5468 5.49989 13.6668 5.66656 13.6668H8.33323C8.49989 13.6668 8.63989 13.5468 8.65989 13.3868L8.91323 11.6202C9.31989 11.4535 9.69323 11.2268 10.0399 10.9668L11.6999 11.6335C11.7399 11.6468 11.7799 11.6535 11.8199 11.6535C11.9332 11.6535 12.0466 11.5935 12.1066 11.4868L13.4399 9.18016C13.5199 9.0335 13.4866 8.8535 13.3599 8.7535L11.9532 7.6535V7.6535ZM10.6332 6.5135C10.6599 6.72016 10.6666 6.86016 10.6666 7.00016C10.6666 7.14016 10.6532 7.28683 10.6332 7.48683L10.5399 8.24016L11.1332 8.70683L11.8532 9.26683L11.3866 10.0735L10.5399 9.7335L9.84656 9.4535L9.24656 9.90683C8.95989 10.1202 8.68656 10.2802 8.41323 10.3935L7.70656 10.6802L7.59989 11.4335L7.46656 12.3335H6.53323L6.40656 11.4335L6.29989 10.6802L5.59323 10.3935C5.30656 10.2735 5.03989 10.1202 4.77323 9.92016L4.16656 9.4535L3.45989 9.74016L2.61323 10.0802L2.14656 9.2735L2.86656 8.7135L3.45989 8.24683L3.36656 7.4935C3.34656 7.28683 3.33323 7.1335 3.33323 7.00016C3.33323 6.86683 3.34656 6.7135 3.36656 6.5135L3.45989 5.76016L2.86656 5.2935L2.14656 4.7335L2.61323 3.92683L3.45989 4.26683L4.15323 4.54683L4.75323 4.0935C5.03989 3.88016 5.31323 3.72016 5.58656 3.60683L6.29323 3.32016L6.39989 2.56683L6.53323 1.66683H7.45989L7.58656 2.56683L7.69323 3.32016L8.39989 3.60683C8.68656 3.72683 8.95323 3.88016 9.21989 4.08016L9.82656 4.54683L10.5332 4.26016L11.3799 3.92016L11.8466 4.72683L11.1332 5.2935L10.5399 5.76016L10.6332 6.5135ZM6.99989 4.3335C5.52656 4.3335 4.33323 5.52683 4.33323 7.00016C4.33323 8.4735 5.52656 9.66683 6.99989 9.66683C8.47323 9.66683 9.66656 8.4735 9.66656 7.00016C9.66656 5.52683 8.47323 4.3335 6.99989 4.3335ZM6.99989 8.3335C6.26656 8.3335 5.66656 7.7335 5.66656 7.00016C5.66656 6.26683 6.26656 5.66683 6.99989 5.66683C7.73323 5.66683 8.33323 6.26683 8.33323 7.00016C8.33323 7.7335 7.73323 8.3335 6.99989 8.3335Z"
+                                          fill="#9759FF"/>
+                                </svg>
+                            </button>
+                            {# Hidden settings modal #}
+                            <div id="river-settings" class="hidden" :class="{ 'hidden': ! open }">
+                                {% include 'partials/river-settings.html' %}
+                            </div>
+                        </div>
                     {% elif request.user.post_code.area == river.area %}
-                        <button name=action value=join class="button button-on-white">Join River</button>
+                        <button name=action value=join class="button button-important">Join</button>
                     {% endif %}
                 </form>
             {% endif %}
@@ -60,4 +77,30 @@
             {% include "river/act.html" with title="reflect stage" reference="reflect" locked=True %}
         </div>
     </div>
+
+    {% block scripts %}
+        {% comment %}
+        TODO: Put me in typescript
+        {% endcomment %}
+        <script>
+            const stopBodyScroll = () => {
+                const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
+                const body = document.body;
+                body.style.position = 'fixed';
+                body.style.top = `-${scrollY}`;
+            };
+            const enableBodyScroll = () => {
+                const body = document.body;
+                const scrollY = body.style.top;
+                body.style.position = '';
+                body.style.top = '';
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
+            window.addEventListener('scroll', () => {
+                document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
+            });
+        </script>
+    {% endblock %}
+
 {% endblock content %}
+
