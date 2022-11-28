@@ -47,22 +47,20 @@ class ChatView(TemplateView):
 
                 message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
 
-                paginator = Paginator(message_list, 10)
-                # paginator.object_list = list(reversed(paginator.object_list))
+                # included orphans: https://docs.djangoproject.com/en/4.1/ref/paginator/#django.core.paginator.Paginator.orphans
+                paginator = Paginator(message_list, 10, 5)
+                # it is currently impossible to reverse order https://code.djangoproject.com/ticket/4956
                 if request.GET.get('page'):
                     page_number = request.GET.get('page')
                 else:
                     page_number = paginator.num_pages
-
                 page_obj = paginator.get_page(page_number)
 
                 total_message_count = message_list.count()
-                messages_displayed_count = total_message_count - page_obj.start_index()+1
+                messages_displayed_count = total_message_count - page_obj.start_index() + 1
 
                 messages_left_count = total_message_count - (messages_displayed_count)
 
-
-                # print(request.GET.get('page'))
                 context = {
                     'members': members,
                     'page_obj': page_obj,
@@ -97,7 +95,7 @@ class ChatView(TemplateView):
 
                 }
 
-                paginator = Paginator(message_list, 10)
+                paginator = Paginator(message_list, 10, 5)
                 if request.GET.get('page'):
                     page_number = request.GET.get('page')
                 else:
