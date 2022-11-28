@@ -4,12 +4,12 @@
 
 {% block content %}
 
-        {% block title %}
+    {% block title %}
         {% include "partials/title.html" with title="💬 with " chat_title=members.0.display_name %}
     {% endblock %}
-    {% include 'messaging/messages.html' %}
+    {% include 'messaging/messages.html' with direct=True %}
 
-{% comment %}
+    {% comment %}
 
     {% block title %}
         {% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}

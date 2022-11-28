@@ -67,11 +67,11 @@
     {% else %}
         <form hx-post="{{ message_post_url }}"
               hx-target="#messages"
+              hx-swap="beforeend"
               enctype="multipart/form-data"
               class="p-4.5 m-0 sticky bottom-0 bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
 
             {% csrf_token %}
-            <input type=hidden name="retrieve_messages"></input>
             {% comment %} https://stackoverflow.com/questions/1804745/get-the-filename-of-a-fileupload-in-a-document-through-javascript {% endcomment %}
             {% comment %}
             <div class="text-meta invisible max-w-full">
