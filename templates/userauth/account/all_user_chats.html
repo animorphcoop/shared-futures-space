@@ -19,7 +19,7 @@
                         <div class="h-[{{ icon_width }}] w-[{{ icon_width }}]">
                             <img src="{{ user_chat.user.avatar.image_url }}" class="w-7.5 h-7.5">
                         </div>
-                        <div class="bg-gray-light rounded-[50px] px-9 py-3 w-[calc(100%-{{ icon_width }})]">
+                        <div class="bg-gradient-to-r from-white to-gray-light rounded-r-[50px] pl-3.5 pr-9 py-3 w-full">
                             <h2 class="text-meta-label font-kanit-700 text-black/30">
                                 {{ user_chat.user.display_name }}
                             </h2>
@@ -30,8 +30,8 @@
                                 </p>
                                 {% include "partials/vertical-spacer.html" with space="1.5" %}
                                 <div class="flex gap-3">
-                                    <span class="text-meta-label text-black/30">{{user_chat.latest_message.timestamp.time}}</span>
-                                    <span class="text-meta-label text-black/30" >{{user_chat.latest_message.timestamp.date}}</span>
+                                    <span class="text-meta-label text-black/30">{{user_chat.latest_message.timestamp|date:"G:i"}}</span>
+                                    <span class="text-meta-label text-black/30" >{{user_chat.latest_message.timestamp|date:"d/m/y"}}</span>
                                     <span class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
                                         Block {# TODO: launch block modal #}
                                     </span>
