@@ -48,7 +48,7 @@ class ChatView(TemplateView):
                 message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
 
                 paginator = Paginator(message_list, 10)
-                #paginator.object_list = list(reversed(paginator.object_list))
+                # paginator.object_list = list(reversed(paginator.object_list))
                 if request.GET.get('page'):
                     page_number = request.GET.get('page')
                 else:
@@ -56,10 +56,11 @@ class ChatView(TemplateView):
 
                 page_obj = paginator.get_page(page_number)
 
-
                 total_message_count = message_list.count()
-                messages_displayed_count = total_message_count - page_obj.start_index()
-                messages_left_count = total_message_count - (messages_displayed_count+1)
+                messages_displayed_count = total_message_count - page_obj.start_index()+1
+
+                messages_left_count = total_message_count - (messages_displayed_count)
+
 
                 # print(request.GET.get('page'))
                 context = {
@@ -106,7 +107,6 @@ class ChatView(TemplateView):
 
                 context['page_obj'] = page_obj
                 context['page_number'] = page_number
-
 
                 if request.GET.get('page'):
                     return render(request, 'messaging/message_list.html', context)
