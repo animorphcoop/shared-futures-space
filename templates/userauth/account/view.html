@@ -55,7 +55,7 @@
                         {% endif %}
                     </div>
 
-                    <div class="h-2.5"></div>
+                    {% include "partials/vertical-spacer.html" with space="2.5" %}
 
                     {# Name #}
                     <div id="name-holder flex flex-row">
@@ -99,8 +99,11 @@
                 <div class="h-3.5"></div>
 
                 {# Organisation #}
-                <div class="">
-                    {% if user.organisation != None %}
+                {% if user.organisation != None %}
+                    {% if not self %}
+                        {# Show nothing at all if someone else's profile has no organisation added #}
+                    {% else %}
+                        {# Show organisation area if you're on your own profile, regardless of whether it's empty or not #}
                         <div class="py-4 px-4.5 flex justify-between items-center  bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
                             <h3 class="inline-block font-kanit-700 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
                                 Organisation
@@ -115,13 +118,14 @@
                                 </button>
                             {% endif %}
                         </div>
-                        <div class="h-1"></div>
+                        {% include "partials/vertical-spacer.html" with space="1" %}
                         <div id="organisation-holder" class="px-4.5">
                             {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
                         </div>
-                        <div class="h-4"></div>
+                        {% include "partials/vertical-spacer.html" with space="4" %}
                     {% endif %}
-                </div>
+                {% endif %}
+
 
                 {# Settings #}
                 {% if self %}
@@ -181,27 +185,38 @@
 
         </section>
 
-
         {% if user.is_authenticated %}
-
             {% if not self %}
-                <div>
-                    <p>
-                        Get in touch with {{ user.display_name }}</p>
-                    </br>
-                    {% with user_pk_string=user.pk|stringformat:'s' %}
-                        {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
-                            <a href="{% url 'user_chat' user_slug %}">Message</a>
+                {# Message this user #}
+                {# WET CALL TO ACTION #}
+                <section class="bg-resources-two">
+                    <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                        <p class="text-large text-22 pb-6">
+                            Get in touch with {{ user.display_name }}!
+                        </p>
+                        {% with user_pk_string=user.pk|stringformat:'s' %}
+                            {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
+                                <a href="{% url 'user_chat' user_slug %}" class="button button-on-colour inline-block">
+                                    Message
+                                </a>
+                            {% endwith %}
                         {% endwith %}
-                    {% endwith %}
-                </div>
-
+                    </div>
+                </section>
+                {# Block this user #}
+                <section class="bg-yellow-pale">
+                    <div class="flex justify-center items-center gap-6 py-9 px-4.5 text-center">
+                        <p class="text-meta text-black/55">
+                            Would you like to block messages from {{ user.display_name }}?
+                        </p>
+                        {# TODO: Block modal #}
+                        <a href="#" class="button button-secondary button-danger">
+                            Block
+                        </a>
+                    </div>
+                </section>
             {% endif %}
-
-
         {% endif %}
-
-
 
 
         {% include "partials/footer-gradient.html" %}
