@@ -70,10 +70,10 @@
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-        {#      Removed Join button for unauthenticated users, but TODO: only show if you're in the right postcode? #}
-        {% if user.is_authenticated %}
-            {% include "partials/button.html" with url=the_url style="important" button="Join" %}
-        {% endif %}
+        {# Removed Join button for unauthenticated users, but TODO: only show if you're in the right postcode? #}
+        {% comment %}{% if user.is_authenticated %}
+            <button class="button button-important">Join</button>
+        {% endif %}{% endcomment %}
 
         {% include "partials/button.html" with url=view_url style="primary_white" button="Learn more" %}
 
