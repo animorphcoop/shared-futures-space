@@ -1,6 +1,6 @@
 {% load static %}
-{% comment %}TODO: Retrieve up to date page number without being in message_list{% endcomment %}
-<div id="loadPreviousMessages">
+{% comment %}TODO: Preferably retrieve up to date page with access to previous_page_number without being in message_list{% endcomment %}
+<div>
     {% if page_obj.has_previous %}
         {% with user_pk_string=members.0.pk|stringformat:'s' %}
             {% with user_slug=members.0.display_name|add:" "|add:user_pk_string|slugify %}

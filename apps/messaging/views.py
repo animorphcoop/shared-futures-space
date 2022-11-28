@@ -15,7 +15,7 @@ from .models import Chat, Message, Flag
 from river.util import get_chat_containing_river  # pyre-ignore[21]
 from river.models import RiverMembership  # pyre-ignore[21]
 from django.core.paginator import Paginator
-from userauth.forms import ChatForm
+#from userauth.forms import ChatForm
 
 
 # usage note: you must redefine post and get_context_data
@@ -27,19 +27,21 @@ from userauth.forms import ChatForm
 
 
 class ChatView(TemplateView):
-    form_class: Type[ChatForm] = ChatForm
+    # form_class: Type[ChatForm] = ChatForm
 
     def get(self, request, user_path):
         other_user = slug_to_user(user_path)
-
+        print('here')
+        print(request.GET.get('chat'))
         # other_user = slug_to_user(user_path)
+
 
         [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
         userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
         members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
 
         message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
-        paginator = Paginator(message_list, 5)
+        paginator = Paginator(message_list, 10)
 
         print(request.GET.get('page'))
         if request.GET.get('page'):
@@ -53,7 +55,7 @@ class ChatView(TemplateView):
             'members': members,
             'page_obj': page_obj,
             'page_number': page_number,
-            'form': ChatForm
+            #'form': chat_form,
         }
         if request.GET.get('page'):
             return render(request, 'messaging/message_list.html', context)
@@ -101,6 +103,7 @@ class ChatView(TemplateView):
                 return HttpResponse(get_template('messaging/messages_snippet.html').render({}))
             else:
                 return super().get(request)
+
 
 
 '''
