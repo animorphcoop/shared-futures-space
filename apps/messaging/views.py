@@ -34,92 +34,83 @@ class ChatView(TemplateView):
 
     def get(self, request, **kwargs: Dict[str, Any]):
         # direct chat section
-        for key in kwargs:
-            if key == 'user_path':
-                user_path = kwargs['user_path']
-                other_user = slug_to_user(user_path)
+        if'user_path' in kwargs:
+            user_path = kwargs['user_path']
+            other_user = slug_to_user(user_path)
 
-                [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
-                userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
-                members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
+            [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+            userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
+            members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
 
-                message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
+            message_list = Message.objects.all().filter(chat=userpair.chat).order_by('timestamp')
 
-                pagination_data = self.paginate_messages(request, message_list)
+            pagination_data = self.paginate_messages(request, message_list)
 
-                context = {
-                    'members': members,
-                    'system_user': get_system_user(),
-                    'page_obj': pagination_data['page_obj'],
-                    'page_number': pagination_data['page_number'],
-                    'messages_displayed_count': pagination_data['messages_displayed_count'],
-                    'messages_left_count': pagination_data['messages_left_count'],
-                    'direct': True
-                }
-                if request.GET.get('page'):
-                    return render(request, 'messaging/message_list.html', context)
-                else:
-                    return render(request, 'userauth/account/user_chat.html', context)
-            # river chat section
-            elif key == 'slug':
-                river = River.objects.get(slug=kwargs['slug'])
-                chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
-                message_list = Message.objects.all().filter(chat=chat).order_by('timestamp')
-                members = list(map(lambda x: x.user, RiverMembership.objects.filter(
-                    river=river)))
+            context = {
+                'members': members,
+                'system_user': get_system_user(),
+                'page_obj': pagination_data['page_obj'],
+                'page_number': pagination_data['page_number'],
+                'messages_displayed_count': pagination_data['messages_displayed_count'],
+                'messages_left_count': pagination_data['messages_left_count'],
+                'direct': True,
+                'message_post_url': reverse('user_chat', args=[user_path]),
+            }
+        # river chat section
+        elif 'slug' in kwargs:
+            river = River.objects.get(slug=kwargs['slug'])
+            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
+            message_list = Message.objects.all().filter(chat=chat).order_by('timestamp')
+            members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
 
-                pagination_data = self.paginate_messages(request, message_list)
+            pagination_data = self.paginate_messages(request, message_list)
 
-                context = {
-                    'members': members,
-                    'slug': kwargs['slug'],
-                    'stage': kwargs['stage'],
-                    'topic': kwargs['topic'],
-                    'page_obj': pagination_data['page_obj'],
-                    'page_number': pagination_data['page_number'],
-                    'messages_displayed_count': pagination_data['messages_displayed_count'],
-                    'messages_left_count': pagination_data['messages_left_count'],
-                    'direct': False
-
-                }
-                if request.GET.get('page'):
-                    return render(request, 'messaging/message_list.html', context)
-                else:
-                    return render(request, 'river/river_chat.html', context)
+            context = {
+                'members': members,
+                'slug': kwargs['slug'],
+                'stage': kwargs['stage'],
+                'topic': kwargs['topic'],
+                'page_obj': pagination_data['page_obj'],
+                'page_number': pagination_data['page_number'],
+                'messages_displayed_count': pagination_data['messages_displayed_count'],
+                'messages_left_count': pagination_data['messages_left_count'],
+                'direct': False,
+                'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
+            }
+        else:
+            context = {} # just in case
+        
+        if request.GET.get('page'):
+            return render(request, 'messaging/message_list.html', context)
+        else:
+            return render(request, 'river/river_chat.html', context)
 
     def post(self, request: WSGIRequest, **kwargs: Dict[str, Any]):
-        for key in kwargs:
-            if key == 'user_path':
-                user_path = kwargs['user_path']
-                other_user = slug_to_user(user_path)
+        if 'user_path' in kwargs:
+            user_path = kwargs['user_path']
+            other_user = slug_to_user(user_path)
 
-                [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
-                userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
+            [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+            userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
 
-                chat = userpair.chat
-                members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
-            elif key == 'slug':
-                river = River.objects.get(slug=kwargs['slug'])
-                members = list(map(lambda x: x.user, RiverMembership.objects.filter(
-                    river=river)))
-                chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
+            chat = userpair.chat
+            members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
+            context = {'message_post_url': reverse('user_chat', args=[user_path]),}
+        elif 'slug' in kwargs:
+            river = River.objects.get(slug=kwargs['slug'])
+            members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
+            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
+            context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),}
 
         if request.user in members:
             if 'text' in request.POST:
-                image = request.FILES.get('image', None)
-                file = request.FILES.get('file', None)
-                if file and image:
-                    new_msg = Message(sender=request.user, text=request.POST['text'], image=image, file=file, chat=chat)
-                elif image:
-                    new_msg = Message(sender=request.user, text=request.POST['text'], image=image, chat=chat)
-                elif file and image:
-                    new_msg = Message(sender=request.user, text=request.POST['text'], file=file, chat=chat)
-                else:
-                    new_msg = Message(sender=request.user, text=request.POST['text'], chat=chat)
-                new_msg.save()
+                context['message'] = Message.objects.create(sender = request.user, text = request.POST['text'],
+                                                            image = request.FILES.get('image', None),
+                                                            file = request.FILES.get('file', None), chat = chat)
             if 'flag' in request.POST:
                 m = Message.objects.get(uuid=request.POST['flag'])
                 m.flagged(request.user)
+                context['message'] = m
             if 'starter_hide' in request.POST and RiverMembership.objects.filter(user=request.user, starter=True,
                                                                                  river=get_chat_containing_river(
                                                                                      chat)).exists():
@@ -127,8 +118,10 @@ class ChatView(TemplateView):
                 m.hidden = not m.hidden
                 m.hidden_reason = 'by the river starter'
                 m.save()
+                context['message'] = m
             # return super().get(request)
-            return render(request, 'messaging/user_message_snippet.html', {'message': new_msg})
+            context['my_flags'] = list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by = request.user)))
+            return render(request, 'messaging/user_message_snippet.html', context)
 
     def paginate_messages(self, request, message_list):
 

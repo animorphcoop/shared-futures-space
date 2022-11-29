@@ -1,6 +1,6 @@
 {% load static %}
 
-<div>
+<div id="message">
     {% if message.sender == user %}
         <div class="flex justify-end">
             {% include "partials/horizontal-spacer.html" with space="7.5" %}
@@ -56,7 +56,7 @@
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <p>{{ message.timestamp|date:"d/m/y" }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
-                    <form method=POST hx-post="{{message_post_url}}" hx-target="closest #messages" hx-swap="outerHTML" class="flex font-kanit-600 tracking-[0.03em] text-red-important">
+                    <form method=POST hx-post="{{message_post_url}}" hx-target="closest #message" hx-swap="outerHTML" class="flex font-kanit-600 tracking-[0.03em] text-red-important">
                         {% csrf_token %}
                         <input type=hidden name="retrieve_messages"></input>
                         <input type=hidden name="from" value="{{from}}"></input>
