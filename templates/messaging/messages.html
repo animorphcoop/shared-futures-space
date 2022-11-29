@@ -1,8 +1,6 @@
 {% load static %}
 
-
 {% block content %}
-
 
     {% if direct %}
 
@@ -22,14 +20,15 @@
                 {% endwith %}
             {% endwith %}
         </div>
+
     {% else %}
-        <div id="messages">
+
+        <div id="messages" class="mx-4.5">
             {% include 'messaging/message_list.html' %}
         </div>
         {% url 'river_chat' slug stage topic as message_post_url %}
         {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
 
     {% endif %}
-
 
 {% endblock %}
