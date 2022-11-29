@@ -31,7 +31,7 @@ from django.core.paginator import Paginator
 
 class ChatView(TemplateView):
     # form_class: Type[ChatForm] = ChatForm
-
+    
     def get(self, request, **kwargs: Dict[str, Any]):
         # direct chat section
         if'user_path' in kwargs:
@@ -47,6 +47,7 @@ class ChatView(TemplateView):
             pagination_data = self.paginate_messages(request, message_list)
 
             context = {
+                'other_user': other_user,
                 'members': members,
                 'system_user': get_system_user(),
                 'page_obj': pagination_data['page_obj'],
@@ -79,11 +80,11 @@ class ChatView(TemplateView):
             }
         else:
             context = {} # just in case
-        
+        print(request.GET.get('page'))
         if request.GET.get('page'):
             return render(request, 'messaging/message_list.html', context)
         else:
-            return render(request, 'river/river_chat.html', context)
+            return render(request, self.template_name, context)
 
     def post(self, request: WSGIRequest, **kwargs: Dict[str, Any]):
         if 'user_path' in kwargs:
