@@ -1,36 +1,55 @@
-{% extends "partials/drawer.html" %}
+{% extends "partials/modal.html" %}
 
-{% block drawer_content %}
+{% block modal_content %}
     {# If no resources:  #}
     {% if resources|length == 0 %}
         {% include "partials/salmon-of-knowledge.html" with text="No associated resources found." %}
     {% endif %}
-    {% for resource in resources %}
-        {# If resources, one looks like: #}
-         {% comment %}TODO: Abstract into a component, review styles, restricted width of title in case it's long, pushed icons to top-right{% endcomment %}
 
-        {% url 'resource_item' resource.slug as the_url %}
-        <div class="bg-gradient-to-b from-gray-light via-white rounded-t-xl flex justify-between">
 
-            <div class="w-3/4 h-full pt-2">
-                <h3 class="font-kanit-500 text-black-large text-xl p-3">
-                    {{ resource.title }}
-                </h3>
-            </div>
-            <div class="relative">
-                {# Link icon opens the copy URL of that resource modal #}
-                <div class="absolute top-0 right-0">
-                    {% include 'partials/button-copy.html' with icon='link' path=the_url %}
-                    <a href="{{ the_url }}">
-                        <svg class="inline-block ml-4 mb-0.5" width="18" height="18" viewBox="0 0 18 18" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 1L7.59 2.41L13.17 8H1V10H13.17L7.59 15.59L9 17L17 9L9 1Z" fill="#9759FF"/>
-                        </svg>
-                    </a>
+    <div class="main-carousel">
+        {% for resource in resources %}
+            <div class="px-3 py-6 w-full text bg-white">
+                <h1 class="font-garamond-500 text-22 text-black-large">{{resource.title}}</h1>
+                {% include "partials/vertical-spacer.html" with space="3" %}
+                <div class="flex flex-row gap-1.5 items-start">
+                    {% for tag in resource.tags.all %}
+                        {% include "river/river_tag.html" with title=tag %}
+                    {% endfor %}
                 </div>
-            </div>
-        </div>
-        <div class="h-3"></div>
+                {% include "partials/vertical-spacer.html" with space="3" %}
+                <p class="font-garamond-500 text-base leading-5 text-black-text">{{resource.summary}}</p>
+                {% include "partials/vertical-spacer.html" with space="6" %}
 
-    {% endfor %}
+                {% url 'resource_item' resource.slug as the_url %}
+                {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="text-center">
+        <button id="prev-button">prev</button>
+        <span class="font-kanit-700 text-xs"><span id="slide-index">1</span>/{{resources|length}}</span>
+        <button id="next-button">next</button>
+    </div>
+
+
+    <script>
+        var flkty = new Flickity( '.main-carousel', {
+            "prevNextButtons": false, "wrapAround": true, "pageDots": false
+        });
+
+        document.getElementById('prev-button').addEventListener('click', () => {
+            flkty.previous()
+        })
+
+        document.getElementById('next-button').addEventListener('click', () => {
+            flkty.next()
+        })
+
+        flkty.on( 'change',( index ) => {
+            console.log({index})
+            document.getElementById('slide-index').innerHTML = `${index + 1}`
+        });
+
+    </script>
 {% endblock %}
