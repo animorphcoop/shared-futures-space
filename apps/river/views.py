@@ -142,14 +142,14 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
         print(slug)
         river = River.objects.get(slug=slug)
         chat = self.get_chat(river, stage, topic)
-        # pyre-ignore[16]
+        
         return super().post(request, chat=chat, url=reverse('river_chat', args=[slug, stage, topic]), members=list(
             map(lambda x: x.user, RiverMembership.objects.filter(river=river))))
 
     def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
         river = River.objects.get(slug=slug)
 
-        # pyre-ignore[16]
+        
         ctx = super().get_context_data(chat=self.get_chat(river, stage, topic), url=reverse('river_chat', args=[slug, stage, topic]),
                                        members=list(map(lambda x: x.user, RiverMembership.objects.filter(
                                            river=river))))

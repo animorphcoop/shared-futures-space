@@ -75,13 +75,10 @@ class CustomAddDataView(TemplateView):
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))  # pyre-ignore[16]
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))  # pyre-ignore[16]
-                current_user.post_code = \
-                    PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[
-                        0]  # pyre-ignore[16]
+                current_user.post_code = PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]  # pyre-ignore[16]
 
                 if len(form.cleaned_data.get('avatar')) > 0:
-                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[
-                        0]  # pyre-ignore[16]
+                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]  # pyre-ignore[16]
                 else:
                     random_avatar = random.randint(1, UserAvatar.objects.count())
                     current_user.avatar = UserAvatar.objects.get_or_create(pk=random_avatar)[0]
@@ -89,8 +86,7 @@ class CustomAddDataView(TemplateView):
                 if len(form.cleaned_data.get('organisation_name')) > 0:
                     lower_org_name = form.cleaned_data.get('organisation_name').lower()
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():
-                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get(
-                            'organisation_name'))  # pyre-ignore[16]
+                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))  # pyre-ignore[16]
                     else:
                         new_organisation = \
                             Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),

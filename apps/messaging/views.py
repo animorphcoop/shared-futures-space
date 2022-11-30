@@ -17,6 +17,8 @@ from river.models import RiverMembership, River  # pyre-ignore[21]
 from django.core.paginator import Paginator
 
 from django.http import HttpResponse
+from django.core.handlers.wsgi import WSGIRequest
+from django.db.models.query import QuerySet
 
 # from userauth.forms import ChatForm
 
@@ -33,13 +35,13 @@ from django.http import HttpResponse
 class ChatView(TemplateView):
     # form_class: Type[ChatForm] = ChatForm
     
-    def get(self, request, **kwargs: Dict[str, Any]) -> HttpResponse: # pyre-ignore[14]
+    def get(self, request: WSGIRequest, **kwargs: Dict[str, Any]) -> HttpResponse: # pyre-ignore[14]
         # direct chat section
         if'user_path' in kwargs:
             user_path = kwargs['user_path']
             other_user = slug_to_user(user_path)
 
-            [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+            [user1, user2] = sorted([request.user.uuid, other_user.uuid]) # pyre-ignore[16]
             userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
             members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
 
@@ -61,7 +63,7 @@ class ChatView(TemplateView):
         # river chat section
         elif 'slug' in kwargs:
             river = River.objects.get(slug=kwargs['slug'])
-            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
+            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic']) # pyre-ignore[6]
             message_list = Message.objects.all().filter(chat=chat).order_by('timestamp')
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
 
@@ -86,7 +88,7 @@ class ChatView(TemplateView):
         else:
             return render(request, self.template_name, context)
 
-    def post(self, request: WSGIRequest, **kwargs: Dict[str, Any]):
+    def post(self, request: WSGIRequest, **kwargs: Dict[str, Any]) -> HttpResponse:
         if 'user_path' in kwargs:
             user_path = kwargs['user_path']
             other_user = slug_to_user(user_path)
@@ -100,8 +102,10 @@ class ChatView(TemplateView):
         elif 'slug' in kwargs:
             river = River.objects.get(slug=kwargs['slug'])
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
-            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
+            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic']) # pyre-ignore[6]
             context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),}
+        else:
+            return HttpResponse('error - no user_path or slug specified')
         if request.user in members:
             if 'text' in request.POST:
                 context['message'] = Message.objects.create(sender = request.user, text = request.POST['text'],
@@ -119,10 +123,10 @@ class ChatView(TemplateView):
                 m.hidden_reason = 'by the river starter'
                 m.save()
                 context['message'] = m
-            context['my_flags'] = list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by = request.user)))
+            context['my_flags'] = list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by = request.user))) # pyre-ignore[6]
         return render(request, 'messaging/user_message_snippet.html', context)
 
-    def paginate_messages(self, request, message_list):
+    def paginate_messages(self, request: WSGIRequest, message_list: QuerySet) -> Dict[str, Any]:
 
         # it is currently impossible to reverse pagnination order https://code.djangoproject.com/ticket/4956
         # but can include orphans: https://docs.djangoproject.com/en/4.1/ref/paginator/#django.core.paginator.Paginator.orphans
@@ -133,7 +137,7 @@ class ChatView(TemplateView):
         else:
             page_number = paginator.num_pages
 
-        page_obj = paginator.get_page(page_number)
+        page_obj = paginator.get_page(page_number) # pyre-ignore[6]
 
         total_message_count = message_list.count()
 
