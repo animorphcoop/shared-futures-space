@@ -2,17 +2,17 @@
     {% csrf_token %}
     <input type=hidden name=action_id value={{message.context_action.uuid}}></input>
     {% if message.context_action.result == 'invoked' %}
-        offer of ownership accepted
+        offer of starter status for {{message.context_action.param_river.title}} accepted
     {% elif message.context_action.result == 'rejected' %}
-        offer of ownership rejected
+        offer of starter status for {{message.context_action.param_river.title}} rejected
     {% elif message.context_action.result == 'rescinded' %}
-        offer of ownership rescinded
+        offer of starter status for {{message.context_action.param_river.title}} rescinded
     {% elif request.user.id == message.context_action.receiver.id %}
-        {{message.context_action.creator.display_name}} has offered you ownership of {{message.context_action.param_river.name}}.
+        {{message.context_action.creator.display_name}} has offered you starter status for {{message.context_action.param_river.title}}.
         <button name=choice value=invoke>Accept</button>
         <button name=choice value=reject>Reject</button>
     {% elif request.user.id == message.context_action.creator.id %}
-        you offered {{message.context_action.receiver.display_name}} ownership of {{message.context_action.param_river.name}}.
+        you offered {{message.context_action.receiver.display_name}} starter status for {{message.context_action.param_river.title}}.
         <button name=choice value=retract>Retract</button>
     {% endif %}
 </form>
