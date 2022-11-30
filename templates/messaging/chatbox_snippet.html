@@ -5,12 +5,13 @@
 {% else %}
     {% if direct %}
 
-{% comment %}              //onsubmit="return method"{% endcomment %}
+        {% comment %}              //onsubmit="return method"{% endcomment %}
         <form hx-post="{{ message_post_url }}"
               hx-target="#messages"
               hx-swap="beforeend"
               enctype="multipart/form-data"
-              hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13] from:body, keydown[ctrlKey&&keyCode==13] from:body"
+              hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13&&validateChat()] from:body, keydown[ctrlKey&&keyCode==13&&validateChat()] from:body"
+              id="chat-form"
               class="p-4.5 m-0 sticky bottom-0 bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
             {% csrf_token %}
 
@@ -71,8 +72,8 @@
               hx-target="#messages"
               hx-swap="beforeend"
               enctype="multipart/form-data"
-                            hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13] from:body, keydown[ctrlKey&&keyCode==13] from:body"
-
+              hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13] from:body, keydown[ctrlKey&&keyCode==13] from:body"
+              id="chat-form"
               class="p-4.5 m-0 sticky bottom-0 bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
 
             {% csrf_token %}
@@ -149,10 +150,10 @@
 
         if (messages != null) {
             const observerMessages = new MutationObserver(function (mutations) {
-                mutations.forEach(function (mutation) {
-                    for (const textInput of document.getElementsByTagName('textarea')) {
-                        textInput.value = ''
-                    }
+                mutations.forEach(function () {
+                    const chatForm = document.getElementById('chat-form')
+                    chatForm.reset()
+
                 })
             })
             let configMessages = {childList: true};
@@ -165,12 +166,10 @@
             let errorCount = 0;
             const textLength = document.getElementById('text-box').value
             const imageValue = document.getElementById('image').files
-            console.log(textLength.length)
-            console.log(imageValue.length)
+
             if (textLength.length < 1 && imageValue.length < 1) {
                 errorCount++
             }
-            console.log(errorCount)
             return errorCount === 0;
 
         }
