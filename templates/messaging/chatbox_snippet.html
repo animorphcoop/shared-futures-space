@@ -5,11 +5,12 @@
 {% else %}
     {% if direct %}
 
-
+{% comment %}              //onsubmit="return method"{% endcomment %}
         <form hx-post="{{ message_post_url }}"
               hx-target="#messages"
               hx-swap="beforeend"
               enctype="multipart/form-data"
+              hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13] from:body, keydown[ctrlKey&&keyCode==13] from:body"
               class="p-4.5 m-0 sticky bottom-0 bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
             {% csrf_token %}
 
@@ -45,12 +46,16 @@
                 <div class="w-full">
                     <textarea data-expandable
                               class="input-text h-[50px] max-h-[150px] bg-yellow rounded-xl w-full max-w-full"
-                              name=text></textarea>
+                              name=text
+                              id="text-box"
+
+                    ></textarea>
 
                     {% comment %}            <textarea name=message></textarea>
                                 <input type="file" id="image" name="image">{% endcomment %}
 
-                    <button type="submit" class="absolute bottom-[34px] right-8">
+                    <button id="chat-button"
+                            class="absolute bottom-[34px] right-8">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 8L1.41 9.41L7 3.83V16H9V3.83L14.58 9.42L16 8L8 0L0 8Z" fill="#9759FF"/>
@@ -66,6 +71,8 @@
               hx-target="#messages"
               hx-swap="beforeend"
               enctype="multipart/form-data"
+                            hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13] from:body, keydown[ctrlKey&&keyCode==13] from:body"
+
               class="p-4.5 m-0 sticky bottom-0 bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
 
             {% csrf_token %}
@@ -112,12 +119,15 @@
 
                     <textarea data-expandable
                               class="input-text h-[50px] max-h-[150px] bg-yellow rounded-xl w-full max-w-full"
-                              name=text></textarea>
+                              name=text
+                              id="text-box"
+                    ></textarea>
 
                     {% comment %}            <textarea name=message></textarea>
                                 <input type="file" id="image" name="image">{% endcomment %}
 
-                    <button type="submit" class="absolute bottom-[34px] right-8">
+                    <button id="chat-button"
+                            class="absolute bottom-[34px] right-8">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 8L1.41 9.41L7 3.83V16H9V3.83L14.58 9.42L16 8L8 0L0 8Z" fill="#9759FF"/>
@@ -147,6 +157,21 @@
             })
             let configMessages = {childList: true};
             observerMessages.observe(messages, configMessages);
+
+        }
+
+
+        function validateChat() {
+            let errorCount = 0;
+            const textLength = document.getElementById('text-box').value
+            const imageValue = document.getElementById('image').files
+            console.log(textLength.length)
+            console.log(imageValue.length)
+            if (textLength.length < 1 && imageValue.length < 1) {
+                errorCount++
+            }
+            console.log(errorCount)
+            return errorCount === 0;
 
         }
 
