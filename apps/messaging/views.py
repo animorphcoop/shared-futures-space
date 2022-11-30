@@ -80,7 +80,6 @@ class ChatView(TemplateView):
             }
         else:
             context = {} # just in case
-        print(request.GET.get('page'))
         if request.GET.get('page'):
             return render(request, 'messaging/message_list.html', context)
         else:
@@ -102,7 +101,6 @@ class ChatView(TemplateView):
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
             chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
             context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),}
-
         if request.user in members:
             if 'text' in request.POST:
                 context['message'] = Message.objects.create(sender = request.user, text = request.POST['text'],
@@ -120,9 +118,8 @@ class ChatView(TemplateView):
                 m.hidden_reason = 'by the river starter'
                 m.save()
                 context['message'] = m
-            # return super().get(request)
             context['my_flags'] = list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by = request.user)))
-            return render(request, 'messaging/user_message_snippet.html', context)
+        return render(request, 'messaging/user_message_snippet.html', context)
 
     def paginate_messages(self, request, message_list):
 

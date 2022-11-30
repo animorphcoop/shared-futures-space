@@ -4,12 +4,13 @@ import pytest
 import bs4
 
 from river.models import RiverMembership
-from userauth.util import slug_to_user, user_to_slug
+from userauth.util import slug_to_user, user_to_slug, get_system_user
 
 from django.urls import reverse
 
 import datetime
-# !! river tests no longer applicable with no longer just the one chat per river, but needs to be replaced with something that checks all the stage chats
+
+from messaging.models import Message
 
 def test_river_chat_basics(client, test_user, test_river):
     test_river.start_envision()
@@ -35,37 +36,32 @@ def test_river_chat_basics(client, test_user, test_river):
     assert 'test message' in chat_page_html.text
 
 def test_river_chat_interface(client, test_user, test_river):
+    get_system_user() # needed to make sure it exists before we try to start_plan, since new polls reference it but can't create it if it doesn't exist for priority reasons
     test_river.start_envision()
     test_river.start_plan()
     chat_url = reverse('river_chat', args=[test_river.slug, 'plan', 'funding'])
     RiverMembership.objects.create(river=test_river, user=test_user, starter=False)
     client.force_login(test_user)
+    for i in range(20):
+        client.post(chat_url, {'text': 'test message ' + str(i) + '.'})
+    chat_page = client.get(chat_url)
     for i in range(10):
-        client.post(chat_url, {'text': 'test message ' + str(i), 'retrieve_messages': ''})
-    chat_page = client.post(chat_url, {'retrieve_messages': ''})
-    chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
+        assert 'test message ' + str(i) + '.' not in chat_page.content.decode('utf-8')
+    for i in range(10,20):
+        assert 'test message ' + str(i) + '.' in chat_page.content.decode('utf-8')
+    chat_page = client.get(chat_url + '?page=1')
     for i in range(10):
-        assert 'test message ' + str(i) in chat_page_html.text
-    chat_page = client.post(chat_url, {'retrieve_messages': '', 'from': '0', 'interval': '5'})
-    chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
-    for i in range(5):
-        assert 'test message ' + str(i) not in chat_page_html.text
-    for i in range(5,10):
-        assert 'test message ' + str(i) in chat_page_html.text
-    chat_page = client.post(chat_url, {'retrieve_messages': '', 'from': '5', 'interval': '10'})
-    chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
-    for i in range(5):
-        assert 'test message ' + str(i) in chat_page_html.text
-    for i in range(5,10):
-        assert 'test message ' + str(i) not in chat_page_html.text
+        assert 'test message ' + str(i) + '.' in chat_page.content.decode('utf-8')
+    for i in range(10,20):
+        assert 'test message ' + str(i) + '.' not in chat_page.content.decode('utf-8')
 
 def test_direct_chat_basics(client, test_user, other_test_user):
     from userauth.util import get_userpair # import here because importing from util is side-effecting on the db the first time it happens and pytest doesn't like that
     pair = get_userpair(other_test_user, test_user)
     client.force_login(test_user)
-    client.post(reverse('user_chat', args=[user_to_slug(other_test_user)]), {'text': 'test message', 'retrieve_messages': ''})
+    client.post(reverse('user_chat', args=[user_to_slug(other_test_user)]), {'text': 'test message'})
     client.force_login(other_test_user)
-    chat_page = client.post(reverse('user_chat', args=[user_to_slug(test_user)]), {'retrieve_messages': ''})
+    chat_page = client.get(reverse('user_chat', args=[user_to_slug(test_user)]))
     assert b'test message' in chat_page.content
 
 def test_direct_chat_interface(client, test_user, other_test_user):
@@ -73,24 +69,18 @@ def test_direct_chat_interface(client, test_user, other_test_user):
     pair = get_userpair(test_user, other_test_user)
     chat_url = reverse('user_chat', args=[user_to_slug(other_test_user)])
     client.force_login(test_user)
+    for i in range(20):
+        client.post(chat_url, {'text': 'test message ' + str(i) + '.'})
+    chat_page = client.get(chat_url)
     for i in range(10):
-        client.post(chat_url, {'text': 'test message ' + str(i), 'retrieve_messages': ''})
-    chat_page = client.post(chat_url, {'retrieve_messages': ''})
-    chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
+        assert 'test message ' + str(i) + '.' not in chat_page.content.decode('utf-8')
+    for i in range(10,20):
+        assert 'test message ' + str(i) + '.' in chat_page.content.decode('utf-8')
+    chat_page = client.get(chat_url + '?page=1')
     for i in range(10):
-        assert 'test message ' + str(i) in chat_page_html.text
-    chat_page = client.post(chat_url, {'retrieve_messages': '', 'from': '0', 'interval': '5'})
-    chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
-    for i in range(5):
-        assert 'test message ' + str(i) not in chat_page_html.text
-    for i in range(5,10):
-        assert 'test message ' + str(i) in chat_page_html.text
-    chat_page = client.post(chat_url, {'retrieve_messages': '', 'from': '5', 'interval': '10'})
-    chat_page_html = bs4.BeautifulSoup(chat_page.content, features='html5lib')
-    for i in range(5):
-        assert 'test message ' + str(i) in chat_page_html.text
-    for i in range(5,10):
-        assert 'test message ' + str(i) not in chat_page_html.text
+        assert 'test message ' + str(i) + '.' in chat_page.content.decode('utf-8')
+    for i in range(10,20):
+        assert 'test message ' + str(i) + '.' not in chat_page.content.decode('utf-8')
 
 def test_direct_chat_listing(client, test_user, other_test_user):
     from userauth.util import get_userpair
