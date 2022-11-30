@@ -89,8 +89,7 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
                     my_membership = RiverMembership.objects.get(river=river, user=request.user, starter=True)
                     my_membership.starter = False
                     my_membership.save()
-                    print(
-                        '!!! WARNING E !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
+                    print('!!! WARNING E !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                     # send_system_message(river.chat, 'lost_ownership', context_user_a = request.user)
             river.title = request.POST['title']
             river.description = request.POST['description']
@@ -122,15 +121,15 @@ class ManageRiverView(TemplateView):
                     send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river', context_user_a = request.user, context_user_b = membership.user, context_river = river)
                     membership.delete()
 
-        return self.get(request, slug)
+        return self.get(request, slug = slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         river = River.objects.get(slug=kwargs['slug'])
         context['starters'] = RiverMembership.objects.filter(river=river.pk, starter=True)
         context['members'] = RiverMembership.objects.filter(river=river.pk)
+        context['open_starter_offers'] = [member.user for member in context['members'] if Action.objects.filter(receiver = member.user, kind = 'become_starter', param_river = river, result = None).exists()]
         context['slug'] = kwargs['slug']
-        print(context['members'])
         return context
 
 
