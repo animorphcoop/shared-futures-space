@@ -11,11 +11,11 @@ from userauth.models import CustomUser # pyre-ignore[21]
 from resources.models import Resource, SavedResource # pyre-ignore[21]
 from river.models import River, RiverMembership # pyre-ignore[21]
 
-from typing import Tuple
+from typing import Tuple, Union
 
 import requests
 
-def get_weather(postcode: str) -> Tuple[str,str,float]:
+def get_weather(postcode: str) -> Tuple[str,str,Union[str,float]]:
     try:
         # try postcode in ie
         code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',IE&appid=' + settings.WEATHER_API_KEY)

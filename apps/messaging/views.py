@@ -16,6 +16,7 @@ from river.util import get_chat_containing_river  # pyre-ignore[21]
 from river.models import RiverMembership, River  # pyre-ignore[21]
 from django.core.paginator import Paginator
 
+from django.http import HttpResponse
 
 # from userauth.forms import ChatForm
 
@@ -32,7 +33,7 @@ from django.core.paginator import Paginator
 class ChatView(TemplateView):
     # form_class: Type[ChatForm] = ChatForm
     
-    def get(self, request, **kwargs: Dict[str, Any]):
+    def get(self, request, **kwargs: Dict[str, Any]) -> HttpResponse: # pyre-ignore[14]
         # direct chat section
         if'user_path' in kwargs:
             user_path = kwargs['user_path']
