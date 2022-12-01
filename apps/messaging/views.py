@@ -107,13 +107,18 @@ class ChatView(TemplateView):
         if request.user in members:
             if 'text' in request.POST:
                # file = self.attachment_validation(request.FILES.get('file', None))
-                chat_form = ChatForm2(request.POST)
-                print(chat_form.is_valid())
+                chat_form = ChatForm2(request.POST, request.FILES)
+                #print(chat_form.is_valid())
                 #file = chat_form.clean_file()
-                #print(file)
-                context['message'] = Message.objects.create(sender = request.user, text = request.POST['text'],
-                                                            image = request.FILES.get('image', None),
-                                                            file = request.FILES.get('file', None), chat = chat)
+                print(chat_form.is_valid())
+                #print(request.FILES.get('file'))
+                if chat_form.is_valid():
+                    chat_form.full_clean()
+                    context['message'] = Message.objects.create(sender = request.user, text = chat_form.cleaned_data.get('text', None),
+                                                            image = chat_form.cleaned_data.get('image', None),
+                                                            file = chat_form.cleaned_data.get('file', None), chat = chat)
+                else:
+                    return HttpResponse("Sorry, the file format not supported.")
             if 'flag' in request.POST:
                 m = Message.objects.get(uuid=request.POST['flag'])
                 m.flagged(request.user)
