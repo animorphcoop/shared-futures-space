@@ -5,6 +5,7 @@ from django.urls import reverse
 from poll.models import SingleChoicePoll, SingleVote, MultipleChoicePoll, MultipleVote
 from river.models import RiverMembership
 from messaging.util import send_system_message
+from userauth.util import get_system_user
 
 def test_create_poll(client, test_user, test_river):
     client.get(reverse('poll_create')) # make sure form doesn't crash while rendering
@@ -27,16 +28,16 @@ def test_create_poll(client, test_user, test_river):
     
 
 def test_vote_poll_single(client, test_user, other_test_user, test_singlechoicepoll, test_river):
+    get_system_user()
     test_river.start_envision()
     client.force_login(test_user)
     RiverMembership.objects.create(river = test_river, user = test_user)
     RiverMembership.objects.create(river = test_river, user = other_test_user)
     SingleVote.objects.create(poll = test_singlechoicepoll, user = test_user, choice = None)
     SingleVote.objects.create(poll = test_singlechoicepoll, user = other_test_user, choice = None)
-    # can see the poll in chat
-    send_system_message(test_river.envision_stage.chat, 'poll', context_poll = test_singlechoicepoll)
-    chat_view = client.post(reverse('river_chat', args=[test_river.slug, 'envision', 'general']), {'retrieve_messages': ''})
-    assert 'is this a test question?' in chat_view.content.decode('utf-8')
+    poll_view = client.get(reverse('poll_view', args=[test_singlechoicepoll.uuid]))
+    print(poll_view.content.decode('utf-8'))
+    assert 'is this a test question?' in poll_view.content.decode('utf-8')
     # can vote on the poll, and it won't close
     client.post(reverse('poll_view', args=[test_singlechoicepoll.uuid]), {'choice': test_singlechoicepoll.options[0]})
     assert len(SingleVote.objects.filter(poll = test_singlechoicepoll, choice = 1)) == 1
@@ -53,16 +54,15 @@ def test_vote_poll_single(client, test_user, other_test_user, test_singlechoicep
     assert SingleChoicePoll.objects.get(id = test_singlechoicepoll.id).closed == True
 
 def test_vote_poll_multiple(client, test_user, other_test_user, test_multiplechoicepoll, test_river):
+    get_system_user()
     test_river.start_envision()
     client.force_login(test_user)
     RiverMembership.objects.create(river = test_river, user = test_user) # so we can see the chat with the poll in
     RiverMembership.objects.create(river = test_river, user = other_test_user)
     MultipleVote.objects.create(poll = test_multiplechoicepoll, user = test_user, choice = [])
     MultipleVote.objects.create(poll = test_multiplechoicepoll, user = other_test_user, choice = [])
-    # can see the poll in chat
-    send_system_message(test_river.envision_stage.chat, 'poll', context_poll = test_multiplechoicepoll)
-    chat_view = client.post(reverse('river_chat', args=[test_river.slug, 'envision', 'general']), {'retrieve_messages': ''})
-    assert 'which options?' in chat_view.content.decode('utf-8')
+    poll_view = client.get(reverse('poll_view', args=[test_multiplechoicepoll.uuid]))
+    assert 'which options?' in poll_view.content.decode('utf-8')
     # can vote on the poll, and it won't close
     client.post(reverse('poll_view', args=[test_multiplechoicepoll.uuid]), {'choice': test_multiplechoicepoll.options[0]})
     assert len(MultipleVote.objects.filter(poll = test_multiplechoicepoll, choice__contains = [1])) == 1

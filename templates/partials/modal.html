@@ -1,0 +1,18 @@
+{#  Modal blurred backerground overlay  #}
+<section id="modal-background" class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
+    {#  White modal background  #}
+    <div id="modal-content" class="w-full">
+        {% block modal_content %}
+        {% endblock %}
+    </div>
+</section>
+
+<script>
+    document.getElementById('modal-background').addEventListener('click', () => {
+        document.getElementById('modal-container').classList.add('invisible');
+    })
+
+    document.getElementById('modal-content').addEventListener('click', (e) => {
+        e.stopPropagation();
+    })
+</script>

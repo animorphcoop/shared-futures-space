@@ -29,7 +29,7 @@ def test_river_membership(client, test_user, other_test_user, test_river):
     # non-starter members
     client.force_login(test_user)
     river_page = client.get(reverse('view_river', args=[test_river.slug]))
-    assert 'Join River' in river_page.content.decode('utf-8')
+    assert 'Join' in river_page.content.decode('utf-8')
     client.post(reverse('view_river', args=[test_river.slug]), {'action': 'join'})
     assert len(RiverMembership.objects.filter(user=test_user, river=test_river)) == 1
     river_page_member = client.get(reverse('view_river', args=[test_river.slug]))

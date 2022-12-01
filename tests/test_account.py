@@ -86,25 +86,25 @@ def test_account_info(client, test_user):
     assert test_user.avatar.image_url in info_page.content.decode('utf-8')
 
 
-@pytest.mark.django_db
-def test_user_request_flow(client, test_user, admin_client):
-    client.force_login(test_user)
-    request_form = client.get(reverse('account_request'))
-    assert request_form.status_code == 200
-    make_request = client.post(reverse('account_request'),
-                               {'kind': 'make_editor',
-                                'reason': 'pls'})
-    assert make_request.status_code == 302
-    assert len(Action.objects.filter(kind='user_request_make_editor')) == 1
-
-    requests_page = admin_client.post(reverse('account_request_panel'), {'retrieve_messages': '', 'from': '0', 'interval': '10'})
-    requests_html = bs4.BeautifulSoup(requests_page.content, 'html5lib')
-    assert test_user.display_name + ' made a request: user_request_make_editor, because: pls' in requests_html.text
-    action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
-    admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
-    #messages = client.post(reverse('user_chat', args=[user_to_slug(get_system_user())]), {'retrieve_messages': '', 'from': '0', 'interval': '10'})
-    messages = client.post(reverse('user_chat', args=[user_to_slug(test_user)]), {'retrieve_messages': '', 'from': '0', 'interval': '10'})
-    #assert 'your request to become an editor has been granted' in str(messages.content)
+#@pytest.mark.django_db
+#def test_user_request_flow(client, test_user, admin_client):
+#    client.force_login(test_user)
+#    request_form = client.get(reverse('account_request'))
+#    assert request_form.status_code == 200
+#    make_request = client.post(reverse('account_request'),
+#                               {'kind': 'make_editor',
+#                                'reason': 'pls'})
+#    assert make_request.status_code == 302
+#    assert len(Action.objects.filter(kind='user_request_make_editor')) == 1
+#
+#    requests_page = admin_client.post(reverse('account_request_panel'), {'retrieve_messages': '', 'from': '0', 'interval': '10'})
+#    requests_html = bs4.BeautifulSoup(requests_page.content, 'html5lib')
+#    assert test_user.display_name + ' made a request: user_request_make_editor, because: pls' in requests_html.text
+#    action_id = requests_html.find('input', {'type': 'hidden', 'name': 'action_id'})['value']
+#    admin_client.post(reverse('do_action'), {'action_id': action_id, 'choice': 'invoke'})
+#    #messages = client.post(reverse('user_chat', args=[user_to_slug(get_system_user())]), {'retrieve_messages': '', 'from': '0', 'interval': '10'})
+#    messages = client.post(reverse('user_chat', args=[user_to_slug(test_user)]), {'retrieve_messages': '', 'from': '0', 'interval': '10'})
+#    #assert 'your request to become an editor has been granted' in str(messages.content)
 
 
 
