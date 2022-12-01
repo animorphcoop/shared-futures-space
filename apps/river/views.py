@@ -29,7 +29,7 @@ from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluste
 from resources.models import Resource, CaseStudy, HowTo # pyre-ignore[21]
 from typing import Dict, List, Any, Union, Type
 from area.models import PostCode
-from messaging.forms import ChatForm
+from messaging.forms import ChatForm # pyre-ignore[21]
 
 
 class RiverView(DetailView):  # pyre-ignore[24]
@@ -133,7 +133,7 @@ class ManageRiverView(TemplateView):
 
 
 class RiverChatView(ChatView):  # pyre-ignore[11]
-    form_class: Type[ChatForm] = ChatForm
+    form_class: Type[ChatForm] = ChatForm  # pyre-ignore[11]
 
 
 class CreateEnvisionPollView(TemplateView):

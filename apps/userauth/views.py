@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomSignupForm, CustomLoginForm, \
     CustomResetPasswordForm, \
     CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
-from messaging.forms import ChatForm
+from messaging.forms import ChatForm # pyre-ignore[21]
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -189,7 +189,7 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
 
 
 class UserChatView(ChatView):
-    form_class: Type[ChatForm] = ChatForm
+    form_class: Type[ChatForm] = ChatForm  # pyre-ignore[11]
 
 
 
