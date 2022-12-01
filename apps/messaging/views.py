@@ -16,6 +16,7 @@ from river.util import get_chat_containing_river  # pyre-ignore[21]
 from river.models import RiverMembership, River  # pyre-ignore[21]
 from django.core.paginator import Paginator
 
+from .forms import ChatForm2
 
 # from userauth.forms import ChatForm
 
@@ -105,6 +106,11 @@ class ChatView(TemplateView):
 
         if request.user in members:
             if 'text' in request.POST:
+               # file = self.attachment_validation(request.FILES.get('file', None))
+                chat_form = ChatForm2(request.POST)
+                print(chat_form.is_valid())
+                #file = chat_form.clean_file()
+                #print(file)
                 context['message'] = Message.objects.create(sender = request.user, text = request.POST['text'],
                                                             image = request.FILES.get('image', None),
                                                             file = request.FILES.get('file', None), chat = chat)
@@ -174,3 +180,5 @@ class ChatView(TemplateView):
         elif stage == 'reflect':
             chat = river.reflect_stage.chat
         return chat  # pyre-ignore[61]
+
+

@@ -2,7 +2,7 @@
 from django import forms
 from .models import CustomUser, Organisation, UserAvatar
 from analytics.models import log_signup  # pyre-ignore[21]
-from messaging.models import Message # pyre-ignore[21]
+from messaging.models import Message  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
@@ -11,6 +11,8 @@ from wagtail.users.forms import UserEditForm, UserCreationForm
 
 from typing import Type, List, Any, Dict, Tuple, Optional
 from django.http import HttpRequest
+
+import os
 
 '''
 Resolving the first&last name issue, reference
@@ -138,7 +140,6 @@ class CustomResetPasswordForm(ResetPasswordForm):
 
 
 class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
-
     class Meta:
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['password1', 'password2']
@@ -153,9 +154,41 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
                                                  'onfocusout': 'comparePasswords()'}
 
 
+'''
 class ChatForm(forms.ModelForm):
+    ALLOWED_IMAGE_TYPES = ['jpg', 'jpeg', 'png', 'gif']
+    ALLOWED_DOC_TYPES = ['pdf', 'odt', 'docx', 'gif', 'ods', 'xlsx']
+
     class Meta:
         model: Type[Message] = Message  # pyre-ignore[11]
-        fields: List[str] = ['text', 'image']
+        fields: List[str] = ['text', 'image', 'file']
+
+    def clean(self):
+        cleaned_data = super(ChatForm, self).clean()
+        print('wetf')
+        file = self.cleaned_data.get('file', None)
+
+        #cleaned_data = super(ChatForm, self).clean()
+        #file = cleaned_data.get('file', None)
+        print(file)
+        return cleaned_data
+        '''
+'''
+        try:
+            extension = os.path.splitext(file.name)[1][1:].lower()
+            if extension in self.ALLOWED_IMAGE_TYPES:
+                print('its an image')
+                return file
+            elif extension in self.ALLOWED_DOC_TYPES:
+                print('its an file')
+                return file
+            else:
+                raise forms.ValidationError('File types is not allowed')
+        except Exception as e:
+            raise forms.ValidationError('Can not identify file type')
+       '''
+
+'''
     def __init__(self, *args: Optional[Any], **kwargs: Dict[str, Any]) -> None:
         super(ChatForm, self).__init__(*args, **kwargs)
+'''
