@@ -17,6 +17,6 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('view/<str:slug>/envision/createpoll/', CreateEnvisionPollView.as_view(template_name = 'create_envision_poll.html'), name='create_envision_poll'),
     path('view/<str:slug>/chat/<str:stage>/<str:topic>/', RiverChatView.as_view(template_name ='river_chat.html'), name='river_chat'), # pyre-ignore[16]
     path('edit/<str:slug>/', login_required(EditRiverView.as_view(template_name='edit_river.html')), name='edit_river'),
-    path('manage/<str:slug>/', login_required(ManageRiverView.as_view(template_name='swimmers_list.html')), name='manage_river'),
+    path('manage/<str:slug>/', ManageRiverView.as_view(template_name='swimmers_list.html'), name='manage_river'),
 
 ]
