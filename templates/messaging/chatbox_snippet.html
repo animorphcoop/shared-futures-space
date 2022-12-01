@@ -76,23 +76,6 @@
               class="p-4.5 m-0 sticky bottom-0 bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
 
             {% csrf_token %}
-            {% comment %} https://stackoverflow.com/questions/1804745/get-the-filename-of-a-fileupload-in-a-document-through-javascript {% endcomment %}
-            {% comment %}
-            <div class="text-meta invisible max-w-full">
-                {% render_field form.file %}
-            </div>
-
-            <div class="">
-                <label class="cursor-pointer" for="id_file">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 2V16H2V2H16ZM16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM11.14 8.86L8.14 12.73L6 10.14L3 14H15L11.14 8.86Z"
-                              fill="#9759FF"/>
-                    </svg>
-                </label>
-
-            </div>
-            {% endcomment %}
-
 
             <div class="text-meta invisible max-w-full">
                 <input type="file" name=file value="file" id="file">
@@ -113,6 +96,8 @@
                                   fill="#9759FF"/>
                         </svg>
                     </label>
+                                        <div id="upload-ready" class="hidden">something</div>
+
 
                 </div>
                 <div class="w-full">
@@ -160,22 +145,21 @@
 
         }
 
+        let uploadCheckbox = document.getElementById("upload-ready")
+        const fileInput = document.getElementById('file')
+        fileInput.onchange = function () {
+            //console.log(fileInput.files.length)
+            let currentLength = fileInput.files.length
+            if (currentLength > 0) {
+                if (uploadCheckbox.classList.contains('hidden')) {
+                    uploadCheckbox.classList.remove('hidden')
+                }
+            } else {
+                if (!uploadCheckbox.classList.contains('hidden')) {
+                    uploadCheckbox.classList.add('hidden')
+                }
 
-        const fileInput = document.getElementById('file').files
-        if (fileInput != null) {
-            const observerFile = new MutationObserver(function (mutations) {
-                mutations.forEach(function () {
-                    if (fileInput.length > 0) {
-                        let uploadCheckbox = document.getElementById("upload-ready");
-                        uploadCheckbox.classList.remove('hidden')
-                    }
-
-
-                })
-            })
-            let configFile = {childList: true};
-            observerFile.observe(messages, configFile);
-
+            }
         }
 
 
