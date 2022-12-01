@@ -67,6 +67,12 @@
     .drawer-h-100vh {
         max-height: calc(100vh-48px);
     }
+    .bg-drawer-blue {
+        @apply  bg-[linear-gradient(180deg,_#E5F1F8_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]
+    }
+    .bg-drawer-gray {
+        @apply  bg-[linear-gradient(180deg,_#E5F1F8_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]
+    }
 }
 
 @tailwind utilities; /* after layer so they can still be overwritten by utilities */
