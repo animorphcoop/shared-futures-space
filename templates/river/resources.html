@@ -6,19 +6,18 @@
         {% include "partials/salmon-of-knowledge.html" with text="No associated resources found." %}
     {% endif %}
 
-
     <div class="main-carousel">
         {% for resource in resources %}
             <div class="px-3 py-6 w-full text bg-white">
-                <h1 class="font-garamond-500 text-22 text-black-large">{{resource.title}}</h1>
+                <h1 class="font-garamond-500 text-22 text-black-large">{{ resource.title }}</h1>
                 {% include "partials/vertical-spacer.html" with space="3" %}
-                <div class="flex flex-row gap-1.5 items-start">
+                <div class="flex flex-row flex-wrap gap-1.5 items-start">
                     {% for tag in resource.tags.all %}
                         {% include "river/river_tag.html" with title=tag %}
                     {% endfor %}
                 </div>
                 {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="font-garamond-500 text-base leading-5 text-black-text">{{resource.summary}}</p>
+                <p class="font-garamond-500 text-base leading-5 text-black-text">{{ resource.summary }}</p>
                 {% include "partials/vertical-spacer.html" with space="6" %}
 
                 {% url 'resource_item' resource.slug as the_url %}
@@ -26,15 +25,24 @@
             </div>
         {% endfor %}
     </div>
-    <div class="text-center">
-        <button id="prev-button">prev</button>
-        <span class="font-kanit-700 text-xs"><span id="slide-index">1</span>/{{resources|length}}</span>
-        <button id="next-button">next</button>
+    <div class="text-center fixed inset-x-0 bottom-4.5">
+        <button type="button" id="prev-button" class="button button-on-white">
+            <svg width="13" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.294922 6.70508L6.29492 12.7051L7.70492 11.2951L3.12492 6.70508L7.70492 2.11508L6.29492 0.705078L0.294922 6.70508Z"
+                      fill="#9759FF"/>
+            </svg>
+        </button>
+        <span class="text-button inline-block w-12 min-w-12"><span id="slide-index">1</span>/{{ resources|length }}</span>
+        <button type="button" id="next-button" class="button button-on-white">
+            <svg width="13" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.70508 6.70508L1.70508 0.705078L0.295078 2.11508L4.87508 6.70508L0.295078 11.2951L1.70508 12.7051L7.70508 6.70508Z"
+                      fill="#9759FF"/>
+            </svg>
+        </button>
     </div>
 
-
     <script>
-        var flkty = new Flickity( '.main-carousel', {
+        var flkty = new Flickity('.main-carousel', {
             "prevNextButtons": false, "wrapAround": true, "pageDots": false
         });
 
@@ -46,10 +54,9 @@
             flkty.next()
         })
 
-        flkty.on( 'change',( index ) => {
+        flkty.on('change', (index) => {
             console.log({index})
             document.getElementById('slide-index').innerHTML = `${index + 1}`
         });
-
     </script>
 {% endblock %}
