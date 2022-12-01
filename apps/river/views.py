@@ -14,7 +14,7 @@ from django.urls import reverse, reverse_lazy
 from itertools import chain
 from django.db.models import Q
 
-from .forms import CreateRiverForm, RiverChatForm
+from .forms import CreateRiverForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -29,6 +29,7 @@ from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluste
 from resources.models import Resource, CaseStudy, HowTo # pyre-ignore[21]
 from typing import Dict, List, Any, Union, Type
 from area.models import PostCode
+from messaging.forms import ChatForm
 
 
 class RiverView(DetailView):  # pyre-ignore[24]
@@ -134,31 +135,8 @@ class ManageRiverView(TemplateView):
 
 
 class RiverChatView(ChatView):  # pyre-ignore[11]
-    form_class: Type[RiverChatForm] = RiverChatForm
+    form_class: Type[ChatForm] = ChatForm
 
-
-    '''
-    def post(self, request: WSGIRequest, slug: str, stage: str, topic: str = '') -> HttpResponse:
-        print(slug)
-        river = River.objects.get(slug=slug)
-        chat = self.get_chat(river, stage, topic)
-        
-        return super().post(request, chat=chat, url=reverse('river_chat', args=[slug, stage, topic]), members=list(
-            map(lambda x: x.user, RiverMembership.objects.filter(river=river))))
-
-    def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
-        river = River.objects.get(slug=slug)
-
-        
-        ctx = super().get_context_data(chat=self.get_chat(river, stage, topic), url=reverse('river_chat', args=[slug, stage, topic]),
-                                       members=list(map(lambda x: x.user, RiverMembership.objects.filter(
-                                           river=river))))
-        ctx['form'] = RiverChatForm
-        ctx['slug'] = slug
-        ctx['stage'] = stage
-        ctx['topic'] = topic
-        return ctx
-    '''
 
 class CreateEnvisionPollView(TemplateView):
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:

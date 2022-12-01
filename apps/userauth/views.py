@@ -11,8 +11,8 @@ from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomSignupForm, CustomLoginForm, \
     CustomResetPasswordForm, \
-    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm, \
-    ChatForm
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
+from messaging.forms import ChatForm
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -192,18 +192,6 @@ class UserChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm
 
 
-    '''
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        print(kwargs['user_path'])
-        print('hehe')
-        context = super().get(self.request, user_path=kwargs['user_path'])
-
-    def get(self, request, **kwargs: Dict[str, Any]):
-        print('you crazy')
-        print(kwargs['user_path'])
-        super().get(self.request, user_path=kwargs['user_path'])
-        return context
-    '''
 
 class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:

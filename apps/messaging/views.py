@@ -16,11 +16,8 @@ from river.util import get_chat_containing_river  # pyre-ignore[21]
 from river.models import RiverMembership, River  # pyre-ignore[21]
 from django.core.paginator import Paginator
 
-from django.http import HttpResponse
-from django.core.handlers.wsgi import WSGIRequest
-from django.db.models.query import QuerySet
+from .forms import ChatForm
 
-# from userauth.forms import ChatForm
 
 
 # TODO: Rewrite when we settle on how it works now
@@ -108,9 +105,14 @@ class ChatView(TemplateView):
             return HttpResponse('error - no user_path or slug specified')
         if request.user in members:
             if 'text' in request.POST:
-                context['message'] = Message.objects.create(sender = request.user, text = request.POST['text'],
-                                                            image = request.FILES.get('image', None),
-                                                            file = request.FILES.get('file', None), chat = chat)
+                chat_form = ChatForm(request.POST, request.FILES)
+                if chat_form.is_valid():
+                    chat_form.full_clean()
+                    context['message'] = Message.objects.create(sender = request.user, text = chat_form.cleaned_data.get('text', None),
+                                                            image = chat_form.cleaned_data.get('image', None),
+                                                            file = chat_form.cleaned_data.get('file', None), chat = chat)
+                else:
+                    return HttpResponse("Sorry, the file format not supported.")
             if 'flag' in request.POST:
                 m = Message.objects.get(uuid=request.POST['flag'])
                 m.flagged(request.user)
@@ -176,3 +178,5 @@ class ChatView(TemplateView):
         elif stage == 'reflect':
             chat = river.reflect_stage.chat
         return chat  # pyre-ignore[61]
+
+

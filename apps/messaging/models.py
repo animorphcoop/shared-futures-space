@@ -8,7 +8,7 @@ class Message(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4, editable = False)
     timestamp: models.DateTimeField = models.DateTimeField(default=timezone.now)
     sender: models.ForeignKey = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL)
-    text: models.CharField = models.CharField(max_length = 2000, default = '')
+    text: models.CharField = models.CharField(max_length = 2000, blank=True)
     image: models.ImageField = models.ImageField(upload_to='messages/images/', blank=True)
     file: models.FileField = models.FileField(upload_to='messages/files/', blank=True)
     snippet: models.CharField = models.CharField(max_length = 2000, default = '')

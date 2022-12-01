@@ -2,7 +2,7 @@
 from django import forms
 from .models import CustomUser, Organisation, UserAvatar
 from analytics.models import log_signup  # pyre-ignore[21]
-from messaging.models import Message # pyre-ignore[21]
+from messaging.models import Message  # pyre-ignore[21]
 
 from django.utils.translation import gettext_lazy as _
 
@@ -11,6 +11,8 @@ from wagtail.users.forms import UserEditForm, UserCreationForm
 
 from typing import Type, List, Any, Dict, Tuple, Optional
 from django.http import HttpRequest
+
+import os
 
 '''
 Resolving the first&last name issue, reference
@@ -138,7 +140,6 @@ class CustomResetPasswordForm(ResetPasswordForm):
 
 
 class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
-
     class Meta:
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['password1', 'password2']
@@ -152,10 +153,3 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
         self.fields['password2'].widget.attrs = {'placeholder': 'Confirm Password', 'borken': 'false',
                                                  'onfocusout': 'comparePasswords()'}
 
-
-class ChatForm(forms.ModelForm):
-    class Meta:
-        model: Type[Message] = Message  # pyre-ignore[11]
-        fields: List[str] = ['text', 'image']
-    def __init__(self, *args: Optional[Any], **kwargs: Dict[str, Any]) -> None:
-        super(ChatForm, self).__init__(*args, **kwargs)
