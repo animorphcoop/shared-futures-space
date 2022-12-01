@@ -16,9 +16,8 @@ from river.util import get_chat_containing_river  # pyre-ignore[21]
 from river.models import RiverMembership, River  # pyre-ignore[21]
 from django.core.paginator import Paginator
 
-from .forms import ChatForm2
+from .forms import ChatForm
 
-# from userauth.forms import ChatForm
 
 
 # TODO: Rewrite when we settle on how it works now
@@ -31,8 +30,7 @@ from .forms import ChatForm2
 
 
 class ChatView(TemplateView):
-    # form_class: Type[ChatForm] = ChatForm
-    
+
     def get(self, request, **kwargs: Dict[str, Any]):
         # direct chat section
         if'user_path' in kwargs:
@@ -106,12 +104,7 @@ class ChatView(TemplateView):
 
         if request.user in members:
             if 'text' in request.POST:
-               # file = self.attachment_validation(request.FILES.get('file', None))
-                chat_form = ChatForm2(request.POST, request.FILES)
-                #print(chat_form.is_valid())
-                #file = chat_form.clean_file()
-                print(chat_form.is_valid())
-                #print(request.FILES.get('file'))
+                chat_form = ChatForm(request.POST, request.FILES)
                 if chat_form.is_valid():
                     chat_form.full_clean()
                     context['message'] = Message.objects.create(sender = request.user, text = chat_form.cleaned_data.get('text', None),

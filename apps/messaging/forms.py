@@ -6,7 +6,7 @@ from typing import Type, List
 
 import os
 
-class ChatForm2(forms.ModelForm):
+class ChatForm(forms.ModelForm):
     ALLOWED_IMAGE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'webp']
     ALLOWED_DOC_TYPES = ['pdf', 'odt', 'docx', 'doc', 'rtf', 'txt', 'md', 'ods', 'xlsx', 'csv']
 
