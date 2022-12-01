@@ -114,7 +114,7 @@ class ChatView(TemplateView):
                                                             image = chat_form.cleaned_data.get('image', None),
                                                             file = chat_form.cleaned_data.get('file', None), chat = chat)
                 else:
-                    return HttpResponse("Sorry, the file format not supported.")
+                    return HttpResponse("<span class='block text-body text-red-important text-center'>Sorry, the file format not supported.</span>")
             if 'flag' in request.POST:
                 m = Message.objects.get(uuid=request.POST['flag'])
                 m.flagged(request.user)
