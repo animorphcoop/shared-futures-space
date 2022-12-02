@@ -4,20 +4,68 @@
     <div x-data="{ openTab: 'one' }" class="-mx-4.5">
         <ul class="flex flex-start">
             <li @click="openTab = 'one'" class="{{ li_class }} bg-resources-one">
-                {% include "landing/tabbed-resources/title.html" with title="resources" %}
+                {% include "landing/tabbed-resources/title.html" with title="Collaborate" %}
             </li>
             <li @click="openTab = 'two'" class="{{ li_class }} bg-resources-two">
-                {% include "landing/tabbed-resources/title.html" with title="tools" %}
+                {% include "landing/tabbed-resources/title.html" with title="Learn" %}
+            </li>
+            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
+                {% include "landing/tabbed-resources/title.html" with title="Decide" %}
             </li>
 
-            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
+            {% comment %}            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
                 {% include "landing/tabbed-resources/title.html" with title="co creation" %}
-            </li>
+            </li>{% endcomment %}
         </ul>
         <div :class="`bg-resources-${openTab}`" class="w-full pt-6 pb-9 px-4.5 min-h-[486px]">
             <div x-show="openTab === 'one'">
+
+                <div class="px-3">
+                    {% include "landing/main-heading.html" with title="Find like-minded people in your area and create together. We call projects 'rivers' because they flow and cannot be stopped!" %}
+                </div>
+                {% include "partials/vertical-spacer.html" with space="6" %}
+                <div>
+                    <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
+                        Hi all! Let's turn the derelict street corner plot into a community green space and run gardening activities for children.
+                    </p>
+                    <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
+                    <div class="flex gap-1.5 items-center">
+                        <img src="{% static 'images/avatars/clownfish.png' %}" class="w-6 h-6">
+                        <span class="text-meta-label">Grace Campbell</span>
+                    </div>
+                </div>
+                {% include "partials/vertical-spacer.html" with space="6" %}
+                <div class="flex flex-col items-end">
+                    <p class="bg-white font-garamond-500 text-black-large text-right text-base px-3 py-2.5 rounded-xl leading-tight">
+                        Hi Grace, amazing! This space has so much potential, my kids would love that, we don't have a garden!
+                    </p>
+                    <div class="mr-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
+                    <div class="flex gap-1.5 items-center">
+                        <img src="{% static 'images/avatars/mystery.png' %}" class="w-6 h-6">
+                        <span class="text-meta-label">Kate Bell</span>
+                    </div>
+                </div>
+                {% include "partials/vertical-spacer.html" with space="6" %}
+
+                <div>
+                    <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
+                        Hello, I don't know about gardening but can dig a hole, happy to help with carrying things too!
+                    </p>
+                    <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
+                    <div class="flex gap-1.5 items-center">
+                        <img src="{% static 'images/avatars/barb.png' %}" class="w-6 h-6">
+                        <span class="text-meta-label">Ben Moore</span>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div x-show="openTab === 'two'">
+
+
                 <p class="text-large text-center px-3">
-                    We offer smart resources throughout the river.
+                    Explore a range of helpful resources that are mapped onto your river by the salmon of knowledge!
                 </p>
                 {% include "partials/vertical-spacer.html" with space="6" %}
 
@@ -40,14 +88,18 @@
                 {% include "partials/vertical-spacer.html" with space="4" %}
                 <div class="flex flex-col gap-4.5 items-start">
                     <p class="button button-on-colour text-black/75">Funding 💰</p>
-                    <p class="button button-on-colour text-black/75">River management 🚧</p>
-                    <p class="button button-on-colour text-black/75">Community business 💰</p>
+                    <p class="button button-on-colour text-black/75">Training 🏅</p>
+                    <p class="button button-on-colour text-black/75">Community business 📈</p>
                 </div>
+
+
             </div>
 
-            <div x-show="openTab === 'two'">
+            <div x-show="openTab === 'three'">
+
+
                 <div class="px-3">
-                    {% include "landing/main-heading.html" with title="Stages, polls, and dedicated chats to help keep projects on track." %}
+                    {% include "landing/main-heading.html" with title="Rivers go through stages with dedicated chats. Polls conclude stages to ensure shared understanding and agreement on what to do next." %}
                 </div>
 
                 {% include "partials/vertical-spacer.html" with space="6" %}
@@ -66,7 +118,8 @@
                     <div class="bg-yellow/50">
                         {% include "partials/vertical-spacer.html" with space="3" %}
                         <p class="text-body px-3.5 block">
-                            What we agree: “The old lookout tower is rotting and is dangerous. We propose to renew it and we also build a seating deck.”
+                            What we agree: “The old lookout tower is rotting and is dangerous. We propose to renew it
+                            and we also build a seating deck.”
                         </p>
 
                         {% include "partials/vertical-spacer.html" with space="5" %}
@@ -120,35 +173,6 @@
                     </div>
                 </div>
 
-            </div>
-
-            <div x-show="openTab === 'three'">
-                <div class="px-3">
-                    {% include "landing/main-heading.html" with title="Find like-minded people in your area and together make a change." %}
-                </div>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div>
-                    <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
-                        Hi all! I am starting a new project to create a new community garden and teach children how to
-                        cook.
-                    </p>
-                    <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
-                    <div class="flex gap-1.5 items-center">
-                        <img src="{% static 'images/avatars/clownfish.png' %}" class="w-6 h-6">
-                        <span class="text-meta-label">Grace Campbell</span>
-                    </div>
-                </div>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div class="flex flex-col items-end">
-                    <p class="bg-white font-garamond-500 text-black-large text-right text-base px-3 py-2.5 rounded-xl leading-tight">
-                        Hi Grace, amazing! I am keen to see where we can take this!
-                    </p>
-                    <div class="mr-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
-                    <div class="flex gap-1.5 items-center">
-                        <img src="{% static 'images/avatars/mystery.png' %}" class="w-6 h-6">
-                        <span class="text-meta-label">Tom Bell</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
