@@ -18,29 +18,28 @@
 
         <div class="text-meta invisible max-w-full">
             <input type="file" name=file value="file" id="file">
-
-
         </div>
 
 
         <div class="flex w-full max-w-full items-center">
-            <div class="">
+            <div class="flex items-center gap-1">
                 {% comment %}
                         Note that this only provides a hint to the browser as to what file-types to display to the user,
                         but this can be easily circumvented, so you should always validate the uploaded file on the server also.
                     {% endcomment %}
 
-
                 <label class="cursor-pointer" for="file">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 2V16H2V2H16ZM16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM11.14 8.86L8.14 12.73L6 10.14L3 14H15L11.14 8.86Z"
+                    <svg width="11" height="22" viewBox="0 0 11 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.5 5V16.5C9.5 18.71 7.71 20.5 5.5 20.5C3.29 20.5 1.5 18.71 1.5 16.5V4C1.5 2.62 2.62 1.5 4 1.5C5.38 1.5 6.5 2.62 6.5 4V14.5C6.5 15.05 6.05 15.5 5.5 15.5C4.95 15.5 4.5 15.05 4.5 14.5V5H3V14.5C3 15.88 4.12 17 5.5 17C6.88 17 8 15.88 8 14.5V4C8 1.79 6.21 0 4 0C1.79 0 0 1.79 0 4V16.5C0 19.54 2.46 22 5.5 22C8.54 22 11 19.54 11 16.5V5H9.5Z"
                               fill="#9759FF"/>
                     </svg>
                 </label>
 
-                <div id="upload-ready" class="hidden">something</div>
-
+                <div id="upload-ready" class="hidden">
+                    <svg class="fill-red-important" width="18" height="14" viewBox="0 0 18 14" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.91818 10.9511L1.47955 6.75107L0 8.15107L5.91818 13.7511L18.6 1.75107L17.1205 0.351074L5.91818 10.9511Z"/>
+                    </svg>
+                </div>
             </div>
 
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
