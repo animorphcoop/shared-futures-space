@@ -12,7 +12,7 @@
           enctype="multipart/form-data"
           hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13&&validateChat()] from:body, keydown[ctrlKey&&keyCode==13&&validateChat()] from:body"
           id="chat-form"
-          class="p-4.5 m-0 sticky bottom-0 bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
+          class="p-4.5 m-0 sticky bottom-0 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
         {% csrf_token %}
 
 

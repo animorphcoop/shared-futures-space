@@ -1,9 +1,12 @@
 {% load static %}
 {% comment %}Don't delete me please I am $el.parentNode so I will perish anyway{% endcomment %}
-<div>
+<div class="text-center text-meta">
 
     {% if messages_left_count > 0 %}
-        Displaying {{ messages_displayed_count }} messages <br> there are {{ messages_left_count }} more!
+        <p>
+            Showing {{ messages_displayed_count }} messages, there are {{ messages_left_count }} more.
+        </p>
+        {% include "partials/vertical-spacer.html" with space="3" %}
     {% endif %}
 
     {% if page_obj.has_previous %}
@@ -12,7 +15,7 @@
 
             {% with user_pk_string=members.0.pk|stringformat:'s' %}
                 {% with user_slug=members.0.display_name|add:" "|add:user_pk_string|slugify %}
-                    <button
+                    <button class="button-secondary button-important"
                             hx-get="{% url 'user_chat' user_slug %}"
                             hx-vars="page:{{ page_obj.previous_page_number }}"
                             hx-params="*"
@@ -25,12 +28,12 @@
                             $el.parentNode.remove()
                         }, 250);">
 
-                        Load extra 10!
+                        Load previous messages
                     </button>
                 {% endwith %}
             {% endwith %}
         {% else %}
-            <button
+            <button class="button-secondary button-important"
                     hx-get="{% url 'river_chat' slug stage topic %}"
                     hx-vars="page:{{ page_obj.previous_page_number }}"
                     hx-params="*"
@@ -43,8 +46,10 @@
                             $el.parentNode.remove()
                         }, 250);">
 
-                Load extra 10!
+                Load previous messages
             </button>
         {% endif %}
     {% endif %}
 </div>
+
+{% include "partials/vertical-spacer.html" with space="6" %}

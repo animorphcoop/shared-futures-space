@@ -1,7 +1,7 @@
 {% load static %}
 
-<div x-data="{selected:null}" class="sticky top-0 max-height-[50vh] bg-white bg-drawer-blue"
-     :class="selected && 'rounded-t-xl'">
+<div x-data="{selected:null}" class="sticky top-0 bg-white bg-drawer-blue"
+     :class="selected && 'rounded-t-xl'" x-bind:style="selected==1?'max-height:100vh;':''">
     <div class="transition-all">
         {% if not locked %}
             <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null; {# scrollElementTop(); #}">
@@ -29,7 +29,7 @@
     </div>
 
     <div id="drawer-contents" class="px-4 relative overflow-hidden overflow-y-auto transition-all max-h-0 duration-700"
-         style="" id="{{ id }}" x-ref={{ reference }} x-bind:style="selected==1?'max-height:100vh;':''">
+         style="" id="{{ id }}" x-ref={{ reference }} x-bind:style="selected==1?'max-height:75vh;':''">
         {% block drawer_content %}
             # Drawer contents
         {% endblock %}
