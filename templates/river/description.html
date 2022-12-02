@@ -1,7 +1,9 @@
 {% extends "partials/drawer-river.html" %}
 
 {% block drawer_content %}
-    <div class="mt-3">
-        <p class="font-garamond-500 text-base leading-5 text-black-text">{{object.description}}</p>
-    </div>
+    {% include "partials/vertical-spacer.html" with space="3" %}
+    <p class="font-garamond-500 text-base leading-5 text-black-text">
+        {{ object.description }}
+    </p>
+    {% include "partials/vertical-spacer.html" with space="3" %}
 {% endblock %}
