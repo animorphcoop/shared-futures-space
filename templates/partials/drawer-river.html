@@ -1,39 +1,50 @@
 {% load static %}
 
-<div x-data="{selected:null}" class="sticky top-0 max-height-[50vh] bg-white bg-drawer-blue" :class="selected && 'rounded-t-xl'">
+<div x-data="{selected:null}" class="sticky top-0 max-height-[50vh] bg-white bg-drawer-blue"
+     :class="selected && 'rounded-t-xl'">
     <div class="transition-all">
         {% if not locked %}
-        <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
-            {% else %}
+            <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null; {# scrollElementTop(); #}">
+        {% else %}
             <button class="w-full py-4.5 px-4.5" type="button">
-            {% endif %}
-            <h2 class="flex items-center justify-between">
+        {% endif %}
+        <h2 class="flex items-center justify-between">
                 <span class="text-header">
                     {{ title }}
                 </span>
-                {% if not locked %}
-                    <div class="w-[12] h-[8] transition duration-500 ease-out"
-                         :class="{'-rotate-180': selected}">
-                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                  fill="#9759FF"/>
-                        </svg>
-                    </div>
-                {% else %}
-                    <img src="{% static 'images/river/river_drawer_lock.png' %}" alt="locked">
-                {% endif %}
-            </h2>
+            {% if not locked %}
+                <div class="w-[12] h-[8] transition duration-500 ease-out"
+                     :class="{'-rotate-180': selected}">
+                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                              fill="#9759FF"/>
+                    </svg>
+                </div>
+            {% else %}
+                <img src="{% static 'images/river/river_drawer_lock.png' %}" alt="locked">
+            {% endif %}
+        </h2>
         </button>
     </div>
 
-        <div class="px-4 relative overflow-hidden overflow-y-auto transition-all max-h-0 duration-700"
-             style=""
-             id="{{ id }}"
-             x-ref={{ reference }}
-                     x-bind:style="selected == 1 ? 'max-height: 100vh;' : ''">
+    <div id="drawer-contents" class="px-4 relative overflow-hidden overflow-y-auto transition-all max-h-0 duration-700"
+         style="" id="{{ id }}" x-ref={{ reference }} x-bind:style="selected==1?'max-height:100vh;':''">
+        {% block drawer_content %}
+            # Drawer contents
+        {% endblock %}
+    </div>
+</div>
 
-    {% block drawer_content %}
-    {% endblock %}
-</div>
-</div>
+{% block scripts %}
+    {% comment %}
+        TODO: Put me in typescript
+    {% endcomment %}
+{#    <script>#}
+{#        const scrollElementTop = () => {#}
+{#            let element = document.getElementById("drawer-contents");#}
+{#            element.scrollIntoView(true);#}
+{#            console.log('scrolled into view');#}
+{#        };#}
+{#    </script>#}
+{% endblock %}
