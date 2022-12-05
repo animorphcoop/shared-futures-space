@@ -1,10 +1,11 @@
 {% load static %}
 
-<div x-data="{selected:null}" class="sticky top-0 bg-white bg-drawer-blue"
+<section x-data="{selected:null}" class="{# sticky #} top-0 bg-white bg-drawer-blue"
      :class="selected && 'rounded-t-xl'" x-bind:style="selected==1?'max-height:100vh;':''">
     <div class="transition-all">
         {% if not locked %}
-            <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null; {# scrollElementTop(); #}">
+            <button class="w-full py-4.5 px-4.5" type="button" id="{{ id }}-button"
+                    @click="selected ? 1 : scrollToTop($el.id); selected !== 1 ? selected = 1 : selected = null; selected ? 1 : scrollToTop($el.id);">
         {% else %}
             <button class="w-full py-4.5 px-4.5" type="button">
         {% endif %}
@@ -34,17 +35,22 @@
             # Drawer contents
         {% endblock %}
     </div>
-</div>
+</section>
 
 {% block scripts %}
     {% comment %}
         TODO: Put me in typescript
     {% endcomment %}
-{#    <script>#}
-{#        const scrollElementTop = () => {#}
-{#            let element = document.getElementById("drawer-contents");#}
-{#            element.scrollIntoView(true);#}
-{#            console.log('scrolled into view');#}
-{#        };#}
-{#    </script>#}
+
+    <script>
+        function scrollToTop(id) {
+            console.log(id)
+            let drawer_id = id;
+            console.log("I'm the drawer ID: " + drawer_id);
+            let el = document.querySelector('#' + drawer_id);
+            console.log("I'm the el: " + el);
+            el.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+            console.log('I scrolled to ' + drawer_id);
+        }
+    </script>
 {% endblock %}

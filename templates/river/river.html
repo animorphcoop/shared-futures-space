@@ -19,6 +19,8 @@
 
 
 
+
+
                         {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
                      class="object-cover w-full h-full" alt="" title="">
             </div>
@@ -69,8 +71,8 @@
         {% include "partials/vertical-spacer.html" with space="3" %}
 
         <div class="-mx-4.5">
-            {% include "river/swimmers.html" with title="swimmers" reference="swimmers" %}
-            {% include "river/description.html" with title="description" reference="description" %}
+            {% include "river/swimmers.html" with title="swimmers" reference="swimmers" id="swimmers" %}
+            {% include "river/description.html" with title="description" reference="description" id="description" %}
             <div id="modal-container" class="invisible">
                 {% include "river/resources.html" %}
             </div>
