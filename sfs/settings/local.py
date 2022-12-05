@@ -18,7 +18,7 @@ AUTHENTICATION_BACKENDS: List[str] = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-SOCIALACCOUNT_PROVIDERS: Dict[str, DICT[str, Dict[str, str]]] = {
+SOCIALACCOUNT_PROVIDERS: Dict[str, Dict[str, Dict[str, str]]] = {
     'facebook': {
         'APP': {
             'client_id': FACEBOOK_CLIENT_ID,
