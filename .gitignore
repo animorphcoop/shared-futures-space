@@ -124,6 +124,8 @@ static/*
 static/css/dist/styles.css
 apps/theme/static_src/node_modules/
 apps/theme/static/css/dist/*
+# IMPORTANT:
+sfs/settings/secrets.py
 
 # migrations files
 # NO LONGER IGNORED BECAUSE WE'RE LIVE AND NEED TO KEEP THE DB CONSISTENT
