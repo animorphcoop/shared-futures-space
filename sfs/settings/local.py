@@ -1,7 +1,9 @@
 # pyre-strict
-from typing import List, Optional
+from typing import List, Optional, Dict
 from .base import INSTALLED_APPS
-from .secrets import SECRET_KEY, WEATHER_API_KEY, EMAIL_HOST_PASSWORD, FACEBOOK_CLIENT_ID, FACEBOOK_SECRET, GOOOGLE_CLIENT_ID, GOOGLE_SECRET
+from .secrets import SECRET_KEY, WEATHER_API_KEY, EMAIL_HOST_PASSWORD, FACEBOOK_CLIENT_ID, FACEBOOK_SECRET, GOOGLE_CLIENT_ID, GOOGLE_SECRET
+
+SECRET_KEY = SECRET_KEY
 
 SITE_ID = 1
 SITE_DOMAIN = 'sharedfutures.space'
@@ -16,7 +18,7 @@ AUTHENTICATION_BACKENDS: List[str] = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-SOCIALACCOUNT_PROVIDERS = {
+SOCIALACCOUNT_PROVIDERS: Dict[str, DICT[str, Dict[str, str]]] = {
     'facebook': {
         'APP': {
             'client_id': FACEBOOK_CLIENT_ID,
@@ -45,7 +47,7 @@ ACCOUNT_USERNAME_REQUIRED: bool = False
 EMAIL_HOST: str = 'mail.webarch.net'
 EMAIL_PORT: int = 465
 EMAIL_HOST_USER: str = 'sfs_mailer@animorph.coop'
-EMAIL_HOST_PASSWORD: str = EMAIL_HOST_PASSWORD # from secrets.py
+EMAIL_HOST_PASSWORD: str = EMAIL_HOST_PASSWORD
 EMAIL_USE_TLS: bool = False
 EMAIL_USE_SSL: bool = True
 DEFAULT_FROM_EMAIL: str = EMAIL_HOST_USER
@@ -65,3 +67,5 @@ SOCIALACCOUNT_ADAPTER = 'userauth.adapters.CustomSocialAccountAdapter'
 CELERY_ACCEPT_CONTENT: List[str] = ['pickle']
 CELERY_TASK_SERIALIZER: str = 'pickle'
 CELERY_RESULT_SERIALIZER: str = 'pickle'
+
+WEATHER_API_KEY = WEATHER_API_KEY
