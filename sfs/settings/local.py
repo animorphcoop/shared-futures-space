@@ -1,9 +1,10 @@
-# pyre-strict
+# pyre-ignore-all-errors
+# (needed because whether `from .secrets import ...` is a type error depends on whether the secrets file is in place
 from typing import List, Optional, Dict
 from .base import INSTALLED_APPS
 from os.path import exists
 if exists('secrets.py'):
-    from .secrets import SECRET_KEY, WEATHER_API_KEY, EMAIL_HOST_PASSWORD, FACEBOOK_CLIENT_ID, FACEBOOK_SECRET, GOOGLE_CLIENT_ID, GOOGLE_SECRET # pyre-ignore[21]
+    from .secrets import SECRET_KEY, WEATHER_API_KEY, EMAIL_HOST_PASSWORD, FACEBOOK_CLIENT_ID, FACEBOOK_SECRET, GOOGLE_CLIENT_ID, GOOGLE_SECRET
 else:
     # dummy values to avoid crashing anything entirely
     SECRET_KEY='...'
@@ -58,7 +59,7 @@ ACCOUNT_USERNAME_REQUIRED: bool = False
 EMAIL_HOST: str = 'mail.webarch.net'
 EMAIL_PORT: int = 465
 EMAIL_HOST_USER: str = 'sfs_mailer@animorph.coop'
-EMAIL_HOST_PASSWORD: str = EMAIL_HOST_PASSWORD
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
 EMAIL_USE_TLS: bool = False
 EMAIL_USE_SSL: bool = True
 DEFAULT_FROM_EMAIL: str = EMAIL_HOST_USER
