@@ -6,6 +6,19 @@
             River settings
         </h2>
         {% include "partials/vertical-spacer.html" with space="6" %}
+
+        {# {% if request.user in starters|attrmap:'user' %} #}
+
+        <p class="button button-on-white">Change title</p>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        <p class="button button-on-white">Change description</p>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        <p class="button button-on-white">Change tags</p>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        <p class="button button-on-white">Change image</p>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+
+        {# {% elif not request.user.is_anonymous %} #}
         <form method=post class="m-0">
             {% csrf_token %}
             <button name=action value=leave class="button button-on-white">
@@ -16,6 +29,8 @@
                 </svg>
             </button>
         </form>
+        {# {% endif %} #}
+
         {% include "partials/vertical-spacer.html" with space="7.5" %}
         <button onclick="enableBodyScroll();" x-on:click="open = ! open"
                 type="button"
