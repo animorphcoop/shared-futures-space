@@ -7,7 +7,7 @@
 
     {% comment %}              //onsubmit="return method"{% endcomment %}
     <form hx-post="{{ message_post_url }}"
-          hx-target="#messages"
+          hx-target="#{{ message_box_id }}"
           hx-swap="beforeend"
           enctype="multipart/form-data"
           hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13&&validateChat()] from:body, keydown[ctrlKey&&keyCode==13&&validateChat()] from:body"
@@ -66,7 +66,7 @@
     {% comment %}{% else %}
 
         <form hx-post="{{ message_post_url }}"
-              hx-target="#messages"
+              hx-target="#{{ message_box_id }}"
               hx-swap="beforeend"
               enctype="multipart/form-data"
               hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13] from:body, keydown[ctrlKey&&keyCode==13] from:body"

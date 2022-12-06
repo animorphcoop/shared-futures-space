@@ -1333,6 +1333,48 @@
           "yes": ["Carla Owen", "Aoife Wilson"],
           "no": ["Dan O’Callaghan"]
         }
+      },
+      "plan": {
+        "general": [
+          {
+            "from": "Dan O’Callaghan",
+            "content": "Hi guys"
+          },
+          {
+            "from": "Patrick Casey",
+            "content": "Hi! :)"
+          }
+        ],
+        "funding": [
+          {
+            "from": "Dan O’Callaghan",
+            "content": "We're going to need some cash"
+          },
+          {
+            "from": "Aoife Wilson",
+            "content": "I found 50p in the bottom of my bag"
+          }
+        ],
+        "location": [
+          {
+            "from": "Dan O’Callaghan",
+            "content": "Where even are we?"
+          },
+          {
+            "from": "Caitlin Healy",
+            "content": "I'm lost"
+          }
+        ],
+        "dates": [
+          {
+            "from": "Dan O’Callaghan",
+            "content": "Any thoughts about a date?"
+          },
+          {
+            "from": "Carla Owen",
+            "content": "Don't look at me, I'm happily married"
+          }
+        ]
       }
     },
     {
