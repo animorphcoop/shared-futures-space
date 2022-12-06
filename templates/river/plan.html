@@ -1,0 +1,32 @@
+{% extends "partials/drawer-river.html" %}
+
+{% block drawer_content %}
+        <div class="-mx-4.5">
+            <div id="plan-view" hx-get="{% url 'view_plan' object.slug %}"
+                 hx-trigger="load"
+                 hx-target="#plan-view"
+                 hx-afterload
+            ></div>
+        </div>
+
+    <script>
+        let envisionDrawer = document.getElementById("plan")
+
+        {% comment %}https://htmx.org/events/{% endcomment %}
+        document.addEventListener('htmx:afterSwap', function () {
+            if (envisionDrawer != null) {
+                let computedStyle = getComputedStyle(envisionDrawer);
+                //console.log(computedStyle.getPropertyValue('height'));
+                if (computedStyle.getPropertyValue('height') !== "0px") {
+                    //console.log('open')
+                    setTimeout(() => {
+                        envisionDrawer.style.maxHeight = envisionDrawer.scrollHeight + 'px';
+                    }, 500)
+                }
+
+            }
+        }, false);
+
+
+    </script>
+{% endblock %}
