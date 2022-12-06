@@ -1,10 +1,94 @@
-plan view
+{% block content %}
+    GENERAL TAB:
+    <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
+         hx-trigger="load"
+         hx-target="this">
+    </div>
+    <div class="mx-4.5">
+        {% if river.plan_stage.general_poll != None %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div id="poll-wrapper">
+                <div hx-trigger="load" hx-target="#poll-wrapper"
+                     hx-get="{% url 'poll_view' river.plan_stage.general_poll.uuid %}"></div>
+            </div>
+        {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div id="poll-creation-wrapper">
+                <button hx-get="{% url 'create_river_poll' river.slug 'plan' %}" hx-target="#poll-creation-plan-general"
+                        class="button button-important">Create Poll For Plan General
+                </button>
+            <div id="poll-creation-plan-general"></div>
+            </div>
+        {% endif %}
+    </div>
 
-<p><a href="{% url 'river_chat' river.slug 'plan' 'general' %}">Plan General Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'plan' 'funding' %}">Plan Funding Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'plan' 'location' %}">Plan Location Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'plan' 'dates' %}">Plan Dates Chat</a></p>
+    FUNDING TAB:
+    <div id="plan-chat-funding" hx-get="{% url 'river_chat' river.slug 'plan' 'funding' %}"
+         hx-trigger="load"
+         hx-target="this">
+    </div>
+    <div class="mx-4.5">
+        {% if river.plan_stage.funding_poll != None %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div id="poll-wrapper">
+                <div hx-trigger="load" hx-target="#poll-wrapper"
+                     hx-get="{% url 'poll_view' river.plan_stage.funding_poll.uuid %}"></div>
+            </div>
+        {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div id="poll-creation-wrapper">
+                <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'funding' %}" hx-target="#poll-creation-plan-funding"
+                        class="button button-important">Create Poll For Plan Funding
+                </button>
+            <div id="poll-creation-plan-funding"></div>
+            </div>
+        {% endif %}
+    </div>
 
-{% if river.current_stage == river.Stage.PLAN %}
-    <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Act Stage</button></form>
-{% endif %}
+    LOCATION TAB:
+    <div id="plan-chat-location" hx-get="{% url 'river_chat' river.slug 'plan' 'location' %}"
+         hx-trigger="load"
+         hx-target="this">
+    </div>
+    <div class="mx-4.5">
+        {% if river.plan_stage.location_poll != None %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div id="poll-wrapper">
+                <div hx-trigger="load" hx-target="#poll-wrapper"
+                     hx-get="{% url 'poll_view' river.plan_stage.location_poll.uuid %}"></div>
+            </div>
+        {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div id="poll-creation-wrapper">
+                <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'location' %}" hx-target="#poll-creation-plan-location"
+                        class="button button-important">Create Poll For Plan Location
+                </button>
+            <div id="poll-creation-plan-location"></div>
+            </div>
+        {% endif %}
+    </div>
+
+    DATES TAB:
+    <div id="plan-chat-dates" hx-get="{% url 'river_chat' river.slug 'plan' 'dates' %}"
+         hx-trigger="load"
+         hx-target="this">
+    </div>
+    <div class="mx-4.5">
+        {% if river.plan_stage.dates_poll != None %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div id="poll-wrapper">
+                <div hx-trigger="load" hx-target="#poll-wrapper"
+                     hx-get="{% url 'poll_view' river.plan_stage.dates_poll.uuid %}"></div>
+            </div>
+        {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div id="poll-creation-wrapper">
+                <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'dates' %}" hx-target="#poll-creation-plan-dates"
+                        class="button button-important">Create Poll For Plan Dates
+                </button>
+            <div id="poll-creation-plan-dates"></div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

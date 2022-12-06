@@ -30,11 +30,6 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserEditForm(UserEditForm):
-    def __init__(self, *args, **kwargs):
-        print(args)
-        print(kwargs)
-        print(self._meta.fields)
-        return super().__init__(*args, **kwargs)
     class Meta(UserEditForm.Meta):
         model: Type[CustomUser] = CustomUser
         fields = {'post_code', 'is_active', 'email', 'last_name', 'is_superuser', 'year_of_birth', 'display_name', 'groups', 'first_name'}
