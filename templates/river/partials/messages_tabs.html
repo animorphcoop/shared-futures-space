@@ -1,0 +1,31 @@
+{% load static %}
+
+{% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex items-center justify-center" %}
+    <div x-data="{ openTab: 'one' }" class="-mx-4.5">
+        <ul class="flex flex-start">
+            <li @click="openTab = 'one'" class="{{ li_class }} bg-resources-one">
+                {% include "landing/tabbed-resources/title.html" with title="Collaborate" %}
+            </li>
+            <li @click="openTab = 'two'" class="{{ li_class }} bg-resources-two">
+                {% include "landing/tabbed-resources/title.html" with title="Learn" %}
+            </li>
+            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
+                {% include "landing/tabbed-resources/title.html" with title="Decide" %}
+            </li>
+            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
+                {% include "landing/tabbed-resources/title.html" with title="Decide" %}
+            </li>
+        </ul>
+        <div :class="`bg-resources-${openTab}`" class="w-full pt-6 pb-9 px-4.5 min-h-[486px]">
+            <div x-show="openTab === 'one'">
+                TAB ONE
+            </div>
+            <div x-show="openTab === 'two'">
+                TAB TWO
+            </div>
+            <div x-show="openTab === 'three'">
+                TAB THREE
+            </div>
+        </div>
+    </div>
+{% endwith %}
