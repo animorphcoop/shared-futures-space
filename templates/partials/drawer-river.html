@@ -5,7 +5,7 @@
     <div class="transition-all">
         {% if not locked %}
             <button class="w-full py-4.5 px-4.5" type="button" id="{{ id }}-button"
-                    @click="selected ? 1 : scrollToTop($el.id); selected !== 1 ? selected = 1 : selected = null; selected ? 1 : scrollToTop($el.id);">
+                    @click="selected ? 1 : scrollToTop($el.id); selected !== 1 ? selected = 1 : selected = null;">
         {% else %}
             <button class="w-full py-4.5 px-4.5" type="button">
         {% endif %}
@@ -30,7 +30,7 @@
     </div>
 
     <div id="drawer-contents" class="px-4 relative overflow-hidden overflow-y-auto transition-all max-h-0 duration-700"
-         style="" id="{{ id }}" x-ref={{ reference }} x-bind:style="selected==1?'max-height:75vh;':''">
+         style="" id="{{ id }}" x-ref={{ reference }} x-bind:style="selected==1?'max-height:75vh;':''" @click="selected ? 1 : scrollToBottom($el.child);">
         {% block drawer_content %}
             # Drawer contents
         {% endblock %}
@@ -50,7 +50,17 @@
             let el = document.querySelector('#' + drawer_id);
             console.log("I'm the el: " + el);
             el.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-            console.log('I scrolled to ' + drawer_id);
+            console.log('I scrolled to top of ' + drawer_id);
         }
+
+        {#function scrollToBottom(id) {#}
+        {#    console.log(id)#}
+        {#    let drawer_id = id;#}
+        {#    console.log("I'm the drawer ID: " + drawer_id);#}
+        {#    let el = document.querySelector('#' + drawer_id);#}
+        {#    console.log("I'm the el: " + el);#}
+        {#    el.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});#}
+        {#    console.log('I scrolled to bottom of' + drawer_id);#}
+        {#}#}
     </script>
 {% endblock %}
