@@ -1,6 +1,6 @@
 {% load static %}
 
-<section x-data="{selected:null}" class="{# sticky #} top-0 bg-white bg-drawer-blue"
+<section x-data="{selected:{{ selected }}}" class="{# sticky #} top-0 bg-white bg-drawer-blue"
      :class="selected && 'rounded-t-xl'" x-bind:style="selected==1?'max-height:100vh;':''">
     <div class="transition-all">
         {% if not locked %}

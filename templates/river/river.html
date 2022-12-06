@@ -84,16 +84,16 @@
             {% include "partials/vertical-spacer.html" with space="3" %}
 
             <div class="-mx-4.5">
-                {% include "river/swimmers.html" with title="swimmers" reference="swimmers" id="swimmers" %}
-                {% include "river/description.html" with title="description" reference="description" id="description" %}
+                {% include "river/swimmers.html" with title="swimmers" reference="swimmers" id="swimmers" selected="null" %}
+                {% include "river/description.html" with title="description" reference="description" id="description" selected="1" %}
                 <div id="modal-container" class="invisible">
                     {% include "river/resources.html" %}
                 </div>
-                {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" %}
+                {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" selected="null" %}
 
-                {% include "river/act.html" with title="plan stage" reference="plan" locked=True %}
-                {% include "river/act.html" with title="act stage" reference="act" locked=True %}
-                {% include "river/act.html" with title="reflect stage" reference="reflect" locked=True %}
+                {% include "river/act.html" with title="plan stage" reference="plan" locked=True selected="null" %}
+                {% include "river/act.html" with title="act stage" reference="act" locked=True selected="null" %}
+                {% include "river/act.html" with title="reflect stage" reference="reflect" locked=True selected="null" %}
 
             </div>
         </div>
