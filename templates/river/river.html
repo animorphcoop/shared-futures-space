@@ -15,13 +15,7 @@
 
         <div class="-mx-4.5">
             <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
-                <img src="
-
-
-
-
-
-                        {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+                <img src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
                      class="object-cover w-full h-full" alt="" title="">
             </div>
         </div>
@@ -85,14 +79,17 @@
         </div>
     </div>
 
-    <button type="button" class="button button-on-white p-1 fixed bottom-[18px] left-[18px] drop-shadow-lg z-30"
-            id="show-modal">
-        <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
-             class="w-9 h-auto">
-        <span class="absolute -top-1.5 -right-1.5 bg-red-important text-white px-1 py-px rounded-sm">{{ resources|length }}</span>
-    </button>
-
     {% include "partials/vertical-spacer.html" with space="16" %}
+
+    {# Resources salmon of knowledge button #}
+    <div class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0">
+        <button type="button" class="button button-on-white p-1 fixed sm:absolute bottom-[18px] left-[18px] drop-shadow-lg "
+                id="show-modal">
+            <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
+                 class="w-9 h-auto">
+            <span class="absolute -top-1.5 -right-1.5 bg-red-important text-white px-1 py-px rounded-sm">{{ resources|length }}</span>
+        </button>
+    </div>
 
     {% block scripts %}
         {% comment %}
