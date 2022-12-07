@@ -136,22 +136,59 @@ class RiverChatView(ChatView):  # pyre-ignore[11]
     form_class: Type[ChatForm] = ChatForm  # pyre-ignore[11]
 
 
-class CreateEnvisionPollView(TemplateView):
-    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
+class CreateRiverPollView(TemplateView):
+    def post(self, request: WSGIRequest, slug: str, stage: str, topic: str) -> HttpResponse:
         river = River.objects.get(slug=slug)
-        if river.current_stage == River.Stage.ENVISION:
-            if river.envision_stage.poll is None:
+        if river.current_stage == stage:
+            if river.current_stage == river.Stage.ENVISION:
+                stage_ref = river.envision_stage
+            elif river.current_stage == river.Stage.PLAN:
+                stage_ref = river.plan_stage
+            elif river.current_stage == river.Stage.ACT:
+                stage_ref = river.act_stage
+            elif river.current_stage == river.Stage.REFLECT:
+                stage_ref = river.reflect_stage
+            else:
+                return HttpResponse('could not create poll, current stage not recognised (' + stage + ')')
+            if topic == 'general':
+                poll_ref = stage_ref.general_poll
+            elif topic == 'funding':
+                poll_ref = stage_ref.funding_poll
+            elif topic == 'location':
+                poll_ref = stage_ref.location_poll
+            elif topic == 'dates':
+                poll_ref == stage_ref.dates_poll
+            else:
+                return HttpResponse('could not create poll, topic not recognised (' + topic + ')')
+            if poll_ref is None:
                 if 'description' in request.POST:
                     try:
+                        if stage == river.Stage.ENVISION:
+                            question = 'is this an acceptable vision?'
+                        elif stage == river.Stage.PLAN:
+                            question = 'is this an acceptable plan for ' + topic + '?'
+                        elif stage == river.Stage.ACT:
+                            question = 'was the plan for ' + topic + 'carried out?'
+                        elif stage == river.Stage.REFLECT:
+                            question = '???'
                         poll = SingleChoicePoll.objects.create(
-                            question='is this an acceptable vision?',
+                            question=question,
                             description=request.POST['description'],
                             options=['yes', 'no'],
                             invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
                             river=river)
-                        river.envision_stage.poll = poll
-                        river.envision_stage.save()
-                        #send_system_message(chat=river.envision_stage.chat, kind='poll', context_poll=poll) current poll apppears at the bottom of the chat, not as part of it
+                        if topic == 'general':
+                            stage_ref.general_poll = poll
+                        elif topic == 'funding':
+                            stage_ref.funding_poll = poll
+                        elif topic == 'location':
+                            stage_ref.location_poll = poll
+                        elif topic == 'dates':
+                            stage_ref.dates_poll = poll
+                        else:
+                            return HttpResponse('could not create poll, topic not recognised (' + topic + ')')
+                        stage_ref.save()
+                        #send_system_message(chat=river.envision_stage.general_chat, kind='poll', context_poll=poll) current poll apppears at the bottom of the chat, not as part of it
                         return HttpResponseRedirect(reverse('poll_view', args=[poll.uuid]))
                     except Exception as e:
                         return HttpResponse('could not create poll, unknown error: ' + str(e))
@@ -160,11 +197,14 @@ class CreateEnvisionPollView(TemplateView):
             else:
                 return HttpResponse('could not create poll, another poll is still not closed')
         else:
-            return HttpResponse('could not create poll, envision stage is finished')
+            return HttpResponse('could not create poll, current stage is not ' + stage)
 
-    def get_context_data(self, slug: str) -> Dict[str, Any]:  # pyre-ignore[14]
+    def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:  # pyre-ignore[14]
         ctx = super().get_context_data()
         ctx['river'] = River.objects.get(slug=slug)
+        ctx['slug'] = slug
+        ctx['stage'] = stage
+        ctx['topic'] = topic
         return ctx
 
 
@@ -176,7 +216,7 @@ class EnvisionView(TemplateView):
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
-        ctx['owners'] = RiverMembership.objects.filter(river=ctx['river']).values_list('user', flat=True)
+        ctx['starters'] = RiverMembership.objects.filter(river=ctx['river'], starter = True).values_list('user', flat=True)
         return ctx
 
 
@@ -188,6 +228,8 @@ class PlanView(TemplateView):
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
+        ctx['starters'] = list(RiverMembership.objects.filter(river=ctx['river'], starter = True).values_list('user', flat=True))
+        print(ctx['starters'])
         return ctx
 
 

@@ -68,10 +68,10 @@ class BasePoll(models.Model):
                     river.start_plan()
                     river.description = self.description
                     river.save()
-                    send_system_message(kind = 'finished_envision', chat = river.envision_stage.chat, context_river = river)
+                    send_system_message(kind = 'finished_envision', chat = river.envision_stage.general_chat, context_river = river)
                 else:
                     river = River.objects.get(envision_stage = es)
-                    river.envision_stage.poll = None
+                    river.envision_stage.general_poll = None
                     river.envision_stage.save()
 
 class SingleChoicePoll(BasePoll):

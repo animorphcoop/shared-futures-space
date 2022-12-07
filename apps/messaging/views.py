@@ -161,7 +161,7 @@ class ChatView(TemplateView):
 
     def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
         if stage == 'envision':
-            chat = river.envision_stage.chat
+            chat = river.envision_stage.general_chat
         elif stage == 'plan':
             if topic == 'general':
                 chat = river.plan_stage.general_chat
@@ -181,7 +181,7 @@ class ChatView(TemplateView):
             elif topic == 'dates':
                 chat = river.act_stage.dates_chat
         elif stage == 'reflect':
-            chat = river.reflect_stage.chat
+            chat = river.reflect_stage.general_chat
         return chat  # pyre-ignore[61]
 
 

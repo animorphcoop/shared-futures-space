@@ -31,10 +31,10 @@
                                 <div hx-trigger="load" hx-target="#plan-general-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.general_poll.uuid %}"></div>
                             </div>
-                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
+                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="poll-creation-wrapper">
-                                <button hx-get="{% url 'create_river_poll' river.slug 'plan' %}"
+                                <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'general' %}"
                                         hx-target="#poll-creation-plan-general"
                                         class="button button-important">Create Poll For Plan General
                                 </button>
@@ -56,7 +56,7 @@
                                 <div hx-trigger="load" hx-target="#plan-funding-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.funding_poll.uuid %}"></div>
                             </div>
-                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
+                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="poll-creation-wrapper">
                                 <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'funding' %}"
@@ -81,7 +81,7 @@
                                 <div hx-trigger="load" hx-target="#plan-location-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.location_poll.uuid %}"></div>
                             </div>
-                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
+                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="poll-creation-wrapper">
                                 <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'location' %}"
@@ -106,7 +106,7 @@
                                 <div hx-trigger="load" hx-target="#plan-dates-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.dates_poll.uuid %}"></div>
                             </div>
-                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
+                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="poll-creation-wrapper">
                                 <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'dates' %}"
