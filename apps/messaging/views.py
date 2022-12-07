@@ -60,6 +60,7 @@ class ChatView(TemplateView):
                 'direct': True,
                 'message_post_url': reverse('user_chat', args=[user_path]),
                 'unique_id': user_path,
+                'chat_open': True,
             }
         # river chat section
         elif 'slug' in kwargs:
@@ -82,6 +83,7 @@ class ChatView(TemplateView):
                 'direct': False,
                 'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
                 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
+                'chat_open': not self.get_river_poll(river, kwargs['stage'], kwargs['topic']).closed,
             }
         else:
             context = {} # just in case
@@ -100,12 +102,13 @@ class ChatView(TemplateView):
 
             chat = userpair.chat
             members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
-            context = {'message_post_url': reverse('user_chat', args=[user_path]), 'unique_id': user_path,}
+            context = {'message_post_url': reverse('user_chat', args=[user_path]), 'unique_id': user_path, 'chat_open': True,}
         elif 'slug' in kwargs:
             river = River.objects.get(slug=kwargs['slug'])
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
             chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic']) # pyre-ignore[6]
-            context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]), 'unique_id': kwargs['stage'] + '-' + kwargs['topic'],} # pyre-ignore[58]
+            context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]), 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
+                       'chat_open': not self.get_river_poll(river, kwargs['stage'], kwargs['topic']).closed,}
         else:
             return HttpResponse('error - no user_path or slug specified')
         if request.user in members:
@@ -183,5 +186,28 @@ class ChatView(TemplateView):
         elif stage == 'reflect':
             chat = river.reflect_stage.general_chat
         return chat  # pyre-ignore[61]
+
+    def get_river_poll(self, river: River, stage: str, topic: str):
+        if stage == 'envision':
+            poll = river.envision_stage.general_poll
+        elif stage == 'plan':
+            if topic == 'general':
+                poll = river.plan_stage.general_poll
+            elif topic == 'funding':
+                poll = river.plan_stage.funding_poll
+            elif topic == 'location':
+                poll = river.plan_stage.location_poll
+            elif topic == 'dates':
+                poll = river.plan_stage.dates_poll
+        elif stage == 'act':
+            if topic == 'general':
+                poll = river.act_stage.general_poll
+            elif topic == 'funding':
+                poll = river.act_stage.funding_poll
+            elif topic == 'location':
+                poll = river.act_stage.location_poll
+            elif topic == 'dates':
+                poll = river.act_stage.dates_poll
+        return poll  # pyre-ignore[61]
 
 

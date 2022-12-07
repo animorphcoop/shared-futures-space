@@ -13,12 +13,14 @@
                 </div>
             </div>
 
-            {% with user_pk_string=other_user.pk|stringformat:'s' %}
-                {% with user_path=other_user.display_name|add:" "|add:user_pk_string|slugify %}
-                    {% url 'user_chat' user_path as message_post_url %}
-                    {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
+            {% if chat_open %}
+                {% with user_pk_string=other_user.pk|stringformat:'s' %}
+                    {% with user_path=other_user.display_name|add:" "|add:user_pk_string|slugify %}
+                        {% url 'user_chat' user_path as message_post_url %}
+                        {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
+                    {% endwith %}
                 {% endwith %}
-            {% endwith %}
+            {% endif %}
         </div>
 
     {% else %}
