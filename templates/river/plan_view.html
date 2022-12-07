@@ -27,8 +27,8 @@
                     <div class="mx-4.5">
                         {% if river.plan_stage.general_poll != None %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
-                            <div id="poll-wrapper">
-                                <div hx-trigger="load" hx-target="#poll-wrapper"
+                            <div id="plan-general-poll-wrapper">
+                                <div hx-trigger="load" hx-target="#plan-general-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.general_poll.uuid %}"></div>
                             </div>
                         {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
@@ -52,8 +52,8 @@
                     <div class="mx-4.5">
                         {% if river.plan_stage.funding_poll != None %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
-                            <div id="poll-wrapper">
-                                <div hx-trigger="load" hx-target="#poll-wrapper"
+                            <div id="plan-funding-poll-wrapper">
+                                <div hx-trigger="load" hx-target="#plan-funding-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.funding_poll.uuid %}"></div>
                             </div>
                         {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
@@ -77,8 +77,8 @@
                     <div class="mx-4.5">
                         {% if river.plan_stage.location_poll != None %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
-                            <div id="poll-wrapper">
-                                <div hx-trigger="load" hx-target="#poll-wrapper"
+                            <div id="plan-location-poll-wrapper">
+                                <div hx-trigger="load" hx-target="#plan-location-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.location_poll.uuid %}"></div>
                             </div>
                         {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}
@@ -102,8 +102,8 @@
                     <div class="mx-4.5">
                         {% if river.plan_stage.dates_poll != None %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
-                            <div id="poll-wrapper">
-                                <div hx-trigger="load" hx-target="#poll-wrapper"
+                            <div id="plan-dates-poll-wrapper">
+                                <div hx-trigger="load" hx-target="#plan-dates-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.dates_poll.uuid %}"></div>
                             </div>
                         {% elif river.current_stage == river.Stage.PLAN and request.user.id in owners %}

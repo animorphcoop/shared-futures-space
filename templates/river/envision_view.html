@@ -6,8 +6,8 @@
     <div class="mx-4.5">
         {% if river.envision_stage.poll != None %}
             {% include "partials/vertical-spacer.html" with space="6" %}
-            <div id="poll-wrapper">
-                <div hx-trigger="load" hx-target="#poll-wrapper"
+            <div id="envision-poll-wrapper">
+                <div hx-trigger="load" hx-target="closest #envision-poll-wrapper"
                      hx-get="{% url 'poll_view' river.envision_stage.poll.uuid %}"></div>
             </div>
         {% elif river.current_stage == river.Stage.ENVISION and request.user.id in owners %}
