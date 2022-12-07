@@ -157,8 +157,9 @@ class CreateRiverPollView(TemplateView):
             elif topic == 'location':
                 poll_ref = stage_ref.location_poll
             elif topic == 'dates':
-                poll_ref == stage_ref.dates_poll
+                poll_ref = stage_ref.dates_poll
             else:
+                poll_ref = None
                 return HttpResponse('could not create poll, topic not recognised (' + topic + ')')
             if poll_ref is None:
                 if 'description' in request.POST:
@@ -171,6 +172,8 @@ class CreateRiverPollView(TemplateView):
                             question = 'was the plan for ' + topic + 'carried out?'
                         elif stage == river.Stage.REFLECT:
                             question = '???'
+                        else:
+                            question = ''
                         poll = SingleChoicePoll.objects.create(
                             question=question,
                             description=request.POST['description'],

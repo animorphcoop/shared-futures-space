@@ -58,7 +58,7 @@ class BasePoll(models.Model):
         from river.models import River, EnvisionStage # pyre-ignore[21]
         from messaging.util import send_system_message # pyre-ignore[21]
         if self.singlechoicepoll: # pyre-ignore[16]
-            es = EnvisionStage.objects.filter(poll = self.singlechoicepoll)
+            es = EnvisionStage.objects.filter(general_poll = self.singlechoicepoll)
             if len(es) != 0:
                 es = es[0]
                 # this poll is the active poll of the envision stage of some river
