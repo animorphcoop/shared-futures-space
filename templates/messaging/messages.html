@@ -8,7 +8,7 @@
             <div class="mx-4.5" x-init="">
 
                 {% comment %}TODO: TEMPLATE tag needed to separate pull_previous{% endcomment %}
-                <div id="{{ message_box_id }}">
+                <div id="messages-{{unique_id}}">
                     {% include 'messaging/message_list.html' %}
                 </div>
             </div>
@@ -23,7 +23,7 @@
 
     {% else %}
 
-        <div id="{{ message_box_id }}" class="mx-4.5 max-height-[50vh]">
+        <div id="messages-{{unique_id}}" class="mx-4.5 max-height-[50vh]">
             {% include 'messaging/message_list.html' %}
         </div>
         {% url 'river_chat' slug stage topic as message_post_url %}

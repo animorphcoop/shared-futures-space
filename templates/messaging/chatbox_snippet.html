@@ -1,23 +1,21 @@
+
 {% if user.is_anonymous %}
     {{ user_anonymous_message }}
 {% elif user not in members %}
     {{ not_member_message }}
 {% else %}
-    {% comment %}    {% if direct %}{% endcomment %}
-
-    {% comment %}              //onsubmit="return method"{% endcomment %}
     <form hx-post="{{ message_post_url }}"
-          hx-target="#{{ message_box_id }}"
+          hx-target="#messages-{{unique_id}}"
           hx-swap="beforeend"
           enctype="multipart/form-data"
           hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13&&validateChat()] from:body, keydown[ctrlKey&&keyCode==13&&validateChat()] from:body"
-          id="chat-form"
+          id="chat-form-{{unique_id}}"
           class="p-4.5 m-0 sticky bottom-0 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
         {% csrf_token %}
 
 
         <div class="text-meta invisible max-w-full">
-            <input type="file" name=file value="file" id="file">
+            <input type="file" name=file value="file" id="file-{{unique_id}}">
         </div>
 
 
@@ -28,14 +26,14 @@
                         but this can be easily circumvented, so you should always validate the uploaded file on the server also.
                     {% endcomment %}
 
-                <label class="cursor-pointer" for="file">
+                <label class="cursor-pointer" for="file-{{unique_id}}">
                     <svg width="11" height="22" viewBox="0 0 11 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9.5 5V16.5C9.5 18.71 7.71 20.5 5.5 20.5C3.29 20.5 1.5 18.71 1.5 16.5V4C1.5 2.62 2.62 1.5 4 1.5C5.38 1.5 6.5 2.62 6.5 4V14.5C6.5 15.05 6.05 15.5 5.5 15.5C4.95 15.5 4.5 15.05 4.5 14.5V5H3V14.5C3 15.88 4.12 17 5.5 17C6.88 17 8 15.88 8 14.5V4C8 1.79 6.21 0 4 0C1.79 0 0 1.79 0 4V16.5C0 19.54 2.46 22 5.5 22C8.54 22 11 19.54 11 16.5V5H9.5Z"
                               fill="#9759FF"/>
                     </svg>
                 </label>
 
-                <div id="upload-ready" class="hidden">
+                <div id="upload-ready-{{unique_id}}" class="hidden">
                     <svg class="fill-red-important" width="18" height="14" viewBox="0 0 18 14" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.91818 10.9511L1.47955 6.75107L0 8.15107L5.91818 13.7511L18.6 1.75107L17.1205 0.351074L5.91818 10.9511Z"/>
                     </svg>
@@ -48,11 +46,11 @@
                     <textarea data-expandable
                               class="input-text h-[50px] max-h-[150px] bg-yellow rounded-xl w-full max-w-full"
                               name=text
-                              id="text-box"
+                              id="text-box-{{unique_id}}"
                     ></textarea>
 
 
-                <button id="chat-button"
+                <button id="chat-button-{{unique_id}}"
                         class="absolute bottom-[34px] right-8">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
@@ -63,78 +61,18 @@
         </div>
 
     </form>
-    {% comment %}{% else %}
-
-        <form hx-post="{{ message_post_url }}"
-              hx-target="#{{ message_box_id }}"
-              hx-swap="beforeend"
-              enctype="multipart/form-data"
-              hx-trigger="click[validateChat()] from:#chat-button, keydown[shiftKey&&keyCode==13] from:body, keydown[ctrlKey&&keyCode==13] from:body"
-              id="chat-form"
-              class="p-4.5 m-0 sticky bottom-0 bottom-4.5 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
-
-            {% csrf_token %}
-
-            <div class="text-meta invisible max-w-full">
-                <input type="file" name=file value="file" id="file">
-
-            </div>
-
-            <div class="flex w-full max-w-full items-center">
-                <div class="mr-2">
-                                            Note that this only provides a hint to the browser as to what file-types to display to the user,
-                        but this can be easily circumvented, so you should always validate the uploaded file on the server also.
-
-
-                    <label class="cursor-pointer" for="file">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16 2V16H2V2H16ZM16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM11.14 8.86L8.14 12.73L6 10.14L3 14H15L11.14 8.86Z"
-                                  fill="#9759FF"/>
-                        </svg>
-                    </label>
-                                        <div id="upload-ready" class="hidden">something</div>
-
-
-                </div>
-                <div class="w-full">
-
-                    <textarea data-expandable
-                              class="input-text h-[50px] max-h-[150px] bg-yellow rounded-xl w-full max-w-full"
-                              name=text
-                              id="text-box"
-                    ></textarea>
-
-                                <textarea name=message></textarea>
-                                <input type="file" id="image" name="image">
-
-                    <button id="chat-button"
-                            class="absolute bottom-[34px] right-8">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 8L1.41 9.41L7 3.83V16H9V3.83L14.58 9.42L16 8L8 0L0 8Z" fill="#9759FF"/>
-                        </svg>
-
-                    </button>
-                </div>
-            </div>
-
-        </form>
-
-    {% endif %}{% endcomment %}
-
 {% endif %}
 
 {% block scripts %}
     <script>
-        let messages = document.getElementById("messages")
+        let messages = document.getElementById("messages-{{unique_id}}")
 
         if (messages != null) {
             const observerMessages = new MutationObserver(function (mutations) {
                 mutations.forEach(function () {
-                    let chatForm = document.getElementById('chat-form')
+                    let chatForm = document.getElementById('chat-form-{{unique_id}}')
                     chatForm.reset()
-                    let uploadCheckbox = document.getElementById("upload-ready")
+                    let uploadCheckbox = document.getElementById("upload-ready-{{unique_id}}")
                     if (!uploadCheckbox.classList.contains('hidden')) {
                         uploadCheckbox.classList.add('hidden')
                     }
@@ -146,8 +84,8 @@
 
         }
 
-        let uploadCheckbox = document.getElementById("upload-ready")
-        const fileInput = document.getElementById('file')
+        let uploadCheckbox = document.getElementById("upload-ready-{{unique_id}}")
+        const fileInput = document.getElementById('file-{{unique_id}}')
         fileInput.onchange = function () {
             //console.log(fileInput.files.length)
             let currentLength = fileInput.files.length
@@ -165,18 +103,19 @@
 
 
         function fileLength() {
-            const fileInput = document.getElementById('file').files
+            const fileInput = document.getElementById('file-{{unique_id}}').files
             return fileInput.length > 0
         }
 
         function validateChat() {
             let errorCount = 0;
             const textLength = document.getElementById('text-box').value
-            const fileValue = document.getElementById('file').files
+            const fileValue = document.getElementById('file-{{unique_id}}').files
 
             if (textLength.length < 1 && fileValue.length < 1) {
                 errorCount++
             }
+            console.log(errorCount);
             return errorCount === 0;
 
         }

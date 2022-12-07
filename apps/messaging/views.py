@@ -59,7 +59,7 @@ class ChatView(TemplateView):
                 'messages_left_count': pagination_data['messages_left_count'],
                 'direct': True,
                 'message_post_url': reverse('user_chat', args=[user_path]),
-                'message_box_id': 'messages-' + user_path, # pyre-ignore[58]
+                'unique_id': user_path,
             }
         # river chat section
         elif 'slug' in kwargs:
@@ -81,7 +81,7 @@ class ChatView(TemplateView):
                 'messages_left_count': pagination_data['messages_left_count'],
                 'direct': False,
                 'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
-                'message_box_id': 'messages-' + kwargs['stage'] + kwargs['topic'], # pyre-ignore[58]
+                'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
             }
         else:
             context = {} # just in case
@@ -100,12 +100,12 @@ class ChatView(TemplateView):
 
             chat = userpair.chat
             members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
-            context = {'message_post_url': reverse('user_chat', args=[user_path]), 'message_box_id': 'messages-' + user_path,} # pyre-ignore[58]
+            context = {'message_post_url': reverse('user_chat', args=[user_path]), 'unique_id': user_path,}
         elif 'slug' in kwargs:
             river = River.objects.get(slug=kwargs['slug'])
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
             chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic']) # pyre-ignore[6]
-            context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]), 'message_box_id': 'messages-' + kwargs['stage'] + kwargs['topic'],} # pyre-ignore[58]
+            context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]), 'unique_id': kwargs['stage'] + '-' + kwargs['topic'],} # pyre-ignore[58]
         else:
             return HttpResponse('error - no user_path or slug specified')
         if request.user in members:

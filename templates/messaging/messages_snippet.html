@@ -1,5 +1,5 @@
 {% comment %}NOT WIRED anymore{% endcomment %}
-<div id=messages class="-mx-4.5 px-4.5 py-4 {% if direct %}pb-[108px]{% endif %}">
+<div id="messages-{{unique_id}}" class="-mx-4.5 px-4.5 py-4 {% if direct %}pb-[108px]{% endif %}">
     {% if more_back %}
        <form hx-post="{{ message_post_url }}" hx-target="this">
             <input type=hidden name="retrieve_messages"></input>
