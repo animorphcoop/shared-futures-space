@@ -1,9 +1,9 @@
 {% block content %}
     {# Wasn't sure how to send the different chats to the different tabs, so all in here for now {% include "partials/messages_tabs.html" %} #}
 
-    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex items-center justify-center bg-white shadow-md" %}
+    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
         <div x-data="{ openTab: 'one' }">
-            <ul class="flex flex-start">
+            <ul class="flex justify-between">
                 <li @click="openTab = 'one'" class="{{ li_class }}">
                     {% include "landing/tabbed-resources/title.html" with title="General" %}
                 </li>
@@ -17,14 +17,14 @@
                     {% include "landing/tabbed-resources/title.html" with title="Time" %}
                 </li>
             </ul>
-            <div class="w-full pt-6 pb-9 px-4.5 bg-white">
+            <div class="w-full-mx-4.5 bg-white">
                 {# GENERAL TAB #}
                 <div x-show="openTab === 'one'">
                     <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
                          hx-trigger="load"
                          hx-target="this">
                     </div>
-                    <div class="mx-4.5">
+                    <div class="">
                         {% if river.plan_stage.general_poll != None %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="plan-general-poll-wrapper">
@@ -49,7 +49,7 @@
                          hx-trigger="load"
                          hx-target="this">
                     </div>
-                    <div class="mx-4.5">
+                    <div class="">
                         {% if river.plan_stage.funding_poll != None %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="plan-funding-poll-wrapper">
@@ -74,7 +74,7 @@
                          hx-trigger="load"
                          hx-target="this">
                     </div>
-                    <div class="mx-4.5">
+                    <div class="">
                         {% if river.plan_stage.location_poll != None %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="plan-location-poll-wrapper">
@@ -99,7 +99,7 @@
                          hx-trigger="load"
                          hx-target="this">
                     </div>
-                    <div class="mx-4.5">
+                    <div class="">
                         {% if river.plan_stage.dates_poll != None %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="plan-dates-poll-wrapper">
