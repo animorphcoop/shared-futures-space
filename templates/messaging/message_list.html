@@ -1,18 +1,21 @@
 {% load static %}
 
+{% include 'messaging/partials/pull_previous.html' %}
 
-        {% include 'messaging/partials/pull_previous.html' %}
+{% comment %}{% if message %}{% endcomment %}
 
-{% for message in page_obj %}
-    {% if message.sender == system_user %}
-        {% include 'messaging/system_message_snippet.html' %}
-    {% else %}
-        {% include 'messaging/user_message_snippet.html' %}
-    {% endif %}
-    {% include "partials/vertical-spacer.html" with space="6" %}
-{% endfor %}
+    {% for message in page_obj %}
+        {% if message.sender == system_user %}
+            {% include 'messaging/system_message_snippet.html' %}
+        {% else %}
+            {% include 'messaging/user_message_snippet.html' %}
+        {% endif %}
+        {% include "partials/vertical-spacer.html" with space="6" %}
+    {% endfor %}
 
+{% comment %}
+{% else %}
 
+    {% include "partials/salmon-of-knowledge.html" with text="No messages yet, start the conversation!" %}
 
-
-
+{% endif %}{% endcomment %}
