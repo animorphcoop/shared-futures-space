@@ -3,38 +3,36 @@
 <section id="river-poll"
          class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur">
     {#  White modal background  #}
-    <div class="bg-white m-2.5 w-4/5 h-1/2">
-        <div class="p-2.5">
+    <div class="w-full sm:w-[360px]">
+        <div class="bg-white p-2.5 m-2.5 sm:m-0">
             {#  Modal title  #}
             <h1 class="text-large text-black/75">
                 Approve shared goal
             </h1>
             {% include "partials/vertical-spacer.html" with space="4.5" %}
-
-            <form hx-post="{% url 'create_river_poll' slug stage topic %}" hx-target="#poll-creation-wrapper" hx-swap="outerHTML">
+            <form hx-post="{% url 'create_river_poll' slug stage topic %}" hx-target="#poll-creation-wrapper"
+                  hx-swap="outerHTML" class="m-0">
                 {% csrf_token %}
-                <textarea class="block w-full h-2/3 px-3 py-1.5 rounded"
-                          name=description>{{ river.description }}</textarea>
-
+                <textarea class="block w-full h-2/3 px-3 py-1.5 rounded text-body" name=description>
+                {{ river.description }}
+            </textarea>
                 {% include "partials/vertical-spacer.html" with space="6" %}
-
+                <span class="block flex items-center gap-3">
                 <button onclick="event.preventDefault(); removePollModal();"
                         class="button button-on-white">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M16 7H3.83L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7Z" fill="#9759FF"/>
                     </svg>
                 </button>
-
                 <input type="submit" value="Create poll" class="button button-important">
-
-
+            </span>
             </form>
         </div>
     </div>
 </section>
 
 <script>
-    function removePollModal(){
+    function removePollModal() {
         //console.log(document.getElementById('river-poll'))
         document.getElementById('river-poll').remove()
     }
