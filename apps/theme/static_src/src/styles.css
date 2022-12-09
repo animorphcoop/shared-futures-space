@@ -73,6 +73,16 @@
     .bg-drawer-gray {
         @apply  bg-[linear-gradient(180deg,_#E5F1F8_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]
     }
+
+    /* --- TABS ----------------------------------------------------------------------------------------------------- */
+    .tab-shadow {
+        box-shadow: inset 4px 2px 3px rgba(100, 100, 100, 0.05);
+        background: #F0F0F0;
+    }
+    .tab-shadow-selected {
+        box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.05);
+        background: #FFFFFF;
+    }
 }
 
 @tailwind utilities; /* after layer so they can still be overwritten by utilities */

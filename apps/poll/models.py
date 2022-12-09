@@ -58,7 +58,7 @@ class BasePoll(models.Model):
         from river.models import River, EnvisionStage # pyre-ignore[21]
         from messaging.util import send_system_message # pyre-ignore[21]
         if self.singlechoicepoll: # pyre-ignore[16]
-            es = EnvisionStage.objects.filter(poll = self.singlechoicepoll)
+            es = EnvisionStage.objects.filter(general_poll = self.singlechoicepoll)
             if len(es) != 0:
                 es = es[0]
                 # this poll is the active poll of the envision stage of some river
@@ -68,10 +68,10 @@ class BasePoll(models.Model):
                     river.start_plan()
                     river.description = self.description
                     river.save()
-                    send_system_message(kind = 'finished_envision', chat = river.envision_stage.chat, context_river = river)
+                    send_system_message(kind = 'finished_envision', chat = river.envision_stage.general_chat, context_river = river)
                 else:
                     river = River.objects.get(envision_stage = es)
-                    river.envision_stage.poll = None
+                    river.envision_stage.general_poll = None
                     river.envision_stage.save()
 
 class SingleChoicePoll(BasePoll):

@@ -29,6 +29,12 @@ class CustomUserCreationForm(UserCreationForm):
         model: Type[CustomUser] = CustomUser
 
 
+class CustomUserEditForm(UserEditForm):
+    class Meta(UserEditForm.Meta):
+        model: Type[CustomUser] = CustomUser
+        fields = {'post_code', 'is_active', 'email', 'last_name', 'is_superuser', 'year_of_birth', 'display_name', 'groups', 'first_name'}
+
+
 class CustomUserNameUpdateForm(forms.ModelForm):
     display_name = forms.CharField(max_length=50)
 

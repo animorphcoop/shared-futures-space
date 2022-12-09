@@ -1,6 +1,6 @@
 {% load static %}
 {#  Modal blurred backerground overlay  #}
-<section id="vision-poll"
+<section id="river-poll"
          class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur">
     {#  White modal background  #}
     <div class="bg-white m-2.5 w-4/5 h-1/2">
@@ -11,7 +11,7 @@
             </h1>
             {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-            <form hx-post="{% url 'create_envision_poll' river.slug %}" hx-target="#poll-creation-wrapper" hx-swap="outerHTML">
+            <form hx-post="{% url 'create_river_poll' slug stage topic %}" hx-target="#poll-creation-wrapper" hx-swap="outerHTML">
                 {% csrf_token %}
                 <textarea class="block w-full h-2/3 px-3 py-1.5 rounded"
                           name=description>{{ river.description }}</textarea>
@@ -35,16 +35,16 @@
 
 <script>
     function removePollModal(){
-        //console.log(document.getElementById('vision-poll'))
-        document.getElementById('vision-poll').remove()
+        //console.log(document.getElementById('river-poll'))
+        document.getElementById('river-poll').remove()
     }
 </script>
 
 
 {% comment %}
-<div id="vision-poll-wrapper">
-  <h1>create poll for vision</h1>
-  <form hx-post="{% url 'create_envision_poll' river.slug %}" hx-target="#vision-poll-wrapper">
+<div id="river-poll-wrapper">
+  <h1>create poll for river</h1>
+  <form hx-post="{% url 'create_river_poll' slug stage topic %}" hx-target="closest #river-poll-wrapper">
    {% csrf_token %}
    <textarea name=description>{{river.description}}</textarea>
    <button type=submit>create</button>

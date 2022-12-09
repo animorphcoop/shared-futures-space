@@ -1,10 +1,124 @@
-plan view
+{% block content %}
+    {# Wasn't sure how to send the different chats to the different tabs, so all in here for now {% include "partials/messages_tabs.html" %} #}
 
-<p><a href="{% url 'river_chat' river.slug 'plan' 'general' %}">Plan General Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'plan' 'funding' %}">Plan Funding Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'plan' 'location' %}">Plan Location Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'plan' 'dates' %}">Plan Dates Chat</a></p>
-
-{% if river.current_stage == river.Stage.PLAN %}
-    <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Act Stage</button></form>
-{% endif %}
+    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
+        <div x-data="{ openTab: 'one' }">
+            <ul class="flex justify-between">
+                <li @click="openTab = 'one'" class="{{ li_class }}">
+                    {% include "landing/tabbed-resources/title.html" with title="General" %}
+                </li>
+                <li @click="openTab = 'two'" class="{{ li_class }}">
+                    {% include "landing/tabbed-resources/title.html" with title="Money" %}
+                </li>
+                <li @click="openTab = 'three'" class="{{ li_class }}">
+                    {% include "landing/tabbed-resources/title.html" with title="Place" %}
+                </li>
+                <li @click="openTab = 'four'" class="{{ li_class }}">
+                    {% include "landing/tabbed-resources/title.html" with title="Time" %}
+                </li>
+            </ul>
+            <div class="w-full-mx-4.5 bg-white">
+                {# GENERAL TAB #}
+                <div x-show="openTab === 'one'">
+                    <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
+                         hx-trigger="load"
+                         hx-target="this">
+                    </div>
+                    <div class="">
+                        {% if river.plan_stage.general_poll != None %}
+                            {% include "partials/vertical-spacer.html" with space="6" %}
+                            <div id="plan-general-poll-wrapper">
+                                <div hx-trigger="load" hx-target="#plan-general-poll-wrapper"
+                                     hx-get="{% url 'poll_view' river.plan_stage.general_poll.uuid %}"></div>
+                            </div>
+                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                            {% include "partials/vertical-spacer.html" with space="6" %}
+                            <div id="poll-creation-wrapper">
+                                <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'general' %}"
+                                        hx-target="#poll-creation-plan-general"
+                                        class="button button-important">Create Poll For Plan General
+                                </button>
+                                <div id="poll-creation-plan-general"></div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {# MONEY TAB #}
+                <div x-show="openTab === 'two'">
+                    <div id="plan-chat-funding" hx-get="{% url 'river_chat' river.slug 'plan' 'funding' %}"
+                         hx-trigger="load"
+                         hx-target="this">
+                    </div>
+                    <div class="">
+                        {% if river.plan_stage.funding_poll != None %}
+                            {% include "partials/vertical-spacer.html" with space="6" %}
+                            <div id="plan-funding-poll-wrapper">
+                                <div hx-trigger="load" hx-target="#plan-funding-poll-wrapper"
+                                     hx-get="{% url 'poll_view' river.plan_stage.funding_poll.uuid %}"></div>
+                            </div>
+                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                            {% include "partials/vertical-spacer.html" with space="6" %}
+                            <div id="poll-creation-wrapper">
+                                <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'funding' %}"
+                                        hx-target="#poll-creation-plan-funding"
+                                        class="button button-important">Create Poll For Plan Funding
+                                </button>
+                                <div id="poll-creation-plan-funding"></div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {# PLACE TAB #}
+                <div x-show="openTab === 'three'">
+                    <div id="plan-chat-location" hx-get="{% url 'river_chat' river.slug 'plan' 'location' %}"
+                         hx-trigger="load"
+                         hx-target="this">
+                    </div>
+                    <div class="">
+                        {% if river.plan_stage.location_poll != None %}
+                            {% include "partials/vertical-spacer.html" with space="6" %}
+                            <div id="plan-location-poll-wrapper">
+                                <div hx-trigger="load" hx-target="#plan-location-poll-wrapper"
+                                     hx-get="{% url 'poll_view' river.plan_stage.location_poll.uuid %}"></div>
+                            </div>
+                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                            {% include "partials/vertical-spacer.html" with space="6" %}
+                            <div id="poll-creation-wrapper">
+                                <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'location' %}"
+                                        hx-target="#poll-creation-plan-location"
+                                        class="button button-important">Create Poll For Plan Location
+                                </button>
+                                <div id="poll-creation-plan-location"></div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {# TIME TAB #}
+                <div x-show="openTab === 'four'">
+                    <div id="plan-chat-dates" hx-get="{% url 'river_chat' river.slug 'plan' 'dates' %}"
+                         hx-trigger="load"
+                         hx-target="this">
+                    </div>
+                    <div class="">
+                        {% if river.plan_stage.dates_poll != None %}
+                            {% include "partials/vertical-spacer.html" with space="6" %}
+                            <div id="plan-dates-poll-wrapper">
+                                <div hx-trigger="load" hx-target="#plan-dates-poll-wrapper"
+                                     hx-get="{% url 'poll_view' river.plan_stage.dates_poll.uuid %}"></div>
+                            </div>
+                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                            {% include "partials/vertical-spacer.html" with space="6" %}
+                            <div id="poll-creation-wrapper">
+                                <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'dates' %}"
+                                        hx-target="#poll-creation-plan-dates"
+                                        class="button button-important">Create Poll For Plan Dates
+                                </button>
+                                <div id="poll-creation-plan-dates"></div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% endblock %}

@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.template.loader import get_template
+from django.utils.text import slugify
 from userauth.models import CustomUser  # pyre-ignore[21]
 from userauth.util import get_system_user, user_to_slug, slug_to_user, get_userpair  # pyre-ignore[21]
 from django.shortcuts import redirect
@@ -58,6 +59,7 @@ class ChatView(TemplateView):
                 'messages_left_count': pagination_data['messages_left_count'],
                 'direct': True,
                 'message_post_url': reverse('user_chat', args=[user_path]),
+                'unique_id': user_path,
             }
         # river chat section
         elif 'slug' in kwargs:
@@ -79,6 +81,7 @@ class ChatView(TemplateView):
                 'messages_left_count': pagination_data['messages_left_count'],
                 'direct': False,
                 'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
+                'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
             }
         else:
             context = {} # just in case
@@ -97,12 +100,12 @@ class ChatView(TemplateView):
 
             chat = userpair.chat
             members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
-            context = {'message_post_url': reverse('user_chat', args=[user_path]),}
+            context = {'message_post_url': reverse('user_chat', args=[user_path]), 'unique_id': user_path,}
         elif 'slug' in kwargs:
             river = River.objects.get(slug=kwargs['slug'])
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
             chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic']) # pyre-ignore[6]
-            context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),}
+            context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]), 'unique_id': kwargs['stage'] + '-' + kwargs['topic'],} # pyre-ignore[58]
         else:
             return HttpResponse('error - no user_path or slug specified')
         if request.user in members:
@@ -158,7 +161,7 @@ class ChatView(TemplateView):
 
     def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
         if stage == 'envision':
-            chat = river.envision_stage.chat
+            chat = river.envision_stage.general_chat
         elif stage == 'plan':
             if topic == 'general':
                 chat = river.plan_stage.general_chat
@@ -178,7 +181,7 @@ class ChatView(TemplateView):
             elif topic == 'dates':
                 chat = river.act_stage.dates_chat
         elif stage == 'reflect':
-            chat = river.reflect_stage.chat
+            chat = river.reflect_stage.general_chat
         return chat  # pyre-ignore[61]
 
 

@@ -35,9 +35,9 @@ class EnvisionStage(models.Model):
         FINALISE_VISION = '2', 'finalise vision'
         REVIEW = '3', 'review tags and image'
 
-    chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT)
+    general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT)
     step: models.CharField = models.CharField(max_length = 1, choices = Step.choices, default = Step.GET_TO_KNOW)
-    poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', null = True, default = None, on_delete = models.SET_NULL)
+    general_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', null = True, default = None, on_delete = models.SET_NULL)
 
 class PlanStage(models.Model):
     general_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
@@ -79,7 +79,7 @@ class ActStage(models.Model):
 
 
 class ReflectStage(models.Model):
-    chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT)
+    general_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT)
     # feedback?
 
 
@@ -157,34 +157,6 @@ class River(ClusterableModel):
         if self.current_stage == self.Stage.ENVISION:
             self.current_stage = self.Stage.PLAN
             self.plan_stage = PlanStage.objects.create()
-            # for testing purposes ONLY # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-            self.plan_stage.general_poll = SingleChoicePoll.objects.create(question='general question',
-                                                                           options=['1', 'b'],
-                                                                           expires=timezone.now() + timezone.timedelta(
-                                                                               days=30),  #
-                                                                           river=self)
-            self.plan_stage.funding_poll = SingleChoicePoll.objects.create(question='funding question',
-                                                                           options=['1', 'b'],
-                                                                           expires=timezone.now() + timezone.timedelta(
-                                                                               days=30),  #
-                                                                           river=self)
-            self.plan_stage.location_poll = SingleChoicePoll.objects.create(question='location question',
-                                                                            options=['1', 'b'],
-                                                                            expires=timezone.now() + timezone.timedelta(
-                                                                                days=30),  #
-                                                                            river=self)
-            self.plan_stage.dates_poll = SingleChoicePoll.objects.create(question='dates question', options=['1', 'b'],
-                                                                         expires=timezone.now() + timezone.timedelta(
-                                                                             days=30),  #
-                                                                         river=self)
-            self.plan_stage.general_poll.closed = True  #
-            self.plan_stage.general_poll.save()
-            self.plan_stage.funding_poll.closed = True  #
-            self.plan_stage.funding_poll.save()
-            self.plan_stage.location_poll.closed = True  #
-            self.plan_stage.location_poll.save()
-            self.plan_stage.dates_poll.closed = True  #
-            self.plan_stage.dates_poll.save()
             self.plan_stage.save()
             self.save()
 
@@ -195,7 +167,35 @@ class River(ClusterableModel):
                     self.plan_stage.funding_poll is None or not self.plan_stage.funding_poll.closed or
                     self.plan_stage.location_poll is None or not self.plan_stage.location_poll.closed or
                     self.plan_stage.dates_poll is None or not self.plan_stage.dates_poll.closed):
-                raise ValueError('plan stage is not finished!')
+                # for testing purposes ONLY # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+                self.plan_stage.general_poll = SingleChoicePoll.objects.create(question='general question',
+                                                                           options=['1', 'b'],
+                                                                           expires=timezone.now() + timezone.timedelta(
+                                                                               days=30),  #
+                                                                           river=self)
+                self.plan_stage.funding_poll = SingleChoicePoll.objects.create(question='funding question',
+                                                                           options=['1', 'b'],
+                                                                           expires=timezone.now() + timezone.timedelta(
+                                                                               days=30),  #
+                                                                           river=self)
+                self.plan_stage.location_poll = SingleChoicePoll.objects.create(question='location question',
+                                                                            options=['1', 'b'],
+                                                                            expires=timezone.now() + timezone.timedelta(
+                                                                                days=30),  #
+                                                                            river=self)
+                self.plan_stage.dates_poll = SingleChoicePoll.objects.create(question='dates question', options=['1', 'b'],
+                                                                         expires=timezone.now() + timezone.timedelta(
+                                                                             days=30),  #
+                                                                         river=self)
+                self.plan_stage.general_poll.closed = True  #
+                self.plan_stage.general_poll.save()
+                self.plan_stage.funding_poll.closed = True  #
+                self.plan_stage.funding_poll.save()
+                self.plan_stage.location_poll.closed = True  #
+                self.plan_stage.location_poll.save()
+                self.plan_stage.dates_poll.closed = True  #
+                self.plan_stage.dates_poll.save()
+                #raise ValueError('plan stage is not finished!')
             self.current_stage = self.Stage.ACT
             self.act_stage = ActStage.objects.create()
             self.act_stage.general_poll = SingleChoicePoll.objects.create(question='was this done?',

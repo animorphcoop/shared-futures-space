@@ -14,7 +14,7 @@ from resources.models import HowTo, CaseStudy  # pyre-ignore[21]
 from userauth.models import CustomUser, UserPair, Organisation, UserAvatar  # pyre-ignore[21]
 from userauth.util import get_userpair # pyre-ignore[21]
 from river.models import River, RiverMembership  # pyre-ignore[21]
-from river.views import CreateEnvisionPollView # pyre-ignore[21]
+from river.views import CreateRiverPollView # pyre-ignore[21]
 from poll.models import SingleVote,SingleChoicePoll # pyre-ignore[21]
 from messaging.models import Message  # pyre-ignore[21]
 from area.models import PostCode, Area  # pyre-ignore[21]
@@ -96,7 +96,7 @@ def add_rivers(rivers_data):
                 new_river.start_envision()
                 for message in river_data['envision']['chat']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_river.envision_stage.chat)
+                                                  text=message['content'], chat=new_river.envision_stage.general_chat)
                 if 'poll' in river_data['envision']:
                     poll = SingleChoicePoll.objects.create(
                                 question='is this an acceptable vision?',
@@ -104,12 +104,12 @@ def add_rivers(rivers_data):
                                 options=['yes', 'no'],
                                 invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
                                 river=new_river)
-                    new_river.envision_stage.poll = poll
+                    new_river.envision_stage.general_poll = poll
                     new_river.envision_stage.save()
                     for option in ['yes', 'no']:
                         for user in river_data['envision']['poll'][option]:
                             SingleVote.objects.filter(user = CustomUser.objects.get_or_create(display_name = user)[0],
-                                                      poll = new_river.envision_stage.poll).update(choice = new_river.envision_stage.poll.options.index(option) + 1)
+                                                      poll = new_river.envision_stage.general_poll).update(choice = new_river.envision_stage.general_poll.options.index(option) + 1)
 
             if 'plan' in river_data:
                 new_river.start_plan()
@@ -144,7 +144,7 @@ def add_rivers(rivers_data):
                 new_river.start_reflect()
                 for message in river_data['reflect']['chat']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_river.reflect_stage.chat)
+                                                  text=message['content'], chat=new_river.reflect_stage.general_chat)
 
         except Exception as e:
             print('could not load river image: ' + str(river_data['name']) + '\nerror given: ' + repr(
