@@ -4,16 +4,16 @@
     {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
         <div x-data="{ openTab: 'one' }">
             <ul class="flex justify-between">
-                <li @click="openTab = 'one'" class="{{ li_class }}">
+                <li @click="openTab = 'one'" class="{{ li_class }}" :class="openTab == 'one' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="General" %}
                 </li>
-                <li @click="openTab = 'two'" class="{{ li_class }}">
+                <li @click="openTab = 'two'" class="{{ li_class }}" :class="openTab == 'two' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Money" %}
                 </li>
-                <li @click="openTab = 'three'" class="{{ li_class }}">
+                <li @click="openTab = 'three'" class="{{ li_class }}" :class="openTab == 'three' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Place" %}
                 </li>
-                <li @click="openTab = 'four'" class="{{ li_class }}">
+                <li @click="openTab = 'four'" class="{{ li_class }}" :class="openTab == 'four' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Time" %}
                 </li>
             </ul>
