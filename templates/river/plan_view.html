@@ -4,16 +4,20 @@
     {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
         <div x-data="{ openTab: 'one' }">
             <ul class="flex justify-between">
-                <li @click="openTab = 'one'" class="{{ li_class }}" :class="openTab == 'one' ? 'tab-shadow-selected' : 'tab-shadow'">
+                <li @click="openTab = 'one'" class="{{ li_class }}"
+                    :class="openTab == 'one' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="General" %}
                 </li>
-                <li @click="openTab = 'two'" class="{{ li_class }}" :class="openTab == 'two' ? 'tab-shadow-selected' : 'tab-shadow'">
+                <li @click="openTab = 'two'" class="{{ li_class }}"
+                    :class="openTab == 'two' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Money" %}
                 </li>
-                <li @click="openTab = 'three'" class="{{ li_class }}" :class="openTab == 'three' ? 'tab-shadow-selected' : 'tab-shadow'">
+                <li @click="openTab = 'three'" class="{{ li_class }}"
+                    :class="openTab == 'three' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Place" %}
                 </li>
-                <li @click="openTab = 'four'" class="{{ li_class }}" :class="openTab == 'four' ? 'tab-shadow-selected' : 'tab-shadow'">
+                <li @click="openTab = 'four'" class="{{ li_class }}"
+                    :class="openTab == 'four' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Time" %}
                 </li>
             </ul>
@@ -33,10 +37,19 @@
                             </div>
                         {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
-                            <div id="poll-creation-wrapper">
+                            <div id="poll-creation-wrapper"
+                                 class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
+                                 :class="selected == 1 && openTab == 'one' ? 'block' : 'hidden'">
                                 <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'general' %}"
                                         hx-target="#poll-creation-plan-general"
-                                        class="button button-important">Create Poll For Plan General
+                                        class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
+                                        type="button">
+                                    {# Poll creation button #}
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
+                                              fill="#9759FF"/>
+                                    </svg>
                                 </button>
                                 <div id="poll-creation-plan-general"></div>
                             </div>
@@ -58,10 +71,19 @@
                             </div>
                         {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
-                            <div id="poll-creation-wrapper">
+                            <div id="poll-creation-wrapper"
+                                 class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
+                                 :class="selected == 1 && openTab == 'two' ? 'block' : 'hidden'">
                                 <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'funding' %}"
                                         hx-target="#poll-creation-plan-funding"
-                                        class="button button-important">Create Poll For Plan Funding
+                                        class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
+                                        type="button">
+                                    {# Poll creation button #}
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
+                                              fill="#9759FF"/>
+                                    </svg>
                                 </button>
                                 <div id="poll-creation-plan-funding"></div>
                             </div>
@@ -83,10 +105,19 @@
                             </div>
                         {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
-                            <div id="poll-creation-wrapper">
+                            <div id="poll-creation-wrapper"
+                                 class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
+                                 :class="selected == 1 && openTab == 'three' ? 'block' : 'hidden'">
                                 <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'location' %}"
                                         hx-target="#poll-creation-plan-location"
-                                        class="button button-important">Create Poll For Plan Location
+                                        class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
+                                        type="button">
+                                    {# Poll creation button #}
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
+                                              fill="#9759FF"/>
+                                    </svg>
                                 </button>
                                 <div id="poll-creation-plan-location"></div>
                             </div>
@@ -108,10 +139,19 @@
                             </div>
                         {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
-                            <div id="poll-creation-wrapper">
+                            <div id="poll-creation-wrapper"
+                                 class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
+                                 :class="selected == 1 && openTab == 'four' ? 'block' : 'hidden'">
                                 <button hx-get="{% url 'create_river_poll' river.slug 'plan' 'dates' %}"
                                         hx-target="#poll-creation-plan-dates"
-                                        class="button button-important">Create Poll For Plan Dates
+                                        class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
+                                        type="button">
+                                    {# Poll creation button #}
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
+                                              fill="#9759FF"/>
+                                    </svg>
                                 </button>
                                 <div id="poll-creation-plan-dates"></div>
                             </div>
