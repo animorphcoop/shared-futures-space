@@ -19,6 +19,7 @@
                 <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
                     <img src="
 
+
                             {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
                          class="object-cover w-full h-full" alt="" title="">
                 </div>
@@ -84,15 +85,27 @@
             </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
 
-            {# River information; swimmers, description, resources #}
+            {# River information; swimmers, description #}
             <section class="-mx-4.5">
                 {% include "river/swimmers.html" with title="swimmers" reference="swimmers" id="swimmers" selected="null" %}
                 {% include "river/description.html" with title="description" reference="description" id="description" selected="1" %}
+            </section>
+
+            {# River stages; envision, plan, act, reflect #}
+            <section class="-mx-4.5">
+                {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" selected="null" %}
+                {% include "river/plan.html" with title="plan stage" reference="plan" id="plan" selected="null" %}
+                {% include "river/act.html" with title="act stage" reference="act" locked=True selected="null" %}
+                {% include "river/act.html" with title="reflect stage" reference="reflect" locked=True selected="null" %}
+            </section>
+
+            {# River information;  resources. At end so knowledge salmon is always on top even #}
+            <section class="-mx-4.5">
                 <div id="modal-container" class="invisible">
                     {% include "river/resources.html" %}
                 </div>
                 {# Resources salmon of knowledge button #}
-                <div class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0">
+                <div class="z-40 sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:bottom-0">
                     <button type="button"
                             class="button button-on-white p-1 fixed sm:absolute bottom-[18px] left-[18px] drop-shadow-lg "
                             id="show-modal">
@@ -102,17 +115,7 @@
                     </button>
                 </div>
             </section>
-
-
-            {# River stages; envision, plan, act, reflect #}
-            <section class="-mx-4.5">
-                {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" selected="null" %}
-                {% include "river/plan.html" with title="plan stage" reference="plan" id="plan" selected="null" %}
-                {% include "river/act.html" with title="act stage" reference="act" locked=True selected="null" %}
-                {% include "river/act.html" with title="reflect stage" reference="reflect" locked=True selected="null" %}
-            </section>
         </div>
-
 
         {% include "partials/footer-gradient.html" %}
     </div>
