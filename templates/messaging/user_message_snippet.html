@@ -62,17 +62,19 @@
                         <input type=hidden name="retrieve_messages"></input>
                         <input type=hidden name="from" value="{{ from }}"></input>
                         <input type=hidden name="interval" value="{{ from|add:10 }}"></input>
-                        <button name=flag value="{{ message.uuid }}">
-                            <svg width="8" height="10" viewBox="0 0 8 10"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                    {% if message.uuid in my_flags %}
-                                        class="fill-red-important"
-                                    {% else %}
-                                        class="fill-black/30"
-                                    {% endif %}>
-                                <path d="M0 10V0H4.42857L4.78571 1.49254H7.92857V6.86567H4.92857L4.57143 5.37313H0.785714V10H0ZM5.57143 6.04478H7.21429V2.31343H4.21429L3.85714 0.820896H0.785714V4.55224H5.21429L5.57143 6.04478Z"/>
-                            </svg>
-                        </button>
+                        {% if user.is_authenticated %}
+                            <button name=flag value="{{ message.uuid }}">
+                                <svg width="8" height="10" viewBox="0 0 8 10"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                        {% if message.uuid in my_flags %}
+                                     class="fill-red-important"
+                                        {% else %}
+                                     class="fill-black/30"
+                                        {% endif %}>
+                                    <path d="M0 10V0H4.42857L4.78571 1.49254H7.92857V6.86567H4.92857L4.57143 5.37313H0.785714V10H0ZM5.57143 6.04478H7.21429V2.31343H4.21429L3.85714 0.820896H0.785714V4.55224H5.21429L5.57143 6.04478Z"/>
+                                </svg>
+                            </button>
+                        {% endif %}
                         {% if user == starter %}
                             {% include "partials/horizontal-spacer.html" with space="1.5" %}
                             <button name=starter_hide value="{{ message.uuid }}">
