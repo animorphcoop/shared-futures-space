@@ -10,8 +10,8 @@
                 {{prompt}}
             </h1>
             {% include "partials/vertical-spacer.html" with space="4.5" %}
-            <form hx-post="{% url 'create_river_poll' slug stage topic %}" hx-target="#poll-creation-wrapper"
-                  hx-swap="outerHTML" class="m-0">
+            <form hx-post="{% url 'create_river_poll' slug stage topic %}" hx-target="#{{stage}}-{{topic}}-poll-wrapper"
+                  hx-swap="innerHTML" class="m-0">
                 {% csrf_token %}
                 <textarea class="block w-full h-2/3 px-3 py-1.5 rounded text-body" name=description>
                 {{ default }}
