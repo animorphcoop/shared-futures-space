@@ -45,9 +45,57 @@
                                                 <div class="flex gap-3">
                                                     <span class="text-meta-label text-black/30">{{ user_chat.latest_message.timestamp|date:"G:i" }}</span>
                                                     <span class="text-meta-label text-black/30">{{ user_chat.latest_message.timestamp|date:"d/m/y" }}</span>
-                                                    <span class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
-                                        Block {# TODO: launch block modal #}
-                                    </span>
+                                                    {# TODO: launch block modal #}
+
+                                                    <div x-data="{ overlay: false }" class="inline-block">
+    <span @click="overlay = ! overlay; console.log('BLUE remove button triggered overlay'); $event.preventDefault();"
+          class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
+        Block
+    </span>
+                                                        <div class="" :class="overlay || 'hidden'"
+                                                             @click="$event.preventDefault();">
+                                                            {# WET MODAL, Modal blurred backerground overlay #}
+                                                            <section
+                                                                    class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
+                                                                {#  White modal background  #}
+                                                                <div class="w-full bg-white m-2.5 sm:w-[360px]">
+                                                                    <div class="bg-red-important/30 sm:w-[360px]">
+                                                                        <div class="p-2.5">
+                                                                            <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                                                                                <p class="text-large pb-6">
+                                                                                    Are you sure you want to
+                                                                                    block {{ user_chat.user.display_name }}
+                                                                                    from messaging you?
+                                                                                </p>
+                                                                                <p class="text-meta text-black-large pb-6">
+                                                                                    This action cannot be undone.
+                                                                                </p>
+                                                                                <div class="flex gap-4.5">
+                                                                                    <button @click="overlay = ! overlay; console.log('Back button triggered overlay'); $event.preventDefault();"
+                                                                                            class="button button-on-colour">
+                                                                                        Back
+                                                                                    </button>
+                                                                                    <button
+                                                                                            hx-post="{% url 'block_user_chat' user_chat.user.uuid %}"
+                                                                                            hx-trigger="click"
+                                                                                            hx-target="this"
+                                                                                            hx-swap="outerHTML"
+                                                                                            @click="overlay = ! overlay; console.log('RED remove button triggered overlay'); $event.preventDefault();"
+                                                                                            name="action"
+                                                                                            value="remove_swimmer"
+                                                                                            class="button button-danger">
+                                                                                        Block
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </section>
+                                                        </div>
+                                                    </div>
+
+
                                                 </div>
 
                                             </div>

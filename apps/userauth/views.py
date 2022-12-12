@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomSignupForm, CustomLoginForm, \
     CustomResetPasswordForm, \
     CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
-from messaging.forms import ChatForm # pyre-ignore[21]
+from messaging.forms import ChatForm  # pyre-ignore[21]
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -75,10 +75,13 @@ class CustomAddDataView(TemplateView):
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))  # pyre-ignore[16]
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))  # pyre-ignore[16]
-                current_user.post_code = PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]  # pyre-ignore[16]
+                current_user.post_code = \
+                    PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[
+                        0]  # pyre-ignore[16]
 
                 if len(form.cleaned_data.get('avatar')) > 0:
-                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]  # pyre-ignore[16]
+                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[
+                        0]  # pyre-ignore[16]
                 else:
                     random_avatar = random.randint(1, UserAvatar.objects.count())
                     current_user.avatar = UserAvatar.objects.get_or_create(pk=random_avatar)[0]
@@ -86,7 +89,8 @@ class CustomAddDataView(TemplateView):
                 if len(form.cleaned_data.get('organisation_name')) > 0:
                     lower_org_name = form.cleaned_data.get('organisation_name').lower()
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():
-                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))  # pyre-ignore[16]
+                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get(
+                            'organisation_name'))  # pyre-ignore[16]
                     else:
                         new_organisation = \
                             Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
@@ -187,10 +191,8 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
             return {}
 
 
-
 class UserChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm  # pyre-ignore[11]
-
 
 
 class UserAllChatsView(TemplateView):
@@ -209,6 +211,21 @@ class UserAllChatsView(TemplateView):
                 user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
                 context['user_chats'].append(user_chat)
         return context
+
+
+def block_user_chat(request: WSGIRequest, uuid: UUID) -> HttpResponse:
+    print(uuid)
+    print(request.user)
+    user_to_block = CustomUser.objects.filter(uuid=uuid)[0]
+    print(user_to_block)
+    if user_to_block.uuid < request.user.uuid:  # pyre-ignore[16]
+        user_chat = UserPair.objects.filter(user1=user_to_block, user2=request.user)[0]
+    else:
+        user_chat = UserPair.objects.filter(user1=request.user, user2=user_to_block)[0]
+    print(user_chat)
+    user_chat.blocked(request.user)
+    print('work')
+    return HttpResponse('blocked user')
 
 
 # helper for inspecting db whether user exists
