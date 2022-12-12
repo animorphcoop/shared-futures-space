@@ -37,9 +37,7 @@
                               hx-swap="outerHTML" class="mt-1 mb-2 hidden" :class="{ 'hidden': ! open }">
                             {% csrf_token %}
                             <input type="hidden" name="membership" value="{{ member.id }}">
-                            <button name="action" value="remove_swimmer" class="button-secondary button-on-white">
-                                Remove
-                            </button>
+                            {% include "river/remove_swimmer.html" %}
                             {% if member.user in open_starter_offers %}
                                 <p class="button-secondary button-important ml-1.5">Offered River Starter</p>
                             {% else %}

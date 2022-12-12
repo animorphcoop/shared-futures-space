@@ -15,6 +15,7 @@
 
         <div class="mx-4.5">
 
+            {# Image #}
             <div class="-mx-4.5">
                 <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
                     <img class="object-cover w-full h-full"
@@ -35,10 +36,8 @@
             {% endcomment %}
 
                 {% if request.user in starters|attrmap:'user' %}
-                    {% comment %}
-                <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>
-                <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>
-                {% endcomment %}
+{#                <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>#}
+{#                <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>#}
                     <div x-data="{ open: false }">
                         <button onclick="stopBodyScroll();"
                                 type="button"
