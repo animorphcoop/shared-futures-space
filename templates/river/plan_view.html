@@ -35,7 +35,9 @@
                                 <div hx-trigger="load" hx-target="#plan-general-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.general_poll.uuid %}"></div>
                             </div>
-                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                        {% endif %}
+                        {% if river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                          {% if river.plan_stage.general_poll == None or river.plan_stage.general_poll.closed %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="poll-creation-wrapper"
                                  class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
@@ -53,6 +55,7 @@
                                 </button>
                                 <div id="poll-creation-plan-general"></div>
                             </div>
+                          {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -69,7 +72,9 @@
                                 <div hx-trigger="load" hx-target="#plan-funding-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.funding_poll.uuid %}"></div>
                             </div>
-                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                        {% endif %}
+                        {% if river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                          {% if river.plan_stage.funding_poll == None or river.plan_stage.funding_poll.closed %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="poll-creation-wrapper"
                                  class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
@@ -87,6 +92,7 @@
                                 </button>
                                 <div id="poll-creation-plan-funding"></div>
                             </div>
+                          {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -103,7 +109,9 @@
                                 <div hx-trigger="load" hx-target="#plan-location-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.location_poll.uuid %}"></div>
                             </div>
-                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                        {% endif %}
+                        {% if river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                          {% if river.plan_stage.location_poll == None or river.plan_stage.location_poll.closed %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="poll-creation-wrapper"
                                  class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
@@ -121,6 +129,7 @@
                                 </button>
                                 <div id="poll-creation-plan-location"></div>
                             </div>
+                          {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -137,7 +146,9 @@
                                 <div hx-trigger="load" hx-target="#plan-dates-poll-wrapper"
                                      hx-get="{% url 'poll_view' river.plan_stage.dates_poll.uuid %}"></div>
                             </div>
-                        {% elif river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                        {% endif %}
+                        {% if river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+                          {% if river.plan_stage.dates_poll == None or river.plan_stage.dates_poll.closed %}
                             {% include "partials/vertical-spacer.html" with space="6" %}
                             <div id="poll-creation-wrapper"
                                  class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
@@ -155,6 +166,7 @@
                                 </button>
                                 <div id="poll-creation-plan-dates"></div>
                             </div>
+                          {% endif %}
                         {% endif %}
                     </div>
                 </div>

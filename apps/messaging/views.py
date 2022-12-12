@@ -168,6 +168,8 @@ class ChatView(TemplateView):
         return pagination_data
 
     def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
+        if stage == 'plan':
+            print(river.title)
         if stage == 'envision':
             chat = river.envision_stage.general_chat
         elif stage == 'plan':
