@@ -1,0 +1,19 @@
+{# Add a <section> with the background colour, here is just the contents and spacing #}
+
+<div class="flex flex-col items-center py-9 px-4.5 text-center">
+
+    <p class="text-large text-black/75 pb-6">
+        You need to find more swimmers for this river to flow. Share on social media so you can begin as soon as possible.
+    </p>
+
+    <div class="">
+        {% include 'partials/button-copy.html' with text='Share' background="button-on-colour" %}
+    </div>
+
+    {% if info %}
+        <p class="text-meta text-black-large pt-6">
+            {{ info }}
+        </p>
+    {% endif %}
+
+</div>

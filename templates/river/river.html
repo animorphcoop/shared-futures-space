@@ -19,7 +19,10 @@
             <div class="-mx-4.5">
                 <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
                     <img class="object-cover w-full h-full"
-                         src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+                         src="
+
+
+                                 {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
                          alt="" title="">
                 </div>
             </div>
@@ -36,8 +39,8 @@
             {% endcomment %}
 
                 {% if request.user in starters|attrmap:'user' %}
-{#                <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>#}
-{#                <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>#}
+                    {#                <p><a href="{% url 'edit_river' object.slug %}">Edit River</a></p>#}
+                    {#                <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>#}
                     <div x-data="{ open: false }">
                         <button onclick="stopBodyScroll();"
                                 type="button"
@@ -81,6 +84,13 @@
                 {% endif %}
             </div>
             {% include "partials/vertical-spacer.html" with space="3" %}
+
+            {# CTA for rivers without enough swimmers to splash with. Show if riverstarter, and if count swimmers <3 #}
+            {% if request.user in starters|attrmap:'user' and members.count < 3 %}
+                <section class="-mx-4.5 bg-resources-two">
+                    {% include 'partials/call-to-action-copy.html' with text='Share' icon='link' %}
+                </section>
+            {% endif %}
 
             {# River information; swimmers, description #}
             <section class="-mx-4.5">
