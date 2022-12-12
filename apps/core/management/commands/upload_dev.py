@@ -70,7 +70,8 @@ def add_rivers(rivers_data):
     for river_data in rivers_data:
         try:
 
-            new_river = River.objects.get_or_create(title=river_data['name'], description=river_data['description'],
+            new_river = \
+                River.objects.get_or_create(title=river_data['name'], description=river_data['description'],
                                             area=Area.objects.get_or_create(name=river_data['area'])[0])[0]
 
             for tag in river_data['tags']:
@@ -105,24 +106,13 @@ def add_rivers(rivers_data):
                                 river=new_river)
                     new_river.envision_stage.general_poll = poll
                     new_river.envision_stage.save()
-                    new_river.save()
                     for option in ['yes', 'no']:
                         for user in river_data['envision']['poll'][option]:
                             SingleVote.objects.filter(user = CustomUser.objects.get_or_create(display_name = user)[0],
                                                       poll = new_river.envision_stage.general_poll).update(choice = new_river.envision_stage.general_poll.options.index(option) + 1)
 
             if 'plan' in river_data:
-                if new_river.envision_stage.general_poll is None:
-                    new_river.envision_stage.general_poll = SingleChoicePoll.objects.create(
-                                question='is this an acceptable vision?',
-                                description=new_river.description,
-                                options=['yes', 'no'],
-                                invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
-                                river=new_river)
-                    new_river.envison_stage.save()
-                    new_river.save()
-                SingleVote.objects.filter(poll = new_river.envision_stage.general_poll).update(choice=1) # force poll to pass
-                new_river.envision_stage.general_poll.close()
+                new_river.start_plan()
                 for message in river_data['plan']['general']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
                                                   text=message['content'], chat=new_river.plan_stage.general_chat)

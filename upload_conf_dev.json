@@ -1418,12 +1418,7 @@
             "from": "Desmond Telainy",
             "content": "Let's vote now!"
           }
-        ],
-        "poll": {
-           "description": "a description of the club...",
-           "yes": [],
-           "no": []
-        }
+        ]
       },
       "plan": {
         "general": [
