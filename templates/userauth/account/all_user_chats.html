@@ -12,99 +12,116 @@
 
         {% if user_chats %}
             {% for user_chat in user_chats %}
-                {% if user_chat.latest_message %}
-                    {% with user_pk_string=user_chat.user.pk|stringformat:'s' %}
-                        {% with user_slug=user_chat.user.display_name|add:" "|add:user_pk_string|slugify %}
-                            <a href="{% url 'user_chat' user_slug %}">
-                                <div class="mx-4">
-                                    {% with icon_width="30px" %}
-                                        <div class="flex space-between items-start relative">
-                                            <div class="h-[{{ icon_width }}] w-[{{ icon_width }}]">
-                                                <img src="{{ user_chat.user.avatar.image_url }}" class="w-7.5 h-7.5">
-                                            </div>
-                                            <div class="bg-gradient-to-r from-white to-gray-light rounded-r-[50px] pl-3.5 pr-9 py-3 w-full">
-                                                <h2 class="text-meta-label font-kanit-700 text-black/30">
-                                                    {{ user_chat.user.display_name }}
-                                                </h2>
-                                                {% include "partials/vertical-spacer.html" with space="1.5" %}
-                                                <p class="text-body">
-                                                    {% if user_chat.latest_message.sender.display_name == "salmon" %}
-                                                        {# TODO: Pull the actual system message #}
-                                                        System message from The Salmon of Knowledge.
-                                                    {% elif user_chat.latest_message.text != "" %}
-                                                        {{ user_chat.latest_message.text|truncatechars:50 }}
-                                                    {% elif user_chat.latest_message.image != "" %}
-                                                        The last message is an image.
-                                                    {% elif user_chat.latest_message.file != "" %}
-                                                        The last message is a document.
-                                                    {% else %}
-                                                        Message cannot be retrieved.
-                                                    {% endif %}
-                                                </p>
-                                                {% include "partials/vertical-spacer.html" with space="1.5" %}
-                                                <div class="flex gap-3">
-                                                    <span class="text-meta-label text-black/30">{{ user_chat.latest_message.timestamp|date:"G:i" }}</span>
-                                                    <span class="text-meta-label text-black/30">{{ user_chat.latest_message.timestamp|date:"d/m/y" }}</span>
-                                                    {# TODO: launch block modal #}
+                {% if user_chat.blocked and request.user == user_chat.blocked_by %}
+                    {% comment %}not displaying chat if the chat blocked by the current user {% endcomment %}
+                    {% comment %}TODO: In case this is the only chat should it then display salmon again? Or should we still show it, just with a different style or smth?{% endcomment %}
+                {% else %}
+                    {% if user_chat.latest_message %}
 
-                                                    <div x-data="{ overlay: false }" class="inline-block">
-    <span @click="overlay = ! overlay; console.log('BLUE remove button triggered overlay'); $event.preventDefault();"
-          class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
-        Block
-    </span>
-                                                        <div class="" :class="overlay || 'hidden'"
-                                                             @click="$event.preventDefault();">
-                                                            {# WET MODAL, Modal blurred backerground overlay #}
-                                                            <section
-                                                                    class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
-                                                                {#  White modal background  #}
-                                                                <div class="w-full bg-white m-2.5 sm:w-[360px]">
-                                                                    <div class="bg-red-important/30 sm:w-[360px]">
-                                                                        <div class="p-2.5">
-                                                                            <div class="flex flex-col items-center py-9 px-4.5 text-center">
-                                                                                <p class="text-large pb-6">
-                                                                                    Are you sure you want to
-                                                                                    block {{ user_chat.user.display_name }}
-                                                                                    from messaging you?
-                                                                                </p>
-                                                                                <p class="text-meta text-black-large pb-6">
-                                                                                    This action cannot be undone.
-                                                                                </p>
-                                                                                <div class="flex gap-4.5">
-                                                                                    <button @click="overlay = ! overlay; console.log('Back button triggered overlay'); $event.preventDefault();"
-                                                                                            class="button button-on-colour">
-                                                                                        Back
-                                                                                    </button>
-                                                                                    <button
-                                                                                            hx-post="{% url 'block_user_chat' user_chat.user.uuid %}"
-                                                                                            hx-trigger="click"
-                                                                                            hx-target="this"
-                                                                                            hx-swap="outerHTML"
-                                                                                            @click="overlay = ! overlay; console.log('RED remove button triggered overlay'); $event.preventDefault();"
-                                                                                            name="action"
-                                                                                            value="remove_swimmer"
-                                                                                            class="button button-danger">
-                                                                                        Block
-                                                                                    </button>
+                        {% with user_pk_string=user_chat.user.pk|stringformat:'s' %}
+                            {% with user_slug=user_chat.user.display_name|add:" "|add:user_pk_string|slugify %}
+                                <a href="{% url 'user_chat' user_slug %}">
+
+                                    <div class="mx-4">
+                                        {% with icon_width="30px" %}
+
+                                            <div class="flex space-between items-start relative">
+                                                <div class="h-[{{ icon_width }}] w-[{{ icon_width }}]">
+                                                    <img src="{{ user_chat.user.avatar.image_url }}"
+                                                         class="w-7.5 h-7.5">
+                                                </div>
+                                                <div class="bg-gradient-to-r from-white to-gray-light rounded-r-[50px] pl-3.5 pr-9 py-3 w-full">
+                                                    <h2 class="text-meta-label font-kanit-700 text-black/30">
+                                                        {{ user_chat.user.display_name }}
+                                                    </h2>
+                                                    {% include "partials/vertical-spacer.html" with space="1.5" %}
+                                                    <p class="text-body">
+                                                        {% if user_chat.latest_message.sender.display_name == "salmon" %}
+                                                            {# TODO: Pull the actual system message #}
+                                                            System message from The Salmon of Knowledge.
+                                                        {% elif user_chat.latest_message.text != "" %}
+                                                            {{ user_chat.latest_message.text|truncatechars:50 }}
+                                                        {% elif user_chat.latest_message.image != "" %}
+                                                            The last message is an image.
+                                                        {% elif user_chat.latest_message.file != "" %}
+                                                            The last message is a document.
+                                                        {% else %}
+                                                            Message cannot be retrieved.
+                                                        {% endif %}
+                                                    </p>
+                                                    {% include "partials/vertical-spacer.html" with space="1.5" %}
+                                                    <div class="flex gap-3">
+                                                        <span class="text-meta-label text-black/30">{{ user_chat.latest_message.timestamp|date:"G:i" }}</span>
+                                                        <span class="text-meta-label text-black/30">{{ user_chat.latest_message.timestamp|date:"d/m/y" }}</span>
+                                                        {# TODO: launch block modal #}
+
+                                                        <div x-data="{ overlay: false }" class="inline-block">
+                                                            <span @click="overlay = ! overlay; console.log('BLUE remove button triggered overlay'); $event.preventDefault();"
+                                                                  class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
+                                                                Block
+                                                            </span>
+                                                            <div class="" :class="overlay || 'hidden'"
+                                                                 @click="$event.preventDefault();">
+                                                                {# WET MODAL, Modal blurred backerground overlay #}
+                                                                <section
+                                                                        class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
+                                                                    {#  White modal background  #}
+                                                                    <div class="w-full bg-white m-2.5 sm:w-[360px]">
+                                                                        <div class="bg-red-important/30 sm:w-[360px]">
+                                                                            <div class="p-2.5">
+                                                                                <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                                                                                    <p class="text-large pb-6">
+                                                                                        Are you sure you want to
+                                                                                        block {{ user_chat.user.display_name }}
+                                                                                        from messaging you?
+                                                                                    </p>
+                                                                                    <p class="text-meta text-black-large pb-6">
+                                                                                        This action cannot be
+                                                                                        undone.
+                                                                                    </p>
+                                                                                    <div class="flex gap-4.5">
+                                                                                        <button @click="overlay = ! overlay; console.log('Back button triggered overlay'); $event.preventDefault();"
+                                                                                                class="button button-on-colour">
+                                                                                            Back
+                                                                                        </button>
+                                                                                        <button
+                                                                                                hx-post="{% url 'block_user_chat' user_chat.user.uuid %}"
+                                                                                                hx-trigger="click"
+                                                                                                hx-target="this"
+                                                                                                hx-swap="outerHTML"
+                                                                                                @click="overlay = ! overlay; console.log('RED remove button triggered overlay'); $event.preventDefault();"
+                                                                                                name="action"
+                                                                                                value="remove_swimmer"
+                                                                                                class="button button-danger">
+                                                                                            Block
+                                                                                        </button>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </section>
+                                                                </section>
+                                                            </div>
                                                         </div>
+
+
                                                     </div>
 
-
                                                 </div>
-
                                             </div>
-                                        </div>
-                                    {% endwith %}
-                                </div>
-                            </a>
+                                        {% endwith %}
+                                    </div>
+                                </a>
+                            {% endwith %}
                         {% endwith %}
-                    {% endwith %}
+
+
+                    {% endif %}
+
+
+
+
+
                     {% include "partials/vertical-spacer.html" with space="6" %}
                 {% endif %}
             {% endfor %}

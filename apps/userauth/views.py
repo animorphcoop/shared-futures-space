@@ -22,7 +22,7 @@ from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
-from userauth.models import CustomUser  # pyre-ignore[21]
+from userauth.models import CustomUser, Block  # pyre-ignore[21]
 from userauth.util import get_userpair  # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
@@ -209,7 +209,12 @@ class UserAllChatsView(TemplateView):
                 user_chat.user = user
                 messages_in_chat = Message.objects.filter(chat=user_chat.chat)
                 user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
+                if user_chat.blocked:
+                    blocked_object = Block.objects.filter(user_pair=user_chat)[0]
+                    user_chat.blocked_by = blocked_object.blocked_by
                 context['user_chats'].append(user_chat)
+                #blocked_object = Block.objects.filter(user_pair=user_chat)[0]
+                #context['blocked_by'] = blocked_object.blocked_by
         return context
 
 
@@ -223,8 +228,9 @@ def block_user_chat(request: WSGIRequest, uuid: UUID) -> HttpResponse:
     else:
         user_chat = UserPair.objects.filter(user1=request.user, user2=user_to_block)[0]
     print(user_chat)
-    user_chat.blocked(request.user)
+    user_chat.block_user(request.user)
     print('work')
+    # TODO: Add feedback on having blocked the user
     return HttpResponse('blocked user')
 
 
