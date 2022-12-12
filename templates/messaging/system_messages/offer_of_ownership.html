@@ -1,18 +1,30 @@
-<form method=POST action="{% url 'do_action' %}">
+<form method=POST action="{% url 'do_action' %}" class="m-0">
     {% csrf_token %}
-    <input type=hidden name=action_id value={{message.context_action.uuid}}></input>
+    <input type=hidden name=action_id value={{ message.context_action.uuid }}>
     {% if message.context_action.result == 'invoked' %}
-        offer of starter status for {{message.context_action.param_river.title}} accepted
+        Offer of starter status for {{ message.context_action.param_river.title }} accepted.
     {% elif message.context_action.result == 'rejected' %}
-        offer of starter status for {{message.context_action.param_river.title}} rejected
+        Offer of starter status for {{ message.context_action.param_river.title }} rejected.
     {% elif message.context_action.result == 'rescinded' %}
-        offer of starter status for {{message.context_action.param_river.title}} rescinded
+        Offer of starter status for {{ message.context_action.param_river.title }} rescinded.
     {% elif request.user.id == message.context_action.receiver.id %}
-        {{message.context_action.creator.display_name}} has offered you starter status for {{message.context_action.param_river.title}}.
-        <button name=choice value=invoke>Accept</button>
-        <button name=choice value=reject>Reject</button>
+        {{ message.context_action.creator.display_name }} has offered you River Starter status for
+        {{ message.context_action.param_river.title }}.
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="flex gap-3">
+            <button type="submit" name=choice value=invoke class="button-secondary button-on-colour">
+                Accept
+            </button>
+            <button type="submit" name=choice value=reject class="button-secondary button-on-colour">
+                Reject
+            </button>
+        </div>
+        {% include "partials/vertical-spacer.html" with space="3" %}
     {% elif request.user.id == message.context_action.creator.id %}
-        you offered {{message.context_action.receiver.display_name}} starter status for {{message.context_action.param_river.title}}.
-        <button name=choice value=retract>Retract</button>
+        You offered {{ message.context_action.receiver.display_name }} River Starter status for
+        {{ message.context_action.param_river.title }}.
+        <button type="submit" name=choice value=retract class="button-secondary button-on-colour">
+            Retract
+        </button>
     {% endif %}
 </form>
