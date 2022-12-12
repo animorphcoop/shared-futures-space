@@ -2,11 +2,11 @@
     {% csrf_token %}
     <input type=hidden name=action_id value={{ message.context_action.uuid }}>
     {% if message.context_action.result == 'invoked' %}
-        Offer of starter status for {{ message.context_action.param_river.title }} accepted.
+        Offer of River Starter status for {{ message.context_action.param_river.title }} accepted.
     {% elif message.context_action.result == 'rejected' %}
-        Offer of starter status for {{ message.context_action.param_river.title }} rejected.
+        Offer of River Starter status for {{ message.context_action.param_river.title }} rejected.
     {% elif message.context_action.result == 'rescinded' %}
-        Offer of starter status for {{ message.context_action.param_river.title }} rescinded.
+        Offer of River Starter status for {{ message.context_action.param_river.title }} rescinded.
     {% elif request.user.id == message.context_action.receiver.id %}
         {{ message.context_action.creator.display_name }} has offered you River Starter status for
         {{ message.context_action.param_river.title }}.

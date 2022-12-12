@@ -27,8 +27,12 @@
                                         {% if user_chat.latest_message %}
                                             {% include "partials/vertical-spacer.html" with space="1.5" %}
                                             <p class="text-body">
-                                                {{ user_chat.latest_message.sender.display_name }}
-                                                : {{ user_chat.latest_message.text|truncatechars:50 }}
+                                                {% if user_chat.latest_message.sender.display_name == "salmon" %}
+                                                    {# TODO: Pull the actual system message #}
+                                                    System message from The Salmon of Knowledge.
+                                                {% else %}
+                                                    {{ user_chat.latest_message.text|truncatechars:50 }}
+                                                {% endif %}
                                             </p>
                                             {% include "partials/vertical-spacer.html" with space="1.5" %}
                                             <div class="flex gap-3">
