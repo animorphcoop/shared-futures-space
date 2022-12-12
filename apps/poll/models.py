@@ -79,7 +79,7 @@ class BasePoll(models.Model):
                         stage.dates_poll = None
                     stage.save()
 
-    def get_poll_context(self, poll):
+    def get_poll_context(self, poll): # pyre-ignore[2,3]
         from river.models import River, EnvisionStage, PlanStage, ActStage, ReflectStage # pyre-ignore[21]
         es = EnvisionStage.objects.filter(general_poll = poll)
         if es.exists():
@@ -108,10 +108,7 @@ class BasePoll(models.Model):
         asd = ActStage.objects.filter(dates_poll = poll)
         if asd.exists():
             return (River.objects.get(plan_stage = asd[0]), asd[0], 'dates')
-        rs = ReflectStage.objects.filter(general_poll = poll)
-        if rs.exists():
-            return (River.objects.get(reflect_stage = rs[0]), rs[0], 'general')
-        return False, False
+        return False, False, False
 
 class SingleChoicePoll(BasePoll):
     vote_kind = SingleVote # pyre-ignore[15]
