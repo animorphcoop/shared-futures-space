@@ -67,6 +67,10 @@ class RiverView(DetailView):  # pyre-ignore[24]
                                 for tag_a in self.object.tags.names() for tag_b in self.object.tags.names() if
                                 tag_a != tag_b and tag_a > tag_b]))) # ensure we don't have (tag1, tag2) and (tag2, tag1) searched separately. they would be filtered out by fromkeys but might as well remove earlier on
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
+        context['envision_locked'] = False
+        context['plan_locked'] = context['object'].current_stage == River.Stage.ENVISION
+        context['act_locked'] = context['object'].current_stage == River.Stage.ENVISION or context['object'].current_stage == River.Stage.PLAN
+        context['reflect_locked'] = context['object'].current_stage != River.Stage.REFLECT
         return context
 
 
@@ -161,7 +165,7 @@ class CreateRiverPollView(TemplateView):
             else:
                 poll_ref = None
                 return HttpResponse('could not create poll, topic not recognised (' + topic + ')')
-            if poll_ref is None:
+            if poll_ref is None or poll_ref.closed:
                 if 'description' in request.POST:
                     try:
                         if stage == river.Stage.ENVISION:
@@ -208,6 +212,8 @@ class CreateRiverPollView(TemplateView):
         ctx['slug'] = slug
         ctx['stage'] = stage
         ctx['topic'] = topic
+        ctx['prompt'] = {'envision': 'Approve shared goal', 'plan': 'Approve plan for ' + topic, 'act': 'Query success of ' + topic}[stage]
+        ctx['default'] = {'envision': ctx['river'].description, 'plan': '', 'act': ''}[stage]
         return ctx
 
 
@@ -232,7 +238,6 @@ class PlanView(TemplateView):
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
         ctx['starters'] = list(RiverMembership.objects.filter(river=ctx['river'], starter = True).values_list('user', flat=True))
-        print(ctx['starters'])
         return ctx
 
 

@@ -1418,7 +1418,12 @@
             "from": "Desmond Telainy",
             "content": "Let's vote now!"
           }
-        ]
+        ],
+        "poll": {
+          "description": "poll desc",
+          "yes": [],
+          "no": []
+        }
       },
       "plan": {
         "general": [

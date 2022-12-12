@@ -55,24 +55,60 @@ class BasePoll(models.Model):
         else:
             return self.singlechoicepoll # pyre-ignore[16]
     def close(self) -> None:
-        from river.models import River, EnvisionStage # pyre-ignore[21]
         from messaging.util import send_system_message # pyre-ignore[21]
         if self.singlechoicepoll: # pyre-ignore[16]
-            es = EnvisionStage.objects.filter(general_poll = self.singlechoicepoll)
-            if len(es) != 0:
-                es = es[0]
-                # this poll is the active poll of the envision stage of some river
+            river, stage, topic = self.get_poll_context(self.singlechoicepoll)
+            if river:
+                # this poll is the current poll of the active stage of a river
                 if sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0][0] == 'yes': # pyre-ignore[16]
                     # poll has passed
-                    river = River.objects.get(envision_stage = es)
-                    river.start_plan()
-                    river.description = self.description
-                    river.save()
-                    send_system_message(kind = 'finished_envision', chat = river.envision_stage.general_chat, context_river = river)
+                    if (river.current_stage == river.Stage.ENVISION):
+                        river.start_plan()
+                        river.description = self.description
+                        river.save()
+                        send_system_message(kind = 'finished_envision', chat = river.envision_stage.general_chat, context_river = river)
+                    # ...
                 else:
-                    river = River.objects.get(envision_stage = es)
-                    river.envision_stage.general_poll = None
-                    river.envision_stage.save()
+                    if topic == 'general':
+                        stage.general_poll = None
+                    elif topic == 'funding':
+                        stage.funding_poll = None
+                    elif topic == 'location':
+                        stage.location_poll = None
+                    elif topic == 'dates':
+                        stage.dates_poll = None
+                    stage.save()
+
+    def get_poll_context(self, poll): # pyre-ignore[2,3]
+        from river.models import River, EnvisionStage, PlanStage, ActStage, ReflectStage # pyre-ignore[21]
+        es = EnvisionStage.objects.filter(general_poll = poll)
+        if es.exists():
+            return (River.objects.get(envision_stage = es[0]), es[0], 'general')
+        psg = PlanStage.objects.filter(general_poll = poll)
+        if psg.exists():
+            return (River.objects.get(plan_stage = psg[0]), psg[0], 'general')
+        psf = PlanStage.objects.filter(funding_poll = poll)
+        if psf.exists():
+            return (River.objects.get(plan_stage = psf[0]), psf[0], 'funding')
+        psl = PlanStage.objects.filter(location_poll = poll)
+        if psl.exists():
+            return (River.objects.get(plan_stage = psl[0]), psl[0], 'location')
+        psd = PlanStage.objects.filter(dates_poll = poll)
+        if psd.exists():
+            return (River.objects.get(plan_stage = psd[0]), psd[0], 'dates')
+        asg = ActStage.objects.filter(general_poll = poll)
+        if asg.exists():
+            return (River.objects.get(act_stage = asg[0]), asg[0], 'general')
+        asf = ActStage.objects.filter(funding_poll = poll)
+        if asf.exists():
+            return (River.objects.get(act_stage = asf[0]), asf[0], 'funding')
+        asl = ActStage.objects.filter(location_poll = poll)
+        if asl.exists():
+            return (River.objects.get(act_stage = asl[0]), asl[0], 'location')
+        asd = ActStage.objects.filter(dates_poll = poll)
+        if asd.exists():
+            return (River.objects.get(plan_stage = asd[0]), asd[0], 'dates')
+        return False, False, False
 
 class SingleChoicePoll(BasePoll):
     vote_kind = SingleVote # pyre-ignore[15]
