@@ -67,7 +67,7 @@
 
         {% if resource.link %}
             <a href="{{ resource.link }}"
-               class="font-kanit-400 font-medium text-[9px] tracking-wide text-black-text leading-normal">
+               class="font-kanit-400 font-medium text-[9px] tracking-wide text-purple leading-normal">
                 {{ resource.link }}
                 <svg class="ml-1 mb-1 inline-block" width="10" height="10" viewBox="0 0 10 10" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +88,7 @@
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-        {% include 'partials/button.html' with style='primary_white' icon='arrow-left' url='/resources/' %}
+        {% include 'partials/button.html' with style='primary_white' icon='' button="Back" url='/resources/' %}
 
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
