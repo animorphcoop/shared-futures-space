@@ -1,7 +1,8 @@
 {% load static %}
 
 <div x-data="{ overlay: false }">
-    <button onclick="copyLink('{{ path }}')" @click="overlay = ! overlay" class="button" type="button">
+    <button onclick="copyLink('{{ path }}')" @click="overlay = ! overlay" class="button {% if text %}button-on-white{% endif %}" type="button">
+        {{ text }}
         <svg class="inline-block mb-0.5"
              width="22" height="12" viewBox="0 0 22 12" fill="none"
              xmlns="http://www.w3.org/2000/svg">
