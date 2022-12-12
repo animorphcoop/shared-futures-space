@@ -112,6 +112,17 @@ def add_rivers(rivers_data):
                                                       poll = new_river.envision_stage.general_poll).update(choice = new_river.envision_stage.general_poll.options.index(option) + 1)
 
             if 'plan' in river_data:
+                if new_river.envision_stage.general_poll is None:
+                    new_river.envision_stage.general_poll = SingleChoicePoll.objects.create(
+                                question='is this an acceptable vision?',
+                                description=new_river.description,
+                                options=['yes', 'no'],
+                                invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
+                                river=new_river)
+                    new_river.envison_stage.save()
+                    new_river.save()
+                SingleVote.objects.filter(poll = new_river.envision_stage.general_poll).update(choice=1) # force poll to pass
+                new_river.envision_stage.general_poll.close()
                 new_river.start_plan()
                 for message in river_data['plan']['general']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
