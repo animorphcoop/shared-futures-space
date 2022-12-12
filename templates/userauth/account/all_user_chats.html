@@ -12,28 +12,33 @@
 
         {% if user_chats %}
             {% for user_chat in user_chats %}
-                {% with user_pk_string=user_chat.user.pk|stringformat:'s' %}
-                    {% with user_slug=user_chat.user.display_name|add:" "|add:user_pk_string|slugify %}
-
-                        <a href="{% url 'user_chat' user_slug %}">
-                            <div class="mx-4">
-                                {% with icon_width="30px" %}
-                                    <div class="flex space-between items-start relative">
-                                        <div class="h-[{{ icon_width }}] w-[{{ icon_width }}]">
-                                            <img src="{{ user_chat.user.avatar.image_url }}" class="w-7.5 h-7.5">
-                                        </div>
-                                        <div class="bg-gradient-to-r from-white to-gray-light rounded-r-[50px] pl-3.5 pr-9 py-3 w-full">
-                                            <h2 class="text-meta-label font-kanit-700 text-black/30">
-                                                {{ user_chat.user.display_name }}
-                                            </h2>
-                                            {% if user_chat.latest_message %}
+                {% if user_chat.latest_message %}
+                    {% with user_pk_string=user_chat.user.pk|stringformat:'s' %}
+                        {% with user_slug=user_chat.user.display_name|add:" "|add:user_pk_string|slugify %}
+                            <a href="{% url 'user_chat' user_slug %}">
+                                <div class="mx-4">
+                                    {% with icon_width="30px" %}
+                                        <div class="flex space-between items-start relative">
+                                            <div class="h-[{{ icon_width }}] w-[{{ icon_width }}]">
+                                                <img src="{{ user_chat.user.avatar.image_url }}" class="w-7.5 h-7.5">
+                                            </div>
+                                            <div class="bg-gradient-to-r from-white to-gray-light rounded-r-[50px] pl-3.5 pr-9 py-3 w-full">
+                                                <h2 class="text-meta-label font-kanit-700 text-black/30">
+                                                    {{ user_chat.user.display_name }}
+                                                </h2>
                                                 {% include "partials/vertical-spacer.html" with space="1.5" %}
                                                 <p class="text-body">
                                                     {% if user_chat.latest_message.sender.display_name == "salmon" %}
                                                         {# TODO: Pull the actual system message #}
                                                         System message from The Salmon of Knowledge.
-                                                    {% else %}
+                                                    {% elif user_chat.latest_message.text != "" %}
                                                         {{ user_chat.latest_message.text|truncatechars:50 }}
+                                                    {% elif user_chat.latest_message.image != "" %}
+                                                        The last message is an image.
+                                                    {% elif user_chat.latest_message.file != "" %}
+                                                        The last message is a document.
+                                                    {% else %}
+                                                        Message cannot be retrieved.
                                                     {% endif %}
                                                 </p>
                                                 {% include "partials/vertical-spacer.html" with space="1.5" %}
@@ -44,15 +49,16 @@
                                         Block {# TODO: launch block modal #}
                                     </span>
                                                 </div>
-                                            {% endif %}
+
+                                            </div>
                                         </div>
-                                    </div>
-                                {% endwith %}
-                            </div>
-                        </a>
+                                    {% endwith %}
+                                </div>
+                            </a>
+                        {% endwith %}
                     {% endwith %}
-                {% endwith %}
-                {% include "partials/vertical-spacer.html" with space="6" %}
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                {% endif %}
             {% endfor %}
         {% else %}
             {% if request.user.post_code.area.name != 'Other' %}
