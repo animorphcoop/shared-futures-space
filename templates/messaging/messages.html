@@ -12,13 +12,14 @@
                     {% include 'messaging/message_list.html' %}
                 </div>
             </div>
-
-            {% with user_pk_string=other_user.pk|stringformat:'s' %}
-                {% with user_path=other_user.display_name|add:" "|add:user_pk_string|slugify %}
-                    {% url 'user_chat' user_path as message_post_url %}
-                    {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
+            {% if chat_open %}
+                {% with user_pk_string=other_user.pk|stringformat:'s' %}
+                    {% with user_path=other_user.display_name|add:" "|add:user_pk_string|slugify %}
+                        {% url 'user_chat' user_path as message_post_url %}
+                        {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
+                    {% endwith %}
                 {% endwith %}
-            {% endwith %}
+            {% endif %}
         </div>
 
     {% else %}
@@ -26,8 +27,10 @@
         <div id="messages-{{unique_id}}" class="mx-4.5 max-height-[50vh]">
             {% include 'messaging/message_list.html' %}
         </div>
-        {% url 'river_chat' slug stage topic as message_post_url %}
-        {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
+        {% if chat_open %}
+            {% url 'river_chat' slug stage topic as message_post_url %}
+            {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
+        {% endif %}
 
     {% endif %}
 

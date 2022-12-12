@@ -108,8 +108,6 @@
         }
 
         function validateChat(chat) {
-            console.log('text-box-' + chat);
-            console.log('file-' + chat);
             let errorCount = 0;
             const textLength = document.getElementById('text-box-' + chat).value
             const fileValue = document.getElementById('file-' + chat).files
@@ -117,8 +115,6 @@
             if (textLength.length < 1 && fileValue.length < 1) {
                 errorCount++
             }
-            console.log(textLength);
-            console.log(fileValue);
             return errorCount === 0;
 
         }
