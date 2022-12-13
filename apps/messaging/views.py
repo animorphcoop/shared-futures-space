@@ -60,7 +60,7 @@ class ChatView(TemplateView):
                 'direct': True,
                 'message_post_url': reverse('user_chat', args=[user_path]),
                 'unique_id': user_path,
-                'chat_open': True,
+                'chat_open': not userpair.blocked,
             }
         # river chat section
         elif 'slug' in kwargs:
@@ -104,7 +104,7 @@ class ChatView(TemplateView):
 
             chat = userpair.chat
             members = [CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)]
-            chat_open = True
+            chat_open = not userpair.blocked
             context = {'message_post_url': reverse('user_chat', args=[user_path]), 'unique_id': user_path, 'chat_open': chat_open}
         elif 'slug' in kwargs:
             river = River.objects.get(slug=kwargs['slug'])

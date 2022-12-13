@@ -7,11 +7,12 @@
         <div class="bg-gray-light bg-gray-light sm:w-[360px]">
             <div class="mx-4.5" x-init="">
 
-                {% comment %}TODO: TEMPLATE tag needed to separate pull_previous{% endcomment %}
-                <div id="messages-{{unique_id}}">
+
+                <div id="messages-{{ unique_id }}">
                     {% include 'messaging/message_list.html' %}
                 </div>
             </div>
+
             {% if chat_open %}
                 {% with user_pk_string=other_user.pk|stringformat:'s' %}
                     {% with user_path=other_user.display_name|add:" "|add:user_pk_string|slugify %}
@@ -24,7 +25,7 @@
 
     {% else %}
 
-        <div id="messages-{{unique_id}}" class="mx-4.5 max-height-[50vh]">
+        <div id="messages-{{ unique_id }}" class="mx-4.5 max-height-[50vh]">
             {% include 'messaging/message_list.html' %}
         </div>
         {% if chat_open %}
