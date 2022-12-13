@@ -2,7 +2,7 @@
 
 {% include 'messaging/partials/pull_previous.html' %}
 
-{% comment %}{% if message %}{% endcomment %}
+{% comment %}{% if page_obj.count > 0 %}{% endcomment %}
 
     {% for message in page_obj %}
         {% if message.sender == system_user %}
@@ -12,8 +12,7 @@
         {% endif %}
     {% endfor %}
 
-{% comment %}
-{% else %}
+{% comment %}{% else %}
 
     {% include "partials/salmon-of-knowledge.html" with text="No messages yet, start the conversation!" %}
 

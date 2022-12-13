@@ -63,7 +63,7 @@
 {% comment %}                        <input type=hidden name="retrieve_messages"></input>
                         <input type=hidden name="from" value="{{ from }}"></input>
                         <input type=hidden name="interval" value="{{ from|add:10 }}"></input>{% endcomment %}
-                        {% if user.is_authenticated and 'river' in "{{ message_post_url }}" %}
+                        {% if user.is_authenticated %}
                             <button name=flag value="{{ message.uuid }}">
                                 <svg width="8" height="10" viewBox="0 0 8 10"
                                      xmlns="http://www.w3.org/2000/svg"
