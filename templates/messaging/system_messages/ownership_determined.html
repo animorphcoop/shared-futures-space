@@ -1,11 +1,24 @@
-<p>
-{% comment %}
-    {{ message.context_action }}{% endcomment %}
-    {% if message.context_action.result == 'invoked' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} accepted.
-    {% elif message.context_action.result == 'rejected' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} rejected.
-    {% elif message.context_action.result == 'rescinded' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} rescinded.
+{% if message.context_action.result == 'invoked' %}
+    {% if request.user.id == message.context_action.receiver.id %}
+        You have
+    {% else %}
+        {{ message.context_action.receiver.display_name }} has
     {% endif %}
-</p>
+    accepted
+{% elif message.context_action.result == 'rejected' %}
+
+    {% if request.user.id == message.context_action.receiver.id %}
+        You have
+    {% else %}
+        {{ message.context_action.creator.display_name }} has
+    {% endif %}
+    rejected
+{% elif message.context_action.result == 'rescinded' %}
+    {% if request.user.id == message.context_action.creator.id %}
+        You have
+    {% else %}
+        {{ message.context_action.creator.display_name }} has
+    {% endif %}
+    rescinded
+{% endif %}
+the offer of River Starter status for {{ message.context_action.param_river.title }}.

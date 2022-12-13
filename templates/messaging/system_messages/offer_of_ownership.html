@@ -2,20 +2,13 @@
     {% csrf_token %}
     <input type=hidden name=action_id value={{ message.context_action.uuid }}>
 
-    {% comment %}    {% if message.context_action.result == 'invoked' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} accepted.
-    {% elif message.context_action.result == 'rejected' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} rejected.
-    {% elif message.context_action.result == 'rescinded' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} rescinded.{% endcomment %}
     {% if request.user.id == message.context_action.receiver.id %}
-        {% comment %}        {{ message.context_action.result }}{% endcomment %}
+
         {{ message.context_action.creator.display_name }} has offered you River Starter status for
         {{ message.context_action.param_river.title }}.
 
         {% if message.context_action.result == None %}
             {% include "partials/vertical-spacer.html" with space="3" %}
-
             <div class="flex gap-3">
                 <button type="submit" name=choice value=invoke class="button-secondary button-on-colour">
                     Accept
@@ -25,13 +18,13 @@
                 </button>
             </div>
         {% endif %}
-        {% include "partials/vertical-spacer.html" with space="3" %}
+
 
     {% elif request.user.id == message.context_action.creator.id %}
-        You offered {{ message.context_action.receiver.display_name }} River Starter status for
+        You have offered {{ message.context_action.receiver.display_name }} River Starter status for
         {{ message.context_action.param_river.title }}.
-
         {% if message.context_action.result == None %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
             <button type="submit" name=choice value=retract class="button-secondary button-on-colour">
                 Retract
             </button>
