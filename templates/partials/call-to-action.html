@@ -1,33 +1,35 @@
 {# Add a <section> with the background colour, here is just the contents and spacing #}
+{# TODO: Add a background variable to the partial instead of wrapping as above #}
 
 <div class="flex flex-col items-center py-9 px-4.5 text-center">
 
-    <p class="text-large text-22 pb-6">
+    <p class="text-large">
         {{ main }}
     </p>
 
-    <div class="">
-        {% if url %}
-            <a href="{{ url }}"
-               class="button button-on-colour inline-block">
-                {{ button }}
-            </a>
-        {% endif %}
-
-        {% if url2 %}
-            <a href="{{ url2 }}"
-               class="button button-on-colour inline-block ml-5">
-                {{ button2 }}
-            </a>
-        {% endif %}
-
-            {% if url3 %}
-            <a href="{% url url3 %}"
-               class="button button-on-colour inline-block">
-                {{ button }}
-            </a>
-        {% endif %}
-    </div>
+    {% if url or url2 or url3 %}
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        <div>
+            {% if url %}
+                <a href="{{ url }}"
+                   class="button button-on-colour inline-block">
+                    {{ button }}
+                </a>
+            {% endif %}
+            {% if url2 %}
+                <a href="{{ url2 }}"
+                   class="button button-on-colour inline-block ml-5">
+                    {{ button2 }}
+                </a>
+            {% endif %}
+            {% if url3 %} {# Differen href pattern, used in River creation from Spring #}
+                <a href="{% url url3 %}"
+                   class="button button-on-colour inline-block">
+                    {{ button }}
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
 
     {% if info %}
         <p class="text-meta text-black-large pt-6">

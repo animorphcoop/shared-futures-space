@@ -1,0 +1,6 @@
+<p>{% if message.context_user_a != request.user %}
+    Sorry, you have been blocked by {{ message.context_user_a.display_name }}.
+    {% else %}
+    You decided to end this conversation by blocking the other person.
+    {% endif %}
+</p>

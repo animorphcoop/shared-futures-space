@@ -185,37 +185,85 @@
 
         </section>
 
-        {% if user.is_authenticated %}
-            {% if not self %}
-                {# Message this user #}
-                {# WET CALL TO ACTION #}
-                <section class="bg-resources-two">
-                    <div class="flex flex-col items-center py-9 px-4.5 text-center">
-                        <p class="text-large text-22 pb-6">
-                            Get in touch with {{ user.display_name }}!
-                        </p>
-                        {% with user_pk_string=user.pk|stringformat:'s' %}
-                            {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
-                                <a href="{% url 'user_chat' user_slug %}" class="button button-on-colour inline-block">
-                                    Message
-                                </a>
-                            {% endwith %}
+        {% if user.is_authenticated and not self %}
+
+            {# Message this user #}
+            {# WET CALL TO ACTION #}
+            <section class="bg-resources-two">
+                <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                    <p class="text-large text-22 pb-6">
+                        Get in touch with {{ user.display_name }}!
+                    </p>
+                    {% with user_pk_string=user.pk|stringformat:'s' %}
+                        {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
+                            <a href="{% url 'user_chat' user_slug %}" class="button button-on-colour inline-block">
+                                Message
+                            </a>
                         {% endwith %}
-                    </div>
-                </section>
-                {# Block this user #}
-                <section class="bg-yellow-pale">
+                    {% endwith %}
+                </div>
+            </section>
+            {# Block this user #}
+            {% if user_chat and not user_chat.blocked %}
+                <section class="bg-yellow-pale" id="block-user">
                     <div class="flex justify-center items-center gap-6 py-9 px-4.5 text-center">
                         <p class="text-meta text-black/55">
                             Would you like to block messages from {{ user.display_name }}?
                         </p>
-                        {# TODO: Block modal #}
-                        <a href="#" class="button button-secondary button-danger">
-                            Block
-                        </a>
+
+                        <div x-data="{ overlay: false }" class="inline-block">
+                                                            <span @click="overlay = ! overlay; console.log('BLUE remove button triggered overlay'); $event.preventDefault();"
+                                                                  class="button button-secondary button-danger">
+                                                                Block
+                                                            </span>
+                            <div class="" :class="overlay || 'hidden'"
+                                 @click="$event.preventDefault();">
+                                <section
+                                        class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
+                                    {#  White modal background  #}
+                                    <div class="w-full bg-white m-2.5 sm:w-[360px]">
+                                        <div class="bg-red-important/30 sm:w-[360px]">
+                                            <div class="p-2.5">
+                                                <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                                                    <p class="text-large pb-6">
+                                                        Are you sure you want to
+                                                        block {{ user.display_name }}
+                                                        from messaging you?
+                                                    </p>
+                                                    <p class="text-meta text-black-large pb-6">
+                                                        This action cannot be
+                                                        undone.
+                                                    </p>
+                                                    <div class="flex gap-4.5">
+                                                        <button @click="overlay = ! overlay; console.log('Back button triggered overlay'); $event.preventDefault();"
+                                                                class="button button-on-colour">
+                                                            Back
+                                                        </button>
+                                                        <button
+                                                                hx-post="{% url 'block_user_chat' user.uuid %}"
+                                                                hx-trigger="click"
+                                                                hx-target="#block-user"
+                                                                hx-swap="outerHTML"
+                                                                @click="overlay = ! overlay; console.log('RED remove button triggered overlay'); $event.preventDefault();"
+                                                                name="action"
+                                                                value="remove_swimmer"
+                                                                class="button button-danger">
+                                                            Block
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+
                     </div>
                 </section>
             {% endif %}
+
         {% endif %}
 
 
@@ -225,9 +273,11 @@
 {% endblock %}
 
 {% block scripts %}
-    {# Wanted to refer to the functions about disabling and enabling scroll when
+    {% comment %}
+    Wanted to refer to the functions about disabling and enabling scroll when
     modals are open, which was written first for organisations, so included this script.
     Would like to extract into it's own lil file that can be referred to for all modals,
-    but not today satan #}
+    but not today satan
+    {% endcomment %}
     <script src="{% static 'js/organisation_list_add.js' %}"></script>
 {% endblock %}
