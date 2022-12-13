@@ -1,0 +1,11 @@
+<p>
+{% comment %}
+    {{ message.context_action }}{% endcomment %}
+    {% if message.context_action.result == 'invoked' %}
+        Offer of River Starter status for {{ message.context_action.param_river.title }} accepted.
+    {% elif message.context_action.result == 'rejected' %}
+        Offer of River Starter status for {{ message.context_action.param_river.title }} rejected.
+    {% elif message.context_action.result == 'rescinded' %}
+        Offer of River Starter status for {{ message.context_action.param_river.title }} rescinded.
+    {% endif %}
+</p>

@@ -15,8 +15,11 @@ def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                         context_action: Optional['action.Action'] = None, context_river: Optional['river.River'] = None,  # pyre-ignore[11]
                         context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None,  # pyre-ignore[11]
                         context_poll: Optional[BasePoll] = None) -> None: # pyre-ignore[11]
+    print('sending a message')
+    print(kind)
     Message.objects.create(sender = get_system_user(), text='',
                            snippet = {'offer_of_ownership': 'messaging/system_messages/offer_of_ownership.html',
+                                      'ownership_determined': 'messaging/system_messages/ownership_determined.html',
                                       'removed_from_river': 'messaging/system_messages/removed_from_river.html',
                                       'new_owner': 'messaging/system_messages/new_owner.html',
                                       'left_project': 'messaging/system_messages/left_project.html',
