@@ -1,30 +1,33 @@
 <form method=POST action="{% url 'do_action' %}" class="m-0">
     {% csrf_token %}
     <input type=hidden name=action_id value={{ message.context_action.uuid }}>
-    {% if message.context_action.result == 'invoked' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} accepted.
-    {% elif message.context_action.result == 'rejected' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} rejected.
-    {% elif message.context_action.result == 'rescinded' %}
-        Offer of River Starter status for {{ message.context_action.param_river.title }} rescinded.
-    {% elif request.user.id == message.context_action.receiver.id %}
+
+    {% if request.user.id == message.context_action.receiver.id %}
+
         {{ message.context_action.creator.display_name }} has offered you River Starter status for
         {{ message.context_action.param_river.title }}.
-        {% include "partials/vertical-spacer.html" with space="3" %}
-        <div class="flex gap-3">
-            <button type="submit" name=choice value=invoke class="button-secondary button-on-colour">
-                Accept
-            </button>
-            <button type="submit" name=choice value=reject class="button-secondary button-on-colour">
-                Reject
-            </button>
-        </div>
-        {% include "partials/vertical-spacer.html" with space="3" %}
+
+        {% if message.context_action.result == None %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            <div class="flex gap-3">
+                <button type="submit" name=choice value=invoke class="button-secondary button-on-colour">
+                    Accept
+                </button>
+                <button type="submit" name=choice value=reject class="button-secondary button-on-colour">
+                    Reject
+                </button>
+            </div>
+        {% endif %}
+
+
     {% elif request.user.id == message.context_action.creator.id %}
-        You offered {{ message.context_action.receiver.display_name }} River Starter status for
+        You have offered {{ message.context_action.receiver.display_name }} River Starter status for
         {{ message.context_action.param_river.title }}.
-        <button type="submit" name=choice value=retract class="button-secondary button-on-colour">
-            Retract
-        </button>
+        {% if message.context_action.result == None %}
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            <button type="submit" name=choice value=retract class="button-secondary button-on-colour">
+                Retract
+            </button>
+        {% endif %}
     {% endif %}
 </form>
