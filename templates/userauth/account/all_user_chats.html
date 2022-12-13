@@ -20,7 +20,7 @@
 
                         {% with user_pk_string=user_chat.user.pk|stringformat:'s' %}
                             {% with user_slug=user_chat.user.display_name|add:" "|add:user_pk_string|slugify %}
-                                <a href="{% url 'user_chat' user_slug %}">
+                                <a href="{% url 'user_chat' user_slug %}" id={{ user_slug }}>
 
                                     <div class="mx-4">
                                         {% with icon_width="30px" %}
@@ -53,7 +53,7 @@
                                                     <div class="flex gap-3">
                                                         <span class="text-meta-label text-black/30">{{ user_chat.latest_message.timestamp|date:"G:i" }}</span>
                                                         <span class="text-meta-label text-black/30">{{ user_chat.latest_message.timestamp|date:"d/m/y" }}</span>
-                                                        {# TODO: launch block modal #}
+
 
                                                         <div x-data="{ overlay: false }" class="inline-block">
                                                             <span @click="overlay = ! overlay; console.log('BLUE remove button triggered overlay'); $event.preventDefault();"
@@ -62,7 +62,6 @@
                                                             </span>
                                                             <div class="" :class="overlay || 'hidden'"
                                                                  @click="$event.preventDefault();">
-                                                                {# WET MODAL, Modal blurred backerground overlay #}
                                                                 <section
                                                                         class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
                                                                     {#  White modal background  #}
@@ -87,7 +86,7 @@
                                                                                         <button
                                                                                                 hx-post="{% url 'block_user_chat' user_chat.user.uuid %}"
                                                                                                 hx-trigger="click"
-                                                                                                hx-target="this"
+                                                                                                hx-target="#{{ user_slug }}"
                                                                                                 hx-swap="outerHTML"
                                                                                                 @click="overlay = ! overlay; console.log('RED remove button triggered overlay'); $event.preventDefault();"
                                                                                                 name="action"

@@ -223,6 +223,7 @@ def block_user_chat(request: WSGIRequest, uuid: UUID) -> HttpResponse:
     print(request.user)
     user_to_block = CustomUser.objects.filter(uuid=uuid)[0]
     print(user_to_block)
+    #TODO: call util since we are trying to prevent this from being visible frontend
     if user_to_block.uuid < request.user.uuid:  # pyre-ignore[16]
         user_chat = UserPair.objects.filter(user1=user_to_block, user2=request.user)[0]
     else:
@@ -230,7 +231,8 @@ def block_user_chat(request: WSGIRequest, uuid: UUID) -> HttpResponse:
     print(user_chat)
     user_chat.block_user(request.user)
     print('work')
-    # TODO: Add feedback on having blocked the user
+
+    # TODO: Add feedback on having blocked the user - new partial?
     return HttpResponse('blocked user')
 
 
@@ -306,6 +308,15 @@ class CustomUserPersonalView(TemplateView):
                 password_changed = self.request.session['password_changed']
                 context['password_changed'] = password_changed
                 del self.request.session['password_changed']
+        else:
+            try:
+                if user.uuid < self.request.user.uuid:  # pyre-ignore[16]
+                    user_chat = UserPair.objects.filter(user1=user, user2=self.request.user)[0]
+                else:
+                    user_chat = UserPair.objects.filter(user1=self.request.user, user2=user)[0]
+            except:
+                user_chat = None
+            context['user_chat'] = user_chat
         return render(request, 'account/view.html', context)
 
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:

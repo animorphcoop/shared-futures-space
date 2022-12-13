@@ -94,9 +94,6 @@ class UserPair(models.Model):
 
     def block_user(self, user) -> None: # pyre-ignore[2]
         from messaging.util import send_system_message # pyre-ignore[21]
-        print('blocking them')
-        print(self)
-        print(user)
         Block.objects.create(user_pair=self, blocked_by=user)
         send_system_message(kind='blocked user', chat=self.chat, context_user_a=user)
         self.blocked = True
