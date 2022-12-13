@@ -58,15 +58,17 @@
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <form method=POST hx-post="{{ message_post_url }}" hx-target="closest #message" hx-swap="outerHTML"
                           class="flex font-kanit-600 tracking-[0.03em] text-red-important">
+
                         {% csrf_token %}
-                        <input type=hidden name="retrieve_messages"></input>
+{% comment %}                        <input type=hidden name="retrieve_messages"></input>
                         <input type=hidden name="from" value="{{ from }}"></input>
-                        <input type=hidden name="interval" value="{{ from|add:10 }}"></input>
-                        {% if user.is_authenticated %}
+                        <input type=hidden name="interval" value="{{ from|add:10 }}"></input>{% endcomment %}
+                        {% if user.is_authenticated and 'river' in "{{ message_post_url }}" %}
                             <button name=flag value="{{ message.uuid }}">
                                 <svg width="8" height="10" viewBox="0 0 8 10"
                                      xmlns="http://www.w3.org/2000/svg"
                                         {% if message.uuid in my_flags %}
+
                                      class="fill-red-important"
                                         {% else %}
                                      class="fill-black/30"
