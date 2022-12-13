@@ -14,7 +14,8 @@
             {% for user_chat in user_chats %}
                 {% if user_chat.blocked and request.user == user_chat.blocked_by %}
                     {% comment %}not displaying chat if the chat blocked by the current user {% endcomment %}
-                    {% comment %}TODO: In case this is the only chat should it then display salmon again? Or should we still show it, just with a different style or smth?{% endcomment %}
+                    {% comment %}TODO: If the length of chat list is equal to blocked chats then display salmon again? Or should we still show it, just with a different style or smth?{% endcomment %}
+
                 {% else %}
                     {% if user_chat.latest_message %}
 

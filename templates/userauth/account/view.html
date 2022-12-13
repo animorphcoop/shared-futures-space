@@ -185,32 +185,31 @@
 
         </section>
 
-        {% if user.is_authenticated %}
-            {% if not self %}
-                {# Message this user #}
-                {# WET CALL TO ACTION #}
-                <section class="bg-resources-two">
-                    <div class="flex flex-col items-center py-9 px-4.5 text-center">
-                        <p class="text-large text-22 pb-6">
-                            Get in touch with {{ user.display_name }}!
-                        </p>
-                        {% with user_pk_string=user.pk|stringformat:'s' %}
-                            {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
-                                <a href="{% url 'user_chat' user_slug %}" class="button button-on-colour inline-block">
-                                    Message
-                                </a>
-                            {% endwith %}
+        {% if user.is_authenticated and not self %}
+
+            {# Message this user #}
+            {# WET CALL TO ACTION #}
+            <section class="bg-resources-two">
+                <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                    <p class="text-large text-22 pb-6">
+                        Get in touch with {{ user.display_name }}!
+                    </p>
+                    {% with user_pk_string=user.pk|stringformat:'s' %}
+                        {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
+                            <a href="{% url 'user_chat' user_slug %}" class="button button-on-colour inline-block">
+                                Message
+                            </a>
                         {% endwith %}
-                    </div>
-                </section>
-                {# Block this user #}
-                {% if user_chat and not user_chat.blocked %}
+                    {% endwith %}
+                </div>
+            </section>
+            {# Block this user #}
+            {% if user_chat and not user_chat.blocked %}
                 <section class="bg-yellow-pale" id="block-user">
                     <div class="flex justify-center items-center gap-6 py-9 px-4.5 text-center">
                         <p class="text-meta text-black/55">
                             Would you like to block messages from {{ user.display_name }}?
                         </p>
-
 
                         <div x-data="{ overlay: false }" class="inline-block">
                                                             <span @click="overlay = ! overlay; console.log('BLUE remove button triggered overlay'); $event.preventDefault();"
@@ -263,8 +262,8 @@
 
                     </div>
                 </section>
-                    {% endif %}
             {% endif %}
+
         {% endif %}
 
 
@@ -274,9 +273,11 @@
 {% endblock %}
 
 {% block scripts %}
-    {# Wanted to refer to the functions about disabling and enabling scroll when
+    {% comment %}
+    Wanted to refer to the functions about disabling and enabling scroll when
     modals are open, which was written first for organisations, so included this script.
     Would like to extract into it's own lil file that can be referred to for all modals,
-    but not today satan #}
+    but not today satan
+    {% endcomment %}
     <script src="{% static 'js/organisation_list_add.js' %}"></script>
 {% endblock %}
