@@ -83,12 +83,13 @@ def test_direct_chat_interface(client, test_user, other_test_user):
         assert 'test message ' + str(i) + '.' not in chat_page.content.decode('utf-8')
 
 def test_direct_chat_listing(client, test_user, other_test_user):
-    from userauth.util import get_userpair
+    from userauth.util import get_userpair, user_to_slug
     client.force_login(test_user)
     listing = client.get(reverse('account_all_chats'))
     assert 'Your Messages' in str(listing.content)
     assert other_test_user.display_name not in str(listing.content)
     get_userpair(test_user, other_test_user)
+    client.post(reverse('user_chat', args = [user_to_slug(other_test_user)]), {'text': 'test message'})
     listing = client.get(reverse('account_all_chats'))
     assert other_test_user.display_name in str(listing.content)
 
