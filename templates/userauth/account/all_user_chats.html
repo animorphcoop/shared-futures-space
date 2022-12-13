@@ -57,14 +57,16 @@
 
 
                                                         <div x-data="{ overlay: false }" class="inline-block">
-                                                            <span @click="overlay = ! overlay; console.log('BLUE remove button triggered overlay'); $event.preventDefault();"
-                                                                  class="font-kanit-600 text-[9px] leading-3 tracking-wide text-red-important">
-                                                                Block
+                                                            <span @click="overlay = ! overlay; console.log('BLUE remove button triggered overlay'); $event.preventDefault();">
+                                                                <svg width="8" height="10" viewBox="0 0 8 10"
+                                                                     xmlns="http://www.w3.org/2000/svg"
+                                                                     class="fill-black/30">
+                                                                    <path d="M0 10V0H4.42857L4.78571 1.49254H7.92857V6.86567H4.92857L4.57143 5.37313H0.785714V10H0ZM5.57143 6.04478H7.21429V2.31343H4.21429L3.85714 0.820896H0.785714V4.55224H5.21429L5.57143 6.04478Z"/>
+                                                                </svg>
                                                             </span>
                                                             <div class="" :class="overlay || 'hidden'"
                                                                  @click="$event.preventDefault();">
-                                                                <section
-                                                                        class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
+                                                                <section class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
                                                                     {#  White modal background  #}
                                                                     <div class="w-full bg-white m-2.5 sm:w-[360px]">
                                                                         <div class="bg-red-important/30 sm:w-[360px]">
@@ -76,8 +78,7 @@
                                                                                         from messaging you?
                                                                                     </p>
                                                                                     <p class="text-meta text-black-large pb-6">
-                                                                                        This action cannot be
-                                                                                        undone.
+                                                                                        This action cannot be undone.
                                                                                     </p>
                                                                                     <div class="flex gap-4.5">
                                                                                         <button @click="overlay = ! overlay; console.log('Back button triggered overlay'); $event.preventDefault();"
