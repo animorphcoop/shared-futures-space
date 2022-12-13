@@ -1,6 +1,6 @@
 {% load static %}
 
-<div id="message">
+<div id="message" class="pb-6">
     {% if message.sender == user %}
         <div class="flex justify-end">
             {% include "partials/horizontal-spacer.html" with space="7.5" %}
@@ -96,5 +96,3 @@
 
     {% endif %}
 </div>
-
-{% include "partials/vertical-spacer.html" with space="6" %}
