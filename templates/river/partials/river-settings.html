@@ -9,16 +9,15 @@
 
         {# {% if request.user in starters|attrmap:'user' %} #}
 
-{% comment %}
-        <p class="button button-on-white">Change title</p>
+        {% comment %}TODO: Make these other settings buttons work in v2{% endcomment %}
+        {% comment %}<p class="button button-on-white">Change title</p>
         {% include "partials/vertical-spacer.html" with space="6" %}
         <p class="button button-on-white">Change description</p>
         {% include "partials/vertical-spacer.html" with space="6" %}
         <p class="button button-on-white">Change tags</p>
         {% include "partials/vertical-spacer.html" with space="6" %}
         <p class="button button-on-white">Change image</p>
-        {% include "partials/vertical-spacer.html" with space="6" %}
-{% endcomment %}
+        {% include "partials/vertical-spacer.html" with space="6" %}{% endcomment %}
 
         {# {% elif not request.user.is_anonymous %} #}
         <form method=post class="m-0">

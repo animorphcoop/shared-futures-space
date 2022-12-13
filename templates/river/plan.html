@@ -10,17 +10,17 @@
         </div>
 
     <script>
-        let envisionDrawer = document.getElementById("plan")
+        let planDrawer = document.getElementById("plan")
 
         {% comment %}https://htmx.org/events/{% endcomment %}
         document.addEventListener('htmx:afterSwap', function () {
-            if (envisionDrawer != null) {
-                let computedStyle = getComputedStyle(envisionDrawer);
+            if (planDrawer != null) {
+                let computedStyle = getComputedStyle(planDrawer);
                 //console.log(computedStyle.getPropertyValue('height'));
                 if (computedStyle.getPropertyValue('height') !== "0px") {
                     //console.log('open')
                     setTimeout(() => {
-                        envisionDrawer.style.maxHeight = envisionDrawer.scrollHeight + 'px';
+                        planDrawer.style.maxHeight = planDrawer.scrollHeight + 'px';
                     }, 500)
                 }
 
