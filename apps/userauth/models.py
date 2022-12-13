@@ -11,6 +11,7 @@ from messaging.models import Chat  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
 
 from typing import List, Optional, Any, Dict, Optional
+from django.utils import timezone
 
 
 class Organisation(models.Model):
@@ -81,7 +82,7 @@ class UserPair(models.Model):
     user2: models.ForeignKey = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='second_user')
     chat: models.ForeignKey = models.ForeignKey(Chat, null=True, on_delete=models.SET_NULL,
                                                 default=new_chat)  # I'm guessing that if for some reason a chat is deleted, that means we want to purge it and replace it with a new one
-
+    blocked: models.BooleanField = models.BooleanField(default = False)
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         # ensure that there won't be two UserPairs created for one pair of users
         if self.user1.uuid > self.user2.uuid:
@@ -89,3 +90,16 @@ class UserPair(models.Model):
             self.user1.uuid = self.user2.uuid
             self.user2.uuid = swp
         return super().save(*args, **kwargs)  # pyre-ignore[6] destructuring arguments
+
+
+    def block_user(self, user) -> None: # pyre-ignore[2]
+        from messaging.util import send_system_message # pyre-ignore[21]
+        Block.objects.create(user_pair=self, blocked_by=user)
+        send_system_message(kind='blocked user', chat=self.chat, context_user_a=user)
+        self.blocked = True
+        self.save()
+
+class Block(models.Model):
+    timestamp: models.DateTimeField = models.DateTimeField(default=timezone.now)
+    user_pair: models.ForeignKey = models.ForeignKey(UserPair, on_delete = models.CASCADE)
+    blocked_by: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete = models.SET_NULL, null = True)

@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomSignupForm, CustomLoginForm, \
     CustomResetPasswordForm, \
     CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
-from messaging.forms import ChatForm # pyre-ignore[21]
+from messaging.forms import ChatForm  # pyre-ignore[21]
 from django.http.request import QueryDict
 
 from .tasks import send_after
@@ -22,7 +22,7 @@ from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
 from area.models import PostCode  # pyre-ignore[21]
-from userauth.models import CustomUser  # pyre-ignore[21]
+from userauth.models import CustomUser, Block  # pyre-ignore[21]
 from userauth.util import get_userpair  # pyre-ignore[21]
 
 from allauth.account.adapter import DefaultAccountAdapter
@@ -75,10 +75,13 @@ class CustomAddDataView(TemplateView):
                 form.full_clean()
                 current_user.display_name = str(form.cleaned_data.get('display_name'))  # pyre-ignore[16]
                 current_user.year_of_birth = int(form.cleaned_data.get('year_of_birth'))  # pyre-ignore[16]
-                current_user.post_code = PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[0]  # pyre-ignore[16]
+                current_user.post_code = \
+                    PostCode.objects.get_or_create(code=filter_postcode(form.cleaned_data.get('post_code')))[
+                        0]  # pyre-ignore[16]
 
                 if len(form.cleaned_data.get('avatar')) > 0:
-                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[0]  # pyre-ignore[16]
+                    current_user.avatar = UserAvatar.objects.get_or_create(pk=form.cleaned_data.get('avatar'))[
+                        0]  # pyre-ignore[16]
                 else:
                     random_avatar = random.randint(1, UserAvatar.objects.count())
                     current_user.avatar = UserAvatar.objects.get_or_create(pk=random_avatar)[0]
@@ -86,7 +89,8 @@ class CustomAddDataView(TemplateView):
                 if len(form.cleaned_data.get('organisation_name')) > 0:
                     lower_org_name = form.cleaned_data.get('organisation_name').lower()
                     if Organisation.objects.filter(name__iexact=lower_org_name).exists():
-                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get('organisation_name'))  # pyre-ignore[16]
+                        current_user.organisation = get_object_or_404(Organisation, name=form.cleaned_data.get(
+                            'organisation_name'))  # pyre-ignore[16]
                     else:
                         new_organisation = \
                             Organisation.objects.get_or_create(name=form.cleaned_data.get('organisation_name'),
@@ -187,10 +191,8 @@ class AdminRequestView(ChatView):  # pyre-ignore[11]
             return {}
 
 
-
 class UserChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm  # pyre-ignore[11]
-
 
 
 class UserAllChatsView(TemplateView):
@@ -207,8 +209,31 @@ class UserAllChatsView(TemplateView):
                 user_chat.user = user
                 messages_in_chat = Message.objects.filter(chat=user_chat.chat)
                 user_chat.latest_message = messages_in_chat.latest('timestamp') if len(messages_in_chat) != 0 else False
+                if user_chat.blocked:
+                    blocked_object = Block.objects.filter(user_pair=user_chat)[0]
+                    user_chat.blocked_by = blocked_object.blocked_by
                 context['user_chats'].append(user_chat)
+                #blocked_object = Block.objects.filter(user_pair=user_chat)[0]
+                #context['blocked_by'] = blocked_object.blocked_by
         return context
+
+
+def block_user_chat(request: WSGIRequest, uuid: UUID) -> HttpResponse:
+    print(uuid)
+    print(request.user)
+    user_to_block = CustomUser.objects.filter(uuid=uuid)[0]
+    print(user_to_block)
+    #TODO: call util since we are trying to prevent this from being visible frontend
+    if user_to_block.uuid < request.user.uuid:  # pyre-ignore[16]
+        user_chat = UserPair.objects.filter(user1=user_to_block, user2=request.user)[0]
+    else:
+        user_chat = UserPair.objects.filter(user1=request.user, user2=user_to_block)[0]
+    print(user_chat)
+    user_chat.block_user(request.user)
+    print('work')
+
+    # TODO: Add feedback on having blocked the user - new partial?
+    return HttpResponse('blocked user')
 
 
 # helper for inspecting db whether user exists
@@ -283,6 +308,15 @@ class CustomUserPersonalView(TemplateView):
                 password_changed = self.request.session['password_changed']
                 context['password_changed'] = password_changed
                 del self.request.session['password_changed']
+        else:
+            try:
+                if user.uuid < self.request.user.uuid:  # pyre-ignore[16]
+                    user_chat = UserPair.objects.filter(user1=user, user2=self.request.user)[0]
+                else:
+                    user_chat = UserPair.objects.filter(user1=self.request.user, user2=user)[0]
+            except:
+                user_chat = None
+            context['user_chat'] = user_chat
         return render(request, 'account/view.html', context)
 
     def put(self, request: WSGIRequest, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:

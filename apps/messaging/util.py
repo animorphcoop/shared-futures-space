@@ -26,6 +26,7 @@ def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                                       'request_rejected': 'messaging/system_messages/request_rejected.html',
                                       'poll': 'messaging/system_messages/poll.html',
                                       'finished_envision': 'messaging/system_messages/finished_envision.html',
+                                      'blocked user': 'messaging/system_messages/user_chat_blocked.html',
                                       }[kind],
                            chat=chat,
                            context_action = context_action,
