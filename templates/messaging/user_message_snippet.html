@@ -58,24 +58,46 @@
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <form method=POST hx-post="{{ message_post_url }}" hx-target="closest #message" hx-swap="outerHTML"
                           class="flex font-kanit-600 tracking-[0.03em] text-red-important">
-
                         {% csrf_token %}
-{% comment %}                        <input type=hidden name="retrieve_messages"></input>
-                        <input type=hidden name="from" value="{{ from }}"></input>
-                        <input type=hidden name="interval" value="{{ from|add:10 }}"></input>{% endcomment %}
                         {% if user.is_authenticated %}
-                            <button name=flag value="{{ message.uuid }}">
-                                <svg width="8" height="10" viewBox="0 0 8 10"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                        {% if message.uuid in my_flags %}
-
-                                     class="fill-red-important"
-                                        {% else %}
-                                     class="fill-black/30"
-                                        {% endif %}>
-                                    <path d="M0 10V0H4.42857L4.78571 1.49254H7.92857V6.86567H4.92857L4.57143 5.37313H0.785714V10H0ZM5.57143 6.04478H7.21429V2.31343H4.21429L3.85714 0.820896H0.785714V4.55224H5.21429L5.57143 6.04478Z"/>
-                                </svg>
-                            </button>
+                            <div x-data="{ overlay: false }" class="inline-block">
+                                <button name=flag value="{{ message.uuid }}"
+                                        @click="overlay = ! overlay; {# $event.preventDefault(); #}">
+                                    <svg width="8" height="10" viewBox="0 0 8 10"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                            {% if message.uuid in my_flags %}
+                                                class="fill-red-important"
+                                            {% else %}
+                                                class="fill-black/30"
+                                            {% endif %}>
+                                        <path d="M0 10V0H4.42857L4.78571 1.49254H7.92857V6.86567H4.92857L4.57143 5.37313H0.785714V10H0ZM5.57143 6.04478H7.21429V2.31343H4.21429L3.85714 0.820896H0.785714V4.55224H5.21429L5.57143 6.04478Z"/>
+                                    </svg>
+                                </button>
+                                <div class="" :class="overlay || 'hidden'"
+                                     @click="">
+                                    <section
+                                            class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
+                                        {#  White modal background  #}
+                                        <div class="w-full bg-white m-2.5 sm:w-[360px]">
+                                            <div class="bg-red-important/30 sm:w-[360px]">
+                                                <div class="p-2.5">
+                                                    <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                                                        <p class="text-large pb-6 normal-case">
+                                                            If three people flag this message then it will be hidden for all users.
+                                                        </p>
+                                                        <div class="flex gap-4.5">
+                                                            <button @click="overlay = ! overlay;"
+                                                                    class="button button-on-colour">
+                                                                OK
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
                         {% endif %}
                         {% if user == starter %}
                             {% include "partials/horizontal-spacer.html" with space="1.5" %}
