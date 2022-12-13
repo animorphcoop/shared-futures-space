@@ -233,7 +233,8 @@ def block_user_chat(request: WSGIRequest, uuid: UUID) -> HttpResponse:
     print('work')
 
     # TODO: Add feedback on having blocked the user - new partial?
-    return HttpResponse('blocked user')
+    # return HttpResponse('blocked user')
+    return render(request, 'account/partials/blocked.html')
 
 
 # helper for inspecting db whether user exists
