@@ -10,8 +10,8 @@
                 {{prompt}}
             </h1>
             {% include "partials/vertical-spacer.html" with space="4.5" %}
-            <form hx-post="{% url 'create_river_poll' slug stage topic %}" hx-target="#{{stage}}-{{topic}}-poll-wrapper"
-                  hx-swap="innerHTML" class="m-0">
+            <form hx-post="{% url 'create_river_poll' slug stage topic %}"
+                  hx-swap="none" class="m-x" id="poll-form-{{stage}}-{{topic}}">
                 {% csrf_token %}
                 <textarea class="block w-full h-2/3 px-3 py-1.5 rounded text-body" name=description>
                 {{ default }}
@@ -24,7 +24,7 @@
                         <path d="M16 7H3.83L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7Z" fill="#9759FF"/>
                     </svg>
                 </button>
-                <input type="submit" value="Create poll" class="button button-important">
+                <input type="submit" value="Create poll" class="button button-important" onclick="submitAndRemovePollModal()">
             </span>
             </form>
         </div>
@@ -32,9 +32,15 @@
 </section>
 
 <script>
-    function removePollModal() {
+    function submitAndRemovePollModal() {
         //console.log(document.getElementById('river-poll'))
-        document.getElementById('river-poll').remove()
+        document.getElementById('poll-form-{{stage}}-{{topic}}').requestSubmit();
+        console.log(document.getElementById('{{stage}}-chat-{{topic}}'));
+        htmx.trigger('#{{stage}}-chat-{{topic}}', 'htmx:load'); // TODO: this doesn't actually work
+        removePollModal();
+    }
+    function removePollModal() {
+        document.getElementById('river-poll').remove();
     }
 </script>
 

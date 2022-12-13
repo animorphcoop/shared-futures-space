@@ -44,6 +44,7 @@ class BasePoll(models.Model):
     expires: models.DateTimeField = models.DateTimeField()
     created: models.DateTimeField = models.DateTimeField(default = timezone.now)
     closed: models.BooleanField = models.BooleanField(default = False)
+    passed: models.BooleanField = models.BooleanField(default = False)
     vote_kind: models.Model = BaseVote # pyre-ignore[8]
     invalid_option: models.BooleanField = models.BooleanField(default = False)
     created_by: models.ForeignKey = models.ForeignKey(CustomUser, on_delete = models.SET_NULL, null = True, default = 0)
@@ -62,22 +63,14 @@ class BasePoll(models.Model):
                 # this poll is the current poll of the active stage of a river
                 if sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0][0] == 'yes': # pyre-ignore[16]
                     # poll has passed
+                    self.passed = True
+                    self.save()
                     if (river.current_stage == river.Stage.ENVISION):
                         river.start_plan()
                         river.description = self.description
                         river.save()
                         send_system_message(kind = 'finished_envision', chat = river.envision_stage.general_chat, context_river = river)
                     # ...
-                else:
-                    if topic == 'general':
-                        stage.general_poll = None
-                    elif topic == 'funding':
-                        stage.funding_poll = None
-                    elif topic == 'location':
-                        stage.location_poll = None
-                    elif topic == 'dates':
-                        stage.dates_poll = None
-                    stage.save()
 
     def get_poll_context(self, poll): # pyre-ignore[2,3]
         from river.models import River, EnvisionStage, PlanStage, ActStage, ReflectStage # pyre-ignore[21]

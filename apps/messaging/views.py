@@ -72,8 +72,10 @@ class ChatView(TemplateView):
             pagination_data = self.paginate_messages(request, message_list)
 
             chat_poll = self.get_river_poll(river, kwargs['stage'], kwargs['topic']) # pyre-ignore[6]
+            stage_ref = {'envision': river.envision_stage, 'plan': river.plan_stage, 'act': river.act_stage, 'reflect': river.reflect_stage}[kwargs['stage']]
 
             context = {
+                'river': river,
                 'members': members,
                 'slug': kwargs['slug'],
                 'stage': kwargs['stage'],
@@ -85,8 +87,13 @@ class ChatView(TemplateView):
                 'direct': False,
                 'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
                 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
-                'chat_open': chat_poll == None or not chat_poll.closed,
+                'chat_open': chat_poll == None or not chat_poll.closed or (chat_poll.closed and not chat_poll.passed),
+                'stage_ref': stage_ref,
+                'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
+                'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
+                'starters': RiverMembership.objects.filter(river=river, starter = True).values_list('user', flat=True),
             }
+            
         else:
             context = {} # just in case
         if request.GET.get('page'):
@@ -111,9 +118,13 @@ class ChatView(TemplateView):
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
             chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic']) # pyre-ignore[6]
             chat_poll = self.get_river_poll(river, kwargs['stage'], kwargs['topic']) # pyre-ignore[6]
-            chat_open = chat_poll == None or not chat_poll.closed
+            chat_open = chat_poll == None or not chat_poll.closed or (chat_poll.closed and not chat_poll.passed)
+            stage_ref = {'envision': river.envision_stage, 'plan': river.plan_stage, 'act': river.act_stage, 'reflect': river.reflect_stage}[kwargs['stage']]
             context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]), 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
-                       'chat_open': chat_open,}
+                       'chat_open': chat_open, 'stage_ref': stage_ref, 'river': river,
+                       'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
+                       'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
+                       'starters': RiverMembership.objects.filter(river=river, starter = True).values_list('user', flat=True),}
         else:
             return HttpResponse('error - no user_path or slug specified')
         if request.user in members:
