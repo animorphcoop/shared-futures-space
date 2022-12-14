@@ -1,13 +1,56 @@
-{% comment %}
-act view
+{% block content %}
+    {# Wasn't sure how to send the different chats to the different tabs, so all in here for now {% include "partials/messages_tabs.html" %} #}
 
-<p><a href="{% url 'river_chat' river.slug 'act' 'general' %}">Act General Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'act' 'funding' %}">Act Funding Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'act' 'location' %}">Act Location Chat</a></p>
-<p><a href="{% url 'river_chat' river.slug 'act' 'dates' %}">Act Dates Chat</a></p>
-
-{% if river.current_stage == river.Stage.ACT %}
-    <form method=POST>{% csrf_token %}<button name=action value=start_plan>[TESTING] Start Reflect Stage</button></form>
-{% endif %}
-{% endcomment %}
-
+    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
+        <div x-data="{ openTab: 'one' }">
+            <ul class="flex justify-between">
+                <li @click="openTab = 'one'" class="{{ li_class }}"
+                    :class="openTab == 'one' ? 'tab-shadow-selected' : 'tab-shadow'">
+                    {% include "landing/tabbed-resources/title.html" with title="General" %}
+                </li>
+                <li @click="openTab = 'two'" class="{{ li_class }}"
+                    :class="openTab == 'two' ? 'tab-shadow-selected' : 'tab-shadow'">
+                    {% include "landing/tabbed-resources/title.html" with title="Money" %}
+                </li>
+                <li @click="openTab = 'three'" class="{{ li_class }}"
+                    :class="openTab == 'three' ? 'tab-shadow-selected' : 'tab-shadow'">
+                    {% include "landing/tabbed-resources/title.html" with title="Place" %}
+                </li>
+                <li @click="openTab = 'four'" class="{{ li_class }}"
+                    :class="openTab == 'four' ? 'tab-shadow-selected' : 'tab-shadow'">
+                    {% include "landing/tabbed-resources/title.html" with title="Time" %}
+                </li>
+            </ul>
+            <div class="w-full-mx-4.5 bg-white">
+                {# GENERAL TAB #}
+                <div x-show="openTab === 'one'">
+                    <div id="act-chat-general" hx-get="{% url 'river_chat' river.slug 'act' 'general' %}"
+                         hx-trigger="load"
+                         hx-target="this">
+                    </div>
+                </div>
+                {# MONEY TAB #}
+                <div x-show="openTab === 'two'">
+                    <div id="act-chat-funding" hx-get="{% url 'river_chat' river.slug 'act' 'funding' %}"
+                         hx-trigger="load"
+                         hx-target="this">
+                    </div>
+                </div>
+                {# PLACE TAB #}
+                <div x-show="openTab === 'three'">
+                    <div id="act-chat-location" hx-get="{% url 'river_chat' river.slug 'act' 'location' %}"
+                         hx-trigger="load"
+                         hx-target="this">
+                    </div>
+                </div>
+                {# TIME TAB #}
+                <div x-show="openTab === 'four'">
+                    <div id="act-chat-dates" hx-get="{% url 'river_chat' river.slug 'act' 'dates' %}"
+                         hx-trigger="load"
+                         hx-target="this">
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% endblock %}

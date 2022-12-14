@@ -70,11 +70,17 @@ class BasePoll(models.Model):
                         river.description = self.description
                         river.save()
                         send_system_message(kind = 'finished_envision', chat = river.envision_stage.general_chat, context_river = river)
-                    if (river.current_stage == river.Stage.PLAN):
+                    elif (river.current_stage == river.Stage.PLAN):
                         if (topic == 'general' and river.plan_stage.funding_poll and river.plan_stage.funding_poll.passed
                             and river.plan_stage.location_poll and river.plan_stage.location_poll.passed and river.plan_stage.dates_poll
                             and river.plan_stage.dates_poll.passed):
                             river.start_act()
+                            river.save()
+                    elif (river.current_stage == river.Stage.ACT):
+                        if (river.act_stage.general_poll and river.act_stage.general_poll.passed and river.plan_stage.funding_poll
+                            and river.plan_stage.funding_poll.passed and river.act_stage.location_poll and river.plan_stage.location_poll.passed and
+                            river.plan_stage.dates_poll and river.act_stage.dates_poll.passed):
+                            river.start_reflect()
                             river.save()
                     # ...
 
@@ -106,7 +112,7 @@ class BasePoll(models.Model):
             return (River.objects.get(act_stage = asl[0]), asl[0], 'location')
         asd = ActStage.objects.filter(dates_poll = poll)
         if asd.exists():
-            return (River.objects.get(plan_stage = asd[0]), asd[0], 'dates')
+            return (River.objects.get(act_stage = asd[0]), asd[0], 'dates')
         return False, False, False
 
 class SingleChoicePoll(BasePoll):
