@@ -70,6 +70,12 @@ class BasePoll(models.Model):
                         river.description = self.description
                         river.save()
                         send_system_message(kind = 'finished_envision', chat = river.envision_stage.general_chat, context_river = river)
+                    if (river.current_stage == river.Stage.PLAN):
+                        if (topic == 'general' and river.plan_stage.funding_poll and river.plan_stage.funding_poll.passed
+                            and river.plan_stage.location_poll and river.plan_stage.location_poll.passed and river.plan_stage.dates_poll
+                            and river.plan_stage.dates_poll.passed):
+                            river.start_act()
+                            river.save()
                     # ...
 
     def get_poll_context(self, poll): # pyre-ignore[2,3]

@@ -89,6 +89,9 @@ class ChatView(TemplateView):
                 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
                 'chat_open': chat_poll == None or not chat_poll.closed or (chat_poll.closed and not chat_poll.passed),
                 'stage_ref': stage_ref,
+                'poll_possible': True if kwargs['stage'] == 'envision' else (kwargs['topic'] != 'general') or (kwargs['topic'] == 'general' and stage_ref.funding_poll and stage_ref.funding_poll.passed
+                                                                                                               and stage_ref.location_poll and stage_ref.location_poll.passed and stage_ref.dates_poll
+                                                                                                               and stage_ref.dates_poll.passed),
                 'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
                 'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
                 'starters': RiverMembership.objects.filter(river=river, starter = True).values_list('user', flat=True),
