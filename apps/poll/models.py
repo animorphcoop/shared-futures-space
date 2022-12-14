@@ -170,16 +170,8 @@ class MultipleChoicePoll(BasePoll):
         elif self.expires < timezone.now():
             self.closed = True
             self.save()
-            return True
         else:
-            vote_nums = sorted(list(map(len, self.current_results.values())), reverse = True)
-            if vote_nums[0] > vote_nums[1] + len(MultipleVote.objects.filter(poll = self, choice = [])):
-                # if all remaining votes went to the current second-place option it still wouldn't equal the top option
-                self.closed = True
-                self.save()
-                return True
-            else:
-                return False
+            return False
 
 
 # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll

@@ -80,6 +80,8 @@ class ActStage(models.Model):
 
 class ReflectStage(models.Model):
     general_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT)
+    general_poll: models.ForeignKey = models.ForeignKey('poll.MultipleChoicePoll', default = None, null = True,
+                                                        on_delete = models.SET_DEFAULT)
     # feedback?
 
 
@@ -230,7 +232,18 @@ class River(ClusterableModel):
             self.save()
 
     def start_reflect(self) -> None:
+        from resources.models import Resource, CaseStudy, HowTo
+        from poll.models import MultipleChoicePoll
+        from django.db.models import Q
+        from itertools import chain
         if self.current_stage == self.Stage.ACT:
             self.current_stage = self.Stage.REFLECT
             self.reflect_stage = ReflectStage.objects.create()
             self.save()
+            self.reflect_stage.general_poll = MultipleChoicePoll.objects.create(question = 'Which of these resources did you find useful?',
+                                                                                options = list(dict.fromkeys(chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)).values_list('title', flat = True),
+                                                                                CaseStudy.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)).values_list('title', flat = True)))
+                                                                                for tag_a in self.tags.names() for tag_b in self.tags.names() if tag_a != tag_b and tag_a > tag_b]))),
+                                                                                expires = timezone.now() + timezone.timedelta(days=30),
+                                                                                river = self)
+            self.reflect_stage.save()
