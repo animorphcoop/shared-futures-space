@@ -6,6 +6,7 @@ from poll.models import SingleChoicePoll, SingleVote, MultipleChoicePoll, Multip
 from river.models import RiverMembership
 from messaging.util import send_system_message
 from userauth.util import get_system_user
+from django.utils import timezone
 
 def test_create_poll(client, test_user, test_river):
     client.get(reverse('poll_create')) # make sure form doesn't crash while rendering
@@ -79,8 +80,7 @@ def test_vote_poll_multiple(client, test_user, other_test_user, test_multiplecho
     client.post(reverse('poll_view', args=[test_multiplechoicepoll.uuid]), {'choice': test_multiplechoicepoll.options[1]})
     assert len(MultipleVote.objects.filter(poll = test_multiplechoicepoll, user = test_user, choice__contains = [2])) == 0
     assert MultipleChoicePoll.objects.get(id = test_multiplechoicepoll.id).closed == False
-    # poll will close when it should
-    client.force_login(other_test_user)
-    client.post(reverse('poll_view', args=[test_multiplechoicepoll.uuid]), {'choice': 'poll is wrong'})
-    assert len(MultipleVote.objects.filter(poll = test_multiplechoicepoll, choice__contains = [0])) == 1
-    assert MultipleChoicePoll.objects.get(id = test_multiplechoicepoll.id).closed == True
+    # poll will close when it should (by time and not votes, because multiplechoicepolls don't close due to votes. this is because if they did, they would close when the last person cast their first vote, preventing them from casting any others)
+    test_multiplechoicepoll.expires = timezone.now() - timezone.timedelta(days=1)
+    test_multiplechoicepoll.save()
+    assert MultipleChoicePoll.objects.get(id = test_multiplechoicepoll.id).check_closed() == True

@@ -2,28 +2,31 @@
 
 {% block drawer_content %}
         <div class="-mx-4.5">
-            <div id="act-view" hx-get="{% url 'view_act' object.slug %}"
+            <div id="reflect-view" hx-get="{% url 'view_reflect' object.slug %}"
                  hx-trigger="load"
-                 hx-target="#act-view"
-                 hx-afterload>
-            </div>
+                 hx-target="#reflect-view"
+                 hx-afterload
+            ></div>
         </div>
+
     <script>
-        let actDrawer = document.getElementById("act")
+        let reflectDrawer = document.getElementById("reflect")
 
         {% comment %}https://htmx.org/events/{% endcomment %}
         document.addEventListener('htmx:afterSwap', function () {
-            if (actDrawer != null) {
-                let computedStyle = getComputedStyle(actDrawer);
+            if (reflectDrawer != null) {
+                let computedStyle = getComputedStyle(reflectDrawer);
                 //console.log(computedStyle.getPropertyValue('height'));
                 if (computedStyle.getPropertyValue('height') !== "0px") {
                     //console.log('open')
                     setTimeout(() => {
-                        actDrawer.style.maxHeight = actDrawer.scrollHeight + 'px';
+                        reflectDrawer.style.maxHeight = reflectDrawer.scrollHeight + 'px';
                     }, 500)
                 }
 
             }
         }, false);
+
+
     </script>
 {% endblock %}

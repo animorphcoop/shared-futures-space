@@ -89,11 +89,11 @@ class ChatView(TemplateView):
                 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
                 'chat_open': chat_poll == None or not chat_poll.closed or (chat_poll.closed and not chat_poll.passed),
                 'stage_ref': stage_ref,
-                'poll_possible': True if kwargs['stage'] == 'envision' else (kwargs['topic'] != 'general') or (kwargs['topic'] == 'general' and stage_ref.funding_poll and stage_ref.funding_poll.passed
+                'poll_possible': True if kwargs['stage'] == 'envision' else (False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (kwargs['topic'] == 'general' and stage_ref.funding_poll and stage_ref.funding_poll.passed
                                                                                                                and stage_ref.location_poll and stage_ref.location_poll.passed and stage_ref.dates_poll
-                                                                                                               and stage_ref.dates_poll.passed),
-                'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
-                'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
+                                                                                                               and stage_ref.dates_poll.passed)),
+                'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
+                'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
                 'starters': RiverMembership.objects.filter(river=river, starter = True).values_list('user', flat=True),
             }
             
@@ -125,8 +125,11 @@ class ChatView(TemplateView):
             stage_ref = {'envision': river.envision_stage, 'plan': river.plan_stage, 'act': river.act_stage, 'reflect': river.reflect_stage}[kwargs['stage']]
             context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]), 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
                        'chat_open': chat_open, 'stage_ref': stage_ref, 'river': river,
-                       'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
-                       'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
+                       'poll_possible': True if kwargs['stage'] == 'envision' else (False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (kwargs['topic'] == 'general' and stage_ref.funding_poll and stage_ref.funding_poll.passed
+                                                                                                               and stage_ref.location_poll and stage_ref.location_poll.passed and stage_ref.dates_poll
+                                                                                                               and stage_ref.dates_poll.passed)),
+                       'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
+                       'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
                        'starters': RiverMembership.objects.filter(river=river, starter = True).values_list('user', flat=True),}
         else:
             return HttpResponse('error - no user_path or slug specified')
@@ -229,6 +232,8 @@ class ChatView(TemplateView):
                 poll = river.act_stage.location_poll
             elif topic == 'dates':
                 poll = river.act_stage.dates_poll
+        elif stage == 'reflect':
+            poll = river.reflect_stage.general_poll
         return poll  # pyre-ignore[61]
 
 

@@ -1,3 +1,39 @@
-reflect view
+{% load static %}
 
-<p><a href="{% url 'river_chat' river.slug 'reflect' 'general' %}">Reflect Chat</a></p>
+{% block content %}
+    <div id="reflect-chat-general" hx-get="{% url 'river_chat' river.slug 'reflect' 'general' %}"
+         hx-trigger="load"
+         hx-target="this">
+    </div>
+    <div class="mx-4.5">
+        <div id="reflect-general-poll-wrapper">
+            {% if river.reflect_stage.general_poll != None %}
+                {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div hx-trigger="load" hx-target="closest #reflect-poll-wrapper"
+                         hx-get="{% url 'poll_view' river.reflect_stage.general_poll.uuid %}"></div>
+            {% endif %}
+        </div>
+{% comment %}
+        {% if river.current_stage == river.Stage.REFLECT and request.user.id in starters %}
+            {% if river.reflect_stage.general_poll == None or river.reflect_stage.general_poll.closed %}
+                {% include "partials/vertical-spacer.html" with space="6" %}
+                <div id="poll-creation-wrapper" class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0">
+                    <button hx-get="{% url 'create_river_poll' river.slug 'reflect' 'general' %}" hx-target="#poll-creation"
+                            class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
+                            type="button">
+                        {# Poll creation button #}
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
+                                  fill="#9759FF"/>
+                        </svg>
+                    </button>
+                    <div id="poll-creation"></div>
+                </div>
+            {% endif %}
+        {% endif %}
+{% endcomment %}
+    </div>
+    <script>
+
+    </script>
+{% endblock %}
