@@ -149,7 +149,7 @@ class ChatView(TemplateView):
                 m.hidden_reason = 'by the river starter'
                 m.save()
                 context['message'] = m
-            context['my_flags'] = list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by = request.user))) # pyre-ignore[6]
+            context['my_flags'] = list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by = request.user)))
         return render(request, 'messaging/user_message_snippet.html', context)
 
     def paginate_messages(self, request: WSGIRequest, message_list: QuerySet) -> Dict[str, Any]:
