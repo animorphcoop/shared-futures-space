@@ -165,11 +165,13 @@ class MultipleChoicePoll(BasePoll):
                     results[self.options[choice - 1]].append(vote.user)
         return results
     def check_closed(self) -> bool:
+        # doesn't check votes, because then how would it tell when the last person has finished voting?
         if self.closed:
             return True
         elif self.expires < timezone.now():
             self.closed = True
             self.save()
+            return True
         else:
             return False
 

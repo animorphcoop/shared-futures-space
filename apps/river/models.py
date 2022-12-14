@@ -232,7 +232,7 @@ class River(ClusterableModel):
             self.save()
 
     def start_reflect(self) -> None:
-        from resources.models import Resource, CaseStudy, HowTo
+        from resources.models import Resource, CaseStudy, HowTo # pyre-ignore[21]
         from poll.models import MultipleChoicePoll
         from django.db.models import Q
         from itertools import chain
