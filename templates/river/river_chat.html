@@ -18,7 +18,7 @@
                      hx-get="{% url 'poll_view' poll_ref.uuid %}"></div>
             {% endif %}
         </div>
-        {% if river.current_stage == river.Stage.PLAN and request.user.id in starters %}
+        {% if river.current_stage == stage and request.user.id in starters %}
             {% if poll_ref == None or not poll_ref.passed %}
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 <div id="poll-creation-wrapper"
