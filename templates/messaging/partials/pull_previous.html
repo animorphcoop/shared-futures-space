@@ -20,11 +20,10 @@
                             hx-vars="page:{{ page_obj.previous_page_number }}"
                             hx-params="*"
                             hx-trigger="click"
-                            hx-target="#messages"
+                            hx-target="#messages-{{ unique_id }}"
                             hx-swap="afterbegin"
 
                             x-on:click="setTimeout(function(e){
-                            console.log($el.parentNode.remove());
                             $el.parentNode.remove()
                         }, 250);">
 
@@ -38,11 +37,10 @@
                     hx-vars="page:{{ page_obj.previous_page_number }}"
                     hx-params="*"
                     hx-trigger="click"
-                    hx-target="#messages"
+                    hx-target="#messages-{{ unique_id }}"
                     hx-swap="afterbegin"
 
                     x-on:click="setTimeout(function(e){
-                            console.log($el.parentNode.remove());
                             $el.parentNode.remove()
                         }, 250);">
 
@@ -51,5 +49,3 @@
         {% endif %}
     {% endif %}
 </div>
-
-{% include "partials/vertical-spacer.html" with space="6" %}
