@@ -26,11 +26,18 @@
 
             </div>
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
-            <img class="h-6 w-6" src={{ message.sender.avatar.image_url }} alt="useravatar">
+            <img class="h-6 w-6" src="{{ message.sender.avatar.image_url }}" alt="useravatar">
         </div>
     {% else %}
         <div class="flex">
-            <img class="h-6 w-6" src="{{ message.sender.avatar.image_url }}" alt="useravatar">
+
+
+            {% if message.sender.display_name == 'salmon' %}
+                <img src="{% static 'images/avatars/salmon_1.png' %}" class="w-6 h-6">
+            {% else %}
+                <img class="h-6 w-6" src="{{ message.sender.avatar.image_url }}" alt="useravatar">
+            {% endif %}
+
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
             <div class="flex flex-col w-full">
                 <span class="text-body">
@@ -57,7 +64,7 @@
                     <p>{{ message.timestamp|date:"d/m/y" }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
 
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and message.sender.display_name != 'salmon' %}
                         <div class="inline-block">
 
                             <button
