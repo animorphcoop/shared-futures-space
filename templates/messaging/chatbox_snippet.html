@@ -87,14 +87,12 @@
         }
 
         function createForm(messages, formId, upload, file) {
-            console.log(formId)
             let messagess = document.getElementById(messages)
             let uploadCheckbox = document.getElementById(upload)
             const observerMessages = new MutationObserver(function (mutations) {
                 mutations.forEach(function () {
                     let chatForm = document.getElementById(formId)
                     chatForm.reset()
-                    console.log('u here?')
                     if (!uploadCheckbox.classList.contains('hidden')) {
                         uploadCheckbox.classList.add('hidden')
                     }
@@ -107,7 +105,6 @@
             const fileInput = document.getElementById(file)
 
             fileInput.onchange = function () {
-                //console.log(fileInput.files.length)
                 let currentLength = fileInput.files.length
                 if (currentLength > 0) {
                     if (uploadCheckbox.classList.contains('hidden')) {
@@ -123,65 +120,5 @@
 
         }
 
-        {#messages-{{unique_id}}#}
-        {% comment %}let messages = document.getElementById("messages-{{unique_id}}")
-
-        if (messages != null) {
-            const observerMessages = new MutationObserver(function (mutations) {
-                mutations.forEach(function () {
-                    let chatForm = document.getElementById('chat-form-{{unique_id}}')
-                    chatForm.reset()
-                    console.log('u here?')
-                    let uploadCheckbox = document.getElementById("upload-ready-{{unique_id}}")
-                    if (!uploadCheckbox.classList.contains('hidden')) {
-                        uploadCheckbox.classList.add('hidden')
-                    }
-
-                })
-            })
-            let configMessages = {childList: true};
-            observerMessages.observe(messages, configMessages);
-
-        }
-
-        let uploadCheckbox = document.getElementById("upload-ready-{{unique_id}}")
-        const fileInput = document.getElementById('file-{{unique_id}}')
-        fileInput.onchange = function () {
-            //console.log(fileInput.files.length)
-            let currentLength = fileInput.files.length
-            if (currentLength > 0) {
-                if (uploadCheckbox.classList.contains('hidden')) {
-                    uploadCheckbox.classList.remove('hidden')
-                }
-            } else {
-                if (!uploadCheckbox.classList.contains('hidden')) {
-                    uploadCheckbox.classList.add('hidden')
-                }
-
-            }
-        }
-
-
-        function fileLength() {
-            const fileInput = document.getElementById('file-{{unique_id}}').files
-            return fileInput.length > 0
-        }
-
-        function validateChat(chat) {
-            let errorCount = 0;
-            const textLength = document.getElementById('text-box-' + chat).value
-            const fileValue = document.getElementById('file-' + chat).files
-
-            if (textLength.length < 1 && fileValue.length < 1) {
-                errorCount++
-            }
-            return errorCount === 0;
-
-        }
-
-
-        const random = (length = 8) => {
-    return Math.random().toString(16).substr(2, length);
-};{% endcomment %}
     </script>
 {% endblock %}

@@ -1,7 +1,6 @@
 {% load static %}
 
 {% include 'messaging/partials/pull_previous.html' %}
-
 {% comment %}{% if page_obj.count > 0 %}{% endcomment %}
 <div x-data="{ overlay: false }">
     {% for message in page_obj %}
@@ -19,7 +18,3 @@
     {% include "partials/salmon-of-knowledge.html" with text="No messages yet, start the conversation!" %}
 
 {% endif %}{% endcomment %}
-
-<script>
-    document.addEventListener('click', ()=>{console.log(event.target)})
-</script>
