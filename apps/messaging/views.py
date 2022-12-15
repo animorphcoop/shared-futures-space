@@ -22,16 +22,6 @@ from django.http import HttpResponse
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models.query import QuerySet
 
-
-# TODO: Rewrite when we settle on how it works now
-# usage note: you must redefine post and get_context_data
-# both need to be passed three kwargs:
-#   a list of users called 'members' which is the people allowed to post in the chat
-#   a Chat called 'chat'
-#   a str called 'url' which is the url to post new chat requests to, ie. if htmx is in use it's the hx-post not the address bar url
-# your get_context_data should define user_anonymous_message and not_member_message in context
-
-
 class ChatView(TemplateView):
     # form_class: Type[ChatForm] = ChatForm
     

@@ -1,4 +1,5 @@
 <b>{{message.context_action.creator.display_name}} made a request: </b>{{message.context_action.kind}}<b>, because: </b>{{message.context_action.param_str}}.
+{% if not preview %}
 {% if message.context_action.result == 'invoked' %}
     [accepted]
 {% elif message.context_action.result == 'rejected' %}
@@ -10,4 +11,5 @@
         <button name=choice value=invoke>Mark Accepted (don't forget to do it first)</button>
         <button name=choice value=reject>Mark Rejected</button>
     </form>
+{% endif %}
 {% endif %}

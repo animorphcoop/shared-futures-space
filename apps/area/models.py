@@ -25,7 +25,6 @@ class PostCode(models.Model):
     code: models.CharField = models.CharField(max_length = 4)
     area: models.ForeignKey = models.ForeignKey(Area, on_delete = models.CASCADE, null = True)
     def save(self, *args: Tuple[Any], **kwargs: Dict[str,Any]) -> None:
-        # normalise different ways of writing the postcode - TODO: carrying cleaning on the frontend & view
         m = re.match(r'([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)\s?([0-9][a-zA-Z]{2})?', self.code)
         if m is not None:
             self.code = m.group(1).upper() # discard incode

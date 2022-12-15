@@ -1,3 +1,7 @@
-<p>The envision stage has finished! The agreed-upon vision is:</p>
-<br>
-<p>{{message.context_river.description}}</p>
+{% if preview %}
+  The envision stage has finished!
+{% else %}
+  <p>The envision stage has finished! The agreed-upon vision is:</p>
+  <br>
+  <p>{{message.context_river.description}}</p>
+{% endif %}

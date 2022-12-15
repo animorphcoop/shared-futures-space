@@ -32,8 +32,6 @@ class SpringView(TemplateView):
 
 
         rivers = River.objects.filter(area=area)
-        # rivers = River.objects.all()
-        # members = []
         for river in rivers:
             river.tags = tag_cluster_to_list(river.tags)
 
@@ -53,7 +51,6 @@ class SpringView(TemplateView):
         num_swimmers = RiverMembership.objects.filter(
             river__in=River.objects.filter(area=area)).values_list('user', flat=True).distinct().count()
 
-        # TODO: Add when started and which stage
         context = {
             'area': area,
             'rivers': rivers,

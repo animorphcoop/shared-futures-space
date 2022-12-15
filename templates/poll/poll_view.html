@@ -10,8 +10,7 @@
                 <h3 class="flex items-center justify-between">
                     {#  User icon and poll header text  #}
                     <div class="flex gap-2 items-center">
-                        {#  TODO: [[ POLL CREATOR AVATAR, user or salmon ]]  #}
-                        <img src="{% static 'images/avatars/salmon_1.png' %}" class="w-6 h-6">
+                        <img src="{% if poll.created_by.id == 0 %}{% static 'images/avatars/salmon_1.png' %}{% else %}{{ poll.created_by.avatar.image_url }}{% endif %}" class="w-6 h-6">
                         <p class="text-header text-center">
                             {{ poll_name }}
                         </p>
@@ -34,8 +33,7 @@
             </button>
         </div>
         {#  Poll body  #}
-        <div> {# removed collapsable class="relative overflow-hidden transition-all max-h-0 duration-500" style="" x-ref="poll" x-bind:style="selected == 1 ? 'max-height: ' + $refs.poll.scrollHeight + 'px' : ''" #}
-            {#  TODO: "poll" in x-ref and in x-bind as the poll's uuid  #}
+        <div>
             {#  Poll description  #}
             <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}">
                 {% include "partials/vertical-spacer.html" with space="3" %}
@@ -64,7 +62,7 @@
                                 {% endif %}
                                 <button class="flex items-center gap-4"
                                         @click="selected !== 1 ? selected = 1 : selected = null">
-                                    <span class="text-meta font-kanit-700"> {#  TODO: Winning option on a closed poll is is text-red-important  #}
+                                    <span class="text-meta font-kanit-700">
                                         {{ count|length }}
                                     </span>
                                     <div class="w-[12] h-[8] transition duration-500 ease-out"
@@ -104,14 +102,13 @@
                 {#  Poll timing information  #}
                 <p class="block text-meta px-3.5">
                     {% if poll_closed %}
-                        This poll finished at {{ poll_expires|date:"G:i" }} {{ poll_expires|date:"d/m/y" }}. {#  TODO: Does this need to be different if the vote ends earlier than the maximum?  #}
+                        This poll finished at {{ poll.when_closed|date:"G:i" }} {{ poll.when_closed|date:"d/m/y" }}.
                     {% else %}
                         Please cast your vote. This vote will close in {{ poll_expires|timeuntil }}.
                     {% endif %}
                 </p>
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 {#  User info of the vote triggerer  #}
-                {#  TODO: Add poll creator name, time and date created at  #}
                 <p class="flex gap-2 text-meta uppercase text-black/30 px-3.5">
                     <span>{{ poll.created_by.display_name }}</span>
                     <span>{{ poll.created.time|time:"G:i" }}</span> {# created time #}

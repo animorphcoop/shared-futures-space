@@ -105,6 +105,7 @@ class CaseStudy(Resource):
 
 # SIGNALS
 # TODO: Find out 'sender' type
+# (unclear what this todo means?)
 @receiver(post_save, sender=HowTo)
 def add_slug_to_how_to(sender, instance, *args, **kwargs) -> None:  # pyre-ignore[2]
     if instance and not instance.slug:

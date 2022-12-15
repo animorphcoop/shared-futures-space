@@ -16,7 +16,7 @@ from messaging.forms import ChatForm  # pyre-ignore[21]
 from django.http.request import QueryDict
 
 from .tasks import send_after
-from .util import user_to_slug, slug_to_user
+from .util import user_to_slug, slug_to_user, get_userpair
 from messaging.models import Message  # pyre-ignore[21]
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
@@ -202,6 +202,7 @@ class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['user_chats'] = []
+        context['blocked_chats'] = []
         for user in CustomUser.objects.all():
             if user.uuid < self.request.user.uuid:  # pyre-ignore[16]
                 user_chat = UserPair.objects.filter(user1=user, user2=self.request.user)
@@ -215,26 +216,20 @@ class UserAllChatsView(TemplateView):
                 if user_chat.blocked:
                     blocked_object = Block.objects.filter(user_pair=user_chat)[0]
                     user_chat.blocked_by = blocked_object.blocked_by
-                context['user_chats'].append(user_chat)
+                else:
+                    user_chat.blocked_by = None
+                if user_chat.blocked_by == self.request.user:
+                    context['blocked_chats'].append(user_chat)
+                else:
+                    context['user_chats'].append(user_chat)
         return context
 
 
 def block_user_chat(request: WSGIRequest, uuid: UUID) -> HttpResponse:
-    print(uuid)
-    print(request.user)
     user_to_block = CustomUser.objects.filter(uuid=uuid)[0]
-    print(user_to_block)
-    # TODO: call util since we are trying to prevent this from being visible frontend
-    if user_to_block.uuid < request.user.uuid:  # pyre-ignore[16]
-        user_chat = UserPair.objects.filter(user1=user_to_block, user2=request.user)[0]
-    else:
-        user_chat = UserPair.objects.filter(user1=request.user, user2=user_to_block)[0]
-    print(user_chat)
+    user_chat = get_userpair(request.user, user_to_block) # pyre-ignore[6]
     user_chat.block_user(request.user)
-    print('work')
 
-    # TODO: Add feedback on having blocked the user - new partial?
-    # return HttpResponse('blocked user')
     return render(request, 'account/partials/blocked.html')
 
 

@@ -44,6 +44,7 @@ class BasePoll(models.Model):
     expires: models.DateTimeField = models.DateTimeField()
     created: models.DateTimeField = models.DateTimeField(default = timezone.now)
     closed: models.BooleanField = models.BooleanField(default = False)
+    when_closed: models.DateTimeField = models.DateTimeField(null = True, default = None)
     passed: models.BooleanField = models.BooleanField(default = False)
     vote_kind: models.Model = BaseVote # pyre-ignore[8]
     invalid_option: models.BooleanField = models.BooleanField(default = False)
@@ -57,6 +58,7 @@ class BasePoll(models.Model):
             return self.singlechoicepoll # pyre-ignore[16]
     def close(self) -> None:
         from messaging.util import send_system_message # pyre-ignore[21]
+        self.when_closed = timezone.now()
         if self.singlechoicepoll: # pyre-ignore[16]
             river, stage, topic = self.get_poll_context(self.singlechoicepoll)
             if river:

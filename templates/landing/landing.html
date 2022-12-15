@@ -66,17 +66,9 @@
         </div>
         {% include "partials/vertical-spacer.html" with space="9" %}
 
-        <section class="bg-resources-two -mx-4.5">
-            {% url 'resources' as resources_url %}
-
-            {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" %}
-        </section>
-        {% comment %}        <section class="bg-[rgba(121,203,208,1)] -mx-4.5">
-            {% include "partials/call-to-action.html" with main="Find a community river to join!" button="Go to your river" url=the_url info="" %}
-        </section>{% endcomment %}
-        <section class="bg-yellow -mx-4.5">
-            {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" %}
-        </section>
+        {% url 'resources' as resources_url %}
+        {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-resources-two -mx-4.5" %}
+        {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" bg="bg-yellow -mx-4.5" %}
 
         {% include "partials/vertical-spacer.html" with space="9" %}
         {% include "landing/section-heading.html" with title="Case Studies" %}

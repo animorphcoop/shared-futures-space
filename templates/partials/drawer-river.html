@@ -45,23 +45,9 @@
 
     <script>
         function scrollToTop(id) {
-            console.log(id)
             let drawer_id = id;
-            console.log("I'm the drawer ID: " + drawer_id);
             let el = document.querySelector('#' + drawer_id);
-            console.log("I'm the el: " + el);
             el.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-            console.log('I scrolled to top of ' + drawer_id);
         }
-
-        {#function scrollToBottom(id) {#}
-        {#    console.log(id)#}
-        {#    let drawer_id = id;#}
-        {#    console.log("I'm the drawer ID: " + drawer_id);#}
-        {#    let el = document.querySelector('#' + drawer_id);#}
-        {#    console.log("I'm the el: " + el);#}
-        {#    el.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});#}
-        {#    console.log('I scrolled to bottom of' + drawer_id);#}
-        {#}#}
     </script>
 {% endblock %}

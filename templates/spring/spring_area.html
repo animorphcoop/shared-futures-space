@@ -36,12 +36,8 @@
     {% include "partials/vertical-spacer.html" with space="4.5" %}
 
     {% if area.name == user.post_code.area.name %}
-        <section class="bg-resources-two">
-            {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url3='start_river' info="" %}
-        </section>
+        {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url3='start_river' info="" bg="bg-resources-two" %}
     {% endif %}
     {#    Hidden for now, unhide when Estuary exists! #}
-    {#    <section class="bg-yellow">#}
-    {#        {% include "partials/call-to-action.html" with main="Are you interested in rivers from other areas? Explore springs from top navigation!" %}#}
-    {#    </section>#}
+    {#    {% include "partials/call-to-action.html" with main="Are you interested in rivers from other areas? Explore springs from top navigation!" bg="bg-yellow" %}#}
 {% endblock content %}

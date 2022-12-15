@@ -22,18 +22,11 @@ def invoke_action_view(request: WSGIRequest) -> HttpResponsePermanentRedirect:
                 action.receiver == None and request.user.is_superuser)):  # pyre-ignore[16]
             if (request.POST['choice'] == 'invoke'):
                 invoke_action(action)
-                # return HttpResponse("action completed (TODO: redirect? how will this be invoked?)")
             elif (request.POST['choice'] == 'reject'):
                 reject_action(action)
-                # return HttpResponse("action rejected (TODO: redirect? how will this be invoked?)")
-
-
         elif (action.creator == request.user and request.POST['choice'] == 'retract'):
             rescind_action(action)
-            # return HttpResponse("action rescindeddd")
-
         else:
-            # return HttpResponse("you do not have the right to invoke this action")
             pass
     return redirect(request.META['HTTP_REFERER']) if 'HTTP_REFERRER' in request.META else redirect('/')
 

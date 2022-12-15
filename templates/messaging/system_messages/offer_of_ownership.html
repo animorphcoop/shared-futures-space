@@ -1,3 +1,6 @@
+{% if preview %}
+&lt;offer of river starter status&gt;
+{% else %}
 <form method=POST action="{% url 'do_action' %}" class="m-0">
     {% csrf_token %}
     <input type=hidden name=action_id value={{ message.context_action.uuid }}>
@@ -31,3 +34,4 @@
         {% endif %}
     {% endif %}
 </form>
+{% endif%}

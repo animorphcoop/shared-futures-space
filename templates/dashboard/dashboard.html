@@ -48,10 +48,8 @@
 
     {#  Call to action partial, replace URL variable  #}
     {% if request.user.post_code.area.name != 'Other' %}
-        <section class="bg-resources-two">
-            {% url 'spring' request.user.post_code.area.name as the_url %}
-            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" %}
-        </section>
+        {% url 'spring' request.user.post_code.area.name as the_url %}
+        {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" bg="bg-resources-two" %}
     {% endif %}
 
     {% if request.user.post_code.area.name != 'Other' %}
@@ -77,14 +75,13 @@
     {% include "dashboard/partials/resources.html" with title="Saved resources" reference="resources" %}
 
     {% comment %}
-    TODO: Is this true?
-    {% endcomment %}
-    {% comment %}
-    {% if user.is_staff %}
+      TODO: Is this true?
+
+      {% if user.is_staff %}
         <br/>
         <a href="{% url 'account_request_panel' %}">Manage User Requests</a>
-    {% endif %}
-{% endcomment %}
+      {% endif %}
+    {% endcomment %}
     {% include "dashboard/partials/get_in_touch.html" with title="Get in touch" reference="get_in_touch" %}
 
 {% endblock content %}

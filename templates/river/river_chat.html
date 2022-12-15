@@ -4,10 +4,8 @@
     {% include 'messaging/messages.html' with direct=direct message_post_url=message_post_url%}
 
     {% if not user.is_authenticated %}
-        <div class="bg-blue-done">
-            {% url 'account_login' as the_url %}
-            {% include "partials/call-to-action.html" with main="To participate in the project you need to be logged in." button="Log in" url=the_url  bg='done' %}
-        </div>
+        {% url 'account_login' as the_url %}
+        {% include "partials/call-to-action.html" with main="To participate in the project you need to be logged in." button="Log in" url=the_url  bg="bg-blue-done" %}
     {% endif %}
 
     <div class="">

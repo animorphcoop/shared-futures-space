@@ -39,7 +39,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
         river = River.objects.get(slug=slug)
         if (request.POST['action'] == 'leave'):
             membership = RiverMembership.objects.get(user=request.user, river=river)
-            if not membership.starter:  # reject starter's attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last starter left. TODO: allow starters to leave as well if they're not the last starter
+            if not membership.starter: # reject starter's attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last starter left.
                 membership.delete()
                 print(
                     '!!! WARNING C !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
@@ -50,10 +50,6 @@ class RiverView(DetailView):  # pyre-ignore[24]
                 print(
                     '!!! WARNING D !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                 # send_system_message(river.chat, 'joined_river', context_river = river, context_user_a = request.user)
-        # TESTING PURPOSES ONLY!! TODO # # # # # # # # # #
-        if (request.POST['action'] == 'start_envision'):  #
-            river.start_envision()  #
-        # # # # # # # # # # # # # # # # # # # # # # # # #
         return super().get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
@@ -87,8 +83,7 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
         if (RiverMembership.objects.get(river=river, user=request.user).starter == True):
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'):
                 starters = RiverMembership.objects.filter(river=river, starter=True)
-                if (
-                        len(starters) >= 2):  # won't be orphaning the river (TODO: allow rivers to be shut down, in which case they can be orphaned)
+                if (len(starters) >= 2):  # won't be orphaning the river (TODO: allow rivers to be shut down, in which case they can be orphaned. v2?)
                     my_membership = RiverMembership.objects.get(river=river, user=request.user, starter=True)
                     my_membership.starter = False
                     my_membership.save()
@@ -218,10 +213,6 @@ class CreateRiverPollView(TemplateView):
 
 
 class EnvisionView(TemplateView):
-    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        River.objects.get(slug=slug).start_plan()  # TODO TESTING PURPOSES ONLY
-        return super().get(request, slug)
-
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
@@ -230,10 +221,6 @@ class EnvisionView(TemplateView):
 
 
 class PlanView(TemplateView):
-    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        River.objects.get(slug=slug).start_act()  # TODO TESTING PURPOSES ONLY
-        return super().get(request, slug)
-
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
@@ -242,10 +229,6 @@ class PlanView(TemplateView):
 
 
 class ActView(TemplateView):
-    def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
-        River.objects.get(slug=slug).start_reflect()  # TODO TESTING PURPOSES ONLY
-        return super().get(request, slug)
-
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
