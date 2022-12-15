@@ -1,21 +1,34 @@
+{% load static %}
+
 {% with h3_class="uppercase font-kanit-700 text-black-large text-[9px] leading-3 tracking-widest" p_class="text-meta text-black/55" %}
-    <div class="bg-gradient-to-b from-blue-second to-white flex flex-col py-8 -mx-4.5 px-4.5">
+    <div class="bg-gradient-to-b from-blue-second to-white flex flex-col flex-start py-8 -mx-4.5 px-4.5 gap-8">
         <h3 class="{{ h3_class }}">Funded by</h3>
-        {% include "partials/vertical-spacer.html" with space="3" %}
-        <p class="{{ p_class }}">Special EU Programmes Body</p>
-        {% include "partials/vertical-spacer.html" with space="9" %}
+        <div>
+            <img src="{% static 'images/partner_logos/seupb.png' %}" class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto" alt="Special EU Programmes Body">
+        </div>
 
         <h3 class="{{ h3_class }}">Project Team</h3>
-        {% include "partials/vertical-spacer.html" with space="3" %}
-        <p class="{{ p_class }}">Co-operation Ireland</p>
-        {% include "partials/vertical-spacer.html" with space="3" %}
-        <p class="{{ p_class }}">Belfast Interface Project</p>
-        {% include "partials/vertical-spacer.html" with space="3" %}
-        <p class="{{ p_class }}">Animorph</p>
-        {% include "partials/vertical-spacer.html" with space="3" %}
-        <p class="{{ p_class }}">Essex University (prof. Peter Bloom)</p>
-        {% include "partials/vertical-spacer.html" with space="3" %}
-        <p class="{{ p_class }}">Donegal Youth Service</p>
+
+        <div>
+            <img src="{% static 'images/partner_logos/ci.png' %}" class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto" alt="Co-operation Ireland">
+        </div>
+
+        <div>
+            <img src="{% static 'images/partner_logos/bip.png' %}" class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto" alt="Belfast Interface Project">
+        </div>
+
+        <div>
+            <img src="{% static 'images/partner_logos/animorph.png' %}" class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto" alt="Animorph">
+        </div>
+
+        <div>
+            <img src="{% static 'images/partner_logos/essex.png' %}" class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-20 w-auto" alt="Essex University (prof. Peter Bloom)">
+        </div>
+
+        <div>
+            <img src="{% static 'images/partner_logos/dys.png' %}" class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto" alt="Donegal Youth Service">
+        </div>
+{#        <p class="{{ p_class }}">Donegal Youth Service</p>#}
     </div>
 {% endwith %}
 
