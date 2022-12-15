@@ -95,6 +95,7 @@ class ChatView(TemplateView):
             return render(request, self.template_name, context)
 
     def post(self, request: WSGIRequest, **kwargs: Dict[str, Any]) -> HttpResponse:
+        print(request.POST)
         if 'user_path' in kwargs:
             user_path = kwargs['user_path']
             other_user = slug_to_user(user_path)
@@ -134,6 +135,7 @@ class ChatView(TemplateView):
                 else:
                     return HttpResponse("<span class='block text-body text-red-important text-center'>Sorry, the file format not supported.</span>")
             if 'flag' in request.POST:
+                print(request.POST['flag'])
                 m = Message.objects.get(uuid=request.POST['flag'])
                 m.flagged(request.user)
                 context['message'] = m
