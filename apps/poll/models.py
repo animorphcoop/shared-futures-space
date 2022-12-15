@@ -59,8 +59,11 @@ class BasePoll(models.Model):
     def close(self) -> None:
         from messaging.util import send_system_message # pyre-ignore[21]
         self.when_closed = timezone.now()
-        if self.singlechoicepoll: # pyre-ignore[16]
+        if hasattr(self, 'singlechoicepoll'):
             river, stage, topic = self.get_poll_context(self.singlechoicepoll)
+            print(river)
+            print(stage)
+            print(topic)
             if river:
                 # this poll is the current poll of the active stage of a river
                 if sorted(self.current_results.items(), key = lambda x: x[1], reverse = True)[0][0] == 'yes': # pyre-ignore[16]
@@ -78,13 +81,27 @@ class BasePoll(models.Model):
                             and river.plan_stage.time_poll.passed):
                             river.start_act()
                             river.save()
+                        elif (topic != 'general' and river.plan_stage.money_poll and river.plan_stage.money_poll.passed
+                              and river.plan_stage.place_poll and river.plan_stage.place_poll.passed and river.plan_stage.time_poll
+                              and river.plan_stage.time_poll.passed):
+                            river.make_plan_general_poll()  
                     elif (river.current_stage == river.Stage.ACT):
                         if (river.act_stage.general_poll and river.act_stage.general_poll.passed and river.plan_stage.money_poll
                             and river.plan_stage.money_poll.passed and river.act_stage.place_poll and river.plan_stage.place_poll.passed and
                             river.plan_stage.time_poll and river.act_stage.time_poll.passed):
                             river.start_reflect()
                             river.save()
-                    # ...
+        elif hasattr(self, 'multiplechoicepoll'):
+            from river.models import River, ReflectStage
+            print(2)
+            rs = ReflectStage.objects.filter(general_poll = self)
+            if rs.exists():
+                print(6)
+                river = River.objects.get(reflect_stage = rs[0])
+                if (river.current_stage == river.Stage.REFLECT):
+                    print(7)
+                    river.finish()
+                    river.save()
 
     def get_poll_context(self, poll): # pyre-ignore[2,3]
         from river.models import River, EnvisionStage, PlanStage, ActStage, ReflectStage # pyre-ignore[21]
@@ -115,6 +132,9 @@ class BasePoll(models.Model):
         asd = ActStage.objects.filter(time_poll = poll)
         if asd.exists():
             return (River.objects.get(act_stage = asd[0]), asd[0], 'time')
+        rs = ReflectStage.objects.filter(general_poll = poll)
+        if rs.exists():
+            return (River.objects.get(reflect_stage = rs[0]), rs[0], 'general')
         return False, False, False
 
 class SingleChoicePoll(BasePoll):
@@ -171,7 +191,7 @@ class MultipleChoicePoll(BasePoll):
         if self.closed:
             return True
         elif self.expires < timezone.now():
-            self.closed = True
+            self.close()
             self.save()
             return True
         else:

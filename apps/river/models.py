@@ -106,6 +106,7 @@ class River(ClusterableModel):
         PLAN = 'plan'
         ACT = 'act'
         REFLECT = 'reflect'
+        FINISHED = 'finished'
 
     slug: models.CharField = models.CharField(max_length=100, default='')
     started_on: models.DateTimeField = models.DateTimeField(auto_now_add=True)
@@ -129,7 +130,8 @@ class River(ClusterableModel):
             "envision": 'Stage 1: Envision',
             "plan": 'Stage 2: Plan',
             "act": 'Stage 3: Act',
-            "reflect": 'Stage 4: Reflect'
+            "reflect": 'Stage 4: Reflect',
+            "finished": 'Finished',
         }
         return stage_switch.get(self.current_stage, "")
 
@@ -159,6 +161,13 @@ class River(ClusterableModel):
             self.plan_stage = PlanStage.objects.create()
             self.plan_stage.save()
             self.save()
+
+    def make_plan_general_poll(self) -> None:
+        from poll.models import SingleChoicePoll # pyre-ignore[21]
+        ps = self.plan_stage
+        ps.general_poll = SingleChoicePoll.objects.create(question = 'Are the money, place and time plans satisfactory?', expires = timezone.now() + timezone.timedelta(days=3), options = ['yes', 'no'],
+                                                          river = self)
+        ps.save()
 
     def start_act(self) -> None:
         from poll.models import SingleChoicePoll
@@ -245,3 +254,9 @@ class River(ClusterableModel):
                                                                                 expires = timezone.now() + timezone.timedelta(days=3),
                                                                                 river = self)
             self.reflect_stage.save()
+
+    def finish(self) -> None:
+        print(self)
+        print('11111111111')
+        self.current_stage = self.Stage.FINISHED
+        self.save()
