@@ -8,7 +8,7 @@ const order_by = document.getElementById("orderby");
 let flipped = false;
 function buttonTagSearch(tag) {
     searchbar.value = tag;
-    console.log('search');
+    //console.log('search')
     //searching(true)
 }
 function setResultCount(count) {

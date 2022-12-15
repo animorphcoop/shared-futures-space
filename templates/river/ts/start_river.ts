@@ -20,7 +20,6 @@ function selectTag(tagElemId: string, tagName: string) {
                 tagsInput.value = `${tagsInput.value} "${tagName}", `
             }
 
-            console.log(tagsInput.value)
             counterDown(true)
         }
 
@@ -36,7 +35,6 @@ function selectTag(tagElemId: string, tagName: string) {
                 tagsInput.value = tagsInput.value.replace(toRemove, "")
 
             }
-            console.log(tagsInput.value)
 
             counterDown(false)
 

@@ -17,7 +17,6 @@ function selectTag(tagElemId, tagName) {
             else {
                 tagsInput.value = `${tagsInput.value} "${tagName}", `;
             }
-            console.log(tagsInput.value);
             counterDown(true);
         }
     }
@@ -32,7 +31,6 @@ function selectTag(tagElemId, tagName) {
                 let toRemove = `"${tagName}",`;
                 tagsInput.value = tagsInput.value.replace(toRemove, "");
             }
-            console.log(tagsInput.value);
             counterDown(false);
         }
     }

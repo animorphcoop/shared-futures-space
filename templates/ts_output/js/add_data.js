@@ -7,7 +7,7 @@ const postcodeInput = document.getElementById("post_code");
 const avatarInput = document.getElementById("avatar");
 const errorBoxData = document.getElementById("error-box-data");
 function selectAvatar(avatarElemId, avatarPk) {
-    console.log(avatarPk);
+    //console.log(avatarPk)
     if (lastClicked != null) {
         lastClicked.classList.remove("bg-purple/25");
     }

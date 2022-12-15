@@ -10,7 +10,7 @@ const avatarInput = (<HTMLInputElement>document.getElementById("avatar"))
 const errorBoxData: HTMLElement | null = document.getElementById("error-box-data")
 
 function selectAvatar(avatarElemId: string, avatarPk: string) {
-    console.log(avatarPk)
+    //console.log(avatarPk)
 
     if (lastClicked != null) {
         lastClicked.classList.remove("bg-purple/25")

@@ -11,7 +11,7 @@ let flipped: boolean = false
 
 function buttonTagSearch(tag: string) {
     searchbar.value = tag
-    console.log('search')
+    //console.log('search')
     //searching(true)
 }
 
