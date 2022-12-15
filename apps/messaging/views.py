@@ -76,7 +76,6 @@ class ChatView(TemplateView):
                 'page_number': pagination_data['page_number'],
                 'messages_displayed_count': pagination_data['messages_displayed_count'],
                 'messages_left_count': pagination_data['messages_left_count'],
-                'my_flags': list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by=request.user))),
                 'direct': False,
                 'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
                 'unique_id': kwargs['stage'] + '-' + kwargs['topic'],  # pyre-ignore[58]
@@ -84,9 +83,9 @@ class ChatView(TemplateView):
                 'stage_ref': stage_ref,
                 'poll_possible': True if kwargs['stage'] == 'envision' else (
                     False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (
-                                kwargs['topic'] == 'general' and stage_ref.money_poll and stage_ref.money_poll.passed
-                                and stage_ref.place_poll and stage_ref.place_poll.passed and stage_ref.time_poll
-                                and stage_ref.time_poll.passed)),
+                            kwargs['topic'] == 'general' and stage_ref.money_poll and stage_ref.money_poll.passed
+                            and stage_ref.place_poll and stage_ref.place_poll.passed and stage_ref.time_poll
+                            and stage_ref.time_poll.passed)),
                 'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else
                 {'general': stage_ref.general_poll, 'money': stage_ref.money_poll, 'place': stage_ref.place_poll,
                  'time': stage_ref.time_poll}[kwargs['topic']],
@@ -95,6 +94,10 @@ class ChatView(TemplateView):
                  'time': stage_ref.time_chat}[kwargs['topic']],
                 'starters': RiverMembership.objects.filter(river=river, starter=True).values_list('user', flat=True),
             }
+            if request.user.is_authenticated:
+                context['my_flags'] = list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by=request.user)))
+
+
 
         else:
             context = {}  # just in case
@@ -104,7 +107,6 @@ class ChatView(TemplateView):
             return render(request, self.template_name, context)
 
     def post(self, request: WSGIRequest, **kwargs: Dict[str, Any]) -> HttpResponse:
-        print(request.POST)
         if 'user_path' in kwargs:
             user_path = kwargs['user_path']
             other_user = slug_to_user(user_path)
@@ -131,9 +133,9 @@ class ChatView(TemplateView):
                 'chat_open': chat_open, 'stage_ref': stage_ref, 'river': river,
                 'poll_possible': True if kwargs['stage'] == 'envision' else (
                     False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (
-                                kwargs['topic'] == 'general' and stage_ref.money_poll and stage_ref.money_poll.passed
-                                and stage_ref.place_poll and stage_ref.place_poll.passed and stage_ref.time_poll
-                                and stage_ref.time_poll.passed)),
+                            kwargs['topic'] == 'general' and stage_ref.money_poll and stage_ref.money_poll.passed
+                            and stage_ref.place_poll and stage_ref.place_poll.passed and stage_ref.time_poll
+                            and stage_ref.time_poll.passed)),
                 'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else
                 {'general': stage_ref.general_poll, 'money': stage_ref.money_poll, 'place': stage_ref.place_poll,
                  'time': stage_ref.time_poll}[kwargs['topic']],
@@ -157,7 +159,6 @@ class ChatView(TemplateView):
                     return HttpResponse(
                         "<span class='block text-body text-red-important text-center'>Sorry, the file format not supported.</span>")
             if 'flag' in request.POST:
-                print(request.POST['flag'])
                 m = Message.objects.get(uuid=request.POST['flag'])
                 m.flagged(request.user)
                 context['message'] = m
