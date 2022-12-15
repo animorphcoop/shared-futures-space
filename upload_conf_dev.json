@@ -1345,7 +1345,7 @@
             "content": "Hi! :)"
           }
         ],
-        "funding": [
+        "money": [
           {
             "from": "Dan O’Callaghan",
             "content": "We're going to need some cash"
@@ -1355,7 +1355,7 @@
             "content": "I found 50p in the bottom of my bag"
           }
         ],
-        "location": [
+        "place": [
           {
             "from": "Dan O’Callaghan",
             "content": "Where even are we?"
@@ -1365,7 +1365,7 @@
             "content": "I'm lost"
           }
         ],
-        "dates": [
+        "time": [
           {
             "from": "Dan O’Callaghan",
             "content": "Any thoughts about a date?"
@@ -1432,19 +1432,19 @@
             "content": "this is the general chat for the plan stage"
           }
         ],
-        "funding": [
+        "money": [
           {
             "from": "Aoife Wilson",
             "content": "this is the funding chat for the plan stage"
           }
         ],
-        "location": [
+        "place": [
           {
             "from": "Desmond Telainy",
             "content": "this is the location chat for the plan stage"
           }
         ],
-        "dates": [
+        "time": [
           {
             "from": "Aoife Wilson",
             "content": "this is the dates chat for the plan stage"
@@ -1458,19 +1458,19 @@
             "content": "this is the general chat for the act stage"
           }
         ],
-        "funding": [
+        "money": [
           {
             "from": "Aoife Wilson",
             "content": "this is the funding chat for the act stage"
           }
         ],
-        "location": [
+        "place": [
           {
             "from": "Desmond Telainy",
             "content": "this is the location chat for the act stage"
           }
         ],
-        "dates": [
+        "time": [
           {
             "from": "Aoife Wilson",
             "content": "this is the dates chat for the act stage"

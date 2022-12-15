@@ -73,15 +73,15 @@ class BasePoll(models.Model):
                         river.save()
                         send_system_message(kind = 'finished_envision', chat = river.envision_stage.general_chat, context_river = river)
                     elif (river.current_stage == river.Stage.PLAN):
-                        if (topic == 'general' and river.plan_stage.funding_poll and river.plan_stage.funding_poll.passed
-                            and river.plan_stage.location_poll and river.plan_stage.location_poll.passed and river.plan_stage.dates_poll
-                            and river.plan_stage.dates_poll.passed):
+                        if (topic == 'general' and river.plan_stage.money_poll and river.plan_stage.money_poll.passed
+                            and river.plan_stage.place_poll and river.plan_stage.place_poll.passed and river.plan_stage.time_poll
+                            and river.plan_stage.time_poll.passed):
                             river.start_act()
                             river.save()
                     elif (river.current_stage == river.Stage.ACT):
-                        if (river.act_stage.general_poll and river.act_stage.general_poll.passed and river.plan_stage.funding_poll
-                            and river.plan_stage.funding_poll.passed and river.act_stage.location_poll and river.plan_stage.location_poll.passed and
-                            river.plan_stage.dates_poll and river.act_stage.dates_poll.passed):
+                        if (river.act_stage.general_poll and river.act_stage.general_poll.passed and river.plan_stage.money_poll
+                            and river.plan_stage.money_poll.passed and river.act_stage.place_poll and river.plan_stage.place_poll.passed and
+                            river.plan_stage.time_poll and river.act_stage.time_poll.passed):
                             river.start_reflect()
                             river.save()
                     # ...
@@ -94,27 +94,27 @@ class BasePoll(models.Model):
         psg = PlanStage.objects.filter(general_poll = poll)
         if psg.exists():
             return (River.objects.get(plan_stage = psg[0]), psg[0], 'general')
-        psf = PlanStage.objects.filter(funding_poll = poll)
+        psf = PlanStage.objects.filter(money_poll = poll)
         if psf.exists():
-            return (River.objects.get(plan_stage = psf[0]), psf[0], 'funding')
-        psl = PlanStage.objects.filter(location_poll = poll)
+            return (River.objects.get(plan_stage = psf[0]), psf[0], 'money')
+        psl = PlanStage.objects.filter(place_poll = poll)
         if psl.exists():
-            return (River.objects.get(plan_stage = psl[0]), psl[0], 'location')
-        psd = PlanStage.objects.filter(dates_poll = poll)
+            return (River.objects.get(plan_stage = psl[0]), psl[0], 'place')
+        psd = PlanStage.objects.filter(time_poll = poll)
         if psd.exists():
-            return (River.objects.get(plan_stage = psd[0]), psd[0], 'dates')
+            return (River.objects.get(plan_stage = psd[0]), psd[0], 'time')
         asg = ActStage.objects.filter(general_poll = poll)
         if asg.exists():
             return (River.objects.get(act_stage = asg[0]), asg[0], 'general')
-        asf = ActStage.objects.filter(funding_poll = poll)
+        asf = ActStage.objects.filter(money_poll = poll)
         if asf.exists():
-            return (River.objects.get(act_stage = asf[0]), asf[0], 'funding')
-        asl = ActStage.objects.filter(location_poll = poll)
+            return (River.objects.get(act_stage = asf[0]), asf[0], 'money')
+        asl = ActStage.objects.filter(place_poll = poll)
         if asl.exists():
-            return (River.objects.get(act_stage = asl[0]), asl[0], 'location')
-        asd = ActStage.objects.filter(dates_poll = poll)
+            return (River.objects.get(act_stage = asl[0]), asl[0], 'place')
+        asd = ActStage.objects.filter(time_poll = poll)
         if asd.exists():
-            return (River.objects.get(act_stage = asd[0]), asd[0], 'dates')
+            return (River.objects.get(act_stage = asd[0]), asd[0], 'time')
         return False, False, False
 
 class SingleChoicePoll(BasePoll):

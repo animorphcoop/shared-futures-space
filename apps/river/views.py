@@ -151,12 +151,12 @@ class CreateRiverPollView(TemplateView):
                 return HttpResponse('could not create poll, current stage not recognised (' + stage + ')')
             if topic == 'general':
                 poll_ref = stage_ref.general_poll
-            elif topic == 'funding':
-                poll_ref = stage_ref.funding_poll
-            elif topic == 'location':
-                poll_ref = stage_ref.location_poll
-            elif topic == 'dates':
-                poll_ref = stage_ref.dates_poll
+            elif topic == 'money':
+                poll_ref = stage_ref.money_poll
+            elif topic == 'place':
+                poll_ref = stage_ref.place_poll
+            elif topic == 'time':
+                poll_ref = stage_ref.time_poll
             else:
                 poll_ref = None
                 return HttpResponse('could not create poll, topic not recognised (' + topic + ')')
@@ -181,12 +181,12 @@ class CreateRiverPollView(TemplateView):
                             river=river)
                         if topic == 'general':
                             stage_ref.general_poll = poll
-                        elif topic == 'funding':
-                            stage_ref.funding_poll = poll
-                        elif topic == 'location':
-                            stage_ref.location_poll = poll
-                        elif topic == 'dates':
-                            stage_ref.dates_poll = poll
+                        elif topic == 'money':
+                            stage_ref.money_poll = poll
+                        elif topic == 'place':
+                            stage_ref.place_poll = poll
+                        elif topic == 'time':
+                            stage_ref.time_poll = poll
                         else:
                             return HttpResponse('could not create poll, topic not recognised (' + topic + ')')
                         stage_ref.save()

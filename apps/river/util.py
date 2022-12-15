@@ -11,10 +11,10 @@ def get_chat_containing_river(chat: Chat) -> Optional[River]: # pyre-ignore[11]
     envision = EnvisionStage.objects.filter(chat  = chat)
     if len(envision) != 0:
         return River.objects.get(envision_stage = envision[0])
-    plan = PlanStage.objects.filter(Q(general_chat = chat) | Q(funding_chat = chat) | Q(location_chat = chat) | Q(dates_chat = chat))
+    plan = PlanStage.objects.filter(Q(general_chat = chat) | Q(money_chat = chat) | Q(place_chat = chat) | Q(time_chat = chat))
     if len(plan) != 0:
         return River.objects.get(plan_stage = plan[0])
-    act = ActStage.objects.filter(Q(general_chat = chat) | Q(funding_chat = chat) | Q(location_chat = chat) | Q(dates_chat = chat))
+    act = ActStage.objects.filter(Q(general_chat = chat) | Q(money_chat = chat) | Q(place_chat = chat) | Q(time_chat = chat))
     if len(act) != 0:
         return River.objects.get(act_stage = act[0])
     reflect = ReflectStage.objects.filter(chat  = chat)

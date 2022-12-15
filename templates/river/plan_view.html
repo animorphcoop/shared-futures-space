@@ -31,21 +31,21 @@
                 </div>
                 {# MONEY TAB #}
                 <div x-show="openTab === 'two'">
-                    <div id="plan-chat-funding" hx-get="{% url 'river_chat' river.slug 'plan' 'funding' %}"
+                    <div id="plan-chat-money" hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
                          hx-trigger="load"
                          hx-target="this">
                     </div>
                 </div>
                 {# PLACE TAB #}
                 <div x-show="openTab === 'three'">
-                    <div id="plan-chat-location" hx-get="{% url 'river_chat' river.slug 'plan' 'location' %}"
+                    <div id="plan-chat-place" hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
                          hx-trigger="load"
                          hx-target="this">
                     </div>
                 </div>
                 {# TIME TAB #}
                 <div x-show="openTab === 'four'">
-                    <div id="plan-chat-dates" hx-get="{% url 'river_chat' river.slug 'plan' 'dates' %}"
+                    <div id="plan-chat-time" hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
                          hx-trigger="load"
                          hx-target="this">
                     </div>

@@ -127,30 +127,30 @@ def add_rivers(rivers_data):
                 for message in river_data['plan']['general']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
                                                   text=message['content'], chat=new_river.plan_stage.general_chat)
-                for message in river_data['plan']['funding']:
+                for message in river_data['plan']['money']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_river.plan_stage.funding_chat)
-                for message in river_data['plan']['location']:
+                                                  text=message['content'], chat=new_river.plan_stage.money_chat)
+                for message in river_data['plan']['place']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
                                                   text=message['content'],
-                                                  chat=new_river.plan_stage.location_chat)
-                for message in river_data['plan']['dates']:
+                                                  chat=new_river.plan_stage.place_chat)
+                for message in river_data['plan']['time']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_river.plan_stage.dates_chat)
+                                                  text=message['content'], chat=new_river.plan_stage.time_chat)
             if 'act' in river_data:
                 new_river.start_act()
                 for message in river_data['act']['general']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
                                                   text=message['content'], chat=new_river.act_stage.general_chat)
-                for message in river_data['act']['funding']:
+                for message in river_data['act']['money']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_river.act_stage.funding_chat)
-                for message in river_data['act']['location']:
+                                                  text=message['content'], chat=new_river.act_stage.money_chat)
+                for message in river_data['act']['place']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_river.act_stage.location_chat)
-                for message in river_data['act']['dates']:
+                                                  text=message['content'], chat=new_river.act_stage.place_chat)
+                for message in river_data['act']['time']:
                     Message.objects.get_or_create(sender=CustomUser.objects.get(display_name=message['from']),
-                                                  text=message['content'], chat=new_river.act_stage.dates_chat)
+                                                  text=message['content'], chat=new_river.act_stage.time_chat)
             if 'reflect' in river_data:
                 new_river.start_reflect()
                 for message in river_data['reflect']['chat']:

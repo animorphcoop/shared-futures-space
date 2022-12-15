@@ -79,11 +79,11 @@ class ChatView(TemplateView):
                 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
                 'chat_open': chat_poll == None or not chat_poll.closed or (chat_poll.closed and not chat_poll.passed),
                 'stage_ref': stage_ref,
-                'poll_possible': True if kwargs['stage'] == 'envision' else (False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (kwargs['topic'] == 'general' and stage_ref.funding_poll and stage_ref.funding_poll.passed
-                                                                                                               and stage_ref.location_poll and stage_ref.location_poll.passed and stage_ref.dates_poll
-                                                                                                               and stage_ref.dates_poll.passed)),
-                'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
-                'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
+                'poll_possible': True if kwargs['stage'] == 'envision' else (False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (kwargs['topic'] == 'general' and stage_ref.money_poll and stage_ref.money_poll.passed
+                                                                                                               and stage_ref.place_poll and stage_ref.place_poll.passed and stage_ref.time_poll
+                                                                                                               and stage_ref.time_poll.passed)),
+                'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_poll, 'money': stage_ref.money_poll, 'place': stage_ref.place_poll, 'time': stage_ref.time_poll}[kwargs['topic']],
+                'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_chat, 'money': stage_ref.money_chat, 'place': stage_ref.place_chat, 'time': stage_ref.time_chat}[kwargs['topic']],
                 'starters': RiverMembership.objects.filter(river=river, starter = True).values_list('user', flat=True),
             }
             
@@ -115,11 +115,11 @@ class ChatView(TemplateView):
             stage_ref = {'envision': river.envision_stage, 'plan': river.plan_stage, 'act': river.act_stage, 'reflect': river.reflect_stage}[kwargs['stage']]
             context = {'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]), 'unique_id': kwargs['stage'] + '-' + kwargs['topic'], # pyre-ignore[58]
                        'chat_open': chat_open, 'stage_ref': stage_ref, 'river': river,
-                       'poll_possible': True if kwargs['stage'] == 'envision' else (False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (kwargs['topic'] == 'general' and stage_ref.funding_poll and stage_ref.funding_poll.passed
-                                                                                                               and stage_ref.location_poll and stage_ref.location_poll.passed and stage_ref.dates_poll
-                                                                                                               and stage_ref.dates_poll.passed)),
-                       'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_poll, 'funding': stage_ref.funding_poll, 'location': stage_ref.location_poll, 'dates': stage_ref.dates_poll}[kwargs['topic']],
-                       'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_chat, 'funding': stage_ref.funding_chat, 'location': stage_ref.location_chat, 'dates': stage_ref.dates_chat}[kwargs['topic']],
+                       'poll_possible': True if kwargs['stage'] == 'envision' else (False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (kwargs['topic'] == 'general' and stage_ref.money_poll and stage_ref.money_poll.passed
+                                                                                                               and stage_ref.place_poll and stage_ref.place_poll.passed and stage_ref.time_poll
+                                                                                                               and stage_ref.time_poll.passed)),
+                       'poll_ref': stage_ref.general_poll if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_poll, 'money': stage_ref.money_poll, 'place': stage_ref.place_poll, 'time': stage_ref.time_poll}[kwargs['topic']],
+                       'chat_ref': stage_ref.general_chat if kwargs['stage'] == 'envision' or kwargs['stage'] == 'reflect' else {'general': stage_ref.general_chat, 'money': stage_ref.money_chat, 'place': stage_ref.place_chat, 'time': stage_ref.time_chat}[kwargs['topic']],
                        'starters': RiverMembership.objects.filter(river=river, starter = True).values_list('user', flat=True),}
         else:
             return HttpResponse('error - no user_path or slug specified')
@@ -182,21 +182,21 @@ class ChatView(TemplateView):
         elif stage == 'plan':
             if topic == 'general':
                 chat = river.plan_stage.general_chat
-            elif topic == 'funding':
-                chat = river.plan_stage.funding_chat
-            elif topic == 'location':
-                chat = river.plan_stage.location_chat
-            elif topic == 'dates':
-                chat = river.plan_stage.dates_chat
+            elif topic == 'money':
+                chat = river.plan_stage.money_chat
+            elif topic == 'place':
+                chat = river.plan_stage.place_chat
+            elif topic == 'time':
+                chat = river.plan_stage.time_chat
         elif stage == 'act':
             if topic == 'general':
                 chat = river.act_stage.general_chat
-            elif topic == 'funding':
-                chat = river.act_stage.funding_chat
-            elif topic == 'location':
-                chat = river.act_stage.location_chat
-            elif topic == 'dates':
-                chat = river.act_stage.dates_chat
+            elif topic == 'money':
+                chat = river.act_stage.money_chat
+            elif topic == 'place':
+                chat = river.act_stage.place_chat
+            elif topic == 'time':
+                chat = river.act_stage.time_chat
         elif stage == 'reflect':
             chat = river.reflect_stage.general_chat
         return chat  # pyre-ignore[61]
@@ -207,21 +207,21 @@ class ChatView(TemplateView):
         elif stage == 'plan':
             if topic == 'general':
                 poll = river.plan_stage.general_poll
-            elif topic == 'funding':
-                poll = river.plan_stage.funding_poll
-            elif topic == 'location':
-                poll = river.plan_stage.location_poll
-            elif topic == 'dates':
-                poll = river.plan_stage.dates_poll
+            elif topic == 'money':
+                poll = river.plan_stage.money_poll
+            elif topic == 'place':
+                poll = river.plan_stage.place_poll
+            elif topic == 'time':
+                poll = river.plan_stage.time_poll
         elif stage == 'act':
             if topic == 'general':
                 poll = river.act_stage.general_poll
-            elif topic == 'funding':
-                poll = river.act_stage.funding_poll
-            elif topic == 'location':
-                poll = river.act_stage.location_poll
-            elif topic == 'dates':
-                poll = river.act_stage.dates_poll
+            elif topic == 'money':
+                poll = river.act_stage.money_poll
+            elif topic == 'place':
+                poll = river.act_stage.place_poll
+            elif topic == 'time':
+                poll = river.act_stage.time_poll
         elif stage == 'reflect':
             poll = river.reflect_stage.general_poll
         return poll  # pyre-ignore[61]

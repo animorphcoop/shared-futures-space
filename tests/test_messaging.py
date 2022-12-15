@@ -39,7 +39,7 @@ def test_river_chat_interface(client, test_user, test_river):
     get_system_user() # needed to make sure it exists before we try to start_plan, since new polls reference it but can't create it if it doesn't exist for priority reasons
     test_river.start_envision()
     test_river.start_plan()
-    chat_url = reverse('river_chat', args=[test_river.slug, 'plan', 'funding'])
+    chat_url = reverse('river_chat', args=[test_river.slug, 'plan', 'money'])
     RiverMembership.objects.create(river=test_river, user=test_user, starter=False)
     client.force_login(test_user)
     for i in range(20):
