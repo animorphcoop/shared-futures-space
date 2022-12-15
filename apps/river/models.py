@@ -163,7 +163,7 @@ class River(ClusterableModel):
             self.save()
 
     def make_plan_general_poll(self) -> None:
-        from poll.models import SingleChoicePoll # pyre-ignore[21]
+        from poll.models import SingleChoicePoll
         ps = self.plan_stage
         ps.general_poll = SingleChoicePoll.objects.create(question = 'Are the money, place and time plans satisfactory?', expires = timezone.now() + timezone.timedelta(days=3), options = ['yes', 'no'],
                                                           river = self)
