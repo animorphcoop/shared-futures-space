@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.forms import ChoiceField, ModelChoiceField, ModelForm
 from uuid import UUID
 from itertools import chain
+from django.shortcuts import redirect
 
 from typing import Dict, Any, List, Tuple
 
@@ -37,6 +38,8 @@ class PollView(TemplateView):
             elif hasattr(poll, 'singlechoicepoll'):
                 SingleVote.objects.filter(poll = poll, user = request.user).update(choice = choice)
             poll.check_closed()
+            if poll.check_closed() and 'slug' in request.POST:
+                return redirect(reverse('view_river', args=[request.POST['slug']]))
         return self.render_to_response(self.get_context_data(uuid = uuid, request = request)) # pyre-ignore[6]
     def get_context_data(self, uuid: UUID, **kwargs: Dict[str,Any]) -> Dict[str,Any]:
         ctx = super().get_context_data(**kwargs)
@@ -57,6 +60,8 @@ class PollView(TemplateView):
         ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll = poll))
         ctx['poll_votes_cast'] = len(list(chain(*ctx['poll_results'].values())))
         ctx['poll_results_winners'] = get_winners(list(ctx['poll_results'].items()))
+        river = poll.river
+        ctx['slug'] = river.slug
         return ctx
 
 def get_winners(options: List[Tuple[str,List[Any]]], winners: List[Tuple[str,List[Any]]] = []) -> List[str]: # pyre-ignore[2] Any is actually CustomUser, but for some reason we can't get hold of that

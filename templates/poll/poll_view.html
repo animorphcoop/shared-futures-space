@@ -3,14 +3,19 @@
 
 {% block content %}
 
-    <div class='poll-wrapper px-2.5'> {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
+    <div class='poll-wrapper px-2.5'>
+        {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
         {#  Poll header  #}
         <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-black/30{% else %}bg-yellow{% endif %}">
-            <button class="w-full" type="button"> {# removed collapsable @click="selected !== 1 ? selected = 1 : selected = null" #}
+            <button class="w-full" type="button">
+                {# removed collapsable @click="selected !== 1 ? selected = 1 : selected = null" #}
                 <h3 class="flex items-center justify-between">
                     {#  User icon and poll header text  #}
                     <div class="flex gap-2 items-center">
-                        <img src="{% if poll.created_by.id == 0 %}{% static 'images/avatars/salmon_1.png' %}{% else %}{{ poll.created_by.avatar.image_url }}{% endif %}" class="w-6 h-6">
+                        <img src="
+
+                                {% if poll.created_by.id == 0 %}{% static 'images/avatars/salmon_1.png' %}{% else %}{{ poll.created_by.avatar.image_url }}{% endif %}"
+                             class="w-6 h-6">
                         <p class="text-header text-center">
                             {{ poll_name }}
                         </p>
@@ -18,9 +23,10 @@
                     {#  Poll vote counter and drop down arrow  #}
                     <div class="flex items-center gap-4">
                         <span class="text-header">
-                            {{poll_votes_cast}}/{{poll_total_votes}}
+                            {{ poll_votes_cast }}/{{ poll_total_votes }}
                         </span>
-                        <div class="w-[12] h-[8] transition duration-500 ease-out invisible" {#  removed collapsible, added invisible  #}
+                        <div class="w-[12] h-[8] transition duration-500 ease-out invisible"
+                                {#  removed collapsible, added invisible  #}
                              :class="{'-rotate-180': selected}">
                             <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -38,7 +44,7 @@
             <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}">
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <p class="text-body px-3.5 block">
-                    {{poll_description}}
+                    {{ poll_description }}
                 </p>
                 {% include "partials/vertical-spacer.html" with space="5" %}
                 {#  Vote options list  #}
@@ -48,11 +54,14 @@
                             {#  Vote option  #}
                             <div class="flex justify-between items-center px-3.5">
                                 {% if request.user.is_active and not poll_closed %}
-                                    <form hx-post="{% url 'poll_view' poll.uuid %}" hx-target="closest .poll-wrapper" hx-swap="outerHTML" class="m-0">
+                                    <form hx-post="{% url 'poll_view' poll.uuid %}" hx-target="closest .poll-wrapper"
+                                          hx-swap="outerHTML"
+                                          class="m-0">
                                         <button class="button button-on-colour inline-block" type="submit">
                                             {{ name }}
                                         </button>
                                         <input type=hidden name=choice value="{{ name }}">
+                                        <input type="hidden" name=slug value="{{ slug }}">
                                         {% csrf_token %}
                                     </form>
                                 {% else %}
@@ -77,7 +86,7 @@
                                     </div>
                                 </button>
                             </div>
-                             {#  Vote option voter information  #}
+                            {#  Vote option voter information  #}
                             <div class="relative overflow-hidden transition-all max-h-0 duration-500"
                                  style=""
                                  x-ref="name"
@@ -87,9 +96,10 @@
                                         <div class="flex justify-between items-center pt-3">
                                             <div class="flex gap-2 items-center">
                                                 <img class="h-6 w-6" src={{ user.avatar.image_url }}>
-                                                <span class="text-meta-label">{{user.display_name}}</span>
+                                                <span class="text-meta-label">{{ user.display_name }}</span>
                                             </div>
-                                            <p class="text-meta text-black/30">Joined {{ user.join_date|timesince }} ago</p>
+                                            <p class="text-meta text-black/30">Joined {{ user.join_date|timesince }}
+                                                ago</p>
                                         </div>
                                     {% endfor %}
                                 </div>

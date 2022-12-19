@@ -9,11 +9,13 @@
     {% endif %}
 
     <div class="">
+
         <div id="{{ stage }}-{{ topic }}-poll-wrapper">
             {% if poll_ref != None %}
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 <div hx-trigger="load" hx-target="#{{ stage }}-{{ topic }}-poll-wrapper" hx-swap="innerHTML"
-                     hx-get="{% url 'poll_view' poll_ref.uuid %}"></div>
+                     hx-get="{% url 'poll_view' poll_ref.uuid %}">
+                </div>
             {% endif %}
         </div>
         {% if river.current_stage == stage and request.user.id in starters and poll_possible %}
