@@ -44,7 +44,6 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
 
     path("favicon.ico", RedirectView.as_view(url=staticfiles_storage.url("favicon/favicon.ico")), ),
     path("apple-touch-icon.png", RedirectView.as_view(url=staticfiles_storage.url("favicon/apple-touch-icon.png")), ),
-    path("manifest.webmanifest", RedirectView.as_view(url=staticfiles_storage.url("favicon/manifest.webmanifest")), ),
 ]
 
 if settings.DEBUG:
