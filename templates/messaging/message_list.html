@@ -1,6 +1,8 @@
 {% load static %}
 
+{% include 'partials/vertical-spacer.html' with space='2.5' %}
 {% include 'messaging/partials/pull_previous.html' %}
+
 {% comment %}{% if page_obj.count > 0 %}{% endcomment %}
 <div x-data="{ overlay: false }">
     {% for message in page_obj %}
@@ -12,9 +14,6 @@
     {% endfor %}
 </div>
 
-
 {% comment %}{% else %}
-
     {% include "partials/salmon-of-knowledge.html" with text="No messages yet, start the conversation!" %}
-
 {% endif %}{% endcomment %}
