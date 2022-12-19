@@ -14,22 +14,23 @@ import pytest
                                                ('/profile/request/', False),
                                                ('/profile/managerequests/', False)])
 def test_access_public(url, is_accessible, client):
+    page = client.get(url)
     if is_accessible:
-        assert client.get(url).status_code == 200
+        assert page.status_code == 200 and 'Page not found' not in page.content.decode('utf-8')
     else:
-        assert client.get(url).status_code != 200
+        assert page.status_code != 200 or 'Page not found' in client.get(url).content.decode('utf-8')
 
 @pytest.mark.django_db
-@pytest.mark.parametrize('url,is_accessible', [('/', False),
-                                               ('/dashboard/', True),
-                                               ('/doesnotexist/', False),
-                                               ('/profile/request/', True)])
+@pytest.mark.parametrize('url,is_accessible', [('/', True),
+                                               ('/doesnotexist/', False)])
 def test_access_logged_in(url, is_accessible, test_user, client):
-    client.force_login(test_user)
+    page = client.get(url)
+    print(page)
+    print(page.content)
     if is_accessible:
-        assert client.get(url).status_code == 200
+        assert page.status_code == 200 and 'Page not found' not in page.content.decode('utf-8')
     else:
-        assert client.get(url).status_code != 200
+        assert page.status_code != 200 or 'Page not found' in client.get(url).content.decode('utf-8')
 
 def test_access_admin_stuff(client, admin_client, test_user):
     client.force_login(test_user)

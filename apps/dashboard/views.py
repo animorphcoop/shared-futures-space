@@ -34,6 +34,7 @@ def get_weather(postcode: str) -> Tuple[str,str,Union[str,float]]:
             'scattered clouds': 'https://openweathermap.org/img/wn/03d@2x.png',
             'broken clouds': 'https://openweathermap.org/img/wn/04d@2x.png',
             'shower rain': 'https://openweathermap.org/img/wn/09d@2x.png',
+            'light rain': 'https://openweathermap.org/img/wn/09d@2x.png',
             'rain': 'https://openweathermap.org/img/wn/10d@2x.png',
             'thunderstorm': 'https://openweathermap.org/img/wn/11d@2x.png',
             'snow': 'https://openweathermap.org/img/wn/13d@2x.png',
