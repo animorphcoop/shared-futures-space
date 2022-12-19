@@ -11,12 +11,9 @@ from wagtail.documents import urls as wagtaildocs_urls
 from search import views as search_views
 
 from typing import List, Union
-from django.urls import URLResolver, URLPattern, include, path
+from django.urls import URLResolver, URLPattern
 
 from landing.views import handle_404  # pyre-ignore[21]
-
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
 
 handler404 = handle_404  # pyre-ignore[5]
 
@@ -41,9 +38,6 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('resources/', include('resources.urls')),
     path('core/', include('core.urls')),
     path('', include('landing.urls')),
-
-    path("favicon.ico", RedirectView.as_view(url=staticfiles_storage.url("favicon/favicon.ico")), ),
-    path("apple-touch-icon.png", RedirectView.as_view(url=staticfiles_storage.url("favicon/apple-touch-icon.png")), ),
 ]
 
 if settings.DEBUG:
