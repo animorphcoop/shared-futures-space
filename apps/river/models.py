@@ -165,7 +165,7 @@ class River(ClusterableModel):
     def make_plan_general_poll(self) -> None:
         from poll.models import SingleChoicePoll
         ps = self.plan_stage
-        ps.general_poll = SingleChoicePoll.objects.create(question = 'Are the money, place and time plans satisfactory?', expires = timezone.now() + timezone.timedelta(days=3), options = ['yes', 'no'],
+        ps.general_poll = SingleChoicePoll.objects.create(question = 'Are the money, place and time plans satisfactory?', expires = timezone.now() + timezone.timedelta(days=7), options = ['yes', 'no'],
                                                           river = self)
         ps.save()
 
@@ -180,21 +180,21 @@ class River(ClusterableModel):
                 self.plan_stage.general_poll = SingleChoicePoll.objects.create(question='general question',
                                                                            options=['1', 'b'],
                                                                            expires=timezone.now() + timezone.timedelta(
-                                                                               days=3),  #
+                                                                               days=7),  #
                                                                            river=self)
                 self.plan_stage.money_poll = SingleChoicePoll.objects.create(question='money question',
                                                                            options=['1', 'b'],
                                                                            expires=timezone.now() + timezone.timedelta(
-                                                                               days=3),  #
+                                                                               days=7),  #
                                                                            river=self)
                 self.plan_stage.place_poll = SingleChoicePoll.objects.create(question='place question',
                                                                             options=['1', 'b'],
                                                                             expires=timezone.now() + timezone.timedelta(
-                                                                                days=3),  #
+                                                                                days=7),  #
                                                                             river=self)
                 self.plan_stage.time_poll = SingleChoicePoll.objects.create(question='time question', options=['1', 'b'],
                                                                          expires=timezone.now() + timezone.timedelta(
-                                                                             days=3),  #
+                                                                             days=7),  #
                                                                          river=self)
                 self.plan_stage.general_poll.closed = True  #
                 self.plan_stage.general_poll.save()
@@ -210,28 +210,28 @@ class River(ClusterableModel):
             self.act_stage.general_poll = SingleChoicePoll.objects.create(question='was this done?',
                                                                           options=['yes', 'no'],
                                                                           expires=timezone.now() + timezone.timedelta(
-                                                                              days=3),
+                                                                              days=7),
                                                                           river=self)
             send_system_message(self.act_stage.general_chat, 'poll', context_poll=self.plan_stage.general_poll)
             send_system_message(self.act_stage.general_chat, 'poll', context_poll=self.act_stage.general_poll)
             self.act_stage.money_poll = SingleChoicePoll.objects.create(question='was this done?',
                                                                           options=['yes', 'no'],
                                                                           expires=timezone.now() + timezone.timedelta(
-                                                                              days=3),
+                                                                              days=7),
                                                                           river=self)
             send_system_message(self.act_stage.money_chat, 'poll', context_poll=self.plan_stage.money_poll)
             send_system_message(self.act_stage.money_chat, 'poll', context_poll=self.act_stage.money_poll)
             self.act_stage.place_poll = SingleChoicePoll.objects.create(question='was this done?',
                                                                            options=['yes', 'no'],
                                                                            expires=timezone.now() + timezone.timedelta(
-                                                                               days=3),
+                                                                               days=7),
                                                                            river=self)
             send_system_message(self.act_stage.place_chat, 'poll', context_poll=self.plan_stage.place_poll)
             send_system_message(self.act_stage.place_chat, 'poll', context_poll=self.act_stage.place_poll)
             self.act_stage.time_poll = SingleChoicePoll.objects.create(question='was this done?',
                                                                         options=['yes', 'no'],
                                                                         expires=timezone.now() + timezone.timedelta(
-                                                                            days=3),
+                                                                            days=7),
                                                                         river=self)
             send_system_message(self.act_stage.time_chat, 'poll', context_poll=self.plan_stage.time_poll)
             send_system_message(self.act_stage.time_chat, 'poll', context_poll=self.act_stage.time_poll)
@@ -251,7 +251,7 @@ class River(ClusterableModel):
                                                                                 options = list(dict.fromkeys(chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)).values_list('title', flat = True),
                                                                                 CaseStudy.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)).values_list('title', flat = True)))
                                                                                 for tag_a in self.tags.names() for tag_b in self.tags.names() if tag_a != tag_b and tag_a > tag_b]))),
-                                                                                expires = timezone.now() + timezone.timedelta(days=3),
+                                                                                expires = timezone.now() + timezone.timedelta(days=7),
                                                                                 river = self)
             self.reflect_stage.save()
 

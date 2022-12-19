@@ -177,7 +177,7 @@ class CreateRiverPollView(TemplateView):
                             question=question,
                             description=request.POST['description'],
                             options=['yes', 'no'],
-                            invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
+                            invalid_option=False, expires=timezone.now() + timezone.timedelta(days=7),
                             river=river)
                         if topic == 'general':
                             stage_ref.general_poll = poll
