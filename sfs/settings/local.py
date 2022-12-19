@@ -3,7 +3,7 @@
 from typing import List, Optional, Dict
 from .base import INSTALLED_APPS
 from os.path import exists
-if exists('secrets.py'):
+if exists('sfs/settings/secrets.py'):
     from .secrets import SECRET_KEY, WEATHER_API_KEY, EMAIL_HOST_PASSWORD, FACEBOOK_CLIENT_ID, FACEBOOK_SECRET, GOOGLE_CLIENT_ID, GOOGLE_SECRET
 else:
     # dummy values to avoid crashing anything entirely
