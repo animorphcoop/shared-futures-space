@@ -45,9 +45,9 @@
 
                 <li class="p-4 pb-5">
                     {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                        <a href="{% url 'dashboard' %}" @click="toggle(), menu = !menu">Dashboard</a>
                     {% else %}
-                        <a href="{% url 'landing' %}">Landing page</a>
+                        <a href="{% url 'landing' %}" @click="toggle(), menu = !menu">Landing page</a>
                     {% endif %}
                 </li>
 
@@ -75,22 +75,22 @@
 
                 {% if user.is_authenticated %}
                     <li class="p-4 pb-5">
-                        <a href="{% url 'account_all_chats' %}">Messages</a>
+                        <a href="{% url 'account_all_chats' %}" @click="toggle(), menu = !menu">Messages</a>
                     </li>
                     <li class="p-4 pb-5">
-                        <a href="{% url 'account_view' %}">Profile</a>
+                        <a href="{% url 'account_view' %}" @click="toggle(), menu = !menu">Profile</a>
                     </li>
                 {% endif %}
 
                 <li class="p-4 pb-5">
-                    <a href="{% url 'resources' %}">Resources</a>
+                    <a href="{% url 'resources' %}" @click="toggle(), menu = !menu">Resources</a>
                 </li>
 
                 <li class="p-4 pb-5">
                     {% if user.is_authenticated %}
                         <form method="post" action="{% url 'account_logout' %}">
                             {% csrf_token %}
-                            <button type="submit">
+                            <button type="submit" @click="toggle(), menu = !menu">
                                 Log out
                             </button>
                         </form>
@@ -100,7 +100,7 @@
 
             <ul class="p-4 bg-white">
                 <li class="text-meta text-purple font-kanit-600 mr-2.5">
-                    <a href="{% url 'privacy' %}">
+                    <a href="{% url 'privacy' %}" @click="toggle(), menu = !menu">
                         Privacy policy
                     </a>
                 </li>

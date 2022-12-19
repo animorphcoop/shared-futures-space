@@ -8,13 +8,13 @@
 
             {% if value == user.post_code.area.name %}
                 <li class="px-4 py-3 text-black/75">
-                    <a href="{% url "spring" key %}">
+                    <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
                         <span>Your spring: </span>{{ value }}
                     </a>
                 </li>
             {% else %}
                 <li class="px-4 py-3">
-                    <a href="{% url "spring" key %}">
+                    <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
                         {{ value }}
                     </a>
                 </li>
@@ -24,7 +24,7 @@
     {% else %}
         {% for key, value in areas_dict.items %}
             <li class="px-4 py-3">
-                <a href="{% url "spring" key %}">
+                <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
                     {{ value }}
                 </a>
             </li>
