@@ -28,6 +28,7 @@ def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                                       'poll': 'messaging/system_messages/poll.html',
                                       'finished_envision': 'messaging/system_messages/finished_envision.html',
                                       'blocked user': 'messaging/system_messages/user_chat_blocked.html',
+                                      'salmon_envision_start': 'messaging/system_messages/salmon_envision_start.html',
                                       }[kind],
                            chat=chat,
                            context_action = context_action,

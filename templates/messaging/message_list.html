@@ -6,9 +6,11 @@
 {% comment %}{% if page_obj.count > 0 %}{% endcomment %}
 <div x-data="{ overlay: false }">
     {% for message in page_obj %}
+
         {% if message.sender == system_user %}
             {% include 'messaging/system_message_snippet.html' %}
         {% else %}
+
             {% include 'messaging/user_message_snippet.html' %}
         {% endif %}
     {% endfor %}

@@ -33,6 +33,7 @@
 
 
             {% if message.sender.display_name == 'salmon' %}
+
                 <img src="{% static 'images/avatars/salmon_1.png' %}" class="w-6 h-6">
             {% else %}
                 <img class="h-6 w-6" src="{{ message.sender.avatar.image_url }}" alt="useravatar">

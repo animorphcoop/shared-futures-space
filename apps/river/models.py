@@ -35,53 +35,56 @@ class EnvisionStage(models.Model):
         FINALISE_VISION = '2', 'finalise vision'
         REVIEW = '3', 'review tags and image'
 
-    general_chat: models.ForeignKey = models.ForeignKey(Chat, default = new_chat, on_delete = models.SET_DEFAULT)
-    step: models.CharField = models.CharField(max_length = 1, choices = Step.choices, default = Step.GET_TO_KNOW)
-    general_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', null = True, default = None, on_delete = models.SET_NULL)
+    general_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT)
+    step: models.CharField = models.CharField(max_length=1, choices=Step.choices, default=Step.GET_TO_KNOW)
+    general_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', null=True, default=None,
+                                                        on_delete=models.SET_NULL)
+
 
 class PlanStage(models.Model):
     general_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
                                                         related_name='plan_general_chat')
     money_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
-                                                        related_name='plan_money_chat')
+                                                      related_name='plan_money_chat')
     place_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
-                                                         related_name='plan_place_chat')
+                                                      related_name='plan_place_chat')
     time_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
-                                                      related_name='plan_time_chat')
+                                                     related_name='plan_time_chat')
     general_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
                                                         on_delete=models.SET_DEFAULT, related_name='plan_general_poll')
     money_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
-                                                        on_delete=models.SET_DEFAULT, related_name='plan_money_poll')
+                                                      on_delete=models.SET_DEFAULT, related_name='plan_money_poll')
     place_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
-                                                         on_delete=models.SET_DEFAULT,
-                                                         related_name='plan_place_poll')
+                                                      on_delete=models.SET_DEFAULT,
+                                                      related_name='plan_place_poll')
     time_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
-                                                      on_delete=models.SET_DEFAULT, related_name='plan_time_poll')
+                                                     on_delete=models.SET_DEFAULT, related_name='plan_time_poll')
 
 
 class ActStage(models.Model):
     general_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
                                                         related_name='act_general_chat')
     money_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
-                                                        related_name='act_money_chat')
+                                                      related_name='act_money_chat')
     place_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
-                                                         related_name='act_place_chat')
+                                                      related_name='act_place_chat')
     time_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT,
-                                                      related_name='act_time_chat')
+                                                     related_name='act_time_chat')
     general_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
                                                         on_delete=models.SET_DEFAULT, related_name='act_general_poll')
     money_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
-                                                        on_delete=models.SET_DEFAULT, related_name='act_money_poll')
+                                                      on_delete=models.SET_DEFAULT, related_name='act_money_poll')
     place_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
-                                                         on_delete=models.SET_DEFAULT, related_name='act_place_poll')
+                                                      on_delete=models.SET_DEFAULT, related_name='act_place_poll')
     time_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
-                                                      on_delete=models.SET_DEFAULT, related_name='act_time_poll')
+                                                     on_delete=models.SET_DEFAULT, related_name='act_time_poll')
 
 
 class ReflectStage(models.Model):
     general_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT)
-    general_poll: models.ForeignKey = models.ForeignKey('poll.MultipleChoicePoll', default = None, null = True,
-                                                        on_delete = models.SET_DEFAULT)
+    general_poll: models.ForeignKey = models.ForeignKey('poll.MultipleChoicePoll', default=None, null=True,
+                                                        on_delete=models.SET_DEFAULT)
+
 
 # PROJECTS
 
@@ -89,7 +92,8 @@ class RiverMembership(models.Model):
     river: models.ForeignKey = models.ForeignKey('river.River', on_delete=models.CASCADE)
     user: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete=models.CASCADE)
     starter: models.BooleanField = models.BooleanField(default=False)
-    join_date: models.DateField = models.DateField(default = timezone.now)
+    join_date: models.DateField = models.DateField(default=timezone.now)
+
 
 class RiverTag(TaggedItemBase):
     content_object = ParentalKey('river.River', on_delete=models.CASCADE, related_name='tagged_items')
@@ -115,7 +119,7 @@ class River(ClusterableModel):
     tags = ClusterTaggableManager(through=RiverTag, blank=True)
     image: models.ImageField = models.ImageField(upload_to='rivers/images/', blank=True)
     area: models.ForeignKey = models.ForeignKey(Area, on_delete=models.CASCADE,
-                                            default=get_default_other_area)  # this is a bad default but can't really be replaced because it's used in every river creation, just immediately replaced, and it's a pain to change
+                                                default=get_default_other_area)  # this is a bad default but can't really be replaced because it's used in every river creation, just immediately replaced, and it's a pain to change
     envision_stage: models.ForeignKey = models.ForeignKey(EnvisionStage, null=True, default=None,
                                                           on_delete=models.SET_NULL)
     plan_stage: models.ForeignKey = models.ForeignKey(PlanStage, null=True, default=None, on_delete=models.SET_NULL)
@@ -139,7 +143,6 @@ class River(ClusterableModel):
     def get_started_months_ago(self) -> int:
         return timezone.now().month - self.started_on.month
 
-
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super().save(*args, **kwargs)  # save first or we won't have an id
         if (self.slug == ''):
@@ -152,10 +155,13 @@ class River(ClusterableModel):
         if self.current_stage is None:
             self.current_stage = self.Stage.ENVISION
             self.envision_stage = EnvisionStage.objects.create()
+            send_system_message(kind='salmon_envision_start', chat=self.envision_stage.general_chat,
+                                context_river=self)
+
             self.save()
 
     def start_plan(self) -> None:
-        from poll.models import SingleChoicePoll # pyre-ignore[21]
+        from poll.models import SingleChoicePoll  # pyre-ignore[21]
         if self.current_stage == self.Stage.ENVISION:
             self.current_stage = self.Stage.PLAN
             self.plan_stage = PlanStage.objects.create()
@@ -165,8 +171,10 @@ class River(ClusterableModel):
     def make_plan_general_poll(self) -> None:
         from poll.models import SingleChoicePoll
         ps = self.plan_stage
-        ps.general_poll = SingleChoicePoll.objects.create(question = 'Are the money, place and time plans satisfactory?', expires = timezone.now() + timezone.timedelta(days=7), options = ['yes', 'no'],
-                                                          river = self)
+        ps.general_poll = SingleChoicePoll.objects.create(question='Are the money, place and time plans satisfactory?',
+                                                          expires=timezone.now() + timezone.timedelta(days=7),
+                                                          options=['yes', 'no'],
+                                                          river=self)
         ps.save()
 
     def start_act(self) -> None:
@@ -178,24 +186,25 @@ class River(ClusterableModel):
                     self.plan_stage.time_poll is None or not self.plan_stage.time_poll.closed):
                 # for testing purposes ONLY # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
                 self.plan_stage.general_poll = SingleChoicePoll.objects.create(question='general question',
-                                                                           options=['1', 'b'],
-                                                                           expires=timezone.now() + timezone.timedelta(
-                                                                               days=7),  #
-                                                                           river=self)
+                                                                               options=['1', 'b'],
+                                                                               expires=timezone.now() + timezone.timedelta(
+                                                                                   days=7),  #
+                                                                               river=self)
                 self.plan_stage.money_poll = SingleChoicePoll.objects.create(question='money question',
-                                                                           options=['1', 'b'],
-                                                                           expires=timezone.now() + timezone.timedelta(
-                                                                               days=7),  #
-                                                                           river=self)
+                                                                             options=['1', 'b'],
+                                                                             expires=timezone.now() + timezone.timedelta(
+                                                                                 days=7),  #
+                                                                             river=self)
                 self.plan_stage.place_poll = SingleChoicePoll.objects.create(question='place question',
+                                                                             options=['1', 'b'],
+                                                                             expires=timezone.now() + timezone.timedelta(
+                                                                                 days=7),  #
+                                                                             river=self)
+                self.plan_stage.time_poll = SingleChoicePoll.objects.create(question='time question',
                                                                             options=['1', 'b'],
                                                                             expires=timezone.now() + timezone.timedelta(
                                                                                 days=7),  #
                                                                             river=self)
-                self.plan_stage.time_poll = SingleChoicePoll.objects.create(question='time question', options=['1', 'b'],
-                                                                         expires=timezone.now() + timezone.timedelta(
-                                                                             days=7),  #
-                                                                         river=self)
                 self.plan_stage.general_poll.closed = True  #
                 self.plan_stage.general_poll.save()
                 self.plan_stage.money_poll.closed = True  #
@@ -204,7 +213,7 @@ class River(ClusterableModel):
                 self.plan_stage.place_poll.save()
                 self.plan_stage.time_poll.closed = True  #
                 self.plan_stage.time_poll.save()
-                #raise ValueError('plan stage is not finished!')
+                # raise ValueError('plan stage is not finished!')
             self.current_stage = self.Stage.ACT
             self.act_stage = ActStage.objects.create()
             self.act_stage.general_poll = SingleChoicePoll.objects.create(question='was this done?',
@@ -215,31 +224,31 @@ class River(ClusterableModel):
             send_system_message(self.act_stage.general_chat, 'poll', context_poll=self.plan_stage.general_poll)
             send_system_message(self.act_stage.general_chat, 'poll', context_poll=self.act_stage.general_poll)
             self.act_stage.money_poll = SingleChoicePoll.objects.create(question='was this done?',
-                                                                          options=['yes', 'no'],
-                                                                          expires=timezone.now() + timezone.timedelta(
-                                                                              days=7),
-                                                                          river=self)
-            send_system_message(self.act_stage.money_chat, 'poll', context_poll=self.plan_stage.money_poll)
-            send_system_message(self.act_stage.money_chat, 'poll', context_poll=self.act_stage.money_poll)
-            self.act_stage.place_poll = SingleChoicePoll.objects.create(question='was this done?',
-                                                                           options=['yes', 'no'],
-                                                                           expires=timezone.now() + timezone.timedelta(
-                                                                               days=7),
-                                                                           river=self)
-            send_system_message(self.act_stage.place_chat, 'poll', context_poll=self.plan_stage.place_poll)
-            send_system_message(self.act_stage.place_chat, 'poll', context_poll=self.act_stage.place_poll)
-            self.act_stage.time_poll = SingleChoicePoll.objects.create(question='was this done?',
                                                                         options=['yes', 'no'],
                                                                         expires=timezone.now() + timezone.timedelta(
                                                                             days=7),
                                                                         river=self)
+            send_system_message(self.act_stage.money_chat, 'poll', context_poll=self.plan_stage.money_poll)
+            send_system_message(self.act_stage.money_chat, 'poll', context_poll=self.act_stage.money_poll)
+            self.act_stage.place_poll = SingleChoicePoll.objects.create(question='was this done?',
+                                                                        options=['yes', 'no'],
+                                                                        expires=timezone.now() + timezone.timedelta(
+                                                                            days=7),
+                                                                        river=self)
+            send_system_message(self.act_stage.place_chat, 'poll', context_poll=self.plan_stage.place_poll)
+            send_system_message(self.act_stage.place_chat, 'poll', context_poll=self.act_stage.place_poll)
+            self.act_stage.time_poll = SingleChoicePoll.objects.create(question='was this done?',
+                                                                       options=['yes', 'no'],
+                                                                       expires=timezone.now() + timezone.timedelta(
+                                                                           days=7),
+                                                                       river=self)
             send_system_message(self.act_stage.time_chat, 'poll', context_poll=self.plan_stage.time_poll)
             send_system_message(self.act_stage.time_chat, 'poll', context_poll=self.act_stage.time_poll)
             self.act_stage.save()
             self.save()
 
     def start_reflect(self) -> None:
-        from resources.models import Resource, CaseStudy, HowTo # pyre-ignore[21]
+        from resources.models import Resource, CaseStudy, HowTo  # pyre-ignore[21]
         from poll.models import MultipleChoicePoll
         from django.db.models import Q
         from itertools import chain
@@ -247,12 +256,18 @@ class River(ClusterableModel):
             self.current_stage = self.Stage.REFLECT
             self.reflect_stage = ReflectStage.objects.create()
             self.save()
-            self.reflect_stage.general_poll = MultipleChoicePoll.objects.create(question = 'Which of these resources did you find useful?',
-                                                                                options = list(dict.fromkeys(chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)).values_list('title', flat = True),
-                                                                                CaseStudy.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)).values_list('title', flat = True)))
-                                                                                for tag_a in self.tags.names() for tag_b in self.tags.names() if tag_a != tag_b and tag_a > tag_b]))),
-                                                                                expires = timezone.now() + timezone.timedelta(days=7),
-                                                                                river = self)
+            self.reflect_stage.general_poll = MultipleChoicePoll.objects.create(
+                question='Which of these resources did you find useful?',
+                options=list(dict.fromkeys(chain(*[list(chain(
+                    HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)).values_list(
+                        'title', flat=True),
+                    CaseStudy.objects.filter(
+                        Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)).values_list('title',
+                                                                                                     flat=True)))
+                                                   for tag_a in self.tags.names() for tag_b in self.tags.names() if
+                                                   tag_a != tag_b and tag_a > tag_b]))),
+                expires=timezone.now() + timezone.timedelta(days=7),
+                river=self)
             self.reflect_stage.save()
 
     def finish(self) -> None:

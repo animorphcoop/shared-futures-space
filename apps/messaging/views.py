@@ -73,6 +73,8 @@ class ChatView(TemplateView):
                 'stage': kwargs['stage'],
                 'topic': kwargs['topic'],
                 'page_obj': pagination_data['page_obj'],
+                'system_user': get_system_user(),
+
                 'page_number': pagination_data['page_number'],
                 'messages_displayed_count': pagination_data['messages_displayed_count'],
                 'messages_left_count': pagination_data['messages_left_count'],
