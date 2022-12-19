@@ -19,5 +19,5 @@ def privacy(request: HttpRequest) -> HttpResponse:
     return render(request, 'landing/privacy.html')
 
 
-def handle_404(request: HttpRequest) -> HttpResponse:
+def handle_404(request: HttpRequest, exception: Exception) -> HttpResponse:
     return render(request, '404.html')

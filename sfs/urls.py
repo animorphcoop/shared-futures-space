@@ -13,9 +13,9 @@ from search import views as search_views
 from typing import List, Union
 from django.urls import URLResolver, URLPattern
 
-from landing.views import handle_404
+from landing.views import handle_404 # pyre-ignore[21]
 
-handler404 = handle_404
+handler404 = handle_404 # pyre-ignore[5]
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     # pyre comment suppresses an error caused by pyre's limited understanding of django
