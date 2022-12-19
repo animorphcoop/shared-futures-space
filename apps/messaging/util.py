@@ -14,8 +14,10 @@ from typing import Union, Optional
 def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                         context_action: Optional['action.Action'] = None, context_river: Optional['river.River'] = None,  # pyre-ignore[11]
                         context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None,  # pyre-ignore[11]
-                        context_poll: Optional[BasePoll] = None) -> None: # pyre-ignore[11]
-    Message.objects.create(sender = get_system_user(), text='',
+                        context_poll: Optional[BasePoll] = None,
+                        text: Optional[str] = "",
+                        ) -> None: # pyre-ignore[11]
+    Message.objects.create(sender = get_system_user(), text=text,
                            snippet = {'offer_of_ownership': 'messaging/system_messages/offer_of_ownership.html',
                                       'ownership_determined': 'messaging/system_messages/ownership_determined.html',
                                       'removed_from_river': 'messaging/system_messages/removed_from_river.html',
@@ -29,6 +31,11 @@ def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                                       'finished_envision': 'messaging/system_messages/finished_envision.html',
                                       'blocked user': 'messaging/system_messages/user_chat_blocked.html',
                                       'salmon_envision_start': 'messaging/system_messages/salmon_envision_start.html',
+                                      'salmon_envision_intro': 'messaging/system_messages/salmon_envision_intro.html',
+                                      'salmon_envision_swimmers': 'messaging/system_messages/salmon_envision_swimmers.html',
+                                      'salmon_envision_poll': 'messaging/system_messages/salmon_envision_poll.html',
+                                      'salmon_wizard': 'messaging/system_messages/salmon_wizard.html',
+
                                       }[kind],
                            chat=chat,
                            context_action = context_action,

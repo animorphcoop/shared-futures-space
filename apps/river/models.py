@@ -158,6 +158,16 @@ class River(ClusterableModel):
             send_system_message(kind='salmon_envision_start', chat=self.envision_stage.general_chat,
                                 context_river=self)
 
+            '''
+            send_system_message(kind='salmon_envision_intro', chat=self.envision_stage.general_chat,context_river=self)
+            send_system_message(kind='salmon_envision_swimmers', chat=self.envision_stage.general_chat,context_river=self)
+            send_system_message(kind='salmon_envision_poll', chat=self.envision_stage.general_chat,context_river=self)
+            '''
+            send_system_message(kind='salmon_wizard', chat=self.envision_stage.general_chat, context_river=self, text="I am the Salmon of Knowledge and will help you navigate the river of your project. At the bottom left you can see me, and if you click me, you can browse relevant resources.")
+            send_system_message(kind='salmon_wizard', chat=self.envision_stage.general_chat, context_river=self, text="Once there are 3 swimmers in the river, you can shape the vision together. Discuss the current description and make sure it captures your collective vision for this project.")
+            send_system_message(kind='salmon_wizard', chat=self.envision_stage.general_chat, context_river=self,
+                                text="When you’re ready, the river starter can launch a poll using the poll icon in the bottom right. Here they can edit the original description to include any changes that have been discussed. If the poll passes, you will move to the planning stage.")
+            #send_system_message(kind='salmon_wizard', chat=self.envision_stage.general_chat, context_river=self, text="")
             self.save()
 
     def start_plan(self) -> None:
@@ -272,6 +282,5 @@ class River(ClusterableModel):
 
     def finish(self) -> None:
         print(self)
-        print('11111111111')
         self.current_stage = self.Stage.FINISHED
         self.save()

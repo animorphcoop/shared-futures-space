@@ -31,7 +31,7 @@
     {% else %}
         <div class="flex">
 
-
+            {% comment %}TODO: v2 - delete system message should not be here{% endcomment %}
             {% if message.sender.display_name == 'salmon' %}
 
                 <img src="{% static 'images/avatars/salmon_1.png' %}" class="w-6 h-6">
