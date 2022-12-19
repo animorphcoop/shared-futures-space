@@ -102,7 +102,7 @@ def add_rivers(rivers_data):
                                 question='is this an acceptable vision?',
                                 description=river_data['envision']['poll']['description'],
                                 options=['yes', 'no'],
-                                invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
+                                invalid_option=False, expires=timezone.now() + timezone.timedelta(days=7),
                                 river=new_river)
                     new_river.envision_stage.general_poll = poll
                     new_river.envision_stage.save()
@@ -117,7 +117,7 @@ def add_rivers(rivers_data):
                                 question='is this an acceptable vision?',
                                 description=new_river.description,
                                 options=['yes', 'no'],
-                                invalid_option=False, expires=timezone.now() + timezone.timedelta(days=3),
+                                invalid_option=False, expires=timezone.now() + timezone.timedelta(days=7),
                                 river=new_river)
                     new_river.envison_stage.save()
                     new_river.save()
