@@ -1,19 +1,21 @@
 {% load static %}
 
 {% block content %}
-    <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-         hx-trigger="load"
-         hx-target="this">
+    <div x-data="{ openTab: 'one' }">
+        <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
+             hx-trigger="load"
+             hx-target="this">
+        </div>
     </div>
     <div class="mx-4.5">
         <div id="envision-general-poll-wrapper">
             {% if river.envision_stage.general_poll != None %}
                 {% include "partials/vertical-spacer.html" with space="6" %}
-                    <div hx-trigger="load" hx-target="closest #envision-poll-wrapper"
-                         hx-get="{% url 'poll_view' river.envision_stage.general_poll.uuid %}"></div>
+                <div hx-trigger="load" hx-target="closest #envision-poll-wrapper"
+                     hx-get="{% url 'poll_view' river.envision_stage.general_poll.uuid %}"></div>
             {% endif %}
         </div>
-{% comment %}
+        {% comment %}
         {% if river.current_stage == river.Stage.ENVISION and request.user.id in starters %}
             {% if river.envision_stage.general_poll == None or river.envision_stage.general_poll.closed %}
                 {% include "partials/vertical-spacer.html" with space="6" %}

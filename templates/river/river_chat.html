@@ -1,7 +1,7 @@
 {% load static %}
 {% block content %}
     {% url 'river_chat' slug stage topic as message_post_url %}
-    {% include 'messaging/messages.html' with direct=direct message_post_url=message_post_url%}
+    {% include 'messaging/messages.html' with direct=direct message_post_url=message_post_url %}
 
     {% if not user.is_authenticated %}
         {% url 'account_login' as the_url %}
@@ -9,10 +9,10 @@
     {% endif %}
 
     <div class="">
-        <div id="{{stage}}-{{topic}}-poll-wrapper">
+        <div id="{{ stage }}-{{ topic }}-poll-wrapper">
             {% if poll_ref != None %}
                 {% include "partials/vertical-spacer.html" with space="6" %}
-                <div hx-trigger="load" hx-target="#{{stage}}-{{topic}}-poll-wrapper" hx-swap="innerHTML"
+                <div hx-trigger="load" hx-target="#{{ stage }}-{{ topic }}-poll-wrapper" hx-swap="innerHTML"
                      hx-get="{% url 'poll_view' poll_ref.uuid %}"></div>
             {% endif %}
         </div>
@@ -22,9 +22,9 @@
                 <div id="poll-creation-wrapper"
                      class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
                      :class="selected == 1 && openTab == 'one' ? 'block' : 'hidden'">
-                    <button id="poll-create-button-{{stage}}-{{topic}}"
+                    <button id="poll-create-button-{{ stage }}-{{ topic }}"
                             hx-get="{% url 'create_river_poll' river.slug stage topic %}"
-                            hx-target="#poll-creation-{{stage}}-{{topic}}"
+                            hx-target="#poll-creation-{{ stage }}-{{ topic }}"
                             class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
                             type="button">
                         {# Poll creation button #}
@@ -34,7 +34,7 @@
                                   fill="#9759FF"/>
                         </svg>
                     </button>
-                    <div id="poll-creation-{{stage}}-{{topic}}"></div>
+                    <div id="poll-creation-{{ stage }}-{{ topic }}"></div>
                 </div>
             {% endif %}
         {% endif %}

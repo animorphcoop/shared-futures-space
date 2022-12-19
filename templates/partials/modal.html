@@ -1,18 +1,44 @@
 {#  Modal blurred backerground overlay  #}
-<section id="modal-background" class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
+<section id="modal-background"
+         class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
     {#  White modal background  #}
-    <div id="modal-content" class="w-full sm:w-[360px]">
+    <div id="modal-content" class=" w-full sm:w-[360px]">
         {% block modal_content %}
         {% endblock %}
     </div>
 </section>
 
 <script>
-    document.getElementById('modal-background').addEventListener('click', () => {
-        document.getElementById('modal-container').classList.add('invisible');
-    })
+{% comment %}    let backgroundElements = document.getElementsByClassName("modal-background");
+    console.log(backgroundElements)
 
-    document.getElementById('modal-content').addEventListener('click', (e) => {
-        e.stopPropagation();
-    })
+    let modalElement = document.getElementsByClassName("modal-container");
+
+
+    for (let i = 0; i < backgroundElements.length; i++) {
+        backgroundElements[i].addEventListener('click', () => {
+            for (let j = 0; j < modalElement.length; j++) {
+                modalElement[j].classList.add('invisible');
+            }
+        })
+    }
+
+    let modalContent = document.getElementsByClassName("modal-content");
+
+    for (let i = 0; i < modalContent.length; i++) {
+        modalContent[i].addEventListener('click', (e) => {
+            e.stopPropagation();
+        })
+
+    }{% endcomment %}
+            document.getElementById('modal-background').addEventListener('click', () => {
+            document.getElementById('modal-container').classList.add('invisible');
+        })
+
+        document.getElementById('modal-content').addEventListener('click', (e) => {
+            e.stopPropagation();
+        })
+
+
+
 </script>
