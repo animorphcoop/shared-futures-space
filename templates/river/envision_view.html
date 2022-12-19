@@ -6,16 +6,16 @@
              hx-trigger="load"
              hx-target="this">
         </div>
-    </div>
-    <div class="mx-4.5">
-        <div id="envision-general-poll-wrapper">
-            {% if river.envision_stage.general_poll != None %}
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div hx-trigger="load" hx-target="closest #envision-poll-wrapper"
-                     hx-get="{% url 'poll_view' river.envision_stage.general_poll.uuid %}"></div>
-            {% endif %}
-        </div>
-        {% comment %}
+
+        <div class="mx-4.5">
+            <div id="envision-general-poll-wrapper">
+                {% if river.envision_stage.general_poll != None %}
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div hx-trigger="load" hx-target="closest #envision-poll-wrapper"
+                         hx-get="{% url 'poll_view' river.envision_stage.general_poll.uuid %}"></div>
+                {% endif %}
+            </div>
+            {% comment %}
         {% if river.current_stage == river.Stage.ENVISION and request.user.id in starters %}
             {% if river.envision_stage.general_poll == None or river.envision_stage.general_poll.closed %}
                 {% include "partials/vertical-spacer.html" with space="6" %}
@@ -34,6 +34,7 @@
             {% endif %}
         {% endif %}
 {% endcomment %}
+        </div>
     </div>
     <script>
 

@@ -19,11 +19,12 @@
             {% endif %}
         </div>
         {% if river.current_stage == stage and request.user.id in starters and poll_possible %}
+
             {% if poll_ref == None or not poll_ref.passed %}
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 <div id="poll-creation-wrapper"
                      class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
-                     :class="selected == 1 && openTab == 'one' ? 'block' : 'hidden'">
+                     :class="selected == 1 ? 'block' : 'hidden'">
                     <button id="poll-create-button-{{ stage }}-{{ topic }}"
                             hx-get="{% url 'create_river_poll' river.slug stage topic %}"
                             hx-target="#poll-creation-{{ stage }}-{{ topic }}"
