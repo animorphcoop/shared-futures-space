@@ -76,16 +76,16 @@
         {% include "landing/carousel.html" %}
         {% include "partials/vertical-spacer.html" with space="9" %}
 
-
-        {% include "partials/vertical-spacer.html" with space="9" %}
-        {% include "landing/section-heading.html" with title="get in touch 📧" %}
-        {% include "partials/vertical-spacer.html" with space="9" %}
-
-        <div class="">
-            {% include "partials/get-in-touch-buttons.html" %}
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <div class="bg-blue-pale -mx-4.5">
+            <div class="p-4.5">
+                {% include "partials/vertical-spacer.html" with space="6" %}
+                {% include "landing/section-heading.html" with title="get in touch 📧" %}
+                {% include "partials/vertical-spacer.html" with space="9" %}
+                {% include "partials/get-in-touch-buttons.html" with colour="primary_colour" %}
+                {% include "partials/vertical-spacer.html" with space="4.5" %}
+            </div>
         </div>
-
-        {% include "partials/vertical-spacer.html" with space="9" %}
 
         {% include "partials/footer-text.html" %}
     </div>

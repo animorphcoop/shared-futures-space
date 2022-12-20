@@ -1,11 +1,20 @@
 {% load static %}
 
+
+
 {% with h3_class="uppercase font-kanit-700 text-black-large text-[9px] leading-3 tracking-widest" p_class="text-meta text-black/55" %}
-    <div class="bg-gradient-to-b from-blue-second to-white flex flex-col flex-start py-8 -mx-4.5 px-4.5 gap-8">
-        <h3 class="{{ h3_class }}">Funded by</h3>
-        <div>
+
+    <div class="-mx-4.5 p-4.5 sticky bottom-0 bg-white z-10">
+        <h3 class="{{ h3_class }} pb-4">Funded by</h3>
+        <img src="{% static 'images/partner_logos/peace.jpg' %}"
+             class="grow-0 h-20 w-auto"
+             alt="PEACE IV">
+    </div>
+
+    <div class="flex flex-col flex-start pb-8 -mx-4.5 px-4.5 gap-8 overflow-auto">
+        <div class="">
             <img src="{% static 'images/partner_logos/seupb.png' %}"
-                 class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto"
+                 class="grow-0 h-16 w-auto pt-3.5"
                  alt="Special EU Programmes Body">
         </div>
 
@@ -13,42 +22,41 @@
 
         <div>
             <img src="{% static 'images/partner_logos/ci.png' %}"
-                 class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto"
+                 class="grow-0 h-14 w-auto"
                  alt="Co-operation Ireland">
         </div>
 
         <div>
             <img src="{% static 'images/partner_logos/bip.png' %}"
-                 class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto"
+                 class="grow-0 h-14 w-auto"
                  alt="Belfast Interface Project">
         </div>
 
         <div>
             <img src="{% static 'images/partner_logos/animorph.png' %}"
-                 class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto"
+                 class="grow-0 h-14 w-auto"
                  alt="Animorph">
         </div>
 
-        <div>
+        <div class="-mt-2 -mb-3">
             <img src="{% static 'images/partner_logos/essex.png' %}"
-                 class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-20 w-auto"
+                 class="grow-0 h-24 w-auto"
                  alt="Essex University (prof. Peter Bloom)">
         </div>
 
         <div>
             <img src="{% static 'images/partner_logos/dys.png' %}"
-                 class="transition-all duration-200 grow-0 grayscale mix-blend-multiply opacity-55 hover:opacity-100 hover:grayscale-0 h-12 w-auto"
+                 class="grow-0 h-16 w-auto mix-blend-multiply"
                  alt="Donegal Youth Service">
         </div>
 
-        {% include "partials/vertical-spacer.html" with space="3" %}
         <div>
             <img src="{% static 'images/partner_logos/future_innovators.png' %}"
-                 class="h-48 w-auto"
+                 class="h-40 w-auto"
                  alt="Future Innovators">
         </div>
 
-
+        {% include "partials/vertical-spacer.html" with space="3" %}
     </div>
 {% endwith %}
 
