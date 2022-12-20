@@ -1,3 +1,5 @@
+{% load static %}
+
 {% if dashboard %}
     <title>
         Shared Futures Space - Dashboard
@@ -14,6 +16,16 @@
     <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5">
         {{ title }}
     </h1>
+{% elif landing %}
+    <title>
+        Shared Futures Space
+    </title>
+    <div class="flex items-center ml-4.5">
+        <img src="{% static 'images/partner_logos/shared-futures.png' %}" class="h-8">
+        <h1 class="font-kanit-500 text-purple text-xl px-3 py-2.5">
+            {{ title }}
+        </h1>
+    </div>
 {% else %}
 
     <title>
