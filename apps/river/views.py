@@ -115,6 +115,7 @@ class ManageRiverView(TemplateView):
                     #send_system_message(get_userpair(request.user, membership.user).chat,'lost_championship_notification', context_user_a=request.user,context_river=membership.river)
             membership.save() # IMPORTANT: happens here because if membership.save is called after membership.delete, it reinstantiates a new identical membership. spent a while chasing that one.
             if (request.POST['action'] == 'remove_swimmer'):
+                print('ok?')
                 if not membership.starter:
                     send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river', context_user_a = request.user, context_user_b = membership.user, context_river = river)
                     membership.delete()

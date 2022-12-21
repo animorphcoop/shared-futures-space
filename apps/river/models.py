@@ -240,7 +240,7 @@ class River(ClusterableModel):
                 self.plan_stage.time_poll.closed = True  #
                 self.plan_stage.time_poll.save()
                 '''
-            # raise ValueError('plan stage is not finished!')
+                # raise ValueError('plan stage is not finished!')
 
             self.current_stage = self.Stage.ACT
             self.act_stage = ActStage.objects.create()
