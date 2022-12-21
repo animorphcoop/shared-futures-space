@@ -42,17 +42,17 @@ def test_river_chat_interface(client, test_user, test_river):
     chat_url = reverse('river_chat', args=[test_river.slug, 'plan', 'money'])
     RiverMembership.objects.create(river=test_river, user=test_user, starter=False)
     client.force_login(test_user)
-    for i in range(20):
+    for i in range(21):
         client.post(chat_url, {'text': 'test message ' + str(i) + '.'})
     chat_page = client.get(chat_url)
-    for i in range(10):
+    for i in range(9):
         assert 'test message ' + str(i) + '.' not in chat_page.content.decode('utf-8')
-    for i in range(10,20):
+    for i in range(9,21):
         assert 'test message ' + str(i) + '.' in chat_page.content.decode('utf-8')
     chat_page = client.get(chat_url + '?page=1')
-    for i in range(10):
+    for i in range(9):
         assert 'test message ' + str(i) + '.' in chat_page.content.decode('utf-8')
-    for i in range(10,20):
+    for i in range(9,21):
         assert 'test message ' + str(i) + '.' not in chat_page.content.decode('utf-8')
 
 def test_direct_chat_basics(client, test_user, other_test_user):

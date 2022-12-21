@@ -74,8 +74,7 @@ class BasePoll(models.Model):
             river, stage, topic = self.get_poll_context(self.singlechoicepoll)  # pyre-ignore[16]
             if river:
                 # this poll is the current poll of the active stage of a river
-                if sorted(self.current_results.items(), key=lambda x: x[1], reverse=True)[0][
-                    0] == 'yes':  # pyre-ignore[16]
+                if sorted(self.current_results.items(), key=lambda x: x[1], reverse=True)[0][0] == 'yes':  # pyre-ignore[16]
                     # poll has passed
                     self.passed = True
                     self.save()
