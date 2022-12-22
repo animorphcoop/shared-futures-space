@@ -1,32 +1,34 @@
 {% extends "partials/drawer-river.html" %}
 
 {% block drawer_content %}
-        <div class="-mx-4.5">
-            <div id="reflect-view" hx-get="{% url 'view_reflect' object.slug %}"
-                 hx-trigger="load"
-                 hx-target="#reflect-view"
-                 hx-afterload
-            ></div>
-        </div>
+    <div class="-mx-4.5">
+        <div id="reflect-view" hx-get="{% url 'view_reflect' object.slug %}"
+             hx-trigger="load"
+             hx-target="#reflect-view"
+             hx-afterload
+        ></div>
+    </div>
 
     <script>
-        let reflectDrawer = document.getElementById("reflect")
+        if (typeof reflectDrawer !== 'undefined') {
 
-        {% comment %}https://htmx.org/events/{% endcomment %}
-        document.addEventListener('htmx:afterSwap', function () {
-            if (reflectDrawer != null) {
-                let computedStyle = getComputedStyle(reflectDrawer);
-                //console.log(computedStyle.getPropertyValue('height'));
-                if (computedStyle.getPropertyValue('height') !== "0px") {
-                    //console.log('open')
-                    setTimeout(() => {
-                        reflectDrawer.style.maxHeight = reflectDrawer.scrollHeight + 'px';
-                    }, 500)
+            let reflectDrawer = document.getElementById("reflect")
+
+            {% comment %}https://htmx.org/events/{% endcomment %}
+            document.addEventListener('htmx:afterSwap', function () {
+                if (reflectDrawer != null) {
+                    let computedStyle = getComputedStyle(reflectDrawer);
+                    //console.log(computedStyle.getPropertyValue('height'));
+                    if (computedStyle.getPropertyValue('height') !== "0px") {
+                        //console.log('open')
+                        setTimeout(() => {
+                            reflectDrawer.style.maxHeight = reflectDrawer.scrollHeight + 'px';
+                        }, 500)
+                    }
+
                 }
-
-            }
-        }, false);
-
+            }, false);
+        }
 
     </script>
 {% endblock %}

@@ -1,32 +1,34 @@
 {% extends "partials/drawer-river.html" %}
 
 {% block drawer_content %}
-        <div class="-mx-4.5">
-            <div id="plan-view" hx-get="{% url 'view_plan' object.slug %}"
-                 hx-trigger="load"
-                 hx-target="#plan-view"
-                 hx-afterload
-            ></div>
-        </div>
+    <div class="-mx-4.5">
+        <div id="plan-view" hx-get="{% url 'view_plan' object.slug %}"
+             hx-trigger="load"
+             hx-target="#plan-view"
+             hx-afterload
+        ></div>
+    </div>
 
     <script>
-        let planDrawer = document.getElementById("plan")
+        if (typeof planDrawer !== 'undefined') {
 
-        {% comment %}https://htmx.org/events/{% endcomment %}
-        document.addEventListener('htmx:afterSwap', function () {
-            if (planDrawer != null) {
-                let computedStyle = getComputedStyle(planDrawer);
-                //console.log(computedStyle.getPropertyValue('height'));
-                if (computedStyle.getPropertyValue('height') !== "0px") {
-                    //console.log('open')
-                    setTimeout(() => {
-                        planDrawer.style.maxHeight = planDrawer.scrollHeight + 'px';
-                    }, 500)
+            let planDrawer = document.getElementById("plan")
+
+            {% comment %}https://htmx.org/events/{% endcomment %}
+            document.addEventListener('htmx:afterSwap', function () {
+                if (planDrawer != null) {
+                    let computedStyle = getComputedStyle(planDrawer);
+                    //console.log(computedStyle.getPropertyValue('height'));
+                    if (computedStyle.getPropertyValue('height') !== "0px") {
+                        //console.log('open')
+                        setTimeout(() => {
+                            planDrawer.style.maxHeight = planDrawer.scrollHeight + 'px';
+                        }, 500)
+                    }
+
                 }
+            }, false);
 
-            }
-        }, false);
-
-
+        }
     </script>
 {% endblock %}

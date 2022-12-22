@@ -2,8 +2,8 @@
 <script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>
 
 {% block content %}
-
-    <div class='poll-wrapper px-2.5'>
+    <div x-init="setTimeout(()=>{refreshNewlyFinished({{ just_finished }});}, 100)"
+         class='poll-wrapper px-2.5'>
         {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
         {#  Poll header  #}
         <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-black/30{% else %}bg-yellow{% endif %}">
@@ -13,6 +13,10 @@
                     {#  User icon and poll header text  #}
                     <div class="flex gap-2 items-center">
                         <img src="
+
+
+
+
 
                                 {% if poll.created_by.id == 0 %}{% static 'images/avatars/salmon_1.png' %}{% else %}{{ poll.created_by.avatar.image_url }}{% endif %}"
                              class="w-6 h-6">
@@ -129,6 +133,19 @@
         </div>
     </div>
 
+    <script>
+
+        function refreshNewlyFinished(finished) {
+            if (finished == null) return
+            //console.log(finished)
+            if (finished) {
+                //console.log('closed')
+                location.reload();
+
+            }
+        }
+
+    </script>
 
 
 {% endblock %}

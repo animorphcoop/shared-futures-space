@@ -1,29 +1,32 @@
 {% extends "partials/drawer-river.html" %}
 
 {% block drawer_content %}
-        <div class="-mx-4.5">
-            <div id="act-view" hx-get="{% url 'view_act' object.slug %}"
-                 hx-trigger="load"
-                 hx-target="#act-view"
-                 hx-afterload>
-            </div>
+    <div class="-mx-4.5">
+        <div id="act-view" hx-get="{% url 'view_act' object.slug %}"
+             hx-trigger="load"
+             hx-target="#act-view"
+             hx-afterload>
         </div>
+    </div>
     <script>
-        let actDrawer = document.getElementById("act")
+        if (typeof actDrawer !== 'undefined') {
 
-        {% comment %}https://htmx.org/events/{% endcomment %}
-        document.addEventListener('htmx:afterSwap', function () {
-            if (actDrawer != null) {
-                let computedStyle = getComputedStyle(actDrawer);
-                //console.log(computedStyle.getPropertyValue('height'));
-                if (computedStyle.getPropertyValue('height') !== "0px") {
-                    //console.log('open')
-                    setTimeout(() => {
-                        actDrawer.style.maxHeight = actDrawer.scrollHeight + 'px';
-                    }, 500)
+            let actDrawer = document.getElementById("act")
+
+            {% comment %}https://htmx.org/events/{% endcomment %}
+            document.addEventListener('htmx:afterSwap', function () {
+                if (actDrawer != null) {
+                    let computedStyle = getComputedStyle(actDrawer);
+                    //console.log(computedStyle.getPropertyValue('height'));
+                    if (computedStyle.getPropertyValue('height') !== "0px") {
+                        //console.log('open')
+                        setTimeout(() => {
+                            actDrawer.style.maxHeight = actDrawer.scrollHeight + 'px';
+                        }, 500)
+                    }
+
                 }
-
-            }
-        }, false);
+            }, false);
+        }
     </script>
 {% endblock %}
