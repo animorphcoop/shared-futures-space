@@ -19,8 +19,7 @@
             {% endif %}
         </div>
         {% if river.current_stage == stage and request.user.id in starters and poll_possible %}
-
-            {% if poll_ref == None or not poll_ref.passed %}
+            {% if poll_ref == None and not poll_ref.passed %}
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 <div id="poll-creation-wrapper"
                      class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
