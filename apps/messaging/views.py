@@ -83,6 +83,7 @@ class ChatView(TemplateView):
                 'unique_id': kwargs['stage'] + '-' + kwargs['topic'],  # pyre-ignore[58]
                 'chat_open': chat_poll == None or not chat_poll.closed or (chat_poll.closed and not chat_poll.passed),
                 'stage_ref': stage_ref,
+                # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
                 'poll_possible': True if kwargs['stage'] == 'envision' else (
                     False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (
                             kwargs['topic'] == 'general' and stage_ref.money_poll and stage_ref.money_poll.passed
@@ -98,9 +99,6 @@ class ChatView(TemplateView):
             }
             if request.user.is_authenticated:
                 context['my_flags'] = list(map(lambda f: f.message.uuid, Flag.objects.filter(flagged_by=request.user)))
-
-
-
         else:
             context = {}  # just in case
         if request.GET.get('page'):
