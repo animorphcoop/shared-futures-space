@@ -11,7 +11,7 @@ from uuid import UUID
 from itertools import chain
 from django.shortcuts import redirect
 
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Optional
 
 from .models import BasePoll, SingleChoicePoll, MultipleChoicePoll, BaseVote, SingleVote, MultipleVote
 from river.models import River, RiverMembership  # pyre-ignore[21]
@@ -41,12 +41,13 @@ class PollView(TemplateView):
                 SingleVote.objects.filter(poll=poll, user=request.user).update(choice=choice)
             poll.check_closed()
             if poll.check_closed() and 'slug' in request.POST:
-                # adding 'just_finished' so frontend can refresh
-                print(self.get_context_data(uuid=uuid, request=request, just_finished='true'))
-                return self.render_to_response(self.get_context_data(uuid=uuid, request=request, just_finished='true'))  # pyre-ignore[6]
-        return self.render_to_response(self.get_context_data(uuid=uuid, request=request,))  # pyre-ignore[6]
+                # adding 'just_finished' so frontend can refresh, did not want to tamper with request payload
+                # print(self.get_context_data(uuid=uuid, request=request, just_finished='true'))
+                return self.render_to_response(self.get_context_data(uuid=uuid, request=request, just_finished='true')) # pyre-ignore[6]
+        return self.render_to_response(self.get_context_data(uuid=uuid, request=request)) # pyre-ignore[6]
 
-    def get_context_data(self, uuid: UUID, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def get_context_data(self, uuid: UUID,  **kwargs: Dict[str, Any]) -> Dict[str, Any]: # adding request and just_finished as optional causes errors
+
         ctx = super().get_context_data(**kwargs)
         poll = BasePoll.objects.get(uuid=uuid)
         if hasattr(poll, 'multiplechoicepoll'):
@@ -67,7 +68,7 @@ class PollView(TemplateView):
         ctx['poll_results_winners'] = get_winners(list(ctx['poll_results'].items()))
 
         # added the variable to htmx response when the poll closes so frontend can refresh
-        #ctx['just_finished'] = 'false'
+        #ctx['just_finished']
 
         #river slug for htmx to run conditional check if the poll is closed so to trigger refreshing on the frontend
         river = poll.river
@@ -75,8 +76,7 @@ class PollView(TemplateView):
         return ctx
 
 
-def get_winners(options: List[Tuple[str, List[Any]]], winners: List[Tuple[str, List[Any]]] = []) -> List[
-    str]:  # pyre-ignore[2] Any is actually CustomUser, but for some reason we can't get hold of that
+def get_winners(options: List[Tuple[str, List[Any]]], winners: List[Tuple[str, List[Any]]] = []) -> List[str]:  # pyre-ignore[2] Any is actually CustomUser, but for some reason we can't get hold of that
     # get a list of equally-most-highly voted results, in case of a draw
     if len(options) == 0:
         return list(map(lambda pair: pair[0], winners))
@@ -103,8 +103,7 @@ class PollCreateView(CreateView):  # pyre-ignore[24]
     model = SingleChoicePoll
     form_class = PollCreateForm
 
-    def form_valid(self,
-                   form) -> HttpResponseRedirect:  # pyre-ignore[2] - the type of the form argument is some weird private thing that i can't seem to get hold of
+    def form_valid(self, form) -> HttpResponseRedirect:  # pyre-ignore[2] - the type of the form argument is some weird private thing that i can't seem to get hold of
         #print(form.cleaned_data)
         if form.cleaned_data['kind'] == 'SINGLE':
             new_poll = SingleChoicePoll.objects.create(question=form.cleaned_data['question'],
