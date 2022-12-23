@@ -17,14 +17,14 @@ import requests
 
 def get_weather(postcode: str) -> Tuple[str,str,Union[str,float]]:
     try:
-        # try postcode in ie
-        code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',IE&appid=' + settings.WEATHER_API_KEY)
-        if code_location.status_code != 200:
-            # if not, try in gb
+        # try postcode in gb, then ie
+        try:
             code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',GB&appid=' + settings.WEATHER_API_KEY)
-            # if not, default out
+        except requests.exceptions.ConnectionError:
+            code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',IE&appid=' + settings.WEATHER_API_KEY)
             if code_location.status_code != 200:
-                raise ConnectionError('could not retrieve openweathermap details')
+                return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
+
         weather = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=' + str(code_location.json()['lat']) + '&lon=' + str(code_location.json()['lon']) + '&appid=' + settings.WEATHER_API_KEY).json()
 
         desc = weather['weather'][0]['description']
@@ -41,8 +41,8 @@ def get_weather(postcode: str) -> Tuple[str,str,Union[str,float]]:
             'mist': 'https://openweathermap.org/img/wn/50d@2x.png',}[desc]
         temp = round(weather['main']['temp'] - 273.15, 1)
         return (desc, image, temp)
-    except ConnectionError:
-        return ('[no weather]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no weather]')
+    except requests.exceptions.ConnectionError:
+        return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
 
 @login_required(login_url='/profile/login/')  # redirect when user is not logged in
 def dashboard(request: HttpRequest) -> HttpResponse:
