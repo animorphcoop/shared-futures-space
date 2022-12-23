@@ -25,6 +25,9 @@ def get_weather(postcode: str) -> Tuple[str,str,Union[str,float]]:
             if code_location.status_code != 200:
                 return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
 
+        if code_location.status_code != 200:
+            return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
+
         weather = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=' + str(code_location.json()['lat']) + '&lon=' + str(code_location.json()['lon']) + '&appid=' + settings.WEATHER_API_KEY).json()
 
         desc = weather['weather'][0]['description']

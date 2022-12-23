@@ -27,6 +27,7 @@
 
 
 
+
                                  {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
                          alt="" title="">
                 </div>
@@ -145,10 +146,11 @@
                     document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
                 });
 
-                document.getElementById('show-modal').addEventListener('click', () => {
-                    document.getElementById('modal-container').classList.remove('invisible');
-                })
+
             }
+            document.getElementById('show-modal').addEventListener('click', () => {
+                document.getElementById('modal-container').classList.remove('invisible');
+            })
         </script>
     {% endblock %}
 

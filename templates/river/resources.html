@@ -32,7 +32,8 @@
                       fill="#9759FF"/>
             </svg>
         </button>
-        <span class="text-button inline-block w-12 min-w-12"><span id="slide-index">1</span>/{{ resources|length }}</span>
+        <span class="text-button inline-block w-12 min-w-12"><span
+                id="slide-index">1</span>/{{ resources|length }}</span>
         <button type="button" id="next-button" class="button button-on-white">
             <svg width="13" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7.70508 6.70508L1.70508 0.705078L0.295078 2.11508L4.87508 6.70508L0.295078 11.2951L1.70508 12.7051L7.70508 6.70508Z"
@@ -42,6 +43,7 @@
     </div>
 
     <script>
+
         var flkty = new Flickity('.main-carousel', {
             "prevNextButtons": false, "wrapAround": true, "pageDots": false
         });
