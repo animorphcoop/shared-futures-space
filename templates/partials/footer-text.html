@@ -4,7 +4,7 @@
 
 {% with h3_class="uppercase font-kanit-700 text-black-large text-[9px] leading-3 tracking-widest" p_class="text-meta text-black/55" %}
 
-    <div class="-mx-4.5 p-4.5 sticky bottom-0 bg-white z-10">
+    <div class="-mx-4.5 p-4.5 bg-white z-10">
         <h3 class="{{ h3_class }} pb-4">Funded by</h3>
         <img src="{% static 'images/partner_logos/peace.jpg' %}"
              class="grow-0 h-20 w-auto"
@@ -12,6 +12,7 @@
     </div>
 
     <div class="flex flex-col flex-start pb-8 -mx-4.5 px-4.5 gap-8 overflow-auto">
+
         <div class="">
             <a href="https://www.seupb.eu/" target="_blank">
                 <img src="{% static 'images/partner_logos/seupb.png' %}"
@@ -19,6 +20,11 @@
                      alt="Special EU Programmes Body">
             </a>
         </div>
+
+        <p class="text-meta">
+            A project supported by the European Union’s PEACE IV Programme, managed by the Special EU Programmes Body
+            (SEUPB).
+        </p>
 
         <h3 class="{{ h3_class }}">Project Team</h3>
 
