@@ -21,3 +21,8 @@ def privacy(request: HttpRequest) -> HttpResponse:
 
 def handle_404(request: HttpRequest, exception: Exception) -> HttpResponse:
     return render(request, '404.html')
+
+
+def handle_500(request: HttpRequest) -> HttpResponse:
+    print('500 error handled with redirect')
+    return HttpResponseRedirect(reverse('resources'))

@@ -29,7 +29,6 @@ def get_weather(postcode: str) -> Tuple[str,str,Union[str,float]]:
             return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
 
         weather = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=' + str(code_location.json()['lat']) + '&lon=' + str(code_location.json()['lon']) + '&appid=' + settings.WEATHER_API_KEY).json()
-
         desc = weather['weather'][0]['description']
         image = {'clear sky': 'https://openweathermap.org/img/wn/01d@2x.png',
             'few clouds': 'https://openweathermap.org/img/wn/02d@2x.png',
@@ -45,6 +44,11 @@ def get_weather(postcode: str) -> Tuple[str,str,Union[str,float]]:
         temp = round(weather['main']['temp'] - 273.15, 1)
         return (desc, image, temp)
     except requests.exceptions.ConnectionError:
+        return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
+    # catch all for our yet unknown error to be found in the logs
+    except Exception as e:
+        print('weather error')
+        print(e)
         return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
 
 @login_required(login_url='/profile/login/')  # redirect when user is not logged in
@@ -69,10 +73,6 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         except RiverMembership.DoesNotExist:
             pass
 
-
-
-
-
     #resources = ['fav resource one', 'fav resource two', 'fav resource three', 'fav resource four']
     resources = []
     saved_resources = None
@@ -92,8 +92,10 @@ def dashboard(request: HttpRequest) -> HttpResponse:
             }
 
     if current_user.post_code != None: # pyre-ignore[16]
+        print('getting weather')
         weather_desc, weather_img, temperature = get_weather(current_user.post_code.code) # pyre-ignore[16]
         context['temperature'] = temperature # pyre-ignore[6]
+        print(temperature)
         context['weather_img'] = weather_img # pyre-ignore[6]
         context['weather_description'] = weather_desc # pyre-ignore[6]
 

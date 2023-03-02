@@ -3,7 +3,8 @@
 <section>
 
     {# Area image #}
-    <div class="h-64 bg-cover bg-center
+    <div
+            class="h-64 bg-cover bg-center
         {% if user.post_code.area.name == 'North Belfast' %}
             bg-north-belfast
         {% elif user.post_code.area.name == 'West Belfast' %}
@@ -22,7 +23,7 @@
     "></div>
 
     {# Area name and weather #}
-    <div x-init="console.log('')"
+    <div x-data="{temperature: getTemperature('{{ temperature }}')}"
          class="flex justify-between w-full px-4.5">
 
         {# Area name #}
@@ -37,12 +38,20 @@
                 {{ user.post_code.area.name }}
             </span>
         </div>
-
         {# Area weather #}
-        <div id="dash-weather" class="flex justify-center items-center">
+        {% comment %}x-show="temperature != '[no data]'"{% endcomment %}
+        <div x-show="temperature"
+                id="dash-weather" class="flex justify-center items-center">
         <span class="text-meta-label">{{temperature}}°</span>
             <img src="{{weather_img}}" alt="{{weather_description}}" id="weather-icon" class="h-6 w-auto">
         </div>
     </div>
 
 </section>
+
+<script>
+    {% comment %}take out the weather element if there's no data{% endcomment %}
+    function getTemperature(serverData){
+        return serverData.includes('[no data]') ? false : true;
+    }
+</script>

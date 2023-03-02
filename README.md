@@ -10,7 +10,7 @@ On MacOS
 - Running after containers have been built: ```USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up```
 
 On Windows (running Linux containers)
-- Building: ```USER_ID=$(1000) GROUP_ID=$(1000) docker-compose up --build``` 
+- Building: ```USER_ID=$(1000) GROUP_ID=$(1000) docker-compose up --bubild``` 
 - Running after containers have been built: ```USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up```
 
 - To enter shell
