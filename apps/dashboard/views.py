@@ -92,10 +92,8 @@ def dashboard(request: HttpRequest) -> HttpResponse:
             }
 
     if current_user.post_code != None: # pyre-ignore[16]
-        print('getting weather')
         weather_desc, weather_img, temperature = get_weather(current_user.post_code.code) # pyre-ignore[16]
         context['temperature'] = temperature # pyre-ignore[6]
-        print(temperature)
         context['weather_img'] = weather_img # pyre-ignore[6]
         context['weather_description'] = weather_desc # pyre-ignore[6]
 
