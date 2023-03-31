@@ -19,15 +19,14 @@
 
     <div class="mx-4.5">
 
-
         {% include "partials/vertical-spacer.html" with space="6" %}
 
-        {% include "landing/main-heading.html" with title="Welcome to a project management platform where your community collaborates and gets stuff done!" %}
+        <h1 class="text-large text-center mx-auto sm:max-w-md">Welcome to a project management platform where your community collaborates and gets stuff done!</h1>
         {% include "partials/vertical-spacer.html" with space="9" %}
 
-        <div class="-mx-4.5 relative h-auto min-h-[180px] sm:h-auto">
+        <div class="-mx-4.5 relative h-auto min-h-[180px] overflow-hidden sm:h-auto sm:h-12">
             <div class="relative w-full z-10">
-                <video class="" autoplay muted loop>
+                <video class="w-full object-cover object-center sm:mt-[-280px]" autoplay muted loop>
                     <source src="{% static 'images/landing/shared_futures_waters.mp4' %}" type="video/mp4">
                     <source src="movie.ogg" type="video/ogg">
                     Your browser does not support the video tag.
@@ -57,10 +56,8 @@
         <div class="grid grid-cols-2 gap-5">
             {% if areas_dict|length >= 6 %}
                 {# this is to stop it complaining when there's no areas loaded, such as during tests #}
-
                 {% for key, value in areas_dict.items %}
                     {% include "landing/rounded-image.html" with image=key slug=key title=value %}
-
                 {% endfor %}
             {% endif %}
         </div>
