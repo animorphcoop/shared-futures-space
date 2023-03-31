@@ -1,8 +1,8 @@
 {% load static %}
 
-{% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex items-center justify-center" %}
+{% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex items-center justify-center sm:w-1/3" %}
     <div x-data="{ openTab: 'one' }" class="-mx-4.5">
-        <ul class="flex flex-start">
+        <ul class="flex flex-start sm:px-24 sm:max-w-4xl sm:mx-auto">
             <li @click="openTab = 'one'" class="{{ li_class }} bg-resources-one">
                 {% include "landing/tabbed-resources/title.html" with title="Collaborate" %}
             </li>
@@ -17,159 +17,148 @@
                 {% include "landing/tabbed-resources/title.html" with title="co creation" %}
             </li>{% endcomment %}
         </ul>
-        <div :class="`bg-resources-${openTab}`" class="w-full pt-6 pb-9 px-4.5 min-h-[486px]">
-            <div x-show="openTab === 'one'">
-
-                <div class="px-3">
+        <div :class="`bg-resources-${openTab}`" class="w-full pt-6 pb-9 px-4.5 min-h-[486px] sm:flex sm:items-center">
+            <div x-show="openTab === 'one'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
+                <div class="px-3 sm:max-w-lg sm:mx-auto sm:w-1/2">
                     {% include "landing/main-heading.html" with title="Find like-minded people in your area and create together. We call projects 'rivers' because they flow and cannot be stopped!" %}
                 </div>
                 {% include "partials/vertical-spacer.html" with space="6" %}
-                <div>
-                    <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
-                        Hi all! Let's turn the derelict street corner plot into a community green space and run gardening activities for children.
-                    </p>
-                    <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
-                    <div class="flex gap-1.5 items-center">
-                        <img src="{% static 'images/avatars/clownfish.png' %}" class="w-6 h-6">
-                        <span class="text-meta-label">Grace Campbell</span>
-                    </div>
-                </div>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div class="flex flex-col items-end">
-                    <p class="bg-white font-garamond-500 text-black-large text-right text-base px-3 py-2.5 rounded-xl leading-tight">
-                        Hi Grace, amazing! This space has so much potential, my kids would love that, we don't have a garden!
-                    </p>
-                    <div class="mr-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
-                    <div class="flex gap-1.5 items-center">
-                        <img src="{% static 'images/avatars/mystery.png' %}" class="w-6 h-6">
-                        <span class="text-meta-label">Kate Bell</span>
-                    </div>
-                </div>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-
-                <div>
-                    <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
-                        Hello, I don't know about gardening but can dig a hole, happy to help with carrying things too!
-                    </p>
-                    <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
-                    <div class="flex gap-1.5 items-center">
-                        <img src="{% static 'images/avatars/barb.png' %}" class="w-6 h-6">
-                        <span class="text-meta-label">Ben Moore</span>
-                    </div>
-                </div>
-
-
-            </div>
-
-            <div x-show="openTab === 'two'">
-
-
-                <p class="text-large text-center px-3">
-                    Explore a range of helpful resources that are mapped onto your river by the salmon of knowledge!
-                </p>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-
-                {# WET SALMON #}
-                <section class="flex flex-col items-center">
-                    <div class="bg-blue-pale rounded-full">
-                        <p class="text-large p-2.5 px-10">
-                            How can I help you?
+                <div class="sm:max-w-sm sm:mx-auto sm:px-6 md:px-12 sm:w-1/2">
+                    <div>
+                        <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
+                            Hi all! Let's turn the derelict street corner plot into a community green space and run
+                            gardening activities for children.
                         </p>
+                        <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
+                        <div class="flex gap-1.5 items-center">
+                            <img src="{% static 'images/avatars/clownfish.png' %}" class="w-6 h-6">
+                            <span class="text-meta-label">Grace Campbell</span>
+                        </div>
                     </div>
-                    <div class="flex flex-col p-1 w-10">
-                        <div class="rounded-full bg-blue-pale w-5 h-5 mt-1 self-end"></div>
-                        <div class="rounded-full bg-blue-pale w-3.5 h-3.5 mt-1 self-start"></div>
-                        <div class="rounded-full bg-blue-pale w-2.5 h-2.5 mt-2 self-center"></div>
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div class="flex flex-col items-end">
+                        <p class="bg-white font-garamond-500 text-black-large text-right text-base px-3 py-2.5 rounded-xl leading-tight">
+                            Hi Grace, amazing! This space has so much potential, my kids would love that, we don't have
+                            a garden!
+                        </p>
+                        <div class="mr-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
+                        <div class="flex gap-1.5 items-center">
+                            <img src="{% static 'images/avatars/mystery.png' %}" class="w-6 h-6">
+                            <span class="text-meta-label">Kate Bell</span>
+                        </div>
                     </div>
-                    <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
-                         class="fish self-start w-44 h-auto -my-12 ml-3">
-                </section>
-
-                {% include "partials/vertical-spacer.html" with space="4" %}
-                <div class="flex flex-col gap-4.5 items-start">
-                    <p class="button button-on-colour text-black/75">Funding 💰</p>
-                    <p class="button button-on-colour text-black/75">Training 🏅</p>
-                    <p class="button button-on-colour text-black/75">Community business 📈</p>
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div>
+                        <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
+                            Hello, I don't know about gardening but can dig a hole, happy to help with carrying things
+                            too!
+                        </p>
+                        <div class="ml-5 w-0 h-0 border border-solid border-t-[12px] border-t-white border-r-[8px] border-r-transparent border-b-0 border-b-transparent border-l-[8px] border-l-transparent"></div>
+                        <div class="flex gap-1.5 items-center">
+                            <img src="{% static 'images/avatars/barb.png' %}" class="w-6 h-6">
+                            <span class="text-meta-label">Ben Moore</span>
+                        </div>
+                    </div>
                 </div>
-
-
             </div>
 
-            <div x-show="openTab === 'three'">
+            <div x-show="openTab === 'two'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
+                <div class="px-3 sm:max-w-lg sm:mx-auto sm:w-1/2">
+                    {% include "landing/main-heading.html" with title="Explore a range of helpful resources that are mapped onto your river by the salmon of knowledge!" %}
+                </div>
+                {% include "partials/vertical-spacer.html" with space="6" %}
+                <div class="sm:max-w-sm sm:mx-auto sm:px-6 md:px-12 sm:w-1/2">
+                    {# WET SALMON #}
+                    <section class="flex flex-col items-center">
+                        <div class="bg-blue-pale rounded-full">
+                            <p class="text-large p-2.5 px-10">
+                                How can I help you?
+                            </p>
+                        </div>
+                        <div class="flex flex-col p-1 w-10">
+                            <div class="rounded-full bg-blue-pale w-5 h-5 mt-1 self-end"></div>
+                            <div class="rounded-full bg-blue-pale w-3.5 h-3.5 mt-1 self-start"></div>
+                            <div class="rounded-full bg-blue-pale w-2.5 h-2.5 mt-2 self-center"></div>
+                        </div>
+                        <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
+                             class="fish self-start w-44 h-auto -my-12 ml-3">
+                    </section>
 
+                    {% include "partials/vertical-spacer.html" with space="4" %}
+                    <div class="flex flex-col gap-4.5 items-start">
+                        <p class="button button-on-colour text-black/75">Funding 💰</p>
+                        <p class="button button-on-colour text-black/75">Training 🏅</p>
+                        <p class="button button-on-colour text-black/75">Community business 📈</p>
+                    </div>
+                </div>
+            </div>
 
-                <div class="px-3">
+            <div x-show="openTab === 'three'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
+                <div class="px-3 sm:max-w-lg sm:mx-auto sm:w-1/2">
                     {% include "landing/main-heading.html" with title="Rivers go through stages with dedicated chats. Polls conclude stages to ensure shared understanding and agreement on what to do next." %}
                 </div>
-
                 {% include "partials/vertical-spacer.html" with space="6" %}
-
-                <div class="flex items-center bg-yellow rounded-t-xl shadow-xl h-12">
-                    <div class="flex gap-2 items-center">
-                        {% include "partials/horizontal-spacer.html" with space="1" %}
-                        <img src="{% static 'images/avatars/salmon_1.png' %}" class="w-6 h-6">
-                        <p class="text-header text-center">
-                            Time to decide on the vision
-                        </p>
+                <div class="sm:max-w-sm sm:mx-auto sm:px-6 md:px-12 sm:w-1/2">
+                    <div class="flex items-center bg-yellow rounded-t-xl shadow-xl h-12">
+                        <div class="flex gap-2 items-center">
+                            {% include "partials/horizontal-spacer.html" with space="1" %}
+                            <img src="{% static 'images/avatars/salmon_1.png' %}" class="w-6 h-6">
+                            <p class="text-header text-center">
+                                Time to decide on the vision
+                            </p>
+                        </div>
                     </div>
-                </div>
-
-                <div class="bg-white">
-                    <div class="bg-yellow/50">
-                        {% include "partials/vertical-spacer.html" with space="3" %}
-                        <p class="text-body px-3.5 block">
-                            What we agree: “The old lookout tower is rotting and is dangerous. We propose to renew it
-                            and we also build a seating deck.”
-                        </p>
-
-                        {% include "partials/vertical-spacer.html" with space="5" %}
-
-                        <div class="flex justify-between items-center px-3.5">
+                    <div class="bg-white">
+                        <div class="bg-yellow/50">
+                            {% include "partials/vertical-spacer.html" with space="3" %}
+                            <p class="text-body px-3.5 block">
+                                What we agree: “The old lookout tower is rotting and is dangerous. We propose to renew
+                                it and we also build a seating deck.”
+                            </p>
+                            {% include "partials/vertical-spacer.html" with space="5" %}
+                            <div class="flex justify-between items-center px-3.5">
                         <span class="button button-on-colour inline-block">
                             Yes
                         </span>
-                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-4">
                             <span class="text-meta font-kanit-700">
                                 5
                             </span>
-                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                          fill="#9759FF"/>
-                                </svg>
+                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                                              fill="#9759FF"/>
+                                    </svg>
+                                </div>
                             </div>
-                        </div>
-
-                        {% include "partials/vertical-spacer.html" with space="3" %}
-
-                        <div class="flex justify-between items-center px-3.5">
+                            {% include "partials/vertical-spacer.html" with space="3" %}
+                            <div class="flex justify-between items-center px-3.5">
                         <span class="button button-on-colour inline-block">
                             No
                         </span>
-                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-4">
                             <span class="text-meta font-kanit-700">
                                 1
                             </span>
-                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                                          fill="#9759FF"/>
-                                </svg>
+                                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                                              fill="#9759FF"/>
+                                    </svg>
+                                </div>
                             </div>
-                        </div>
-
-                        {% include "partials/vertical-spacer.html" with space="3" %}
-
-                        <span class="block text-meta px-3.5">
+                            {% include "partials/vertical-spacer.html" with space="3" %}
+                            <span class="block text-meta px-3.5">
                         Please cast your vote. This vote will close in 2 days and 6 hours.
                     </span>
-                        {% include "partials/vertical-spacer.html" with space="3" %}
-                        <span class="flex gap-2 text-meta uppercase text-black/30 tracking-widest px-3.5">
+                            {% include "partials/vertical-spacer.html" with space="3" %}
+                            <span class="flex gap-2 text-meta uppercase text-black/30 tracking-widest px-3.5">
                         <span>Salmon of Knowledge</span>
                         <span>11:12</span>
                         <span>15/11/2022</span>
                     </span>
-                        {% include "partials/vertical-spacer.html" with space="3" %}
+                            {% include "partials/vertical-spacer.html" with space="3" %}
+                        </div>
                     </div>
                 </div>
 
