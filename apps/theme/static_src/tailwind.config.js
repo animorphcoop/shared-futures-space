@@ -101,8 +101,8 @@ module.exports = {
                 22: ["1.375rem", "1.75rem"],
             },
             spacing: {
-                4.5: ["1.125em"],
-                7.5: ["1.875em"],
+                4.5: ["1.125rem"],
+                7.5: ["1.875rem"],
             },
             boxShadow: {
                 input: "0px 1px 1px 0px rgba(0, 0, 0, 0.15) inset",
