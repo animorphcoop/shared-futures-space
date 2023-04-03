@@ -64,8 +64,10 @@
         {% include "partials/vertical-spacer.html" with space="9" %}
 
         {% url 'resources' as resources_url %}
-        {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-resources-two -mx-4.5" %}
-        {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" bg="bg-yellow -mx-4.5" %}
+        <div class="-mx-4.5 sm:flex">
+            {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-resources-two" %}
+            {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" bg="bg-yellow" %}
+        </div>
 
         {% include "partials/vertical-spacer.html" with space="9" %}
         {% include "landing/section-heading.html" with title="Case Studies" %}
