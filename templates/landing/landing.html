@@ -53,7 +53,7 @@
     {% for area in areas %}
         {{ area.name }}
     {% endfor %}{% endcomment %}
-        <div class="grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-y-9">
+        <div class="grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-y-9 lg:sm:grid-cols-4 xl:sm:grid-cols-6">
             {% if areas_dict|length >= 6 %}
                 {# this is to stop it complaining when there's no areas loaded, such as during tests #}
                 {% for key, value in areas_dict.items %}
