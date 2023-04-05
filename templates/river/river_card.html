@@ -3,87 +3,88 @@
 
 {% url 'view_river' river.slug as view_url %}
 
-<div class="mx-1.5 relative">
+<div class="mx-1.5 relative sm:max-w-xs">
     <div class="absolute bg-gradient-to-b from-[#E5F1F8] to-white h-12 w-full rounded-xl"></div>
     <div class="p-3 relative">
-        <div class="flex flex-start justify-between -mr-4.5">
-            <h2 class="relative text-title text-black/55">
-                {{ river.title }}
-            </h2>
-            <div class="-my-3">{% include 'partials/button-copy.html' with icon='link' path=view_url %}</div>
-        </div>
+        <div class="">
+            <div class="flex flex-start justify-between -mr-4.5">
+                <h2 class="relative text-title text-black/55">
+                    {{ river.title }}
+                </h2>
+                <div class="-my-3">{% include 'partials/button-copy.html' with icon='link' path=view_url %}</div>
+            </div>
 
-        {% include "partials/vertical-spacer.html" with space="4.5" %}
-        <div class="flex flex-row gap-1.5">
-            {% for tag in river.tags %}
-                {% include "river/river_tag.html" with title=tag %}
-            {% endfor %}
-        </div>
-
-        {% include "partials/vertical-spacer.html" with space="6" %}
-
-        <div class="flex justify-between">
-            <div class="flex flex-col gap-1.5">
-                {% for member in river.membership reversed %}
-                    {% if member.starter %}
-                        <a href="{% url 'user_detail' member.user.user_slug %}" class="flex flex-row">
-                            <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
-                            {% include "partials/horizontal-spacer.html" with space="4" %}
-                            <div class="flex flex-col justify-center">
-                                <p class="text-meta uppercase tracking-widest">
-                                    {{ member.user.display_name }} <span class="text-black/30 uppercase">Riverstarter</span>
-                                </p>
-                            </div>
-                        </a>
-                    {% endif %}
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
+            <div class="flex flex-row gap-1.5">
+                {% for tag in river.tags %}
+                    {% include "river/river_tag.html" with title=tag %}
                 {% endfor %}
-                <div class="pl-10 -mt-3">
-                    <p class="text-meta text-black/30">
-                        Started {{ river.started_on|timesince }} ago
-                    </p>
-                    {% if river.current_stage != "" %}
+            </div>
+
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            <div class="flex justify-between">
+                <div class="flex flex-col gap-1.5">
+                    {% for member in river.membership reversed %}
+                        {% if member.starter %}
+                            <a href="{% url 'user_detail' member.user.user_slug %}" class="flex flex-row">
+                                <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
+                                {% include "partials/horizontal-spacer.html" with space="4" %}
+                                <div class="flex flex-col justify-center">
+                                    <p class="text-meta uppercase tracking-widest">
+                                        {{ member.user.display_name }} <span class="text-black/30 uppercase">Riverstarter</span>
+                                    </p>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="pl-10 -mt-3">
                         <p class="text-meta text-black/30">
-                            {{ river.current_stage }}
+                            Started {{ river.started_on|timesince }} ago
                         </p>
+                        {% if river.current_stage != "" %}
+                            <p class="text-meta text-black/30">
+                                {{ river.current_stage }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    {% for member in river.membership|slice:3 %}
+                        {% if not member.starter %}
+                            <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
+                        {% endif %}
+                    {% endfor %}
+                    {% if river.extra_swimmers != 0 %}
+                        <span class="text-header"> +{{ river.extra_swimmers }}</span>
                     {% endif %}
                 </div>
             </div>
 
-            <div class="flex items-center gap-1.5">
-                {% for member in river.membership|slice:3 %}
-                    {% if not member.starter %}
-                        <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
-                    {% endif %}
-                {% endfor %}
-                {% if river.extra_swimmers != 0 %}
-                    <span class="text-header"> +{{ river.extra_swimmers }}</span>
-                {% endif %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            <div class="flex items-center justify-center overflow-hidden h-[262px] w-full rounded-[10px_10px_0_0]">
+                <img src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+                     class="object-cover w-full h-full" alt="" title="">
             </div>
+
         </div>
 
-        {% include "partials/vertical-spacer.html" with space="6" %}
+        <div class="">
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-        <div class="flex items-center justify-center overflow-hidden h-[262px] w-full rounded-[10px_10px_0_0]">
-            <img src="
+            <p class="font-garamond-500 text-base leading-5 text-black/75 sm:order-3">{{ river.description|truncatewords:25 }}</p>
 
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-
-                    {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
-                 class="object-cover w-full h-full" alt="" title="">
-        </div>
-
-        {% include "partials/vertical-spacer.html" with space="4.5" %}
-
-        <p class="font-garamond-500 text-base leading-5 text-black/75">{{ river.description }}</p>
-
-        {% include "partials/vertical-spacer.html" with space="4.5" %}
-
-        {# Removed Join button for unauthenticated users, but TODO: only show if you're in the right postcode? #}
-        {% comment %}{% if user.is_authenticated %}
+            {# Removed Join button for unauthenticated users, but TODO: only show if you're in the right postcode? #}
+            {% comment %}{% if user.is_authenticated %}
             <button class="button button-important">Join</button>
         {% endif %}{% endcomment %}
 
-        {% include "partials/button.html" with url=view_url style="primary_white" button="Learn more" %}
+            {% include "partials/button.html" with url=view_url style="primary_white" button="Learn more" %}
+        </div>
 
     </div>
 </div>
