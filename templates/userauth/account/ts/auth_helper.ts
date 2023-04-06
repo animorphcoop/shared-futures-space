@@ -38,35 +38,6 @@ function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () 
 }
 
 
-/*input value change did not work*/
-/*function loginAutofillObserver(input: HTMLInputElement, action: () => void) {
-
-    /!*not observing the value so*!/
-    const observerAutofill = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            console.log(mutation)
-            console.log('some mutationz')
-            if (input.value != '') {
-                console.log('changed email value')
-                action();
-            }
-            else {
-                console.log('apparently nothing happened')
-                console.log(input.value)
-            }
-
-        })
-    })
-    let configEmail = {childList: true, attributes: true, characterData: true};
-    observerAutofill.observe(input, configEmail);
-}*/
-
-
-
-
-
-
-
 function processEmailValue() {
 
     if (emailInput == null || inputFeedback == null) return
