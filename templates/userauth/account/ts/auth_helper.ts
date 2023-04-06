@@ -29,7 +29,6 @@ function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () 
                     input.setAttribute('borken', 'true')
                 }
 
-
             }
 
         })
@@ -43,7 +42,6 @@ function processEmailValue() {
 
     if (emailInput == null || inputFeedback == null) return
     const emailPassed = emailInput.value
-
     if (emailPassed.length <= 5) {
         inputFeedback.innerText = 'Please enter a valid email address.'
         return false
@@ -124,7 +122,6 @@ function getPasswordFeedback() {
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
 
         const passwordEntered: string = (<HTMLInputElement>document.getElementById("password-input1")).value
-
 
         if (passwordEntered.length < 1)
             return
