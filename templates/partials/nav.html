@@ -1,7 +1,7 @@
 {% load static %}
 
 <div x-data="{ open: false, toggle() { this.open = ! this.open } }" :class="{'fixed top-0 right-6.5': open == true}"
-     class="w-full sm:w-[360px] absolute pointer-events-auto">
+     class="w-full max-w-screen-xl mx-auto relative pointer-events-auto z-50">
 
     {#  Burger-cross icon  #}
     <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
@@ -29,7 +29,7 @@
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
          x-cloak
-         class="h-screen">
+         class="h-screen lg:fixed lg:right-0">
 
         {#  Menu list  #}
         <nav class="w-full min-h-full font-kanit-500 text-xl text-black-text flex flex-col">

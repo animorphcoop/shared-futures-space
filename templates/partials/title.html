@@ -5,7 +5,7 @@
         Shared Futures Space - Dashboard
     </title>
 
-    <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5">
+    <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5 max-w-screen-xl mx-auto">
         Welcome
         {{ title }}
         {% comment %}
@@ -13,14 +13,14 @@
         {% endcomment %}
     </h1>
 {% elif partial %}
-    <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5">
+    <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5 max-w-screen-xl mx-auto">
         {{ title }}
     </h1>
 {% elif landing %}
     <title>
         Shared Futures Space
     </title>
-    <div class="flex items-center ml-4.5">
+    <div class="flex items-center ml-4.5 max-w-screen-xl lg:mx-auto">
         <img src="{% static 'images/partner_logos/shared-futures.png' %}" class="h-8">
         <h1 class="font-kanit-500 text-purple text-xl px-3 py-2.5">
             {{ title }}
@@ -38,7 +38,7 @@
         {% endif %}
     </title>
 
-    <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5">
+    <h1 class="font-kanit-500 text-purple text-xl px-[18px] py-2.5 max-w-screen-xl mx-auto">
         {% if chat_title %}
             {{ title }} {{ chat_title }}
         {% else %}
