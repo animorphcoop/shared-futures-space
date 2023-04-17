@@ -15,7 +15,8 @@
 
     {% include "partials/vertical-spacer.html" with space="2" %}
 
-    <div class="flex flex-row flex-wrap gap-6 sm:gap-x-4 justify-center">
+{#    <div class="flex flex-row flex-wrap gap-6 sm:gap-x-4 justify-center">#}
+    <div class="sm:grid sm:grid-cols-2 gap-6 lg:gap-9 justify-center max-w-screen-xl mx-auto">
         {% for avatar in avatars %}
             <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
         {% endfor %}

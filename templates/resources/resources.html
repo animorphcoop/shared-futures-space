@@ -10,7 +10,7 @@
     {% block title %}{% include "partials/title.html" with title="Resources" %}{% endblock %}
 
     {# Search, number of results, and filter #}
-    <section class="bg-gradient-to-b from-gray-light via-white">
+    <section class="bg-gradient-to-b from-gray-light via-white max-w-screen-xl mx-auto">
         {% include "partials/vertical-spacer.html" with space="6" %}
         <div class="px-4.5">
             {% include 'resources/partials/search.html' %}
@@ -19,7 +19,7 @@
 
     {# Results #}
     <section>
-        <ul id="search-results" class="px-1.5 sm:flex sm:flex-wrap sm:gap-x-[2.5vw]"></ul>
+        <ul id="search-results" class="px-1.5 sm:grid sm:grid-cols-2 gap-6 lg:gap-9 max-w-screen-xl mx-auto"></ul>
     </section>
 
     {% block scripts %}
