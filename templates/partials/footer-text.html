@@ -1,17 +1,16 @@
 {% load static %}
 
+{% with h3_class="uppercase font-kanit-700 text-black-large text-[9px] leading-3 tracking-widest" p_class="text-meta text-black/55" img_class="grow-0 w-auto" %}
 
-
-{% with h3_class="uppercase font-kanit-700 text-black-large text-[9px] leading-3 tracking-widest" p_class="text-meta text-black/55" %}
-
-    <div class="-mx-4.5 p-4.5 bg-white z-10">
-        <h3 class="{{ h3_class }} pb-4">Funded by</h3>
-        <img src="{% static 'images/partner_logos/peace.jpg' %}"
-             class="grow-0 h-20 w-auto"
-             alt="PEACE IV">
-    </div>
-
-    <div class="flex flex-col flex-start pb-8 -mx-4.5 px-4.5 gap-8 overflow-auto">
+    {% include "partials/vertical-spacer.html" with space="7.5" %}
+    <h3 class="{{ h3_class }}">Funded by</h3>
+    {% include "partials/vertical-spacer.html" with space="3" %}
+    <div class="flex flex-col flex-start sm:flex-row sm:flex-wrap sm:gap-8">
+        <div>
+            <img src="{% static 'images/partner_logos/peace.jpg' %}"
+                 class="grow-0 h-20 w-auto"
+                 alt="PEACE IV">
+        </div>
 
         <div class="">
             <a href="https://www.seupb.eu/" target="_blank">
@@ -20,47 +19,50 @@
                      alt="Special EU Programmes Body">
             </a>
         </div>
+    </div>
+    {% include "partials/vertical-spacer.html" with space="3" %}
+    <p class="text-meta">
+        A project supported by the European Union’s PEACE IV Programme, managed by the Special EU Programmes Body
+        (SEUPB).
+    </p>
+    {% include "partials/vertical-spacer.html" with space="9" %}
 
-        <p class="text-meta">
-            A project supported by the European Union’s PEACE IV Programme, managed by the Special EU Programmes Body
-            (SEUPB).
-        </p>
-
-        <h3 class="{{ h3_class }}">Project Team</h3>
-
+    <h3 class="{{ h3_class }}">Project Team</h3>
+    {% include "partials/vertical-spacer.html" with space="3" %}
+    <div class="flex flex-col flex-start sm:flex-row sm:flex-wrap pb-8 -mx-4.5 px-4.5 gap-8 sm:gap-x-16 overflow-auto">
         <div>
             <img src="{% static 'images/partner_logos/ci.png' %}"
-                 class="grow-0 h-14 w-auto"
+                 class="{{ img_class }} h-14"
                  alt="Co-operation Ireland">
         </div>
 
         <div>
             <img src="{% static 'images/partner_logos/bip.png' %}"
-                 class="grow-0 h-14 w-auto"
+                 class="{{ img_class }} h-14"
                  alt="Belfast Interface Project">
         </div>
 
         <div>
             <img src="{% static 'images/partner_logos/animorph.png' %}"
-                 class="grow-0 h-14 w-auto"
+                 class="{{ img_class }} h-14"
                  alt="Animorph">
         </div>
 
         <div class="-mt-2 -mb-3">
             <img src="{% static 'images/partner_logos/essex.png' %}"
-                 class="grow-0 h-24 w-auto"
+                 class="{{ img_class }} h-24"
                  alt="Essex University (prof. Peter Bloom)">
         </div>
 
         <div>
             <img src="{% static 'images/partner_logos/dys.png' %}"
-                 class="grow-0 h-16 w-auto mix-blend-multiply"
+                 class="{{ img_class }} h-16 mix-blend-multiply"
                  alt="Donegal Youth Service">
         </div>
 
         <div>
             <img src="{% static 'images/partner_logos/future_innovators.png' %}"
-                 class="h-40 w-auto"
+                 class="{{ img_class }} h-40"
                  alt="Future Innovators">
         </div>
 

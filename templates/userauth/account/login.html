@@ -16,7 +16,7 @@
 
         {% block title %}{% include "partials/title.html" with title="Log in" %}{% endblock %}
 
-        <form class="" method="POST" action="{% url 'account_login' %}" x-init="setupObserversLogin()">
+        <form class="sm:w-[32rem] sm:mx-auto" method="POST" action="{% url 'account_login' %}" x-init="setupObserversLogin()">
             {% csrf_token %}
 
             {% include "partials/vertical-spacer.html" with space="4" %}

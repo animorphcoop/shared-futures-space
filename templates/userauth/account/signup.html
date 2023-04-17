@@ -12,7 +12,7 @@
 
         {% block title %}{% include "partials/title.html" with title="Sign up for Shared Futures" %}{% endblock %}
 
-        <form class="signup" id="signup_form" onsubmit="return validateSignup()" method="post"
+        <form class="signup sm:w-[32rem] sm:mx-auto" id="signup_form" onsubmit="return validateSignup()" method="post"
               action="{% url 'account_signup' %}"
               x-init="setupObserversSignup()">
 

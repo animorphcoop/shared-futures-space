@@ -7,29 +7,30 @@
     <div class="main-carousel w-full" data-flickity='{ "prevNextButtons": false, "wrapAround": true }'>
 
         {% for study in studies %}
-            <div class="w-full">
-                <div class="mx-4.5">
-                    <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
-                        {{ study.title }}
-                    </h2>
-                    {% include "partials/vertical-spacer.html" with space="3" %}
-                    <p class="font-garamond-500 text-base text-black-large text-center leading-5">
-                        {{ study.summary }}
-                    </p>
-                    {% include "partials/vertical-spacer.html" with space="6" %}
-                    <div class="w-full flex justify-center">
+            <div class="w-full sm:flex sm:justify-center">
+                <div class="mx-4.5 sm:flex sm:items-center sm:justify-center sm:max-w-3xl">
+                    <div class="sm:grow sm:w-1/2 sm:pl-6 sm:pr-3">
+                        <h2 class="font-kanit-500 text-xl leading-6 text-black-large text-center">
+                            {{ study.title }}
+                        </h2>
+                        {% include "partials/vertical-spacer.html" with space="3" %}
+                        <p class="font-garamond-500 text-base text-black-large text-center leading-5">
+                            {{ study.summary }}
+                        </p>
+                        {% include "partials/vertical-spacer.html" with space="6" %}
+                        <div class="w-full flex justify-center">
 
-                        {% url 'resource_item' study.slug as resource_url %}
-                        {% include "partials/button.html" with url=resource_url style="primary_white" button="Find out more" %}
+                            {% url 'resource_item' study.slug as resource_url %}
+                            {% include "partials/button.html" with url=resource_url style="primary_white" button="Find out more" %}
+                        </div>
                     </div>
-
 
                     {% image study.case_study_image max-1920x1080 as study_img %}
                     {% if study_img %}
-                    {% include "partials/vertical-spacer.html" with space="6" %}
-                    <div class="w-full max-h-fit">
-                        <img src="{{ study_img.url }}" class="object-contain h-48 w-96">
-                    </div>
+                        {% include "partials/vertical-spacer.html" with space="6" %}
+                        <div class="w-full max-h-fit flex items-center justify-center sm:grow sm:w-1/2 sm:pr-6 sm:pl-3">
+                            <img src="{{ study_img.url }}" class="object-contain h-48 w-96">
+                        </div>
                     {% endif %}
 
                 </div>

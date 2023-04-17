@@ -19,15 +19,14 @@
 
     <div class="mx-4.5">
 
-
         {% include "partials/vertical-spacer.html" with space="6" %}
 
-        {% include "landing/main-heading.html" with title="Welcome to a project management platform where your community collaborates and gets stuff done!" %}
+        <h1 class="text-large text-center mx-auto sm:max-w-md">Welcome to a project management platform where your community collaborates and gets stuff done!</h1>
         {% include "partials/vertical-spacer.html" with space="9" %}
 
-        <div class="-mx-4.5 relative h-auto min-h-[180px] sm:h-auto">
+        <div class="-mx-4.5 relative h-auto min-h-[180px] overflow-hidden sm:h-auto sm:h-12">
             <div class="relative w-full z-10">
-                <video class="" autoplay muted loop>
+                <video class="w-full object-cover object-center sm:mt-[-280px]" autoplay muted loop>
                     <source src="{% static 'images/landing/shared_futures_waters.mp4' %}" type="video/mp4">
                     <source src="movie.ogg" type="video/ogg">
                     Your browser does not support the video tag.
@@ -54,21 +53,21 @@
     {% for area in areas %}
         {{ area.name }}
     {% endfor %}{% endcomment %}
-        <div class="grid grid-cols-2 gap-5">
+        <div class="grid grid-cols-2 gap-5 sm:grid-cols-3 sm:gap-y-9 lg:sm:grid-cols-4 xl:sm:grid-cols-6">
             {% if areas_dict|length >= 6 %}
                 {# this is to stop it complaining when there's no areas loaded, such as during tests #}
-
                 {% for key, value in areas_dict.items %}
                     {% include "landing/rounded-image.html" with image=key slug=key title=value %}
-
                 {% endfor %}
             {% endif %}
         </div>
         {% include "partials/vertical-spacer.html" with space="9" %}
 
         {% url 'resources' as resources_url %}
-        {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-resources-two -mx-4.5" %}
-        {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" bg="bg-yellow -mx-4.5" %}
+        <div class="-mx-4.5 sm:flex">
+            {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-resources-two" %}
+            {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" bg="bg-yellow" %}
+        </div>
 
         {% include "partials/vertical-spacer.html" with space="9" %}
         {% include "landing/section-heading.html" with title="Case Studies" %}
