@@ -1,7 +1,7 @@
 {% load static %}
 <div class="justify-self-center">
     <a href="{% url "spring" slug %}">
-        <div class="bg-{{ image }} bg-center bg-cover h-[42.5vw] w-[42.5vw] sm:h-[27.5vw] sm:w-[27.5vw] lg:h-[20vw] lg:w-[20vw] xl:h-[13vw] xl:w-[13vw] rounded-full"></div>
+        <div class="bg-{{ image }} bg-center bg-cover h-[42.5vw] w-[42.5vw] md:h-[27.5vw] md:w-[27.5vw] max-h-80 max-w-xs rounded-full"></div>
         {% include "partials/vertical-spacer.html" with space="3" %}
         <h3 class="uppercase text-center text-black-text font-kanit-400 text-[9px] leading-3 tracking-widest">{{ title }}</h3>
     </a>
