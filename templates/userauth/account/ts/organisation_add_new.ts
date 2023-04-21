@@ -36,32 +36,37 @@ function addName() {
         errorBoxName.classList.add('hidden')
     }
 
-    console.log('is valid?')
+
+
+    /* basic url validation*/
+    let urlString = tempOrgUrlInput.value
+
+    /*if the url field is empty then we are happy to process it as such, otherwise validate*/
+    if (urlString.length > 1) {
 
     /*url has to have at least one dot*/
-    let urlString = tempOrgUrlInput.value
-    // @ts-ignore
-    if (!urlString.includes(".") || !urlString.includes("https://")) {
+        // @ts-ignore
+        if (!urlString.includes(".") || !urlString.includes("https://")) {
 
-        if (errorBoxUrl.classList.contains('hidden')) {
-            errorBoxUrl.classList.remove('hidden')
+            if (errorBoxUrl.classList.contains('hidden')) {
+                errorBoxUrl.classList.remove('hidden')
+            }
+            return
         }
-        return
-    }
 
 
-    /*url has to have something before and after the dot, not worried about the details*/
-    /*TODO: Extend and consolidate validation*/
-    let urlArray = urlString.split(".")
-    console.log(urlArray.length)
-    if (urlArray.length < 2 || urlArray[0] == "" || urlArray[1] == "") {
+        /*url has to have something before and after the dot, not worried about the details*/
+        /*TODO: Extend and consolidate validation*/
+        let urlArray = urlString.split(".")
+        console.log(urlArray.length)
+        if (urlArray.length < 2 || urlArray[0] == "" || urlArray[1] == "") {
 
-        if (errorBoxUrl.classList.contains('hidden')) {
-            errorBoxUrl.classList.remove('hidden')
+            if (errorBoxUrl.classList.contains('hidden')) {
+                errorBoxUrl.classList.remove('hidden')
+            }
+            return
         }
-        return
     }
-
 
     if (!errorBoxUrl.classList.contains('hidden')) {
         errorBoxUrl.classList.add('hidden')
