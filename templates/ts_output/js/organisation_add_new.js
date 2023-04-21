@@ -44,7 +44,6 @@ function addName() {
         /*url has to have something before and after the dot, not worried about the details*/
         /*TODO: Extend and consolidate validation*/
         let urlArray = urlString.split(".");
-        console.log(urlArray.length);
         if (urlArray.length < 2 || urlArray[0] == "" || urlArray[1] == "") {
             if (errorBoxUrl.classList.contains('hidden')) {
                 errorBoxUrl.classList.remove('hidden');
