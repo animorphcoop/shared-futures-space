@@ -100,9 +100,8 @@
 
                 {# Organisation #}
                 {% if user.organisation != None %}
-                    {% if not self %}
-                        {# Show nothing at all if someone else's profile has no organisation added #}
-                    {% else %}
+                                            {# If you're not the owner of the profile you can only view but not edit #}
+
                         {# Show organisation area if you're on your own profile, regardless of whether it's empty or not #}
                         <div class="py-4 px-4.5 flex justify-between items-center  bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
                             <h3 class="inline-block font-kanit-700 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
@@ -123,7 +122,7 @@
                             {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
                         </div>
                         {% include "partials/vertical-spacer.html" with space="4" %}
-                    {% endif %}
+
                 {% endif %}
 
 

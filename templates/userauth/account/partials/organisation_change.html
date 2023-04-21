@@ -1,15 +1,17 @@
 {% load static %}
 {% comment %}
+This is for profile org edit only
 TODO: Need to restyle this field so does not look like in adddata
 {% endcomment %}
 
 <form hx-put="{% url 'account_update' %}" hx-target="#organisation-holder">
-    <input id="organisation_name" onfocus="blur()" name="organisation_name" type=text
+    <input id="organisation-name" onfocus="blur()" name="organisation_name" type=text
            value="None" class="hidden">
 
     {% comment %}taking on the value of the organisation url via organisation_name_enter modal field{% endcomment %}
-    <input id="organisation_url" name=organisation_url type=text value=""
+    <input id="organisation-url" name=organisation_url type=text value=""
            class="hidden">
+
 
     <button id="organisation-button"
             type="submit"

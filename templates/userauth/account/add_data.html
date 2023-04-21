@@ -110,12 +110,13 @@
                     {% include "partials/input-label.html" with for="organisation" label="You organisation" %}
                     <div class="">
                         <input class="input-text input-text-invalid bg-white"
-                               id="organisation_name" onfocus="blur()" name="organisation_name" type=text value="">
+                               id="organisation-name" onfocus="blur()" name="organisation_name" type=text value="">
 
+                    <input id="organisation-url" name=organisation_url type=text value="" class="hidden">
                         {% comment %}taking on the value of the organisation url via organisation_name_enter modal field{% endcomment %}
-                        {% if newOrgUrl %}
-                            <input id="organisation_url" name=organisation_url type=text value="" class="hidden">
-                        {% endif %}
+{% comment %}                        {% if newOrgUrl %}
+                            <input id="organisation-url" name=organisation_url type=text value="" class="hidden">
+                        {% endif %}{% endcomment %}
 
                         <button onclick="event.preventDefault(); toggleOrganisationsAdd();"
                                 class="inline -ml-9 h-0">

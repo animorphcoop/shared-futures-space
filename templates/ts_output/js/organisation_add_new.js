@@ -14,8 +14,8 @@ function addName() {
     if (organisationDataEnter == null)
         return;
     const errorBoxName = document.getElementById("error-box-name");
-    const tempOrgNameInput = document.getElementById("organisation-name");
-    const tempOrgUrlInput = document.getElementById("organisation-url");
+    const tempOrgNameInput = document.getElementById("organisation-name-temp");
+    const tempOrgUrlInput = document.getElementById("organisation-url-temp");
     if (tempOrgNameInput == null || tempOrgUrlInput == null || errorBoxName == null)
         return;
     if (tempOrgNameInput.value.length < 1) {
@@ -30,6 +30,8 @@ function addName() {
     }
     const newOrgName = tempOrgNameInput.value;
     const newOrgUrl = tempOrgUrlInput.value;
+    console.log(newOrgName);
+    console.log(newOrgUrl);
     selectOrganisation(newOrgName, newOrgUrl);
     submitOrganisation();
     organisationDataEnter.classList.add('hidden');

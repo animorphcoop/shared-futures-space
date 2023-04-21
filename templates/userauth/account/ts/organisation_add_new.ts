@@ -18,8 +18,8 @@ function addName() {
     if (organisationDataEnter == null) return
 
     const errorBoxName: HTMLElement | null = document.getElementById("error-box-name")
-    const tempOrgNameInput = (<HTMLInputElement>document.getElementById("organisation-name"))
-    const tempOrgUrlInput = (<HTMLInputElement>document.getElementById("organisation-url"))
+    const tempOrgNameInput = (<HTMLInputElement>document.getElementById("organisation-name-temp"))
+    const tempOrgUrlInput = (<HTMLInputElement>document.getElementById("organisation-url-temp"))
 
     if (tempOrgNameInput == null || tempOrgUrlInput == null || errorBoxName == null) return
 
@@ -37,7 +37,8 @@ function addName() {
 
     const newOrgName = tempOrgNameInput.value
     const newOrgUrl = tempOrgUrlInput.value
-
+    console.log(newOrgName)
+    console.log(newOrgUrl)
 
     selectOrganisation(newOrgName, newOrgUrl)
     submitOrganisation()
