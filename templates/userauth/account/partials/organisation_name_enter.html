@@ -16,17 +16,22 @@
             <p class="px-4 py-3">Please add the name of your organisation.</p>
         </div>
 
-        {% include "partials/input-label.html" with for="organisation-name" label="Organisation name" %}
+
+        {% include "partials/input-label.html" with for="organisation-name-temp" label="Organisation name" %}
         <input class="input-text input-text-invalid"
-               id="organisation-name" name="organisation-name" type=text value=""
-               pattern="[a-zA-Z0-9\s]+" placeholder="">
+               id="organisation-name-temp" type=text value=""
+               placeholder="">
 
         <div class="h-4.5"></div>
 
-        {% include "partials/input-label.html" with for="organisation-url" label="Website" %}
+        <div id="error-box-url" class="hidden mx-4 mb-4.5 font-garamond-500 bg-red-100">
+            <p class="px-4 py-3">Please write a full valid address starting with https://</p>
+        </div>
+
+        {% include "partials/input-label.html" with for="organisation-url-temp" label="Website" %}
         <input class="input-text"
-               id="organisation-url" name="organisation-url" type=text pattern="https?://.+"
-               value="" placeholder="">
+               id="organisation-url-temp" type=text
+               value="" >
 
         <div class="h-4.5"></div>
 

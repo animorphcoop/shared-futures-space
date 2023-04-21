@@ -5,8 +5,6 @@ function setupObserversLogin() {
     if (inputFeedback == null)
         return;
     newObserver(emailInput, inputFeedback, evaluateButtonLogin);
-    /*Setup observer on start check if fill automatically triggered*/
-    //loginAutofillObserver(emailInput, listenForAutofill)
     /*
     * listen for value change and see autofill with a delay
     * it is because onfocusout event is not triggered with autofill

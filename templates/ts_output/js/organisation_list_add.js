@@ -1,12 +1,13 @@
 "use strict";
 let selectedOrganisation = '';
 let newOrganisationUrl = '';
+//if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
 const organisationCheckboxBlock = document.getElementById("organisation-starter");
 const checkbox = document.getElementById("organisation-checkbox");
 const organisationDataBlock = document.getElementById("organisation-data");
 const organisationList = document.getElementById("organisation-list");
-const organisationNameInput = document.getElementById("organisation_name");
-const organisationUrlInput = document.getElementById("organisation_url");
+const organisationNameInput = document.getElementById("organisation-name");
+const organisationUrlInput = document.getElementById("organisation-url");
 const stopBodyScroll = () => {
     const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
     const body = document.body;
@@ -71,18 +72,27 @@ function backFromOrganisations() {
     organisationNameInput.value = selectedOrganisation;
     organisationDataBlock.classList.add('hidden');
 }
+/*
+* when called from the list of organisations orgUrl will be undefined,
+* the url is only needed when createing a new organisation in CustomAddDataView
+* */
 function selectOrganisation(orgName, orgUrl) {
     selectedOrganisation = orgName;
-    newOrganisationUrl = orgUrl;
+    if (typeof orgUrl !== "undefined") {
+        newOrganisationUrl = orgUrl;
+    }
 }
 function submitOrganisation() {
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null)
         return;
-    if (organisationNameInput.value == "")
+    //if (organisationNameInput.value == "") return
+    if (selectedOrganisation == "")
         return;
     organisationNameInput.value = selectedOrganisation;
     organisationNameInput.classList.add('cursor-not-allowed');
-    organisationUrlInput.value = newOrganisationUrl;
+    if (newOrganisationUrl != '') {
+        organisationUrlInput.value = newOrganisationUrl;
+    }
     organisationDataBlock.classList.remove('hidden');
     enableBodyScroll();
     organisationList.classList.add('hidden');

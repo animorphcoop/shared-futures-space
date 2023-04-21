@@ -1,5 +1,6 @@
 let selectedOrganisation: string = ''
 let newOrganisationUrl: string = ''
+//if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
 
 const organisationCheckboxBlock = document.getElementById("organisation-starter")
 
@@ -8,8 +9,8 @@ const checkbox = (<HTMLInputElement>document.getElementById("organisation-checkb
 const organisationDataBlock: HTMLElement | null = document.getElementById("organisation-data")
 const organisationList: HTMLElement | null = document.getElementById("organisation-list")
 
-const organisationNameInput = (<HTMLInputElement>document.getElementById("organisation_name"))
-const organisationUrlInput = (<HTMLInputElement>document.getElementById("organisation_url"))
+const organisationNameInput = (<HTMLInputElement>document.getElementById("organisation-name"))
+const organisationUrlInput = (<HTMLInputElement>document.getElementById("organisation-url"))
 
 const stopBodyScroll = () => {
     const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
@@ -83,21 +84,29 @@ function backFromOrganisations() {
     organisationDataBlock.classList.add('hidden')
 }
 
+/*
+* when called from the list of organisations orgUrl will be undefined,
+* the url is only needed when createing a new organisation in CustomAddDataView
+* */
 function selectOrganisation(orgName: string, orgUrl: string) {
     selectedOrganisation = orgName
-    newOrganisationUrl = orgUrl
+    if (typeof orgUrl !== "undefined") {
+        newOrganisationUrl = orgUrl
+    }
 }
 
 function submitOrganisation() {
 
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
 
-    if (organisationNameInput.value == "") return
+    //if (organisationNameInput.value == "") return
+    if (selectedOrganisation == "") return
 
     organisationNameInput.value = selectedOrganisation
     organisationNameInput.classList.add('cursor-not-allowed')
-
-    organisationUrlInput.value = newOrganisationUrl
+    if (newOrganisationUrl != '') {
+        organisationUrlInput.value = newOrganisationUrl
+    }
 
     organisationDataBlock.classList.remove('hidden')
 
