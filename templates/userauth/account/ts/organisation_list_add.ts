@@ -89,40 +89,26 @@ function backFromOrganisations() {
 * the url is only needed when createing a new organisation in CustomAddDataView
 * */
 function selectOrganisation(orgName: string, orgUrl: string) {
-    console.log(`selecting me ${orgName}`)
-    console.log(`my url ${orgUrl}`)
     selectedOrganisation = orgName
     if (typeof orgUrl !== "undefined") {
         newOrganisationUrl = orgUrl
     }
-
 }
 
 function submitOrganisation() {
 
-    console.log('about to submit')
-    console.log(organisationNameInput)
-    console.log(organisationDataBlock)
-    console.log(organisationList)
-    console.log(organisationNameInput)
-    console.log(organisationUrlInput)
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
-    console.log('not missing')
+
     //if (organisationNameInput.value == "") return
     if (selectedOrganisation == "") return
 
     organisationNameInput.value = selectedOrganisation
     organisationNameInput.classList.add('cursor-not-allowed')
-    console.log("i've added name")
     if (newOrganisationUrl != '') {
         organisationUrlInput.value = newOrganisationUrl
-        console.log("i've added url")
     }
-    console.log("post url")
 
     organisationDataBlock.classList.remove('hidden')
-
-    console.log("bring back to the front")
 
     enableBodyScroll();
     organisationList.classList.add('hidden')

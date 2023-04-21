@@ -5,7 +5,7 @@ TODO: Need to restyle this field so does not look like in adddata
 {% endcomment %}
 
 <form hx-put="{% url 'account_update' %}" hx-target="#organisation-holder">
-    <input id="organisation-name" onfocus="blur()" name="organisation_name" type=text
+    <input id="organisation-name" name="organisation_name" type=text
            value="None" class="hidden">
 
     {% comment %}taking on the value of the organisation url via organisation_name_enter modal field{% endcomment %}

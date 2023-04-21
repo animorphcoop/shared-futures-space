@@ -15,8 +15,9 @@ function addName() {
         return;
     const errorBoxName = document.getElementById("error-box-name");
     const tempOrgNameInput = document.getElementById("organisation-name-temp");
+    const errorBoxUrl = document.getElementById("error-box-url");
     const tempOrgUrlInput = document.getElementById("organisation-url-temp");
-    if (tempOrgNameInput == null || tempOrgUrlInput == null || errorBoxName == null)
+    if (tempOrgNameInput == null || tempOrgUrlInput == null || errorBoxName == null || errorBoxUrl == null)
         return;
     if (tempOrgNameInput.value.length < 1) {
         if (errorBoxName.classList.contains('hidden')) {
@@ -28,10 +29,31 @@ function addName() {
     if (!errorBoxName.classList.contains('hidden')) {
         errorBoxName.classList.add('hidden');
     }
+    console.log('is valid?');
+    /*url has to have at least one dot*/
+    let urlString = tempOrgUrlInput.value;
+    // @ts-ignore
+    if (!urlString.includes(".") || !urlString.includes("https://")) {
+        if (errorBoxUrl.classList.contains('hidden')) {
+            errorBoxUrl.classList.remove('hidden');
+        }
+        return;
+    }
+    /*url has to have something before and after the dot, not worried about the details*/
+    /*TODO: Extend and consolidate validation*/
+    let urlArray = urlString.split(".");
+    console.log(urlArray.length);
+    if (urlArray.length < 2 || urlArray[0] == "" || urlArray[1] == "") {
+        if (errorBoxUrl.classList.contains('hidden')) {
+            errorBoxUrl.classList.remove('hidden');
+        }
+        return;
+    }
+    if (!errorBoxUrl.classList.contains('hidden')) {
+        errorBoxUrl.classList.add('hidden');
+    }
     const newOrgName = tempOrgNameInput.value;
     const newOrgUrl = tempOrgUrlInput.value;
-    console.log(newOrgName);
-    console.log(newOrgUrl);
     selectOrganisation(newOrgName, newOrgUrl);
     submitOrganisation();
     organisationDataEnter.classList.add('hidden');
