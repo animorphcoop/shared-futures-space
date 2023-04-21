@@ -100,28 +100,29 @@
 
                 {# Organisation #}
                 {% if user.organisation != None %}
-                                            {# If you're not the owner of the profile you can only view but not edit #}
+                    {# If you're not the owner of the profile you can only view but not edit #}
 
-                        {# Show organisation area if you're on your own profile, regardless of whether it's empty or not #}
-                        <div class="py-4 px-4.5 flex justify-between items-center  bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
-                            <h3 class="inline-block font-kanit-700 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
-                                Organisation
-                            </h3>
-                            {% if self %}
-                                <button onclick="toggleOrganisationsChange()">
-                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.545 4.765L9.235 5.455L2.44 12.25H1.75V11.56L8.545 4.765V4.765ZM11.245 0.25C11.0575 0.25 10.8625 0.325 10.72 0.4675L9.3475 1.84L12.16 4.6525L13.5325 3.28C13.825 2.9875 13.825 2.515 13.5325 2.2225L11.7775 0.4675C11.6275 0.3175 11.44 0.25 11.245 0.25V0.25ZM8.545 2.6425L0.25 10.9375V13.75H3.0625L11.3575 5.455L8.545 2.6425V2.6425Z"
-                                              fill="#9759FF"/>
-                                    </svg>
-                                </button>
-                            {% endif %}
-                        </div>
-                        {% include "partials/vertical-spacer.html" with space="1" %}
-                        <div id="organisation-holder" class="px-4.5">
+                    {# Show organisation area if you're on your own profile, regardless of whether it's empty or not #}
+                    <div class="py-4 px-4.5 flex justify-between items-center  bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
+                        <h3 class="inline-block font-kanit-700 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
+                            Organisation
+                        </h3>
+                        {% if self %}
+                            <button onclick="toggleOrganisationsChange()">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.545 4.765L9.235 5.455L2.44 12.25H1.75V11.56L8.545 4.765V4.765ZM11.245 0.25C11.0575 0.25 10.8625 0.325 10.72 0.4675L9.3475 1.84L12.16 4.6525L13.5325 3.28C13.825 2.9875 13.825 2.515 13.5325 2.2225L11.7775 0.4675C11.6275 0.3175 11.44 0.25 11.245 0.25V0.25ZM8.545 2.6425L0.25 10.9375V13.75H3.0625L11.3575 5.455L8.545 2.6425V2.6425Z"
+                                          fill="#9759FF"/>
+                                </svg>
+                            </button>
+                        {% endif %}
+                    </div>
+                    {% include "partials/vertical-spacer.html" with space="1" %}
+                    <div id="organisation-holder" class="px-4.5">
+                         {% comment %}Some organisations might not have links saved with them, catching within the partial {% endcomment %}
                             {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
-                        </div>
-                        {% include "partials/vertical-spacer.html" with space="4" %}
+                    </div>
+                    {% include "partials/vertical-spacer.html" with space="4" %}
 
                 {% endif %}
 

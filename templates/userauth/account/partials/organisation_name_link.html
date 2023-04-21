@@ -1,5 +1,9 @@
-<a href="{{ link }}" target="_blank">
-    <span class="font-kanit-400 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
+{% if link %}
+    <a href="{{ link }}" target="_blank">
+{% endif %}
+<span class="font-kanit-400 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
        {{ name }}
     </span>
-</a>
+{% if link %}
+    </a>
+{% endif %}
