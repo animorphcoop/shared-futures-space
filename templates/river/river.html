@@ -19,16 +19,7 @@
             <div class="-mx-4.5">
                 <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
                     <img class="object-cover w-full h-full"
-                         src="
-
-
-
-
-
-
-
-
-                                 {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+                         src="{% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
                          alt="" title="">
                 </div>
             </div>
