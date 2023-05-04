@@ -41,15 +41,16 @@ class RiverView(DetailView):  # pyre-ignore[24]
             membership = RiverMembership.objects.get(user=request.user, river=river)
             if not membership.starter: # reject starter's attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last starter left.
                 membership.delete()
-                print(
-                    '!!! WARNING C !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
-                # send_system_message(river.chat, 'left_river', context_river = river, context_user_a = request.user)
+                # if to notify for each, need to know the current river stage and post to general
+
         if (request.POST['action'] == 'join'):
             if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0 and request.user.post_code.area == river.area: # pyre-ignore[16]
                 RiverMembership.objects.create(user=request.user, river=river, starter=False)
-                print(
-                    '!!! WARNING D !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
-                # send_system_message(river.chat, 'joined_river', context_river = river, context_user_a = request.user)
+                # if to notify for each, need to know the current river stage and post to general
+
+                if len(RiverMembership.objects.filter(river=river)) == 3:
+                    send_system_message(kind='salmon_envision_poll_available', chat=river.envision_stage.general_chat,
+                                    context_river=river)
         return super().get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
