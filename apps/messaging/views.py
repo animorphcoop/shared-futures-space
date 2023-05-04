@@ -129,6 +129,7 @@ class ChatView(TemplateView):
                          'reflect': river.reflect_stage}[kwargs['stage']]
             context = {
                 'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
+                'members': members,
                 'unique_id': kwargs['stage'] + '-' + kwargs['topic'],  # pyre-ignore[58]
                 'chat_open': chat_open, 'stage_ref': stage_ref, 'river': river,
                 'poll_possible': True if kwargs['stage'] == 'envision' else (

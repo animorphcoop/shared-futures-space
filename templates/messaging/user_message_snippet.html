@@ -89,8 +89,8 @@
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <p>{{ message.timestamp|date:"d/m/y" }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
+                    {% if user.is_authenticated and message.sender.display_name != 'salmon' and user in members and not message.hidden %}
 
-                    {% if user.is_authenticated and message.sender.display_name != 'salmon' %}
                         <div class="inline-block">
 
                             <button
