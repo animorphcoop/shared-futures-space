@@ -39,7 +39,7 @@ select opt in "Development" "Production" "Cancel"; do
     case $opt in
         Development ) target_user="dev"; target_dir="/home/dev/sites/dev"; target_data_dir="/home/dev/sites/dev_data"; break;;
         Production ) target_user="prod"; target_dir="/home/prod/sites/prod"; target_data_dir="/home/prod/sites/prod_data"; break;;
-        No ) echo "  # CANCELLED"; exit;;
+        Cancel ) echo "# CANCELLED"; exit;;
     esac
 done
 echo "# REQUIRES REBUILD OF CONTAINERS? (THIS WOULD ERASE THE DATABASE)"
