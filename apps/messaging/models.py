@@ -1,6 +1,8 @@
 # pyre-strict
 
+import re
 from django.utils import timezone
+from django.utils.html import escape
 from django.db import models
 from uuid import uuid4
 
@@ -23,6 +25,27 @@ class Message(models.Model):
     context_user_b: models.ForeignKey = models.ForeignKey('userauth.CustomUser', null = True, on_delete = models.SET_NULL, related_name = 'user_b')
     context_bool: models.BooleanField = models.BooleanField(default=False)
     context_poll: models.ForeignKey = models.ForeignKey('poll.BasePoll', null = True, on_delete = models.SET_NULL)
+
+    @property
+    def text_with_links(self):
+        """
+        This function replaces all URLs in the message with HTML anchor links.
+        Regex from https://stackoverflow.com/a/3809435
+        """
+        text = escape(self.text)
+        url_regex = re.compile(r"""
+            (?:
+                (?:https?)  # match the URL scheme (http or https)
+                :\/\/       # match the colon slash combo ://
+            )?              # make URL scheme optional (eg. www.example.com instead of https://www.example.com)
+            [\w/\-?=%.]+    # match one or more alphanumeric characters, slashes, hyphens, question marks, equal signs, percent signs, dots
+            \.              # match a literal dot
+            [\w/\-?=%.]+    # match one or more alphanumeric characters, slashes, hyphens, question marks, equal signs, percent signs, dots
+        """, re.VERBOSE)
+        for match in url_regex.finditer(text):
+            start, end = match.span()
+            text = text[:start] + f'<a href="{match.group()}" target="_blank" style="text-decoration: underline;">{match.group()}</a>' + text[end:]
+        return text
 
     def flagged(self, user) -> None: # pyre-ignore[2]
         from userauth.models import CustomUser # pyre-ignore[21] don't like it but there's so many things defined in terms of each other
