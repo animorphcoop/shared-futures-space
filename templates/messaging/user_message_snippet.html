@@ -6,7 +6,7 @@
             {% include "partials/horizontal-spacer.html" with space="7.5" %}
             <div class="flex flex-col w-full">
                 <span class="text-body text-right">
-                    {{ message.text }}
+                    {{ message.text_with_links|safe }}
                 </span>
 
                 {% if message.image %}
