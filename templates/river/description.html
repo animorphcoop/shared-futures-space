@@ -1,67 +1,9 @@
 {% extends "partials/drawer-river.html" %}
-{% load custom_filters %}
+
 {% block drawer_content %}
     {% include "partials/vertical-spacer.html" with space="3" %}
-    {% comment %}for title editing we need to check if user is authenticated if they are a river starter, whether the river is in envision stage and does not have a poll open{% endcomment %}
-    {% if request.user.is_authenticated and river.current_stage == 'envision' and river.envision_stage.general_poll %}
-
-        {% if user in starters|attrmap:'user' %}
-            <div x-data="{ editing: false }" class="flex justify-between items-center">
-                <div class="flex gap-2 items-center">
-
-                    {% comment %}starter, gets swapped by editable{% endcomment %}
-                    <span :class="{ 'hidden': editing }">{{ object.description }}</span>
-
-                    <div :class="{ 'hidden': ! editing }">
-
-                        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="this" hx-swap="outerHTML"
-                              hx-swap="outerHTML" class="mt-1 mb-2 hidden" :class="{ 'hidden': ! open }">
-                            {% csrf_token %}
-                            <input type=text name=title id=title
-                                   value="{{ object.description }}"></input>
-                            <button
-                                    class="button-secondary button-on-white ml-1.5">
-                                Submit
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <button class="button-secondary button-on-white ml-1.5" x-on:click="()=> { editing = !editing; console.log($el.innerHTML);
-            if ($el.innerHTML === 'Edit') {
-                $el.innerHTML = 'Cancel'
-            } else {
-                $el.innerHTML = 'Edit'
-            }
-                                        }">Edit</button>
-                    {% comment %}                    <button id="description-edit" x-on:click="toggleDescriptionChange($el)">Edit</button>{% endcomment %}
-                    {% comment %}                    <svg width="16" height="4" viewBox="0 0 16 4" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 0C0.9 0 0 0.9 0 2C0 3.1 0.9 4 2 4C3.1 4 4 3.1 4 2C4 0.9 3.1 0 2 0ZM14 0C12.9 0 12 0.9 12 2C12 3.1 12.9 4 14 4C15.1 4 16 3.1 16 2C16 0.9 15.1 0 14 0ZM8 0C6.9 0 6 0.9 6 2C6 3.1 6.9 4 8 4C9.1 4 10 3.1 10 2C10 0.9 9.1 0 8 0Z"
-                              fill="#9759FF"/>
-                    </svg>{% endcomment %}
-                </div>
-
-            </div>
-        {% else %}
-            {% comment %}not a starter {% endcomment %}
-            <p class="font-garamond-500 text-base leading-5 text-black-text">
-               asd {{ object.description }}
-            </p>
-        {% endif %}
-    {% endif %}
+    <p class="font-garamond-500 text-base leading-5 text-black-text">
+        {{ object.description }}
+    </p>
     {% include "partials/vertical-spacer.html" with space="3" %}
-
-    <script>
-        function toggleDescriptionChange(buttonPressed) {
-
-            if (buttonPressed.innerHTML === 'Edit') {
-                buttonPressed.innerHTML = 'Submit'
-            } else {
-                buttonPressed.innerHTML = 'Edit'
-            }
-            console.log(buttonPressed.innerHTML)
-        }
-
-    </script>
 {% endblock %}

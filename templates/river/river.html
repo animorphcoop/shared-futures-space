@@ -48,7 +48,14 @@
                             <div x-data="{ open: false }">
                                 <button onclick="stopBodyScroll();"
                                         type="button"
-                                        x-on:click="open = ! open"
+                                        {% comment %}TODO: htmx returned partial does not gel with alpine{% endcomment %}
+                                        x-on:click="()=>{
+                                        open = !open;
+                                        if (!document.getElementById('title-change').classList.contains('hidden')) {
+                                            document.getElementById('title-change').classList.add('hidden');
+                                        }
+
+                                        }"
                                         class="button button-on-white">
                                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
@@ -57,7 +64,7 @@
                                     </svg>
                                 </button>
                                 {# Hidden settings modal #}
-                                <div id="river-settings" class="hidden" :class="{ 'hidden': ! open }">
+                                <div id="river-settings" :class="{ 'hidden': ! open }">
                                     {% include 'partials/river-settings.html' %}
                                 </div>
                             </div>

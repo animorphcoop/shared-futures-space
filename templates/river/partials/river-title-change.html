@@ -16,14 +16,14 @@
             {% csrf_token %}
 
             {% include "partials/input-label.html" with for="title" label="New River title" %}
-            <input id=display_name name=title type=text placeholder="{{ river.title }}" value=""
+            <input id=river-title-input name=title type=text placeholder="{{ river.title }}" value=""
                    pattern="[a-zA-Z][a-zA-Z\s]*"
                    class="input-text input-text-invalid">
             {% include "partials/vertical-spacer.html" with space="1.5" %}
             {% include "partials/input-note.html" with for="title" label="You can change river title until you create the poll" %}
             {% include "partials/vertical-spacer.html" with space="4.5" %}
             <div class="flex items-center justify-center">
-                <button onclick="toggleNameChange()"
+                <button x-on:click="editing = !editing"
                         type="button"
                         class="button button-on-white">
                     Back
@@ -32,8 +32,12 @@
                {% comment %}TODO: Need to use multi-swap: https://htmx.org/extensions/multi-swap/{% endcomment %}
                 <button
                         x-on:click="()=>{
-                        document.getElementById('river-title').innerHTML=document.getElementById('display_name').value;
-                        open = ! open;
+                        document.getElementById('river-title').innerHTML=document.getElementById('river-title-input').value;
+                        enableBodyScroll();
+                        open = !open;
+
+
+
                         }"
                         type="submit"
                         class="button button-on-white">
@@ -47,10 +51,6 @@
 </section>
 
 {% block scripts %}
-    <script>
-
-    </script>
-        <script src="{% static 'js/name_change.js' %}"></script>
 
 
 {% endblock %}

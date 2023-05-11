@@ -8,8 +8,6 @@
         </h2>
         {% include "partials/vertical-spacer.html" with space="6" %}
 
-        {# {% if request.user in starters|attrmap:'user' %} #}
-
         {% comment %}TODO: Make these other settings buttons work in v2{% endcomment %}
         {% comment %}<p class="button button-on-white">Change title</p>
         {% include "partials/vertical-spacer.html" with space="6" %}
@@ -20,19 +18,27 @@
         <p class="button button-on-white">Change image</p>
         {% include "partials/vertical-spacer.html" with space="6" %}{% endcomment %}
 
-        {# {% elif not request.user.is_anonymous %} #}
+
+
         {% if request.user in starters|attrmap:'user' %}
-            <div x-data="{ editing: false }">
-                <button x-on:click="()=> { editing = !editing; }"
-                        type="button"
-                        class="button button-on-white">
-                    Edit River title
-                </button>
-                <div id="name-change" :class="{ 'hidden': !editing }">
-                    {% include 'river/partials/river-title-change.html' with title=river.title %}
+            {% comment %}TITLE ONLY
+            TODO: add Description & image change as in comments above
+            {% endcomment %}
+            {% if river.current_stage == 'envision' and not river.envision_stage.general_poll %}
+
+                <div x-data="{ editing: false }">
+                    <button x-on:click="()=> { editing = !editing; }"
+                            type="button"
+                            class="button button-on-white">
+                        Edit River title
+                    </button>
+                    <div id="title-change" :class="{ 'hidden': !editing }">
+                        {% include 'river/partials/river-title-change.html' with title=river.title %}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         {% else %}
+
             <form method=post class="m-0">
                 {% csrf_token %}
                 <button name=action value=leave class="button button-on-white">
