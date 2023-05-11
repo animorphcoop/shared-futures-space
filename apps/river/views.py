@@ -14,7 +14,7 @@ from django.urls import reverse, reverse_lazy
 from itertools import chain
 from django.db.models import Q
 
-from .forms import CreateRiverForm
+from .forms import CreateRiverForm, RiverTitleUpdateForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -26,10 +26,12 @@ from messaging.util import send_system_message  # pyre-ignore[21]
 from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
 from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
-from resources.models import Resource, CaseStudy, HowTo # pyre-ignore[21]
-from typing import Dict, List, Any, Union, Type
+from resources.models import Resource, CaseStudy, HowTo  # pyre-ignore[21]
+from typing import Dict, List, Any, Union, Type, Optional
 from area.models import PostCode
-from messaging.forms import ChatForm # pyre-ignore[21]
+from messaging.forms import ChatForm  # pyre-ignore[21]
+
+from django.http.request import QueryDict
 
 
 class RiverView(DetailView):  # pyre-ignore[24]
@@ -39,34 +41,38 @@ class RiverView(DetailView):  # pyre-ignore[24]
         river = River.objects.get(slug=slug)
         if (request.POST['action'] == 'leave'):
             membership = RiverMembership.objects.get(user=request.user, river=river)
-            if not membership.starter: # reject starter's attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last starter left.
+            if not membership.starter:  # reject starter's attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last starter left.
                 membership.delete()
                 # if to notify for each, need to know the current river stage and post to general
 
         if (request.POST['action'] == 'join'):
-            if len(RiverMembership.objects.filter(user=request.user, river=river)) == 0 and request.user.post_code.area == river.area: # pyre-ignore[16]
+            if len(RiverMembership.objects.filter(user=request.user,
+                                                  river=river)) == 0 and request.user.post_code.area == river.area:  # pyre-ignore[16]
                 RiverMembership.objects.create(user=request.user, river=river, starter=False)
                 # if to notify for each, need to know the current river stage and post to general
 
                 if len(RiverMembership.objects.filter(river=river)) == 3:
                     send_system_message(kind='salmon_envision_poll_available', chat=river.envision_stage.general_chat,
-                                    context_river=river)
+                                        context_river=river)
         return super().get(request, slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['user'] = self.request.user
-        context['slug'] = self.object.slug #pyre-ignore[16]
+        context['slug'] = self.object.slug  # pyre-ignore[16]
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
-        context['resources'] = list(dict.fromkeys(chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)),
-                                                                     CaseStudy.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b))))
-                                for tag_a in self.object.tags.names() for tag_b in self.object.tags.names() if
-                                tag_a != tag_b and tag_a > tag_b]))) # ensure we don't have (tag1, tag2) and (tag2, tag1) searched separately. they would be filtered out by fromkeys but might as well remove earlier on
+        context['resources'] = list(dict.fromkeys(
+            chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)),
+                               CaseStudy.objects.filter(
+                                   Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b))))
+                    for tag_a in self.object.tags.names() for tag_b in self.object.tags.names() if
+                    tag_a != tag_b and tag_a > tag_b])))  # ensure we don't have (tag1, tag2) and (tag2, tag1) searched separately. they would be filtered out by fromkeys but might as well remove earlier on
         context['object'].tags = tag_cluster_to_list(context['object'].tags)
         context['envision_locked'] = False
         context['plan_locked'] = context['object'].current_stage == River.Stage.ENVISION
-        context['act_locked'] = context['object'].current_stage == River.Stage.ENVISION or context['object'].current_stage == River.Stage.PLAN
+        context['act_locked'] = context['object'].current_stage == River.Stage.ENVISION or context[
+            'object'].current_stage == River.Stage.PLAN
         context['reflect_locked'] = context['object'].current_stage != River.Stage.REFLECT
         return context
 
@@ -81,19 +87,53 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
 
     def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]) -> HttpResponse:  # pyre-ignore[14]
         river = River.objects.get(slug=slug)
+
+        # abdication currently disabled
         if (RiverMembership.objects.get(river=river, user=request.user).starter == True):
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'):
                 starters = RiverMembership.objects.filter(river=river, starter=True)
-                if (len(starters) >= 2):  # won't be orphaning the river (TODO: allow rivers to be shut down, in which case they can be orphaned. v2?)
+                if (
+                        len(starters) >= 2):  # won't be orphaning the river (TODO: allow rivers to be shut down, in which case they can be orphaned. v2?)
                     my_membership = RiverMembership.objects.get(river=river, user=request.user, starter=True)
                     my_membership.starter = False
                     my_membership.save()
-                    print('!!! WARNING E !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
+                    print(
+                        '!!! WARNING E !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                     # send_system_message(river.chat, 'lost_ownership', context_user_a = request.user)
+
             river.title = request.POST['title']
             river.description = request.POST['description']
             river.save()
         return redirect(reverse('view_river', args=[slug]))
+
+    def put(self, request: WSGIRequest, slug: str, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> HttpResponse:
+        data = QueryDict(request.body).dict()
+        if slug:
+            river = River.objects.get(slug=slug)
+            if data.get('title'):
+                form = RiverTitleUpdateForm(data, instance=river)
+                if form.is_valid():
+                    river.title = form.cleaned_data.get('title')
+                    river.save()
+
+                    context = {'request': request, 'river': river,
+                    'starters': RiverMembership.objects.filter(river=river, starter=True)
+
+                               }
+                    # TODO: consider rewriting above for get_context_data
+                    # context = super().get_context_data(**kwargs)
+
+                    return render(request, 'river/partials/river-settings.html', context)
+
+                else:
+                    #TODO: Write handler for processing failure
+                    return HttpResponse("Sorry, couldn't process your request, try again.")
+            else:
+                #TODO: Write handler for processing failure
+                return HttpResponse("Sorry, couldn't process your request, try again.")
+        else:
+            # TODO: Write handler for processing failure
+            return HttpResponse("Sorry, couldn't process your request, try again.")
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -113,22 +153,26 @@ class ManageRiverView(TemplateView):
             if (request.POST['action'] == 'offer_starter'):
                 if not membership.starter:  # not an starter already
                     send_offer(request.user, membership.user, 'become_starter', param_river=river)
-                    #send_system_message(get_userpair(request.user, membership.user).chat,'lost_championship_notification', context_user_a=request.user,context_river=membership.river)
-            membership.save() # IMPORTANT: happens here because if membership.save is called after membership.delete, it reinstantiates a new identical membership. spent a while chasing that one.
+                    # send_system_message(get_userpair(request.user, membership.user).chat,'lost_championship_notification', context_user_a=request.user,context_river=membership.river)
+            membership.save()  # IMPORTANT: happens here because if membership.save is called after membership.delete, it reinstantiates a new identical membership. spent a while chasing that one.
             if (request.POST['action'] == 'remove_swimmer'):
                 print('ok?')
                 if not membership.starter:
-                    send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river', context_user_a = request.user, context_user_b = membership.user, context_river = river)
+                    send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river',
+                                        context_user_a=request.user, context_user_b=membership.user,
+                                        context_river=river)
                     membership.delete()
 
-        return self.get(request, slug = slug)
+        return self.get(request, slug=slug)
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         river = River.objects.get(slug=kwargs['slug'])
         context['starters'] = RiverMembership.objects.filter(river=river.pk, starter=True)
         context['members'] = RiverMembership.objects.filter(river=river.pk)
-        context['open_starter_offers'] = [member.user for member in context['members'] if Action.objects.filter(receiver = member.user, kind = 'become_starter', param_river = river, result = None).exists()]
+        context['open_starter_offers'] = [member.user for member in context['members'] if
+                                          Action.objects.filter(receiver=member.user, kind='become_starter',
+                                                                param_river=river, result=None).exists()]
         context['slug'] = kwargs['slug']
         return context
 
@@ -192,7 +236,7 @@ class CreateRiverPollView(TemplateView):
                         else:
                             return HttpResponse('could not create poll, topic not recognised (' + topic + ')')
                         stage_ref.save()
-                        #send_system_message(chat=river.envision_stage.general_chat, kind='poll', context_poll=poll) current poll apppears at the bottom of the chat, not as part of it
+                        # send_system_message(chat=river.envision_stage.general_chat, kind='poll', context_poll=poll) current poll apppears at the bottom of the chat, not as part of it
                         return HttpResponseRedirect(reverse('poll_view', args=[poll.uuid]))
                     except Exception as e:
                         return HttpResponse('could not create poll, unknown error: ' + str(e))
@@ -209,7 +253,9 @@ class CreateRiverPollView(TemplateView):
         ctx['slug'] = slug
         ctx['stage'] = stage
         ctx['topic'] = topic
-        ctx['prompt'] = {'envision': 'Approve shared goal', 'plan': 'Approve plan for ' + topic, 'act': 'Query success of ' + topic}[stage]
+        ctx['prompt'] = \
+        {'envision': 'Approve shared goal', 'plan': 'Approve plan for ' + topic, 'act': 'Query success of ' + topic}[
+            stage]
         ctx['default'] = {'envision': ctx['river'].description, 'plan': '', 'act': ''}[stage]
         return ctx
 
@@ -218,7 +264,8 @@ class EnvisionView(TemplateView):
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
-        ctx['starters'] = RiverMembership.objects.filter(river=ctx['river'], starter = True).values_list('user', flat=True)
+        ctx['starters'] = RiverMembership.objects.filter(river=ctx['river'], starter=True).values_list('user',
+                                                                                                       flat=True)
         return ctx
 
 
@@ -226,7 +273,8 @@ class PlanView(TemplateView):
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         ctx = super().get_context_data(*args, **kwargs)
         ctx['river'] = River.objects.get(slug=self.kwargs['slug'])
-        ctx['starters'] = list(RiverMembership.objects.filter(river=ctx['river'], starter = True).values_list('user', flat=True))
+        ctx['starters'] = list(
+            RiverMembership.objects.filter(river=ctx['river'], starter=True).values_list('user', flat=True))
         return ctx
 
 
@@ -247,23 +295,22 @@ class ReflectView(TemplateView):
 class RiverStartView(CreateView):  # pyre-ignore[24]
     form_class = CreateRiverForm
 
-    def form_valid(self, form) -> HttpResponse: # pyre-ignore[2]
+    def form_valid(self, form) -> HttpResponse:  # pyre-ignore[2]
         r = super(RiverStartView, self).form_valid(form)
         for tag in form.cleaned_data['tags']:
-            self.object.tags.add(tag) # pyre-ignore[16]
+            self.object.tags.add(tag)  # pyre-ignore[16]
         try:
-            post_code = PostCode.objects.all().filter(code=self.request.user.post_code)[0] # pyre-ignore[16]
+            post_code = PostCode.objects.all().filter(code=self.request.user.post_code)[0]  # pyre-ignore[16]
             self.object.area = post_code.area
 
         except PostCode.DoesNotExist:
 
             pass
 
-        self.object.save() # pyre-ignore[16]
-        self.object.start_envision() # pyre-ignore[16]
+        self.object.save()  # pyre-ignore[16]
+        self.object.start_envision()  # pyre-ignore[16]
 
         return r
-
 
     def get_context_data(self, *args: List[Any], **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(*args, **kwargs)
