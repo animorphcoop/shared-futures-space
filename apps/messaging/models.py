@@ -27,7 +27,7 @@ class Message(models.Model):
     context_poll: models.ForeignKey = models.ForeignKey('poll.BasePoll', null = True, on_delete = models.SET_NULL)
 
     @property
-    def text_with_links(self):
+    def text_with_links(self) -> str:
         """
         This function replaces all URLs in the message with HTML anchor links.
         Regex from https://stackoverflow.com/a/3809435
