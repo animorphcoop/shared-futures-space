@@ -13,12 +13,13 @@
                     <span :class="{ 'hidden': editing }">{{ object.description }}</span>
 
                     <div :class="{ 'hidden': ! editing }">
-                        <form hx-post="{% url 'manage_river' slug %}" hx-target="closest #swimmers"
+
+                        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="this" hx-swap="outerHTML"
                               hx-swap="outerHTML" class="mt-1 mb-2 hidden" :class="{ 'hidden': ! open }">
                             {% csrf_token %}
-                            <input type=text name=title id=name
+                            <input type=text name=title id=title
                                    value="{{ object.description }}"></input>
-                            <button name="action" value="offer_starter"
+                            <button
                                     class="button-secondary button-on-white ml-1.5">
                                 Submit
                             </button>
@@ -45,7 +46,7 @@
         {% else %}
             {% comment %}not a starter {% endcomment %}
             <p class="font-garamond-500 text-base leading-5 text-black-text">
-                {{ object.description }}
+               asd {{ object.description }}
             </p>
         {% endif %}
     {% endif %}

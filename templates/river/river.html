@@ -27,7 +27,7 @@
             {% include "partials/vertical-spacer.html" with space="3" %}
             <div class="flex justify-between items-center">
 
-                <h1 class="text-title text-black/55">
+                <h1 id="river-title" class="text-title text-black/55">
                     {{ object.title }}
                 </h1>
 
@@ -42,9 +42,9 @@
 
 
 
-                    <form method=post class="m-0">
-                        {% csrf_token %}
-                        {% if request.user in members|attrmap:'user' and request.user not in starters|attrmap:'user' %}
+
+
+                        {% if request.user in members|attrmap:'user'%}
                             <div x-data="{ open: false }">
                                 <button onclick="stopBodyScroll();"
                                         type="button"
@@ -62,9 +62,12 @@
                                 </div>
                             </div>
                         {% elif request.user not in members|attrmap:'user' and request.user.post_code.area == river.area %}
+                            <form method=post class="m-0">
+                             {% csrf_token %}
                             <button name=action value=join class="button button-important">Join</button>
+                        </form>
                         {% endif %}
-                    </form>
+
 
 
                 {% endif %}
@@ -144,5 +147,9 @@
             })
         </script>
     {% endblock %}
+
+    {% comment %}stopBodyScroll() and enableBodyScroll() need to be extracted
+    {% endcomment %}
+    <script src="{% static 'js/organisation_list_add.js' %}"></script>
 
 {% endblock content %}

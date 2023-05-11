@@ -14,7 +14,7 @@ from django.urls import reverse, reverse_lazy
 from itertools import chain
 from django.db.models import Q
 
-from .forms import CreateRiverForm
+from .forms import CreateRiverForm, RiverTitleUpdateForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -31,6 +31,7 @@ from typing import Dict, List, Any, Union, Type
 from area.models import PostCode
 from messaging.forms import ChatForm # pyre-ignore[21]
 
+from django.http.request import QueryDict
 
 class RiverView(DetailView):  # pyre-ignore[24]
     model = River
@@ -81,6 +82,10 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
 
     def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]) -> HttpResponse:  # pyre-ignore[14]
         river = River.objects.get(slug=slug)
+
+
+
+        # abdication currently disabled
         if (RiverMembership.objects.get(river=river, user=request.user).starter == True):
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'):
                 starters = RiverMembership.objects.filter(river=river, starter=True)
@@ -90,10 +95,29 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
                     my_membership.save()
                     print('!!! WARNING E !!! not sending a message to the river, because rivers no longer have one central chat. how to disseminate that information?')
                     # send_system_message(river.chat, 'lost_ownership', context_user_a = request.user)
+
             river.title = request.POST['title']
             river.description = request.POST['description']
             river.save()
         return redirect(reverse('view_river', args=[slug]))
+
+    def put(self, request: WSGIRequest, slug: str, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[None, HttpResponse]:
+        data = QueryDict(request.body).dict()
+        if slug:
+            print('slugz')
+            river = River.objects.get(slug=slug)
+            if data.get('title'):
+                form = RiverTitleUpdateForm(data, instance=river)
+                if form.is_valid():
+                    print('good arrangement')
+                    river.title = form.cleaned_data.get('title')  # pyre-ignore[16]
+                    river.save()
+                    print('saving')
+                    return render(request, 'river/partials/river-settings.html')
+
+                else:
+                    print('bat arrangement')
+                    return HttpResponse("Sorry, couldn't process your request, try again.")
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)

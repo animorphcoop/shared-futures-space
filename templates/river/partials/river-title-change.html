@@ -1,0 +1,56 @@
+{% load static %}
+
+<section class="z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
+    <div class="bg-white mx-2.5 px-5 grow">
+        {% include "partials/vertical-spacer.html" with space="7.5" %}
+        <h2 class="text-large text-center w-full">
+            Change River title
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+
+
+
+{% comment %}        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-settings" hx-swap="innerHTML" class="mb-0">
+{% endcomment %}
+        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-settings" hx-swap="innerHTML" class="mb-0">
+            {% csrf_token %}
+
+            {% include "partials/input-label.html" with for="title" label="New River title" %}
+            <input id=display_name name=title type=text placeholder="{{ river.title }}" value=""
+                   pattern="[a-zA-Z][a-zA-Z\s]*"
+                   class="input-text input-text-invalid">
+            {% include "partials/vertical-spacer.html" with space="1.5" %}
+            {% include "partials/input-note.html" with for="title" label="You can change river title until you create the poll" %}
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
+            <div class="flex items-center justify-center">
+                <button onclick="toggleNameChange()"
+                        type="button"
+                        class="button button-on-white">
+                    Back
+                </button>
+                {% include "partials/horizontal-spacer.html" with space="4.5" %}
+               {% comment %}TODO: Need to use multi-swap: https://htmx.org/extensions/multi-swap/{% endcomment %}
+                <button
+                        x-on:click="()=>{
+                        document.getElementById('river-title').innerHTML=document.getElementById('display_name').value;
+                        open = ! open;
+                        }"
+                        type="submit"
+                        class="button button-on-white">
+
+                    Submit
+                </button>
+            </div>
+            {% include "partials/vertical-spacer.html" with space="7.5" %}
+        </form>
+    </div>
+</section>
+
+{% block scripts %}
+    <script>
+
+    </script>
+        <script src="{% static 'js/name_change.js' %}"></script>
+
+
+{% endblock %}
