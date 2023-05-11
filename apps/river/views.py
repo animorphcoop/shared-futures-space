@@ -27,7 +27,7 @@ from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
 from poll.models import SingleChoicePoll  # pyre-ignore[21]
 from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
 from resources.models import Resource, CaseStudy, HowTo  # pyre-ignore[21]
-from typing import Dict, List, Any, Union, Type
+from typing import Dict, List, Any, Union, Type, Optional
 from area.models import PostCode
 from messaging.forms import ChatForm  # pyre-ignore[21]
 
@@ -106,31 +106,34 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
             river.save()
         return redirect(reverse('view_river', args=[slug]))
 
-    def put(self, request: WSGIRequest, slug: str, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> Union[
-        None, HttpResponse]:
+    def put(self, request: WSGIRequest, slug: str, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> HttpResponse:
         data = QueryDict(request.body).dict()
         if slug:
             river = River.objects.get(slug=slug)
             if data.get('title'):
                 form = RiverTitleUpdateForm(data, instance=river)
                 if form.is_valid():
-                    river.title = form.cleaned_data.get('title')  # pyre-ignore[16]
+                    river.title = form.cleaned_data.get('title')
                     river.save()
 
                     context = {'request': request, 'river': river,
                     'starters': RiverMembership.objects.filter(river=river, starter=True)
 
                                }
-                    print(context['starters'])
-                    #context['user'] = self.request.user
-
+                    # TODO: consider rewriting above for get_context_data
                     # context = super().get_context_data(**kwargs)
 
                     return render(request, 'river/partials/river-settings.html', context)
 
                 else:
-                    print('bat arrangement')
+                    #TODO: Write handler for processing failure
                     return HttpResponse("Sorry, couldn't process your request, try again.")
+            else:
+                #TODO: Write handler for processing failure
+                return HttpResponse("Sorry, couldn't process your request, try again.")
+        else:
+            # TODO: Write handler for processing failure
+            return HttpResponse("Sorry, couldn't process your request, try again.")
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
