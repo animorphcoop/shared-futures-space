@@ -117,29 +117,30 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
                     river.title = form.cleaned_data.get('title')
                     river.save()
                     return HttpResponse(river.title)
+                return HttpResponse("Sorry, your title could not be processed, please refresh the page")
+
             elif data.get('description'):
-                print('im i here')
                 form = RiverDescriptionUpdateForm(data, instance=river)
                 if form.is_valid():
-                    print('is my form invalid')
                     river.description = form.cleaned_data.get('description')
                     river.save()
                     return HttpResponse(river.description)
-            else:
-                # TODO: Write handler for processing failure
-                return HttpResponse("Sorry, couldn't process your request, try again.")
 
+                return HttpResponse("Sorry, your description could not be processed, please refresh the page")
+
+            else:
+                return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
         else:
             # TODO: Write handler for processing failure
-            return HttpResponse("Sorry, couldn't process your request, try again.")
+            return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
 
 
-def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-    context = super().get_context_data(**kwargs)
-    context['starters'] = RiverMembership.objects.filter(river=context['object'], starter=True)
-    context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
-    context['user'] = self.request.user
-    return context
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['starters'] = RiverMembership.objects.filter(river=context['object'], starter=True)
+        context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
+        context['user'] = self.request.user
+        return context
 
 
 class ManageRiverView(TemplateView):
