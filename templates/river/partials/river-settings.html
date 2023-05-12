@@ -27,6 +27,7 @@
             {% if river.current_stage == 'envision' and not river.envision_stage.general_poll %}
 
                 <div x-data="{ editing: false }">
+
                     <button x-on:click="()=> { editing = !editing; }"
                             type="button"
                             class="button button-on-white">
@@ -36,7 +37,29 @@
                         {% include 'river/partials/river-title-change.html' with title=river.title %}
                     </div>
                 </div>
+                {% include "partials/vertical-spacer.html" with space="6" %}
+
+                <div x-data="{ editing: false }">
+
+                    <button x-on:click="()=> { editing = !editing; }"
+                            type="button"
+                            class="button button-on-white">
+                        Edit River description
+                    </button>
+                    <div id="title-change" :class="{ 'hidden': !editing }">
+                        {% include 'river/partials/river-description-change.html' with description=river.description %}
+                    </div>
+                </div>
             {% endif %}
+
+            {% comment %}image change{% endcomment %}
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+{% comment %}            <button x-on:click="()=> { editing = !editing; }"
+                    type="button"
+                    class="button button-on-white">
+                Edit River image
+            </button>{% endcomment %}
         {% else %}
 
             <form method=post class="m-0">

@@ -19,3 +19,11 @@ class RiverTitleUpdateForm(forms.ModelForm):
         model: Type[River] = River
         fields: List[str] = ['title']
 
+
+class RiverDescriptionUpdateForm(forms.ModelForm):
+    description = forms.CharField(max_length=100)
+
+    class Meta:
+        model: Type[River] = River
+        fields: List[str] = ['description']
+
