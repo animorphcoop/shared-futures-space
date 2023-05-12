@@ -9,7 +9,10 @@
         {% include "partials/vertical-spacer.html" with space="6" %}
 
 
-        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-description" hx-swap="innerHTML"
+        <form hx-post="{% url 'edit_river' river.slug %}"
+              hx-target="#river-image"
+              hx-swap="outerHTML"
+              hx-encoding='multipart/form-data'
               class="mb-0">
 
             {% csrf_token %}
@@ -18,7 +21,7 @@
             {% include "partials/input-label.html" with for="image" label="Select image to preview" %}
             <div class="text-meta text-black/30">
                 <input type="file"
-                       id="river-image" name="image"
+                       id="river-image-upload" name="image" value=""
                        accept="image/png, image/jpeg, image/webp">
             </div>
             {% include "partials/vertical-spacer.html" with space="6" %}
@@ -30,9 +33,8 @@
             <div class="flex items-center justify-center">
                 <button x-on:click="()=>{
                                 editing = !editing
-                                document.getElementById('river-image').value = ''
-                document.getElementById('image-preview').src = ''
-
+                                document.getElementById('river-image-upload').value = ''
+                                document.getElementById('image-preview').src = ''
                 }
                 "
                         type="button"
@@ -52,6 +54,12 @@
                         editing = !editing;
 
 
+                        //clear image upload area
+                        setTimeout(()=>{
+                                document.getElementById('river-image-upload').value = ''
+                                document.getElementById('image-preview').src = ''
+                        }, 1500)
+
                         }"
                         type="submit"
                         class="button button-on-white">
@@ -59,15 +67,15 @@
                     Submit
                 </button>
             </div>
-            {% include "partials/vertical-spacer.html" with space="7.5" %}
         </form>
+        {% include "partials/vertical-spacer.html" with space="7.5" %}
     </div>
 </section>
 
 {% block scripts %}
 
     <script>
-        document.getElementById('river-image').onchange = function () {
+        document.getElementById('river-image-upload').onchange = function () {
             let src = URL.createObjectURL(this.files[0])
             document.getElementById('image-preview').src = src
         }

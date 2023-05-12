@@ -24,7 +24,7 @@
             {% comment %}TITLE ONLY
             TODO: add Description & image change as in comments above
             {% endcomment %}
-            {% if river.current_stage == 'envision' and river.envision_stage.general_poll %}
+            {% if river.current_stage == 'envision' and not river.envision_stage.general_poll %}
 
                 <div x-data="{ editing: false }">
 

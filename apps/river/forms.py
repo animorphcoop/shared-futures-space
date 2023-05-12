@@ -39,7 +39,10 @@ class RiverImageUpdateForm(forms.ModelForm):
         model: Type[River] = River
         fields: List[str] = ['image']
 
+    '''
     def clean(self):
+        print(self)
+        print('trying to clean')
         cleaned_data = self.cleaned_data
         image = cleaned_data.get('image')
 
@@ -55,4 +58,4 @@ class RiverImageUpdateForm(forms.ModelForm):
                 raise forms.ValidationError('Can not identify file type')
 
         return cleaned_data
-
+    '''
