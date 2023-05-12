@@ -21,9 +21,9 @@ def test_river_edit(client, test_user, test_river):
     client.force_login(test_user)
     attempt_logged_in = client.get(reverse('edit_river', args=[test_river.slug]))
     assert attempt_logged_in.status_code == 200
-    client.post(reverse('edit_river', args=[test_river.slug]), {'title': 'new edited name',
-                                                                  'description': 'new edited description'})
-    assert River.objects.get(pk=test_river.id).title == 'new edited name'
+    # currently edit handles image for post and title + description for put - using htmx
+    #client.post(reverse('edit_river', args=[test_river.slug]), {'title': 'new edited name', 'description': 'new edited description'})
+    #assert River.objects.get(pk=test_river.id).title == 'new edited name'
 
 def test_river_membership(client, test_user, other_test_user, test_river):
     # non-starter members

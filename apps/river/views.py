@@ -95,13 +95,10 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
         form = RiverImageUpdateForm(request.POST, request.FILES, instance=river)
         if form.is_valid():
             form.full_clean()
-            print('is good')
             river.image = form.cleaned_data.get('image', None)
             river.save()
-            print('here')
             context = {'river': river}
             return render(request, 'river/partials/river-image.html', context)
-        print('not')
         return HttpResponse("Sorry, your description could not be processed, please refresh the page")
         '''
         # abdication currently disabled
