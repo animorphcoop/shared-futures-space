@@ -1,0 +1,6 @@
+{% load static %}
+
+<img id="river-image" class="object-cover w-full h-full"
+     src="
+             {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
+     alt="" title="">

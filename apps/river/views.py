@@ -1,5 +1,7 @@
 # pyre-strict
+import io
 
+from PIL.Image import Image
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView
@@ -14,7 +16,7 @@ from django.urls import reverse, reverse_lazy
 from itertools import chain
 from django.db.models import Q
 
-from .forms import CreateRiverForm, RiverTitleUpdateForm, RiverDescriptionUpdateForm
+from .forms import CreateRiverForm, RiverTitleUpdateForm, RiverDescriptionUpdateForm, RiverImageUpdateForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -79,15 +81,26 @@ class RiverView(DetailView):  # pyre-ignore[24]
 
 class EditRiverView(UpdateView):  # pyre-ignore[24]
     model = River
-    fields = ['title', 'description']
+    fields = ['title', 'description', 'image']
 
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
         # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
         return login_required(super().get)(*args, **kwargs)  # pyre-ignore[6]
 
     def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]) -> HttpResponse:  # pyre-ignore[14]
-        river = River.objects.get(slug=slug)
 
+        # changing the river image - same code appears not to upload using put method
+        river = River.objects.get(slug=slug)
+        # print(request.body)
+        form = RiverImageUpdateForm(request.POST, request.FILES, instance=river)
+        if form.is_valid():
+            form.full_clean()
+            river.image = form.cleaned_data.get('image', None)
+            river.save()
+            context = {'river': river}
+            return render(request, 'river/partials/river-image.html', context)
+        return HttpResponse("Sorry, your description could not be processed, please refresh the page")
+        '''
         # abdication currently disabled
         if (RiverMembership.objects.get(river=river, user=request.user).starter == True):
             if ('abdicate' in request.POST and request.POST['abdicate'] == 'abdicate'):
@@ -105,9 +118,12 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
             river.description = request.POST['description']
             river.save()
         return redirect(reverse('view_river', args=[slug]))
+        '''
 
+    # was able to pass the byte stream of image via put but impractical comparing to post so updating here only text and description
     def put(self, request: WSGIRequest, slug: str, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> HttpResponse:
         data = QueryDict(request.body).dict()
+
         if slug:
             river = River.objects.get(slug=slug)
 
@@ -125,13 +141,12 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
                     river.description = form.cleaned_data.get('description')
                     river.save()
                     return HttpResponse(river.description)
-
                 return HttpResponse("Sorry, your description could not be processed, please refresh the page")
 
             else:
                 return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
+
         else:
-            # TODO: Write handler for processing failure
             return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
 
 

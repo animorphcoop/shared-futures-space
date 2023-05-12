@@ -9,13 +9,15 @@
         {% include "partials/vertical-spacer.html" with space="6" %}
 
 
-        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-description" hx-swap="innerHTML" class="mb-0">
+        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-description" hx-swap="innerHTML"
+              class="mb-0">
 
             {% csrf_token %}
 
             {% include "partials/input-label.html" with for="description" label="New River description" %}
-            <input id=river-description-input name=description type=text placeholder="{{ river.description }}" value=""
-                   class="input-text input-text-invalid">
+            <textarea id=river-description-input name=description type=text placeholder="{{ river.description }}"
+                      value=""
+                      class="input-text input-text-invalid"></textarea>
             {% include "partials/vertical-spacer.html" with space="1.5" %}
             {% include "partials/input-note.html" with for="title" label="You can change river title until you create the poll" %}
             {% include "partials/vertical-spacer.html" with space="4.5" %}

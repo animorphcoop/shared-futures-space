@@ -1,0 +1,86 @@
+{% load static %}
+
+<section class="z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
+    <div class="bg-white mx-2.5 px-5 grow">
+        {% include "partials/vertical-spacer.html" with space="7.5" %}
+        <h2 class="text-large text-center w-full">
+            Change River Image
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+
+
+        <form hx-post="{% url 'edit_river' river.slug %}"
+              hx-target="#river-image"
+              hx-swap="outerHTML"
+              hx-encoding='multipart/form-data'
+              class="mb-0">
+
+            {% csrf_token %}
+
+
+            {% include "partials/input-label.html" with for="image" label="Select image to preview" %}
+            <div class="text-meta text-black/30">
+                <input type="file"
+                       id="river-image-upload" name="image" value=""
+                       accept="image/png, image/jpeg, image/webp">
+            </div>
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div class="w-96">
+                <img id="image-preview" class="h-auto max-w-1/3"/>
+            </div>
+
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div class="flex items-center justify-center">
+                <button x-on:click="()=>{
+                                editing = !editing
+                                document.getElementById('river-image-upload').value = ''
+                                document.getElementById('image-preview').src = ''
+                }
+                "
+                        type="button"
+                        class="button button-on-white">
+                    Back
+                </button>
+                {% include "partials/horizontal-spacer.html" with space="4.5" %}
+                {% comment %}
+               {% endcomment %}
+                <button
+                        x-on:click="()=>{
+                        enableBodyScroll();
+                        //remove settings
+                        open = !open;
+
+                        // editing unblock
+                        editing = !editing;
+
+
+                        //clear image upload area
+                        setTimeout(()=>{
+                                document.getElementById('river-image-upload').value = ''
+                                document.getElementById('image-preview').src = ''
+                        }, 1500)
+
+                        }"
+                        type="submit"
+                        class="button button-on-white">
+
+                    Submit
+                </button>
+            </div>
+        </form>
+        {% include "partials/vertical-spacer.html" with space="7.5" %}
+    </div>
+</section>
+
+{% block scripts %}
+
+    <script>
+        document.getElementById('river-image-upload').onchange = function () {
+            let src = URL.createObjectURL(this.files[0])
+            document.getElementById('image-preview').src = src
+        }
+    </script>
+
+
+{% endblock %}
+
