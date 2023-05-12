@@ -4,18 +4,17 @@
     <div class="bg-white mx-2.5 px-5 grow">
         {% include "partials/vertical-spacer.html" with space="7.5" %}
         <h2 class="text-large text-center w-full">
-            Change River title
+            Change River description
         </h2>
         {% include "partials/vertical-spacer.html" with space="6" %}
 
 
-        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-title" hx-swap="innerHTML" class="mb-0">
+        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-description" hx-swap="innerHTML" class="mb-0">
 
             {% csrf_token %}
 
-            {% include "partials/input-label.html" with for="title" label="New River title" %}
-            <input id=river-title-input name=title type=text placeholder="{{ river.title }}" value=""
-                   pattern="[a-zA-Z][a-zA-Z\s]*"
+            {% include "partials/input-label.html" with for="description" label="New River description" %}
+            <input id=river-description-input name=description type=text placeholder="{{ river.description }}" value=""
                    class="input-text input-text-invalid">
             {% include "partials/vertical-spacer.html" with space="1.5" %}
             {% include "partials/input-note.html" with for="title" label="You can change river title until you create the poll" %}
@@ -28,9 +27,6 @@
                 </button>
                 {% include "partials/horizontal-spacer.html" with space="4.5" %}
                 {% comment %}
-               TODO: Need to use multi-swap: https://htmx.org/extensions/multi-swap/
-               document.getElementById('river-title').innerHTML=document.getElementById('river-title-input').value;
-
                {% endcomment %}
                 <button
                         x-on:click="()=>{
@@ -42,10 +38,10 @@
                         editing = !editing;
 
                         //aligning input with placeholder in case someone wants to change again
-                        var titleInput = document.getElementById('river-title-input')
-                        titleInput.placeholder = titleInput.value
+                        var descriptionInput = document.getElementById('river-description-input')
+                        descriptionInput.placeholder = descriptionInput.value
                         setTimeout(()=>{
-                            titleInput.value = ''
+                            descriptionInput.value = ''
                         }, 500)
 
                         }"

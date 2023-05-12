@@ -14,7 +14,7 @@ from django.urls import reverse, reverse_lazy
 from itertools import chain
 from django.db.models import Q
 
-from .forms import CreateRiverForm, RiverTitleUpdateForm
+from .forms import CreateRiverForm, RiverTitleUpdateForm, RiverDescriptionUpdateForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -110,30 +110,30 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
         data = QueryDict(request.body).dict()
         if slug:
             river = River.objects.get(slug=slug)
+
             if data.get('title'):
                 form = RiverTitleUpdateForm(data, instance=river)
                 if form.is_valid():
                     river.title = form.cleaned_data.get('title')
                     river.save()
+                    return HttpResponse(river.title)
+                return HttpResponse("Sorry, your title could not be processed, please refresh the page")
 
-                    context = {'request': request, 'river': river,
-                    'starters': RiverMembership.objects.filter(river=river, starter=True)
+            elif data.get('description'):
+                form = RiverDescriptionUpdateForm(data, instance=river)
+                if form.is_valid():
+                    river.description = form.cleaned_data.get('description')
+                    river.save()
+                    return HttpResponse(river.description)
 
-                               }
-                    # TODO: consider rewriting above for get_context_data
-                    # context = super().get_context_data(**kwargs)
+                return HttpResponse("Sorry, your description could not be processed, please refresh the page")
 
-                    return render(request, 'river/partials/river-settings.html', context)
-
-                else:
-                    #TODO: Write handler for processing failure
-                    return HttpResponse("Sorry, couldn't process your request, try again.")
             else:
-                #TODO: Write handler for processing failure
-                return HttpResponse("Sorry, couldn't process your request, try again.")
+                return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
         else:
             # TODO: Write handler for processing failure
-            return HttpResponse("Sorry, couldn't process your request, try again.")
+            return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
+
 
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -156,7 +156,6 @@ class ManageRiverView(TemplateView):
                     # send_system_message(get_userpair(request.user, membership.user).chat,'lost_championship_notification', context_user_a=request.user,context_river=membership.river)
             membership.save()  # IMPORTANT: happens here because if membership.save is called after membership.delete, it reinstantiates a new identical membership. spent a while chasing that one.
             if (request.POST['action'] == 'remove_swimmer'):
-                print('ok?')
                 if not membership.starter:
                     send_system_message(get_userpair(request.user, membership.user).chat, 'removed_from_river',
                                         context_user_a=request.user, context_user_b=membership.user,
@@ -254,8 +253,9 @@ class CreateRiverPollView(TemplateView):
         ctx['stage'] = stage
         ctx['topic'] = topic
         ctx['prompt'] = \
-        {'envision': 'Approve shared goal', 'plan': 'Approve plan for ' + topic, 'act': 'Query success of ' + topic}[
-            stage]
+            {'envision': 'Approve shared goal', 'plan': 'Approve plan for ' + topic,
+             'act': 'Query success of ' + topic}[
+                stage]
         ctx['default'] = {'envision': ctx['river'].description, 'plan': '', 'act': ''}[stage]
         return ctx
 
