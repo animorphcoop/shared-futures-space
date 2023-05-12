@@ -91,7 +91,7 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
 
         # changing the river image - same code appears not to upload using put method
         river = River.objects.get(slug=slug)
-        #print(request.body)
+        # print(request.body)
         form = RiverImageUpdateForm(request.POST, request.FILES, instance=river)
         if form.is_valid():
             form.full_clean()
@@ -122,6 +122,8 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
             river.save()
         return redirect(reverse('view_river', args=[slug]))
         '''
+
+    # was able to pass the byte stream of image via put but impractical comparing to post so updating here only text and description
     def put(self, request: WSGIRequest, slug: str, *args: tuple[str, ...], **kwargs: dict[str, Any]) -> HttpResponse:
         data = QueryDict(request.body).dict()
 
@@ -144,19 +146,6 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
                     return HttpResponse(river.description)
                 return HttpResponse("Sorry, your description could not be processed, please refresh the page")
 
-            elif data.get('image'):
-
-                print('u here')
-                form = RiverImageUpdateForm(data, instance=river)
-                print('u hereform?')
-                if form.is_valid():
-                    form.full_clean()
-                    river.image = form.cleaned_data.get('image', None)
-                    river.save()
-                    print(river.image)
-                    return HttpResponse(river.image)
-                return HttpResponse("Sorry, your description could not be processed, please refresh the page")
-
             else:
                 return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
 
@@ -164,12 +153,12 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
             return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
 
 
-def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-    context = super().get_context_data(**kwargs)
-    context['starters'] = RiverMembership.objects.filter(river=context['object'], starter=True)
-    context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
-    context['user'] = self.request.user
-    return context
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['starters'] = RiverMembership.objects.filter(river=context['object'], starter=True)
+        context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
+        context['user'] = self.request.user
+        return context
 
 
 class ManageRiverView(TemplateView):
