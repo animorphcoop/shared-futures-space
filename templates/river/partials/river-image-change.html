@@ -4,7 +4,7 @@
     <div class="bg-white mx-2.5 px-5 grow">
         {% include "partials/vertical-spacer.html" with space="7.5" %}
         <h2 class="text-large text-center w-full">
-            Change River description
+            Change River Image
         </h2>
         {% include "partials/vertical-spacer.html" with space="6" %}
 
@@ -14,15 +14,27 @@
 
             {% csrf_token %}
 
-            {% include "partials/input-label.html" with for="description" label="New River description" %}
-            <textarea id=river-description-input name=description type=text placeholder="{{ river.description }}"
-                      value=""
-                      class="input-text input-text-invalid"></textarea>
-            {% include "partials/vertical-spacer.html" with space="1.5" %}
-            {% include "partials/input-note.html" with for="title" label="You can change river title until you create the poll" %}
-            {% include "partials/vertical-spacer.html" with space="4.5" %}
+
+            {% include "partials/input-label.html" with for="image" label="Select image to preview" %}
+            <div class="text-meta text-black/30">
+                <input type="file"
+                       id="river-image" name="image"
+                       accept="image/png, image/jpeg, image/webp">
+            </div>
+            {% include "partials/vertical-spacer.html" with space="6" %}
+            <div class="w-96">
+                <img id="image-preview" class="h-auto max-w-1/3"/>
+            </div>
+
+            {% include "partials/vertical-spacer.html" with space="6" %}
             <div class="flex items-center justify-center">
-                <button x-on:click="editing = !editing"
+                <button x-on:click="()=>{
+                                editing = !editing
+                                document.getElementById('river-image').value = ''
+                document.getElementById('image-preview').src = ''
+
+                }
+                "
                         type="button"
                         class="button button-on-white">
                     Back
@@ -39,12 +51,6 @@
                         // editing unblock
                         editing = !editing;
 
-                        //aligning input with placeholder in case someone wants to change again
-                        var descriptionInput = document.getElementById('river-description-input')
-                        descriptionInput.placeholder = descriptionInput.value
-                        setTimeout(()=>{
-                            descriptionInput.value = ''
-                        }, 500)
 
                         }"
                         type="submit"
@@ -60,5 +66,13 @@
 
 {% block scripts %}
 
+    <script>
+        document.getElementById('river-image').onchange = function () {
+            let src = URL.createObjectURL(this.files[0])
+            document.getElementById('image-preview').src = src
+        }
+    </script>
+
 
 {% endblock %}
+

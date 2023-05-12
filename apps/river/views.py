@@ -14,7 +14,7 @@ from django.urls import reverse, reverse_lazy
 from itertools import chain
 from django.db.models import Q
 
-from .forms import CreateRiverForm, RiverTitleUpdateForm, RiverDescriptionUpdateForm
+from .forms import CreateRiverForm, RiverTitleUpdateForm, RiverDescriptionUpdateForm, RiverImageUpdateForm
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
@@ -125,22 +125,30 @@ class EditRiverView(UpdateView):  # pyre-ignore[24]
                     river.description = form.cleaned_data.get('description')
                     river.save()
                     return HttpResponse(river.description)
+                return HttpResponse("Sorry, your description could not be processed, please refresh the page")
 
+            elif data.get('image'):
+                form = RiverImageUpdateForm(data, instance=river)
+                if form.is_valid():
+                    form.full_clean()
+                    river.image = form.cleaned_data.get('image', None)
+                    river.save()
+                    return HttpResponse(river.image)
                 return HttpResponse("Sorry, your description could not be processed, please refresh the page")
 
             else:
                 return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
+
         else:
-            # TODO: Write handler for processing failure
             return HttpResponse("Sorry, couldn't process your request, please refresh & try again.")
 
 
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context['starters'] = RiverMembership.objects.filter(river=context['object'], starter=True)
-        context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
-        context['user'] = self.request.user
-        return context
+def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    context = super().get_context_data(**kwargs)
+    context['starters'] = RiverMembership.objects.filter(river=context['object'], starter=True)
+    context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
+    context['user'] = self.request.user
+    return context
 
 
 class ManageRiverView(TemplateView):
