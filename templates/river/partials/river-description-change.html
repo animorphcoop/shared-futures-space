@@ -1,4 +1,9 @@
+{% extends "partials/overlay-river.html" %}
+{% block overlay_title %}Change River description{% endblock %}
 {% load static %}
+
+{% block river_overlay_content %}
+
 
 <section class="z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
     <div class="bg-white mx-2.5 px-5 grow">
@@ -57,8 +62,5 @@
         </form>
     </div>
 </section>
-
-{% block scripts %}
-
 
 {% endblock %}
