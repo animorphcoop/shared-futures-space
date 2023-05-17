@@ -56,7 +56,7 @@
                             Message hidden {{ message.hidden_reason }}
                         </span>
                     {% else %}
-                        {{ message.text }}
+                        {{ message.text_with_links|safe }}
                     {% endif %}
                 </span>
 
