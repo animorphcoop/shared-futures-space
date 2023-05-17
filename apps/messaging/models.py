@@ -42,9 +42,20 @@ class Message(models.Model):
             \.              # match a literal dot
             [\w/\-?=%.]+    # match one or more alphanumeric characters, slashes, hyphens, question marks, equal signs, percent signs, dots
         """, re.VERBOSE)
+
+        chars_added = 0  # keep track of new characters we add
         for match in url_regex.finditer(text):
             start, end = match.span()
-            text = text[:start] + f'<a href="{match.group()}" target="_blank" style="text-decoration: underline;">{match.group()}</a>' + text[end:]
+            link_in_html = f'<a href="{match.group()}" target="_blank" style="text-decoration: underline;">{match.group()}</a>'
+            text = text[:start+chars_added] + link_in_html + text[end+chars_added:]
+
+            # character length of the url that already exists in text
+            url_length = len(match.group())
+
+            # We need to calculate how many characters we have added because they
+            # change the offset (match.span()) of the subsequent links that we need to replace.
+            chars_added += len(link_in_html) - url_length
+
         return text
 
     def flagged(self, user) -> None: # pyre-ignore[2]
