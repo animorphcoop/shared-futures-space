@@ -1,70 +1,101 @@
 # Shared Futures Space
-## Django/Wagtail + Postgres + Redis + Celery
 
-- Build containers (Linux & MINGW64 on Windows)
-Since [Commit 6e3c8b4a](https://git.coop/animorph-coop/shared-futures-space/-/commit/6e3c8b4a6e5893e3a00379ba383c7c0cead397d0)
-```USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build```
+## Development
 
-On MacOS
-- Building: ```USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up --build``` because Mac has obfuscated groups for Docker, so we use user ID for Dockerfile group instead of group ID.
-- Running after containers have been built: ```USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up```
+This is a Django/Wagtail + Postgres + Redis + Celery stack.
 
-On Windows (running Linux containers)
-- Building: ```USER_ID=$(1000) GROUP_ID=$(1000) docker-compose up --build``` 
-- Running after containers have been built: ```USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up```
+### Linux & MINGW64 on Windows
 
-- To enter shell
-
-```docker-compose exec app sh```
-
-To run Django-related administrative commands
-```docker-compose exec app django-admin startapp healerapp```
-OR
-```docker-compose exec app python3 manage.py startapp healerapp```
-
-
-Create superuser
-
-```docker-compose exec app python3 manage.py createsuperuser```
-
-```docker-compose exec app python3 manage.py collectstatic```
-
-Migrations
-
-```docker-compose exec app python3 manage.py makemigrations && docker-compose exec app python3 manage.py migrate```
-
----
-
-Running Tests
+```sh
+# build containers
+USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build
 ```
+
+### macOS
+
+```sh
+# Mac has obfuscated groups for Docker, so we use user ID
+# for Dockerfile group instead of group ID
+USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up
+```
+
+### Windows (running Linux containers)
+
+```sh
+USER_ID=$(1000) GROUP_ID=$(1000) docker-compose up --build
+```
+
+### Commands
+
+Enter shell:
+
+```sh
+docker-compose exec app sh
+```
+
+Run Django-related administrative commands:
+
+```sh
+docker-compose exec app django-admin startapp healerapp
+# OR
+docker-compose exec app python3 manage.py startapp healerapp
+```
+
+Create superuser:
+
+```sh
+docker-compose exec app python3 manage.py createsuperuser
+```
+
+Collect static:
+
+```sh
+docker-compose exec app python3 manage.py collectstatic
+```
+
+Migrations:
+
+```sh
+docker-compose exec app python3 manage.py makemigrations && docker-compose exec app python3 manage.py migrate
+```
+
+Running Tests:
+
+```sh
+# all tests
 docker-compose exec app pytest tests
 docker-compose exec app pyre
+
+# a specific one
+docker-compose exec app pytest tests/test_account.py
+# add `-s` flag to display output
+docker-compose exec app pytest -s tests/test_account.py
 ```
-(they'll also run automatically on gitlagb after a push)
 
-- to run a specific py.test, e.g. `docker-compose exec app pytest tests/test_account.py`
-- add `-s` flag to display output
+NOTE: Test run automatically on Gitlab after a push.
 
----
+## Uploading Data
 
-Uploading Data
+1. Fetch zip with autoupload directory to be dropped into repo's root: https://hub.animorph.coop/f/261269
 
-Fetch zip with autoupload directory to be dropped into repo's root: https://hub.animorph.coop/f/261269
+2. Run:
 
-```
+```sh
 docker-compose exec app ./manage.py upload_dev [filename.json]
 ```
 
-put data from [filename.json] in the db. filename defaults to `upload_conf.json`, which contains some default debugging data.
+3. Put data from [filename.json] in the db. Filename defaults to `upload_conf.json`, which contains some default debugging data.
 
+Example with current file:
 
-With the current file it is:
-```docker-compose exec app python3 manage.py upload_dev upload_conf_dev.json```
+```sh
+docker-compose exec app python3 manage.py upload_dev upload_conf_dev.json
+# or
 USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose exec app python3 manage.py upload_prod upload_conf_prod.json
-
----
+```
 
 ### Using Static Typing
+
 The key to effective use of static typing is the principle *"make illegal states unrepresentable"*. The type of a variable should cover precisely the set of values
 it's expected to have and nothing else - that is, if a variable taking some specific value would cause
 an error, the type system should be used to ensure that it can't take that value. That way, most kinds
@@ -106,6 +137,7 @@ tree: LabelledBinaryTree =
              'left': None,
              'right': { 'label': 'leaf 3', 'left': None, 'right': None}}}
 ```
+
 #### The type checker
 
 run `pyre` to type check. The file `.pyre_configuration` must list the location of your python `site-packages` in its `search_path` key.
