@@ -160,6 +160,6 @@ echo "# DEPLOY SCRIPT II"
 check_tests
 input_dev_prod
 input_rebuilt
-echo "# DEPLOYING TO PRODUCTION"
+echo "# DEPLOYING TO PRODUCTION OR DEVELOPMENT"
 check_files
 restart_docker
