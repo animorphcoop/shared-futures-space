@@ -1,10 +1,13 @@
 {% load static %}
 
 {% block content %}
-    <div x-data="{ openTab: 'one' }">
+    {% url 'river_chat' river.slug 'envision' 'general' 'count' as message_count_url %}
+
+    <div x-data="{ openTab: 'one' }" x-init="setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`)}, 2000)">
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-             hx-trigger="load"
+             hx-trigger="load, every 6s [newMessages()]"
              hx-target="this">
+
         </div>
 
         <div class="mx-4.5">
@@ -36,7 +39,41 @@
 {% endcomment %}
         </div>
     </div>
+    <div id="data-swap" class="hidden"></div>
     <script>
 
+        let previouslyMessages = 0
+
+        function saveMyUrl(myUrl) {
+            console.log(myUrl)
+            return new Promise(function (resolve, reject) {
+                setInterval(function () {
+                    htmx.ajax('GET', myUrl, '#data-swap')
+                    //newMessages()
+                }, 5000)
+            })
+            //htmx.ajax('GET', myUrl, '#data-swap')
+            //setInterval(, 1000);
+
+        }
+
+        function newMessages() {
+            let newMessages = document.getElementById('data-swap').innerHTML
+            if (newMessages !== "" && Number(newMessages) !== previouslyMessages){
+                previouslyMessages = newMessages
+                return true
+            }
+            else {
+                return false
+            }
+            //console.log(newMessages)
+
+        }
+
+        document.body.addEventListener('htmx:afterSwap', (() => {
+            //var data = JSON.parse(document.getElementById('data').textContent);
+            // []
+
+        }))
     </script>
 {% endblock %}
