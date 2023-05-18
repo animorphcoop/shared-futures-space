@@ -28,7 +28,7 @@ Before building, you might optionally want to make settings changes in `sfs/sett
 If desired to use development or production mode (affects things like the debug tools), you might want to change
 `.dev` to `.production` or vice versa in `sfs/settings/settings.py`.
 
-### Docker seetup
+### Docker setup
 
 Linux & MINGW64 on Windows:
 
