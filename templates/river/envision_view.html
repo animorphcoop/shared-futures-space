@@ -5,7 +5,7 @@
 
     <div x-data="{ openTab: 'one' }" x-init="setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`)}, 2000)">
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-             hx-trigger="load, every 6s [newMessages()]"
+             hx-trigger="load, every 5s [newMessages()]"
              hx-target="this">
 
         </div>
@@ -48,32 +48,37 @@
             console.log(myUrl)
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
-                    htmx.ajax('GET', myUrl, '#data-swap')
-                    //newMessages()
+                    console.log(document.visibilityState)
+                    if (document.visibilityState == 'visible'){
+                        htmx.ajax('GET', myUrl, '#data-swap')
+                        console.log("checking the message count")
+                    }
+                    else {
+                        console.log("tab inactive")
+                    }
+
                 }, 5000)
             })
-            //htmx.ajax('GET', myUrl, '#data-swap')
-            //setInterval(, 1000);
 
         }
 
         function newMessages() {
-            let newMessages = document.getElementById('data-swap').innerHTML
-            if (newMessages !== "" && Number(newMessages) !== previouslyMessages){
-                previouslyMessages = newMessages
+            let newMessagesHtml = document.getElementById('data-swap').innerHTML
+            let newMessagesNumber = Number(newMessagesHtml)
+            console.log(newMessagesNumber)
+            console.log(previouslyMessages)
+            if (previouslyMessages === "" || newMessagesNumber !== previouslyMessages){
+                previouslyMessages = newMessagesNumber
+                console.log('go search')
                 return true
             }
             else {
+                console.log('no need')
                 return false
             }
             //console.log(newMessages)
 
         }
 
-        document.body.addEventListener('htmx:afterSwap', (() => {
-            //var data = JSON.parse(document.getElementById('data').textContent);
-            // []
-
-        }))
     </script>
 {% endblock %}
