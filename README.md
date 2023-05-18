@@ -4,14 +4,40 @@
 
 This is a Django/Wagtail + Postgres + Redis + Celery stack.
 
-### Linux & MINGW64 on Windows
+### TypeScript
+
+Make sure you have typescript installed globally for local development:
+
+```
+npm install -g typescript
+```
+
+Then, from the repo's root directory, each time you want to rebuild JS files after changing typescript ones,
+you can run:
+
+```
+./ts_generate_js.sh
+```
+
+Note: Run `chmod +x ts_generate_js.sh` if file not executable.
+
+### Configuration
+
+Before building, you might optionally want to make settings changes in `sfs/settings/local.py`.
+
+If desired to use development or production mode (affects things like the debug tools), you might want to change
+`.dev` to `.production` or vice versa in `sfs/settings/settings.py`.
+
+### Docker seetup
+
+Linux & MINGW64 on Windows:
 
 ```sh
 # build containers
 USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build
 ```
 
-### macOS
+macOS:
 
 ```sh
 # Mac has obfuscated groups for Docker, so we use user ID
@@ -19,7 +45,7 @@ USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build
 USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up
 ```
 
-### Windows (running Linux containers)
+Windows (running Linux containers):
 
 ```sh
 USER_ID=$(1000) GROUP_ID=$(1000) docker-compose up --build
@@ -94,17 +120,19 @@ docker-compose exec app python3 manage.py upload_dev upload_conf_dev.json
 USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose exec app python3 manage.py upload_prod upload_conf_prod.json
 ```
 
-### Using Static Typing
+## Using Static Typing
 
-The key to effective use of static typing is the principle *"make illegal states unrepresentable"*. The type of a variable should cover precisely the set of values
-it's expected to have and nothing else - that is, if a variable taking some specific value would cause
-an error, the type system should be used to ensure that it can't take that value. That way, most kinds
-of errors become type errors, and type errors are (hopefully) caught before runtime. This approach
+The key to effective use of static typing is the principle *"make illegal states unrepresentable"*. The type of a
+variable should cover precisely the set of values it's expected to have and nothing else - that is, if a variable
+taking some specific value would cause an error, the type system should be used to ensure that it can't take that value.
+That way, most kinds of errors become type errors, and type errors are (hopefully) caught before runtime. This approach
 means thinking about what each variable really represents.
 
-for instance, the type of a variable that stores a string which must be one of a set of known options should not be `str` but an [Enum](https://docs.python.org/3/library/enum.html) type encompassing the set of acceptable options. That way, the type checker can be used to guarantee that it will never be set to an illegal value.
+For instance, the type of a variable that stores a string which must be one of a set of known options should not be
+`str` but an [Enum](https://docs.python.org/3/library/enum.html) type encompassing the set of acceptable options. That
+way, the type checker can be used to guarantee that it will never be set to an illegal value.
 
-#### The python type system in particular
+### The python type system in particular
 
 A variable can be annotated when it is declared: `a_whole_number`**`: int`**` = 42`
 
@@ -124,6 +152,7 @@ These include:
 - `Optional[T]` - equivalent to `Union[T, None]`
 - `Any` - matches any value at all
 - `TypedDict` - dicts with specific known keys, which can be used to construct custom types like so (apologies for very studenty example):
+
 ```
 class LabelledBinaryTree(TypedDict):
   label: str
@@ -138,123 +167,114 @@ tree: LabelledBinaryTree =
              'right': { 'label': 'leaf 3', 'left': None, 'right': None}}}
 ```
 
-#### The type checker
+### The type checker
 
-run `pyre` to type check. The file `.pyre_configuration` must list the location of your python `site-packages` in its `search_path` key.
-It will only type check functions that have their types declared, unless the file begins with `# pyre-strict`. If pyre is wrong about the type of something, you can suppress the error with `# pyre-ignore[n]` where n is the error type number that appears in the pyre output.
+run `pyre` to type check. The file `.pyre_configuration` must list the location of your python `site-packages` in its
+`search_path` key. It will only type check functions that have their types declared, unless the file begins with
+`# pyre-strict`. If pyre is wrong about the type of something, you can suppress the error with `# pyre-ignore[n]` where
+n is the error type number that appears in the pyre output.
 
----
+## Resources and notes
 
-- Adding management commands:
-management applies to the django naming convention: https://docs.djangoproject.com/en/3.2/howto/custom-management-commands/
+### Turning off and on again
 
-
-- Celery integration: 
-http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html
-
----
-
-**NOTE: before using in a public-facing environment, don't forget to change the default credentials! They're in `variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`**
-
----
 Occasionally, issues with spinning new containers out of existing images might occur.
 
+To stop containers and remove them along with images:
 
-To stop containers and remove them along with images
+```
+docker stop $(docker ps -a -q)
+docker system prune -a
+```
 
-```docker stop $(docker ps -a -q)```
+Alternatively, to start from a clean slate :
 
-```docker system prune -a```
+```
+docker-compose build --force-rm --no-cache && docker-compose up
+```
 
-Alternatively, to start from a clean slate 
-```docker-compose build --force-rm --no-cache && docker-compose up```
+### Adding management commands
 
----
+Management applies to the Django naming convention:
 
-Inspiration in regards to setting the path for venv in Dockerfile: https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
+https://docs.djangoproject.com/en/3.2/howto/custom-management-commands/
 
-```docker-compose exec app pip3 -V```
-returns /home/app/venv/lib/python3.9/site-packages/pip (python 3.9)
+### Celery integration
 
+http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html
 
----
+### Dockerfile venv path
 
-Changed directory structure to nest all apps within one dir
-https://stackoverflow.com/questions/22841764/best-practice-for-django-project-working-directory-structure
-https://github.com/Mischback/django-project-skeleton/blob/development/project_name/settings/common.py
+Inspiration in regards to setting the path for venv in Dockerfile:
 
----
+https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
+
+```
+docker-compose exec app pip3 -V
+# returns /home/app/venv/lib/python3.9/site-packages/pip (python 3.9)
+```
+
+### Directory structure
+
+Changed directory structure to nest all apps within one dir:
+
+* https://stackoverflow.com/questions/22841764/best-practice-for-django-project-working-directory-structure
+* https://github.com/Mischback/django-project-skeleton/blob/development/project_name/settings/common.py
+
+### New Celery tasks
 
 When adding celery task, restarting its container is required.
 
----
+### Mapping IPs onto Docker containers
 
-#### Mapping IPs onto Docker containers
-We need to ensure that UID and GID from the system (host) are mapped onto the container user. The containers carry over User and Group IDs as they share one kernel.
-So we need to ensure that IDs of the user and group of the host match these of the container user.
-References [1](https://medium.com/@mccode/understanding-how-uid-and-gid-work-in-docker-containers-c37a01d01cf) [2](https://blog.dbi-services.com/how-uid-mapping-works-in-docker-containers/)
+We need to ensure that UID and GID from the system (host) are mapped onto the container user. The containers carry over
+User and Group IDs as they share one kernel. So we need to ensure that IDs of the user and group of the host match these
+of the container user.
 
-**Challenge: passing variables to Dockerfile via Docker compose**
+References: 
+
+* https://medium.com/@mccode/understanding-how-uid-and-gid-work-in-docker-containers-c37a01d01cf
+* https://blog.dbi-services.com/how-uid-mapping-works-in-docker-containers/
+
+### Passing variables to Dockerfile via docker-compose
+
 Mapping the UID and GID will change depending on the environment, we don't want to change the Dockerfile each time.
 Does look like it's challenging/dangerous to include shell in env variables, e.g. [Ref 1](https://github.com/docker/compose/pull/8078).
 Hence need to pass the user variables via CLI when building the containers.
-```USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build```
 
+```
+USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build
+```
 
+### Tailwind
 
----
+Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/installation.html),
 
-#### Tailwind
-Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/installation.html)
-- After pulling need to execute npm install once as node_modules are in gitignore:
-```docker-compose exec app python3 manage.py tailwind install```
-- Then run in a separate terminal session to listen for changes.
-```docker-compose exec app python3 manage.py tailwind start```
-- To build for production.
-```docker-compose exec app python3 manage.py tailwind build```
+After pulling, need to execute npm install once as node_modules are in gitignore:
 
-Notes:
-Styles passed dynamically from views are not automatically applied to tailwind classes (which are exported as static classes at the time of save/build). So even if the classes are on the list in tailwind.confg.js, but they are not used by any html element at the time of running the app you cannot refer to them.
+```
+docker-compose exec app python3 manage.py tailwind install
+```
 
+Then run in a separate terminal session to listen for changes:
 
+```
+docker-compose exec app python3 manage.py tailwind start
+```
 
----
+To build for production, run:
 
-#### TypeScript
+```
+docker-compose exec app python3 manage.py tailwind build
+```
 
-- Make sure you have typescript installed globally for local development
+Note: Styles passed dynamically from views are not automatically applied to tailwind classes (which are exported as
+static classes at the time of save/build). So even if the classes are on the list in tailwind.confg.js, but they are
+not used by any html element at the time of running the app you cannot refer to them.
 
-```npm install -g typescript```
+### Social account login
 
-- Then, each time you want to rebuild js files after changing typescript ones, you can run
-
-```./ts_generate_js.sh```
-
-from the repo's root directory (run `chmod +x ts_generate_js.sh` if file not executable)
-
-
-
----
-
-### RUNNING LOCALLY
-
-to run locally:
-- make a local copy of the desired branch, probably development or production
-- optionally in `sfs/settngs/local.py` make any desired settings changes
-- optionally in `sfs/settings/settings.py` change `.dev` to `.production` or vice versa if desired to use development or production mode (affects things like the debug tools). 
-- run ```USER_ID=`id -u` GROUP_ID=`id -g` docker-compose up``` in the local copy directory
-
-### DEPLOYMENT
-
-to deploy:
-
-- merge into staging
-- merge staging into production (you cannot push directly to production, it will only allow merges)
-- go into the pipeline for that merge and run the 'deploy' job
-- don't forget: variables.env and sfs/settings/local.py are replaced suring deployment with versions stored on the server in /home/dev/sites/dev\_data
-- **conversely, if setting up a new deployment situation don't forget to set the password in variables.env to something new!**
-
-to use social account logins, add the following to local.py:
+To use social account logins, add the following to local.py:
 
 ```
 from .base import INSTALLED_APPS
@@ -280,13 +300,12 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-
 ```
 
+### Deployment
 
+**NOTE:** Before using in a public-facing environment, don't forget to change the default credentials! They're in
+`variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`
 
----
-DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN THE GIT HISTORY
-
-
-
+**NOTE:** DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN
+THE GIT HISTORY
