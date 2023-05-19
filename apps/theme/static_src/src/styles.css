@@ -3,26 +3,54 @@
 
 @layer components { /* layer so they're on included if used */
     /* --- TYPOGRAPHY ----------------------------------------------------------------------------------------------- */
-    .text-large { /* mobile/28 Prompts + Descriptions */
-        @apply text-black/55 font-garamond-500 text-black-large text-[22px] leading-7/*28px*/
+    /* prompts descriptions ------------------------------ */
+    .text-large { /* mobile 22/28 */
+        @apply text-black/55 font-garamond-500 text-black-large text-[22px] leading-[28px]
     }
-    .text-title { /* menu headers */
-        @apply font-kanit-500 text-black/75 text-xl leading-6
+    .text-large-desktop { /* desktop 26/34 */
+        @apply text-large text-[26px] leading-[34px]
     }
-    .text-header { /* mobile/10 Headers */
+    /* menu titles ------------------------------ */
+    .text-title { /* mobile 19/34 */
+        @apply font-kanit-500 text-black/75 text-[19px] leading-6
+    }
+    .text-title-desktop { /* desktop 26/34 */
+        @apply text-title text-[26px]
+    }
+    /* HEADER ------------------------------ */
+    .text-header { /* mobile 10/Auto */
         @apply uppercase text-black-text font-kanit-600 text-[10px] tracking-widest leading-normal
     }
-    .text-body { /* mobile/15 Body */
-        @apply font-garamond-500 text-black/75 text-base leading-5 whitespace-normal tracking-[0.01em]
+    .text-header-desktop { /* desktop 12/Auto */
+        @apply text-header text-[12px]
     }
-    .text-button { /* mobile/10 Button */
-        @apply font-kanit-700 uppercase font-medium text-xxs tracking-widest leading-4
+    /* body ------------------------------ */
+    .text-body { /* mobile 16/20 */
+        @apply font-garamond-500 text-black/75 text-[16px] leading-5 whitespace-normal tracking-[0.01em]
     }
-    .text-meta { /* mobile/meta/9 lowercase Reg: meta */
-        @apply text-black/75 font-kanit-400 text-[9px] leading-3 tracking-[0.03em]
+    .text-body-desktop { /* desktop 18/24 */
+        @apply text-body text-[18px] leading-6
     }
-    .text-meta-label { /* mobile/meta/9 allcap Reg: tags and names */
+    /* button ------------------------------ */
+    .text-button { /* mobile 10/Auto */
+        @apply font-kanit-700 uppercase font-medium text-[10px] tracking-widest leading-4
+    }
+    .text-button-desktop { /* desktop 12/Auto */
+        @apply text-button text-[12px]
+    }
+    /* meta tags names ------------------------------ */
+    .text-meta { /* mobile 9/12 */
+        @apply text-black/75 font-kanit-400 text-[9px] leading-[12px] tracking-[0.03em]
+    }
+    .text-meta-desktop { /* desktop 10/12 */
+        @apply text-meta text-[10px]
+    }
+    /* meta ------------------------------ */
+    .text-meta-label { /* mobile 9/Auto */
         @apply uppercase text-black/75 font-kanit-400 text-[9px] leading-[12px] tracking-widest
+    }
+    .text-meta-label-desktop { /* desktop 11/14 */
+        @apply text-meta-label
     }
 
     /* --- BUTTONS -------------------------------------------------------------------------------------------------- */
