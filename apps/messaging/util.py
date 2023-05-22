@@ -36,6 +36,7 @@ def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
                                     'salmon_envision_poll': 'messaging/system_messages/salmon_envision_poll.html',
                                     'salmon_envision_poll_available': 'messaging/system_messages/salmon_envision_poll_available.html',
                                     'salmon_wizard': 'messaging/system_messages/salmon_wizard.html',
+                                    'poll_edited': 'messaging/system_messages/poll_edited.html',
 
                                     }[kind],
                            chat=chat,

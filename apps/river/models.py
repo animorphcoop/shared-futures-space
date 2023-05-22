@@ -39,6 +39,10 @@ class EnvisionStage(models.Model):
     step: models.CharField = models.CharField(max_length=1, choices=Step.choices, default=Step.GET_TO_KNOW)
     general_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', null=True, default=None,
                                                         on_delete=models.SET_NULL)
+    def get_chat(self, topic: str) -> Chat:
+        if topic == 'general':
+            return self.general_chat
+        # no others
 
 
 class PlanStage(models.Model):
@@ -59,6 +63,15 @@ class PlanStage(models.Model):
                                                       related_name='plan_place_poll')
     time_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
                                                      on_delete=models.SET_DEFAULT, related_name='plan_time_poll')
+    def get_chat(self, topic: str) -> Chat:
+        if topic == 'general':
+            return self.general_chat
+        elif topic == 'money':
+            return self.money_chat
+        elif topic == 'place':
+            return self.place_chat
+        elif topic == 'time':
+            return self.time_chat
 
 
 class ActStage(models.Model):
@@ -78,12 +91,25 @@ class ActStage(models.Model):
                                                       on_delete=models.SET_DEFAULT, related_name='act_place_poll')
     time_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', default=None, null=True,
                                                      on_delete=models.SET_DEFAULT, related_name='act_time_poll')
+    def get_chat(self, topic: str) -> Chat:
+        if topic == 'general':
+            return self.general_chat
+        elif topic == 'money':
+            return self.money_chat
+        elif topic == 'place':
+            return self.place_chat
+        elif topic == 'time':
+            return self.time_chat
 
 
 class ReflectStage(models.Model):
     general_chat: models.ForeignKey = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT)
     general_poll: models.ForeignKey = models.ForeignKey('poll.MultipleChoicePoll', default=None, null=True,
                                                         on_delete=models.SET_DEFAULT)
+    def get_chat(self, topic: str) -> Chat:
+        if topic == 'general':
+            return self.general_chat
+        # no others
 
 
 # PROJECTS

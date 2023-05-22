@@ -15,6 +15,7 @@ from typing import Dict, Any, List, Tuple, Optional
 
 from .models import BasePoll, SingleChoicePoll, MultipleChoicePoll, BaseVote, SingleVote, MultipleVote
 from river.models import River, RiverMembership  # pyre-ignore[21]
+from messaging.util import send_system_message
 
 
 class PollView(TemplateView):
@@ -73,6 +74,7 @@ class PollView(TemplateView):
         #river slug for htmx to run conditional check if the poll is closed so to trigger refreshing on the frontend
         river = poll.river
         ctx['slug'] = river.slug
+        ctx['starters'] = RiverMembership.objects.filter(river = river).values_list('user__id', flat = True) # for telling whether we should show the edit poll button
         return ctx
 
 
@@ -119,3 +121,35 @@ class PollCreateView(CreateView):  # pyre-ignore[24]
 
     def get_success_url(self) -> str:
         return reverse('poll_view', args=[self.object.uuid])  # pyre-ignore[16]
+
+def poll_edit(request: WSGIRequest) -> HttpResponse:
+    # update description of poll, return new description for htmx
+    poll = BasePoll.objects.get(uuid=request.POST['poll-uuid'])
+    if RiverMembership.objects.get(user = request.user, river = poll.river).starter:
+        poll.closed = True
+        poll.save()
+        river, stage, topic = poll.get_poll_context(poll)
+        send_system_message(stage.get_chat(topic), 'poll_edited', context_poll = poll)
+        new_poll = SingleChoicePoll.objects.create(question = poll.question, description = request.POST['new-description'], options = poll.options, expires = poll.expires, created_by = poll.created_by, river = poll.river)
+        if topic == 'general':
+            stage.general_poll = new_poll
+        elif topic == 'money':
+            stage.money_poll = new_poll
+        elif topic == 'place':
+            stage.place_poll = new_poll
+        elif topic == 'time':
+            stage.time_poll = new_poll
+        stage.save()
+        return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
+    else:
+        # user isn't a river starter for the river the poll appears in
+        # the ui shouldn't permit this situation, so allowing an exception to be thrown is probably correct
+        return None
+
+
+
+
+
+
+
+

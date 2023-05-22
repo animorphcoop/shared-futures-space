@@ -43,10 +43,14 @@
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <div id="poll-description-{{poll.uuid}}">
                     <p class="text-body px-3.5 block">{{ poll_description }}</p>
-                    <button onclick="document.getElementById('poll-description-{{poll.uuid}}').style.display = 'none'; document.getElementById('poll-edit-{{poll.uuid}}').style.display = 'block';">edit</button>
+                    {% if request.user.id in starters %}<button onclick="document.getElementById('poll-description-{{poll.uuid}}').style.display = 'none'; document.getElementById('poll-edit-{{poll.uuid}}').style.display = 'block';">edit</button>{% endif %}
                 </div>
-                <form id="poll-edit-{{poll.uuid}}" onsubmit="return confirm('changing the description being voted on will cancel all existing votes!');" style="display:none">
+                <form id="poll-edit-{{poll.uuid}}" style="display:none" hx-trigger="submit[confirm('changing the poll will cancel all existing votes!')]"
+                      onsubmit="document.getElementById('poll-description-{{poll.uuid}}').style.display = 'block';
+                                document.getElementById('poll-edit-{{poll.uuid}}').style.display = 'none';"
+                      hx-post="{% url 'poll_edit' %}" hx-target="closest .poll-wrapper" hx-swap="outerHTML">
                     <textarea name="new-description">{{poll_description}}</textarea>
+                    <input type="hidden" name="poll-uuid" value="{{poll.uuid}}"></input>
                     <button>submit</button>
                 </form>
                 {% include "partials/vertical-spacer.html" with space="5" %}
