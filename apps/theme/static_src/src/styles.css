@@ -40,14 +40,17 @@
     }
     /* meta tags names ------------------------------ */
     .text-meta { /* mobile 9/12 */
-        @apply text-black/75 font-kanit-400 text-[9px] leading-[12px] tracking-[0.03em]
+        @apply text-black/75 font-kanit-400 text-[9px] lg:text-[11px] leading-[12px] lg:leading-[18px] tracking-[0.03em]
+    }
+    .text-meta-uppercase { /* mobile 9/12 */
+        @apply text-meta uppercase tracking-[0.1em]
     }
     .text-meta-desktop { /* desktop 10/12 */
         @apply text-meta text-[10px]
     }
     /* meta ------------------------------ */
     .text-meta-label { /* mobile 9/Auto */
-        @apply uppercase text-black/75 font-kanit-400 text-[9px] leading-[12px] tracking-widest
+        @apply uppercase text-black/75 font-kanit-400 text-[9px] text-[10px] leading-[12px] tracking-widest
     }
     .text-meta-label-desktop { /* desktop 11/14 */
         @apply text-meta-label
@@ -55,8 +58,8 @@
 
     /* --- TAGS ----------------------------------------------------------------------------------------------------- */
     .tag {
-        @apply flex justify-center items-center px-1.5 h-3 lg:h-6 rounded-sm
-        text-meta uppercase tracking-[0.1em] text-black/55
+        @apply flex justify-center items-center px-1.5 h-[18px] lg:h-[24px] rounded-sm
+        text-meta-uppercase text-[9px] lg:text-[10px] text-black/55
     }
 
     /* --- BUTTONS -------------------------------------------------------------------------------------------------- */
