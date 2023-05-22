@@ -9,7 +9,7 @@
     setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, chatActive)}, 1000);"
     >
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-             hx-trigger="load, every 5s [newMessages()]"
+             hx-trigger="load, every 3s [newMessages()]"
              hx-target="this">
         </div>
 
