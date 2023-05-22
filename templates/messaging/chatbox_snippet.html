@@ -14,7 +14,8 @@
 
 
         <div class="text-meta invisible max-w-full">
-            <input type="file" name=file value="file" id="file-{{ unique_id }}">
+            <input type="file" name=file value="file" id="file-{{ unique_id }}"
+                   x-init="setTimeout(()=>{checkFileContents($el.id)}, 1000);">
         </div>
 
 
@@ -74,6 +75,74 @@
     <script>
 
 
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','),
+                mime = arr[0].match(/:(.*?);/)[1],
+
+                bstr = atob(arr[arr.length - 1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            console.log(mime)
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, {type: mime});
+        }
+
+
+        function checkFileContents(fileElemId) {
+            let fileElem = document.getElementById(fileElemId)
+            if (fileElem.value === "") {
+                console.log("zilch")
+                const localStorageImage = localStorage.getItem(fileElemId);
+                const localStorageImageName = localStorage.getItem(`${fileElemId}+name`);
+
+                console.log(localStorageImage)
+                if (localStorageImage) {
+
+
+                    var file = dataURLtoFile(localStorageImage, localStorageImageName);
+                    console.log(file);
+
+
+                    let container = new DataTransfer();
+                    container.items.add(file);
+                    fileElem.files = container.files;
+                    var event = new Event('change');
+                    console.log('sending event')
+                    setTimeout(() => {
+                        fileElem.dispatchEvent(event)
+                        console.log('dispatched')
+
+                    }, 250)
+
+
+                    //fileElem.value = localStorageImage
+                    {% comment %}                    var reader = new FileReader();
+                                        reader.addEventListener(
+                                            "load",
+                                            () => {
+                                                // this will then display a text file
+                                                console.log(reader.result);
+                                            },
+                                            false
+                                        );
+
+                                        if (localStorageImage) {
+                                            reader.readAsBinaryString(localStorageImage);
+                                        }{% endcomment %}
+                    //reader.readAsText(localStorageImage);
+
+                } else {
+                    console.log('no image')
+                }
+
+            }
+
+
+        }
+
+
         function validateChat(chat) {
             let errorCount = 0;
             const textLength = document.getElementById('text-box-' + chat).value
@@ -105,14 +174,48 @@
             const fileInput = document.getElementById(file)
 
             fileInput.onchange = function () {
+
+                console.log('changed')
                 let currentLength = fileInput.files.length
                 if (currentLength > 0) {
+                    //localStorage.setItem(file, this.files[0].text());
+                    var fileReader = new FileReader()
+
+                    fileReader.addEventListener(
+                        "load",
+                        () => {
+                            // convert image file to base64 string
+
+
+                            localStorage.setItem(file, fileReader.result);
+                            localStorage.setItem(`${file}+name`, fileInput.files[0].name);
+                        },
+                        false
+                    );
+
+                    if (file) {
+                        fileReader.readAsDataURL(fileInput.files[0]);
+                    }
+
+                    {% comment %}
+                                        let filePromise = this.files[0].text()
+                                        filePromise.then((value) => {
+                                            //console.log(value)
+                                            localStorage.setItem(file, value);
+                                        })
+                    {% endcomment %}
+
+
                     if (uploadCheckbox.classList.contains('hidden')) {
                         uploadCheckbox.classList.remove('hidden')
                     }
                 } else {
                     if (!uploadCheckbox.classList.contains('hidden')) {
+
                         uploadCheckbox.classList.add('hidden')
+                        if (localStorage.getItem(file)) {
+                            localStorage.removeItem(file);
+                        }
                     }
 
                 }
