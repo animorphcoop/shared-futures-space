@@ -51,11 +51,12 @@
                               class="input-text h-[50px] max-h-[150px] bg-yellow rounded-xl w-full max-w-full"
                               name=text
                               id="text-box-{{ unique_id }}"
+                              x-init="setTimeout(()=>{checkTextContents($el.id)}, 1000);"
 
                     ></textarea>
 
 
-                <button @click="textInput= ''; clearFile('file-{{ unique_id }}')"
+                <button @click="clearFile('file-{{ unique_id }}'); clearTextarea('text-box-{{ unique_id }}');"
                         id="chat-button-{{ unique_id }}"
                         class="absolute bottom-[34px] right-8"
 
@@ -93,21 +94,23 @@
         function checkFileContents(fileElemId) {
             let fileElem = document.getElementById(fileElemId)
             if (fileElem.value === "") {
-                console.log("zilch")
+                {% comment %}nothing in input on load, as expected{% endcomment %}
                 const localStorageImage = localStorage.getItem(fileElemId);
                 const localStorageImageName = localStorage.getItem(`${fileElemId}+name`);
 
-                console.log(localStorageImage)
                 if (localStorageImage) {
 
 
+                    {% comment %}reconstructing the file from base64{% endcomment %}
                     var file = dataURLtoFile(localStorageImage, localStorageImageName);
-                    console.log(file);
 
 
+                    {% comment %} loading the file into input value {% endcomment %}
                     let container = new DataTransfer();
                     container.items.add(file);
                     fileElem.files = container.files;
+
+                    {% comment %}triggering on change event{% endcomment %}
                     var event = new Event('change');
                     console.log('sending event')
                     setTimeout(() => {
@@ -118,12 +121,29 @@
 
 
                 } else {
-                    console.log('no image')
+                    console.log('no file retrieved')
                 }
-
             }
 
+        }
 
+        function checkTextContents(textElemId) {
+            console.log(textElemId)
+            let textElem = document.getElementById(textElemId)
+            console.log(textElem.value)
+
+            if (textElem.value === "") {
+                console.log('nothing to see here')
+                if (localStorage.getItem(textElemId)) {
+                    textElem.value = localStorage.getItem(textElemId)
+                }
+            }
+
+            if (textElem.addEventListener) {
+                textElem.addEventListener('input', function () {
+                    localStorage.setItem(textElemId, textElem.value)
+                }, false);
+            }
         }
 
 
@@ -205,6 +225,12 @@
 
                 }
             }
+
+        }
+
+        function clearTextarea(textInputId) {
+            console.log('removing')
+            localStorage.removeItem(textInputId);
 
         }
 
