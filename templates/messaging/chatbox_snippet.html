@@ -56,7 +56,7 @@
                     ></textarea>
 
 
-                <button x-on:click="clearFile('file-{{ unique_id }}'); clearTextarea('text-box-{{ unique_id }}');"
+                <button
                         id="chat-button-{{ unique_id }}"
                         class="absolute bottom-[34px] right-8"
 
@@ -155,6 +155,11 @@
             if (textLength.length < 1 && fileValue.length < 1) {
                 errorCount++
             }
+
+            if (errorCount === 0){
+                clearTextarea(`text-box-${chat}`)
+                clearFile(`file-${chat}`)
+            }
             return errorCount === 0;
 
         }
@@ -229,9 +234,12 @@
         }
 
         function clearTextarea(textInputId) {
-            console.log('removing')
+            console.log('what is my id')
+            console.log(localStorage.getItem(textInputId))
             if (localStorage.getItem(textInputId)) {
-                localStorage.removeItem(textInputId);
+                console.log('it exists')
+                localStorage.setItem(textInputId, "");
+                //localStorage.removeItem(textInputId);
             }
 
         }
