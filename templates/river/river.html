@@ -17,14 +17,14 @@
 
             {# Image #}
             <div class="-mx-4.5">
-                <div class="flex items-center justify-center overflow-hidden h-[262px] w-full">
+                <div class="flex items-center justify-center overflow-hidden h-[262px] lg:h-[362px] w-full">
                     {% include 'partials/river-image.html' %}
                 </div>
             </div>
 
             {% include "partials/vertical-spacer.html" with space="3" %}
 
-            <div class="lg:grid grid-cols-4 gap-9 max-w-screen-xl mx-auto">
+            <ul class="lg:grid grid-cols-4 gap-9 max-w-screen-xl mx-auto">
                 <div class="col-span-1"> {# Large layout, first column #}
                     <div class="flex justify-between items-center">
                         <h1 id="river-title" class="text-title text-black/55">
@@ -85,22 +85,29 @@
                 </div>
 
                 {# River stages; envision, plan, act, reflect #}
-                <section class="-mx-4.5 lg:mx-0 col-span-2">
+                <section class="-mx-4.5 lg:mx-0 col-span-2"> {# Large layout, middle two columns #}
                     {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" selected="null" locked=envision_locked %}
                     {% include "river/plan.html" with title="plan stage" reference="plan" id="plan" selected="null" locked=plan_locked %}
                     {% include "river/act.html" with title="act stage" reference="act" id="act" selected="null" locked=act_locked %}
                     {% include "river/reflect.html" with title="reflect stage" reference="reflect" id="reflect" selected="null" locked=reflect_locked %}
                 </section>
 
-                {# River information;  resources. At end so knowledge salmon is always on top even #}
-                <section class="-mx-4.5 lg:mx-0 col-span-1">
+                {# River information; stage bookmarks, resources. At end so knowledge salmon is always on top #}
+                <section class="-mx-4.5 lg:mx-0 col-span-1 lg:justify-items-end"> {# Large layout, last column #}
+                    {# Stage outline #}
+                    <ul class="flex flex-col gap-3 text-right">
+                        <li><a href="#envision" class="button button-on-white button-secondary">Envision</a></li>
+                        <li><a href="#plan" class="button button-on-white button-secondary">Plan</a></li>
+                        <li><a href="#act" class="button button-on-white button-secondary">Act</a></li>
+                        <li><a href="#reflect" class="button button-on-white button-secondary">Reflect</a></li>
+                    </ul>
                     <div id="modal-container" class="invisible">
                         {% include "river/resources.html" %}
                     </div>
                     {# Resources salmon of knowledge button #}
-                    <div class="z-40 sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:bottom-0">
+                    <div class="z-40 flex flex-col w-[360px] fixed bottom-0 lg:initial lg:bottom-auto ">
                         <button type="button"
-                                class="button button-on-white p-1 fixed sm:absolute bottom-[18px] left-[18px] drop-shadow-lg "
+                                class="button button-on-white p-1 fixed bottom-[18px] left-[18px] lg:absolute lg:bottom-auto lg:left-auto drop-shadow-lg "
                                 id="show-modal">
                             <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
                                  class="w-9 h-auto">
