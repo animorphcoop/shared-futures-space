@@ -55,7 +55,7 @@
                     ></textarea>
 
 
-                <button @click="textInput= ''"
+                <button @click="textInput= ''; clearFile('file-{{ unique_id }}')"
                         id="chat-button-{{ unique_id }}"
                         class="absolute bottom-[34px] right-8"
 
@@ -116,22 +116,6 @@
 
                     }, 250)
 
-
-                    //fileElem.value = localStorageImage
-                    {% comment %}                    var reader = new FileReader();
-                                        reader.addEventListener(
-                                            "load",
-                                            () => {
-                                                // this will then display a text file
-                                                console.log(reader.result);
-                                            },
-                                            false
-                                        );
-
-                                        if (localStorageImage) {
-                                            reader.readAsBinaryString(localStorageImage);
-                                        }{% endcomment %}
-                    //reader.readAsText(localStorageImage);
 
                 } else {
                     console.log('no image')
@@ -214,12 +198,19 @@
 
                         uploadCheckbox.classList.add('hidden')
                         if (localStorage.getItem(file)) {
-                            localStorage.removeItem(file);
+                            clearFile(file)
+
                         }
                     }
 
                 }
             }
+
+        }
+
+        function clearFile(fileInputId) {
+            localStorage.removeItem(fileInputId);
+            localStorage.removeItem(`${fileInputId}+name`);
 
         }
 
