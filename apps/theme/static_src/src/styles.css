@@ -53,6 +53,12 @@
         @apply text-meta-label
     }
 
+    /* --- TAGS ----------------------------------------------------------------------------------------------------- */
+    .tag {
+        @apply flex justify-center items-center px-1.5 h-4.5 lg:h-6 rounded-sm
+        text-meta uppercase tracking-[0.1em] text-black/55
+    }
+
     /* --- BUTTONS -------------------------------------------------------------------------------------------------- */
     .button {
         @apply inline-block rounded-full px-4 py-4 max-h-12

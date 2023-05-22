@@ -18,7 +18,7 @@
 
         {% if resource.tags %}
             {% for tag in resource.tags %}
-                <button class="whitespace-normal px-1.5 py-1 bg-blue-second text-black-large font-kanit-400 text-xxxs uppercase leading-none tracking-widest rounded-sm"
+                <button class="tag bg-blue-second"
                         onclick="buttonTagSearch('{{ tag }}')"
                         hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
                         hx-target="#search-results">

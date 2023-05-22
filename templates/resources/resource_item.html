@@ -11,7 +11,7 @@
     {% block title %}{% include "partials/title.html" with title="Resource" extra_title=resource.title %}{% endblock %}
 
     <article class="px-4.5 max-w-screen-xl mx-auto">
-        <div class="w-1/2 pr-9">
+        <div class="max-w-xl">
             {% include "partials/vertical-spacer.html" with space="2" %}
 
             <h1 class="text-title text-black/55">
@@ -30,9 +30,8 @@
 
                 {% if resource.tags %}
                     {% for tag in resource.tags %}
-                        <button class="flex justify-center items-center px-1.5 h-4.5 lg:h-6 bg-blue-second rounded-sm">
-                            <a href="{% url "resources_tag" tag %}"
-                               class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">
+                        <button class="tag bg-blue-second">
+                            <a href="{% url "resources_tag" tag %}">
                                 {{ tag }}
                             </a>
                         </button>
