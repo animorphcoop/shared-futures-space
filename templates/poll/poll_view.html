@@ -12,13 +12,7 @@
                 <h3 class="flex items-center justify-between">
                     {#  User icon and poll header text  #}
                     <div class="flex gap-2 items-center">
-                        <img src="
-
-
-
-
-
-                                {% if poll.created_by.id == 0 %}{% static 'images/avatars/salmon_1.png' %}{% else %}{{ poll.created_by.avatar.image_url }}{% endif %}"
+                        <img src="{% if poll.created_by.id == 0 %}{% static 'images/avatars/salmon_1.png' %}{% else %}{{ poll.created_by.avatar.image_url }}{% endif %}"
                              class="w-6 h-6">
                         <p class="text-header text-center">
                             {{ poll_name }}
@@ -47,9 +41,14 @@
             {#  Poll description  #}
             <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}">
                 {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="text-body px-3.5 block">
-                    {{ poll_description }}
-                </p>
+                <div id="poll-description-{{poll.uuid}}">
+                    <p class="text-body px-3.5 block">{{ poll_description }}</p>
+                    <button onclick="document.getElementById('poll-description-{{poll.uuid}}').style.display = 'none'; document.getElementById('poll-edit-{{poll.uuid}}').style.display = 'block';">edit</button>
+                </div>
+                <form id="poll-edit-{{poll.uuid}}" onsubmit="return confirm('changing the description being voted on will cancel all existing votes!');" style="display:none">
+                    <textarea name="new-description">{{poll_description}}</textarea>
+                    <button>submit</button>
+                </form>
                 {% include "partials/vertical-spacer.html" with space="5" %}
                 {#  Vote options list  #}
                 <ul>
