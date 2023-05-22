@@ -28,8 +28,8 @@
 
             {% comment %}    {% if user.organisation %}<br/>this account belongs to an organisation{% endif %}{% endcomment %}
 
-            <div id="profile-data" class="">
-                <div class="flex flex-col items-center justify-center">
+            <div id="profile-data" class="lg:grid grid-cols-4 gap-9 max-w-screen-xl lg:mx-auto">
+                <div class="flex flex-col items-center justify-center col-span-1">
 
                     {# Avatar #}
                     <div class="relative">
@@ -94,36 +94,38 @@
                         Active since {{ user.signup_date }}
                     </p>
 
+                    <div class="h-3.5"></div>
+
                 </div>
 
-                <div class="h-3.5"></div>
 
                 {# Organisation #}
                 {% if user.organisation != None %}
-                    {# If you're not the owner of the profile you can only view but not edit #}
+                    <div class="col-span-2">
+                        {# If you're not the owner of the profile you can only view but not edit #}
 
-                    {# Show organisation area if you're on your own profile, regardless of whether it's empty or not #}
-                    <div class="py-4 px-4.5 flex justify-between items-center  bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
-                        <h3 class="inline-block font-kanit-700 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
-                            Organisation
-                        </h3>
-                        {% if self %}
-                            <button onclick="toggleOrganisationsChange()">
-                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8.545 4.765L9.235 5.455L2.44 12.25H1.75V11.56L8.545 4.765V4.765ZM11.245 0.25C11.0575 0.25 10.8625 0.325 10.72 0.4675L9.3475 1.84L12.16 4.6525L13.5325 3.28C13.825 2.9875 13.825 2.515 13.5325 2.2225L11.7775 0.4675C11.6275 0.3175 11.44 0.25 11.245 0.25V0.25ZM8.545 2.6425L0.25 10.9375V13.75H3.0625L11.3575 5.455L8.545 2.6425V2.6425Z"
-                                          fill="#9759FF"/>
-                                </svg>
-                            </button>
-                        {% endif %}
-                    </div>
-                    {% include "partials/vertical-spacer.html" with space="1" %}
-                    <div id="organisation-holder" class="px-4.5">
-                         {% comment %}Some organisations might not have links saved with them, catching within the partial {% endcomment %}
+                        {# Show organisation area if you're on your own profile, regardless of whether it's empty or not #}
+                        <div class="py-4 px-4.5 flex justify-between items-center  bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)]">
+                            <h3 class="inline-block font-kanit-700 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
+                                Organisation
+                            </h3>
+                            {% if self %}
+                                <button onclick="toggleOrganisationsChange()">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.545 4.765L9.235 5.455L2.44 12.25H1.75V11.56L8.545 4.765V4.765ZM11.245 0.25C11.0575 0.25 10.8625 0.325 10.72 0.4675L9.3475 1.84L12.16 4.6525L13.5325 3.28C13.825 2.9875 13.825 2.515 13.5325 2.2225L11.7775 0.4675C11.6275 0.3175 11.44 0.25 11.245 0.25V0.25ZM8.545 2.6425L0.25 10.9375V13.75H3.0625L11.3575 5.455L8.545 2.6425V2.6425Z"
+                                              fill="#9759FF"/>
+                                    </svg>
+                                </button>
+                            {% endif %}
+                        </div>
+                        {% include "partials/vertical-spacer.html" with space="1" %}
+                        <div id="organisation-holder" class="px-4.5">
+                            {% comment %}Some organisations might not have links saved with them, catching within the partial {% endcomment %}
                             {% include "account/partials/organisation_name_link.html" with name=user.organisation.name link=user.organisation.link %}
+                        </div>
+                        {% include "partials/vertical-spacer.html" with space="4" %}
                     </div>
-                    {% include "partials/vertical-spacer.html" with space="4" %}
-
                 {% endif %}
 
 
@@ -170,6 +172,87 @@
                 </button>
 {% endcomment %}
 
+            {% if user.is_authenticated and not self %}
+
+                {# Message this user #}
+                {# WET CALL TO ACTION #}
+                <section class="bg-resources-two col-span-1">
+                    <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                        <p class="text-large text-22 pb-6">
+                            Get in touch with {{ user.display_name }}!
+                        </p>
+                        {% with user_pk_string=user.pk|stringformat:'s' %}
+                            {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
+                                <a href="{% url 'user_chat' user_slug %}" class="button button-on-colour inline-block">
+                                    Message
+                                </a>
+                            {% endwith %}
+                        {% endwith %}
+                    </div>
+                </section>
+                {# Block this user #}
+                {% if user_chat and not user_chat.blocked %}
+                    <section class="bg-yellow-pale" id="block-user">
+                        <div class="flex justify-center items-center gap-6 py-9 px-4.5 text-center">
+                            <p class="text-meta text-black/55">
+                                Would you like to block messages from {{ user.display_name }}?
+                            </p>
+
+                            <div x-data="{ overlay: false }" class="inline-block">
+                                                            <span @click="overlay = ! overlay; $event.preventDefault();"
+                                                                  class="button button-secondary button-danger">
+                                                                Block
+                                                            </span>
+                                <div class="" :class="overlay || 'hidden'"
+                                     @click="$event.preventDefault();">
+                                    <section
+                                            class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
+                                        {#  White modal background  #}
+                                        <div class="w-full bg-white m-2.5 sm:w-[360px]">
+                                            <div class="bg-red-important/30 sm:w-[360px]">
+                                                <div class="p-2.5">
+                                                    <div class="flex flex-col items-center py-9 px-4.5 text-center">
+                                                        <p class="text-large pb-6">
+                                                            Are you sure you want to
+                                                            block {{ user.display_name }}
+                                                            from messaging you?
+                                                        </p>
+                                                        <p class="text-meta text-black-large pb-6">
+                                                            This action cannot be
+                                                            undone.
+                                                        </p>
+                                                        <div class="flex gap-4.5">
+                                                            <button @click="overlay = ! overlay; $event.preventDefault();"
+                                                                    class="button button-on-colour">
+                                                                Back
+                                                            </button>
+                                                            <button
+                                                                    hx-post="{% url 'block_user_chat' user.uuid %}"
+                                                                    hx-trigger="click"
+                                                                    hx-target="#block-user"
+                                                                    hx-swap="outerHTML"
+                                                                    @click="overlay = ! overlay; $event.preventDefault();"
+                                                                    name="action"
+                                                                    value="remove_swimmer"
+                                                                    class="button button-danger">
+                                                                Block
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </section>
+                {% endif %}
+
+            {% endif %}
+
             </div>
 
             {# Hidden settings modals #}
@@ -183,88 +266,9 @@
                 {% include "account/partials/organisation_change.html" %}
             </div>
 
+
+
         </section>
-
-        {% if user.is_authenticated and not self %}
-
-            {# Message this user #}
-            {# WET CALL TO ACTION #}
-            <section class="bg-resources-two">
-                <div class="flex flex-col items-center py-9 px-4.5 text-center">
-                    <p class="text-large text-22 pb-6">
-                        Get in touch with {{ user.display_name }}!
-                    </p>
-                    {% with user_pk_string=user.pk|stringformat:'s' %}
-                        {% with user_slug=user.display_name|add:" "|add:user_pk_string|slugify %}
-                            <a href="{% url 'user_chat' user_slug %}" class="button button-on-colour inline-block">
-                                Message
-                            </a>
-                        {% endwith %}
-                    {% endwith %}
-                </div>
-            </section>
-            {# Block this user #}
-            {% if user_chat and not user_chat.blocked %}
-                <section class="bg-yellow-pale" id="block-user">
-                    <div class="flex justify-center items-center gap-6 py-9 px-4.5 text-center">
-                        <p class="text-meta text-black/55">
-                            Would you like to block messages from {{ user.display_name }}?
-                        </p>
-
-                        <div x-data="{ overlay: false }" class="inline-block">
-                                                            <span @click="overlay = ! overlay; $event.preventDefault();"
-                                                                  class="button button-secondary button-danger">
-                                                                Block
-                                                            </span>
-                            <div class="" :class="overlay || 'hidden'"
-                                 @click="$event.preventDefault();">
-                                <section
-                                        class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5">
-                                    {#  White modal background  #}
-                                    <div class="w-full bg-white m-2.5 sm:w-[360px]">
-                                        <div class="bg-red-important/30 sm:w-[360px]">
-                                            <div class="p-2.5">
-                                                <div class="flex flex-col items-center py-9 px-4.5 text-center">
-                                                    <p class="text-large pb-6">
-                                                        Are you sure you want to
-                                                        block {{ user.display_name }}
-                                                        from messaging you?
-                                                    </p>
-                                                    <p class="text-meta text-black-large pb-6">
-                                                        This action cannot be
-                                                        undone.
-                                                    </p>
-                                                    <div class="flex gap-4.5">
-                                                        <button @click="overlay = ! overlay; $event.preventDefault();"
-                                                                class="button button-on-colour">
-                                                            Back
-                                                        </button>
-                                                        <button
-                                                                hx-post="{% url 'block_user_chat' user.uuid %}"
-                                                                hx-trigger="click"
-                                                                hx-target="#block-user"
-                                                                hx-swap="outerHTML"
-                                                                @click="overlay = ! overlay; $event.preventDefault();"
-                                                                name="action"
-                                                                value="remove_swimmer"
-                                                                class="button button-danger">
-                                                            Block
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </section>
-            {% endif %}
-
-        {% endif %}
 
 
         {% include "partials/footer-gradient.html" %}
