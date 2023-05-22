@@ -6,10 +6,7 @@ chatActive = {% if not chat_open %}true{% else %}false{% endif %}
 console.log(document.getElementById(`{{ stage }}-chat-{{ topic }}`).parentNode);
 console.log('am i being regenerated')">{% endcomment %}
     <div x-init="
-chatActive = {% if chat_open %}true{% else %}false{% endif %}
-console.log(document.getElementById(`{{ stage }}-chat-{{ topic }}`).parentNode);
-console.log('am i being regenerated');
-    console.log($el)">
+chatActive = {% if not chat_open %}true{% else %}false{% endif %}">
 
     {% comment %}{{ message_count }}{% endcomment %}
 

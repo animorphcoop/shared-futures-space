@@ -6,10 +6,10 @@
 
 
     <div x-data="{ openTab: 'one', chatActive: true }" x-init="
-    setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, `${chatActive}`)}, 2000);"
+    setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, chatActive)}, 2000);"
     >
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-             hx-trigger="load, every 5s [`${chatActive}` && newMessages()]"
+             hx-trigger="load, every 5s [newMessages()]"
              hx-target="this">
         </div>
 
@@ -46,13 +46,14 @@
     <script>
 
         let previouslyMessages = 0
-        //let chatOpen = true
+        let chatOpen = false
 
         function saveMyUrl(myUrl, chatActive) {
             console.log(myUrl)
             console.log(`Im here ${chatActive}`)
+            chatOpen = chatActive
 
-            if (!chatActive) return;
+            if (!chatOpen) return;
 
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
@@ -72,6 +73,9 @@
 
         function newMessages() {
             console.log('is called')
+            console.log(chatOpen)
+
+            if (!chatOpen) return;
 
             let newMessagesHtml = document.getElementById('data-swap').innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
