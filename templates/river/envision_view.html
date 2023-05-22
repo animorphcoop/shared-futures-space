@@ -1,13 +1,16 @@
 {% load static %}
 
 {% block content %}
+
     {% url 'river_chat' river.slug 'envision' 'general' 'count' as message_count_url %}
 
-    <div x-data="{ openTab: 'one' }" x-init="setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`)}, 2000)">
-        <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-             hx-trigger="load, every 5s [newMessages()]"
-             hx-target="this">
 
+    <div x-data="{ openTab: 'one', chatActive: true }" x-init="
+    setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, `${chatActive}`)}, 2000);"
+    >
+        <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
+             hx-trigger="load, every 5s [`${chatActive}` && newMessages()]"
+             hx-target="this">
         </div>
 
         <div class="mx-4.5">
@@ -43,9 +46,14 @@
     <script>
 
         let previouslyMessages = 0
+        //let chatOpen = true
 
-        function saveMyUrl(myUrl) {
+        function saveMyUrl(myUrl, chatActive) {
             console.log(myUrl)
+            console.log(`Im here ${chatActive}`)
+
+            if (!chatActive) return;
+
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
                     console.log(document.visibilityState)
@@ -63,6 +71,8 @@
         }
 
         function newMessages() {
+            console.log('is called')
+
             let newMessagesHtml = document.getElementById('data-swap').innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
             console.log(newMessagesNumber)
