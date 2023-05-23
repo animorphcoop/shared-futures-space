@@ -19,7 +19,6 @@
                 </div>
             {% endif %}
         </div>
-
         {% if river.current_stage == stage and request.user.id in starters and poll_possible and members|length > 2 %}
             {% if poll_ref == None and not poll_ref.passed %}
                 {% include "partials/vertical-spacer.html" with space="6" %}

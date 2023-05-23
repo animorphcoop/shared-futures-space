@@ -60,15 +60,21 @@ class PollView(TemplateView):
         ctx['poll'] = poll
         ctx['poll_name'] = poll.question
         ctx['poll_description'] = poll.description
-        ctx['poll_results'] = poll.current_results
-        for result in ctx['poll_results'].values():
-            for user in result:
+        ctx['poll_votes_cast'] = len(list(chain(*poll.current_results.values())))
+        ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll=poll))
+        total_votes_uncast = ctx['poll_total_votes'] - ctx['poll_votes_cast']
+        second_most_votes_cast = sorted([len(votes) for votes in poll.current_results.values()], reverse=True)[1]
+        ctx['poll_results'] = [(option, votes, len(votes) + 1 > second_most_votes_cast + total_votes_uncast - 1) for option, votes in poll.current_results.items()]
+        for result in ctx['poll_results']:
+            for user in result[1]:
                 user.join_date = RiverMembership.objects.get(user=user, river=poll.river).join_date
+        ctx['any_threshold'] = False
+        for _, _, threshold in ctx['poll_results']:
+            if threshold:
+                ctx['any_threshold'] = True
         ctx['poll_closed'] = poll.check_closed()
         ctx['poll_expires'] = poll.expires
-        ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll=poll))
-        ctx['poll_votes_cast'] = len(list(chain(*ctx['poll_results'].values())))
-        ctx['poll_results_winners'] = get_winners(list(ctx['poll_results'].items()))
+        ctx['poll_results_winners'] = get_winners(list(poll.current_results.items()))
 
         # added the variable to htmx response when the poll closes so frontend can refresh
         #ctx['just_finished']
