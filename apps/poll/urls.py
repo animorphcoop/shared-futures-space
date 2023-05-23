@@ -1,7 +1,7 @@
 # pyre-strict
 from django.conf import settings
 from django.urls import include, path, URLResolver, URLPattern
-from .views import PollView, PollCreateView
+from .views import PollView, PollCreateView, poll_edit
 from typing import List, Union
 from uuid import UUID
 
@@ -9,4 +9,5 @@ from uuid import UUID
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('<uuid:uuid>/', PollView.as_view(template_name='poll/poll_view.html'), name='poll_view'),
     path('create/', PollCreateView.as_view(template_name='poll/poll_create.html'), name='poll_create'),
+    path('edit/', poll_edit, name='poll_edit'),
 ]

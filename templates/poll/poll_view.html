@@ -3,7 +3,7 @@
 
 {% block content %}
     <div x-init="setTimeout(()=>{refreshNewlyFinished({{ just_finished }});}, 100)"
-         class='poll-wrapper px-2.5'>
+        class='poll-wrapper px-2.5'>
         {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
         {#  Poll header  #}
         <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-black/30{% else %}bg-yellow{% endif %}">
@@ -12,13 +12,7 @@
                 <h3 class="flex items-center justify-between">
                     {#  User icon and poll header text  #}
                     <div class="flex gap-2 items-center">
-                        <img src="
-
-
-
-
-
-                                {% if poll.created_by.id == 0 %}{% static 'images/avatars/salmon_1.png' %}{% else %}{{ poll.created_by.avatar.image_url }}{% endif %}"
+                        <img src="{% if poll.created_by.id == 0 %}{% static 'images/avatars/salmon_1.png' %}{% else %}{{ poll.created_by.avatar.image_url }}{% endif %}"
                              class="w-6 h-6">
                         <p class="text-header text-center">
                             {{ poll_name }}
@@ -47,13 +41,22 @@
             {#  Poll description  #}
             <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}">
                 {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="text-body px-3.5 block">
-                    {{ poll_description }}
-                </p>
+                <div id="poll-description-{{poll.uuid}}">
+                    <p class="text-body px-3.5 block">{{ poll_description }}</p>
+                    {% if request.user.id in starters %}<button onclick="document.getElementById('poll-description-{{poll.uuid}}').style.display = 'none'; document.getElementById('poll-edit-{{poll.uuid}}').style.display = 'block';">edit</button>{% endif %}
+                </div>
+                <form id="poll-edit-{{poll.uuid}}" style="display:none" hx-trigger="submit[confirm('changing the poll will cancel all existing votes!')]"
+                      onsubmit="document.getElementById('poll-description-{{poll.uuid}}').style.display = 'block';
+                                document.getElementById('poll-edit-{{poll.uuid}}').style.display = 'none';"
+                      hx-post="{% url 'poll_edit' %}" hx-target="closest .poll-wrapper" hx-swap="outerHTML">
+                    <textarea name="new-description">{{poll_description}}</textarea>
+                    <input type="hidden" name="poll-uuid" value="{{poll.uuid}}"></input>
+                    <button>submit</button>
+                </form>
                 {% include "partials/vertical-spacer.html" with space="5" %}
                 {#  Vote options list  #}
                 <ul>
-                    {% for name, count in poll_results.items %}
+                    {% for name, count, threshold in poll_results %}
                         <li x-data="{selected:null}">
                             {#  Vote option  #}
                             <div class="flex justify-between items-center px-3.5">
@@ -88,6 +91,7 @@
                                             </svg>
                                         {% endif %}
                                     </div>
+                               {% if threshold and not poll_closed %}*{% endif %}
                                 </button>
                             </div>
                             {#  Vote option voter information  #}
@@ -119,6 +123,11 @@
                         This poll finished at {{ poll.when_closed|date:"G:i" }} {{ poll.when_closed|date:"d/m/y" }}.
                     {% else %}
                         Please cast your vote. This vote will close in {{ poll_expires|timeuntil }}.
+                    {% endif %}
+                </p>
+                <p class="block text-meta px-3.5">
+                    {% if any_threshold and not poll_closed %}
+                        * This option requires only one more vote to win.
                     {% endif %}
                 </p>
                 {% include "partials/vertical-spacer.html" with space="3" %}
