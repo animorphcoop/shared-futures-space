@@ -10,12 +10,14 @@ from django.forms import ChoiceField, ModelChoiceField, ModelForm
 from uuid import UUID
 from itertools import chain
 from django.shortcuts import redirect
+from django.core.exceptions import PermissionDenied
+
 
 from typing import Dict, Any, List, Tuple, Optional
 
 from .models import BasePoll, SingleChoicePoll, MultipleChoicePoll, BaseVote, SingleVote, MultipleVote
 from river.models import River, RiverMembership  # pyre-ignore[21]
-from messaging.util import send_system_message
+from messaging.util import send_system_message # pyre-ignore[21]
 
 
 class PollView(TemplateView):
@@ -143,8 +145,8 @@ def poll_edit(request: WSGIRequest) -> HttpResponse:
         return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
     else:
         # user isn't a river starter for the river the poll appears in
-        # the ui shouldn't permit this situation, so allowing an exception to be thrown is probably correct
-        return None
+        # the ui shouldn't permit this situation
+        raise PermissionDenied('non-riverstarter user trying to edit a poll')
 
 
 

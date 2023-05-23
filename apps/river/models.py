@@ -39,7 +39,7 @@ class EnvisionStage(models.Model):
     step: models.CharField = models.CharField(max_length=1, choices=Step.choices, default=Step.GET_TO_KNOW)
     general_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', null=True, default=None,
                                                         on_delete=models.SET_NULL)
-    def get_chat(self, topic: str) -> Chat:
+    def get_chat(self, topic: str) -> Chat: # pyre-ignore[11]
         if topic == 'general':
             return self.general_chat
         # no others
