@@ -1,0 +1,52 @@
+<div>
+    <div class="h-9"></div>
+    <div>
+        <label for="subject" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+            Subject
+        </label>
+        <select id="subject" name="subject" class="input-text" tabindex="1">
+            <option value="resources">Suggest resources</option>
+            <option value="feedback">Send your feedback</option>
+            <option value="rollout">Enquire about roll out in your area</option>
+            <option value="bug">Report a bug</option>
+        </select>
+    </div>
+
+    <div class="h-9"></div>
+    <div>
+        <label for="email" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+            Email
+        </label>
+        <input type="email" name="email" id="email" class="input-text" tabindex="2" required>
+    </div>
+
+    {% if form.errors %}
+    <div class="h-9"></div>
+    <div class="text-body bg-red-important/30 p-4 px-6">
+        <div>
+            {% for field, errors in form.errors.items %}
+                <div>
+                    {{ field }}:
+
+                    {% for error in errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="h-9"></div>
+    <button class="button button-on-white" tabindex="4" type="submit">Send</button>
+</div>
+
+<div>
+    <div class="h-9"></div>
+    <div>
+        <label for="message" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+            Message
+        </label>
+        <textarea name="message" id="message" cols="30" rows="12" class="input-text" tabindex="3"></textarea>
+    </div>
+</div>
