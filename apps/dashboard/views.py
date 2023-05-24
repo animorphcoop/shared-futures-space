@@ -2,14 +2,17 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
+from django.forms import Form
 
 from django.contrib.auth.decorators import login_required
 
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseNotAllowed
+from django.views.generic.edit import FormView
 
 from userauth.models import CustomUser # pyre-ignore[21]
 from resources.models import Resource, SavedResource # pyre-ignore[21]
 from river.models import River, RiverMembership # pyre-ignore[21]
+from dashboard.forms import ContactForm # pyre-ignore[21]
 
 from typing import Tuple, Union
 
@@ -99,3 +102,18 @@ def dashboard(request: HttpRequest) -> HttpResponse:
 
     return render(request, 'dashboard/dashboard.html', context)
 
+
+def contact(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(request.method)
+
+    form = ContactForm(request.POST)
+    if form.is_valid():
+        form.send_email()
+        return HttpResponse('<div class="text-large">Thank you getting in touch!</div>')
+    else:
+        return render(
+            request,
+            "dashboard/partials/get_in_touch_form.html",
+            {"form": form},
+        )
