@@ -1,4 +1,3 @@
-# pyre-strict
 import sys
 from django.apps import AppConfig
 

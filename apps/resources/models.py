@@ -1,5 +1,3 @@
-# pyre-strict
-
 from django.db import models
 from modelcluster.models import ClusterableModel
 
@@ -107,7 +105,7 @@ class CaseStudy(Resource):
 # TODO: Find out 'sender' type
 # (unclear what this todo means?)
 @receiver(post_save, sender=HowTo)
-def add_slug_to_how_to(sender, instance, *args, **kwargs) -> None:  # pyre-ignore[2]
+def add_slug_to_how_to(sender, instance, *args, **kwargs) -> None:
     if instance and not instance.slug:
         slug = slugify(instance.title)
         random_string = generate_random_string()
@@ -116,7 +114,7 @@ def add_slug_to_how_to(sender, instance, *args, **kwargs) -> None:  # pyre-ignor
 
 
 @receiver(post_save, sender=CaseStudy)
-def add_slug_to_case_study(sender, instance, *args, **kwargs) -> None:  # pyre-ignore[2]
+def add_slug_to_case_study(sender, instance, *args, **kwargs) -> None:
     if instance and not instance.slug:
         slug = slugify(instance.title)
         random_string = generate_random_string()

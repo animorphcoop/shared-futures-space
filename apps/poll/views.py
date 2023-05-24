@@ -1,5 +1,3 @@
-# pyre-strict
-
 from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
@@ -16,8 +14,8 @@ from django.core.exceptions import PermissionDenied
 from typing import Dict, Any, List, Tuple, Optional
 
 from .models import BasePoll, SingleChoicePoll, MultipleChoicePoll, BaseVote, SingleVote, MultipleVote
-from river.models import River, RiverMembership  # pyre-ignore[21]
-from messaging.util import send_system_message # pyre-ignore[21]
+from river.models import River, RiverMembership
+from messaging.util import send_system_message
 
 
 class PollView(TemplateView):
@@ -46,8 +44,8 @@ class PollView(TemplateView):
             if poll.check_closed() and 'slug' in request.POST:
                 # adding 'just_finished' so frontend can refresh, did not want to tamper with request payload
                 # print(self.get_context_data(uuid=uuid, request=request, just_finished='true'))
-                return self.render_to_response(self.get_context_data(uuid=uuid, request=request, just_finished='true')) # pyre-ignore[6]
-        return self.render_to_response(self.get_context_data(uuid=uuid, request=request)) # pyre-ignore[6]
+                return self.render_to_response(self.get_context_data(uuid=uuid, request=request, just_finished='true'))
+        return self.render_to_response(self.get_context_data(uuid=uuid, request=request))
 
     def get_context_data(self, uuid: UUID,  **kwargs: Dict[str, Any]) -> Dict[str, Any]: # adding request and just_finished as optional causes errors
 
@@ -86,7 +84,7 @@ class PollView(TemplateView):
         return ctx
 
 
-def get_winners(options: List[Tuple[str, List[Any]]], winners: List[Tuple[str, List[Any]]] = []) -> List[str]:  # pyre-ignore[2] Any is actually CustomUser, but for some reason we can't get hold of that
+def get_winners(options: List[Tuple[str, List[Any]]], winners: List[Tuple[str, List[Any]]] = []) -> List[str]:
     # get a list of equally-most-highly voted results, in case of a draw
     if len(options) == 0:
         return list(map(lambda pair: pair[0], winners))
@@ -109,11 +107,11 @@ class PollCreateForm(ModelForm):
         fields = ['question', 'description', 'options', 'expires']
 
 
-class PollCreateView(CreateView):  # pyre-ignore[24]
+class PollCreateView(CreateView):
     model = SingleChoicePoll
     form_class = PollCreateForm
 
-    def form_valid(self, form) -> HttpResponseRedirect:  # pyre-ignore[2] - the type of the form argument is some weird private thing that i can't seem to get hold of
+    def form_valid(self, form) -> HttpResponseRedirect:
         #print(form.cleaned_data)
         if form.cleaned_data['kind'] == 'SINGLE':
             new_poll = SingleChoicePoll.objects.create(question=form.cleaned_data['question'],
@@ -128,7 +126,7 @@ class PollCreateView(CreateView):  # pyre-ignore[24]
         return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
 
     def get_success_url(self) -> str:
-        return reverse('poll_view', args=[self.object.uuid])  # pyre-ignore[16]
+        return reverse('poll_view', args=[self.object.uuid])
 
 def poll_edit(request: WSGIRequest) -> HttpResponse:
     # update description of poll, return new description for htmx

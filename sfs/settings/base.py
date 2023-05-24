@@ -1,5 +1,3 @@
-
-# pyre-strict
 """
 Django settings for sfs river.
 

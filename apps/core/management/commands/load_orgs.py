@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from userauth.models import Organisation # pyre-ignore[21]
+from userauth.models import Organisation
 
 # TEMP: just to quickly insert organisations
 

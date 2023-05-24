@@ -1,4 +1,3 @@
-# pyre-strict
 from .base import *
 from django.conf import settings
 from typing import List, Any

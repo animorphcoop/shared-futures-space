@@ -1,8 +1,7 @@
-# pyre-strict
 from django import forms
 from .models import CustomUser, Organisation, UserAvatar
-from analytics.models import log_signup  # pyre-ignore[21]
-from messaging.models import Message  # pyre-ignore[21]
+from analytics.models import log_signup
+from messaging.models import Message
 
 from django.utils.translation import gettext_lazy as _
 
@@ -101,7 +100,7 @@ class CustomUserAddDataForm(forms.Form):
     organisation_url = forms.CharField(max_length=100, required=False)
 
     def __init__(self, *arg: List[Any], **kwarg: Dict[str, Any]) -> None:
-        super(CustomUserAddDataForm, self).__init__(*arg, **kwarg)  # pyre-ignore[6]
+        super(CustomUserAddDataForm, self).__init__(*arg, **kwarg)
         self.empty_permitted = True
 
 
@@ -140,7 +139,7 @@ class CustomResetPasswordForm(ResetPasswordForm):
         fields: List[str] = ['email']
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        super(CustomResetPasswordForm, self).__init__(*args, **kwargs)  # pyre-ignore[6]
+        super(CustomResetPasswordForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs = {'placeholder': 'Your E-mail', 'borken': 'false',
                                              'onfocusout': 'processEmailValue()'}
 
@@ -151,8 +150,8 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
         fields: List[str] = ['password1', 'password2']
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
-        self.user = kwargs.pop("user", None)  # pyre-ignore[4]
-        self.temp_key = kwargs.pop("temp_key", None)  # pyre-ignore[4]
+        self.user = kwargs.pop("user", None)
+        self.temp_key = kwargs.pop("temp_key", None)
         super(ResetPasswordKeyForm, self).__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs = {'placeholder': 'Password', 'borken': 'false',
                                                  'onfocusout': 'getPasswordFeedback()'}

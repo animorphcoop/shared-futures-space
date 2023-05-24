@@ -1,20 +1,19 @@
-# pyre-strict
 from django.shortcuts import render
 
 from django.views.generic.base import TemplateView
 from django.core.handlers.wsgi import WSGIRequest
 from django.template.loader import get_template
 from django.utils.text import slugify
-from userauth.models import CustomUser  # pyre-ignore[21]
-from userauth.util import get_system_user, user_to_slug, slug_to_user, get_userpair  # pyre-ignore[21]
+from userauth.models import CustomUser
+from userauth.util import get_system_user, user_to_slug, slug_to_user, get_userpair
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.urls import reverse
 from typing import Dict, List, Any, Type, Optional
 
 from .models import Chat, Message, Flag
-from river.util import get_chat_containing_river  # pyre-ignore[21]
-from river.models import RiverMembership, River  # pyre-ignore[21]
+from river.util import get_chat_containing_river
+from river.models import RiverMembership, River
 from django.core.paginator import Paginator
 
 from .forms import ChatForm
@@ -26,13 +25,13 @@ from django.db.models.query import QuerySet
 class ChatView(TemplateView):
     # form_class: Type[ChatForm] = ChatForm
 
-    def get(self, request: WSGIRequest, **kwargs: Dict[str, Any]) -> HttpResponse:  # pyre-ignore[14]
+    def get(self, request: WSGIRequest, **kwargs: Dict[str, Any]) -> HttpResponse:
         # direct chat section
         if 'user_path' in kwargs:
             user_path = kwargs['user_path']
             other_user = slug_to_user(user_path)
 
-            [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+            [user1, user2] = sorted([request.user.uuid, other_user.uuid])
             userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
             members = CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2)
 
@@ -56,13 +55,13 @@ class ChatView(TemplateView):
         # river chat section
         elif 'slug' in kwargs:
             river = River.objects.get(slug=kwargs['slug'])
-            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])  # pyre-ignore[6]
+            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
             message_list = Message.objects.all().filter(chat=chat).order_by('timestamp')
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
 
             pagination_data = self.paginate_messages(request, message_list)
 
-            chat_poll = self.get_river_poll(river, kwargs['stage'], kwargs['topic'])  # pyre-ignore[6]
+            chat_poll = self.get_river_poll(river, kwargs['stage'], kwargs['topic'])
             stage_ref = {'envision': river.envision_stage, 'plan': river.plan_stage, 'act': river.act_stage,
                          'reflect': river.reflect_stage}[kwargs['stage']]
 
@@ -80,7 +79,7 @@ class ChatView(TemplateView):
                 'messages_left_count': pagination_data['messages_left_count'],
                 'direct': False,
                 'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
-                'unique_id': kwargs['stage'] + '-' + kwargs['topic'],  # pyre-ignore[58]
+                'unique_id': kwargs['stage'] + '-' + kwargs['topic'],
                 'chat_open': chat_poll == None or not chat_poll.closed or (chat_poll.closed and not chat_poll.passed),
                 'stage_ref': stage_ref,
                 # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
@@ -111,7 +110,7 @@ class ChatView(TemplateView):
             user_path = kwargs['user_path']
             other_user = slug_to_user(user_path)
 
-            [user1, user2] = sorted([request.user.uuid, other_user.uuid])  # pyre-ignore[16]
+            [user1, user2] = sorted([request.user.uuid, other_user.uuid])
             userpair = get_userpair(CustomUser.objects.get(uuid=user1), CustomUser.objects.get(uuid=user2))
 
             chat = userpair.chat
@@ -122,15 +121,15 @@ class ChatView(TemplateView):
         elif 'slug' in kwargs:
             river = River.objects.get(slug=kwargs['slug'])
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
-            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])  # pyre-ignore[6]
-            chat_poll = self.get_river_poll(river, kwargs['stage'], kwargs['topic'])  # pyre-ignore[6]
+            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])
+            chat_poll = self.get_river_poll(river, kwargs['stage'], kwargs['topic'])
             chat_open = chat_poll == None or not chat_poll.closed or (chat_poll.closed and not chat_poll.passed)
             stage_ref = {'envision': river.envision_stage, 'plan': river.plan_stage, 'act': river.act_stage,
                          'reflect': river.reflect_stage}[kwargs['stage']]
             context = {
                 'message_post_url': reverse('river_chat', args=[kwargs['slug'], kwargs['stage'], kwargs['topic']]),
                 'members': members,
-                'unique_id': kwargs['stage'] + '-' + kwargs['topic'],  # pyre-ignore[58]
+                'unique_id': kwargs['stage'] + '-' + kwargs['topic'],
                 'chat_open': chat_open, 'stage_ref': stage_ref, 'river': river,
                 'poll_possible': True if kwargs['stage'] == 'envision' else (
                     False if kwargs['stage'] == 'reflect' else (kwargs['topic'] != 'general') or (
@@ -186,7 +185,7 @@ class ChatView(TemplateView):
         else:
             page_number = paginator.num_pages
 
-        page_obj = paginator.get_page(page_number)  # pyre-ignore[6]
+        page_obj = paginator.get_page(page_number)
 
         total_message_count = message_list.count()
 
@@ -201,7 +200,7 @@ class ChatView(TemplateView):
         }
         return pagination_data
 
-    def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
+    def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:
 
         if stage == 'envision':
             chat = river.envision_stage.general_chat
@@ -225,9 +224,9 @@ class ChatView(TemplateView):
                 chat = river.act_stage.time_chat
         elif stage == 'reflect':
             chat = river.reflect_stage.general_chat
-        return chat  # pyre-ignore[61]
+        return chat
 
-    def get_river_poll(self, river: River, stage: str, topic: str):  # pyre-ignore[3]
+    def get_river_poll(self, river: River, stage: str, topic: str):
         if stage == 'envision':
             poll = river.envision_stage.general_poll
         elif stage == 'plan':
@@ -250,4 +249,4 @@ class ChatView(TemplateView):
                 poll = river.act_stage.time_poll
         elif stage == 'reflect':
             poll = river.reflect_stage.general_poll
-        return poll  # pyre-ignore[61]
+        return poll

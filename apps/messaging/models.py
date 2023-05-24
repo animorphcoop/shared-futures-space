@@ -1,5 +1,3 @@
-# pyre-strict
-
 import re
 from django.utils import timezone
 from django.utils.html import escape
@@ -58,8 +56,8 @@ class Message(models.Model):
 
         return text
 
-    def flagged(self, user) -> None: # pyre-ignore[2]
-        from userauth.models import CustomUser # pyre-ignore[21] don't like it but there's so many things defined in terms of each other
+    def flagged(self, user) -> None:
+        from userauth.models import CustomUser
         existing = Flag.objects.filter(message = self, flagged_by = user)
         if len(existing) == 0:
             f = Flag.objects.create(message = self, flagged_by = user)

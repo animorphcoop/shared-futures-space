@@ -10,14 +10,14 @@ import requests
 import time
 import json
 
-from resources.models import HowTo, CaseStudy  # pyre-ignore[21]
-from userauth.models import CustomUser, UserPair, Organisation, UserAvatar  # pyre-ignore[21]
-from userauth.util import get_userpair # pyre-ignore[21]
-from river.models import River, RiverMembership  # pyre-ignore[21]
-from river.views import CreateRiverPollView # pyre-ignore[21]
-from poll.models import SingleVote,SingleChoicePoll # pyre-ignore[21]
-from messaging.models import Message  # pyre-ignore[21]
-from area.models import PostCode, Area  # pyre-ignore[21]
+from resources.models import HowTo, CaseStudy
+from userauth.models import CustomUser, UserPair, Organisation, UserAvatar
+from userauth.util import get_userpair
+from river.models import River, RiverMembership
+from river.views import CreateRiverPollView
+from poll.models import SingleVote,SingleChoicePoll
+from messaging.models import Message
+from area.models import PostCode, Area
 
 image_dir = 'autoupload/'
 

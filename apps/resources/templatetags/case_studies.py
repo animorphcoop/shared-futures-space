@@ -1,4 +1,3 @@
-# pyre-strict
 from django import template
 from ..models import CaseStudy
 

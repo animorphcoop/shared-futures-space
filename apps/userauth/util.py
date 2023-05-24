@@ -1,5 +1,3 @@
-# pyre-strict
-
 from .models import CustomUser, UserPair
 
 def get_system_user() -> CustomUser:

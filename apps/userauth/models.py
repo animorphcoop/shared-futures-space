@@ -1,5 +1,3 @@
-# pyre-strict
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -7,8 +5,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 from uuid import uuid4
 
-from messaging.models import Chat  # pyre-ignore[21]
-from area.models import PostCode  # pyre-ignore[21]
+from messaging.models import Chat
+from area.models import PostCode
 
 from typing import List, Optional, Any, Dict, Optional
 from django.utils import timezone
@@ -89,11 +87,11 @@ class UserPair(models.Model):
             swp = self.user1.uuid
             self.user1.uuid = self.user2.uuid
             self.user2.uuid = swp
-        return super().save(*args, **kwargs)  # pyre-ignore[6] destructuring arguments
+        return super().save(*args, **kwargs)
 
 
-    def block_user(self, user) -> None: # pyre-ignore[2]
-        from messaging.util import send_system_message # pyre-ignore[21]
+    def block_user(self, user) -> None:
+        from messaging.util import send_system_message
         Block.objects.create(user_pair=self, blocked_by=user)
         send_system_message(kind='blocked user', chat=self.chat, context_user_a=user)
         self.blocked = True
