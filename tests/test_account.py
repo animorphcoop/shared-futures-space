@@ -51,7 +51,7 @@ def test_dashboard_info(client, test_user):
     test_user.post_code = None
     test_user.save()
     dash = client.get('/dashboard/')
-    assert 'Your messages' in str(dash.content)
+    assert 'View messages' in str(dash.content)
 
 
 

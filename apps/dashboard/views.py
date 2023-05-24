@@ -103,9 +103,9 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     return render(request, 'dashboard/dashboard.html', context)
 
 
-def contact(request):
+def contact(request: HttpRequest) -> HttpResponse:
     if request.method != 'POST':
-        return HttpResponseNotAllowed(request.method)
+        return HttpResponseNotAllowed(['POST'])
 
     form = ContactForm(request.POST)
     if form.is_valid():

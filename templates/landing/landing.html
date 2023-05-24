@@ -81,7 +81,13 @@
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 {% include "landing/section-heading.html" with title="get in touch 📧" %}
                 {% include "partials/vertical-spacer.html" with space="9" %}
-                {% include "partials/get-in-touch-buttons.html" with colour="primary_colour" %}
+
+                <div class="lg:flex lg:justify-center lg:gap-6">
+                    <form class="grid grid-cols-2 gap-4" hx-post="/dashboard/contact/" hx-trigger="submit">
+                        {% include "dashboard/partials/get_in_touch_form.html" with style="primary_colour" %}
+                    </form>
+                </div>
+
                 {% include "partials/vertical-spacer.html" with space="4.5" %}
             </div>
         </div>
