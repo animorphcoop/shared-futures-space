@@ -15,10 +15,17 @@ class ContactForm(forms.Form):
             "rollout": "Enquire about roll out in your area",
             "bug": "Report a bug",
         }
+        email_dict = {
+            "resources": ["resources@sharedfutures.space"],
+            "feedback": ["feedback@sharedfutures.space"],
+            "rollout": ["enquire@sharedfutures.space"],
+            "bug": ["dev@animorph.coop"],
+        }
         subject_verbose = subject_dict[self.cleaned_data["subject"]]
+        receivers_emails = email_dict[self.cleaned_data["subject"]]
         mail.send_mail(
             subject=f"SFS Contact Form submission from: {self.cleaned_data['email']}",
             message=subject_verbose + "\n\n" + self.cleaned_data["message"],
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=["we@animorph.coop"],
+            recipient_list=receivers_emails,
         )
