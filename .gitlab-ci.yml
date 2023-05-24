@@ -35,11 +35,6 @@ stages:
   - Tests
   - Deploy
 
-pyre:
-  stage: Tests
-  script:
-    - pyre --search-path "/usr/local/lib/python3.9/site-packages"
-
 pytest:
   stage: Tests
   script:
