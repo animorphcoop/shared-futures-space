@@ -4,7 +4,7 @@
         <label for="subject" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
             Subject
         </label>
-        <select id="subject" name="subject" class="input-text" tabindex="1">
+        <select id="subject" name="subject" class="input-text {% if style == 'primary_colour' %}bg-white{% endif %}" tabindex="1">
             <option value="resources">Suggest resources</option>
             <option value="feedback">Send your feedback</option>
             <option value="rollout">Enquire about roll out in your area</option>
@@ -17,7 +17,7 @@
         <label for="email" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
             Email
         </label>
-        <input type="email" name="email" id="email" class="input-text" tabindex="2" required>
+        <input type="email" name="email" id="email" class="input-text {% if style == 'primary_colour' %}bg-white{% endif %}" tabindex="2" required>
     </div>
 
     {% if form.errors %}
@@ -38,7 +38,7 @@
     {% endif %}
 
     <div class="h-9"></div>
-    <button class="button button-on-white" tabindex="4" type="submit">Send</button>
+    <button class="button {% if style == 'primary_colour' %}button-on-colour{% else %}button-on-white{% endif %}" tabindex="4" type="submit">Send</button>
 </div>
 
 <div>
@@ -47,6 +47,6 @@
         <label for="message" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
             Message
         </label>
-        <textarea name="message" id="message" cols="30" rows="12" class="input-text" tabindex="3"></textarea>
+        <textarea name="message" id="message" cols="30" rows="12" class="input-text {% if style == 'primary_colour' %}bg-white{% endif %}" tabindex="3"></textarea>
     </div>
 </div>
