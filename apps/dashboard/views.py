@@ -109,8 +109,8 @@ def contact(request: HttpRequest) -> HttpResponse:
 
     form = ContactForm(request.POST)
     if form.is_valid():
-        form.send_email()
-        return HttpResponse('<div class="text-large">Thank you getting in touch!</div>')
+        form.send_email(request.user)
+        return HttpResponse('<div class="text-large">Thank you for getting in touch!</div>')
     else:
         return render(
             request,
