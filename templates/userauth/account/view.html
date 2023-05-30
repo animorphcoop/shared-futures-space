@@ -74,7 +74,7 @@
                     </div>
 
                     {# Location #}
-                    {% if request.user.post_code.area.name != 'Other' %}
+                    {%comment%} if request.user.post_code.area.name != 'Other' {%endcomment%}
                         <div class="flex flex-col items-center">
                             <svg width="16" height="20" viewBox="0 0 16 20" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -86,7 +86,18 @@
                                 {{ user.post_code.area.name }}
                             </p>
                         </div>
-                    {% endif %}
+                        {% if self %}
+                            {% comment %}pencil edit for postcode{% endcomment %}
+                            <button onclick="togglePostcodeChange(); stopBodyScroll();"
+                                    class="bg-blue-pale rounded-full py-1.5 px-2.5">
+                                <svg width="13" height="12" viewBox="0 0 13 12" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.37333 4.01333L7.98667 4.62667L1.94667 10.6667H1.33333V10.0533L7.37333 4.01333V4.01333ZM9.77333 0C9.60667 0 9.43333 0.0666666 9.30667 0.193333L8.08667 1.41333L10.5867 3.91333L11.8067 2.69333C12.0667 2.43333 12.0667 2.01333 11.8067 1.75333L10.2467 0.193333C10.1133 0.06 9.94667 0 9.77333 0V0ZM7.37333 2.12667L0 9.5V12H2.5L9.87333 4.62667L7.37333 2.12667V2.12667Z"
+                                          fill="#9759FF"/>
+                                </svg>
+                            </button>
+                        {% endif %}
+                    {%comment%} endif {%endcomment%}
                     {# Signup date #}
                     <p class="font-kanit-400 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
                         Active since {{ user.signup_date }}
@@ -260,6 +271,9 @@
             </div>
             <div id="name-change" class="hidden">
                 {% include 'userauth/account/partials/name_change.html' with name=user.display_name %}
+            </div>
+            <div id="postcode-change" class="hidden">
+                {% include 'userauth/account/partials/postcode_change.html' with postcode=user.post_code %}
             </div>
             <div id="organisation-data" class="hidden">
                 {% include "account/partials/organisation_change.html" %}

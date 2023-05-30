@@ -12,6 +12,13 @@ def validate_postcode(postcode: str) -> None:
     if not re.match(r'[a-zA-Z]{1,2}[0-9][a-zA-0-9]?\s?([0-9][a-zA-Z]{2})?', postcode):
         raise ValidationError('not a valid UK postcode: %(value)s', params = {'value': postcode})
 
+# get matching postcode, a straight get_or_create doesn't work because it edits its own .code
+def get_postcode(code):
+    m = re.match(r'([a-zA-Z]{1,2}[0-9][a-zA-Z0-9]?)\s?([0-9][a-zA-Z]{2})?', code)
+    if m is not None:
+        return PostCode.objects.get_or_create(code = m.group(1).upper())[0]
+    else:
+        return PostCode.objects.get_or_create(code = code)[0]
 
 class Area(models.Model):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)

@@ -11,7 +11,7 @@ from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomSignupForm, CustomLoginForm, \
     CustomResetPasswordForm, \
-    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomUserPostcodeUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
 from messaging.forms import ChatForm  # pyre-ignore[21]
 from django.http.request import QueryDict
 
@@ -21,7 +21,7 @@ from messaging.models import Message  # pyre-ignore[21]
 from messaging.views import ChatView  # pyre-ignore[21]
 from messaging.util import send_system_message, get_requests_chat  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
-from area.models import PostCode  # pyre-ignore[21]
+from area.models import PostCode, get_postcode  # pyre-ignore[21]
 from userauth.models import CustomUser, Block  # pyre-ignore[21]
 # from userauth.util import get_userpair
 
@@ -301,6 +301,7 @@ class CustomUserPersonalView(TemplateView):
             context['self'] = True  # pyre-ignore[6]
             context['organisations'] = Organisation.objects.all()  # pyre-ignore[6]
             context['avatars'] = UserAvatar.objects.all()  # pyre-ignore[6]
+            context['changes'] = user.postcode_changes
             if self.request.session.has_key('password_changed'):
                 password_changed = self.request.session['password_changed']
                 context['password_changed'] = password_changed
@@ -364,5 +365,15 @@ class CustomUserPersonalView(TemplateView):
             else:
                 return HttpResponse("Sorry, couldn't process your request, try again.")
 
+        elif data.get('postcode'):
+            form = CustomUserPostcodeUpdateForm(data, instance=current_user)
+            if form.is_valid() and current_user.postcode_changes > 0:
+                pc = get_postcode(form.cleaned_data.get('postcode'))
+                current_user.post_code = pc
+                current_user.postcode_changes -= 1
+                current_user.save()
+                return HttpResponseRedirect(reverse('account_view'))
+            else:
+                return HttpResponse("Sorry, couldn't process your request, try again.")
         else:
             return HttpResponse("Sorry, couldn't process your request, try again.")
