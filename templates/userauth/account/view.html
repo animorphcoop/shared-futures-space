@@ -266,19 +266,20 @@
             </div>
 
             {# Hidden settings modals #}
-            <div id="avatar-list" class="hidden">
-                {% include 'userauth/account/partials/avatar_change.html' with avatars=avatars %}
-            </div>
-            <div id="name-change" class="hidden">
-                {% include 'userauth/account/partials/name_change.html' with name=user.display_name %}
-            </div>
-            <div id="postcode-change" class="hidden">
-                {% include 'userauth/account/partials/postcode_change.html' with postcode=user.post_code %}
-            </div>
-            <div id="organisation-data" class="hidden">
-                {% include "account/partials/organisation_change.html" %}
-            </div>
-
+            {% if self %}
+                <div id="avatar-list" class="hidden">
+                    {% include 'userauth/account/partials/avatar_change.html' with avatars=avatars %}
+                </div>
+                <div id="name-change" class="hidden">
+                    {% include 'userauth/account/partials/name_change.html' with name=user.display_name %}
+                </div>
+                <div id="postcode-change" class="hidden">
+                    {% include 'userauth/account/partials/postcode_change.html' with postcode=user.post_code %}
+                </div>
+                <div id="organisation-data" class="hidden">
+                    {% include "account/partials/organisation_change.html" %}
+                </div>
+            {% endif %}
 
         </section>
 
