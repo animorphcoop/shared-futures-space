@@ -74,7 +74,7 @@
                     </div>
 
                     {# Location #}
-                    {%comment%} if request.user.post_code.area.name != 'Other' {%endcomment%}
+                    <div class="postcode-holder flex flex-row">
                         <div class="flex flex-col items-center">
                             <svg width="16" height="20" viewBox="0 0 16 20" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -97,7 +97,7 @@
                                 </svg>
                             </button>
                         {% endif %}
-                    {%comment%} endif {%endcomment%}
+                    </div>
                     {# Signup date #}
                     <p class="font-kanit-400 uppercase font-medium text-[9px] tracking-widest text-black-text leading-normal">
                         Active since {{ user.signup_date }}
