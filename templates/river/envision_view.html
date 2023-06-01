@@ -5,8 +5,10 @@
     {% url 'river_chat' river.slug 'envision' 'general' 'count' as message_count_url %}
 
 
-    <div x-data="{ openTab: 'one', chatActive: true }" x-init="
-    setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, chatActive, 'data-swap-envision-general')}, 1000);"
+    <div id="event-envision-general"
+         x-init="
+         setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, 'data-swap-envision-general')}, 1000);"
+         @chatstatusupdate="setChatOpen($event.detail)"
     >
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
              hx-trigger="load, every 4s [newMessages('data-swap-envision-general')]"
@@ -30,15 +32,18 @@
         let previouslyMessages = 0
         let chatOpen = false
 
-        function saveMyUrl(myUrl, chatActive, dataSwapId) {
+        function setChatOpen(eventData){
+            chatOpen = eventData.chatOpen
+            console.log(`just set chat status to ${eventData.chatOpen}`)
+        }
 
-            chatOpen = chatActive
-            if (!chatOpen) return;
+        function saveMyUrl(myUrl, dataSwapId) {
+
 
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
                     //console.log(document.visibilityState)
-                    if (document.visibilityState == 'visible'){
+                    if (document.visibilityState === 'visible' && chatOpen){
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
 

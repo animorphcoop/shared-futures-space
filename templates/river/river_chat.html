@@ -5,12 +5,20 @@
 chatActive = {% if not chat_open %}true{% else %}false{% endif %}
 console.log(document.getElementById(`{{ stage }}-chat-{{ topic }}`).parentNode);
 console.log('am i being regenerated')">{% endcomment %}
-   {% comment %} <div x-init="
-chatActive = {% if chat_open %}true{% else %}false{% endif %}; console.log(chatActive)">{% endcomment %}
-<div >
+
+{% url 'river_chat' slug stage topic as message_post_url %}
+
+
+    <div x-init="chatActive = {% if chat_open %}true{% else %}false{% endif %}; console.log(chatActive);
+    console.log('event-{{ stage }}-{{ topic }}');
+    console.log(chatActive);
+    document.getElementById('event-{{ stage }}-{{ topic }}').dispatchEvent(new CustomEvent('chatstatusupdate', { detail: { chatOpen: {% if chat_open %}true{% else %}false{% endif %}} }));;
+
+">
+
     {% comment %}{{ message_count }}{% endcomment %}
 
-        {% url 'river_chat' slug stage topic as message_post_url %}
+
         {% include 'messaging/messages.html' with direct=direct message_post_url=message_post_url %}
 
         {% if not user.is_authenticated %}
