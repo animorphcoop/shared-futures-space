@@ -6,7 +6,7 @@
 
 
     <div x-data="{ openTab: 'one', chatActive: true }" x-init="
-    setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, chatActive)}, 1000);"
+    setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, chatActive, 'envision-general')}, 1000);"
     >
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
              hx-trigger="load, every 3s [newMessages()]"
@@ -42,22 +42,25 @@
 {% endcomment %}
         </div>
     </div>
-    <div id="data-swap" class="hidden"></div>
+    <div id="data-swap-envision-general" class="hidden"></div>
     <script>
+
 
         let previouslyMessages = 0
         let chatOpen = false
+        let dataSwapId = ''
 
-        function saveMyUrl(myUrl, chatActive) {
+        function saveMyUrl(myUrl, chatActive, dataSwapUnique) {
+            if (dataSwapId === '') dataSwapId = `data-swap-${dataSwapUnique}`
+
             chatOpen = chatActive
-
             if (!chatOpen) return;
 
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
                     console.log(document.visibilityState)
                     if (document.visibilityState == 'visible'){
-                        htmx.ajax('GET', myUrl, '#data-swap')
+                        htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
 
                 }, 5000)
@@ -69,7 +72,7 @@
 
             if (!chatOpen) return;
 
-            let newMessagesHtml = document.getElementById('data-swap').innerHTML
+            let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
 
             if (previouslyMessages === "" || newMessagesNumber !== previouslyMessages){
