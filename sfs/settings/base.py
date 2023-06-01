@@ -88,8 +88,6 @@ INSTALLED_APPS: List[str] = [
 ]
 
 MIDDLEWARE: List[str] = [
-
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -97,11 +95,9 @@ MIDDLEWARE: List[str] = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-
+    'analytics.middleware.log_visit_middleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-
     'django_htmx.middleware.HtmxMiddleware',
-
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
