@@ -120,6 +120,8 @@ class RiverMembership(models.Model):
     starter: models.BooleanField = models.BooleanField(default=False)
     join_date: models.DateField = models.DateField(default=timezone.now)
 
+    def __str__(self):
+        return f"User({str(self.user.uuid)}) membership to River({self.river.slug})"
 
 class RiverTag(TaggedItemBase):
     content_object = ParentalKey('river.River', on_delete=models.CASCADE, related_name='tagged_items')
