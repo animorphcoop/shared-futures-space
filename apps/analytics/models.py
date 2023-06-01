@@ -45,6 +45,24 @@ def log_resource_access(resource: Resource, user: CustomUser) -> None: # pyre-ig
     if not AnalyticsEvent.objects.filter(session = analyticsSession, type = AnalyticsEvent.EventType.RESOURCE, target_resource = resource).exists():
         AnalyticsEvent.objects.create(session = analyticsSession, date = date.today(), type = AnalyticsEvent.EventType.RESOURCE, target_resource = resource)
 
+def log_visit(user):
+    analytics_session, _ = AnalyticsSession.objects.get_or_create(
+        sessid_hash=make_password(user.display_name, salt=str(date.today())),
+        area=user.post_code.area if user.post_code else None,
+    )
+    AnalyticsEvent.objects.get_or_create(session=analytics_session, type=AnalyticsEvent.EventType.VISIT)
+
+def has_visited_today(user):
+    analytics_session, _ = AnalyticsSession.objects.get_or_create(
+        sessid_hash=make_password(user.display_name, salt=str(date.today())),
+        area=user.post_code.area if user.post_code else None,
+    )
+    return AnalyticsEvent.objects.filter(
+        session=analytics_session,
+        type=AnalyticsEvent.EventType.VISIT,
+    ).exists()
+
+
 ####
 ## MODELS
 #
@@ -60,6 +78,7 @@ class AnalyticsEvent(models.Model):
         SIGNUP = 'SIGNUP', 'signup'
         LOGIN = 'LOGIN', 'login'
         RESOURCE = 'RESOURCE', 'resource'
+        VISIT = 'VISIT', 'visit'
     session: models.ForeignKey = models.ForeignKey(AnalyticsSession, on_delete = models.SET_NULL, null = True)
     date: models.DateField = models.DateField(default = date.today)
     type: models.CharField = models.CharField(max_length = 8, choices = EventType.choices)
