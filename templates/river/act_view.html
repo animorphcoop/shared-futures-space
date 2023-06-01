@@ -129,16 +129,16 @@
             let chatOpen = eventData.chatOpen
 
             if (chatId === 'one') {
-                console.log('general')
+                //console.log('general')
                 currentlyActiveChatsAct['one'] = chatOpen
             } else if (chatId === 'two') {
-                console.log('money')
+                //console.log('money')
                 currentlyActiveChatsAct['two'] = chatOpen
             } else if (chatId === 'three') {
-                console.log('place')
+                //console.log('place')
                 currentlyActiveChatsAct['three'] = chatOpen
             } else if (chatId === 'four') {
-                console.log('time')
+                //console.log('time')
                 currentlyActiveChatsAct['four'] = chatOpen
             }
 
@@ -154,7 +154,6 @@
                     //console.log(document.visibilityState)
                     //console.log(currentlyActiveTabAct === tabId)
                     if (document.visibilityState === 'visible' && currentlyActiveTabAct === tabId && currentlyActiveChatsAct[tabId]) {
-                        console.log('requesting here')
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
                 }, 5000)
@@ -163,8 +162,8 @@
         }
 
         function setCurrentlyActiveTabAct({openTab}) {
-            console.log('called tab change')
-            console.log(openTab)
+            //console.log('called tab change')
+            //console.log(openTab)
             currentlyActiveTabAct = openTab
         }
 
@@ -206,22 +205,20 @@
         function compareMessagesAct(dataSwapId, tabId) {
 
             {% comment %}Stopping all tabs from checking {% endcomment %}
-            console.log(`${tabId} is ${currentlyActiveChatsAct[tabId]}`)
+            //console.log(`${tabId} is ${currentlyActiveChatsAct[tabId]}`)
             if (currentlyActiveTabAct !== tabId || !currentlyActiveChatsAct[tabId]) return false
 
-            console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTabAct}`)
+            //console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTabAct}`)
 
-            console.log(`checking messages for ${currentlyActiveTabAct}`)
+            //console.log(`checking messages for ${currentlyActiveTabAct}`)
 
             let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
-            console.log(`my message number is ${newMessagesNumber}`)
-            console.log(`last messages for this tab is ${getLastMessages(tabId)}`)
+            //console.log(`my message number is ${newMessagesNumber}`)
+            //console.log(`last messages for this tab is ${getLastMessages(tabId)}`)
 
 
             if (newMessagesNumber !== getLastMessages(tabId)) {
-                console.log('not matching')
-
                 saveNewMessages(tabId, newMessagesNumber)
                 return true
             } else {

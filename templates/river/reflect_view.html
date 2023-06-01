@@ -5,12 +5,12 @@
     {% url 'river_chat' river.slug 'reflect' 'general' 'count' as message_count_url %}
 
     <div  id="event-reflect-general"
-            x-data="{ openTab: 'one', chatActive: true }" x-init="
-            setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, chatActive, 'data-swap-reflect-general')}, 1000);"
-            @chatstatusupdate="setEnvisionChatOpen($event.detail)"
+          x-init="
+            setTimeout(()=>{saveMyReflectUrl(`{{ message_count_url }}`, 'data-swap-reflect-general')}, 1000);"
+            @chatstatusupdate="setReflectChatOpen($event.detail)"
     >
         <div id="reflect-chat-general" hx-get="{% url 'river_chat' river.slug 'reflect' 'general' %}"
-             hx-trigger="load, every 5s [newMessages('data-swap-reflect-general')]"
+             hx-trigger="load, every 4s [newMessagesReflect('data-swap-reflect-general')]"
              hx-target="this">
         </div>
     </div>
@@ -29,21 +29,21 @@
 
         /* Everything that's called from Alpine needs to have unique name */
 
-        let previouslyMessages = 0
-        let chatOpen = false
+        let previouslyMessagesReflect = 0
+        let chatOpenReflect = false
 
                 // eventData comes from river_chat.html, received with @chatstatusupdate
         function setReflectChatOpen(eventData){
-            chatOpen = eventData.chatOpen
-            console.log(`just set chat status to ${eventData.chatOpen}`)
+            chatOpenReflect = eventData.chatOpen
+            //console.log(`just set chat status to ${eventData.chatOpen}`)
         }
 
-        function saveMyEnvisionUrl(myUrl, dataSwapId) {
+        function saveMyReflectUrl(myUrl, dataSwapId) {
 
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
                     //console.log(document.visibilityState)
-                    if (document.visibilityState === 'visible' && chatOpen){
+                    if (document.visibilityState === 'visible' && chatOpenReflect){
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
 
@@ -52,15 +52,15 @@
 
         }
 
-        function newMessages(dataSwapId) {
+        function newMessagesReflect(dataSwapId) {
 
-            if (!chatOpen) return;
+            if (!chatOpenReflect) return;
 
             let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
 
-            if (previouslyMessages === "" || newMessagesNumber !== previouslyMessages) {
-                previouslyMessages = newMessagesNumber
+            if (previouslyMessagesReflect === "" || newMessagesNumber !== previouslyMessagesReflect) {
+                previouslyMessagesReflect = newMessagesNumber
                 return true
             } else {
                 return false
