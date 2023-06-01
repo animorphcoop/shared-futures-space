@@ -4,36 +4,78 @@
     {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
         <div x-data="{ openTab: 'one' }">
             <ul class="flex justify-between">
-                <li @click="openTab = 'one'" class="{{ li_class }}"
+                <li @click="openTab = 'one'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
                     :class="openTab == 'one' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="General" %}
                 </li>
-                <li @click="openTab = 'two'" class="{{ li_class }}"
+                <li @click="openTab = 'two'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
                     :class="openTab == 'two' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Money" %}
                 </li>
-                <li @click="openTab = 'three'" class="{{ li_class }}"
+                <li @click="openTab = 'three'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
                     :class="openTab == 'three' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Place" %}
                 </li>
-                <li @click="openTab = 'four'" class="{{ li_class }}"
+                <li @click="openTab = 'four'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
                     :class="openTab == 'four' ? 'tab-shadow-selected' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Time" %}
                 </li>
             </ul>
             <div class="w-full-mx-4.5 bg-white">
+
+
                 {# GENERAL TAB #}
-                <div x-show="openTab === 'one'">
+                {% url 'river_chat' river.slug 'plan' 'general' 'count' as message_count_url_general %}
+
+                {% comment %}                <div x-show="openTab === 'one'">
+
                     <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
                          hx-trigger="load"
                          hx-target="this">
                     </div>
+                </div>{% endcomment %}
+
+                {% comment %}                <div x-show="openTab === 'one'">
+                    <div x-init="
+    setTimeout(()=>{saveMyUrl(`{{ message_count_url_general }}`, 'data-swap-plan-general')}, 1000);"
+                    >
+                        <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
+                             hx-trigger="load, every 3s [compareMessages('data-swap-plan-general', openTab)]"
+                             hx-target="this">
+                        </div>
+                    </div>
+                </div>{% endcomment %}
+
+
+                <div x-show="openTab === 'one'">
+                    <div x-init="
+    setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_general }}`, 'data-swap-plan-general', 'one')}, 1000);"
+                    >
+                        <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
+                             hx-trigger="load, every 4s [compareMessages('data-swap-plan-general', 'one')]"
+                             hx-target="this">
+                        </div>
+                    </div>
                 </div>
+
                 {# MONEY TAB #}
-                <div x-show="openTab === 'two'">
+                {% comment %}                <div x-show="openTab === 'two'">
                     <div id="plan-chat-money" hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
                          hx-trigger="load"
                          hx-target="this">
+                    </div>
+                </div>{% endcomment %}
+
+                {% url 'river_chat' river.slug 'plan' 'money' 'count' as message_count_url_money %}
+
+                <div x-show="openTab === 'two'">
+                    <div x-init="
+    setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_money }}`, 'data-swap-plan-money', 'two')}, 1000);"
+                    >
+                        <div id="plan-chat-money" hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
+                             hx-trigger="load, every 4s [compareMessages('data-swap-plan-money', 'two')]"
+                             hx-target="this">
+                        </div>
                     </div>
                 </div>
                 {# PLACE TAB #}
@@ -52,5 +94,113 @@
                 </div>
             </div>
         </div>
+        <div id="data-swap-plan-general" class="hidden"></div>
+        <div id="data-swap-plan-money" class="hidden"></div>
+        {% comment %}<div id="data-swap-plan-place" class="hidden"></div>
+        <div id="data-swap-plan-time" class="hidden"></div>{% endcomment %}
+
     {% endwith %}
+
+    <script>
+
+        //TODO: Will need to specify these separately for each id?
+        //let previouslyMessages = 0
+
+        let currentlyActiveTab = ''
+
+        let previouslyMessagesChats = {
+            'one': 0,
+            'two': 0,
+            'three': 0,
+            'four': 0
+        }
+
+        function saveMyPlanUrl(myUrl, dataSwapId, tabId) {
+            console.log(myUrl)
+            console.log(dataSwapId)
+
+            return new Promise(function (resolve, reject) {
+                setInterval(function () {
+                    console.log(document.visibilityState)
+                    if (document.visibilityState == 'visible' && currentlyActiveTab === tabId) {
+                        htmx.ajax('GET', myUrl, `#${dataSwapId}`)
+                    }
+
+                }, 5000)
+            })
+
+        }
+
+        function setCurrentlyActiveTab({openTab}){
+            console.log('called tab change')
+            console.log(openTab)
+            currentlyActiveTab = openTab
+        }
+
+        function getLastMessages(chatId) {
+            console.log(chatId)
+            if (chatId === 'one') {
+                console.log('general')
+                return previouslyMessagesChats.one
+            } else if (chatId === 'two') {
+                console.log('money')
+                return previouslyMessagesChats.two
+            } else if (chatId === 'three') {
+                console.log('place')
+                return previouslyMessagesChats.three
+            } else if (chatId === 'four') {
+                console.log('time')
+                return previouslyMessagesChats.three
+            }
+
+        }
+
+        function saveNewMessages(chatId, messageCount) {
+            {% comment %}            console.log('last messages')
+                        console.log(chatId)
+                        console.log('message')
+                        console.log(previouslyMessagesChats.one)
+                        console.log(previouslyMessagesChats['one']){% endcomment %}
+            if (chatId === 'one') {
+                console.log('general')
+                previouslyMessages.one = messageCount
+            } else if (chatId === 'two') {
+                console.log('money')
+                previouslyMessagesChats.two = messageCount
+            } else if (chatId === 'three') {
+                console.log('place')
+                previouslyMessagesChats.three = messageCount
+            } else if (chatId === 'four') {
+                console.log('time')
+                previouslyMessagesChats.three = messageCount
+            }
+
+        }
+
+        function compareMessages(dataSwapId, tabId) {
+
+
+            console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTab}`)
+
+            {% comment %}Stopping all tabs from checking {% endcomment %}
+            if (currentlyActiveTab !== tabId) return false
+
+            console.log('checking messages')
+
+            let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
+            let newMessagesNumber = Number(newMessagesHtml)
+
+
+            if (getLastMessages(tabId) === "" || newMessagesNumber !== getLastMessages(tabId)) {
+                saveNewMessages(newMessagesNumber)
+                return true
+            } else {
+                return false
+            }
+            //console.log(newMessages)
+
+        }
+
+    </script>
+
 {% endblock %}

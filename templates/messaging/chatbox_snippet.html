@@ -112,10 +112,10 @@
 
                     {% comment %}triggering on change event{% endcomment %}
                     var event = new Event('change');
-                    console.log('sending event')
+                    //console.log('sending event')
                     setTimeout(() => {
                         fileElem.dispatchEvent(event)
-                        console.log('dispatched')
+                        //console.log('dispatched')
 
                     }, 250)
 
@@ -128,12 +128,12 @@
         }
 
         function checkTextContents(textElemId) {
-            console.log(textElemId)
+            //console.log(textElemId)
             let textElem = document.getElementById(textElemId)
-            console.log(textElem.value)
+            //console.log(textElem.value)
 
             if (textElem.value === "") {
-                console.log('nothing to see here')
+                //console.log('nothing to see here')
                 if (localStorage.getItem(textElemId)) {
                     textElem.value = localStorage.getItem(textElemId)
                 }
@@ -184,7 +184,7 @@
 
             fileInput.onchange = function () {
 
-                console.log('changed')
+                //console.log('changed')
                 let currentLength = fileInput.files.length
                 if (currentLength > 0) {
                     //localStorage.setItem(file, this.files[0].text());
@@ -234,10 +234,9 @@
         }
 
         function clearTextarea(textInputId) {
-            console.log('what is my id')
-            console.log(localStorage.getItem(textInputId))
+            //console.log(localStorage.getItem(textInputId))
             if (localStorage.getItem(textInputId)) {
-                console.log('it exists')
+                //console.log('it exists')
                 localStorage.setItem(textInputId, "");
                 //localStorage.removeItem(textInputId);
             }
