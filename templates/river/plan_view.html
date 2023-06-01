@@ -1,5 +1,4 @@
 {% block content %}
-    {# Wasn't sure how to send the different chats to the different tabs, so all in here for now {% include "partials/messages_tabs.html" %} #}
 
     {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
         <div x-data="{ openTab: 'one' }">
@@ -21,35 +20,15 @@
                     {% include "landing/tabbed-resources/title.html" with title="Time" %}
                 </li>
             </ul>
-            <div class="w-full-mx-4.5 bg-white">
 
+            <div class="w-full-mx-4.5 bg-white">
 
                 {# GENERAL TAB #}
                 {% url 'river_chat' river.slug 'plan' 'general' 'count' as message_count_url_general %}
 
-                {% comment %}                <div x-show="openTab === 'one'">
-
-                    <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
-                         hx-trigger="load"
-                         hx-target="this">
-                    </div>
-                </div>{% endcomment %}
-
-                {% comment %}                <div x-show="openTab === 'one'">
-                    <div x-init="
-    setTimeout(()=>{saveMyUrl(`{{ message_count_url_general }}`, 'data-swap-plan-general')}, 1000);"
-                    >
-                        <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
-                             hx-trigger="load, every 3s [compareMessages('data-swap-plan-general', openTab)]"
-                             hx-target="this">
-                        </div>
-                    </div>
-                </div>{% endcomment %}
-
-
                 <div x-show="openTab === 'one'">
                     <div x-init="
-    setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_general }}`, 'data-swap-plan-general', 'one')}, 1000);"
+                        setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_general }}`, 'data-swap-plan-general', 'one')}, 1000);"
                     >
                         <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
                              hx-trigger="load, every 4s [compareMessages('data-swap-plan-general', 'one')]"
@@ -58,19 +37,13 @@
                     </div>
                 </div>
 
-                {# MONEY TAB #}
-                {% comment %}                <div x-show="openTab === 'two'">
-                    <div id="plan-chat-money" hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
-                         hx-trigger="load"
-                         hx-target="this">
-                    </div>
-                </div>{% endcomment %}
 
+                {# MONEY TAB #}
                 {% url 'river_chat' river.slug 'plan' 'money' 'count' as message_count_url_money %}
 
                 <div x-show="openTab === 'two'">
                     <div x-init="
-    setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_money }}`, 'data-swap-plan-money', 'two')}, 1000);"
+                        setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_money }}`, 'data-swap-plan-money', 'two')}, 1000);"
                     >
                         <div id="plan-chat-money" hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
                              hx-trigger="load, every 4s [compareMessages('data-swap-plan-money', 'two')]"
@@ -78,26 +51,48 @@
                         </div>
                     </div>
                 </div>
+
+
                 {# PLACE TAB #}
+                {% url 'river_chat' river.slug 'plan' 'place' 'count' as message_count_url_place %}
+
                 <div x-show="openTab === 'three'">
-                    <div id="plan-chat-place" hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
-                         hx-trigger="load"
-                         hx-target="this">
+                    <div x-init="
+                        setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_place }}`, 'data-swap-plan-place', 'three')}, 1000);"
+                    >
+                        <div id="plan-chat-place" hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
+                             hx-trigger="load, every 4s [compareMessages('data-swap-plan-place', 'three')]"
+                             hx-target="this">
+                        </div>
                     </div>
                 </div>
+
+
                 {# TIME TAB #}
+                {% url 'river_chat' river.slug 'plan' 'time' 'count' as message_count_url_time %}
                 <div x-show="openTab === 'four'">
-                    <div id="plan-chat-time" hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
-                         hx-trigger="load"
-                         hx-target="this">
+                    <div x-init="
+                        setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_place }}`, 'data-swap-plan-time', 'four')}, 1000);"
+                    >
+                        <div id="plan-chat-time" hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
+                             hx-trigger="load, every 4s [compareMessages('data-swap-plan-time', 'four')]"
+                             hx-target="this">
+                        </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
+
+
+        {% comment %}Temp storage, can redo for alpine value with custom event;
+        the problem is that alpine does not accept passing its variables
+        unless we have $data which needs be triggered by alpine event {% endcomment %}
         <div id="data-swap-plan-general" class="hidden"></div>
         <div id="data-swap-plan-money" class="hidden"></div>
-        {% comment %}<div id="data-swap-plan-place" class="hidden"></div>
-        <div id="data-swap-plan-time" class="hidden"></div>{% endcomment %}
+        <div id="data-swap-plan-place" class="hidden"></div>
+        <div id="data-swap-plan-time" class="hidden"></div>
 
     {% endwith %}
 
@@ -106,7 +101,8 @@
         //TODO: Will need to specify these separately for each id?
         //let previouslyMessages = 0
 
-        let currentlyActiveTab = ''
+        {% comment %}starting value, tab one opens automatically{% endcomment %}
+        let currentlyActiveTab = 'one'
 
         let previouslyMessagesChats = {
             'one': 0,
@@ -122,16 +118,15 @@
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
                     console.log(document.visibilityState)
-                    if (document.visibilityState == 'visible' && currentlyActiveTab === tabId) {
+                    if (document.visibilityState === 'visible' && currentlyActiveTab === tabId) {
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
-
                 }, 5000)
             })
 
         }
 
-        function setCurrentlyActiveTab({openTab}){
+        function setCurrentlyActiveTab({openTab}) {
             console.log('called tab change')
             console.log(openTab)
             currentlyActiveTab = openTab
@@ -156,11 +151,6 @@
         }
 
         function saveNewMessages(chatId, messageCount) {
-            {% comment %}            console.log('last messages')
-                        console.log(chatId)
-                        console.log('message')
-                        console.log(previouslyMessagesChats.one)
-                        console.log(previouslyMessagesChats['one']){% endcomment %}
             if (chatId === 'one') {
                 console.log('general')
                 previouslyMessages.one = messageCount
@@ -185,7 +175,7 @@
             {% comment %}Stopping all tabs from checking {% endcomment %}
             if (currentlyActiveTab !== tabId) return false
 
-            console.log('checking messages')
+            console.log(`checking messages for ${currentlyActiveTab}`)
 
             let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
@@ -197,7 +187,7 @@
             } else {
                 return false
             }
-            //console.log(newMessages)
+
 
         }
 
