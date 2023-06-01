@@ -7,7 +7,7 @@
 
     <div id="event-envision-general"
          x-init="
-         setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, 'data-swap-envision-general')}, 1000);"
+         setTimeout(()=>{saveMyEnvisionUrl(`{{ message_count_url }}`, 'data-swap-envision-general')}, 1000);"
          @chatstatusupdate="setChatOpen($event.detail)"
     >
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
@@ -28,17 +28,17 @@
     <div id="data-swap-envision-general" class="hidden"></div>
     <script>
 
-        //TODO: Will need to specify these separately for each id?
+
         let previouslyMessages = 0
         let chatOpen = false
 
+                // eventData comes from river_chat.html, received with @chatstatusupdate
         function setChatOpen(eventData){
             chatOpen = eventData.chatOpen
             console.log(`just set chat status to ${eventData.chatOpen}`)
         }
 
-        function saveMyUrl(myUrl, dataSwapId) {
-
+        function saveMyEnvisionUrl(myUrl, dataSwapId) {
 
             return new Promise(function (resolve, reject) {
                 setInterval(function () {

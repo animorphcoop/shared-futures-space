@@ -30,7 +30,7 @@
                     <div id="event-plan-general"
                             x-init="
                             setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_general }}`, 'data-swap-plan-general', 'one')}, 1000);"
-                            @chatstatusupdate="console.log($event.detail)"
+                            @chatstatusupdate="setPlanChatOpen('one', $event.detail)"
                     >
                         <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
                              hx-trigger="load, every 4s [compareMessages('data-swap-plan-general', 'one')]"
@@ -47,7 +47,7 @@
                     <div id="event-plan-money"
                             x-init="
                             setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_money }}`, 'data-swap-plan-money', 'two')}, 1000);"
-                            @chatstatusupdate="console.log($event.detail)"
+                            @chatstatusupdate="setPlanChatOpen('two', $event.detail); console.log('is money');"
                     >
                         <div id="plan-chat-money" hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
                              hx-trigger="load, every 4s [compareMessages('data-swap-plan-money', 'two')]"
@@ -64,7 +64,7 @@
                     <div id="event-plan-place"
                             x-init="
                             setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_place }}`, 'data-swap-plan-place', 'three')}, 1000);"
-                            @chatstatusupdate="console.log($event.detail)"
+                            @chatstatusupdate="setPlanChatOpen('three', $event.detail)"
                     >
                         <div id="plan-chat-place" hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
                              hx-trigger="load, every 4s [compareMessages('data-swap-plan-place', 'three')]"
@@ -80,7 +80,7 @@
                     <div id="event-plan-time"
                             x-init="
                             setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_time }}`, 'data-swap-plan-time', 'four')}, 1000);"
-                            @chatstatusupdate="console.log($event.detail)"
+                            @chatstatusupdate="setPlanChatOpen('four', $event.detail)"
                     >
                         <div id="plan-chat-time" hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
                              hx-trigger="load, every 4s [compareMessages('data-swap-plan-time', 'four')]"
@@ -119,6 +119,38 @@
             'four': 0
         }
 
+        let currentlyActiveChats = {
+            'one': false,
+            'two': false,
+            'three': false,
+            'four': false,
+        }
+
+        // eventData comes from river_chat.html, received with @chatstatusupdate
+        function setPlanChatOpen(chatId, eventData){
+
+
+            console.log('am I here?')
+
+            let chatOpen = eventData.chatOpen
+
+            if (chatId === 'one') {
+                console.log('general')
+                currentlyActiveChats['one'] = chatOpen
+            } else if (chatId === 'two') {
+                console.log('money')
+                currentlyActiveChats['two'] = chatOpen
+            } else if (chatId === 'three') {
+                console.log('place')
+                currentlyActiveChats['three'] = chatOpen
+            } else if (chatId === 'four') {
+                console.log('time')
+                currentlyActiveChats['four'] = chatOpen
+            }
+
+            console.log(`just set chat status to ${eventData.chatOpen}`)
+        }
+
         function saveMyPlanUrl(myUrl, dataSwapId, tabId) {
             //console.log(myUrl)
             //console.log(dataSwapId)
@@ -127,7 +159,7 @@
                 setInterval(function () {
                     //console.log(document.visibilityState)
                     //console.log(currentlyActiveTab === tabId)
-                    if (document.visibilityState === 'visible' && currentlyActiveTab === tabId) {
+                    if (document.visibilityState === 'visible' && currentlyActiveTab === tabId && currentlyActiveChats[tabId]) {
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
                 }, 5000)
@@ -180,7 +212,8 @@
 
 
             {% comment %}Stopping all tabs from checking {% endcomment %}
-            if (currentlyActiveTab !== tabId) return false
+            console.log(`${tabId} is ${currentlyActiveChats[tabId]}`)
+            if (currentlyActiveTab !== tabId || !currentlyActiveChats[tabId]) return false
 
             //console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTab}`)
 
