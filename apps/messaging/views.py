@@ -264,6 +264,7 @@ class ChatUpdateCheck(View):
             message_list = Message.objects.all().filter(chat=chat).order_by('timestamp')
             return HttpResponse(message_list.count())
 
+    #TODO: Duplication of that's above, clear
     def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
 
         if stage == 'envision':

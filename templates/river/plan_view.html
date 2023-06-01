@@ -112,14 +112,15 @@
         }
 
         function saveMyPlanUrl(myUrl, dataSwapId, tabId) {
-            console.log(myUrl)
-            console.log(dataSwapId)
+            //console.log(myUrl)
+            //console.log(dataSwapId)
 
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
-                    console.log(document.visibilityState)
-                    console.log(currentlyActiveTab === tabId)
+                    //console.log(document.visibilityState)
+                    //console.log(currentlyActiveTab === tabId)
                     if (document.visibilityState === 'visible' && currentlyActiveTab === tabId) {
+                        console.log('checking list')
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
                 }, 5000)
@@ -128,42 +129,41 @@
         }
 
         function setCurrentlyActiveTab({openTab}) {
-            console.log('called tab change')
-            console.log(openTab)
+            //console.log('called tab change')
+            //console.log(openTab)
             currentlyActiveTab = openTab
         }
 
         function getLastMessages(chatId) {
-            console.log(`getting last message for chat tab ${chatId}`)
+            //console.log(`getting last message for chat tab ${chatId}`)
             if (chatId === 'one') {
                 console.log('general')
                 return previouslyMessagesChats['one']
             } else if (chatId === 'two') {
-                console.log('money')
+                //console.log('money')
                 return previouslyMessagesChats['two']
             } else if (chatId === 'three') {
-                console.log('place')
+                //console.log('place')
                 return previouslyMessagesChats['three']
             } else if (chatId === 'four') {
-                console.log(`time is ${previouslyMessagesChats['four']}`)
+                //console.log(`time is ${previouslyMessagesChats['four']}`)
                 return previouslyMessagesChats['four']
             }
 
         }
 
         function saveNewMessages(chatId, messageCount) {
-            console.log(`going to override ${chatId} with count ${messageCount}`)
+            //console.log(`going to override ${chatId} with count ${messageCount}`)
             if (chatId === 'one') {
-                console.log('general')
-                previouslyMessages['one'] = messageCount
+                previouslyMessagesChats['one'] = messageCount
             } else if (chatId === 'two') {
-                console.log('money')
+                //console.log('money')
                 previouslyMessagesChats['two'] = messageCount
             } else if (chatId === 'three') {
-                console.log('place')
+                //console.log('place')
                 previouslyMessagesChats['three'] = messageCount
             } else if (chatId === 'four') {
-                console.log(`saving time messages count ${messageCount}`)
+                //console.log(`saving time messages count ${messageCount}`)
                 previouslyMessagesChats['four'] = messageCount
             }
 
@@ -175,14 +175,14 @@
             {% comment %}Stopping all tabs from checking {% endcomment %}
             if (currentlyActiveTab !== tabId) return false
 
-            console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTab}`)
+            //console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTab}`)
 
-            console.log(`checking messages for ${currentlyActiveTab}`)
+            //console.log(`checking messages for ${currentlyActiveTab}`)
 
             let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
-            console.log(`my message number is ${newMessagesNumber}`)
-            console.log(`last messages for this tab is ${getLastMessages(tabId)}`)
+            //console.log(`my message number is ${newMessagesNumber}`)
+            //console.log(`last messages for this tab is ${getLastMessages(tabId)}`)
 
 
             if (newMessagesNumber !== getLastMessages(tabId)) {
