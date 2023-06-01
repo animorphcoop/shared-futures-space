@@ -72,7 +72,7 @@
                 {% url 'river_chat' river.slug 'plan' 'time' 'count' as message_count_url_time %}
                 <div x-show="openTab === 'four'">
                     <div x-init="
-                        setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_place }}`, 'data-swap-plan-time', 'four')}, 1000);"
+                        setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_time }}`, 'data-swap-plan-time', 'four')}, 1000);"
                     >
                         <div id="plan-chat-time" hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
                              hx-trigger="load, every 4s [compareMessages('data-swap-plan-time', 'four')]"
@@ -118,6 +118,7 @@
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
                     console.log(document.visibilityState)
+                    console.log(currentlyActiveTab === tabId)
                     if (document.visibilityState === 'visible' && currentlyActiveTab === tabId) {
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
@@ -133,36 +134,37 @@
         }
 
         function getLastMessages(chatId) {
-            console.log(chatId)
+            console.log(`getting last message for chat tab ${chatId}`)
             if (chatId === 'one') {
                 console.log('general')
-                return previouslyMessagesChats.one
+                return previouslyMessagesChats['one']
             } else if (chatId === 'two') {
                 console.log('money')
-                return previouslyMessagesChats.two
+                return previouslyMessagesChats['two']
             } else if (chatId === 'three') {
                 console.log('place')
-                return previouslyMessagesChats.three
+                return previouslyMessagesChats['three']
             } else if (chatId === 'four') {
-                console.log('time')
-                return previouslyMessagesChats.three
+                console.log(`time is ${previouslyMessagesChats['four']}`)
+                return previouslyMessagesChats['four']
             }
 
         }
 
         function saveNewMessages(chatId, messageCount) {
+            console.log(`going to override ${chatId} with count ${messageCount}`)
             if (chatId === 'one') {
                 console.log('general')
-                previouslyMessages.one = messageCount
+                previouslyMessages['one'] = messageCount
             } else if (chatId === 'two') {
                 console.log('money')
-                previouslyMessagesChats.two = messageCount
+                previouslyMessagesChats['two'] = messageCount
             } else if (chatId === 'three') {
                 console.log('place')
-                previouslyMessagesChats.three = messageCount
+                previouslyMessagesChats['three'] = messageCount
             } else if (chatId === 'four') {
-                console.log('time')
-                previouslyMessagesChats.three = messageCount
+                console.log(`saving time messages count ${messageCount}`)
+                previouslyMessagesChats['four'] = messageCount
             }
 
         }
@@ -170,19 +172,22 @@
         function compareMessages(dataSwapId, tabId) {
 
 
-            console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTab}`)
-
             {% comment %}Stopping all tabs from checking {% endcomment %}
             if (currentlyActiveTab !== tabId) return false
+
+            console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTab}`)
 
             console.log(`checking messages for ${currentlyActiveTab}`)
 
             let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
+            console.log(`my message number is ${newMessagesNumber}`)
+            console.log(`last messages for this tab is ${getLastMessages(tabId)}`)
 
 
-            if (getLastMessages(tabId) === "" || newMessagesNumber !== getLastMessages(tabId)) {
-                saveNewMessages(newMessagesNumber)
+            if (newMessagesNumber !== getLastMessages(tabId)) {
+
+                saveNewMessages(tabId, newMessagesNumber)
                 return true
             } else {
                 return false
