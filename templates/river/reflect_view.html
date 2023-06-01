@@ -4,8 +4,10 @@
 
     {% url 'river_chat' river.slug 'reflect' 'general' 'count' as message_count_url %}
 
-    <div x-data="{ openTab: 'one', chatActive: true }" x-init="
-    setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, chatActive, 'data-swap-reflect-general')}, 1000);"
+    <div  id="event-reflect-general"
+            x-data="{ openTab: 'one', chatActive: true }" x-init="
+            setTimeout(()=>{saveMyUrl(`{{ message_count_url }}`, chatActive, 'data-swap-reflect-general')}, 1000);"
+            @chatstatusupdate="setEnvisionChatOpen($event.detail)"
     >
         <div id="reflect-chat-general" hx-get="{% url 'river_chat' river.slug 'reflect' 'general' %}"
              hx-trigger="load, every 5s [newMessages('data-swap-reflect-general')]"
@@ -25,18 +27,23 @@
 
     <script>
 
+        /* Everything that's called from Alpine needs to have unique name */
+
         let previouslyMessages = 0
         let chatOpen = false
 
-        function saveMyUrl(myUrl, chatActive, dataSwapId) {
+                // eventData comes from river_chat.html, received with @chatstatusupdate
+        function setReflectChatOpen(eventData){
+            chatOpen = eventData.chatOpen
+            console.log(`just set chat status to ${eventData.chatOpen}`)
+        }
 
-            chatOpen = chatActive
-            if (!chatOpen) return;
+        function saveMyEnvisionUrl(myUrl, dataSwapId) {
 
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
                     //console.log(document.visibilityState)
-                    if (document.visibilityState == 'visible') {
+                    if (document.visibilityState === 'visible' && chatOpen){
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
 

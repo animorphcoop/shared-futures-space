@@ -8,10 +8,10 @@
     <div id="event-envision-general"
          x-init="
          setTimeout(()=>{saveMyEnvisionUrl(`{{ message_count_url }}`, 'data-swap-envision-general')}, 1000);"
-         @chatstatusupdate="setChatOpen($event.detail)"
+         @chatstatusupdate="setEnvisionChatOpen($event.detail)"
     >
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-             hx-trigger="load, every 4s [newMessages('data-swap-envision-general')]"
+             hx-trigger="load, every 4s [newMessagesEnvision('data-swap-envision-general')]"
              hx-target="this">
         </div>
 
@@ -28,12 +28,12 @@
     <div id="data-swap-envision-general" class="hidden"></div>
     <script>
 
-
+    /* Everything that's called from Alpine needs to have unique name */
         let previouslyMessages = 0
         let chatOpen = false
 
                 // eventData comes from river_chat.html, received with @chatstatusupdate
-        function setChatOpen(eventData){
+        function setEnvisionChatOpen(eventData){
             chatOpen = eventData.chatOpen
             console.log(`just set chat status to ${eventData.chatOpen}`)
         }
@@ -52,7 +52,7 @@
 
         }
 
-        function newMessages(dataSwapId) {
+        function newMessagesEnvision(dataSwapId) {
 
             if (!chatOpen) return;
 
@@ -66,7 +66,6 @@
             else {
                 return false
             }
-            //console.log(newMessages)
 
         }
 

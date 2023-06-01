@@ -47,7 +47,7 @@
                     <div id="event-plan-money"
                             x-init="
                             setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_money }}`, 'data-swap-plan-money', 'two')}, 1000);"
-                            @chatstatusupdate="setPlanChatOpen('two', $event.detail); console.log('is money');"
+                            @chatstatusupdate="setPlanChatOpen('two', $event.detail);"
                     >
                         <div id="plan-chat-money" hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
                              hx-trigger="load, every 4s [compareMessages('data-swap-plan-money', 'two')]"
@@ -94,9 +94,6 @@
         </div>
 
 
-        {% comment %}Temp storage, can redo for alpine value with custom event;
-        the problem is that alpine does not accept passing its variables
-        unless we have $data which needs be triggered by alpine event {% endcomment %}
         <div id="data-swap-plan-general" class="hidden"></div>
         <div id="data-swap-plan-money" class="hidden"></div>
         <div id="data-swap-plan-place" class="hidden"></div>
@@ -109,17 +106,18 @@
         //TODO: Will need to specify these separately for each id?
         //let previouslyMessages = 0
 
-        {% comment %}starting value, tab one opens automatically{% endcomment %}
-        let currentlyActiveTab = 'one'
+    /* Everything that's called from Alpine needs to have unique name */
 
-        let previouslyMessagesChats = {
+        let currentlyActiveTabPlan = 'one'
+
+        let previouslyMessagesChatsPlan = {
             'one': 0,
             'two': 0,
             'three': 0,
             'four': 0
         }
 
-        let currentlyActiveChats = {
+        let currentlyActiveChatsPlan = {
             'one': false,
             'two': false,
             'three': false,
@@ -129,26 +127,23 @@
         // eventData comes from river_chat.html, received with @chatstatusupdate
         function setPlanChatOpen(chatId, eventData){
 
-
-            console.log('am I here?')
-
             let chatOpen = eventData.chatOpen
 
             if (chatId === 'one') {
                 console.log('general')
-                currentlyActiveChats['one'] = chatOpen
+                currentlyActiveChatsPlan['one'] = chatOpen
             } else if (chatId === 'two') {
                 console.log('money')
-                currentlyActiveChats['two'] = chatOpen
+                currentlyActiveChatsPlan['two'] = chatOpen
             } else if (chatId === 'three') {
                 console.log('place')
-                currentlyActiveChats['three'] = chatOpen
+                currentlyActiveChatsPlan['three'] = chatOpen
             } else if (chatId === 'four') {
                 console.log('time')
-                currentlyActiveChats['four'] = chatOpen
+                currentlyActiveChatsPlan['four'] = chatOpen
             }
 
-            console.log(`just set chat status to ${eventData.chatOpen}`)
+            //console.log(`just set chat status to ${eventData.chatOpen}`)
         }
 
         function saveMyPlanUrl(myUrl, dataSwapId, tabId) {
@@ -158,8 +153,8 @@
             return new Promise(function (resolve, reject) {
                 setInterval(function () {
                     //console.log(document.visibilityState)
-                    //console.log(currentlyActiveTab === tabId)
-                    if (document.visibilityState === 'visible' && currentlyActiveTab === tabId && currentlyActiveChats[tabId]) {
+                    //console.log(currentlyActiveTabPlan === tabId)
+                    if (document.visibilityState === 'visible' && currentlyActiveTabPlan === tabId && currentlyActiveChatsPlan[tabId]) {
                         htmx.ajax('GET', myUrl, `#${dataSwapId}`)
                     }
                 }, 5000)
@@ -170,23 +165,23 @@
         function setCurrentlyActiveTab({openTab}) {
             //console.log('called tab change')
             //console.log(openTab)
-            currentlyActiveTab = openTab
+            currentlyActiveTabPlan = openTab
         }
 
         function getLastMessages(chatId) {
             //console.log(`getting last message for chat tab ${chatId}`)
             if (chatId === 'one') {
                 console.log('general')
-                return previouslyMessagesChats['one']
+                return previouslyMessagesChatsPlan['one']
             } else if (chatId === 'two') {
                 //console.log('money')
-                return previouslyMessagesChats['two']
+                return previouslyMessagesChatsPlan['two']
             } else if (chatId === 'three') {
                 //console.log('place')
-                return previouslyMessagesChats['three']
+                return previouslyMessagesChatsPlan['three']
             } else if (chatId === 'four') {
-                //console.log(`time is ${previouslyMessagesChats['four']}`)
-                return previouslyMessagesChats['four']
+                //console.log(`time is ${previouslyMessagesChatsPlan['four']}`)
+                return previouslyMessagesChatsPlan['four']
             }
 
         }
@@ -194,30 +189,29 @@
         function saveNewMessages(chatId, messageCount) {
             //console.log(`going to override ${chatId} with count ${messageCount}`)
             if (chatId === 'one') {
-                previouslyMessagesChats['one'] = messageCount
+                previouslyMessagesChatsPlan['one'] = messageCount
             } else if (chatId === 'two') {
                 //console.log('money')
-                previouslyMessagesChats['two'] = messageCount
+                previouslyMessagesChatsPlan['two'] = messageCount
             } else if (chatId === 'three') {
                 //console.log('place')
-                previouslyMessagesChats['three'] = messageCount
+                previouslyMessagesChatsPlan['three'] = messageCount
             } else if (chatId === 'four') {
                 //console.log(`saving time messages count ${messageCount}`)
-                previouslyMessagesChats['four'] = messageCount
+                previouslyMessagesChatsPlan['four'] = messageCount
             }
 
         }
 
         function compareMessages(dataSwapId, tabId) {
 
-
             {% comment %}Stopping all tabs from checking {% endcomment %}
-            console.log(`${tabId} is ${currentlyActiveChats[tabId]}`)
-            if (currentlyActiveTab !== tabId || !currentlyActiveChats[tabId]) return false
+            //console.log(`${tabId} is ${currentlyActiveChatsPlan[tabId]}`)
+            if (currentlyActiveTabPlan !== tabId || !currentlyActiveChatsPlan[tabId]) return false
 
-            //console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTab}`)
+            //console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTabPlan}`)
 
-            //console.log(`checking messages for ${currentlyActiveTab}`)
+            //console.log(`checking messages for ${currentlyActiveTabPlan}`)
 
             let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
             let newMessagesNumber = Number(newMessagesHtml)
@@ -232,7 +226,6 @@
             } else {
                 return false
             }
-
 
         }
 

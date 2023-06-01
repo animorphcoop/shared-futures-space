@@ -9,10 +9,7 @@ console.log('am i being regenerated')">{% endcomment %}
 {% url 'river_chat' slug stage topic as message_post_url %}
 
 
-    <div x-init="console.log('event-{{ stage }}-{{ topic }}');
-    document.getElementById('event-{{ stage }}-{{ topic }}').dispatchEvent(new CustomEvent('chatstatusupdate', { detail: { chatOpen: {% if chat_open %}true{% else %}false{% endif %}} }));;
-
-">
+    <div x-init="document.getElementById('event-{{ stage }}-{{ topic }}').dispatchEvent(new CustomEvent('chatstatusupdate', { detail: { chatOpen: {% if chat_open %}true{% else %}false{% endif %}} }));">
 
     {% comment %}{{ message_count }}{% endcomment %}
 
