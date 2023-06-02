@@ -121,6 +121,24 @@ USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose exec app python3 manag
 
 ## Resources and notes
 
+### Product terminology
+
+This of "rivers" as work projects, "swimmers" as project members, and "springs"
+as areas where work can take place.
+
+Each river is at a specific stage (envison, plan, act, reflect) at any given
+time. Rivers progress directionally from one stage to another.
+
+"Resources" are knowledge resources as links. "Salmon" is our helper bot.
+
+### Directories description
+
+* `apps/`: includes all Djano apps
+* `search/`: Wagtail search views
+* `sfs/`: Django project
+* `templates/`: includes all Django HTML templates used across all Django apps
+* `tests/`: Django tests using pytest
+
 ### Turning off and on again
 
 Occasionally, issues with spinning new containers out of existing images might occur.
