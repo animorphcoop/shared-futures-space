@@ -1,39 +1,73 @@
 {% load static %}
 
 {% block content %}
-    <div id="reflect-chat-general" hx-get="{% url 'river_chat' river.slug 'reflect' 'general' %}"
-         hx-trigger="load"
-         hx-target="this">
+
+    {% url 'river_chat' river.slug 'reflect' 'general' 'count' as message_count_url %}
+
+    <div  id="event-reflect-general"
+          x-init="
+            setTimeout(()=>{saveMyReflectUrl(`{{ message_count_url }}`, 'data-swap-reflect-general')}, 1000);"
+            @chatstatusupdate="setReflectChatOpen($event.detail)"
+    >
+        <div id="reflect-chat-general" hx-get="{% url 'river_chat' river.slug 'reflect' 'general' %}"
+             hx-trigger="load, every 4s [newMessagesReflect('data-swap-reflect-general')]"
+             hx-target="this">
+        </div>
     </div>
     <div class="mx-4.5">
         <div id="reflect-general-poll-wrapper">
             {% if river.reflect_stage.general_poll != None %}
                 {% include "partials/vertical-spacer.html" with space="6" %}
-                    <div hx-trigger="load" hx-target="closest #reflect-poll-wrapper"
-                         hx-get="{% url 'poll_view' river.reflect_stage.general_poll.uuid %}"></div>
+                <div hx-trigger="load" hx-target="closest #reflect-poll-wrapper"
+                     hx-get="{% url 'poll_view' river.reflect_stage.general_poll.uuid %}"></div>
             {% endif %}
         </div>
-{% comment %}
-        {% if river.current_stage == river.Stage.REFLECT and request.user.id in starters %}
-            {% if river.reflect_stage.general_poll == None or river.reflect_stage.general_poll.closed %}
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div id="poll-creation-wrapper" class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0">
-                    <button hx-get="{% url 'create_river_poll' river.slug 'reflect' 'general' %}" hx-target="#poll-creation"
-                            class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
-                            type="button">
-                        {# Poll creation button #}
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
-                                  fill="#9759FF"/>
-                        </svg>
-                    </button>
-                    <div id="poll-creation"></div>
-                </div>
-            {% endif %}
-        {% endif %}
-{% endcomment %}
     </div>
+    <div id="data-swap-reflect-general" class="hidden"></div>
+
     <script>
 
+        /* Everything that's called from Alpine needs to have unique name */
+
+        let previouslyMessagesReflect = 0
+        let chatOpenReflect = false
+
+                // eventData comes from river_chat.html, received with @chatstatusupdate
+        function setReflectChatOpen(eventData){
+            chatOpenReflect = eventData.chatOpen
+            //console.log(`just set chat status to ${eventData.chatOpen}`)
+        }
+
+        function saveMyReflectUrl(myUrl, dataSwapId) {
+
+            return new Promise(function (resolve, reject) {
+                setInterval(function () {
+                    //console.log(document.visibilityState)
+                    if (document.visibilityState === 'visible' && chatOpenReflect){
+                        htmx.ajax('GET', myUrl, `#${dataSwapId}`)
+                    }
+
+                }, 5000)
+            })
+
+        }
+
+        function newMessagesReflect(dataSwapId) {
+
+            if (!chatOpenReflect) return;
+
+            let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
+            let newMessagesNumber = Number(newMessagesHtml)
+
+            if (previouslyMessagesReflect === "" || newMessagesNumber !== previouslyMessagesReflect) {
+                previouslyMessagesReflect = newMessagesNumber
+                return true
+            } else {
+                return false
+            }
+
+
+        }
     </script>
+
 {% endblock %}

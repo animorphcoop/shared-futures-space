@@ -1,5 +1,3 @@
-# pyre-strict
-
 from django.urls import include, path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
 from .views import invoke_action_view

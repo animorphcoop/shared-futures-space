@@ -1,20 +1,18 @@
-# pyre-strict
-
 import os
 from django.template import Template, Context
-from messaging.models import Message, Chat  # pyre-ignore[21]
-from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
-from userauth.models import CustomUser  # pyre-ignore[21]
-from poll.models import BasePoll  # pyre-ignore[21]
+from messaging.models import Message, Chat
+from userauth.util import get_system_user, get_userpair
+from userauth.models import CustomUser
+from poll.models import BasePoll
 from uuid import UUID
 
 from typing import Union, Optional
 
 
-def send_system_message(chat: Chat, kind: str,  # pyre-ignore[11]
-                        context_action: Optional['action.Action'] = None, context_river: Optional['river.River'] = None, # pyre-ignore[11]
-                        context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None,  # pyre-ignore[11]
-                        context_poll: Optional[BasePoll] = None,  # pyre-ignore[11]
+def send_system_message(chat: Chat, kind: str,
+                        context_action: Optional['action.Action'] = None, context_river: Optional['river.River'] = None,
+                        context_user_a: Optional[CustomUser] = None, context_user_b: Optional[CustomUser] = None,
+                        context_poll: Optional[BasePoll] = None,
                         text: Optional[str] = "",
                         ) -> None:
     Message.objects.create(sender=get_system_user(), text=text,

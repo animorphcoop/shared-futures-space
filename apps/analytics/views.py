@@ -1,11 +1,9 @@
-# pyre-strict
-
 from django.views.generic.base import TemplateView
 
-from userauth.models import CustomUser # pyre-ignore[21]
-from area.models import Area # pyre-ignore[21]
-from river.models import River, RiverMembership # pyre-ignore[21]
-from core.utils.tags_declusterer import tag_cluster_to_list # pyre-ignore[21]
+from userauth.models import CustomUser
+from area.models import Area
+from river.models import River, RiverMembership
+from core.utils.tags_declusterer import tag_cluster_to_list
 
 from typing import Dict, List, Tuple, Any
 
@@ -63,7 +61,7 @@ class AnalyticsView(TemplateView):
                           for area in Area.objects.all()]
         swimmers_scale = int(max(map(lambda t: t[1], swimmers_area)))+1
         ctx['graphs'].append(BarGraph('average swimmers/river', swimmers_area, swimmers_scale))
-        if self.request.user.is_superuser: # pyre-ignore[16]
+        if self.request.user.is_superuser:
             return ctx
         else:
             return {'unauthenticated': True}

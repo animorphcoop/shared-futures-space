@@ -1,5 +1,3 @@
-# pyre-ignore-all-errors
-# (needed because whether `from .secrets import ...` is a type error depends on whether the secrets file is in place
 from typing import List, Optional, Dict
 from .base import INSTALLED_APPS
 from os.path import exists

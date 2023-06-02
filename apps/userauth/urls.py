@@ -1,4 +1,3 @@
-# pyre-strict
 from django.conf import settings
 from django.urls import include, path, re_path, URLResolver, URLPattern
 from django.contrib.auth.decorators import login_required
@@ -21,7 +20,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         name="account_reset_password_from_key",
     ),
     path('request/', login_required(user_request_view), name='account_request'),
-    path('managerequests/', login_required(AdminRequestView.as_view(template_name='account/manage_requests.html')), name='account_request_panel'),  # pyre-ignore[16]
+    path('managerequests/', login_required(AdminRequestView.as_view(template_name='account/manage_requests.html')), name='account_request_panel'),
     path('view/', profile_view, name='account_view'),
     path('add_data/', login_required(CustomAddDataView.as_view(template_name='account/add_data.html')),
          name='account_add_data'),
@@ -30,8 +29,8 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('chat/', login_required(UserAllChatsView.as_view(template_name='account/all_user_chats.html')),
          name='account_all_chats'),
     # path('chat_path/<str:uuid>/', chat_view, name='user_chat_path'),
-    path('chat/<str:user_path>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')),name='user_chat'),  # pyre-ignore[16]
-    #path('chat/<str:user_path>/', login_required(message_list), name='user_chat'),  
+    path('chat/<str:user_path>/', login_required(UserChatView.as_view(template_name='account/user_chat.html')),name='user_chat'),
+    #path('chat/<str:user_path>/', login_required(message_list), name='user_chat'),
     #path('chat/<str:user_path>/', login_required(ChatView.as_view(template_name='account/user_chat.html')),name='user_chat'),
 
 

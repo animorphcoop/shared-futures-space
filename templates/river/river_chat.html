@@ -1,46 +1,65 @@
 {% load static %}
 {% block content %}
 
-    {% url 'river_chat' slug stage topic as message_post_url %}
-    {% include 'messaging/messages.html' with direct=direct message_post_url=message_post_url %}
+    {% comment %}    <div x-on:htmx:after-settle.window="
+chatActive = {% if not chat_open %}true{% else %}false{% endif %}
+console.log(document.getElementById(`{{ stage }}-chat-{{ topic }}`).parentNode);
+console.log('am i being regenerated')">{% endcomment %}
 
-    {% if not user.is_authenticated %}
-        {% url 'account_login' as the_url %}
-        {% include "partials/call-to-action.html" with main="To participate in the project you need to be logged in." button="Log in" url=the_url  bg="bg-blue-done" %}
-    {% endif %}
+{% url 'river_chat' slug stage topic as message_post_url %}
 
-    <div class="">
 
-        <div id="{{ stage }}-{{ topic }}-poll-wrapper">
-            {% if poll_ref != None %}
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div hx-trigger="load" hx-target="#{{ stage }}-{{ topic }}-poll-wrapper" hx-swap="innerHTML"
-                     hx-get="{% url 'poll_view' poll_ref.uuid %}">
-                </div>
+    <div x-init="document.getElementById('event-{{ stage }}-{{ topic }}').dispatchEvent(new CustomEvent('chatstatusupdate', { detail: { chatOpen: {% if chat_open %}true{% else %}false{% endif %}} }));">
+
+    {% comment %}{{ message_count }}{% endcomment %}
+
+
+        {% include 'messaging/messages.html' with direct=direct message_post_url=message_post_url %}
+
+        {% if not user.is_authenticated %}
+            {% url 'account_login' as the_url %}
+            {% include "partials/call-to-action.html" with main="To participate in the project you need to be logged in." button="Log in" url=the_url  bg="bg-blue-done" %}
+        {% endif %}
+
+        <div class="">
+
+            <div id="{{ stage }}-{{ topic }}-poll-wrapper">
+                {% if poll_ref != None %}
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div hx-trigger="load" hx-target="#{{ stage }}-{{ topic }}-poll-wrapper" hx-swap="innerHTML"
+                         hx-get="{% url 'poll_view' poll_ref.uuid %}">
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if river.current_stage == stage and request.user.id in starters and poll_possible and members|length > 2 %}
+                {% if poll_ref == None and not poll_ref.passed %}
+                    {% include "partials/vertical-spacer.html" with space="6" %}
+                    <div id="poll-creation-wrapper"
+                         class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
+                         :class="selected == 1 ? 'block' : 'hidden'">
+                        <button id="poll-create-button-{{ stage }}-{{ topic }}"
+                                hx-get="{% url 'create_river_poll' river.slug stage topic %}"
+                                hx-target="#poll-creation-{{ stage }}-{{ topic }}"
+                                class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
+                                type="button">
+                            {# Poll creation button #}
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
+                                      fill="#9759FF"/>
+                            </svg>
+                        </button>
+                        <div id="poll-creation-{{ stage }}-{{ topic }}"></div>
+                    </div>
+                {% endif %}
             {% endif %}
         </div>
-        {% if river.current_stage == stage and request.user.id in starters and poll_possible and members|length > 2 %}
-            {% if poll_ref == None and not poll_ref.passed %}
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <div id="poll-creation-wrapper"
-                     class="sm:flex sm:flex-col sm:w-[360px] sm:fixed sm:z-40 sm:bottom-0"
-                     :class="selected == 1 ? 'block' : 'hidden'">
-                    <button id="poll-create-button-{{ stage }}-{{ topic }}"
-                            hx-get="{% url 'create_river_poll' river.slug stage topic %}"
-                            hx-target="#poll-creation-{{ stage }}-{{ topic }}"
-                            class="button button-on-white p-1 fixed sm:absolute bottom-[18px] right-[18px] drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center"
-                            type="button">
-                        {# Poll creation button #}
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
-                                  fill="#9759FF"/>
-                        </svg>
-                    </button>
-                    <div id="poll-creation-{{ stage }}-{{ topic }}"></div>
-                </div>
-            {% endif %}
-        {% endif %}
     </div>
+
+    <script>
+
+
+    </script>
 
 {% endblock %}

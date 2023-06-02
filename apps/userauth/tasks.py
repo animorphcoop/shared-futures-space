@@ -1,4 +1,3 @@
-# pyre-strict
 from celery import shared_task
 
 from collections import defaultdict

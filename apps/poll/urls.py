@@ -1,4 +1,3 @@
-# pyre-strict
 from django.conf import settings
 from django.urls import include, path, URLResolver, URLPattern
 from .views import PollView, PollCreateView, poll_edit

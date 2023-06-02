@@ -8,11 +8,11 @@ from PIL import Image as PillowImage
 import requests
 import json
 
-from resources.models import HowTo, CaseStudy  # pyre-ignore[21]
-from userauth.models import CustomUser, UserPair, Organisation, UserAvatar  # pyre-ignore[21]
-from river.models import River, RiverMembership  # pyre-ignore[21]
-from messaging.models import Message  # pyre-ignore[21]
-from area.models import PostCode, Area  # pyre-ignore[21]
+from resources.models import HowTo, CaseStudy
+from userauth.models import CustomUser, UserPair, Organisation, UserAvatar
+from river.models import River, RiverMembership
+from messaging.models import Message
+from area.models import PostCode, Area
 
 image_dir = 'autoupload/'
 

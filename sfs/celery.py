@@ -1,11 +1,9 @@
-# pyre-strict
 import os
 from celery import Celery
 from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sfs.settings.settings')
 
-# pyre comment suppresses an error caused by pyre's limited analysis of the celery library
 app = Celery('sfs')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')

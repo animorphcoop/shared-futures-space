@@ -1,5 +1,3 @@
-# pyre-strict
-
 from django.db import models
 from modelcluster.models import ClusterableModel
 from django.utils import timezone
@@ -9,10 +7,10 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
-from userauth.models import CustomUser  # pyre-ignore[21]
-from messaging.models import Chat  # pyre-ignore[21]
-from messaging.util import send_system_message  # pyre-ignore[21]
-from area.models import Area  # pyre-ignore[21]
+from userauth.models import CustomUser
+from messaging.models import Chat
+from messaging.util import send_system_message
+from area.models import Area
 from urllib.parse import quote
 from hashlib import shake_256
 
@@ -39,7 +37,7 @@ class EnvisionStage(models.Model):
     step: models.CharField = models.CharField(max_length=1, choices=Step.choices, default=Step.GET_TO_KNOW)
     general_poll: models.ForeignKey = models.ForeignKey('poll.SingleChoicePoll', null=True, default=None,
                                                         on_delete=models.SET_NULL)
-    def get_chat(self, topic: str) -> Chat: # pyre-ignore[11]
+    def get_chat(self, topic: str) -> Chat:
         if topic == 'general':
             return self.general_chat
         # no others
@@ -200,7 +198,7 @@ class River(ClusterableModel):
             self.save()
 
     def start_plan(self) -> None:
-        from poll.models import SingleChoicePoll  # pyre-ignore[21]
+        from poll.models import SingleChoicePoll
         if self.current_stage == self.Stage.ENVISION:
             self.current_stage = self.Stage.PLAN
             self.plan_stage = PlanStage.objects.create()
@@ -258,7 +256,7 @@ class River(ClusterableModel):
                                                                             expires=timezone.now() + timezone.timedelta(
                                                                                 days=7),  #
                                                                             river=self)
-                
+
                 self.plan_stage.general_poll.closed = True  #
                 self.plan_stage.general_poll.save()
                 self.plan_stage.money_poll.closed = True  #
@@ -315,7 +313,7 @@ class River(ClusterableModel):
             self.save()
 
     def start_reflect(self) -> None:
-        from resources.models import Resource, CaseStudy, HowTo  # pyre-ignore[21]
+        from resources.models import Resource, CaseStudy, HowTo
         from poll.models import MultipleChoicePoll
         from django.db.models import Q
         from itertools import chain

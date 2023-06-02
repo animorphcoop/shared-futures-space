@@ -1,14 +1,12 @@
-# pyre-strict
-
-from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
+from userauth.util import get_system_user, get_userpair
 from django.core.handlers.wsgi import WSGIRequest
-from river.models import RiverMembership  # pyre-ignore[21]
+from river.models import RiverMembership
 from django.http import HttpResponse, HttpResponsePermanentRedirect
-from messaging.models import Message  # pyre-ignore[21]
-from messaging.util import send_system_message  # pyre-ignore[21]
+from messaging.models import Message
+from messaging.util import send_system_message
 from userauth.util import get_system_user, get_userpair
 from django.utils.html import escape
-from action.models import Action  # pyre-ignore[21]
+from action.models import Action
 from django.shortcuts import redirect
 
 
@@ -19,7 +17,7 @@ def invoke_action_view(request: WSGIRequest) -> HttpResponsePermanentRedirect:
         action = Action.objects.get(uuid=request.POST['action_id'],
                                     result__isnull=True)  # find only actions that haven't run yet
         if (action.receiver == request.user or (
-                action.receiver == None and request.user.is_superuser)):  # pyre-ignore[16]
+                action.receiver == None and request.user.is_superuser)):
             if (request.POST['choice'] == 'invoke'):
                 invoke_action(action)
             elif (request.POST['choice'] == 'reject'):
@@ -31,7 +29,7 @@ def invoke_action_view(request: WSGIRequest) -> HttpResponsePermanentRedirect:
     return redirect(request.META['HTTP_REFERER']) if 'HTTP_REFERRER' in request.META else redirect('/')
 
 
-def rescind_action(action: Action) -> None: # pyre-ignore[11]
+def rescind_action(action: Action) -> None:
     if (action.kind == 'become_starter'):
         action.result = 'rescinded'
         action.save()

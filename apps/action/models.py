@@ -1,7 +1,5 @@
-# pyre-strict
-
 from django.db import models
-from river.models import River # pyre-ignore[21]
+from river.models import River
 from uuid import uuid4
 
 class Action(models.Model):

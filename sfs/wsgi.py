@@ -1,4 +1,3 @@
-# pyre-strict
 """
 WSGI config for sfs river.
 

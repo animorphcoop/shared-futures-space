@@ -1,5 +1,3 @@
-# pyre-strict
-
 from django.urls import path, URLResolver, URLPattern
 from .views import SpringView
 

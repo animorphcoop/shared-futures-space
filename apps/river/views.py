@@ -1,4 +1,3 @@
-# pyre-strict
 import io
 
 from PIL.Image import Image
@@ -18,25 +17,25 @@ from django.db.models import Q
 
 from .forms import CreateRiverForm, RiverTitleUpdateForm, RiverDescriptionUpdateForm, RiverImageUpdateForm
 from .models import River, RiverMembership
-from messaging.models import Chat, Message  # pyre-ignore[21]
-from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
-from messaging.views import ChatView  # pyre-ignore[21]
-from action.util import send_offer  # pyre-ignore[21]
-from action.models import Action  # pyre-ignore[21]
-from area.models import Area  # pyre-ignore[21]
-from messaging.util import send_system_message  # pyre-ignore[21]
-from resources.views import filter_and_cluster_resources  # pyre-ignore[21]
-from poll.models import SingleChoicePoll  # pyre-ignore[21]
-from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite  # pyre-ignore[21]
-from resources.models import Resource, CaseStudy, HowTo  # pyre-ignore[21]
+from messaging.models import Chat, Message
+from userauth.util import get_system_user, get_userpair
+from messaging.views import ChatView, ChatUpdateCheck
+from action.util import send_offer
+from action.models import Action
+from area.models import Area
+from messaging.util import send_system_message
+from resources.views import filter_and_cluster_resources
+from poll.models import SingleChoicePoll
+from core.utils.tags_declusterer import tag_cluster_to_list, objects_tags_cluster_list_overwrite
+from resources.models import Resource, CaseStudy, HowTo
 from typing import Dict, List, Any, Union, Type, Optional
 from area.models import PostCode
-from messaging.forms import ChatForm  # pyre-ignore[21]
+from messaging.forms import ChatForm
 
 from django.http.request import QueryDict
 
 
-class RiverView(DetailView):  # pyre-ignore[24]
+class RiverView(DetailView):
     model = River
 
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
@@ -49,7 +48,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
 
         if (request.POST['action'] == 'join'):
             if len(RiverMembership.objects.filter(user=request.user,
-                                                  river=river)) == 0 and request.user.post_code.area == river.area:  # pyre-ignore[16]
+                                                  river=river)) == 0 and request.user.post_code.area == river.area:
                 RiverMembership.objects.create(user=request.user, river=river, starter=False)
                 # if to notify for each, need to know the current river stage and post to general
 
@@ -62,7 +61,7 @@ class RiverView(DetailView):  # pyre-ignore[24]
         context = super().get_context_data(**kwargs)
         context['starters'] = RiverMembership.objects.filter(river=context['object'].pk, starter=True)
         context['user'] = self.request.user
-        context['slug'] = self.object.slug  # pyre-ignore[16]
+        context['slug'] = self.object.slug
         context['members'] = RiverMembership.objects.filter(river=context['object'].pk)
         context['resources'] = list(dict.fromkeys(
             chain(*[list(chain(HowTo.objects.filter(Q(tags__name__icontains=tag_a) | Q(tags__name__icontains=tag_b)),
@@ -79,15 +78,15 @@ class RiverView(DetailView):  # pyre-ignore[24]
         return context
 
 
-class EditRiverView(UpdateView):  # pyre-ignore[24]
+class EditRiverView(UpdateView):
     model = River
     fields = ['title', 'description', 'image']
 
     def get(self, *args: List[Any], **kwargs: Dict[str, Any]) -> HttpResponse:
         # login_required is idempotent so we may as well apply it here in case it's forgotten in urls.py
-        return login_required(super().get)(*args, **kwargs)  # pyre-ignore[6]
+        return login_required(super().get)(*args, **kwargs)
 
-    def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]) -> HttpResponse:  # pyre-ignore[14]
+    def post(self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]) -> HttpResponse:
 
         # changing the river image - same code appears not to upload using put method
         river = River.objects.get(slug=slug)
@@ -191,8 +190,12 @@ class ManageRiverView(TemplateView):
         return context
 
 
-class RiverChatView(ChatView):  # pyre-ignore[11]
-    form_class: Type[ChatForm] = ChatForm  # pyre-ignore[11]
+class RiverChatView(ChatView):
+    form_class: Type[ChatForm] = ChatForm
+
+
+class RiverChatUpdateView(ChatUpdateCheck):
+    print('here')
 
 
 class CreateRiverPollView(TemplateView):
@@ -261,7 +264,7 @@ class CreateRiverPollView(TemplateView):
         else:
             return HttpResponse('could not create poll, current stage is not ' + stage)
 
-    def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:  # pyre-ignore[14]
+    def get_context_data(self, slug: str, stage: str, topic: str) -> Dict[str, Any]:
         ctx = super().get_context_data()
         ctx['river'] = River.objects.get(slug=slug)
         ctx['slug'] = slug
@@ -307,23 +310,23 @@ class ReflectView(TemplateView):
         return ctx
 
 
-class RiverStartView(CreateView):  # pyre-ignore[24]
+class RiverStartView(CreateView):
     form_class = CreateRiverForm
 
-    def form_valid(self, form) -> HttpResponse:  # pyre-ignore[2]
+    def form_valid(self, form) -> HttpResponse:
         r = super(RiverStartView, self).form_valid(form)
         for tag in form.cleaned_data['tags']:
-            self.object.tags.add(tag)  # pyre-ignore[16]
+            self.object.tags.add(tag)
         try:
-            post_code = PostCode.objects.all().filter(code=self.request.user.post_code)[0]  # pyre-ignore[16]
+            post_code = PostCode.objects.all().filter(code=self.request.user.post_code)[0]
             self.object.area = post_code.area
 
         except PostCode.DoesNotExist:
 
             pass
 
-        self.object.save()  # pyre-ignore[16]
-        self.object.start_envision()  # pyre-ignore[16]
+        self.object.save()
+        self.object.start_envision()
 
         return r
 
@@ -343,4 +346,4 @@ class RiverStartView(CreateView):  # pyre-ignore[24]
 
     def get_success_url(self) -> str:
         RiverMembership.objects.create(user=self.request.user, river=self.object, starter=True)
-        return reverse_lazy("view_river", args=[self.object.slug])  # pyre-ignore[16]
+        return reverse_lazy("view_river", args=[self.object.slug])
