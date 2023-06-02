@@ -20,7 +20,7 @@ from .forms import CreateRiverForm, RiverTitleUpdateForm, RiverDescriptionUpdate
 from .models import River, RiverMembership
 from messaging.models import Chat, Message  # pyre-ignore[21]
 from userauth.util import get_system_user, get_userpair  # pyre-ignore[21]
-from messaging.views import ChatView  # pyre-ignore[21]
+from messaging.views import ChatView, ChatUpdateCheck  # pyre-ignore[21]
 from action.util import send_offer  # pyre-ignore[21]
 from action.models import Action  # pyre-ignore[21]
 from area.models import Area  # pyre-ignore[21]
@@ -193,6 +193,10 @@ class ManageRiverView(TemplateView):
 
 class RiverChatView(ChatView):  # pyre-ignore[11]
     form_class: Type[ChatForm] = ChatForm  # pyre-ignore[11]
+
+
+class RiverChatUpdateView(ChatUpdateCheck):
+    print('here')
 
 
 class CreateRiverPollView(TemplateView):

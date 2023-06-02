@@ -1,7 +1,7 @@
 # pyre-strict
 from django.shortcuts import render
 
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.core.handlers.wsgi import WSGIRequest
 from django.template.loader import get_template
 from django.utils.text import slugify
@@ -58,6 +58,7 @@ class ChatView(TemplateView):
             river = River.objects.get(slug=kwargs['slug'])
             chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])  # pyre-ignore[6]
             message_list = Message.objects.all().filter(chat=chat).order_by('timestamp')
+            print(message_list.count())
             members = list(map(lambda x: x.user, RiverMembership.objects.filter(river=river)))
 
             pagination_data = self.paginate_messages(request, message_list)
@@ -74,6 +75,7 @@ class ChatView(TemplateView):
                 'topic': kwargs['topic'],
                 'page_obj': pagination_data['page_obj'],
                 'system_user': get_system_user(),
+                'message_count': message_list.count(),
 
                 'page_number': pagination_data['page_number'],
                 'messages_displayed_count': pagination_data['messages_displayed_count'],
@@ -251,3 +253,40 @@ class ChatView(TemplateView):
         elif stage == 'reflect':
             poll = river.reflect_stage.general_poll
         return poll  # pyre-ignore[61]
+
+
+
+class ChatUpdateCheck(View):
+    def get(self, request: WSGIRequest, **kwargs: Dict[str, Any]) -> HttpResponse:  # pyre-ignore[14]
+        if 'slug' in kwargs:
+            river = River.objects.get(slug=kwargs['slug'])
+            chat = self.get_river_chat(river, kwargs['stage'], kwargs['topic'])  # pyre-ignore[6]
+            message_list = Message.objects.all().filter(chat=chat).order_by('timestamp')
+            return HttpResponse(message_list.count())
+
+    #TODO: Duplication of that's above, clear
+    def get_river_chat(self, river: River, stage: str, topic: str) -> Chat:  # pyre-ignore[11]
+
+        if stage == 'envision':
+            chat = river.envision_stage.general_chat
+        elif stage == 'plan':
+            if topic == 'general':
+                chat = river.plan_stage.general_chat
+            elif topic == 'money':
+                chat = river.plan_stage.money_chat
+            elif topic == 'place':
+                chat = river.plan_stage.place_chat
+            elif topic == 'time':
+                chat = river.plan_stage.time_chat
+        elif stage == 'act':
+            if topic == 'general':
+                chat = river.act_stage.general_chat
+            elif topic == 'money':
+                chat = river.act_stage.money_chat
+            elif topic == 'place':
+                chat = river.act_stage.place_chat
+            elif topic == 'time':
+                chat = river.act_stage.time_chat
+        elif stage == 'reflect':
+            chat = river.reflect_stage.general_chat
+        return chat  # pyre-ignore[61]

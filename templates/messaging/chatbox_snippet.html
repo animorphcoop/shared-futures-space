@@ -14,7 +14,8 @@
 
 
         <div class="text-meta invisible max-w-full">
-            <input type="file" name=file value="file" id="file-{{ unique_id }}">
+            <input type="file" name=file value="file" id="file-{{ unique_id }}"
+                   x-init="setTimeout(()=>{checkFileContents($el.id)}, 1000);">
         </div>
 
 
@@ -43,18 +44,19 @@
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
 
             <div class="w-full"
-                 x-init="setTimeout(()=> {createForm('messages-{{ unique_id }}', 'chat-form-{{ unique_id }}', 'upload-ready-{{ unique_id }}', 'file-{{ unique_id }}')}, 1500)">
+                 x-init="setTimeout(()=> {createForm('messages-{{ unique_id }}', 'chat-form-{{ unique_id }}', 'upload-ready-{{ unique_id }}', 'file-{{ unique_id }}')}, 500)">
 
 
                     <textarea data-expandable
                               class="input-text h-[50px] max-h-[150px] bg-yellow rounded-xl w-full max-w-full"
                               name=text
                               id="text-box-{{ unique_id }}"
+                              x-init="setTimeout(()=>{checkTextContents($el.id)}, 1000);"
 
                     ></textarea>
 
 
-                <button @click="textInput= ''"
+                <button
                         id="chat-button-{{ unique_id }}"
                         class="absolute bottom-[34px] right-8"
 
@@ -74,6 +76,77 @@
     <script>
 
 
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','),
+                mime = arr[0].match(/:(.*?);/)[1],
+
+                bstr = atob(arr[arr.length - 1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            console.log(mime)
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, {type: mime});
+        }
+
+
+        function checkFileContents(fileElemId) {
+            let fileElem = document.getElementById(fileElemId)
+            if (fileElem.value === "") {
+                {% comment %}nothing in input on load, as expected{% endcomment %}
+                const localStorageImage = localStorage.getItem(fileElemId);
+                const localStorageImageName = localStorage.getItem(`${fileElemId}+name`);
+
+                if (localStorageImage) {
+
+
+                    {% comment %}reconstructing the file from base64{% endcomment %}
+                    var file = dataURLtoFile(localStorageImage, localStorageImageName);
+
+
+                    {% comment %} loading the file into input value {% endcomment %}
+                    let container = new DataTransfer();
+                    container.items.add(file);
+                    fileElem.files = container.files;
+
+                    {% comment %}triggering on change event{% endcomment %}
+                    var event = new Event('change');
+                    //console.log('sending event')
+                    setTimeout(() => {
+                        fileElem.dispatchEvent(event)
+                        //console.log('dispatched')
+
+                    }, 250)
+
+
+                } else {
+                    console.log('no file retrieved')
+                }
+            }
+
+        }
+
+        function checkTextContents(textElemId) {
+            //console.log(textElemId)
+            let textElem = document.getElementById(textElemId)
+            //console.log(textElem.value)
+
+            if (textElem.value === "") {
+                //console.log('nothing to see here')
+                if (localStorage.getItem(textElemId)) {
+                    textElem.value = localStorage.getItem(textElemId)
+                }
+            }
+
+            if (textElem.addEventListener) {
+                textElem.addEventListener('input', function () {
+                    localStorage.setItem(textElemId, textElem.value)
+                }, false);
+            }
+        }
+
+
         function validateChat(chat) {
             let errorCount = 0;
             const textLength = document.getElementById('text-box-' + chat).value
@@ -81,6 +154,11 @@
 
             if (textLength.length < 1 && fileValue.length < 1) {
                 errorCount++
+            }
+
+            if (errorCount === 0){
+                clearTextarea(`text-box-${chat}`)
+                clearFile(`file-${chat}`)
             }
             return errorCount === 0;
 
@@ -105,18 +183,72 @@
             const fileInput = document.getElementById(file)
 
             fileInput.onchange = function () {
+
+                //console.log('changed')
                 let currentLength = fileInput.files.length
                 if (currentLength > 0) {
+                    //localStorage.setItem(file, this.files[0].text());
+                    var fileReader = new FileReader()
+
+                    fileReader.addEventListener(
+                        "load",
+                        () => {
+                            // convert image file to base64 string
+
+
+                            localStorage.setItem(file, fileReader.result);
+                            localStorage.setItem(`${file}+name`, fileInput.files[0].name);
+                        },
+                        false
+                    );
+
+                    if (file) {
+                        fileReader.readAsDataURL(fileInput.files[0]);
+                    }
+
+                    {% comment %}
+                                        let filePromise = this.files[0].text()
+                                        filePromise.then((value) => {
+                                            //console.log(value)
+                                            localStorage.setItem(file, value);
+                                        })
+                    {% endcomment %}
+
+
                     if (uploadCheckbox.classList.contains('hidden')) {
                         uploadCheckbox.classList.remove('hidden')
                     }
                 } else {
                     if (!uploadCheckbox.classList.contains('hidden')) {
+
                         uploadCheckbox.classList.add('hidden')
+                        if (localStorage.getItem(file)) {
+                            clearFile(file)
+
+                        }
                     }
 
                 }
             }
+
+        }
+
+        function clearTextarea(textInputId) {
+            //console.log(localStorage.getItem(textInputId))
+            if (localStorage.getItem(textInputId)) {
+                //console.log('it exists')
+                localStorage.setItem(textInputId, "");
+                //localStorage.removeItem(textInputId);
+            }
+
+        }
+
+        function clearFile(fileInputId) {
+            if (localStorage.getItem(fileInputId)) {
+                localStorage.removeItem(fileInputId);
+                localStorage.removeItem(`${fileInputId}+name`);
+            }
+
 
         }
 
