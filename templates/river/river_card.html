@@ -31,15 +31,13 @@
                             <a href="{% url 'user_detail' member.user.user_slug %}" class="flex flex-row">
                                 <img class="h-6 w-6" src={{ member.user.avatar.image_url }} alt="user avatar">
                                 {% include "partials/horizontal-spacer.html" with space="4" %}
-                                <div class="flex flex-col justify-center">
-                                    <p class="text-meta uppercase tracking-widest">
+                                <p class="self-center text-meta uppercase tracking-widest">
                                         {{ member.user.display_name }} <span class="text-black/30 uppercase">Riverstarter</span>
                                     </p>
-                                </div>
                             </a>
                         {% endif %}
                     {% endfor %}
-                    <div class="pl-10 -mt-3">
+                    <div class="pl-10 -mt-3 lg:-mt-2">
                         <p class="text-meta text-black/30">
                             Started {{ river.started_on|timesince }} ago
                         </p>
@@ -76,7 +74,7 @@
         <div class="">
             {% include "partials/vertical-spacer.html" with space="4.5" %}
 
-            <p class="font-garamond-500 text-base leading-5 text-black/75 sm:order-3">{{ river.description|truncatewords:25 }}</p>
+            <p class="text-body sm:order-3">{{ river.description|truncatewords:25 }}</p>
 
             {% include "partials/vertical-spacer.html" with space="4.5" %}
 

@@ -42,16 +42,13 @@ def test_dashboard_info(client, test_user):
     client.force_login(test_user)
     dash = client.get('/dashboard/')
     assert dash.status_code == 200
-    assert test_user.post_code.area.name not in dash.content.decode('utf-8')
     welcome = bs4.BeautifulSoup(dash.content, 'html5lib').body.text
-    # placeholder for when there's actually anything on the dashboard to check, feel free to comment out for now if it gets in the way
-    # assert re.match(f'.*Welcome {test_user.display_name}', welcome, re.S)
     assert 'Your profile misses important data, please add them in' not in welcome
     test_user.year_of_birth = None
     test_user.post_code = None
     test_user.save()
     dash = client.get('/dashboard/')
-    assert 'Your messages' in str(dash.content)
+    assert 'View messages' in str(dash.content)
 
 
 

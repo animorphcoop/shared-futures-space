@@ -19,60 +19,51 @@
         </section>
     {% endif %}
 
-    {# Messages #}
-    <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
-        <a href="{% url "account_all_chats" %}" type="button" class="block w-full py-4.5 px-4.5">
-            <h2 class="flex items-center justify-between">
-                <span class="text-header">
-                    Your messages
-                </span>
-                <div class="w-[12] h-[8] -rotate-90 transition duration-500 ease-out">
-                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
-                              fill="#9759FF"/>
-                    </svg>
-                </div>
-            </h2>
-        </a>
-    </div>
+    <div class="lg:grid grid-cols-4 gap-9 gap-y-9 max-w-screen-xl lg:mx-auto lg:pb-9">
+        <div class="col-span-2">
+            {% include "dashboard/partials/resources.html" with title="Saved resources" reference="resources" %}
+        </div>
 
-    {#    {% block messages %}#}
-    {#        {% include "dashboard/partials/accordion.html" with title="Messages" list_items=messages %}#}
-    {#    {% endblock %}#}
+        <div class="col-span-2">
+            {% if request.user.post_code.area.name != 'Other' %}
+                {% include "dashboard/partials/rivers.html" with title="Your rivers" reference="rivers" %}
+            {% else %}
+                <section class="bg-resources-two">
+                    <div class="flex flex-col gap-6 items-center py-9 px-4.5 text-center">
+                        <p class="text-large text-22">
+                            Which spring would you like to explore?
+                        </p>
+                        {% load area_details %}
+                        {% get_areas as areas_dict %}
+                        {% for key, value in areas_dict.items %}
+                            <a href="{% url "spring" key %}"
+                               class="button button-on-colour inline-block">
+                                {{ value }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+        </div>
+    </div>
 
     {% comment %}Include in v2{% endcomment %}
     {% comment %}
     {% include "dashboard/partials/notifications.html" with title="Notifications" reference="notifications" %}
 {% endcomment %}
 
-    {#  Call to action partial, replace URL variable  #}
-    {% if request.user.post_code.area.name != 'Other' %}
-        {% url 'spring' request.user.post_code.area.name as the_url %}
-        {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" bg="bg-resources-two" %}
-    {% endif %}
+    <div class="lg:flex w-full lg:pb-9">
+        {# Messages #}
+        {#  Call to action partial, replace URL variable  #}
+        {% url 'account_all_chats' as the_url %}
+        {% include "partials/call-to-action.html" with main="Continue the conversations" button="View messages" url=the_url info="" bg="bg-yellow" %}
 
-    {% if request.user.post_code.area.name != 'Other' %}
-        {% include "dashboard/partials/rivers.html" with title="Your rivers" reference="rivers" %}
-    {% else %}
-        <section class="bg-resources-two">
-            <div class="flex flex-col gap-6 items-center py-9 px-4.5 text-center">
-                <p class="text-large text-22">
-                    Which spring would you like to explore?
-                </p>
-                {% load area_details %}
-                {% get_areas as areas_dict %}
-                {% for key, value in areas_dict.items %}
-                    <a href="{% url "spring" key %}"
-                       class="button button-on-colour inline-block">
-                        {{ value }}
-                    </a>
-                {% endfor %}
-            </div>
-        </section>
-    {% endif %}
-
-    {% include "dashboard/partials/resources.html" with title="Saved resources" reference="resources" %}
+        {#  Call to action partial, replace URL variable  #}
+        {% if request.user.post_code.area.name != 'Other' %}
+            {% url 'spring' request.user.post_code.area.name as the_url %}
+            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" bg="bg-resources-two" %}
+        {% endif %}
+    </div>
 
     {% comment %}
       TODO: Is this true?
@@ -81,6 +72,9 @@
         <a href="{% url 'account_request_panel' %}">Manage User Requests</a>
       {% endif %}
     {% endcomment %}
-    {% include "dashboard/partials/get_in_touch.html" with title="Get in touch" reference="get_in_touch" %}
+
+    <div class="max-w-screen-xl lg:mx-auto">
+        {% include "dashboard/partials/get_in_touch.html" with title="Get in touch" reference="get_in_touch" %}
+    </div>
 
 {% endblock content %}

@@ -1,0 +1,74 @@
+{% load static %}
+{% load custom_filters %}
+
+<section class="z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
+    <div class="bg-white mx-2.5 px-5 grow">
+        {% include "partials/vertical-spacer.html" with space="7.5" %}
+        <h2 class="text-large text-center w-full">
+            Change your postcode
+        </h2>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+
+
+        {% comment %}
+        TODO: Adjust endpoint processing and container on view as well as ts file
+        {% endcomment %}
+
+        {% if changes > 0 %}
+            <form method="post" action="{% url 'account_update' %}" onsubmit="return validatePostcode()" class="mb-0">
+                {% csrf_token %}
+
+                {% include "partials/input-label.html" with for="postcode" label="New postcode" %}
+                {% if changes > 0 %}
+                    <input id=postcode name=postcode type=text placeholder="{{ postcode.code }} ({{ postcode.area.name }})" value=""
+                        {%comment%} postcode regex from validate_postcode in area/models.py {%endcomment%}
+                        pattern="[a-zA-Z]{1,2}[0-9][a-zA-0-9]?\s?([0-9][a-zA-Z]{2})?"
+                        class="input-text input-text-invalid">
+                {% endif %}
+                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                {% if changes == 1 %}
+                    {% comment %} just to change the plural on 'times' {% endcomment %}
+                    {% include "partials/input-note.html" with for="postcode" label="You can change your postcode "|strcat:changes|strcat:" more time." %}
+                {% else %}
+                    {% include "partials/input-note.html" with for="postcode" label="You can change your postcode "|strcat:changes|strcat:" more times." %}
+                {% endif %}
+                {% include "partials/vertical-spacer.html" with space="4.5" %}
+                <div class="flex items-center justify-center">
+                     <button onclick="togglePostcodeChange()"
+                             type="button"
+                             class="button button-on-white">
+                        Back
+                    </button>
+                    {% include "partials/horizontal-spacer.html" with space="4.5" %}
+                    <button
+                            type="submit"
+                            class="button button-on-white">
+                        Change postcode
+                    </button>
+                </div>
+                {% include "partials/vertical-spacer.html" with space="7.5" %}
+            </form>
+        {% else %}
+            <p class="text-center font-kanit-400">You have changed your postcode three times and cannot change it again. Please use the 'get in touch' form on the dashboard if you need to make another change.</p>
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
+            <div class="flex items-center justify-center">
+                <button onclick="togglePostcodeChange()"
+                        type="button"
+                        class="button button-on-white">
+                   Back
+                </button>
+                {% include "partials/horizontal-spacer.html" with space="4.5" %}
+                <a href="{% url 'dashboard' %}">
+                    <button class="button button-on-white">
+                        Go to dashboard
+                    </button>
+                </a>
+            </div>
+            {% include "partials/vertical-spacer.html" with space="7.5" %}
+        {% endif %}
+    </div>
+</section>
+
+{% block scripts %}
+    <script src="{% static 'js/postcode_change.js' %}"></script>
+{% endblock %}

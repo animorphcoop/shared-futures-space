@@ -10,11 +10,14 @@ from django.forms import ChoiceField, ModelChoiceField, ModelForm
 from uuid import UUID
 from itertools import chain
 from django.shortcuts import redirect
+from django.core.exceptions import PermissionDenied
+
 
 from typing import Dict, Any, List, Tuple, Optional
 
 from .models import BasePoll, SingleChoicePoll, MultipleChoicePoll, BaseVote, SingleVote, MultipleVote
 from river.models import River, RiverMembership  # pyre-ignore[21]
+from messaging.util import send_system_message # pyre-ignore[21]
 
 
 class PollView(TemplateView):
@@ -57,15 +60,21 @@ class PollView(TemplateView):
         ctx['poll'] = poll
         ctx['poll_name'] = poll.question
         ctx['poll_description'] = poll.description
-        ctx['poll_results'] = poll.current_results
-        for result in ctx['poll_results'].values():
-            for user in result:
+        ctx['poll_votes_cast'] = len(list(chain(*poll.current_results.values())))
+        ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll=poll))
+        total_votes_uncast = ctx['poll_total_votes'] - ctx['poll_votes_cast']
+        second_most_votes_cast = sorted([len(votes) for votes in poll.current_results.values()], reverse=True)[1]
+        ctx['poll_results'] = [(option, votes, len(votes) + 1 > second_most_votes_cast + total_votes_uncast - 1) for option, votes in poll.current_results.items()]
+        for result in ctx['poll_results']:
+            for user in result[1]:
                 user.join_date = RiverMembership.objects.get(user=user, river=poll.river).join_date
+        ctx['any_threshold'] = False
+        for _, _, threshold in ctx['poll_results']:
+            if threshold:
+                ctx['any_threshold'] = True
         ctx['poll_closed'] = poll.check_closed()
         ctx['poll_expires'] = poll.expires
-        ctx['poll_total_votes'] = len(BaseVote.objects.filter(poll=poll))
-        ctx['poll_votes_cast'] = len(list(chain(*ctx['poll_results'].values())))
-        ctx['poll_results_winners'] = get_winners(list(ctx['poll_results'].items()))
+        ctx['poll_results_winners'] = get_winners(list(poll.current_results.items()))
 
         # added the variable to htmx response when the poll closes so frontend can refresh
         #ctx['just_finished']
@@ -73,6 +82,7 @@ class PollView(TemplateView):
         #river slug for htmx to run conditional check if the poll is closed so to trigger refreshing on the frontend
         river = poll.river
         ctx['slug'] = river.slug
+        ctx['starters'] = RiverMembership.objects.filter(river = river).values_list('user__id', flat = True) # for telling whether we should show the edit poll button
         return ctx
 
 
@@ -119,3 +129,35 @@ class PollCreateView(CreateView):  # pyre-ignore[24]
 
     def get_success_url(self) -> str:
         return reverse('poll_view', args=[self.object.uuid])  # pyre-ignore[16]
+
+def poll_edit(request: WSGIRequest) -> HttpResponse:
+    # update description of poll, return new description for htmx
+    poll = BasePoll.objects.get(uuid=request.POST['poll-uuid'])
+    if RiverMembership.objects.get(user = request.user, river = poll.river).starter:
+        poll.closed = True
+        poll.save()
+        river, stage, topic = poll.get_poll_context(poll)
+        send_system_message(stage.get_chat(topic), 'poll_edited', context_poll = poll)
+        new_poll = SingleChoicePoll.objects.create(question = poll.question, description = request.POST['new-description'], options = poll.options, expires = poll.expires, created_by = poll.created_by, river = poll.river)
+        if topic == 'general':
+            stage.general_poll = new_poll
+        elif topic == 'money':
+            stage.money_poll = new_poll
+        elif topic == 'place':
+            stage.place_poll = new_poll
+        elif topic == 'time':
+            stage.time_poll = new_poll
+        stage.save()
+        return HttpResponseRedirect(reverse('poll_view', args=[new_poll.uuid]))
+    else:
+        # user isn't a river starter for the river the poll appears in
+        # the ui shouldn't permit this situation
+        raise PermissionDenied('non-riverstarter user trying to edit a poll')
+
+
+
+
+
+
+
+

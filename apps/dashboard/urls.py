@@ -7,4 +7,5 @@ from django.urls import URLResolver, URLPattern
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('', views.dashboard, name='dashboard'),
+    path('contact/', views.contact, name='contact'),
 ]

@@ -1,5 +1,9 @@
 {% extends "partials/drawer.html" %}
 
 {% block drawer_content %}
-    {% include "partials/get-in-touch-buttons.html" with colour="primary_white" %}
+<div id="get-in-touch-content">
+    <form class="grid grid-cols-2 gap-4" hx-post="/dashboard/contact/" hx-trigger="submit">
+    {% include "dashboard/partials/get_in_touch_form.html" %}
+    </form>
+</div>
 {% endblock %}
