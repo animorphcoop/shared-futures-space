@@ -49,6 +49,7 @@ class CustomUser(AbstractUser):
     editor: models.BooleanField = models.BooleanField(default=False)  # is this user an editor
     organisation: models.ForeignKey = models.ForeignKey(Organisation, default=None, null=True,
                                                         on_delete=models.SET_NULL)
+    postcode_changes: models.IntegerField = models.IntegerField(default = 3)
 
     class Meta:
         ordering: List[str] = ['display_name']

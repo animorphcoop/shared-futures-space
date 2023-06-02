@@ -10,7 +10,7 @@ from .models import CustomUser, UserPair, Organisation, UserAvatar
 from django.contrib.auth import get_user_model
 from .forms import CustomUserNameUpdateForm, CustomUserAddDataForm, CustomSignupForm, CustomLoginForm, \
     CustomResetPasswordForm, \
-    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
+    CustomUserAvatarUpdateForm, CustomUserOrganisationUpdateForm, CustomUserPostcodeUpdateForm, CustomChangePasswordForm, CustomResetPasswordKeyForm
 from messaging.forms import ChatForm
 from django.http.request import QueryDict
 
@@ -20,7 +20,7 @@ from messaging.models import Message
 from messaging.views import ChatView
 from messaging.util import send_system_message, get_requests_chat
 from action.models import Action
-from area.models import PostCode
+from area.models import PostCode, get_postcode
 from userauth.models import CustomUser, Block
 # from userauth.util import get_userpair
 
@@ -300,6 +300,7 @@ class CustomUserPersonalView(TemplateView):
             context['self'] = True
             context['organisations'] = Organisation.objects.all()
             context['avatars'] = UserAvatar.objects.all()
+            context['changes'] = user.postcode_changes
             if self.request.session.has_key('password_changed'):
                 password_changed = self.request.session['password_changed']
                 context['password_changed'] = password_changed
@@ -363,5 +364,15 @@ class CustomUserPersonalView(TemplateView):
             else:
                 return HttpResponse("Sorry, couldn't process your request, try again.")
 
+        elif data.get('postcode'):
+            form = CustomUserPostcodeUpdateForm(data, instance=current_user)
+            if form.is_valid() and current_user.postcode_changes > 0:
+                pc = get_postcode(form.cleaned_data.get('postcode'))
+                current_user.post_code = pc
+                current_user.postcode_changes -= 1
+                current_user.save()
+                return HttpResponseRedirect(reverse('account_view'))
+            else:
+                return HttpResponse("Sorry, couldn't process your request, try again.")
         else:
             return HttpResponse("Sorry, couldn't process your request, try again.")

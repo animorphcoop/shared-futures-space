@@ -67,6 +67,12 @@ class CustomUserOrganisationUpdateForm(forms.ModelForm):
         model: Type[CustomUser] = CustomUser
         fields: List[str] = ['organisation_name', 'organisation_url']
 
+class CustomUserPostcodeUpdateForm(forms.ModelForm):
+    postcode = forms.CharField(max_length=50)
+
+    class Meta:
+        model: Type[CustomUser] = CustomUser
+        fields: List[str] = ['postcode']
 
 class CustomSignupForm(SignupForm):
     class Meta:

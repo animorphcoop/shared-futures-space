@@ -11,3 +11,7 @@ def attrmap(value: Iterable[T], arg: str) -> List[T]:
         return [getattr(item, arg) for item in value]
     else:
         return []
+
+@register.filter(name='strcat')
+def strcat(value, arg):
+    return str(value) + str(arg)

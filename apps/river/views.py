@@ -19,7 +19,7 @@ from .forms import CreateRiverForm, RiverTitleUpdateForm, RiverDescriptionUpdate
 from .models import River, RiverMembership
 from messaging.models import Chat, Message
 from userauth.util import get_system_user, get_userpair
-from messaging.views import ChatView
+from messaging.views import ChatView, ChatUpdateCheck
 from action.util import send_offer
 from action.models import Action
 from area.models import Area
@@ -192,6 +192,10 @@ class ManageRiverView(TemplateView):
 
 class RiverChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm
+
+
+class RiverChatUpdateView(ChatUpdateCheck):
+    print('here')
 
 
 class CreateRiverPollView(TemplateView):

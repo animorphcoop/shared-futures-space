@@ -9,6 +9,10 @@
             <option value="feedback">Send your feedback</option>
             <option value="rollout">Enquire about roll out in your area</option>
             <option value="bug">Report a bug</option>
+            {% if user.postcode_changes < 1 %}
+                <option value="postcode">Change your postcode</option>
+            {% endif %}
+            <option value="other">Other</option>
         </select>
     </div>
 
