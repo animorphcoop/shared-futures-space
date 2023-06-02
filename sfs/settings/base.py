@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from celery.schedules import crontab
 from typing import List, Dict, TypedDict, Optional, Union
 
 class Template(TypedDict):
