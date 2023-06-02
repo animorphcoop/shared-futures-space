@@ -220,6 +220,12 @@ LOGIN_URL = '/profile/login/'
 # Redis & Celery configuration
 CELERY_BROKER_URL: str = "redis://redis:6379"
 CELERY_RESULT_BACKEND: str = "redis://redis:6379"
+CELERY_BEAT_SCHEDULE = {
+    'send_daily_messages': {
+        'task': 'userauth.tasks.send_daily_messages',
+        'schedule': crontab(hour=23, minute=0),
+    },
+}
 
 WAGTAIL_USER_EDIT_FORM: str = 'userauth.forms.CustomUserEditForm'
 WAGTAIL_USER_CREATION_FORM: str = 'userauth.forms.CustomUserCreationForm'
