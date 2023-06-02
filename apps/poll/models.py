@@ -1,5 +1,3 @@
-# pyre-strict
-
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
@@ -8,8 +6,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from uuid import uuid4
 
-from userauth.models import CustomUser  # pyre-ignore[21]
-from userauth.util import get_system_user  # pyre-ignore[21]
+from userauth.models import CustomUser
+from userauth.util import get_system_user
 
 from typing import List, Dict, Union
 
@@ -55,7 +53,7 @@ class BasePoll(models.Model):
     closed: models.BooleanField = models.BooleanField(default=False)
     when_closed: models.DateTimeField = models.DateTimeField(null=True, default=None)
     passed: models.BooleanField = models.BooleanField(default=False)
-    vote_kind: models.Model = BaseVote  # pyre-ignore[8]
+    vote_kind: models.Model = BaseVote
     invalid_option: models.BooleanField = models.BooleanField(default=False)
     created_by: models.ForeignKey = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, default=0)
     river: models.ForeignKey = models.ForeignKey('river.River', on_delete=models.CASCADE)
@@ -63,18 +61,18 @@ class BasePoll(models.Model):
     @property
     def specific(self) -> Union['SingleChoicePoll', 'MultipleChoicePoll']:
         if hasattr(self, 'multiplechoicepoll'):
-            return self.multiplechoicepoll  # pyre-ignore[16]
+            return self.multiplechoicepoll
         else:
-            return self.singlechoicepoll  # pyre-ignore[16]
+            return self.singlechoicepoll
 
     def close(self) -> None:
-        from messaging.util import send_system_message  # pyre-ignore[21]
+        from messaging.util import send_system_message
         self.when_closed = timezone.now()
         if hasattr(self, 'singlechoicepoll'):
-            river, stage, topic = self.get_poll_context(self.singlechoicepoll)  # pyre-ignore[16]
+            river, stage, topic = self.get_poll_context(self.singlechoicepoll)
             if river:
                 # this poll is the current poll of the active stage of a river
-                if sorted(self.current_results.items(), key=lambda x: x[1], reverse=True)[0][0] == 'yes':  # pyre-ignore[16]
+                if sorted(self.current_results.items(), key=lambda x: x[1], reverse=True)[0][0] == 'yes':
                     # poll has passed
                     self.passed = True
                     self.save()
@@ -102,7 +100,7 @@ class BasePoll(models.Model):
                             river.start_reflect()
                             river.save()
         elif hasattr(self, 'multiplechoicepoll'):
-            from river.models import River, ReflectStage  # pyre-ignore[21]
+            from river.models import River, ReflectStage
             rs = ReflectStage.objects.filter(general_poll=self)
             if rs.exists():
                 river = River.objects.get(reflect_stage=rs[0])
@@ -110,7 +108,7 @@ class BasePoll(models.Model):
                     river.finish()
                     river.save()
 
-    def get_poll_context(self, poll):  # pyre-ignore[2,3]
+    def get_poll_context(self, poll):
         from river.models import River, EnvisionStage, PlanStage, ActStage, ReflectStage
         es = EnvisionStage.objects.filter(general_poll=poll)
         if es.exists():
@@ -143,10 +141,10 @@ class BasePoll(models.Model):
 
 
 class SingleChoicePoll(BasePoll):
-    vote_kind = SingleVote  # pyre-ignore[15]
+    vote_kind = SingleVote
 
     @property
-    def current_results(self) -> Dict[str, List[CustomUser]]:  # pyre-ignore[11]
+    def current_results(self) -> Dict[str, List[CustomUser]]:
         votes = SingleVote.objects.filter(poll=self, choice__isnull=False)
         results = {option: [] for option in self.options}
         if self.invalid_option:
@@ -181,7 +179,7 @@ class SingleChoicePoll(BasePoll):
 
 
 class MultipleChoicePoll(BasePoll):
-    vote_kind = MultipleVote  # pyre-ignore[15]
+    vote_kind = MultipleVote
 
     @property
     def current_results(self) -> Dict[str, List[CustomUser]]:
@@ -212,7 +210,7 @@ class MultipleChoicePoll(BasePoll):
 
 # initialise the votes relevant to this poll. needed so we know who's allowed to vote on it. should be called after creating any poll
 @receiver(post_save, sender=SingleChoicePoll)
-def make_votes_single(sender, instance, created, **kwargs) -> None:  # pyre-ignore[2]
+def make_votes_single(sender, instance, created, **kwargs) -> None:
     from river.models import RiverMembership
     if created:
         for voter in RiverMembership.objects.filter(river=instance.basepoll_ptr.river):
@@ -220,7 +218,7 @@ def make_votes_single(sender, instance, created, **kwargs) -> None:  # pyre-igno
 
 
 @receiver(post_save, sender=MultipleChoicePoll)
-def make_votes_multiple(sender, instance, created, **kwargs) -> None:  # pyre-ignore[2]
+def make_votes_multiple(sender, instance, created, **kwargs) -> None:
     from river.models import RiverMembership
     if created:
         for voter in RiverMembership.objects.filter(river=instance.basepoll_ptr.river):

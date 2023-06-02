@@ -1,4 +1,3 @@
-# pyre-strict
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import include, path
@@ -13,13 +12,12 @@ from search import views as search_views
 from typing import List, Union
 from django.urls import URLResolver, URLPattern
 
-from landing.views import handle_404, handle_500  # pyre-ignore[21]
+from landing.views import handle_404, handle_500
 
-handler404 = handle_404  # pyre-ignore[5]
-handler500 = handle_500  # pyre-ignore[5]
+handler404 = handle_404
+handler500 = handle_500
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    # pyre comment suppresses an error caused by pyre's limited understanding of django
     path('django-admin/', admin.site.urls),
 
     path('admin/', include(wagtailadmin_urls)),

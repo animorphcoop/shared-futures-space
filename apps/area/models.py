@@ -1,5 +1,3 @@
-# pyre-strict
-
 from django.core.exceptions import ValidationError
 from django.db import models
 from uuid import uuid4
@@ -37,7 +35,7 @@ class PostCode(models.Model):
             self.code = m.group(1).upper() # discard incode
         if not self.area:
             self.area = Area.objects.get_or_create(name='Other')[0]
-        return super().save(*args, **kwargs) # pyre-ignore[6]
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.code

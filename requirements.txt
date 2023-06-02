@@ -8,7 +8,6 @@ pytest==7.1.2
 django-debug-toolbar==3.4.0
 pytest-django==4.5.2
 pytest-celery==0.00
-pyre-check==0.9.15
 django-stubs==1.12.0
 coverage==6.4.2
 django-widget-tweaks==1.4.12

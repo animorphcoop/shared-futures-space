@@ -1,4 +1,3 @@
-# pyre-strict
 from django.views.generic.base import TemplateView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -6,10 +5,10 @@ from django.shortcuts import render
 
 
 from typing import Dict, List, Any, Union
-from core.utils.tags_declusterer import tag_cluster_to_list # pyre-ignore[21]
+from core.utils.tags_declusterer import tag_cluster_to_list
 
-from area.models import Area # pyre-ignore[21]
-from river.models import River, RiverMembership # pyre-ignore[21]
+from area.models import Area
+from river.models import River, RiverMembership
 #from river.util import get_current_stage_string, get_started_months_ago
 
 class SpringView(TemplateView):

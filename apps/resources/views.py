@@ -1,4 +1,3 @@
-# pyre-strict
 from django.http.request import HttpRequest
 from django.http import HttpResponse
 
@@ -7,7 +6,7 @@ from django.shortcuts import render
 from apps.core.utils.tags_declusterer import objects_tags_cluster_list_overwrite, single_object_tags_cluster_overwrite
 from itertools import chain
 
-from analytics.models import AnalyticsEvent, log_resource_access  # pyre-ignore[21]
+from analytics.models import AnalyticsEvent, log_resource_access
 
 from django.db.models import Q
 from typing import List, Optional
@@ -44,13 +43,13 @@ def resource_search(request: HttpRequest) -> HttpResponse:
     context = {'results': results}
     return render(request, 'resources/partials/search_results.html', context)    
 
-def retrieve_and_chain_resources() -> List:  # pyre-ignore[24]
+def retrieve_and_chain_resources() -> List:
     how_tos = objects_tags_cluster_list_overwrite(HowTo.objects.all())
     case_studies = objects_tags_cluster_list_overwrite(CaseStudy.objects.all())
     return list(chain(how_tos, case_studies))
 
 
-def filter_and_cluster_resources(search_term: Optional[str], order_by: Optional[str]) -> List:  # pyre-ignore[24]
+def filter_and_cluster_resources(search_term: Optional[str], order_by: Optional[str]) -> List:
     how_tos = HowTo.objects.filter(Q(title__icontains=search_term)
                                    | Q(summary__icontains=search_term)
                                    | Q(tags__name__icontains=search_term)).distinct()

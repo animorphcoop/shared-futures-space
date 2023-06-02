@@ -1,12 +1,11 @@
-# pyre-strict
 from django.db.models import Q
 
 from .models import River, EnvisionStage, PlanStage, ActStage, ReflectStage
-from messaging.models import Chat # pyre-ignore[21]
+from messaging.models import Chat
 
 from typing import Optional
 
-def get_chat_containing_river(chat: Chat) -> Optional[River]: # pyre-ignore[11]
+def get_chat_containing_river(chat: Chat) -> Optional[River]:
     # return the river that a chat is part of, if any
     envision = EnvisionStage.objects.filter(chat  = chat)
     if len(envision) != 0:

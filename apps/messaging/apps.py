@@ -1,4 +1,3 @@
-# pyre-strict
 import sys
 from uuid import UUID
 from django.apps import AppConfig

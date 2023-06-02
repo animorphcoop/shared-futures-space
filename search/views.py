@@ -1,4 +1,3 @@
-# pyre-strict
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.core.paginator import Page as PaginatorPage
 from django.template.response import TemplateResponse
@@ -13,7 +12,7 @@ from typing import List, Any
 def search(request: HttpRequest) -> TemplateResponse:
     search_query: str = request.GET.get('query', '')
     page: str = request.GET.get('page', '1')
-    search_results_page: PaginatorPage = Page.objects.none() # pyre-ignore[24]
+    search_results_page: PaginatorPage = Page.objects.none()
 
     # Search
     if search_query: # the empty string is falsy

@@ -1,4 +1,3 @@
-# pyre-strict
 from django import template
 from django.http import HttpResponse
 from typing import Iterable, List, Any, TypeVar, Dict

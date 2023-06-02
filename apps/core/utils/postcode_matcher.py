@@ -1,5 +1,5 @@
 import re
-from area.models import PostCode # pyre-ignore[21]
+from area.models import PostCode
 
 
 def filter_postcode(typed_postcode) -> str:
