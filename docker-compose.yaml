@@ -51,7 +51,7 @@ services:
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
-    command: celery -A sfs worker -l info
+    command: celery -A sfs worker -B -l info
     volumes:
       - .:/home/app/sfs
     depends_on:
