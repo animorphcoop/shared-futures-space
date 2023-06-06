@@ -1,17 +1,16 @@
-from celery import shared_task
-
 from collections import defaultdict
-from time import sleep
 from datetime import date
-
-from django.core.mail import EmailMessage
-from django.conf import settings
-from django.utils import timezone
+from time import sleep
 
 from analytics.models import has_visited_today
-from userauth.models import CustomUser
+from celery import shared_task
+from django.conf import settings
+from django.core.mail import EmailMessage, send_mass_mail
+from django.utils import timezone
 from messaging.models import Message
 from river.models import River, RiverMembership
+from userauth.models import CustomUser
+
 
 # Send email asynchronously with a delay.
 @shared_task
