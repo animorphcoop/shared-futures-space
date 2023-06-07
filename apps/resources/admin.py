@@ -1,7 +1,7 @@
-from wagtail.contrib.modeladmin.options import (
-    ModelAdmin, modeladmin_register
-)
-from .models import HowTo, CaseStudy
+from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
+
+from .models import CaseStudy, HowTo
+
 
 @modeladmin_register
 class HowToAdmin(ModelAdmin):
@@ -12,6 +12,7 @@ class HowToAdmin(ModelAdmin):
     add_to_settings_menu = False
     exclude_from_explorer = False
     search_fields = ("title", "summary")
+
 
 @modeladmin_register
 class CaseStudyAdmin(ModelAdmin):

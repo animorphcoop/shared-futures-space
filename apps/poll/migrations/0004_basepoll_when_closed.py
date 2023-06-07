@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('poll', '0003_basepoll_passed'),
+        ("poll", "0003_basepoll_passed"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='basepoll',
-            name='when_closed',
+            model_name="basepoll",
+            name="when_closed",
             field=models.DateTimeField(default=None, null=True),
         ),
     ]

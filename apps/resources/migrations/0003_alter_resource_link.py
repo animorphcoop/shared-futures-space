@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('resources', '0002_initial'),
+        ("resources", "0002_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='resource',
-            name='link',
+            model_name="resource",
+            name="link",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

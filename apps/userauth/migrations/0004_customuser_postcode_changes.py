@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('userauth', '0003_userpair_blocked'),
+        ("userauth", "0003_userpair_blocked"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customuser',
-            name='postcode_changes',
+            model_name="customuser",
+            name="postcode_changes",
             field=models.IntegerField(default=3),
         ),
     ]

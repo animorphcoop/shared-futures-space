@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('messaging', '0005_message_hidden_reason'),
+        ("messaging", "0005_message_hidden_reason"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='message',
-            name='text',
+            model_name="message",
+            name="text",
             field=models.CharField(blank=True, max_length=2000),
         ),
     ]

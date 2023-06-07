@@ -1,7 +1,6 @@
 from wagtail.core import blocks
 
 
-
 class LinkValue(blocks.StructValue):
     """Additional logic for the links"""
 
@@ -11,10 +10,7 @@ class LinkValue(blocks.StructValue):
 
 
 class Link(blocks.StructBlock):
-    link_text = blocks.CharBlock(
-        max_length=50,
-        default='More Details'
-    )
+    link_text = blocks.CharBlock(max_length=50, default="More Details")
     external_link = blocks.URLBlock(required=False)
 
     class Meta:

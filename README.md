@@ -99,6 +99,18 @@ docker-compose exec app pytest -s tests/test_account.py
 
 NOTE: Test run automatically on Gitlab after a push.
 
+Python black code formatting:
+
+```sh
+docker compose exec -it app make format
+```
+
+Python code linting:
+
+```sh
+docker compose exec -it app make lint
+```
+
 ## Uploading Data
 
 1. Fetch zip with autoupload directory to be dropped into repo's root: https://hub.animorph.coop/f/261269

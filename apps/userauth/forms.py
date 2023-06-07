@@ -1,23 +1,27 @@
-from django import forms
-from .models import CustomUser, Organisation, UserAvatar
-from analytics.models import log_signup
-from messaging.models import Message
-
-from django.utils.translation import gettext_lazy as _
-
-from allauth.account.forms import SignupForm, LoginForm, ResetPasswordForm, ChangePasswordForm, ResetPasswordKeyForm
-from wagtail.users.forms import UserEditForm, UserCreationForm
-
-from typing import Type, List, Any, Dict, Tuple, Optional
-from django.http import HttpRequest
-
 import os
+from typing import Any, Dict, List, Optional, Tuple, Type
 
-'''
+from allauth.account.forms import (
+    ChangePasswordForm,
+    LoginForm,
+    ResetPasswordForm,
+    ResetPasswordKeyForm,
+    SignupForm,
+)
+from analytics.models import log_signup
+from django import forms
+from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
+from messaging.models import Message
+from wagtail.users.forms import UserCreationForm, UserEditForm
+
+from .models import CustomUser, Organisation, UserAvatar
+
+"""
 Resolving the first&last name issue, reference
 Making first and last name optional
 https://github.com/brylie/wagtail-social-network/issues/18#issuecomment-892836504
-'''
+"""
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -31,7 +35,17 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomUserEditForm(UserEditForm):
     class Meta(UserEditForm.Meta):
         model: Type[CustomUser] = CustomUser
-        fields = {'post_code', 'is_active', 'email', 'last_name', 'is_superuser', 'year_of_birth', 'display_name', 'groups', 'first_name'}
+        fields = {
+            "post_code",
+            "is_active",
+            "email",
+            "last_name",
+            "is_superuser",
+            "year_of_birth",
+            "display_name",
+            "groups",
+            "first_name",
+        }
 
 
 class CustomUserNameUpdateForm(forms.ModelForm):
@@ -39,7 +53,7 @@ class CustomUserNameUpdateForm(forms.ModelForm):
 
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['display_name']
+        fields: List[str] = ["display_name"]
 
 
 class CustomUserAvatarUpdateForm(forms.ModelForm):
@@ -47,11 +61,11 @@ class CustomUserAvatarUpdateForm(forms.ModelForm):
 
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['avatar']
+        fields: List[str] = ["avatar"]
 
     # need to retrieve an instance of the avatar since it's a foreign key to the user
     def clean_avatar(self) -> UserAvatar:
-        avatar = self.cleaned_data.get('avatar')
+        avatar = self.cleaned_data.get("avatar")
         try:
             avatar_instance = UserAvatar.objects.get(pk=avatar)
         except UserAvatar.DoesNotExist:
@@ -65,30 +79,43 @@ class CustomUserOrganisationUpdateForm(forms.ModelForm):
 
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['organisation_name', 'organisation_url']
+        fields: List[str] = ["organisation_name", "organisation_url"]
+
 
 class CustomUserPostcodeUpdateForm(forms.ModelForm):
     postcode = forms.CharField(max_length=50)
 
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['postcode']
+        fields: List[str] = ["postcode"]
+
 
 class CustomSignupForm(SignupForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['email', 'password1', 'password2']
+        fields: List[str] = ["email", "password1", "password2"]
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomSignupForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs = {'placeholder': 'Your E-mail', 'borken': 'false', 'hx-post': '/search/',
-                                             'hx-post': '/profile/check_email/',
-                                             'hx-trigger': 'focusout[processEmailValue()] delay:500ms',
-                                             'hx-target': '#email-feedback', 'hx-swap': 'innerHTML'}
-        self.fields['password1'].widget.attrs = {'placeholder': 'Password', 'borken': 'false',
-                                                 'onfocusout': 'getPasswordFeedback()'}
-        self.fields['password2'].widget.attrs = {'placeholder': 'Confirm Password', 'borken': 'false',
-                                                 'onfocusout': 'comparePasswords()'}
+        self.fields["email"].widget.attrs = {
+            "placeholder": "Your E-mail",
+            "borken": "false",
+            "hx-post": "/search/",
+            "hx-post": "/profile/check_email/",
+            "hx-trigger": "focusout[processEmailValue()] delay:500ms",
+            "hx-target": "#email-feedback",
+            "hx-swap": "innerHTML",
+        }
+        self.fields["password1"].widget.attrs = {
+            "placeholder": "Password",
+            "borken": "false",
+            "onfocusout": "getPasswordFeedback()",
+        }
+        self.fields["password2"].widget.attrs = {
+            "placeholder": "Confirm Password",
+            "borken": "false",
+            "onfocusout": "comparePasswords()",
+        }
 
     def save(self, request: HttpRequest) -> CustomUser:
         user = super(CustomSignupForm, self).save(request)
@@ -117,50 +144,70 @@ class CustomLoginForm(LoginForm):
 
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['email', 'password']
+        fields: List[str] = ["email", "password"]
 
     def __init__(self, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomLoginForm, self).__init__(*args, **kwargs)
-        self.fields['login'].widget.attrs = {'placeholder': 'Your E-mail', 'borken': 'false',
-                                             'onfocusout': 'processEmailValue()'}
-        self.fields['password'].widget.attrs = {'placeholder': 'Your password', 'borken': 'false', }
+        self.fields["login"].widget.attrs = {
+            "placeholder": "Your E-mail",
+            "borken": "false",
+            "onfocusout": "processEmailValue()",
+        }
+        self.fields["password"].widget.attrs = {
+            "placeholder": "Your password",
+            "borken": "false",
+        }
 
 
 class CustomChangePasswordForm(ChangePasswordForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['oldpassword', 'password1', 'password2']
+        fields: List[str] = ["oldpassword", "password1", "password2"]
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(ChangePasswordForm, self).__init__(*args, **kwargs)
-        self.fields['password1'].widget.attrs = {'placeholder': 'Password', 'borken': 'false',
-                                                 'onfocusout': 'getPasswordFeedback()'}
-        self.fields['password2'].widget.attrs = {'placeholder': 'Confirm Password', 'borken': 'false',
-                                                 'onfocusout': 'comparePasswords()'}
+        self.fields["password1"].widget.attrs = {
+            "placeholder": "Password",
+            "borken": "false",
+            "onfocusout": "getPasswordFeedback()",
+        }
+        self.fields["password2"].widget.attrs = {
+            "placeholder": "Confirm Password",
+            "borken": "false",
+            "onfocusout": "comparePasswords()",
+        }
 
 
 class CustomResetPasswordForm(ResetPasswordForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['email']
+        fields: List[str] = ["email"]
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super(CustomResetPasswordForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs = {'placeholder': 'Your E-mail', 'borken': 'false',
-                                             'onfocusout': 'processEmailValue()'}
+        self.fields["email"].widget.attrs = {
+            "placeholder": "Your E-mail",
+            "borken": "false",
+            "onfocusout": "processEmailValue()",
+        }
 
 
 class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
     class Meta:
         model: Type[CustomUser] = CustomUser
-        fields: List[str] = ['password1', 'password2']
+        fields: List[str] = ["password1", "password2"]
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         self.user = kwargs.pop("user", None)
         self.temp_key = kwargs.pop("temp_key", None)
         super(ResetPasswordKeyForm, self).__init__(*args, **kwargs)
-        self.fields['password1'].widget.attrs = {'placeholder': 'Password', 'borken': 'false',
-                                                 'onfocusout': 'getPasswordFeedback()'}
-        self.fields['password2'].widget.attrs = {'placeholder': 'Confirm Password', 'borken': 'false',
-                                                 'onfocusout': 'comparePasswords()'}
-
+        self.fields["password1"].widget.attrs = {
+            "placeholder": "Password",
+            "borken": "false",
+            "onfocusout": "getPasswordFeedback()",
+        }
+        self.fields["password2"].widget.attrs = {
+            "placeholder": "Confirm Password",
+            "borken": "false",
+            "onfocusout": "comparePasswords()",
+        }
