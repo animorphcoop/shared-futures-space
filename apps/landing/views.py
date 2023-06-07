@@ -1,27 +1,27 @@
-from django.shortcuts import render
+from typing import Union
+
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 # Create your views here.
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from typing import Union
 
 
 def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('dashboard'))
+        return HttpResponseRedirect(reverse("dashboard"))
     else:
-        return render(request, 'landing/landing.html')
+        return render(request, "landing/landing.html")
 
 
 def privacy(request: HttpRequest) -> HttpResponse:
-    return render(request, 'landing/privacy.html')
+    return render(request, "landing/privacy.html")
 
 
 def handle_404(request: HttpRequest, exception: Exception) -> HttpResponse:
-    return render(request, '404.html')
+    return render(request, "404.html")
 
 
 def handle_500(request: HttpRequest) -> HttpResponse:
-    print('500 error handled with redirect')
-    return HttpResponseRedirect(reverse('resources'))
+    print("500 error handled with redirect")
+    return HttpResponseRedirect(reverse("resources"))

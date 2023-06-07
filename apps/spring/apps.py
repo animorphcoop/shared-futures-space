@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class SpringConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'spring'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "spring"

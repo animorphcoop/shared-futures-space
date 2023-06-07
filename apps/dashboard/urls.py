@@ -1,10 +1,10 @@
-from django.urls import path
+from typing import List, Union
+
+from django.urls import URLPattern, URLResolver, path
+
 from . import views
 
-from typing import List, Union
-from django.urls import URLResolver, URLPattern
-
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path('', views.dashboard, name='dashboard'),
-    path('contact/', views.contact, name='contact'),
+    path("", views.dashboard, name="dashboard"),
+    path("contact/", views.contact, name="contact"),
 ]

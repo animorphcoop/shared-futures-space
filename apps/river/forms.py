@@ -1,16 +1,17 @@
-from django import forms
-from .models import River
-from typing import Type, List, Any, Dict, Optional
-
 import os
+from typing import Any, Dict, List, Optional, Type
+
+from django import forms
+
+from .models import River
 
 
 class CreateRiverForm(forms.ModelForm):
     class Meta:
         model: Type[River] = River
-        fields: List[str] = ['title', 'description', 'tags', 'image']
+        fields: List[str] = ["title", "description", "tags", "image"]
         widgets = {
-            'description': forms.Textarea(),
+            "description": forms.Textarea(),
         }
 
 
@@ -19,7 +20,7 @@ class RiverTitleUpdateForm(forms.ModelForm):
 
     class Meta:
         model: Type[River] = River
-        fields: List[str] = ['title']
+        fields: List[str] = ["title"]
 
 
 class RiverDescriptionUpdateForm(forms.ModelForm):
@@ -27,19 +28,20 @@ class RiverDescriptionUpdateForm(forms.ModelForm):
 
     class Meta:
         model: Type[River] = River
-        fields: List[str] = ['description']
+        fields: List[str] = ["description"]
         widgets = {
-            'description': forms.Textarea(),
+            "description": forms.Textarea(),
         }
 
+
 class RiverImageUpdateForm(forms.ModelForm):
-    ALLOWED_IMAGE_TYPES = ['jpg', 'jpeg', 'png', 'webp']
+    ALLOWED_IMAGE_TYPES = ["jpg", "jpeg", "png", "webp"]
 
     class Meta:
         model: Type[River] = River
-        fields: List[str] = ['image']
+        fields: List[str] = ["image"]
 
-    '''
+    """
     def clean(self):
         print(self)
         print('trying to clean')
@@ -58,4 +60,4 @@ class RiverImageUpdateForm(forms.ModelForm):
                 raise forms.ValidationError('Can not identify file type')
 
         return cleaned_data
-    '''
+    """

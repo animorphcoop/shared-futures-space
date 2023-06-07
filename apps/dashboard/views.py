@@ -1,65 +1,104 @@
-from django.shortcuts import render
-from django.conf import settings
-from django.urls import reverse
-from django.forms import Form
-
-from django.contrib.auth.decorators import login_required
-
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseNotAllowed
-from django.views.generic.edit import FormView
-
-from userauth.models import CustomUser
-from resources.models import Resource, SavedResource
-from river.models import River, RiverMembership
-from dashboard.forms import ContactForm
-
 from typing import Tuple, Union
 
 import requests
+from dashboard.forms import ContactForm
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.forms import Form
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseNotAllowed,
+    HttpResponseRedirect,
+)
+from django.shortcuts import render
+from django.urls import reverse
+from django.views.generic.edit import FormView
+from resources.models import Resource, SavedResource
+from river.models import River, RiverMembership
+from userauth.models import CustomUser
 
-def get_weather(postcode: str) -> Tuple[str,str,Union[str,float]]:
+
+def get_weather(postcode: str) -> Tuple[str, str, Union[str, float]]:
     try:
         # try postcode in gb, then ie
         try:
-            code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',GB&appid=' + settings.WEATHER_API_KEY)
+            code_location = requests.get(
+                "https://api.openweathermap.org/geo/1.0/zip?zip="
+                + postcode
+                + ",GB&appid="
+                + settings.WEATHER_API_KEY
+            )
         except requests.exceptions.ConnectionError:
-            code_location = requests.get('https://api.openweathermap.org/geo/1.0/zip?zip=' + postcode + ',IE&appid=' + settings.WEATHER_API_KEY)
+            code_location = requests.get(
+                "https://api.openweathermap.org/geo/1.0/zip?zip="
+                + postcode
+                + ",IE&appid="
+                + settings.WEATHER_API_KEY
+            )
             if code_location.status_code != 200:
-                return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
+                return (
+                    "[no data]",
+                    "https://openweathermap.org/img/wn/01d@2x.png",
+                    "[no data]",
+                )
 
         if code_location.status_code != 200:
-            return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
+            return (
+                "[no data]",
+                "https://openweathermap.org/img/wn/01d@2x.png",
+                "[no data]",
+            )
 
-        weather = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=' + str(code_location.json()['lat']) + '&lon=' + str(code_location.json()['lon']) + '&appid=' + settings.WEATHER_API_KEY).json()
-        desc = weather['weather'][0]['description']
-        image = {'clear sky': 'https://openweathermap.org/img/wn/01d@2x.png',
-            'few clouds': 'https://openweathermap.org/img/wn/02d@2x.png',
-            'overcast clouds': 'https://openweathermap.org/img/wn/02d@2x.png',
-            'scattered clouds': 'https://openweathermap.org/img/wn/03d@2x.png',
-            'broken clouds': 'https://openweathermap.org/img/wn/04d@2x.png',
-            'shower rain': 'https://openweathermap.org/img/wn/09d@2x.png',
-            'light rain': 'https://openweathermap.org/img/wn/09d@2x.png',
-            'rain': 'https://openweathermap.org/img/wn/10d@2x.png',
-            'thunderstorm': 'https://openweathermap.org/img/wn/11d@2x.png',
-            'snow': 'https://openweathermap.org/img/wn/13d@2x.png',
-            'mist': 'https://openweathermap.org/img/wn/50d@2x.png',}[desc]
-        temp = round(weather['main']['temp'] - 273.15, 1)
+        weather = requests.get(
+            "https://api.openweathermap.org/data/2.5/weather?lat="
+            + str(code_location.json()["lat"])
+            + "&lon="
+            + str(code_location.json()["lon"])
+            + "&appid="
+            + settings.WEATHER_API_KEY
+        ).json()
+        desc = weather["weather"][0]["description"]
+        image = {
+            "clear sky": "https://openweathermap.org/img/wn/01d@2x.png",
+            "few clouds": "https://openweathermap.org/img/wn/02d@2x.png",
+            "overcast clouds": "https://openweathermap.org/img/wn/02d@2x.png",
+            "scattered clouds": "https://openweathermap.org/img/wn/03d@2x.png",
+            "broken clouds": "https://openweathermap.org/img/wn/04d@2x.png",
+            "shower rain": "https://openweathermap.org/img/wn/09d@2x.png",
+            "light rain": "https://openweathermap.org/img/wn/09d@2x.png",
+            "rain": "https://openweathermap.org/img/wn/10d@2x.png",
+            "thunderstorm": "https://openweathermap.org/img/wn/11d@2x.png",
+            "snow": "https://openweathermap.org/img/wn/13d@2x.png",
+            "mist": "https://openweathermap.org/img/wn/50d@2x.png",
+        }[desc]
+        temp = round(weather["main"]["temp"] - 273.15, 1)
         return (desc, image, temp)
     except requests.exceptions.ConnectionError:
-        return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
+        return (
+            "[no data]",
+            "https://openweathermap.org/img/wn/01d@2x.png",
+            "[no data]",
+        )
     # catch all for our yet unknown error to be found in the logs
     except Exception as e:
-        print('weather error')
+        print("weather error")
         print(e)
-        return ('[no data]', 'https://openweathermap.org/img/wn/01d@2x.png', '[no data]')
+        return (
+            "[no data]",
+            "https://openweathermap.org/img/wn/01d@2x.png",
+            "[no data]",
+        )
 
-@login_required(login_url='/profile/login/')  # redirect when user is not logged in
+
+@login_required(login_url="/profile/login/")  # redirect when user is not logged in
 def dashboard(request: HttpRequest) -> HttpResponse:
     current_user = request.user
     if not current_user.added_data:
-        return HttpResponseRedirect(reverse('account_add_data'))
+        return HttpResponseRedirect(reverse("account_add_data"))
 
-    #notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new river. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
+    # notifications = ['A new swimmer, Gerry, just joined Halloween Festival!', 'Good news folks we are launching a new river. Please check it out if you are interested.', 'A new resource, Writing business plans, is now available!']
     rivers = []
 
     all_rivers = River.objects.all()
@@ -75,41 +114,45 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         except RiverMembership.DoesNotExist:
             pass
 
-    #resources = ['fav resource one', 'fav resource two', 'fav resource three', 'fav resource four']
+    # resources = ['fav resource one', 'fav resource two', 'fav resource three', 'fav resource four']
     resources = []
     saved_resources = None
     try:
         saved_resources = SavedResource.objects.filter(saved_by=current_user).values()
         for resource in saved_resources:
-            resource_object = Resource.objects.get(pk=resource['saved_resource_id'])
+            resource_object = Resource.objects.get(pk=resource["saved_resource_id"])
             resources.append(resource_object)
 
     except SavedResource.DoesNotExist:
-        print('no favourites')
+        print("no favourites")
 
     context = {
-            'rivers': rivers,
-            'resources': resources,
-            'user': request.user,
-            }
+        "rivers": rivers,
+        "resources": resources,
+        "user": request.user,
+    }
 
     if current_user.post_code != None:
-        weather_desc, weather_img, temperature = get_weather(current_user.post_code.code)
-        context['temperature'] = temperature
-        context['weather_img'] = weather_img
-        context['weather_description'] = weather_desc
+        weather_desc, weather_img, temperature = get_weather(
+            current_user.post_code.code
+        )
+        context["temperature"] = temperature
+        context["weather_img"] = weather_img
+        context["weather_description"] = weather_desc
 
-    return render(request, 'dashboard/dashboard.html', context)
+    return render(request, "dashboard/dashboard.html", context)
 
 
 def contact(request: HttpRequest) -> HttpResponse:
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(['POST'])
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
 
     form = ContactForm(request.POST)
     if form.is_valid():
         form.send_email(request.user)
-        return HttpResponse('<div class="text-large">Thank you for getting in touch!</div>')
+        return HttpResponse(
+            '<div class="text-large">Thank you for getting in touch!</div>'
+        )
     else:
         return render(
             request,

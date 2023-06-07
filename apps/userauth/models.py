@@ -1,15 +1,14 @@
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.urls import reverse
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
-from messaging.models import Chat
 from area.models import PostCode
-
-from typing import List, Optional, Any, Dict, Optional
+from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from messaging.models import Chat
 
 
 class Organisation(models.Model):
@@ -22,11 +21,13 @@ class Organisation(models.Model):
 
 
 class UserAvatar(models.Model):
-    avatar: models.ImageField = models.ImageField(upload_to='profile/avatars/', max_length=100, null=True, blank=True)
+    avatar: models.ImageField = models.ImageField(
+        upload_to="profile/avatars/", max_length=100, null=True, blank=True
+    )
 
     @property
     def image_url(self) -> Optional[str]:
-        if self.avatar and hasattr(self.avatar, 'url'):
+        if self.avatar and hasattr(self.avatar, "url"):
             return self.avatar.url
 
 
@@ -34,26 +35,36 @@ class CustomUser(AbstractUser):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     first_name: None = None
     last_name: None = None
-    signup_date: models.DateTimeField = models.DateTimeField(
-        auto_now_add=True
-    )
+    signup_date: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     added_data: models.BooleanField = models.BooleanField(default=False)
-    display_name: models.CharField = models.CharField(verbose_name=_("Display name"),
-                                                      max_length=30, help_text=_("Will be shown alongside entries"),
-                                                      null=True)
-    year_of_birth: models.PositiveIntegerField = models.PositiveIntegerField(verbose_name=_("Year of birth"),
-                                                                             validators=[MinValueValidator(1900)],
-                                                                             null=True, blank=True)
-    post_code: models.ForeignKey = models.ForeignKey(PostCode, null=True, on_delete=models.SET_NULL)
-    avatar: models.ForeignKey = models.ForeignKey(UserAvatar, null=True, on_delete=models.SET_NULL)
-    editor: models.BooleanField = models.BooleanField(default=False)  # is this user an editor
-    organisation: models.ForeignKey = models.ForeignKey(Organisation, default=None, null=True,
-                                                        on_delete=models.SET_NULL)
-    postcode_changes: models.IntegerField = models.IntegerField(default = 3)
+    display_name: models.CharField = models.CharField(
+        verbose_name=_("Display name"),
+        max_length=30,
+        help_text=_("Will be shown alongside entries"),
+        null=True,
+    )
+    year_of_birth: models.PositiveIntegerField = models.PositiveIntegerField(
+        verbose_name=_("Year of birth"),
+        validators=[MinValueValidator(1900)],
+        null=True,
+        blank=True,
+    )
+    post_code: models.ForeignKey = models.ForeignKey(
+        PostCode, null=True, on_delete=models.SET_NULL
+    )
+    avatar: models.ForeignKey = models.ForeignKey(
+        UserAvatar, null=True, on_delete=models.SET_NULL
+    )
+    editor: models.BooleanField = models.BooleanField(
+        default=False
+    )  # is this user an editor
+    organisation: models.ForeignKey = models.ForeignKey(
+        Organisation, default=None, null=True, on_delete=models.SET_NULL
+    )
+    postcode_changes: models.IntegerField = models.IntegerField(default=3)
 
     class Meta:
-        ordering: List[str] = ['display_name']
-
+        ordering: List[str] = ["display_name"]
 
     @property
     def user_slug(self) -> Optional[str]:
@@ -70,18 +81,26 @@ class CustomUser(AbstractUser):
         return f"{self.email}"
 
 
-def new_chat() -> int:  # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
+def new_chat() -> (
+    int
+):  # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
     c = Chat()
     c.save()
     return c.id
 
 
 class UserPair(models.Model):
-    user1: models.ForeignKey = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='first_user')
-    user2: models.ForeignKey = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='second_user')
-    chat: models.ForeignKey = models.ForeignKey(Chat, null=True, on_delete=models.SET_NULL,
-                                                default=new_chat)  # I'm guessing that if for some reason a chat is deleted, that means we want to purge it and replace it with a new one
-    blocked: models.BooleanField = models.BooleanField(default = False)
+    user1: models.ForeignKey = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="first_user"
+    )
+    user2: models.ForeignKey = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="second_user"
+    )
+    chat: models.ForeignKey = models.ForeignKey(
+        Chat, null=True, on_delete=models.SET_NULL, default=new_chat
+    )  # I'm guessing that if for some reason a chat is deleted, that means we want to purge it and replace it with a new one
+    blocked: models.BooleanField = models.BooleanField(default=False)
+
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         # ensure that there won't be two UserPairs created for one pair of users
         if self.user1.uuid > self.user2.uuid:
@@ -90,15 +109,18 @@ class UserPair(models.Model):
             self.user2.uuid = swp
         return super().save(*args, **kwargs)
 
-
     def block_user(self, user) -> None:
         from messaging.util import send_system_message
+
         Block.objects.create(user_pair=self, blocked_by=user)
-        send_system_message(kind='blocked user', chat=self.chat, context_user_a=user)
+        send_system_message(kind="blocked user", chat=self.chat, context_user_a=user)
         self.blocked = True
         self.save()
 
+
 class Block(models.Model):
     timestamp: models.DateTimeField = models.DateTimeField(default=timezone.now)
-    user_pair: models.ForeignKey = models.ForeignKey(UserPair, on_delete = models.CASCADE)
-    blocked_by: models.ForeignKey = models.ForeignKey('userauth.CustomUser', on_delete = models.SET_NULL, null = True)
+    user_pair: models.ForeignKey = models.ForeignKey(UserPair, on_delete=models.CASCADE)
+    blocked_by: models.ForeignKey = models.ForeignKey(
+        "userauth.CustomUser", on_delete=models.SET_NULL, null=True
+    )

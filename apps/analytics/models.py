@@ -1,16 +1,15 @@
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth import user_logged_in
-from django.dispatch import receiver
-from django.db import models
+from datetime import date, time
+from typing import Any, Dict, Type, Union
 from uuid import uuid4
 
-from datetime import date, time
-from django.http import HttpRequest
-from typing import Type, Dict, Any, Union
-
 from area.models import Area
-from userauth.models import CustomUser
+from django.contrib.auth import user_logged_in
+from django.contrib.auth.hashers import make_password
+from django.db import models
+from django.dispatch import receiver
+from django.http import HttpRequest
 from resources.models import Resource
+from userauth.models import CustomUser
 
 ####
 ## HOW THIS WORKS
@@ -26,29 +25,63 @@ from resources.models import Resource
 ## LOGGING FUNCTIONS
 #
 
+
 # we take request as an argument so that we can log the session if that turns out later to be necessary
 # this is also why we can't hook a post_save signal for this, it doesn't have access to the request
 def log_signup(new_user: CustomUser) -> None:
-    analyticsSession = AnalyticsSession.objects.get_or_create(sessid_hash = '[no session]', area = new_user.post_code.area if new_user.post_code else None)[0]
-    AnalyticsEvent.objects.create(session = analyticsSession, type = AnalyticsEvent.EventType.SIGNUP)
+    analyticsSession = AnalyticsSession.objects.get_or_create(
+        sessid_hash="[no session]",
+        area=new_user.post_code.area if new_user.post_code else None,
+    )[0]
+    AnalyticsEvent.objects.create(
+        session=analyticsSession, type=AnalyticsEvent.EventType.SIGNUP
+    )
+
 
 # use a signal here because django provides stuff for logins so there's not really a good exposed place to put the call
 @receiver(user_logged_in)
-def log_login(sender: Type[CustomUser], request: HttpRequest, user: CustomUser, **kwargs: Dict[str,Any]) -> None:
-    analyticsSession = AnalyticsSession.objects.get_or_create(sessid_hash = make_password(user.display_name, salt = str(date.today())), area = user.post_code.area if user.post_code else None)[0]
-    AnalyticsEvent.objects.create(session = analyticsSession, type = AnalyticsEvent.EventType.LOGIN)
+def log_login(
+    sender: Type[CustomUser],
+    request: HttpRequest,
+    user: CustomUser,
+    **kwargs: Dict[str, Any]
+) -> None:
+    analyticsSession = AnalyticsSession.objects.get_or_create(
+        sessid_hash=make_password(user.display_name, salt=str(date.today())),
+        area=user.post_code.area if user.post_code else None,
+    )[0]
+    AnalyticsEvent.objects.create(
+        session=analyticsSession, type=AnalyticsEvent.EventType.LOGIN
+    )
+
 
 def log_resource_access(resource: Resource, user: CustomUser) -> None:
-    analyticsSession = AnalyticsSession.objects.get_or_create(sessid_hash = make_password(user.display_name, salt = str(date.today())), area = user.post_code.area if user.post_code else None)[0]
-    if not AnalyticsEvent.objects.filter(session = analyticsSession, type = AnalyticsEvent.EventType.RESOURCE, target_resource = resource).exists():
-        AnalyticsEvent.objects.create(session = analyticsSession, date = date.today(), type = AnalyticsEvent.EventType.RESOURCE, target_resource = resource)
+    analyticsSession = AnalyticsSession.objects.get_or_create(
+        sessid_hash=make_password(user.display_name, salt=str(date.today())),
+        area=user.post_code.area if user.post_code else None,
+    )[0]
+    if not AnalyticsEvent.objects.filter(
+        session=analyticsSession,
+        type=AnalyticsEvent.EventType.RESOURCE,
+        target_resource=resource,
+    ).exists():
+        AnalyticsEvent.objects.create(
+            session=analyticsSession,
+            date=date.today(),
+            type=AnalyticsEvent.EventType.RESOURCE,
+            target_resource=resource,
+        )
+
 
 def log_visit(user):
     analytics_session, _ = AnalyticsSession.objects.get_or_create(
         sessid_hash=make_password(user.display_name, salt=str(date.today())),
         area=user.post_code.area if user.post_code else None,
     )
-    AnalyticsEvent.objects.get_or_create(session=analytics_session, type=AnalyticsEvent.EventType.VISIT)
+    AnalyticsEvent.objects.get_or_create(
+        session=analytics_session, type=AnalyticsEvent.EventType.VISIT
+    )
+
 
 def has_visited_today(user):
     analytics_session, _ = AnalyticsSession.objects.get_or_create(
@@ -65,19 +98,30 @@ def has_visited_today(user):
 ## MODELS
 #
 
+
 # an AnalyticsSession records a single user on a single day, without revealing which user but recording their broad location in case it's of interest. we don't
 # connect the same user's activity between days, for privacy reasons
 class AnalyticsSession(models.Model):
-    sessid_hash: models.CharField = models.CharField(max_length = 128) # hash of user.display_name salted with date.today(), so unique per user per day
-    area: models.ForeignKey = models.ForeignKey(Area, on_delete = models.CASCADE, null = True)
+    sessid_hash: models.CharField = models.CharField(
+        max_length=128
+    )  # hash of user.display_name salted with date.today(), so unique per user per day
+    area: models.ForeignKey = models.ForeignKey(
+        Area, on_delete=models.CASCADE, null=True
+    )
+
 
 class AnalyticsEvent(models.Model):
     class EventType(models.TextChoices):
-        SIGNUP = 'SIGNUP', 'signup'
-        LOGIN = 'LOGIN', 'login'
-        RESOURCE = 'RESOURCE', 'resource'
-        VISIT = 'VISIT', 'visit'
-    session: models.ForeignKey = models.ForeignKey(AnalyticsSession, on_delete = models.SET_NULL, null = True)
-    date: models.DateField = models.DateField(default = date.today)
-    type: models.CharField = models.CharField(max_length = 8, choices = EventType.choices)
-    target_resource: models.ForeignKey = models.ForeignKey(Resource, on_delete = models.SET_NULL, null = True)
+        SIGNUP = "SIGNUP", "signup"
+        LOGIN = "LOGIN", "login"
+        RESOURCE = "RESOURCE", "resource"
+        VISIT = "VISIT", "visit"
+
+    session: models.ForeignKey = models.ForeignKey(
+        AnalyticsSession, on_delete=models.SET_NULL, null=True
+    )
+    date: models.DateField = models.DateField(default=date.today)
+    type: models.CharField = models.CharField(max_length=8, choices=EventType.choices)
+    target_resource: models.ForeignKey = models.ForeignKey(
+        Resource, on_delete=models.SET_NULL, null=True
+    )
