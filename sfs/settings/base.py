@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from celery.schedules import crontab
 from typing import List, Dict, TypedDict, Optional, Union
 
 class Template(TypedDict):
@@ -86,8 +87,6 @@ INSTALLED_APPS: List[str] = [
 ]
 
 MIDDLEWARE: List[str] = [
-
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -95,11 +94,9 @@ MIDDLEWARE: List[str] = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-
+    'analytics.middleware.log_visit_middleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-
     'django_htmx.middleware.HtmxMiddleware',
-
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
@@ -224,6 +221,12 @@ LOGIN_URL = '/profile/login/'
 # Redis & Celery configuration
 CELERY_BROKER_URL: str = "redis://redis:6379"
 CELERY_RESULT_BACKEND: str = "redis://redis:6379"
+CELERY_BEAT_SCHEDULE = {
+    'send_daily_messages': {
+        'task': 'userauth.tasks.send_daily_messages',
+        'schedule': crontab(hour=23, minute=0),
+    },
+}
 
 WAGTAIL_USER_EDIT_FORM: str = 'userauth.forms.CustomUserEditForm'
 WAGTAIL_USER_CREATION_FORM: str = 'userauth.forms.CustomUserCreationForm'

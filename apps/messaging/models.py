@@ -71,6 +71,9 @@ class Message(models.Model):
                    self.hidden = False
                    self.save()
 
+    def __str__(self) -> None:
+        return str(self.uuid)
+
 class Chat(models.Model):
     uuid: models.UUIDField = models.UUIDField(default = uuid4, editable = False)
 
