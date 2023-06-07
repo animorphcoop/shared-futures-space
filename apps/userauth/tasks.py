@@ -9,7 +9,7 @@ from django.core.mail import EmailMessage, send_mass_mail
 from django.utils import timezone
 from messaging.models import Message
 from river.models import River, RiverMembership
-from userauth.models import CustomUser
+from userauth.models import CustomUser, UserPair
 
 
 # Send email asynchronously with a delay.
@@ -20,6 +20,9 @@ def send_after(duration: float, message: EmailMessage) -> None:
 
 
 def get_direct_message_data():
+    """
+    Returns two tuples with info about users' direct messages from current day.
+    """
     count_dict = defaultdict(int)
     receivers_dict = defaultdict(set)
 
@@ -38,6 +41,11 @@ def get_direct_message_data():
                 receiver = user_pair.user2
             else:
                 receiver = user_pair.user1
+
+            # skip receiver if they have logged in today
+            if has_visited_today(receiver):
+                continue
+
             count_dict[receiver] += 1
             receivers_dict[receiver].add(message.sender.display_name)
 
@@ -45,9 +53,34 @@ def get_direct_message_data():
     return count_dict, receivers_dict
 
 
+def get_river_chat_set(river):
+    """Return all active chats of river, depending on current river stage."""
+    chat_set = set()
+    if river.current_stage == River.Stage.ENVISION:
+        chat_set = {river.envision_stage.general_chat}
+    elif river.current_stage == River.Stage.PLAN:
+        chat_set = {
+            river.plan_stage.general_chat,
+            river.plan_stage.money_chat,
+            river.plan_stage.place_chat,
+            river.plan_stage.time_chat,
+        }
+    elif river.current_stage == River.Stage.ACT:
+        chat_set = {
+            river.act_stage.general_chat,
+            river.act_stage.money_chat,
+            river.act_stage.place_chat,
+            river.act_stage.time_chat,
+        }
+    elif river.current_stage == River.Stage.REFLECT:
+        chat_set = {river.reflect_stage.general_chat}
+
+    return chat_set
+
+
 def get_river_message_data():
     """
-    Returns two tuples with info about each users new messages. One about
+    Returns two tuples with info about each users' new messages. One about
     message count and another with the river titles with new messages.
     """
     river_dict = defaultdict(set)
@@ -57,44 +90,23 @@ def get_river_message_data():
     #   get all river members
     #   for each member of current river
     #     for each message of river's chats
-    #       increment `river_dict` (user:count, each user has a number of messages waiting for them)
+    #       increment `count_dict` (user:count, each user has a number of messages waiting for them)
     #       increment `river_dict` (user:set, each user has a set of river titles that have messages for them)
     #
     # nb. we use a set because there might be many messages in the same river,
     # and we only want to store the river title once
     for river in River.objects.all():
-        # find chat list
-        chat_list = []
-        if river.current_stage == River.Stage.ENVISION:
-            chat_list = [river.envision_stage.general_chat]
-        elif river.current_stage == River.Stage.PLAN:
-            chat_list = [
-                river.plan_stage.general_chat,
-                river.plan_stage.money_chat,
-                river.plan_stage.place_chat,
-                river.plan_stage.time_chat,
-            ]
-        elif river.current_stage == River.Stage.ACT:
-            chat_list = [
-                river.act_stage.general_chat,
-                river.act_stage.money_chat,
-                river.act_stage.place_chat,
-                river.act_stage.time_chat,
-            ]
-        elif river.current_stage == River.Stage.REFLECT:
-            chat_list = [river.reflect_stage.general_chat]
-
+        river_chats = get_river_chat_set(river)
         # for each member of this river,
         # we add the info we need to the dicts that will be returned
         for membership in RiverMembership.objects.filter(river=river):
-
             # skip user if they have logged in today
             if has_visited_today(membership.user):
                 continue
 
             today = timezone.now().date()
             message_list = Message.objects.filter(
-                timestamp__date=today, chat__in=chat_list
+                timestamp__date=today, chat__in=river_chats
             )
             for message in message_list:
                 count_dict[membership.user] += 1
@@ -110,34 +122,29 @@ def send_daily_messages() -> None:
     direct_count_dict, direct_message_dict = get_direct_message_data()
     river_count_dict, river_message_dict = get_river_message_data()
 
-    for user in river_count_dict:
-        message_count = river_count_dict[user]
+    all_receivers = set(direct_message_dict.keys()) | set(river_message_dict.keys())
 
-        # add direct messages in total count
-        if user in direct_count_dict:
-            message_count += direct_count_dict[user]
+    for user in all_receivers:
+        message_count = river_count_dict[user] + direct_count_dict[user]
+        body = str(message_count)
+        body += " new message(s) waiting for you on Shared Futures Space."
 
         river_set = river_message_dict[user]
-        river_string = "\n".join(river_set)
-        body = f"""
-{message_count} new message(s) waiting for you on Shared Futures Space.
+        if river_set:
+            river_string = "\n".join(river_set)
+            body += "\n\nRivers with messages:\n{river_string}\n"
 
-Rivers with messages:
-{river_string}
-        """
-
-        # add direct messages that user received, if they exist
-        if user in direct_message_dict:
-            senders_set = direct_message_dict[user]
+        senders_set = direct_message_dict[user]
+        if senders_set:
             senders_string = "\n".join(senders_set)
             body += f"\n\nUsers who messaged you:\n{senders_string}\n"
 
         email_list.append(
-            EmailMessage(
-                subject=f"New messages for you on Shared Futures Space",
-                body=body,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[user.email],
+            (
+                f"New messages for you on Shared Futures Space",
+                body,
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
             )
         )
 
