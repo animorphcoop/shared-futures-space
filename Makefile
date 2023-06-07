@@ -1,7 +1,8 @@
 format:
-	black --exclude '/\.venv/' .
+	black .
 	isort --profile black .
 
 lint:
 	isort --check-only --profile black .
-	black --check --exclude '/\.venv/' .
+	black --check .
+	flake8 --ignore=E203,E501,W503
