@@ -21,6 +21,13 @@ you can run:
 
 Note: Run `chmod +x ts_generate_js.sh` if file not executable.
 
+To automatically watch changes in TypeScript files and re-generate, we use
+[entr](https://github.com/eradman/entr). To run:
+
+```sh
+make watch
+```
+
 ### Configuration
 
 Before building, you might optionally want to make settings changes in `sfs/settings/local.py`.
