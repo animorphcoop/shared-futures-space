@@ -6,9 +6,10 @@ GITLAB_TOKEN='ameaqjp9RMWxVtnnzTaD'
 
 # deploy settings
 TARGET_SERVER='sharedfutures.webarch.net'
-REBUILD_REQUIRED=0
+TARGET_USER=''
 TARGET_DIR=''
 TARGET_DATA_DIR=''
+REBUILD_REQUIRED=0
 
 # figure out remote user (defaults to current user on local)
 REMOTE_USER=$(whoami)
@@ -55,8 +56,8 @@ input_dev_prod() {
   echo "# DEPLOY TO DEVELOPMENT/PRODUCTION (REALLY REAL WORLD FOR REAL)?"
   select opt in "Development" "Production" "Cancel"; do
       case $opt in
-          Development ) target_user="dev"; TARGET_DIR="/home/dev/sites/dev"; TARGET_DATA_DIR="/home/dev/sites/dev_data"; break;;
-          Production ) target_user="prod"; TARGET_DIR="/home/prod/sites/prod"; TARGET_DATA_DIR="/home/prod/sites/prod_data"; break;;
+          Development ) TARGET_USER="dev"; TARGET_DIR="/home/dev/sites/dev"; TARGET_DATA_DIR="/home/dev/sites/dev_data"; break;;
+          Production ) TARGET_USER="prod"; TARGET_DIR="/home/prod/sites/prod"; TARGET_DATA_DIR="/home/prod/sites/prod_data"; break;;
           Cancel ) echo "# CANCELLED"; exit;;
       esac
   done
@@ -75,9 +76,10 @@ input_rebuilt() {
 
 # check_files ensures that essential for deployment files exist on remote dev/prod server
 check_files() {
+  echo "# CHECKS FOR DEPLOYING TO $TARGET_USER";
   ssh $REMOTE_USER@$TARGET_SERVER 'bash -s' <<ENDSSH
     # The following commands run on the remote host
-    if sudo -u $target_user test ! -f $TARGET_DATA_DIR/variables.env || sudo -u $target_user test ! -f $TARGET_DATA_DIR/secrets.py || sudo -u $target_user test ! -f $TARGET_DATA_DIR/settings.py || sudo -u $target_user test ! -f $TARGET_DATA_DIR/docker-compose.override.yaml;
+    if sudo -u $TARGET_USER test ! -f $TARGET_DATA_DIR/variables.env || sudo -u $TARGET_USER test ! -f $TARGET_DATA_DIR/secrets.py || sudo -u $TARGET_USER test ! -f $TARGET_DATA_DIR/settings.py || sudo -u $TARGET_USER test ! -f $TARGET_DATA_DIR/docker-compose.override.yaml;
     then
       echo "# COULD NOT FIND ALL REQUIRED LOCAL SETTINGS FILES"
       echo "# wanted $TARGET_DATA_DIR/variables.env, secrets.py, settings.py and docker-compose.override.yaml"
@@ -91,8 +93,9 @@ ENDSSH
 
 # restart_docker pulls latest git changes and restarts docker containers on remote dev/prod server
 restart_docker() {
+  echo "# DEPLOYING TO $TARGET_USER";
   ssh $REMOTE_USER@$TARGET_SERVER 'bash -s' <<ENDSSH
-    sudo su - $target_user
+    sudo su - $TARGET_USER
     cd $TARGET_DIR
     echo "# stopping docker-compose"
     USER_ID=\$(id -u) GROUP_ID=\$(id -g) docker-compose stop > /dev/null
@@ -160,6 +163,5 @@ echo "# DEPLOY SCRIPT II"
 check_tests
 input_dev_prod
 input_rebuilt
-echo "# DEPLOYING TO PRODUCTION OR DEVELOPMENT"
 check_files
 restart_docker
