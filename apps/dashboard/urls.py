@@ -6,5 +6,6 @@ from . import views
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("", views.dashboard, name="dashboard"),
+    path("wizard/", views.wizard, name="wizard"),
     path("contact/", views.contact, name="contact"),
 ]

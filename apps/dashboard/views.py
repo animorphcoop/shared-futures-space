@@ -1,7 +1,8 @@
 from typing import Tuple, Union
 
 import requests
-from dashboard.forms import ContactForm
+from area.models import Area, PostCode
+from dashboard.forms import ContactForm, WizardForm
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.forms import Form
@@ -12,7 +13,7 @@ from django.http import (
     HttpResponseNotAllowed,
     HttpResponseRedirect,
 )
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic.edit import FormView
 from resources.models import Resource, SavedResource
@@ -159,3 +160,22 @@ def contact(request: HttpRequest) -> HttpResponse:
             "dashboard/partials/get_in_touch_form.html",
             {"form": form},
         )
+
+
+def wizard(request):
+    if request.method == "POST":
+        form = WizardForm(request.POST)
+        if form.is_valid():
+            post_code_areas = form.cleaned_data['post_code']
+            for line in post_code_areas.split("\n"):
+                area_name = line.split(":")[0].strip()
+                area, _ = Area.objects.get_or_create(name=area_name)
+                post_code_list = line.split(":")[1]
+                for post_code in post_code_list.split(","):
+                    PostCode.objects.get_or_create(code=post_code.strip(), area=area)
+            return redirect("/")
+    else:
+        form = WizardForm()
+    return render(request, "dashboard/wizard.html", {
+        "form": form,
+    })
