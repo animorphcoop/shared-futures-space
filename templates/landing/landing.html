@@ -19,6 +19,14 @@
 
     <div class="mx-4.5">
 
+        {% if show_wizard %}
+        <div class="text-medium text-center border border-2 border-yellow-500 p-4 mx-auto sm:max-w-md">
+            There are currently no post codes. Click
+            <a href="{% url 'wizard' %}" class="underline">here</a>
+            to configure your Shared Futures Space.
+        </div>
+        {% endif %}
+
         {% include "partials/vertical-spacer.html" with space="6" %}
 
         <h1 class="text-large text-center mx-auto sm:max-w-md">Welcome to a project management platform where your
