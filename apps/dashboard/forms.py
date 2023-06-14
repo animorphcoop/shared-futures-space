@@ -33,3 +33,7 @@ class ContactForm(forms.Form):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=receivers_emails,
         )
+
+
+class WizardForm(forms.Form):
+    post_code = forms.CharField(label="Post Codes", widget=forms.Textarea)
