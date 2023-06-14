@@ -1,0 +1,55 @@
+{% extends "account/base.html" %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block content %}
+
+    <div class="flex flex-col h-screen">
+
+        {% block title %}{% include "partials/title.html" with title="Wizard" %}{% endblock %}
+
+        <form class="sm:w-[32rem] sm:mx-auto" method="POST" action="{% url 'wizard' %}" x-init="setupObserversWizard()">
+            {% csrf_token %}
+
+            {% include "partials/vertical-spacer.html" with space="4" %}
+
+            {% if form.non_field_errors %}
+                <div class="text-large text-center bg-red-important/30 p-4 px-6 mx-4">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% include "partials/vertical-spacer.html" with space="9" %}
+            {% endif %}
+
+            <p class="text-sm p-4 text-black-text">
+                Provide a list of post codes that this Shared Futures Space
+                instance will service. Example:
+                <br>
+                <br>
+                <span class="font-kanit-400">North Belfast: BT14, BT15</span>
+                <br>
+                <span class="font-kanit-400">South Belfast: BT7, BT8</span>
+            </p>
+
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="text-input" label="Post Codes" %}
+                {% include "partials/input-text.html" with field=form.post_code id="text-input" name="text-input" type="text" %}
+            </div>
+
+            <div class="px-4 pb-9">
+                {% include "partials/input-submit.html" with button="Save" id="submit-button" type="submit" %}
+            </div>
+        </form>
+
+        {% block scripts %}
+            <script src="{% static 'js/auth_helper.js' %}"></script>
+            <script src="{% static 'js/wizard.js' %}"></script>
+        {% endblock %}
+    </div>
+
+{% endblock %}
