@@ -8,9 +8,13 @@ from django.urls import reverse
 
 def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     if PostCode.objects.all().count() == 0 and not request.user.is_authenticated:
-        return render(request, "landing/landing.html", {
-            "show_wizard": True,
-        })
+        return render(
+            request,
+            "landing/landing.html",
+            {
+                "show_wizard": True,
+            },
+        )
 
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("dashboard"))

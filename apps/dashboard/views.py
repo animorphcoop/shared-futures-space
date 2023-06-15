@@ -2,8 +2,9 @@ from typing import Tuple, Union
 
 import requests
 from area.models import Area, PostCode
-from dashboard.forms import ContactForm, WizardForm
+from dashboard.forms import AreaForm, ContactForm
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import Form
 from django.http import (
@@ -13,7 +14,7 @@ from django.http import (
     HttpResponseNotAllowed,
     HttpResponseRedirect,
 )
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic.edit import FormView
 from resources.models import Resource, SavedResource
@@ -164,18 +165,24 @@ def contact(request: HttpRequest) -> HttpResponse:
 
 def wizard(request):
     if request.method == "POST":
-        form = WizardForm(request.POST)
+        form = AreaForm(request.POST, request.FILES)
         if form.is_valid():
-            post_code_areas = form.cleaned_data['post_code']
-            for line in post_code_areas.split("\n"):
-                area_name = line.split(":")[0].strip()
-                area, _ = Area.objects.get_or_create(name=area_name)
-                post_code_list = line.split(":")[1]
-                for post_code in post_code_list.split(","):
-                    PostCode.objects.get_or_create(code=post_code.strip(), area=area)
-            return redirect("/")
+            area = form.save()
+            post_code_list = form.cleaned_data["post_code"]
+            for pc in post_code_list.split(","):
+                PostCode.objects.create(code=pc.strip(), area=area)
+            messages.success(
+                request,
+                """Area added! Add another or go to
+                <a class="underline" href="/">landing</a>?""",
+            )
+            return redirect("wizard")
     else:
-        form = WizardForm()
-    return render(request, "dashboard/wizard.html", {
-        "form": form,
-    })
+        form = AreaForm()
+    return render(
+        request,
+        "dashboard/wizard.html",
+        {
+            "form": form,
+        },
+    )

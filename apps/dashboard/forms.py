@@ -1,3 +1,4 @@
+from area.models import Area
 from django import forms
 from django.conf import settings
 from django.core import mail
@@ -35,5 +36,9 @@ class ContactForm(forms.Form):
         )
 
 
-class WizardForm(forms.Form):
-    post_code = forms.CharField(label="Post Codes", widget=forms.Textarea)
+class AreaForm(forms.ModelForm):
+    post_code = forms.CharField(label="Post Codes")
+
+    class Meta:
+        model = Area
+        fields = ["name", "image"]
