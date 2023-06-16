@@ -171,7 +171,6 @@ def wizard(request):
         return redirect("/")
 
     show_finish = False
-    show_finish = True  # TODO REMOVE
     area_list = Area.objects.all()
     if request.method == "POST":
         form = AreaForm(request.POST, request.FILES)
