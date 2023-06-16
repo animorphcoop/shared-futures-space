@@ -90,6 +90,7 @@
                     {% include "river/plan.html" with title="plan stage" reference="plan" id="plan" selected="null" locked=plan_locked %}
                     {% include "river/act.html" with title="act stage" reference="act" id="act" selected="null" locked=act_locked %}
                     {% include "river/reflect.html" with title="reflect stage" reference="reflect" id="reflect" selected="null" locked=reflect_locked %}
+                    {% include "partials/vertical-spacer.html" with space="20" %} {# Keeps space around the salmon so he doesn't cover drawer titles on small screens #}
                 </section>
 
                 {# River information; stage bookmarks, resources. At end so knowledge salmon is always on top #}
@@ -117,8 +118,6 @@
                 </section>
             </div>
         </div>
-
-        {% include "partials/footer-gradient.html" %}
     </div>
 
     {% block scripts %}
