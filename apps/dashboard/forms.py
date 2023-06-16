@@ -1,3 +1,4 @@
+from area.models import Area
 from django import forms
 from django.conf import settings
 from django.core import mail
@@ -33,3 +34,11 @@ class ContactForm(forms.Form):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=receivers_emails,
         )
+
+
+class AreaForm(forms.ModelForm):
+    post_code = forms.CharField(label="Post Codes")
+
+    class Meta:
+        model = Area
+        fields = ["name", "image"]

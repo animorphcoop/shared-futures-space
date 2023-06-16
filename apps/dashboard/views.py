@@ -1,8 +1,11 @@
 from typing import Tuple, Union
 
 import requests
-from dashboard.forms import ContactForm
+from area.models import Area, PostCode
+from dashboard.forms import AreaForm, ContactForm
+from dashboard.models import Wizard
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import Form
 from django.http import (
@@ -12,8 +15,9 @@ from django.http import (
     HttpResponseNotAllowed,
     HttpResponseRedirect,
 )
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.views.generic.edit import FormView
 from resources.models import Resource, SavedResource
 from river.models import River, RiverMembership
@@ -159,3 +163,41 @@ def contact(request: HttpRequest) -> HttpResponse:
             "dashboard/partials/get_in_touch_form.html",
             {"form": form},
         )
+
+
+def wizard(request):
+    wizard_obj, _ = Wizard.objects.get_or_create(id=1)
+    if wizard_obj.completed_at:
+        return redirect("/")
+
+    show_finish = False
+    area_list = Area.objects.all()
+    if request.method == "POST":
+        form = AreaForm(request.POST, request.FILES)
+        if form.is_valid():
+            area = form.save()
+            post_code_list = form.cleaned_data["post_code"]
+            for pc in post_code_list.split(","):
+                PostCode.objects.create(code=pc.strip(), area=area)
+            show_finish = True
+    else:
+        form = AreaForm()
+    return render(
+        request,
+        "dashboard/wizard.html",
+        {
+            "form": form,
+            "show_finish": show_finish,
+            "area_list": area_list,
+        },
+    )
+
+
+def wizard_complete(request):
+    if request.method == "POST":
+        wizard_obj, _ = Wizard.objects.get_or_create(id=1)
+        wizard_obj.completed_at = timezone.now()
+        wizard_obj.save()
+        response = HttpResponse("")
+        response["HX-Redirect"] = "/"
+        return response

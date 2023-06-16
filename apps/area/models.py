@@ -25,6 +25,9 @@ def get_postcode(code):
 class Area(models.Model):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     name: models.CharField = models.CharField(max_length=50)
+    image: models.ImageField = models.ImageField(
+        upload_to="areas/images/", null=True, blank=True
+    )
 
     def __str__(self) -> str:
         return self.name
