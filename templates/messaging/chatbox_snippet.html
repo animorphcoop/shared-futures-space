@@ -9,6 +9,7 @@
           enctype="multipart/form-data"
           hx-trigger="click[validateChat('{{ unique_id }}')] from:#chat-button-{{ unique_id }}, keydown[shiftKey&&keyCode==13&&validateChat('{{ unique_id }}')] from:body, keydown[ctrlKey&&keyCode==13&&validateChat('{{ unique_id }}')] from:body"
           id="chat-form-{{ unique_id }}"
+          x-init="setTimeout(() => setupResetAfterRequest('messages-{{ unique_id }}', 'chat-form-{{ unique_id }}', 'upload-ready-{{ unique_id }}'), 1000)"
           class="p-4.5 m-0 sticky bottom-0 backdrop-blur-sm bg-[linear-gradient(180deg,_#F2000000_1%,_#FFFFFF_25%)] sm:w-[360px]">
         {% csrf_token %}
 
@@ -44,7 +45,7 @@
             {% include "partials/horizontal-spacer.html" with space="1.5" %}
 
             <div class="w-full"
-                 x-init="setTimeout(()=> {createForm('messages-{{ unique_id }}', 'chat-form-{{ unique_id }}', 'upload-ready-{{ unique_id }}', 'file-{{ unique_id }}')}, 500)">
+                 x-init="setTimeout(()=> {createForm('chat-form-{{ unique_id }}', 'upload-ready-{{ unique_id }}', 'file-{{ unique_id }}')}, 500)">
 
 
                     <textarea data-expandable
@@ -75,6 +76,34 @@
 {% block scripts %}
     <script>
 
+        /**
+         * Responsible for resetting the form after sending a message
+         *
+         * @param targetId the id of the messages element
+         * @param formId the id of the form
+         */
+        function setupResetAfterRequest(targetId, formId, uploadId) {
+            document.body.addEventListener('htmx:afterRequest', function(evt) {
+                if (evt.detail.requestConfig.verb === 'post' && evt.detail.target.id === targetId) {
+                    const form = document.getElementById(formId)
+                    if (form) {
+                        form.reset()
+                    }
+                    let uploadCheckbox = document.getElementById(uploadId)
+                    if (!uploadCheckbox.classList.contains('hidden')) {
+                        uploadCheckbox.classList.add('hidden')
+                    }
+                    const elem = document.getElementById(formId).closest('.drawer-contents')
+                    if (elem) {
+                        scrollToBottom(elem)
+                    }
+                }
+            })
+        }
+
+        function scrollToBottom(elem) {
+            elem.scrollTop = elem.scrollHeight;
+        }
 
         function dataURLtoFile(dataurl, filename) {
             var arr = dataurl.split(','),
@@ -89,7 +118,6 @@
             }
             return new File([u8arr], filename, {type: mime});
         }
-
 
         function checkFileContents(fileElemId) {
             let fileElem = document.getElementById(fileElemId)
@@ -164,21 +192,8 @@
 
         }
 
-        function createForm(messages, formId, upload, file) {
-            let messagess = document.getElementById(messages)
+        function createForm(formId, upload, file) {
             let uploadCheckbox = document.getElementById(upload)
-            const observerMessages = new MutationObserver(function (mutations) {
-                mutations.forEach(function () {
-                    let chatForm = document.getElementById(formId)
-                    chatForm.reset()
-                    if (!uploadCheckbox.classList.contains('hidden')) {
-                        uploadCheckbox.classList.add('hidden')
-                    }
-
-                })
-            })
-            let configMessages = {childList: true};
-            observerMessages.observe(messagess, configMessages);
 
             const fileInput = document.getElementById(file)
 

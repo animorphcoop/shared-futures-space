@@ -24,16 +24,14 @@
             <div class="w-full-mx-4.5 bg-white">
 
                 {# GENERAL TAB #}
-                {% url 'river_chat' river.slug 'plan' 'general' 'count' as message_count_url_general %}
 
                 <div x-show="openTab === 'one'">
                     <div id="event-plan-general"
-                            x-init="
-                            setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_general }}`, 'data-swap-plan-general', 'one')}, 1000);"
-                            @chatstatusupdate="setPlanChatOpen('one', $event.detail)"
+                         @chatstatusupdate="setPlanChatOpen('one', $event.detail)"
                     >
-                        <div id="plan-chat-general" hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
-                             hx-trigger="load, every 4s [compareMessages('data-swap-plan-general', 'one')]"
+                        <div id="plan-chat-general"
+                             hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
+                             hx-trigger="load"
                              hx-target="this">
                         </div>
                     </div>
@@ -41,16 +39,14 @@
 
 
                 {# MONEY TAB #}
-                {% url 'river_chat' river.slug 'plan' 'money' 'count' as message_count_url_money %}
 
                 <div x-show="openTab === 'two'">
                     <div id="event-plan-money"
-                            x-init="
-                            setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_money }}`, 'data-swap-plan-money', 'two')}, 1000);"
-                            @chatstatusupdate="setPlanChatOpen('two', $event.detail);"
+                         @chatstatusupdate="setPlanChatOpen('two', $event.detail);"
                     >
-                        <div id="plan-chat-money" hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
-                             hx-trigger="load, every 4s [compareMessages('data-swap-plan-money', 'two')]"
+                        <div id="plan-chat-money"
+                             hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
+                             hx-trigger="load"
                              hx-target="this">
                         </div>
                     </div>
@@ -58,16 +54,14 @@
 
 
                 {# PLACE TAB #}
-                {% url 'river_chat' river.slug 'plan' 'place' 'count' as message_count_url_place %}
 
                 <div x-show="openTab === 'three'">
                     <div id="event-plan-place"
-                            x-init="
-                            setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_place }}`, 'data-swap-plan-place', 'three')}, 1000);"
-                            @chatstatusupdate="setPlanChatOpen('three', $event.detail)"
+                         @chatstatusupdate="setPlanChatOpen('three', $event.detail)"
                     >
-                        <div id="plan-chat-place" hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
-                             hx-trigger="load, every 4s [compareMessages('data-swap-plan-place', 'three')]"
+                        <div id="plan-chat-place"
+                             hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
+                             hx-trigger="load"
                              hx-target="this">
                         </div>
                     </div>
@@ -75,15 +69,14 @@
 
 
                 {# TIME TAB #}
-                {% url 'river_chat' river.slug 'plan' 'time' 'count' as message_count_url_time %}
+                {% url 'river_chat_message_count' river.slug 'plan' 'time' as message_count_url_time %}
                 <div x-show="openTab === 'four'">
                     <div id="event-plan-time"
-                            x-init="
-                            setTimeout(()=>{saveMyPlanUrl(`{{ message_count_url_time }}`, 'data-swap-plan-time', 'four')}, 1000);"
-                            @chatstatusupdate="setPlanChatOpen('four', $event.detail)"
+                         @chatstatusupdate="setPlanChatOpen('four', $event.detail)"
                     >
-                        <div id="plan-chat-time" hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
-                             hx-trigger="load, every 4s [compareMessages('data-swap-plan-time', 'four')]"
+                        <div id="plan-chat-time"
+                             hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
+                             hx-trigger="load"
                              hx-target="this">
                         </div>
                     </div>
@@ -93,29 +86,13 @@
 
         </div>
 
-
-        <div id="data-swap-plan-general" class="hidden"></div>
-        <div id="data-swap-plan-money" class="hidden"></div>
-        <div id="data-swap-plan-place" class="hidden"></div>
-        <div id="data-swap-plan-time" class="hidden"></div>
-
     {% endwith %}
 
     <script>
 
-        //TODO: Will need to specify these separately for each id?
-        //let previouslyMessages = 0
-
     /* Everything that's called from Alpine needs to have unique name */
 
         let currentlyActiveTabPlan = 'one'
-
-        let previouslyMessagesChatsPlan = {
-            'one': 0,
-            'two': 0,
-            'three': 0,
-            'four': 0
-        }
 
         let currentlyActiveChatsPlan = {
             'one': false,
@@ -146,87 +123,10 @@
             //console.log(`just set chat status to ${eventData.chatOpen}`)
         }
 
-        function saveMyPlanUrl(myUrl, dataSwapId, tabId) {
-            //console.log(myUrl)
-            //console.log(dataSwapId)
-
-            return new Promise(function (resolve, reject) {
-                setInterval(function () {
-                    //console.log(document.visibilityState)
-                    //console.log(currentlyActiveTabPlan === tabId)
-                    if (document.visibilityState === 'visible' && currentlyActiveTabPlan === tabId && currentlyActiveChatsPlan[tabId]) {
-                        htmx.ajax('GET', myUrl, `#${dataSwapId}`)
-                    }
-                }, 5000)
-            })
-
-        }
-
         function setCurrentlyActiveTab({openTab}) {
             //console.log('called tab change')
             //console.log(openTab)
             currentlyActiveTabPlan = openTab
-        }
-
-        function getLastMessages(chatId) {
-            //console.log(`getting last message for chat tab ${chatId}`)
-            if (chatId === 'one') {
-                console.log('general')
-                return previouslyMessagesChatsPlan['one']
-            } else if (chatId === 'two') {
-                //console.log('money')
-                return previouslyMessagesChatsPlan['two']
-            } else if (chatId === 'three') {
-                //console.log('place')
-                return previouslyMessagesChatsPlan['three']
-            } else if (chatId === 'four') {
-                //console.log(`time is ${previouslyMessagesChatsPlan['four']}`)
-                return previouslyMessagesChatsPlan['four']
-            }
-
-        }
-
-        function saveNewMessages(chatId, messageCount) {
-            //console.log(`going to override ${chatId} with count ${messageCount}`)
-            if (chatId === 'one') {
-                previouslyMessagesChatsPlan['one'] = messageCount
-            } else if (chatId === 'two') {
-                //console.log('money')
-                previouslyMessagesChatsPlan['two'] = messageCount
-            } else if (chatId === 'three') {
-                //console.log('place')
-                previouslyMessagesChatsPlan['three'] = messageCount
-            } else if (chatId === 'four') {
-                //console.log(`saving time messages count ${messageCount}`)
-                previouslyMessagesChatsPlan['four'] = messageCount
-            }
-
-        }
-
-        function compareMessages(dataSwapId, tabId) {
-
-            {% comment %}Stopping all tabs from checking {% endcomment %}
-            //console.log(`${tabId} is ${currentlyActiveChatsPlan[tabId]}`)
-            if (currentlyActiveTabPlan !== tabId || !currentlyActiveChatsPlan[tabId]) return false
-
-            //console.log(`chat tab id is ${tabId} and the active tab is ${currentlyActiveTabPlan}`)
-
-            //console.log(`checking messages for ${currentlyActiveTabPlan}`)
-
-            let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
-            let newMessagesNumber = Number(newMessagesHtml)
-            //console.log(`my message number is ${newMessagesNumber}`)
-            //console.log(`last messages for this tab is ${getLastMessages(tabId)}`)
-
-
-            if (newMessagesNumber !== getLastMessages(tabId)) {
-
-                saveNewMessages(tabId, newMessagesNumber)
-                return true
-            } else {
-                return false
-            }
-
         }
 
     </script>
