@@ -15,6 +15,7 @@ from .views import (
     RiverChatView,
     RiverStartView,
     RiverView,
+    RiverChatMessageListView,
 )
 
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
@@ -60,9 +61,14 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         name="river_chat",
     ),
     path(
-        "view/<str:slug>/chat/<str:stage>/<str:topic>/<str:count>",
+        "view/<str:slug>/chat/<str:stage>/<str:topic>/count/",
         RiverChatUpdateView.as_view(),
-        name="river_chat",
+        name="river_chat_message_count",
+    ),
+    path(
+        "view/<str:slug>/chat/<str:stage>/<str:topic>/message_list/",
+        RiverChatMessageListView.as_view(template_name="messaging/message_list.html"),
+        name="river_chat_message_list",
     ),
     path(
         "edit/<str:slug>/",

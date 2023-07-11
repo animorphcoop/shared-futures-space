@@ -2,16 +2,11 @@
 
 {% block content %}
 
-    {% url 'river_chat' river.slug 'envision' 'general' 'count' as message_count_url %}
-
-
     <div id="event-envision-general"
-         x-init="
-         setTimeout(()=>{saveMyEnvisionUrl(`{{ message_count_url }}`, 'data-swap-envision-general')}, 1000);"
          @chatstatusupdate="setEnvisionChatOpen($event.detail)"
     >
         <div id="envision-chat-general" hx-get="{% url 'river_chat' river.slug 'envision' 'general' %}"
-             hx-trigger="load, every 4s [newMessagesEnvision('data-swap-envision-general')]"
+             hx-trigger="load"
              hx-target="this">
         </div>
 
@@ -25,48 +20,15 @@
             </div>
         </div>
     </div>
-    <div id="data-swap-envision-general" class="hidden"></div>
     <script>
 
     /* Everything that's called from Alpine needs to have unique name */
-        let previouslyMessages = 0
         let chatOpen = false
 
                 // eventData comes from river_chat.html, received with @chatstatusupdate
         function setEnvisionChatOpen(eventData){
             chatOpen = eventData.chatOpen
             //console.log(`just set chat status to ${eventData.chatOpen}`)
-        }
-
-        function saveMyEnvisionUrl(myUrl, dataSwapId) {
-
-            return new Promise(function (resolve, reject) {
-                setInterval(function () {
-                    //console.log(document.visibilityState)
-                    if (document.visibilityState === 'visible' && chatOpen){
-                        htmx.ajax('GET', myUrl, `#${dataSwapId}`)
-                    }
-
-                }, 5000)
-            })
-
-        }
-
-        function newMessagesEnvision(dataSwapId) {
-
-            if (!chatOpen) return;
-
-            let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
-            let newMessagesNumber = Number(newMessagesHtml)
-
-            if (previouslyMessages === "" || newMessagesNumber !== previouslyMessages){
-                previouslyMessages = newMessagesNumber
-                return true
-            }
-            else {
-                return false
-            }
-
         }
 
     </script>
