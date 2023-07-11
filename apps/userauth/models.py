@@ -10,7 +10,6 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from messaging.models import Chat
 
-
 class Organisation(models.Model):
     uuid: models.UUIDField = models.UUIDField(default=uuid4)
     name: models.CharField = models.CharField(max_length=100)
@@ -62,6 +61,11 @@ class CustomUser(AbstractUser):
         Organisation, default=None, null=True, on_delete=models.SET_NULL
     )
     postcode_changes: models.IntegerField = models.IntegerField(default=3)
+
+    was_active: models.BooleanField = models.BooleanField(default = True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username'] # this just lets us use createsuperuser
+    
 
     class Meta:
         ordering: List[str] = ["display_name"]
