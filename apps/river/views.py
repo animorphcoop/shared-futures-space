@@ -271,8 +271,12 @@ class RiverChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm
 
 
+class RiverChatMessageListView(ChatView):
+    pass
+
+
 class RiverChatUpdateView(ChatUpdateCheck):
-    print("here")
+    pass
 
 
 class CreateRiverPollView(TemplateView):

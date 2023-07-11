@@ -2,15 +2,11 @@
 
 {% block content %}
 
-    {% url 'river_chat' river.slug 'reflect' 'general' 'count' as message_count_url %}
-
-    <div  id="event-reflect-general"
-          x-init="
-            setTimeout(()=>{saveMyReflectUrl(`{{ message_count_url }}`, 'data-swap-reflect-general')}, 1000);"
-            @chatstatusupdate="setReflectChatOpen($event.detail)"
+    <div id="event-reflect-general"
+         @chatstatusupdate="setReflectChatOpen($event.detail)"
     >
         <div id="reflect-chat-general" hx-get="{% url 'river_chat' river.slug 'reflect' 'general' %}"
-             hx-trigger="load, every 4s [newMessagesReflect('data-swap-reflect-general')]"
+             hx-trigger="load"
              hx-target="this">
         </div>
     </div>
@@ -23,50 +19,17 @@
             {% endif %}
         </div>
     </div>
-    <div id="data-swap-reflect-general" class="hidden"></div>
 
     <script>
 
         /* Everything that's called from Alpine needs to have unique name */
 
-        let previouslyMessagesReflect = 0
         let chatOpenReflect = false
 
                 // eventData comes from river_chat.html, received with @chatstatusupdate
         function setReflectChatOpen(eventData){
             chatOpenReflect = eventData.chatOpen
             //console.log(`just set chat status to ${eventData.chatOpen}`)
-        }
-
-        function saveMyReflectUrl(myUrl, dataSwapId) {
-
-            return new Promise(function (resolve, reject) {
-                setInterval(function () {
-                    //console.log(document.visibilityState)
-                    if (document.visibilityState === 'visible' && chatOpenReflect){
-                        htmx.ajax('GET', myUrl, `#${dataSwapId}`)
-                    }
-
-                }, 5000)
-            })
-
-        }
-
-        function newMessagesReflect(dataSwapId) {
-
-            if (!chatOpenReflect) return;
-
-            let newMessagesHtml = document.getElementById(dataSwapId).innerHTML
-            let newMessagesNumber = Number(newMessagesHtml)
-
-            if (previouslyMessagesReflect === "" || newMessagesNumber !== previouslyMessagesReflect) {
-                previouslyMessagesReflect = newMessagesNumber
-                return true
-            } else {
-                return false
-            }
-
-
         }
     </script>
 
