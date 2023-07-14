@@ -14,6 +14,7 @@ from typing import Dict, List, Optional, TypedDict, Union
 
 from celery.schedules import crontab
 
+
 class Template(TypedDict):
     BACKEND: str
     DIRS: List[str]

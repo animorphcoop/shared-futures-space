@@ -10,12 +10,11 @@ from allauth.account.forms import (
 )
 from analytics.models import log_signup
 from django import forms
-from django.http import HttpRequest
+from django.http import HttpRequest, QueryDict
 from django.utils.translation import gettext_lazy as _
 from messaging.models import Message
-from wagtail.users.forms import UserCreationForm, UserEditForm
-from django.http import QueryDict
 from wagtail import hooks
+from wagtail.users.forms import UserCreationForm, UserEditForm
 
 from .models import CustomUser, Organisation, UserAvatar
 
@@ -33,24 +32,31 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model: Type[CustomUser] = CustomUser
 
+
 # these two are used to stop wagtail automatically marking users inactive after editing
 
-@hooks.register('after_edit_user')
+
+@hooks.register("after_edit_user")
 def keep_active_status(request, user):
     user.is_active = user.was_active
     user.save()
 
+
 from django.http import QueryDict
 from wagtail import hooks
-@hooks.register('before_edit_user')
+
+
+@hooks.register("before_edit_user")
 def check_active_status(request, user):
     user.was_active = user.is_active
     user.save()
 
+
 class CustomUserEditForm(UserEditForm):
     first_name: forms.CharField = forms.CharField(required=False, label=_("First name"))
     last_name: forms.CharField = forms.CharField(required=False, label=_("Last name"))
-    is_active: forms.BooleanField = forms.BooleanField(required = False, initial = True)
+    is_active: forms.BooleanField = forms.BooleanField(required=False, initial=True)
+
     class Meta(UserEditForm.Meta):
         model: Type[CustomUser] = CustomUser
         fields = {
