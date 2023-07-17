@@ -11,11 +11,11 @@ from .views import (
     ManageRiverView,
     PlanView,
     ReflectView,
+    RiverChatMessageListView,
     RiverChatUpdateView,
     RiverChatView,
     RiverStartView,
     RiverView,
-    RiverChatMessageListView,
 )
 
 # !!! when adding new urls, don't forget to make them login_required if appropriate!
