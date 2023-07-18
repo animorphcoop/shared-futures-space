@@ -286,6 +286,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 ### Deployment
 
+See the guide: [How to deploy your own instance](deployment-notes.md)
+
 **NOTE:** Before using in a public-facing environment, don't forget to change the default credentials! They're in
 `variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`
 
