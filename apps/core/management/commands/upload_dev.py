@@ -16,8 +16,8 @@ from river.models import River, RiverMembership
 from river.views import CreateRiverPollView
 from userauth.models import CustomUser, Organisation, UserAvatar, UserPair
 from userauth.util import get_userpair
-from wagtail.core.rich_text import RichText
 from wagtail.images.models import Image
+from wagtail.rich_text import RichText
 
 image_dir = "autoupload/"
 

@@ -50,7 +50,7 @@ INSTALLED_APPS: List[str] = [
     "wagtail.images",
     "wagtail.search",
     "wagtail.admin",
-    "wagtail.core",
+    "wagtail",
     "modelcluster",
     "taggit",
     "django.contrib.admin",
@@ -208,7 +208,7 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL: str = "https://sharedfutures.space"
+WAGTAILADMIN_BASE_URL: str = "https://sharedfutures.space"
 CSRF_TRUSTED_ORIGINS = [
     "https://dev.sharedfutures.space",
     "https://sharedfutures.space",

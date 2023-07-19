@@ -11,8 +11,8 @@ from PIL import Image as PillowImage
 from resources.models import CaseStudy, HowTo
 from river.models import River, RiverMembership
 from userauth.models import CustomUser, Organisation, UserAvatar, UserPair
-from wagtail.core.rich_text import RichText
 from wagtail.images.models import Image
+from wagtail.rich_text import RichText
 
 image_dir = "autoupload/"
 

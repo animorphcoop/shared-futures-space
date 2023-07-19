@@ -5,8 +5,8 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, include, path
 from landing.views import handle_404, handle_500
+from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
-from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
