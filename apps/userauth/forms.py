@@ -1,5 +1,4 @@
-import os
-from typing import Any, Dict, List, Optional, Tuple, Type
+from typing import Any, Dict, List, Tuple, Type
 
 from allauth.account.forms import (
     ChangePasswordForm,
@@ -12,11 +11,10 @@ from analytics.models import log_signup
 from django import forms
 from django.http import HttpRequest, QueryDict
 from django.utils.translation import gettext_lazy as _
-from messaging.models import Message
 from wagtail import hooks
 from wagtail.users.forms import UserCreationForm, UserEditForm
 
-from .models import CustomUser, Organisation, UserAvatar
+from .models import CustomUser, UserAvatar
 
 """
 Resolving the first&last name issue, reference
@@ -40,10 +38,6 @@ class CustomUserCreationForm(UserCreationForm):
 def keep_active_status(request, user):
     user.is_active = user.was_active
     user.save()
-
-
-from django.http import QueryDict
-from wagtail import hooks
 
 
 @hooks.register("before_edit_user")
@@ -124,7 +118,6 @@ class CustomSignupForm(SignupForm):
         self.fields["email"].widget.attrs = {
             "placeholder": "Your E-mail",
             "borken": "false",
-            "hx-post": "/search/",
             "hx-post": "/profile/check_email/",
             "hx-trigger": "focusout[processEmailValue()] delay:500ms",
             "hx-target": "#email-feedback",
