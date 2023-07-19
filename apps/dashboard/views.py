@@ -5,23 +5,18 @@ from area.models import Area, PostCode
 from dashboard.forms import AreaForm, ContactForm
 from dashboard.models import Wizard
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.forms import Form
 from django.http import (
     HttpRequest,
     HttpResponse,
-    HttpResponseBadRequest,
     HttpResponseNotAllowed,
     HttpResponseRedirect,
 )
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
-from django.views.generic.edit import FormView
 from resources.models import Resource, SavedResource
 from river.models import River, RiverMembership
-from userauth.models import CustomUser
 
 
 def get_weather(postcode: str) -> Tuple[str, str, Union[str, float]]:
@@ -136,7 +131,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         "user": request.user,
     }
 
-    if current_user.post_code != None:
+    if current_user.post_code is not None:
         weather_desc, weather_img, temperature = get_weather(
             current_user.post_code.code
         )

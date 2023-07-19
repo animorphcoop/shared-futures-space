@@ -1,9 +1,7 @@
 from action.models import Action
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse, HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import redirect
-from django.utils.html import escape
-from messaging.models import Message
 from messaging.util import send_system_message
 from river.models import RiverMembership
 from userauth.util import get_system_user, get_userpair
@@ -17,7 +15,7 @@ def invoke_action_view(request: WSGIRequest) -> HttpResponsePermanentRedirect:
             uuid=request.POST["action_id"], result__isnull=True
         )  # find only actions that haven't run yet
         if action.receiver == request.user or (
-            action.receiver == None and request.user.is_superuser
+            action.receiver is None and request.user.is_superuser
         ):
             if request.POST["choice"] == "invoke":
                 invoke_action(action)
