@@ -64,13 +64,11 @@ def filter_and_cluster_resources(
     how_tos = HowTo.objects.filter(
         Q(title__icontains=search_term)
         | Q(summary__icontains=search_term)
-        | Q(tags__name__icontains=search_term)
     ).distinct()
 
     case_studies = CaseStudy.objects.filter(
         Q(title__icontains=search_term)
         | Q(summary__icontains=search_term)
-        | Q(tags__name__icontains=search_term)
     ).distinct()
     # can iterate over tags only after filtering
     how_tos = objects_tags_cluster_list_overwrite(how_tos)
