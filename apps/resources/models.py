@@ -91,7 +91,7 @@ class CaseStudy(Resource):
         use_json_field=True,
     )
 
-    panels = [
+    content_panels = [
         FieldPanel("body"),
     ]
 
