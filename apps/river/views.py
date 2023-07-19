@@ -1,36 +1,30 @@
-import io
 from itertools import chain
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Type
 
 from action.models import Action
 from action.util import send_offer
-from area.models import Area, PostCode
-from core.utils.tags_declusterer import (
-    objects_tags_cluster_list_overwrite,
-    tag_cluster_to_list,
-)
+from area.models import PostCode
+from core.utils.tags_declusterer import tag_cluster_to_list
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
-from django.db.models.fields import CharField
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import QueryDict
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from messaging.forms import ChatForm
-from messaging.models import Chat, Message
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
 from PIL.Image import Image
 from poll.models import SingleChoicePoll
 from resources.models import CaseStudy, HowTo, Resource
 from resources.views import filter_and_cluster_resources
-from userauth.util import get_system_user, get_userpair
+from userauth.util import get_userpair
 
 from .forms import (
     CreateRiverForm,

@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Tuple
 
 from area.models import Area
-from core.utils.tags_declusterer import tag_cluster_to_list
 from django.views.generic.base import TemplateView
 from river.models import River, RiverMembership
 from userauth.models import CustomUser

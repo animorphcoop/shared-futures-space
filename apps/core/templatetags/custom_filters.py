@@ -1,7 +1,6 @@
-from typing import Any, Dict, Iterable, List, TypeVar
+from typing import Iterable, List, TypeVar
 
 from django import template
-from django.http import HttpResponse
 
 register = template.Library()
 

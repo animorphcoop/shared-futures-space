@@ -1,20 +1,17 @@
 import json
-import time
 from io import BytesIO
 
-import requests
 from allauth.account.admin import EmailAddress
 from area.models import Area, PostCode
-from django.core.files.images import ImageFile
-from django.core.management.base import BaseCommand, CommandError
+from django.files.images import ImageFile
+from django.management.base import BaseCommand
 from django.utils import timezone
 from messaging.models import Message
 from PIL import Image as PillowImage
 from poll.models import SingleChoicePoll, SingleVote
 from resources.models import CaseStudy, HowTo
 from river.models import River, RiverMembership
-from river.views import CreateRiverPollView
-from userauth.models import CustomUser, Organisation, UserAvatar, UserPair
+from userauth.models import CustomUser, Organisation, UserAvatar
 from userauth.util import get_userpair
 from wagtail.images.models import Image
 from wagtail.rich_text import RichText

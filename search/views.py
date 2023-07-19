@@ -1,9 +1,7 @@
-from typing import Any, List
-
 from django.core.paginator import EmptyPage
 from django.core.paginator import Page as PaginatorPage
 from django.core.paginator import PageNotAnInteger, Paginator
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.template.response import TemplateResponse
 from wagtail.models import Page
 from wagtail.search.models import Query
