@@ -1,7 +1,7 @@
 # How to deploy your own instance
 
 This is a guide on how to deploy a new instance of Shared Futures Space on a
-fresh Debian 11 installation.
+fresh Debian 12 installation.
 
 This assumes you have root access.
 
@@ -11,27 +11,26 @@ This assumes you have root access.
 apt-get update
 ```
 
-# Install docker
+## Install docker
 
 ```sh
 apt-get install ca-certificates curl gnupg
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 chmod a+r /etc/apt/keyrings/docker.gpg
-chmod a+r /etc/apt/keyrings/docker.gpg
-echo   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-# Install Node.js LTS
+## Install Node.js LTS
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s lts
 npm install -g n
 ```
 
-# Install caddy
+## Install caddy
 
 ```sh
 apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
@@ -41,7 +40,7 @@ apt-get update
 apt-get install caddy
 ```
 
-To configure Caddy, replace /etc/caddy/Caddyfile with:
+To configure Caddy, replace `/etc/caddy/Caddyfile` with:
 
 ```
 your-shared-futures-space.com:443 {
@@ -60,20 +59,26 @@ your-shared-futures-space.com:443 {
 }
 ```
 
-# Create deploy user
+## Setup /var/www
 
 ```sh
-apt-get install git
+cd /var/
+mkdir wwww
+chown -R deploy:www-data www
+```
+
+## Create deploy user
+
+```sh
 adduser deploy  # empty password
 ```
 
 # Clone repository
 
 ```sh
+apt-get install -y git
 sudo -i -u deploy
-cd /var/
-mkdir www
-cd www/
+cd /var/www/
 git clone https://git.coop:animorph-coop/shared-futures-space
 ```
 
