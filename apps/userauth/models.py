@@ -35,6 +35,7 @@ class CustomUser(AbstractUser):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     first_name: None = None
     last_name: None = None
+    email = models.EmailField(_("email address"), blank=True, unique=True)
     signup_date: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     added_data: models.BooleanField = models.BooleanField(default=False)
     display_name: models.CharField = models.CharField(
