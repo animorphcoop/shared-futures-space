@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
+import sys
 from typing import Dict, List, Optional, TypedDict, Union
 
 from celery.schedules import crontab
@@ -23,9 +25,6 @@ class Template(TypedDict):
 
 
 # Build paths inside the river like this: os.path.join(BASE_DIR, ...)
-import os
-import sys
-
 PROJECT_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR: str = os.path.dirname(PROJECT_DIR)
 sys.path.append(os.path.normpath(os.path.join(BASE_DIR, "apps")))
