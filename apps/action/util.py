@@ -1,16 +1,13 @@
-from django.urls import reverse
-from django.utils.html import escape
-from messaging.models import Message
-from messaging.util import get_userpair, send_system_message
-from userauth.util import get_system_user, get_userpair
+from messaging.util import send_system_message
+from userauth.util import get_userpair
 
 from .models import Action
 
 
 def send_offer(user_from, user_to, kind, param_river=None):
-    existing_offers = Action.objects.filter(
-        receiver=user_to, kind=kind, param_river=param_river, result__isnull=True
-    )
+    # existing_offers = Action.objects.filter(
+    #     receiver=user_to, kind=kind, param_river=param_river, result__isnull=True
+    # )
     # for offer in existing_offers: # remove any duplicates automatically
     # offer.result = 'rescinded'
     # offer.save()
