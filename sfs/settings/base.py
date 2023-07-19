@@ -186,9 +186,14 @@ ACCOUNT_FORMS = {"signup": "userauth.forms.CustomSignupForm"}
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
 # JavaScript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
 # See https://docs.djangoproject.com/en/3.2/ref/contrib/staticfiles/#manifeststaticfilesstorage
-STATICFILES_STORAGE: str = (
-    "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-)
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+    },
+}
 
 STATIC_ROOT: str = os.path.join(BASE_DIR, "static")
 STATIC_URL: str = "/static/"
