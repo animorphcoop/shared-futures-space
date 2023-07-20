@@ -49,7 +49,7 @@ macOS:
 ```sh
 # Mac has obfuscated groups for Docker, so we use user ID
 # for Dockerfile group instead of group ID
-USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up
+USER_ID=$(id -u) GROUP_ID=$(id -u) docker-compose up --build
 ```
 
 Windows (running Linux containers):
@@ -78,6 +78,12 @@ Create superuser:
 
 ```sh
 docker-compose exec app python3 manage.py createsuperuser
+```
+
+Install tailwind theme:
+
+```sh
+docker-compose run app python3 manage.py tailwind install
 ```
 
 Collect static:
