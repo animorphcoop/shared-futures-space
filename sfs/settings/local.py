@@ -38,6 +38,7 @@ SOCIALACCOUNT_PROVIDERS: Dict[str, Dict[str, Dict[str, str]]] = {
         "APP": {"client_id": GOOGLE_CLIENT_ID, "secret": GOOGLE_SECRET, "key": ""}
     },
 }
+ENABLE_ALLAUTH_SOCIAL_LOGIN = True
 
 LOGOUT_REDIRECT_URL: str = "/"
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL: Optional[str] = "/dashboard/"

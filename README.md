@@ -282,6 +282,8 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 ```
 
+Also, make sure `ENABLE_ALLAUTH_SOCIAL_LOGIN = True` is present on your settings file.
+
 ### Deployment
 
 **NOTE:** Before using in a public-facing environment, don't forget to change the default credentials! They're in
