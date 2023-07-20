@@ -13,8 +13,8 @@ from river.models import River
 from userauth.models import UserAvatar
 from wagtail.images.models import Image
 
-
 SMALLEST_JPG_BASE64 = b"/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAFA3PEY8MlBGQUZaVVBfeMiCeG5uePWvuZHI////////////////////////////////////////////////////wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAABP/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8Aa//Z"
+
 
 # a user account to use during testing
 @pytest.fixture(scope="function")
