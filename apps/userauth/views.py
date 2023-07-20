@@ -16,6 +16,7 @@ from allauth.account.views import (
 )
 from area.models import PostCode, get_postcode
 from core.utils.postcode_matcher import filter_postcode
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
@@ -301,6 +302,11 @@ def check_email(request: WSGIRequest) -> HttpResponse:
 
 class CustomSignupView(SignupView):
     form_class: Type[CustomSignupForm] = CustomSignupForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["show_social_logins"] = settings.ENABLE_ALLAUTH_SOCIAL_LOGIN
+        return context
 
 
 class CustomLoginView(LoginView):
