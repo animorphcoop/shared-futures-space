@@ -71,9 +71,11 @@ chown -R deploy:www-data www
 
 ```sh
 adduser deploy  # empty password
+adduser deploy docker
+adduser deploy sudo
 ```
 
-# Clone repository
+## Clone repository
 
 ```sh
 apt-get install -y git
@@ -82,20 +84,31 @@ cd /var/www/
 git clone https://git.coop:animorph-coop/shared-futures-space
 ```
 
-# Configure instance
+## Configure instance
 
 * Create `sfs/settings/secrets.py` with:
     * `SECRET_KEY`
     * `EMAIL_HOST_PASSWORD`
-    * `FACEBOOK_CLIENT_ID`
-    * `FACEBOOK_SECRET`
+    * `WEATHER_API_KEY`
     * `GOOGLE_CLIENT_ID`
     * `GOOGLE_SECRET`
 * Change `sfs/settings/settings.py` to import `from .production import *` instead of dev.
 * Change `variables.env` away from default values.
+* Change `WAGTAILADMIN_BASE_URL` in `sfs/settings/base.py`.
+* Change `CSRF_TRUSTED_ORIGINS` in `sfs/settings/base.py`.
+* Change `ALLOWED_HOSTS` in `sfs/settings/production.py`.
 
-# Initialise instance
+## Initialise instance
 
 ```sh
 USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build
+```
+
+## Troubleshooting
+
+`nftables` is the default firewall in Debian 12, which might interfere. Check
+status with:
+
+```sh
+systemctl status nftables
 ```
