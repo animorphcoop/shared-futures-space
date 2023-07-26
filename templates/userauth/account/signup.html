@@ -78,10 +78,10 @@
         </form>
 
         <div class="flex flex-col flex-grow justify-end">
-            <section
-                    class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_41.67%)] flex flex-grow flex-col items-center">
-
+            <section class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_41.67%)] flex flex-grow flex-col items-center">
+                {% if show_social_logins %}
                 {% include "socialaccount/partials/provider_list.html" with process="login" %}
+                {% endif %}
             </section>
 
             <section class="bg-yellow text-center">

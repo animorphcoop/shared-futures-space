@@ -6,8 +6,6 @@ from .base import INSTALLED_APPS
 if exists("sfs/settings/secrets.py"):
     from .secrets import (
         EMAIL_HOST_PASSWORD,
-        FACEBOOK_CLIENT_ID,
-        FACEBOOK_SECRET,
         GOOGLE_CLIENT_ID,
         GOOGLE_SECRET,
         SECRET_KEY,
@@ -18,8 +16,6 @@ else:
     SECRET_KEY = "..."
     WEATHER_API_KEY = "..."
     EMAIL_HOST_PASSWORD = "..."
-    FACEBOOK_CLIENT_ID = "..."
-    FACEBOOK_SECRET = "..."
     GOOGLE_CLIENT_ID = "..."
     GOOGLE_SECRET = "..."
 
@@ -29,7 +25,6 @@ SITE_ID = 1
 SITE_DOMAIN = "sharedfutures.space"
 
 INSTALLED_APPS += [
-    "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.google",
 ]
 
@@ -39,13 +34,11 @@ AUTHENTICATION_BACKENDS: List[str] = [
 ]
 
 SOCIALACCOUNT_PROVIDERS: Dict[str, Dict[str, Dict[str, str]]] = {
-    "facebook": {
-        "APP": {"client_id": FACEBOOK_CLIENT_ID, "secret": FACEBOOK_SECRET, "key": ""}
-    },
     "google": {
         "APP": {"client_id": GOOGLE_CLIENT_ID, "secret": GOOGLE_SECRET, "key": ""}
     },
 }
+ENABLE_ALLAUTH_SOCIAL_LOGIN = True
 
 LOGOUT_REDIRECT_URL: str = "/"
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL: Optional[str] = "/dashboard/"

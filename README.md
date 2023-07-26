@@ -268,18 +268,10 @@ To use social account logins, add the following to local.py:
 from .base import INSTALLED_APPS
 
 INSTALLED_APPS += [
-    'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google'
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'facebook': {
-        'APP': {
-            'client_id': '...',
-            'secret': '...',
-            'key': ''
-        }
-    },
     'google': {
         'APP': {
             'client_id': '...',
@@ -289,6 +281,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 ```
+
+Also, make sure `ENABLE_ALLAUTH_SOCIAL_LOGIN = True` is present on your settings file.
 
 ### Deployment
 
