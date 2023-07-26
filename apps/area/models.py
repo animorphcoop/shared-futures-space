@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, Tuple
 from uuid import uuid4
 
 from django.core.exceptions import ValidationError

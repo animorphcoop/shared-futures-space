@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from django.contrib.auth.decorators import login_required
-from django.urls import URLPattern, URLResolver, include, path
+from django.urls import URLPattern, URLResolver, path
 
 from .views import invoke_action_view
 

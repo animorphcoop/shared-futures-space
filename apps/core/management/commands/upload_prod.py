@@ -1,18 +1,14 @@
 import json
 from io import BytesIO
 
-import requests
-from allauth.account.admin import EmailAddress
 from area.models import Area, PostCode
 from django.core.files.images import ImageFile
-from django.core.management.base import BaseCommand, CommandError
-from messaging.models import Message
+from django.core.management.base import BaseCommand
 from PIL import Image as PillowImage
 from resources.models import CaseStudy, HowTo
-from river.models import River, RiverMembership
-from userauth.models import CustomUser, Organisation, UserAvatar, UserPair
-from wagtail.core.rich_text import RichText
+from userauth.models import UserAvatar
 from wagtail.images.models import Image
+from wagtail.rich_text import RichText
 
 image_dir = "autoupload/"
 

@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
+import sys
 from typing import Dict, List, Optional, TypedDict, Union
 
 from celery.schedules import crontab
@@ -23,9 +25,6 @@ class Template(TypedDict):
 
 
 # Build paths inside the river like this: os.path.join(BASE_DIR, ...)
-import os
-import sys
-
 PROJECT_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR: str = os.path.dirname(PROJECT_DIR)
 sys.path.append(os.path.normpath(os.path.join(BASE_DIR, "apps")))
@@ -50,7 +49,7 @@ INSTALLED_APPS: List[str] = [
     "wagtail.images",
     "wagtail.search",
     "wagtail.admin",
-    "wagtail.core",
+    "wagtail",
     "modelcluster",
     "taggit",
     "django.contrib.admin",
@@ -186,9 +185,14 @@ ACCOUNT_FORMS = {"signup": "userauth.forms.CustomSignupForm"}
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
 # JavaScript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
 # See https://docs.djangoproject.com/en/3.2/ref/contrib/staticfiles/#manifeststaticfilesstorage
-STATICFILES_STORAGE: str = (
-    "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-)
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+    },
+}
 
 STATIC_ROOT: str = os.path.join(BASE_DIR, "static")
 STATIC_URL: str = "/static/"
@@ -208,7 +212,7 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL: str = "https://sharedfutures.space"
+WAGTAILADMIN_BASE_URL: str = "https://sharedfutures.space"
 CSRF_TRUSTED_ORIGINS = [
     "https://dev.sharedfutures.space",
     "https://sharedfutures.space",

@@ -1,18 +1,16 @@
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, List, Type
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.paginator import Paginator
 from django.db.models.query import QuerySet
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.template.loader import get_template
+from django.shortcuts import render
 from django.urls import reverse
-from django.utils.text import slugify
 from django.views.generic.base import TemplateView, View
 from river.models import River, RiverMembership
 from river.util import get_chat_containing_river
 from userauth.models import CustomUser
-from userauth.util import get_system_user, get_userpair, slug_to_user, user_to_slug
+from userauth.util import get_system_user, get_userpair, slug_to_user
 
 from .forms import ChatForm
 from .models import Chat, Flag, Message

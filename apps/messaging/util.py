@@ -1,12 +1,10 @@
-import os
-from typing import Optional, Union
+from typing import Optional
 from uuid import UUID
 
-from django.template import Context, Template
 from messaging.models import Chat, Message
 from poll.models import BasePoll
 from userauth.models import CustomUser
-from userauth.util import get_system_user, get_userpair
+from userauth.util import get_system_user
 
 
 def send_system_message(

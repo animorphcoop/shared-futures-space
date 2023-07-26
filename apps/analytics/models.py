@@ -1,6 +1,5 @@
-from datetime import date, time
-from typing import Any, Dict, Type, Union
-from uuid import uuid4
+from datetime import date
+from typing import Any, Dict, Type
 
 from area.models import Area
 from django.contrib.auth import user_logged_in

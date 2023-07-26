@@ -3,9 +3,8 @@ from uuid import uuid4
 
 from area.models import PostCode
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from messaging.models import Chat
@@ -35,6 +34,7 @@ class CustomUser(AbstractUser):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     first_name: None = None
     last_name: None = None
+    email = models.EmailField(_("email address"), blank=True, unique=True)
     signup_date: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     added_data: models.BooleanField = models.BooleanField(default=False)
     display_name: models.CharField = models.CharField(

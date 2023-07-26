@@ -1,7 +1,4 @@
-from typing import Any, List
-
-from django.conf import settings
-from django.core.handlers.wsgi import WSGIRequest
+from typing import List
 
 from .base import *
 

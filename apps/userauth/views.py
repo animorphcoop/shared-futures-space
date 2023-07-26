@@ -14,14 +14,12 @@ from allauth.account.views import (
     PasswordResetView,
     SignupView,
 )
-from allauth.utils import get_form_class
 from area.models import PostCode, get_postcode
 from core.utils.postcode_matcher import filter_postcode
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.mail import EmailMessage
-from django.db.models import Q
 from django.dispatch import receiver
 from django.http import (
     HttpRequest,
@@ -30,18 +28,14 @@ from django.http import (
     HttpResponseRedirect,
 )
 from django.http.request import QueryDict
-from django.http.response import HttpResponseBase
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
-from django.utils import timezone
 from django.views.generic.base import TemplateView
 from messaging.forms import ChatForm
 from messaging.models import Message
 from messaging.util import get_requests_chat, send_system_message
 from messaging.views import ChatView
-from userauth.models import Block, CustomUser
-
-from .forms import (
+from userauth.forms import (
     CustomChangePasswordForm,
     CustomLoginForm,
     CustomResetPasswordForm,
@@ -53,11 +47,9 @@ from .forms import (
     CustomUserOrganisationUpdateForm,
     CustomUserPostcodeUpdateForm,
 )
-from .models import CustomUser, Organisation, UserAvatar, UserPair
-from .tasks import send_after
-from .util import get_userpair, slug_to_user, user_to_slug
-
-# from userauth.util import get_userpair
+from userauth.models import Block, CustomUser, Organisation, UserAvatar, UserPair
+from userauth.tasks import send_after
+from userauth.util import get_userpair, slug_to_user, user_to_slug
 
 
 # redirecting to the profile url using the request data

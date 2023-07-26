@@ -9,7 +9,7 @@ from django.core.mail import EmailMessage, send_mass_mail
 from django.utils import timezone
 from messaging.models import Message
 from river.models import River, RiverMembership
-from userauth.models import CustomUser, UserPair
+from userauth.models import UserPair
 
 
 # Send email asynchronously with a delay.
@@ -132,7 +132,7 @@ def send_daily_messages() -> None:
         river_set = river_message_dict[user]
         if river_set:
             river_string = "\n".join(river_set)
-            body += "\n\nRivers with messages:\n{river_string}\n"
+            body += f"\n\nRivers with messages:\n{river_string}\n"
 
         senders_set = direct_message_dict[user]
         if senders_set:
@@ -141,7 +141,7 @@ def send_daily_messages() -> None:
 
         email_list.append(
             (
-                f"New messages for you on Shared Futures Space",
+                "New messages for you on Shared Futures Space",
                 body,
                 settings.DEFAULT_FROM_EMAIL,
                 [user.email],
