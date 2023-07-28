@@ -56,5 +56,8 @@
 </section>
 
 {% block scripts %}
+    <!--
     <script src="{% static 'js/organisation_add_new.js' %}"></script>
+    -->
+    {% vite_asset 'templates/userauth/account/ts/organisation_add_new.ts' %}
 {% endblock %}

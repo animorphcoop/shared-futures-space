@@ -1,21 +1,20 @@
 /* helper functions used in signup and login - import first!*/
 
-const emailInput = (<HTMLInputElement>document.getElementById("email-input"))
-const inputFeedback: HTMLElement | null = document.getElementById("email-feedback")
+export const emailInput = (<HTMLInputElement>document.getElementById("email-input"))
+export const inputFeedback: HTMLElement | null = document.getElementById("email-feedback")
 
-const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
-const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
+export const passwordInputOne = (<HTMLInputElement>document.getElementById("password-input1"))
+export const passwordFeedbackOne: HTMLElement | null = document.getElementById("password-feedback1")
 
-const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
-const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
-
-
-const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
+export const passwordInputTwo = (<HTMLInputElement>document.getElementById("password-input2"))
+export const passwordFeedbackTwo: HTMLElement | null = document.getElementById("password-feedback2")
 
 
-function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () => void) {
+export const submitButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submit-button")
+
+export function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () => void) {
     const observerEmail = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
+        mutations.forEach(function () {
             if (feedback.innerText === '') {
                 if (!feedback.classList.contains('hidden')) {
                     feedback.classList.add('hidden')
@@ -38,7 +37,7 @@ function newObserver(input: HTMLInputElement, feedback: HTMLElement, action: () 
 }
 
 
-function processEmailValue() {
+export function processEmailValue() {
 
     if (emailInput == null || inputFeedback == null) return
     const emailPassed = emailInput.value
@@ -60,7 +59,7 @@ function processEmailValue() {
 }
 
 
-function toggleSubmitButton(toEnable: boolean) {
+export function toggleSubmitButton(toEnable: boolean) {
 
     if (submitButton == null) return
 
@@ -78,7 +77,7 @@ function toggleSubmitButton(toEnable: boolean) {
 }
 
 
-function validateEmail(address: string) {
+export function validateEmail(address: string) {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/.test(address)) {
         return true
     }
@@ -86,7 +85,7 @@ function validateEmail(address: string) {
 }
 
 
-function validateInputFeedback(input: HTMLInputElement, feedback: HTMLElement,) {
+export function validateInputFeedback(input: HTMLInputElement, feedback: HTMLElement,) {
     if (input.value.length < 1 || feedback.innerText != '') {
         input.setAttribute("borken", "true");
         return 1
@@ -95,7 +94,7 @@ function validateInputFeedback(input: HTMLInputElement, feedback: HTMLElement,) 
     }
 }
 
-function comparePasswords() {
+export function comparePasswords() {
     if (passwordInputOne == null || passwordInputTwo == null) return
 
     const passwordOne: string = passwordInputOne.value
@@ -118,7 +117,7 @@ function comparePasswords() {
 
 }
 
-function getPasswordFeedback() {
+export function getPasswordFeedback() {
     if (passwordFeedbackOne != null && passwordFeedbackTwo != null) {
 
         const passwordEntered: string = (<HTMLInputElement>document.getElementById("password-input1")).value
@@ -142,7 +141,7 @@ function getPasswordFeedback() {
 }
 
 
-function checkPasswordQuality(pass: string) {
+export function checkPasswordQuality(pass: string) {
 
     const score = scorePassword(pass);
 
@@ -161,7 +160,7 @@ function checkPasswordQuality(pass: string) {
 * Used
 * https://stackoverflow.com/questions/948172/password-strength-meter#comment120524342_11268104
 * */
-function scorePassword(pass: string) {
+export function scorePassword(pass: string) {
     let score = 0;
 
     // variation range

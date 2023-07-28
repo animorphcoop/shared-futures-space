@@ -1,5 +1,10 @@
 /* Needs auth-helper to run */
 
+import {newObserver, inputFeedback, processEmailValue, emailInput, toggleSubmitButton} from './auth_helper.ts'
+import {expose} from "@/templates/ts/utils.ts";
+
+expose({ setupObserversLogin, processEmailValue })
+
 // triggered from x-init on the form
 function setupObserversLogin() {
 

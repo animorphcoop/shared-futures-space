@@ -1,5 +1,6 @@
 {% load static wagtailcore_tags wagtailuserbar %}
 {% load tailwind_tags %}
+{% load django_vite %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -31,22 +32,24 @@
 
     {% endblock %}
     {% tailwind_css %}
+    {% vite_hmr_client %}
+    {% vite_asset 'templates/ts/base.ts' %}
 
 
     {% comment %}HTMX{% endcomment %}
 
     {% comment %}<script src="https://unpkg.com/htmx.org@1.8.0"></script>{% endcomment %}
-    <script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>
+{#    <script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>#}
 
     <!--Alpine JS-->
     {% comment %}<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>{% endcomment %}
-    <script src="{% static 'packages/alpinejs/alpinejs_3.10.5_min.js' %}" defer></script>
+{#    <script src="{% static 'packages/alpinejs/alpinejs_3.10.5_min.js' %}" defer></script>#}
 
     <!--Flickity CSS+JS-->
     {% comment %}<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>{% endcomment %}
-    <link rel="stylesheet" type="text/css" href="{% static 'packages/flickity/flickity_2.3.0_min.css' %}">
-    <script src="{% static 'packages/flickity/flickity_2.3.0_min.js' %}"></script>
+{#    <link rel="stylesheet" type="text/css" href="{% static 'packages/flickity/flickity_2.3.0_min.css' %}">#}
+{#    <script src="{% static 'packages/flickity/flickity_2.3.0_min.js' %}"></script>#}
 
 </head>
 

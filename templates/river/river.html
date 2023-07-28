@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load custom_filters %}
 {% load static %}
+{% load django_vite %}
+
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_css %}
@@ -121,6 +123,7 @@
     </div>
 
     {% block scripts %}
+        {% vite_asset 'templates/messaging/ts/messaging.ts' %}
         {% comment %}
         TODO: Put me in typescript
         {% endcomment %}
