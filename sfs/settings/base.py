@@ -38,6 +38,7 @@ sys.path.append(os.path.normpath(os.path.join(BASE_DIR, "apps")))
 # add apps/ to the Python path
 
 INSTALLED_APPS: List[str] = [
+    "django_vite",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.modeladmin",
@@ -164,8 +165,15 @@ USE_I18N: bool = True
 
 USE_TZ: bool = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+
+
+# must correspond to build.outDir in your ViteJS configuration
+DJANGO_VITE_ASSETS_PATH = os.path.join(PROJECT_DIR, "static/build")
+DJANGO_VITE_MANIFEST_PATH = os.path.join(PROJECT_DIR, "static/build/manifest.json")
+DJANGO_VITE_STATIC_URL_PREFIX = 'build'
 
 STATICFILES_FINDERS: List[str] = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
