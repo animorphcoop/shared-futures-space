@@ -47,6 +47,7 @@ wheels/
 *.egg
 *.manifest
 *.spec
+sfs/static/build
 
 # Installer logs
 pip-log.txt

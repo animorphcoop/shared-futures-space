@@ -1,0 +1,23 @@
+{
+  "name": "sfs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "lint": "tsc",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@types/alpinejs": "^3.7.2",
+    "@types/flickity": "^2.2.7",
+    "glob": "^10.3.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "alpinejs": "^3.12.3",
+    "flickity": "^3.0.0",
+    "htmx.org": "^1.9.4"
+  }
+}
