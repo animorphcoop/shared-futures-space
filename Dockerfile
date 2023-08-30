@@ -16,7 +16,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y \
     && apt-get -yq install curl gnupg ca-certificates\
     && curl -L https://deb.nodesource.com/setup_16.x | bash \
-    && apt-get install -yq nodejs
+    && apt-get install -yq nodejs npm
 
 # app user variables
 ARG user=app
