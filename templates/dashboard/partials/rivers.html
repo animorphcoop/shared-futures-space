@@ -5,7 +5,7 @@
     {% if rivers|length == 0 %}
         {% if request.user.post_code.area.name != 'Other' %}
             {% url 'spring' request.user.post_code.area.name as the_url %}
-            {% include "partials/salmon-of-knowledge.html" with text="Don't be a hermit crab, join some rivers." url=the_url button="Go to the spring" %}
+            {% include "partials/salmon-of-knowledge.html" with text="Don’t be a hermit crab! Have an idea? Join some rivers." url=the_url button="Go to the spring" %}
         {% endif %}
     {% else %}
         {% for river in rivers %}
