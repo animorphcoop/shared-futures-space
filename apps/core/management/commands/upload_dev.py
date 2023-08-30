@@ -3,8 +3,8 @@ from io import BytesIO
 
 from allauth.account.admin import EmailAddress
 from area.models import Area, PostCode
-from django.files.images import ImageFile
-from django.management.base import BaseCommand
+from django.core.files.images import ImageFile
+from django.core.management.base import BaseCommand
 from django.utils import timezone
 from messaging.models import Message
 from PIL import Image as PillowImage
