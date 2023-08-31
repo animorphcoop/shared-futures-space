@@ -1,3 +1,6 @@
+import {expose} from "@/templates/ts/utils.ts";
+import { submitOrganisationChangeForm } from "@/templates/userauth/account/ts/organisation_change.ts"
+
 let selectedOrganisation: string = ''
 let newOrganisationUrl: string = ''
 //if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
@@ -142,5 +145,15 @@ function goBack() {
     uncoverNewOrgTyping(false)
 }
 
-
+expose({
+    stopBodyScroll,
+    enableBodyScroll,
+    toggleOrganisationsAdd,
+    toggleOrganisationsChange,
+    backFromOrganisations,
+    selectOrganisation,
+    submitOrganisation,
+    openAddName,
+    goBack,
+})
 

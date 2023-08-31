@@ -1,4 +1,5 @@
 {% extends "account/base.html" %}
+{% load django_vite %}
 {% load static %}
 {% comment %}/account/add_data.html{% endcomment %}
 
@@ -150,7 +151,7 @@
     </div>
 
     {% block scripts %}
-        <script src="{% static 'js/add_data.js' %}"></script>
+        {% vite_asset 'templates/userauth/account/ts/add_data.ts' %}
     {% endblock %}
 
 {% endblock %}

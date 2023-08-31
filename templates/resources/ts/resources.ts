@@ -1,3 +1,7 @@
+import { expose } from "@/templates/ts/utils.ts"
+
+// TODO(NS): not sure if these variables are actually used anywhere...
+
 const visible: string = 'block'
 const hidden: string = 'hidden'
 
@@ -26,3 +30,4 @@ function setResultCount(count: number) {
     }
 }
 
+expose({ buttonTagSearch, setResultCount })

@@ -1,3 +1,4 @@
+{% load django_vite %}
 {% load static %}
 {% comment %}
 This is for profile org edit only
@@ -33,5 +34,5 @@ TODO: Need to restyle this field so does not look like in adddata
 
 
 {% block scripts %}
-    <script src="{% static 'js/organisation_change.js' %}"></script>
+    {% vite_asset 'templates/userauth/account/ts/organisation_change.ts' %}
 {% endblock %}

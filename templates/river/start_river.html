@@ -64,7 +64,6 @@
     {% include "partials/vertical-spacer.html" with space="6" %}
 
     {% block scripts %}
-{#        <script src="{% static 'js/start_river.js' %}"></script>#}
         {% vite_asset 'templates/river/ts/start_river.ts' %}
     {% endblock %}
 {% endblock content %}

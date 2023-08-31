@@ -1,3 +1,5 @@
+import { expose } from "@/templates/ts/utils.ts"
+
 let lastClicked: HTMLElement | null
 
 const addDataForm: HTMLFormElement = (<HTMLFormElement>document.getElementById("add-data-form"))
@@ -53,3 +55,8 @@ function validateFields() {
 
 
 }
+
+expose({
+    selectAvatar,
+    validateFields,
+})

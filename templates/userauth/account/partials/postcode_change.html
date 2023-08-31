@@ -1,3 +1,4 @@
+{% load django_vite %}
 {% load static %}
 {% load custom_filters %}
 
@@ -70,5 +71,5 @@
 </section>
 
 {% block scripts %}
-    <script src="{% static 'js/postcode_change.js' %}"></script>
+    {% vite_asset 'templates/userauth/account/ts/postcode_change.ts' %}
 {% endblock %}

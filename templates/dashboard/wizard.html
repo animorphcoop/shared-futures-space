@@ -3,6 +3,7 @@
 {% load widget_tweaks %}
 
 {% load static %}
+{% load django_vite %}
 
 {% block content %}
 
@@ -106,8 +107,7 @@
         {% endif %}
 
         {% block scripts %}
-            <script src="{% static 'js/auth_helper.js' %}"></script>
-            <script src="{% static 'js/wizard.js' %}"></script>
+            {% vite_asset 'templates/userauth/account/ts/wizard.ts' %}
         {% endblock %}
     </div>
 

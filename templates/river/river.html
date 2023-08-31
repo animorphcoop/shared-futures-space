@@ -157,6 +157,6 @@
 
     {% comment %}stopBodyScroll() and enableBodyScroll() need to be extracted
     {% endcomment %}
-    <script src="{% static 'js/organisation_list_add.js' %}"></script>
+    {% vite_asset 'templates/userauth/account/ts/organisation_list_add.ts' %}
 
 {% endblock content %}
