@@ -24,15 +24,13 @@
     <link rel="icon" href="{% static 'favicon/favicon.ico' %}" sizes="any"><!-- 32×32 -->
     <link rel="apple-touch-icon" href="{% static 'favicon/apple-touch-icon.png' %}"><!-- 180×180 -->
 
-    {# Global stylesheets #}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/sfs.css' %}">
-
     {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
-
     {% endblock %}
+
     {% tailwind_css %}
     {% vite_hmr_client %}
+    {# Base script - pulls in all libraries and global stylesheets  #}
     {% vite_asset 'templates/ts/base.ts' %}
 
 </head>

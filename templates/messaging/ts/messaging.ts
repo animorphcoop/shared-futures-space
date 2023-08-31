@@ -3,6 +3,8 @@ import htmx from "htmx.org"
 import Alpine from "alpinejs";
 import {expose} from "@/templates/ts/utils.ts";
 
+console.log('NSDEBUG LOADING messaging.ts')
+
 /*
     As part of the proof-of-concept there are TWO ways to use setupMessageRefresh
 

@@ -1,4 +1,5 @@
 {% extends "account/base.html" %}
+{% load django_vite %}
 
 {% comment %} Page: a messages- direct chat exchanges with another user {% endcomment %}
 
@@ -9,4 +10,12 @@
     {% endblock %}
     {% include 'messaging/messages.html' with direct=direct %}
 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        console.log('hello 2!')
+    </script>
+    {# TODO(NS): not working yet! can't find setupMessageRefresh function#}
+    {% vite_asset 'templates/messaging/ts/messaging.ts' %}
 {% endblock %}

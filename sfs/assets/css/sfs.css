@@ -1,3 +1,8 @@
+#djDebugToolbarHandle {
+    /* moves it down enough to be able to open/close the app menu :) */
+    top: 44px !important;
+}
+
 @font-face {
     font-family: "EB_Garamond_Regular";
     src: url("../fonts/EBGaramond-Regular.ttf") format("truetype");

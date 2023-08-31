@@ -6,6 +6,8 @@ import Alpine from 'alpinejs'
 import Flickity from 'flickity'
 import 'flickity/dist/flickity.min.css'
 
+import '@/sfs/assets/css/sfs.css'
+
 import { expose } from "./utils.ts"
 
 expose({ htmx, Alpine, Flickity })

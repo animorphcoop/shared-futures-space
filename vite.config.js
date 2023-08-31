@@ -11,6 +11,9 @@ export default defineConfig({
         host: "localhost",
         port: 3000,
         open: false,
+        // This ensures assets referenced in CSS files (e.g. fonts)
+        // are served with full host during dev
+        origin: 'http://localhost:3000',
     },
     resolve: {
         alias: {
