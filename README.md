@@ -10,27 +10,39 @@ This is a Django/Wagtail + Postgres + Redis + Celery stack.
 
 ### TypeScript
 
-Make sure you have typescript installed globally for local development:
+We use [vite](https://vitejs.dev/) for bundling our typescript.
+
+Make sure you have npm and nodejs installed, then install the dependencies:
 
 ```
-npm install -g typescript
+npm install
 ```
 
-Then, from the repo's root directory, each time you want to rebuild JS files after changing typescript ones,
-you can run:
+To run in dev mode:
 
 ```
-./ts_generate_js.sh
+npm run dev
 ```
 
-Note: Run `chmod +x ts_generate_js.sh` if file not executable.
+(or `make watch` will also run the same thing)
 
-To automatically watch changes in TypeScript files and re-generate, we use
-[entr](https://github.com/eradman/entr). To run:
+#### Building assets for production
 
-```sh
-make watch
+To build the files run:
+
 ```
+npm run build
+```
+
+It will build the assets into `sfs/static/build`.
+
+Inside the build directory it'll put:
+- `manifest.json` used to connect ts paths to build js files
+- all the build `.js` files with their full path (+ a file hash)
+
+In production `vite_asset <path>` will use `manifest.json` to lookup the path to the built `.js` file.
+
+The built files will be served as normal django static assets.
 
 ### Configuration
 
