@@ -76,8 +76,6 @@ INSTALLED_APPS: List[str] = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "tailwind",
-    "theme",
     "django_browser_reload",
     "widget_tweaks",
     "django_htmx",
@@ -182,7 +180,6 @@ STATICFILES_FINDERS: List[str] = [
 
 STATICFILES_DIRS: List[str] = [
     os.path.join(PROJECT_DIR, "static"),
-    os.path.join(BASE_DIR, "apps/theme/static"),
 ]
 
 # Account
@@ -247,5 +244,4 @@ WAGTAIL_USER_CUSTOM_FIELDS: List[str] = ["display_name", "year_of_birth", "post_
 APPEND_SLASH = True
 WAGTAIL_APPEND_SLASH = True
 
-TAILWIND_APP_NAME = "theme"
 TAGGIT_CASE_INSENSITIVE = True

@@ -4,10 +4,13 @@
  * If you need the full config, get it from here:
  * https://unpkg.com/browse/tailwindcss@latest/stubs/defaultConfig.stub.js
  */
-const colors = require("tailwindcss/colors");
-const plugin = require("tailwindcss/plugin");
+import plugin from "tailwindcss/plugin.js"
 
-module.exports = {
+import forms from "@tailwindcss/forms"
+import typography from "@tailwindcss/typography"
+import aspectRatio from "@tailwindcss/aspect-ratio"
+
+export default {
     /**
      * Stylesheet generation mode.
      *
@@ -19,22 +22,8 @@ module.exports = {
         /**
          * HTML. Paths to Django template files that will contain Tailwind CSS classes.
          */
-
-        /*  Templates within theme app (<tailwind_app_name>/templates), e.g. base.html. */
-        "../templates/**/*.html",
-
-        /*
-         * Main templates directory of the river (BASE_DIR/templates).
-         * Adjust the following line to match your river structure.
-         */
-        "../../templates/**/*.html",
-
-        /*
-         * Templates in other django apps (BASE_DIR/<any_app_name>/templates).
-         * Adjust the following line to match your river structure.
-         */
-        "../../**/templates/**/*.html",
-        "../../../templates/**/*.html",
+        "./templates/**/*.html",
+        "./apps/*/templates/**/*.html",
 
         /**
          * JS: If you use Tailwind CSS in JavaScript, uncomment the following lines and make sure
@@ -167,9 +156,8 @@ module.exports = {
          * for forms. If you don't like it or have own styling for forms,
          * comment the line below to disable '@tailwindcss/forms'.
          */
-        require("@tailwindcss/forms"),
-        require("@tailwindcss/typography"),
-        require("@tailwindcss/line-clamp"),
-        require("@tailwindcss/aspect-ratio"),
+        forms,
+        typography,
+        aspectRatio,
     ],
 };

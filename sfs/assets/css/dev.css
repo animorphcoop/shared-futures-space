@@ -1,0 +1,4 @@
+#djDebugToolbarHandle {
+    /* moves it down enough to be able to open/close the app menu :) */
+    top: 44px !important;
+}

@@ -1,5 +1,4 @@
 {% load static wagtailcore_tags wagtailuserbar %}
-{% load tailwind_tags %}
 {% load django_vite %}
 
 <!DOCTYPE html>
@@ -28,7 +27,6 @@
         {# Override this in templates to add extra stylesheets #}
     {% endblock %}
 
-    {% tailwind_css %}
     {% vite_hmr_client %}
     {# Base script - pulls in all libraries and global stylesheets  #}
     {% vite_asset 'templates/ts/base.ts' %}

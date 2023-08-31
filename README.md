@@ -96,12 +96,6 @@ Create superuser:
 docker-compose exec app python3 manage.py createsuperuser
 ```
 
-Install tailwind theme:
-
-```sh
-docker-compose run app python3 manage.py tailwind install
-```
-
 Collect static:
 
 ```sh
@@ -252,28 +246,10 @@ USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build
 
 ### Tailwind
 
-Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/installation.html),
-
-After pulling, need to execute npm install once as node_modules are in gitignore:
-
-```
-docker-compose exec app python3 manage.py tailwind install
-```
-
-Then run in a separate terminal session to listen for changes:
-
-```
-docker-compose exec app python3 manage.py tailwind start
-```
-
-To build for production, run:
-
-```
-docker-compose exec app python3 manage.py tailwind build
-```
+Tailwind is include in the vite config, via postcss.
 
 Note: Styles passed dynamically from views are not automatically applied to tailwind classes (which are exported as
-static classes at the time of save/build). So even if the classes are on the list in tailwind.confg.js, but they are
+static classes at the time of save/build). So even if the classes are on the list in tailwind.config.js, but they are
 not used by any html element at the time of running the app you cannot refer to them.
 
 ### Social account login
