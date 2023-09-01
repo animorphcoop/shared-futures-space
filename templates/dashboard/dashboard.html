@@ -61,7 +61,7 @@
         {#  Call to action partial, replace URL variable  #}
         {% if request.user.post_code.area.name != 'Other' %}
             {% url 'spring' request.user.post_code.area.name as the_url %}
-            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Go to the spring" url=the_url info="" bg="bg-resources-two" %}
+            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Get involved" url=the_url info="" bg="bg-resources-two" %}
         {% endif %}
     </div>
 
