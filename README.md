@@ -1,5 +1,9 @@
 # Shared Futures Space
 
+A project management platform where your community collaborates and gets stuff done.
+
+The original codebase was developed by Animorph Co-operative under community engagement lead by the consortium partners: Co-operation Ireland, Belfast Interface Project, University of Essex and Donegal Youth Service. This project was supported by the European Union’s PEACE IV Programme, managed by the Special EU Programmes Body (SEUPB).
+
 ## Development
 
 This is a Django/Wagtail + Postgres + Redis + Celery stack.
