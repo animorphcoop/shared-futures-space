@@ -23,10 +23,7 @@ INTERNAL_IPS: List[str] = [
     "0.0.0.0",
 ]
 
-
 DJANGO_VITE_DEV_MODE = True
-# during dev they are served up without the prefix
-DJANGO_VITE_STATIC_URL_PREFIX = ''
 
 # can't be a lambda because you can't annotate the type of lambdas. this is why I don't like python
 def toolbar_callback(x: WSGIRequest) -> bool:

@@ -34,13 +34,15 @@ To build the files run:
 npm run build
 ```
 
-It will build the assets into `sfs/static/build`.
+It will build the assets into `sfs/vite-build`.
 
 Inside the build directory it'll put:
 - `manifest.json` used to connect ts paths to build js files
 - all the build `.js` files with their full path (+ a file hash)
 
 In production `vite_asset <path>` will use `manifest.json` to lookup the path to the built `.js` file.
+
+This directory is registered as a django static dir, so when collectstatic is run, it will include those resources.
 
 The built files will be served as normal django static assets.
 

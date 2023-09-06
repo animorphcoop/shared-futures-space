@@ -167,11 +167,8 @@ USE_TZ: bool = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-
 # must correspond to build.outDir in your ViteJS configuration
-DJANGO_VITE_ASSETS_PATH = os.path.join(PROJECT_DIR, "static/build")
-DJANGO_VITE_MANIFEST_PATH = os.path.join(PROJECT_DIR, "static/build/manifest.json")
-DJANGO_VITE_STATIC_URL_PREFIX = 'build'
+DJANGO_VITE_ASSETS_PATH = os.path.join(PROJECT_DIR, "vite-build")
 
 STATICFILES_FINDERS: List[str] = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -180,6 +177,7 @@ STATICFILES_FINDERS: List[str] = [
 
 STATICFILES_DIRS: List[str] = [
     os.path.join(PROJECT_DIR, "static"),
+    DJANGO_VITE_ASSETS_PATH,
 ]
 
 # Account

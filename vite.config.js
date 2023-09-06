@@ -25,7 +25,7 @@ export default defineConfig({
         },
     },
     build: {
-        outDir: "sfs/static/build",
+        outDir: "sfs/vite-build",
         assetsDir: "",
         manifest: true,
         emptyOutDir: true,
@@ -50,7 +50,7 @@ export default defineConfig({
 
                  */
                 globSync('templates/**/*.ts').map(filename =>
-                    [filename, filename]
+                    [filename.replace(/\.ts$/, ''), filename]
                 )
             ),
             output: {
