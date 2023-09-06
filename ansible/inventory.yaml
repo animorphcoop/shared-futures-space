@@ -1,0 +1,5 @@
+virtualmachines:
+  hosts:
+    soto:
+      ansible_host: 65.108.219.205
+      ansible_user: root

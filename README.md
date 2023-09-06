@@ -6,7 +6,7 @@ The original codebase was developed by Animorph Co-operative under community eng
 
 ## Development
 
-This is a Django/Wagtail + Postgres + Redis + Celery stack.
+This is a Django + Wagtail + Postgres + Redis + Celery stack.
 
 ### TypeScript
 
@@ -122,8 +122,6 @@ docker-compose exec app pytest tests/test_account.py
 docker-compose exec app pytest -s tests/test_account.py
 ```
 
-NOTE: Test run automatically on Gitlab after a push.
-
 Python black code formatting:
 
 ```sh
@@ -216,10 +214,7 @@ docker-compose exec app pip3 -V
 
 ### Directory structure
 
-Changed directory structure to nest all apps within one dir:
-
-* https://stackoverflow.com/questions/22841764/best-practice-for-django-project-working-directory-structure
-* https://github.com/Mischback/django-project-skeleton/blob/development/project_name/settings/common.py
+All Django apps are nested within one dir, `apps`,
 
 ### New Celery tasks
 
@@ -282,8 +277,22 @@ Also, make sure `ENABLE_ALLAUTH_SOCIAL_LOGIN = True` is present on your settings
 
 See the guide: [How to deploy your own instance](deployment-notes.md)
 
-**NOTE:** Before using in a public-facing environment, don't forget to change the default credentials! They're in
-`variables.env`, `sfs/settings/local.py` and `.gitlab_ci.yml`
+### Ansible
 
-**NOTE:** DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN
-THE GIT HISTORY
+We have a rudimentary ansible setup. To setup:
+
+1. Acquire ssh access into a machine.
+1. Edit [inventory.yaml](./ansible/inventory.yaml) with your machine's IP.
+1. Edit [vars.yaml](./ansible/vars.yaml) with your variables.
+1. Run the playbook with:
+
+```sh
+ansible-playbook playbook.yaml -v -e @vars.yaml
+```
+
+You can also run the following as an ssh check into your machine:
+
+```sh
+ansible all -i inventory.yaml -m ping
+ansible-inventory -i inventory.yaml --list
+```

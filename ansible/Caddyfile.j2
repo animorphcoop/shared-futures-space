@@ -1,0 +1,14 @@
+{{ domain_name }}:443 {
+    route {
+        file_server /static/* {
+            root /var/www/sfs
+        }
+        reverse_proxy 127.0.0.1:9000
+    }
+
+    tls {{ email }} {
+        on_demand
+    }
+
+    encode zstd gzip
+}

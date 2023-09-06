@@ -1,0 +1,8 @@
+---
+domain_name: example.com
+email: email@example.com
+secret_key: xxx
+weather_api_key: xxx
+email_host_password: xxx
+google_client_id: xxx
+google_secret: xxx
