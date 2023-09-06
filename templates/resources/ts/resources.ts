@@ -1,6 +1,7 @@
 import { expose } from "@/templates/ts/utils.ts"
 
-// TODO(NS): not sure if these variables are actually used anywhere...
+/*
+TODO(NS): looks like this variables are not used anywhere, but I'll leave them here for now
 
 const visible: string = 'block'
 const hidden: string = 'hidden'
@@ -8,10 +9,12 @@ const hidden: string = 'hidden'
 const initial = document.getElementById("initial-list")
 const results = document.getElementById("search-results")
 
-const searchbar = <HTMLInputElement>document.getElementById("searchbar")
 const order_by = <HTMLElement>document.getElementById("orderby")
 
 let flipped: boolean = false
+*/
+
+const searchbar = <HTMLInputElement>document.getElementById("searchbar")
 
 function buttonTagSearch(tag: string) {
     searchbar.value = tag

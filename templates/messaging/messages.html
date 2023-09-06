@@ -6,9 +6,7 @@
     {% if direct %}
 
         <div class="bg-gray-light bg-gray-light sm:w-[360px]">
-            <div class="mx-4.5" x-init="">
-
-
+            <div class="mx-4.5">
                 <div id="messages-{{ unique_id }}"
                      x-init="setTimeout(() => setupMessageRefresh(`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`), 1000)"
                      class="selected"
@@ -29,10 +27,6 @@
 
     {% else %}
 
-        <!--
-
-
-             -->
         <div id="messages-{{ unique_id }}"
              class="mx-4.5 max-height-[50vh]"
              x-setup-message-refresh="[`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`]"
@@ -46,10 +40,5 @@
         {% endif %}
 
     {% endif %}
-
-    <script>
-
-
-    </script>
 
 {% endblock %}

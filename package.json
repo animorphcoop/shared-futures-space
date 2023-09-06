@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "tsc",
-    "build": "vite build"
+    "build": "tsc && vite build"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
