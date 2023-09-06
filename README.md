@@ -287,6 +287,7 @@ We have a rudimentary ansible setup. To setup:
 1. Run the playbook with:
 
 ```sh
+cd ansible/
 ansible-playbook playbook.yaml -v -e @vars.yaml
 ```
 
