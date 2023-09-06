@@ -30,7 +30,6 @@ before_script:
   - npm i
   - npm run build
 
-
 stages:
   - Tests
   - Deploy
@@ -41,12 +40,6 @@ pytest:
     - export PYTHONPATH="$PYTHONPATH:."
     - ./manage.py collectstatic --noinput
     - pytest tests/
-
-typescript:
-  stage: Tests
-  script:
-    - apt-get install -y node-typescript
-    - ./ts_generate_js.sh --test
 
 deploy:
   stage: Deploy
