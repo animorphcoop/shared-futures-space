@@ -23,6 +23,7 @@ before_script:
   - npm cache verify
   - npm i -g n
   - n latest
+  - hash -r
   - pip install -r requirements.txt
   - ./manage.py wait_for_db
   - ./manage.py makemigrations --no-input
