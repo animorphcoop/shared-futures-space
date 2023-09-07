@@ -1,3 +1,4 @@
+{% load custom_tags %}
 {% load static wagtailcore_tags wagtailuserbar %}
 {% load django_vite %}
 
@@ -57,6 +58,8 @@
 {% block extra_js %}
     {# Override this in templates to add extra javascript #}
 {% endblock %}
+
+{% sfs_vite_prevent_unstyled_flash %}
 
 </body>
 
