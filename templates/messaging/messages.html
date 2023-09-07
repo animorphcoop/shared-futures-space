@@ -7,10 +7,7 @@
 
         <div class="bg-gray-light bg-gray-light sm:w-[360px]">
             <div class="mx-4.5">
-                <div id="messages-{{ unique_id }}"
-                     x-init="setTimeout(() => setupMessageRefresh(`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`), 1000)"
-                     class="selected"
-                >
+                <div id="messages-{{ unique_id }}">
                     {% include 'messaging/message_list.html' %}
                 </div>
             </div>
