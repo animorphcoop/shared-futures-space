@@ -48,6 +48,7 @@ wheels/
 *.manifest
 *.spec
 sfs/vite-build
+.vite
 
 # Installer logs
 pip-log.txt
