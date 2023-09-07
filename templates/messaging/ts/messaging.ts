@@ -1,26 +1,12 @@
 import htmx from "htmx.org"
 
 import Alpine from "alpinejs";
-import {expose} from "@/templates/ts/utils.ts";
 
 /*
-    As part of the proof-of-concept there are TWO ways to use setupMessageRefresh
-
-    1. Calling the function in x-init, e.g.
-
-        x-init="setupMessageRefresh(`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`)"
-
-    2. Using the "x-setup-message-refresh" directive, e.g.:
-
-        x-setup-message-refresh="[`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`]"
-
-        This one is probably the best one, as we have access to the element
-        it is on (although not currently used in this POC)
+    Custom alpine directive, example usage:
+        <div x-setup-message-refresh="[`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`]"></div>
 
  */
-
-expose({ setupMessageRefresh })
-
 Alpine.directive('setup-message-refresh', (_, { expression }, { evaluate }) => {
     const [messageCountURL, messageListURL, messageListTargetId]: [string, string, string] = evaluate(expression) as any
     setupMessageRefresh(messageCountURL, messageListURL, messageListTargetId)
