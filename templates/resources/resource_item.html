@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load django_vite %}
 {% load wagtailimages_tags %}
 {% load static %}
 
@@ -108,7 +109,7 @@
     </article>
 
     {% block scripts %}
-        <script src="{% static 'js/resource_item.js' %}"></script>
+        {% vite_asset 'templates/resources/ts/resource_item.ts' %}
     {% endblock scripts %}
 
 {% endblock %}

@@ -1,6 +1,15 @@
-/* Needs auth-helper to run */
+import { expose } from "@/templates/ts/utils.ts"
+import {
+    newObserver,
+    passwordFeedbackOne,
+    passwordFeedbackTwo,
+    passwordInputOne,
+    passwordInputTwo,
+    toggleSubmitButton, validateInputFeedback,
+} from "@/templates/userauth/account/ts/auth_helper.ts"
 
 // triggered from x-init on the form
+
 function setupObserversPsChange() {
 
     if (passwordFeedbackOne == null) return
@@ -25,4 +34,17 @@ function evaluateButtonPsChange() {
 
 }
 
+function validateResetKey() {
 
+    if (passwordFeedbackOne === null) return
+    let errorCount = 0
+    errorCount += validateInputFeedback(passwordInputOne, passwordFeedbackOne)
+    return errorCount == 0
+
+}
+
+expose({
+    setupObserversPsChange,
+    evaluateButtonPsChange,
+    validateResetKey,
+})

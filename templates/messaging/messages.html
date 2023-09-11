@@ -1,5 +1,3 @@
-{% load static %}
-
 {% url 'river_chat_message_count' slug stage topic as message_count_url %}
 {% url 'river_chat_message_list' slug stage topic as message_list_url %}
 
@@ -8,13 +6,8 @@
     {% if direct %}
 
         <div class="bg-gray-light bg-gray-light sm:w-[360px]">
-            <div class="mx-4.5" x-init="">
-
-
-                <div id="messages-{{ unique_id }}"
-                     x-init="setTimeout(() => setupMessageRefresh(`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`), 1000)"
-                     :class="selected && 'selected'"
-                >
+            <div class="mx-4.5">
+                <div id="messages-{{ unique_id }}">
                     {% include 'messaging/message_list.html' %}
                 </div>
             </div>
@@ -33,7 +26,7 @@
 
         <div id="messages-{{ unique_id }}"
              class="mx-4.5 max-height-[50vh]"
-             x-init="setTimeout(() => setupMessageRefresh(`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`), 1000)"
+             x-setup-message-refresh="[`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`]"
              :class="selected && 'selected'"
           >
             {% include 'messaging/message_list.html' %}
@@ -44,71 +37,5 @@
         {% endif %}
 
     {% endif %}
-
-    <script>
-        function setupMessageRefresh(messageCountURL, messageListURL, messageListTargetId) {
-            let lastCount = 0
-
-            // Get the initial value
-            fetchMessageCount().then(count => {
-                lastCount = count
-            })
-
-            setInterval(() => {
-                if (isActive()) {
-                    // We are active \o/
-                    // Go and check and refresh messages if changed
-                    fetchMessageCount().then(count => {
-                        if (count !== lastCount) {
-                            refreshMessageList()
-                        }
-                        lastCount = count
-                    })
-                }
-            }, 4000)
-
-            function fetchMessageCount() {
-                return new Promise(resolve => {
-                    htmx.ajax('GET', messageCountURL, {
-                        handler (_, obj) {
-                            const count = Number(obj.xhr.responseText)
-                            resolve(count)
-                        },
-                    })
-                })
-            }
-
-            function refreshMessageList() {
-                htmx.ajax('GET', messageListURL, `#${messageListTargetId}`).then(() => {
-                    const elem = document.getElementById(messageListTargetId).closest('.drawer-contents')
-                    if (elem) {
-                        scrollToBottom(elem)
-                    }
-                })
-            }
-
-            function isActive() {
-                const elem = document.getElementById(messageListTargetId)
-                return (
-                    // Whole document is visible
-                    document.visibilityState === 'visible' &&
-                    // We're in a "selected" thing (defined in drawer-river)
-                    elem.classList.contains('selected') &&
-                    // The message list is visible (on the right tab)
-                    isElementVisible(elem)
-                )
-            }
-
-            function isElementVisible (elem) {
-                // borrowed from jQuery logic
-                return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
-            }
-
-            function scrollToBottom(elem) {
-                elem.scrollTop = elem.scrollHeight;
-            }
-        }
-
-    </script>
 
 {% endblock %}

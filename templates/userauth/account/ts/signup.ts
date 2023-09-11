@@ -1,4 +1,14 @@
-/* Needs auth-helper to run */
+import { expose } from "@/templates/ts/utils.ts"
+import {
+    emailInput,
+    inputFeedback,
+    newObserver,
+    passwordFeedbackOne,
+    passwordFeedbackTwo,
+    passwordInputOne,
+    passwordInputTwo, toggleSubmitButton,
+    validateInputFeedback
+} from "@/templates/userauth/account/ts/auth_helper.ts"
 
 // triggered from x-init on the form
 function setupObserversSignup() {
@@ -46,3 +56,9 @@ function validateSignup() {
     return errorCount == 0
 
 }
+
+expose({
+    setupObserversSignup,
+    evaluateButtonSignup,
+    validateSignup,
+})

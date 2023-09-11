@@ -3,6 +3,7 @@
 {% comment %} If you are not logged in and trying to access restricted areas you are redirected to /account/login/{% endcomment %}
 
 {% load static %}
+{% load django_vite %}
 
 {% load account socialaccount %}
 
@@ -72,8 +73,7 @@
         </div>
 
         {% block scripts %}
-            <script src="{% static 'js/auth_helper.js' %}"></script>
-            <script src="{% static 'js/login.js' %}"></script>
+            {% vite_asset 'templates/userauth/account/ts/login.ts' %}
         {% endblock %}
     </div>
 

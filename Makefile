@@ -8,4 +8,4 @@ lint:
 	black --check .
 
 watch:
-	find templates -type f -name '*.ts' | entr -s './ts_generate_js.sh'
+	npm run dev

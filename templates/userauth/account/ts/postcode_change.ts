@@ -1,3 +1,5 @@
+import { expose } from "@/templates/ts/utils.ts"
+
 const postcodeContainer: HTMLElement | null = document.getElementById("postcode-change")
 const postcodeChangeInput = (<HTMLInputElement>document.getElementById("postcode"))
 
@@ -19,3 +21,8 @@ function validatePostcode() {
     }
     return errorCount === 0
 }
+
+expose({
+    togglePostcodeChange,
+    validatePostcode,
+})

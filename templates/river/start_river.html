@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load widget_tweaks %}
+{% load django_vite %}
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -63,6 +64,6 @@
     {% include "partials/vertical-spacer.html" with space="6" %}
 
     {% block scripts %}
-        <script src="{% static 'js/start_river.js' %}"></script>
+        {% vite_asset 'templates/river/ts/start_river.ts' %}
     {% endblock %}
 {% endblock content %}

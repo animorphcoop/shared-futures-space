@@ -1,3 +1,5 @@
+import { expose } from "@/templates/ts/utils.ts"
+
 let avatarClicked: HTMLElement | null
 
 const avatarInputChange = (<HTMLInputElement>document.getElementById("avatar"))
@@ -24,3 +26,8 @@ function changeAvatar(avatarElemId: string, avatarPk: string) {
     avatarInputChange.setAttribute('value', avatarPk)
 
 }
+
+expose({
+    changeAvatar,
+    toggleAvatar,
+})

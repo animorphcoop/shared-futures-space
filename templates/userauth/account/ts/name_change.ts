@@ -1,3 +1,5 @@
+import { expose } from "@/templates/ts/utils.ts"
+
 const nameContainer: HTMLElement | null = document.getElementById("name-change")
 const nameChangeInput = (<HTMLInputElement>document.getElementById("display_name"))
 
@@ -19,3 +21,8 @@ function validateName() {
     }
     return errorCount === 0
 }
+
+expose({
+    toggleNameChange,
+    validateName,
+})

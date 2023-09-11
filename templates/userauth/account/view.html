@@ -1,4 +1,5 @@
 {% extends "account/base.html" %}
+{% load django_vite %}
 {% load static %}
 
 {% block content %}
@@ -296,5 +297,5 @@
     Would like to extract into it's own lil file that can be referred to for all modals,
     but not today satan
     {% endcomment %}
-    <script src="{% static 'js/organisation_list_add.js' %}"></script>
+    {% vite_asset 'templates/userauth/account/ts/organisation_list_add.ts' %}
 {% endblock %}

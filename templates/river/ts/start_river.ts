@@ -1,8 +1,11 @@
+import { expose } from "@/templates/ts/utils.ts"
+
 let selectedTags: Array<HTMLElement> = []
 let counterValue: number = 3
 const tagCounterElem: HTMLElement | null = document.getElementById("counter")
 const tagsInput = (<HTMLInputElement>document.getElementById("tags_input"))
 
+expose({ selectTag })
 
 function selectTag(tagElemId: string, tagName: string) {
 

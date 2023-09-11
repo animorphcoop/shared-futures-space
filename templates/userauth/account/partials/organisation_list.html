@@ -1,3 +1,4 @@
+{% load django_vite %}
 {% load static %}
 
 <section class="z-20 flex justify-center items-center flex-col h-full fixed left-0 top-0 backdrop-blur bg-blue-blur sm:w-full">
@@ -76,5 +77,5 @@
 
 
 {% block scripts %}
-    <script src="{% static 'js/organisation_list_add.js' %}"></script>
+    {%  vite_asset 'templates/userauth/account/ts/organisation_list_add.ts' %}
 {% endblock %}

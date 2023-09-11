@@ -1,5 +1,15 @@
 /* Needs auth-helper to run - same as login - will be merged when TS files speak to each other*/
+// TODO: merge with login? (now that the ts files do speak to each other)
 
+
+import { expose } from "@/templates/ts/utils.ts"
+import {
+    emailInput,
+    inputFeedback,
+    newObserver,
+    toggleSubmitButton,
+    validateInputFeedback
+} from "@/templates/userauth/account/ts/auth_helper.ts"
 
 // triggered from x-init on the form
 function setupObserversReset() {
@@ -21,5 +31,7 @@ function validateReset() {
 
 }
 
-
-
+expose({
+    setupObserversReset,
+    validateReset,
+})

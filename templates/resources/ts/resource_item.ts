@@ -1,3 +1,5 @@
+import { expose } from "@/templates/ts/utils.ts"
+
 function swapHearts(buttonText: string) {
     const heart = document.getElementById('heart-icon')
     if (heart == null) return
@@ -12,3 +14,5 @@ function swapHearts(buttonText: string) {
         }
     }
 }
+
+expose({ swapHearts })

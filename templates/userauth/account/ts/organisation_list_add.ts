@@ -1,3 +1,7 @@
+import {expose} from "@/templates/ts/utils.ts";
+import { submitOrganisationChangeForm } from "@/templates/userauth/account/ts/organisation_change.ts"
+import { uncoverNewOrgTyping } from "@/templates/userauth/account/ts/organisation_add_new.ts"
+
 let selectedOrganisation: string = ''
 let newOrganisationUrl: string = ''
 //if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
@@ -7,7 +11,7 @@ const organisationCheckboxBlock = document.getElementById("organisation-starter"
 const checkbox = (<HTMLInputElement>document.getElementById("organisation-checkbox"))
 
 const organisationDataBlock: HTMLElement | null = document.getElementById("organisation-data")
-const organisationList: HTMLElement | null = document.getElementById("organisation-list")
+export const organisationList: HTMLElement | null = document.getElementById("organisation-list")
 
 const organisationNameInput = (<HTMLInputElement>document.getElementById("organisation-name"))
 const organisationUrlInput = (<HTMLInputElement>document.getElementById("organisation-url"))
@@ -86,16 +90,16 @@ function backFromOrganisations() {
 
 /*
 * when called from the list of organisations orgUrl will be undefined,
-* the url is only needed when createing a new organisation in CustomAddDataView
+* the url is only needed when creating a new organisation in CustomAddDataView
 * */
-function selectOrganisation(orgName: string, orgUrl: string) {
+export function selectOrganisation(orgName: string, orgUrl: string) {
     selectedOrganisation = orgName
     if (typeof orgUrl !== "undefined") {
         newOrganisationUrl = orgUrl
     }
 }
 
-function submitOrganisation() {
+export function submitOrganisation() {
 
     if (organisationNameInput == null || organisationDataBlock == null || organisationList == null || organisationUrlInput == null) return
 
@@ -142,5 +146,15 @@ function goBack() {
     uncoverNewOrgTyping(false)
 }
 
-
+expose({
+    stopBodyScroll,
+    enableBodyScroll,
+    toggleOrganisationsAdd,
+    toggleOrganisationsChange,
+    backFromOrganisations,
+    selectOrganisation,
+    submitOrganisation,
+    openAddName,
+    goBack,
+})
 

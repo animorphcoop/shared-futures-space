@@ -1,5 +1,6 @@
+{% load custom_tags %}
 {% load static wagtailcore_tags wagtailuserbar %}
-{% load tailwind_tags %}
+{% load django_vite %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -23,34 +24,15 @@
     <link rel="icon" href="{% static 'favicon/favicon.ico' %}" sizes="any"><!-- 32×32 -->
     <link rel="apple-touch-icon" href="{% static 'favicon/apple-touch-icon.png' %}"><!-- 180×180 -->
 
-    {# Global stylesheets #}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/sfs.css' %}">
-
     {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
-
     {% endblock %}
-    {% tailwind_css %}
 
-
-    {% comment %}HTMX{% endcomment %}
-
-    {% comment %}<script src="https://unpkg.com/htmx.org@1.8.0"></script>{% endcomment %}
-    <script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>
-
-    <!--Alpine JS-->
-    {% comment %}<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>{% endcomment %}
-    <script src="{% static 'packages/alpinejs/alpinejs_3.10.5_min.js' %}" defer></script>
-
-    <!--Flickity CSS+JS-->
-    {% comment %}<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>{% endcomment %}
-    <link rel="stylesheet" type="text/css" href="{% static 'packages/flickity/flickity_2.3.0_min.css' %}">
-    <script src="{% static 'packages/flickity/flickity_2.3.0_min.js' %}"></script>
+    {% vite_hmr_client %}
+    {# Base script - pulls in all libraries and global stylesheets  #}
+    {% vite_asset 'templates/ts/base.ts' %}
 
 </head>
-
-<script type="text/javascript" src="{% static 'js/sfs.js' %}"></script>
 
 {#<body class="antialiased w-full sm:bg-black/20 sm:flex sm:flex-col sm:items-center" x-data="{ menu: false }">#}
 <body class="antialiased w-full " x-data="{ menu: false }">
@@ -76,6 +58,8 @@
 {% block extra_js %}
     {# Override this in templates to add extra javascript #}
 {% endblock %}
+
+{% sfs_vite_prevent_unstyled_flash %}
 
 </body>
 

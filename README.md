@@ -10,27 +10,41 @@ This is a Django/Wagtail + Postgres + Redis + Celery stack.
 
 ### TypeScript
 
-Make sure you have typescript installed globally for local development:
+We use [vite](https://vitejs.dev/) for bundling our typescript.
+
+Make sure you have npm and nodejs installed, then install the dependencies:
 
 ```
-npm install -g typescript
+npm install
 ```
 
-Then, from the repo's root directory, each time you want to rebuild JS files after changing typescript ones,
-you can run:
+To run in dev mode:
 
 ```
-./ts_generate_js.sh
+npm run dev
 ```
 
-Note: Run `chmod +x ts_generate_js.sh` if file not executable.
+(or `make watch` will also run the same thing)
 
-To automatically watch changes in TypeScript files and re-generate, we use
-[entr](https://github.com/eradman/entr). To run:
+#### Building assets for production
 
-```sh
-make watch
+To build the files run:
+
 ```
+npm run build
+```
+
+It will build the assets into `sfs/vite-build`.
+
+Inside the build directory it'll put:
+- `manifest.json` used to connect ts paths to build js files
+- all the build `.js` files with their full path (+ a file hash)
+
+In production `vite_asset <path>` will use `manifest.json` to lookup the path to the built `.js` file.
+
+This directory is registered as a django static dir, so when collectstatic is run, it will include those resources.
+
+The built files will be served as normal django static assets.
 
 ### Configuration
 
@@ -82,12 +96,6 @@ Create superuser:
 
 ```sh
 docker-compose exec app python3 manage.py createsuperuser
-```
-
-Install tailwind theme:
-
-```sh
-docker-compose run app python3 manage.py tailwind install
 ```
 
 Collect static:
@@ -240,28 +248,10 @@ USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker-compose up --build
 
 ### Tailwind
 
-Following [the documentation](https://django-tailwind.readthedocs.io/en/latest/installation.html),
-
-After pulling, need to execute npm install once as node_modules are in gitignore:
-
-```
-docker-compose exec app python3 manage.py tailwind install
-```
-
-Then run in a separate terminal session to listen for changes:
-
-```
-docker-compose exec app python3 manage.py tailwind start
-```
-
-To build for production, run:
-
-```
-docker-compose exec app python3 manage.py tailwind build
-```
+Tailwind is include in the vite config, via postcss.
 
 Note: Styles passed dynamically from views are not automatically applied to tailwind classes (which are exported as
-static classes at the time of save/build). So even if the classes are on the list in tailwind.confg.js, but they are
+static classes at the time of save/build). So even if the classes are on the list in tailwind.config.js, but they are
 not used by any html element at the time of running the app you cannot refer to them.
 
 ### Social account login

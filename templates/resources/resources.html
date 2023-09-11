@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load django_vite %}
 {% load static %}
 
 {% block extra_css %}
@@ -23,7 +24,7 @@
     </section>
 
     {% block scripts %}
-        <script src="{% static 'js/resources.js' %}"></script>
+        {% vite_asset 'templates/resources/ts/resources.ts' %}
 
     {% endblock scripts %}
 

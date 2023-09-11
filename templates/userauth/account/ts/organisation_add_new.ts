@@ -1,7 +1,14 @@
+import {
+    organisationList,
+    selectOrganisation,
+    submitOrganisation
+} from "@/templates/userauth/account/ts/organisation_list_add.ts"
+import { expose } from "@/templates/ts/utils.ts"
+
 const organisationDataEnter: HTMLElement | null = document.getElementById("organisation-name-enter")
 
 
-function uncoverNewOrgTyping(toOpenInput: boolean) {
+export function uncoverNewOrgTyping(toOpenInput: boolean) {
     if (organisationDataEnter == null || organisationList == null) return
 
     if (toOpenInput) {
@@ -82,3 +89,5 @@ function addName() {
     organisationDataEnter.classList.add('hidden')
 
 }
+
+expose({ addName })

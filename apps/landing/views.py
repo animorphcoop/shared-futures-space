@@ -27,7 +27,7 @@ def privacy(request: HttpRequest) -> HttpResponse:
 
 
 def handle_404(request: HttpRequest, exception: Exception) -> HttpResponse:
-    return render(request, "404.html")
+    return render(request, "404.html", status=404)
 
 
 def handle_500(request: HttpRequest) -> HttpResponse:

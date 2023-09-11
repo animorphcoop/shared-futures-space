@@ -38,6 +38,7 @@ sys.path.append(os.path.normpath(os.path.join(BASE_DIR, "apps")))
 # add apps/ to the Python path
 
 INSTALLED_APPS: List[str] = [
+    "django_vite",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.modeladmin",
@@ -75,8 +76,6 @@ INSTALLED_APPS: List[str] = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "tailwind",
-    "theme",
     "django_browser_reload",
     "widget_tweaks",
     "django_htmx",
@@ -164,8 +163,12 @@ USE_I18N: bool = True
 
 USE_TZ: bool = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+
+# must correspond to build.outDir in your ViteJS configuration
+DJANGO_VITE_ASSETS_PATH = os.path.join(PROJECT_DIR, "vite-build")
 
 STATICFILES_FINDERS: List[str] = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -174,8 +177,7 @@ STATICFILES_FINDERS: List[str] = [
 
 STATICFILES_DIRS: List[str] = [
     os.path.join(PROJECT_DIR, "static"),
-    os.path.join(BASE_DIR, "apps/theme/static"),
-    os.path.join(BASE_DIR, "templates/ts_output"),
+    DJANGO_VITE_ASSETS_PATH,
 ]
 
 # Account
@@ -240,5 +242,4 @@ WAGTAIL_USER_CUSTOM_FIELDS: List[str] = ["display_name", "year_of_birth", "post_
 APPEND_SLASH = True
 WAGTAIL_APPEND_SLASH = True
 
-TAILWIND_APP_NAME = "theme"
 TAGGIT_CASE_INSENSITIVE = True

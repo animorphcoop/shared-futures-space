@@ -1,5 +1,4 @@
 {% load static %}
-<script src="{% static 'packages/htmx/htmx_1.8.2_min.js' %}" defer></script>
 
 {% block content %}
     <div x-init="setTimeout(()=>{refreshNewlyFinished({{ just_finished }});}, 100)"

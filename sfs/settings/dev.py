@@ -23,6 +23,7 @@ INTERNAL_IPS: List[str] = [
     "0.0.0.0",
 ]
 
+DJANGO_VITE_DEV_MODE = True
 
 # can't be a lambda because you can't annotate the type of lambdas. this is why I don't like python
 def toolbar_callback(x: WSGIRequest) -> bool:
@@ -32,6 +33,8 @@ def toolbar_callback(x: WSGIRequest) -> bool:
 # Docker specific, type of values declared as Any because I don't know what the different settings are/can be
 DEBUG_TOOLBAR_CONFIG: Dict[str, Any] = {
     "SHOW_TOOLBAR_CALLBACK": toolbar_callback,
+    # See https://django-debug-toolbar.readthedocs.io/en/latest/tips.html#id1
+    "ROOT_TAG_EXTRA_ATTRS": "hx-preserve"
 }
 MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
