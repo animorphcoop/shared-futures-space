@@ -3,6 +3,7 @@ from typing import List, Union
 from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, path
 
+from task.views import RiverTaskListView
 from .views import (
     ActView,
     CreateRiverPollView,
@@ -69,6 +70,11 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         "view/<str:slug>/chat/<str:stage>/<str:topic>/message_list/",
         RiverChatMessageListView.as_view(template_name="messaging/message_list.html"),
         name="river_chat_message_list",
+    ),
+    path(
+        "view/<str:slug>/task/<str:stage>/<str:topic>/task_list/",
+        RiverTaskListView.as_view(),
+        name="river_task_list",
     ),
     path(
         "edit/<str:slug>/",
