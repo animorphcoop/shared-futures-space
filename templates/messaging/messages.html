@@ -25,7 +25,7 @@
     {% else %}
 
         <div id="messages-{{ unique_id }}"
-             class="mx-4.5 max-height-[50vh]"
+             class="mx-4.5 max-h-[50vh] overflow-y-auto"
              x-setup-message-refresh="[`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`]"
              :class="selected && 'selected'"
           >

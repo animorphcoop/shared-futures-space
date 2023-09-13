@@ -2,7 +2,7 @@
 
 {% block drawer_content %}
     {% include "partials/vertical-spacer.html" with space="3" %}
-    <p id="river-description" class="font-garamond-500 text-base leading-5 text-black-text">
+    <p id="river-description" class="font-garamond-500 text-base leading-5 text-black-text overflow-y-auto max-h-[100vh]">
         {{ object.description }}
     </p>
     {% include "partials/vertical-spacer.html" with space="3" %}

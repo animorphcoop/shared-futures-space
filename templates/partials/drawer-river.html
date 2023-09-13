@@ -1,7 +1,7 @@
 {% load static %}
 
 <section x-data="{selected:{{ selected }}}" class="{# sticky #} top-0 bg-white bg-drawer-blue"
-     :class="selected && 'rounded-t-xl'" x-bind:style="selected==1?'max-height:100vh;':''">
+     :class="selected && 'rounded-t-xl'">
     <div class="transition-all">
         {% if not locked %}
             <button class="w-full py-4.5 px-4.5" type="button" id="{{ id }}-button"
@@ -29,8 +29,8 @@
         </button>
     </div>
     {% if not locked %} {% comment %} don't load if not needed, might contain requests to pages that don't exist {% endcomment %}
-        <div class="drawer-contents px-4 relative overflow-hidden overflow-y-auto transition-all max-h-0 duration-700"
-             style="" id="{{ id }}" x-ref={{ reference }} x-bind:style="selected==1?'max-height:75vh;':''" @click="selected ? 1 : scrollToBottom($el.child);">
+        <div class="drawer-contents px-4 relative overflow-hidden transition-all duration-700"
+             style="" id="{{ id }}" x-ref={{ reference }} x-bind:style="selected==1?'':'max-height:0;'" @click="selected ? 1 : scrollToBottom($el.child);">
             {% block drawer_content %}
                 # Drawer contents
             {% endblock %}

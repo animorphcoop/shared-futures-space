@@ -1,6 +1,6 @@
 {% load custom_filters %}
 
-<div class="flex flex-col gap-3" id="swimmers">
+<div class="flex flex-col gap-3 overflow-y-auto max-h-[100vh]" id="swimmers">
     {% for member in members %}
         <div x-data="{ open: false }">
             <div class="flex justify-between items-center">
