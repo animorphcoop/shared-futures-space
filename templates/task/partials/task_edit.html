@@ -1,0 +1,50 @@
+{% load widget_tweaks %}
+
+{# For creating or editing a task #}
+
+<div id="task-modal" class="fixed inset-0 bg-black/60 z-[100]" x-ref="modal">
+    <div class="absolute inset-0 -z-10" @click="$refs.modal.remove()"></div>
+    <div class="m-2 p-2.5 bg-white rounded">
+        <div class="flex justify-between pb-5">
+            <div class="text-large">Make a new task</div>
+            <button class="cursor-pointer" @click="$refs.modal.remove()">X</button>
+        </div>
+        <form hx-post="{% url 'river_task_add' slug stage topic %}"
+              hx-target="#task-list-{{ slug }}-{{ stage }}-{{ topic }}"
+              hx-swap="outerHTML">
+
+            {% csrf_token %}
+
+            {# Task name #}
+
+            <div class="pb-5">
+                {% include "partials/input-label.html" with for="id_name" label="Name" %}
+                {% include "partials/input-text.html" with field=form.name id="id_name" %}
+            </div>
+
+            {# Task due #}
+
+            <div class="pb-5">
+                {% include "partials/input-label.html" with for="id_due" label="Due (optional)" %}
+                {% include "partials/input-text.html" with field=form.due id="id_due" type="date" %}
+            </div>
+
+            {# Task responsible #}
+
+            <div class="pb-5">
+                {% include "partials/input-label.html" with for="id_responsible" label="Swimmer responsible" %}
+                {% for member in members %}
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="responsible" value="{{ member.user.id }}">
+                        <img class="h-8 w-8" src={{ member.user.avatar.image_url }}>
+                        <span class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                            {{ member.user.display_name }}
+                        </span>
+                    </label>
+                {% endfor %}
+            </div>
+
+            <button class="button button-important">Post</button>
+        </form>
+    </div>
+</div>

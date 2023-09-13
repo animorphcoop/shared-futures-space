@@ -29,6 +29,7 @@
                     <div id="event-plan-general"
                          @chatstatusupdate="setPlanChatOpen('one', $event.detail)"
                     >
+                        {% include "task/partials/task_list.html" %}
                         <div id="plan-chat-general"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
                              hx-trigger="load"
