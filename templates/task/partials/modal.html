@@ -11,7 +11,9 @@
 
 {% endcomment %}
 
-<div class="sfs-modal fixed inset-0 z-[100] grid place-items-center" x-ref="modal">
+<div class="sfs-modal fixed inset-0 z-[100] grid place-items-center"
+     x-data {# need this x-data to ensure each modal has it's own scope #}
+     x-ref="modal">
 
     {# The semi transparent overlay, closes modal on click or ESC press #}
     <div class="absolute inset-0 -z-10 bg-black/60"
