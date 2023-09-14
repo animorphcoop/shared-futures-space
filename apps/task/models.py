@@ -4,7 +4,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.timesince import timesince, timeuntil
 from river.models import River
-
 from userauth.models import CustomUser
 
 
@@ -40,5 +39,3 @@ class Task(models.Model):
         if self.is_overdue:
             return timesince(self.due, depth=1)
         return ""
-
-

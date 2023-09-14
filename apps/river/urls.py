@@ -2,8 +2,8 @@ from typing import List, Union
 
 from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, path
+from task.views import TaskCreateView, TaskListView
 
-from task.views import TaskListView, TaskCreateView
 from .views import (
     ActView,
     CreateRiverPollView,
@@ -82,7 +82,15 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         name="manage_river",
     ),
     # Tasks
-    path("view/<str:slug>/task/<str:stage>/<str:topic>/add/", login_required(TaskCreateView.as_view()), name="river_task_add"),
-    path("view/<str:slug>/task/<str:stage>/<str:topic>/", login_required(TaskListView.as_view()), name="river_task_list"),
+    path(
+        "view/<str:slug>/task/<str:stage>/<str:topic>/add/",
+        login_required(TaskCreateView.as_view()),
+        name="river_task_add",
+    ),
+    path(
+        "view/<str:slug>/task/<str:stage>/<str:topic>/",
+        login_required(TaskListView.as_view()),
+        name="river_task_list",
+    ),
     # path('change/title/<str:slug>/', ManageRiverView.as_view(template_name='swimmers_list.html'), name='manage_river'),
 ]

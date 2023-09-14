@@ -4,16 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('task', '0002_task_river_task_stage_name'),
+        ("task", "0002_task_river_task_stage_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='task',
-            name='topic',
-            field=models.CharField(default='', max_length=32),
+            model_name="task",
+            name="topic",
+            field=models.CharField(default="", max_length=32),
             preserve_default=False,
         ),
     ]
