@@ -1,9 +1,14 @@
-{# Closes the task modal if present using an out-of-band swap #}
-<div id="task-modal" hx-swap-oob="true"></div>
+{# Closes the modals if present using an out-of-band swap #}
+<div hx-swap-oob="outerHTML: .sfs-modal"></div>
 
-<div class="m-4" x-data="{ open: true }" id="task-list-{{ slug }}-{{ stage }}-{{ topic }}">
+{% load custom_filters %}
+
+{% url 'river_task_add' slug stage topic as add_task_url %}
+
+<div id="{{ task_list_id }}" class="m-4" x-data="{ open: true }">
 
     {# Task list header #}
+
     <div class="rounded-t-xl text-button cursor-pointer p-2.5 bg-yellow uppercase flex justify-between items-center" @click="open = !open">
         Tasks
         <div class="w-[12] h-[8] transition duration-500 ease-out"
@@ -17,20 +22,31 @@
     </div>
 
     {# Task list body #}
+
     <div class="p-2.5 bg-yellow/50" :class="open ? '' : 'hidden'">
-        {% for task in tasks %}
+        {% for task in page_obj %}
+
+            {% url 'river_task_edit' slug stage topic task.uuid as edit_task_url %}
+            {% url 'river_task_edit_done' slug stage topic task.uuid as edit_done_task_url %}
+
             <div class="flex gap-2 pb-3">
-                <div>
-                    <input type="radio" {% if task.done %}checked{% endif %}>
+                <div class="mt-0.5">
+                    <input type="radio"
+                           hx-post="{{ edit_done_task_url }}"
+                           hx-trigger="click"
+                           hx-vals='{"done": {% if task.done %}false{% else %}true{% endif %}}'
+                           hx-target="#{{ task_list_id }}"
+                           hx-swap="outerHTML"
+                           {% if task.done %}checked{% endif %}>
                 </div>
-                <div class="flex-auto">
-                    <div class="text-large">
+                <div class="flex-auto {% if task.done %}text-black/30{% endif %}">
+                    <div class="text-large {% if task.done %}line-through text-black/30{% endif %}">
                         {{ task.name }}
                     </div>
                     <div class="flex items-center gap-2 text-xxs">
                         {% if task.due %}
                             {% if task.is_overdue %}
-                                <span class="text-red-600">
+                                <span class="{% if task.done %}text-black/30{% else %}text-red-600{% endif %}">
                                     Overdue <span class="font-bold">for {{ task.overdue_by }}</span>
                                 </span>
                             {% else %}
@@ -45,11 +61,21 @@
                         </div>
                     </div>
                 </div>
-                <div>...</div>
+                <div class="mt-1">
+                    <a href="{{ edit_task_url }}"
+                       hx-get="{{ edit_task_url }}"
+                       hx-target="body"
+                       hx-swap="beforeend">
+                        {% include 'task/partials/three-dots.html' %}
+                    </a>
+                </div>
             </div>
         {% endfor %}
 
-        <button class="button button-on-colour" hx-get="{% url 'river_task_add' slug stage topic %}" hx-target="body" hx-swap="beforeend">
+        <button class="button button-on-colour"
+                hx-get="{{ add_task_url }}"
+                hx-target="body"
+                hx-swap="beforeend">
             Add task
         </button>
     </div>

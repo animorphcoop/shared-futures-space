@@ -2,7 +2,13 @@ from typing import List, Union
 
 from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, path
-from task.views import TaskCreateView, TaskListView
+from task.views import (
+    CreateTaskView,
+    DeleteTaskView,
+    EditDoneTaskView,
+    EditTaskView,
+    ListTaskView,
+)
 
 from .views import (
     ActView,
@@ -82,15 +88,31 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         name="manage_river",
     ),
     # Tasks
+    # nested inside river+stage+topic
+    path(
+        "view/<str:slug>/task/<str:stage>/<str:topic>/",
+        ListTaskView.as_view(),
+        name="river_task_list",
+    ),
     path(
         "view/<str:slug>/task/<str:stage>/<str:topic>/add/",
-        login_required(TaskCreateView.as_view()),
+        login_required(CreateTaskView.as_view()),
         name="river_task_add",
     ),
     path(
-        "view/<str:slug>/task/<str:stage>/<str:topic>/",
-        login_required(TaskListView.as_view()),
-        name="river_task_list",
+        "view/<str:slug>/task/<str:stage>/<str:topic>/edit/<str:uuid>/",
+        EditTaskView.as_view(),
+        name="river_task_edit",
+    ),
+    path(
+        "view/<str:slug>/task/<str:stage>/<str:topic>/done/<str:uuid>/",
+        EditDoneTaskView.as_view(),
+        name="river_task_edit_done",
+    ),
+    path(
+        "view/<str:slug>/task/<str:stage>/<str:topic>/delete/<str:uuid>",
+        DeleteTaskView.as_view(),
+        name="river_task_delete",
     ),
     # path('change/title/<str:slug>/', ManageRiverView.as_view(template_name='swimmers_list.html'), name='manage_river'),
 ]

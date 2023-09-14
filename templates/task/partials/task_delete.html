@@ -1,0 +1,14 @@
+{# Delete confirmation modal #}
+
+{% extends 'task/partials/modal.html' %}
+
+{% block title %}Delete task?{% endblock %}
+
+{% block content %}
+    {% url 'river_task_delete' slug stage topic object.uuid as delete_task_url %}
+    <button class="button button-danger"
+            hx-post="{{ delete_task_url }}"
+            hx-params="none"
+            hx-target="#{{ task_list_id }}"
+            hx-swap="outerHTML">Delete</button>
+{% endblock %}

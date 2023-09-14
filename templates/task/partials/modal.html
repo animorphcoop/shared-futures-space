@@ -1,0 +1,36 @@
+{% comment %}
+
+    A reusable modal dialog \o/
+
+    To close the modals, return html like this:
+
+        <div hx-swap-oob="outerHTML: .sfs-modal"></div>
+
+    (That will close ALL the modals open, if you need to close just one
+    we'll need to implement ability to set an id/class on this...)
+
+{% endcomment %}
+
+<div class="sfs-modal fixed inset-0 z-[100] grid place-items-center" x-ref="modal">
+
+    {# The semi transparent overlay, closes modal on click or ESC press #}
+    <div class="absolute inset-0 -z-10 bg-black/60"
+         @click="$refs.modal.remove()"
+         @keyup.escape.window="$refs.modal.remove()"></div>
+
+    {# A wrapper to control sizing spacing #}
+    <div class="w-full max-w-xl p-4">
+
+        {# Our modal box #}
+        <div class="p-4 bg-white rounded">
+            <div class="flex justify-between pb-5">
+                <div class="text-large">
+                    {% block title %}{% endblock %}
+                </div>
+                <button class="cursor-pointer" @click="$refs.modal.remove()">X</button>
+            </div>
+            {% block content %}{% endblock %}
+        </div>
+
+    </div>
+</div>

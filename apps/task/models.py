@@ -19,7 +19,7 @@ class Task(models.Model):
     stage_name = models.CharField(choices=Stage.choices, max_length=8)
     topic = models.CharField(max_length=32)
     done = models.BooleanField(default=False)
-    due = models.DateTimeField(null=True)
+    due = models.DateTimeField(null=True, blank=True)
     responsible = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     @property
@@ -28,14 +28,14 @@ class Task(models.Model):
 
     @property
     def due_in(self) -> str:
-        """Format as time until task is due, e.g. '6 days'"""
+        """If due, format as time until due, e.g. '6 days'"""
         if self.due and not self.is_overdue:
             return timeuntil(self.due, depth=1)
         return ""
 
     @property
     def overdue_by(self) -> str:
-        """Format as time that task is overdue, e.g. '6 days'"""
+        """If overdue, format as time overdue, e.g. '2 weeks'"""
         if self.is_overdue:
             return timesince(self.due, depth=1)
         return ""

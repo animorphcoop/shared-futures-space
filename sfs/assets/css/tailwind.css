@@ -108,6 +108,26 @@
         box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.05);
         background: #FFFFFF;
     }
+
+    /* --- THREE DOTS --- */
+
+    .sfs-three-dots {
+        @apply h-[5px] w-[5px] rounded relative block bg-purple
+    }
+
+    .sfs-three-dots:before,
+    .sfs-three-dots:after {
+        content: "";
+        @apply absolute w-full h-full bg-purple rounded left-0
+    }
+
+    .sfs-three-dots:before {
+        @apply -left-2
+    }
+
+    .sfs-three-dots:after {
+        @apply -left-4
+    }
 }
 
 @tailwind utilities; /* after layer so they can still be overwritten by utilities */
