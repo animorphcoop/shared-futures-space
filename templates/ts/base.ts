@@ -9,9 +9,7 @@ import 'flickity/dist/flickity.min.css'
 import '@/sfs/assets/css/sfs.css'
 import '@/sfs/assets/css/tailwind.css'
 
-if (import.meta.env.DEV) {
-    import('@/sfs/assets/css/dev.css')
-}
+import './characters-remaining.ts'
 
 import { expose } from "./utils.ts"
 

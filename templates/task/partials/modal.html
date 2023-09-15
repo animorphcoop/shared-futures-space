@@ -29,7 +29,9 @@
                 <div class="text-large">
                     {% block title %}{% endblock %}
                 </div>
-                <button class="cursor-pointer" @click="$refs.modal.remove()">X</button>
+                <button class="cursor-pointer" @click="$refs.modal.remove()">
+                    {% include 'task/partials/close.html' %}
+                </button>
             </div>
             {% block content %}{% endblock %}
         </div>

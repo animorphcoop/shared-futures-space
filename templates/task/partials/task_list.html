@@ -31,22 +31,24 @@
 
             <div class="flex gap-2 pb-3">
                 <div class="mt-0.5">
-                    <input type="radio"
-                           hx-post="{{ edit_done_task_url }}"
-                           hx-trigger="click"
-                           hx-vals='{"done": {% if task.done %}false{% else %}true{% endif %}}'
-                           hx-target="#{{ task_list_id }}"
-                           hx-swap="outerHTML"
-                           {% if task.done %}checked{% endif %}>
+                    <div class="cursor-pointer"
+                         hx-post="{{ edit_done_task_url }}"
+                         hx-trigger="click"
+                         hx-vals='{"done": {% if task.done %}false{% else %}true{% endif %}}'
+                         hx-target="#{{ task_list_id }}"
+                         hx-swap="outerHTML">
+                        {% include 'task/partials/tick.html' with ticked=task.done %}
+                    </div>
                 </div>
                 <div class="flex-auto {% if task.done %}text-black/30{% endif %}">
                     <div class="text-large {% if task.done %}line-through text-black/30{% endif %}">
                         {{ task.name }}
                     </div>
                     <div class="flex items-center gap-2 text-xxs">
-                        {% if task.due %}
+
+                        {% if not task.done and task.due %}
                             {% if task.is_overdue %}
-                                <span class="{% if task.done %}text-black/30{% else %}text-red-600{% endif %}">
+                                <span class="text-red-600">
                                     Overdue <span class="font-bold">for {{ task.overdue_by }}</span>
                                 </span>
                             {% else %}
@@ -55,13 +57,13 @@
                         {% endif %}
 
                         <div class="flex items-center gap-1">
-                            Responsible
+                            <span class="{% if task.done %}text-black/30{% else %}text-black/75{% endif %}">Responsible</span>
                             <img class="h-5 w-5" src={{ task.responsible.avatar.image_url }}>
                             {{ task.responsible.display_name }}
                         </div>
                     </div>
                 </div>
-                <div class="mt-1">
+                <div class="mt-1 {% if task.done %}invisible{% endif %}">
                     <a href="{{ edit_task_url }}"
                        hx-get="{{ edit_task_url }}"
                        hx-target="body"

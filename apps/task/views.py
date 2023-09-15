@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models.expressions import F
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic.base import ContextMixin, TemplateView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -60,9 +60,11 @@ class TaskViewMixin(HTMXMixin, ContextMixin, View):
                 "river_task_list",
                 args=[self.get_slug(), self.get_stage_name(), self.get_topic()],
             )
+        # for non-htmx requests we can't actually send them to the correct place
+        # so do the next best thing we can find :/
         return reverse(
-            "river_chat",
-            args=[self.get_slug(), self.get_stage_name(), self.get_topic()],
+            "view_river",
+            args=[self.get_slug()],
         )
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
@@ -86,13 +88,17 @@ class ListTaskView(LoginRequiredMixin, TaskViewMixin, ListView):
     template_name = "task/tasks.html"
     template_name_htmx = "task/partials/task_list.html"
     paginate_by = 1000  # show all, as no pagination in template (yet)
-    ordering = [F("due").asc(nulls_last=True)]
+    ordering = [
+        F("due").asc(nulls_last=True),
+        F("created_at").asc(),
+    ]
 
 
 class CreateTaskView(LoginRequiredMixin, TaskViewMixin, CreateView):
     model = Task
     fields = ["name", "due", "responsible"]
-    template_name = "task/partials/task_edit.html"
+    template_name = "task/task_edit.html"
+    template_name_htmx = "task/partials/task_edit.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -134,6 +140,10 @@ class EditDoneTaskView(LoginRequiredMixin, TaskViewMixin, UpdateView):
 
     def get_object(self):
         return self.get_queryset().get(uuid=self.kwargs["uuid"])
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        """There is no template for this, so just redirect on get requests"""
+        return redirect(self.get_success_url())
 
 
 class DeleteTaskView(LoginRequiredMixin, TaskViewMixin, DeleteView):

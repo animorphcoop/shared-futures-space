@@ -13,6 +13,7 @@ class Task(models.Model):
         PLAN = "plan"
         ACT = "act"
 
+    created_at = models.DateTimeField(default=timezone.now)
     uuid = models.UUIDField(default=uuid4, editable=False)
     name = models.CharField(max_length=120)
     river = models.ForeignKey(River, on_delete=models.CASCADE)

@@ -48,6 +48,7 @@
         <div class="pb-5">
             {% include "partials/input-label.html" with for="id_name" label="Name" %}
             {% include "partials/input-text.html" with field=form.name|attr:"autofocus" id="id_name" %}
+            <div class="text-xxs text-black-meta mt-2"><span x-characters-remaining="#id_name"></span> remaining characters</div>
         </div>
 
         {# Task due #}
