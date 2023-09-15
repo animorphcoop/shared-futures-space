@@ -9,7 +9,8 @@ import 'flickity/dist/flickity.min.css'
 import '@/sfs/assets/css/sfs.css'
 import '@/sfs/assets/css/tailwind.css'
 
-import './characters-remaining.ts'
+import './directives/characters-remaining.ts'
+import './directives/stop-body-scroll.ts'
 
 import { expose } from "./utils.ts"
 

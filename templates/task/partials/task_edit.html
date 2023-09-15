@@ -1,17 +1,20 @@
 {# For creating or editing a task #}
-{% extends 'task/partials/modal.html' %}
+{% extends "partials/overlay-river-closable.html"%}
 
 {% load widget_tweaks %}
+{% load task_tags %}
 
-{% block title %}
-    {% if object %}
-        Edit task
-    {% else %}
-        Make a new task
-    {% endif %}
+{% block overlay_title %}
+    <div class="text-left">
+        {% if object %}
+            Edit task
+        {% else %}
+            Make a new task
+        {% endif %}
+    </div>
 {% endblock %}
 
-{% block content %}
+{% block river_overlay_content %}
 
     {% if object %}
         {% url 'river_task_edit' slug stage topic object.uuid as save_task_url %}
@@ -38,7 +41,7 @@
     {% endif %}
 
     <form hx-post="{{ save_task_url }}"
-          hx-target="#{{ task_list_id }}"
+          hx-target="#{% task_list_id %}"
           hx-swap="outerHTML">
 
         {% csrf_token %}

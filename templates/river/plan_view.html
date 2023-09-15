@@ -29,7 +29,12 @@
                     <div id="event-plan-general"
                          @chatstatusupdate="setPlanChatOpen('one', $event.detail)"
                     >
-                        {% include "task/partials/task_list.html" %}
+                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'general' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="plan-chat-general"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
                              hx-trigger="load"
@@ -45,6 +50,12 @@
                     <div id="event-plan-money"
                          @chatstatusupdate="setPlanChatOpen('two', $event.detail);"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'money' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="plan-chat-money"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
                              hx-trigger="load"
@@ -60,6 +71,12 @@
                     <div id="event-plan-place"
                          @chatstatusupdate="setPlanChatOpen('three', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'place' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="plan-chat-place"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
                              hx-trigger="load"
@@ -70,11 +87,16 @@
 
 
                 {# TIME TAB #}
-                {% url 'river_chat_message_count' river.slug 'plan' 'time' as message_count_url_time %}
                 <div x-show="openTab === 'four'">
                     <div id="event-plan-time"
                          @chatstatusupdate="setPlanChatOpen('four', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'time' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="plan-chat-time"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
                              hx-trigger="load"

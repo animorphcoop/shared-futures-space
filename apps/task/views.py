@@ -50,6 +50,7 @@ class TaskViewMixin(HTMXMixin, ContextMixin, View):
             .filter(
                 river__slug=self.get_slug(),
                 stage_name=self.get_stage_name(),
+                topic=self.get_topic(),
             )
         )
 
@@ -72,14 +73,6 @@ class TaskViewMixin(HTMXMixin, ContextMixin, View):
         context["slug"] = self.get_slug()
         context["stage"] = self.get_stage_name()
         context["topic"] = self.get_topic()
-        context["task_list_id"] = "-".join(
-            [
-                "task-list",
-                self.get_slug(),
-                self.get_stage_name(),
-                self.get_topic(),
-            ]
-        )
         return context
 
 
