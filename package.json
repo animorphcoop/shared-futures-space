@@ -11,22 +11,22 @@
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.6",
-    "@tailwindcss/typography": "^0.5.9",
-    "@types/alpinejs": "^3.7.2",
-    "@types/flickity": "^2.2.7",
-    "glob": "^10.3.3",
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/alpinejs": "^3.13.0",
+    "@types/flickity": "^2.2.9",
+    "glob": "^10.3.4",
     "postcss": "^8.4.29",
     "postcss-cli": "^10.1.0",
     "postcss-import": "^15.1.0",
     "postcss-nested": "^6.0.1",
     "postcss-simple-vars": "^7.0.1",
     "tailwindcss": "^3.3.3",
-    "typescript": "^5.0.2",
+    "typescript": "^5.2.2",
     "vite": "^4.4.9"
   },
   "dependencies": {
-    "alpinejs": "^3.12.3",
+    "alpinejs": "^3.13.0",
     "flickity": "^3.0.0",
-    "htmx.org": "^1.9.4"
+    "htmx.org": "^1.9.5"
   }
 }
