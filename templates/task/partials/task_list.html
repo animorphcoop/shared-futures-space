@@ -31,10 +31,11 @@
 
                 {% url 'river_task_edit' slug stage topic task.uuid as edit_task_url %}
                 {% url 'river_task_edit_done' slug stage topic task.uuid as edit_done_task_url %}
+                {% task_is_editable task as is_editable %}
 
                 <div class="flex gap-2 pb-3">
                     <div class="mt-0.5">
-                        <div class="cursor-pointer"
+                        <div class="cursor-pointer {% if not is_editable %}invisible{% endif %}"
                              hx-post="{{ edit_done_task_url }}"
                              hx-trigger="click"
                              hx-vals='{"done": {% if task.done %}false{% else %}true{% endif %}}'
@@ -68,7 +69,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mt-1 {% if task.done %}invisible{% endif %}">
+                    <div class="mt-1 {% if task.done or not is_editable %}invisible{% endif %}">
                         <a href="{{ edit_task_url }}"
                            hx-get="{{ edit_task_url }}"
                            hx-target="body"

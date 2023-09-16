@@ -2,17 +2,17 @@ from typing import Any, Dict, List, Union
 
 from core.views import HTMXMixin
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db import models
 from django.db.models.expressions import F
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic.base import ContextMixin, TemplateView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
-from river.models import River
+from river.models import River, RiverMembership
 from task.models import Task
 
 
@@ -29,30 +29,50 @@ class TaskViewMixin(HTMXMixin, ContextMixin, View):
         return self.kwargs["topic"]
 
     def get_river(self) -> River:
-        return River.objects.get(slug=self.get_slug())
+        return self.get_membership().river
+
+    def get_membership(self) -> RiverMembership:
+        return RiverMembership.objects.get(
+            river__slug=self.get_slug(),
+            user=self.request.user,
+        )
 
     def get_members(self):
         """Members for the river, taking into consideration current user permissions"""
-        river = self.get_river()
-        member = river.rivermembership_set.get(user=self.request.user)
-        members = [member]
-        if member.starter:
+        membership = self.get_membership()
+        river = membership.river
+        members = [membership]
+        if membership.starter:
             members += river.rivermembership_set.exclude(
                 user=self.request.user
             ).order_by("user__display_name")
         return members
 
     def get_queryset(self):
-        """A queryset that is filtered by slug and stage route params"""
+        """A queryset that is filtered river/stage/topic/memberships"""
         return (
             super()
             .get_queryset()
             .filter(
+                river__rivermembership__user=self.request.user,
                 river__slug=self.get_slug(),
                 stage_name=self.get_stage_name(),
                 topic=self.get_topic(),
             )
         )
+
+    def get_object(self):
+        """Access an individual task
+
+        Depends on river permissions:
+        - river "starters" can access everyone's
+        - everyone else can only access the ones they are responsible for
+        """
+        queryset = self.get_queryset().filter(uuid=self.kwargs["uuid"])
+        membership = self.get_membership()
+        if not membership.starter:
+            queryset = queryset.filter(responsible=self.request.user)
+        return get_object_or_404(queryset)
 
     def get_success_url(self) -> str:
         # TODO: when completing this request, probably need to take over the full response, so redirect for full page, htmx directly renders the partial
@@ -116,9 +136,6 @@ class EditTaskView(LoginRequiredMixin, TaskViewMixin, UpdateView):
     template_name = "task/task_edit.html"
     template_name_htmx = "task/partials/task_edit.html"
 
-    def get_object(self):
-        return self.get_queryset().get(uuid=self.kwargs["uuid"])
-
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["members"] = self.get_members()
@@ -131,18 +148,11 @@ class EditDoneTaskView(LoginRequiredMixin, TaskViewMixin, UpdateView):
     model = Task
     fields = ["done"]
 
-    def get_object(self):
-        return self.get_queryset().get(uuid=self.kwargs["uuid"])
-
     def get(self, request, *args, **kwargs) -> HttpResponse:
-        """There is no template for this, so just redirect on get requests"""
+        """POST-only There is no template for this, so just redirect on get requests"""
         return redirect(self.get_success_url())
 
 
 class DeleteTaskView(LoginRequiredMixin, TaskViewMixin, DeleteView):
     model = Task
-
     template_name_htmx = "task/partials/task_delete.html"
-
-    def get_object(self):
-        return self.get_queryset().get(uuid=self.kwargs["uuid"])
