@@ -1,6 +1,6 @@
 {% block content %}
 
-    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
+    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow cursor-pointer" %}
         <div x-data="{ openTab: 'one' }">
             <ul class="flex justify-between">
                 <li @click="openTab = 'one'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
