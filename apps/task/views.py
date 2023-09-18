@@ -68,11 +68,11 @@ class TaskViewMixin(HTMXMixin, ContextMixin, View):
         - river "starters" can access everyone's
         - everyone else can only access the ones they are responsible for
         """
-        queryset = self.get_queryset().filter(uuid=self.kwargs["uuid"])
+        queryset = self.get_queryset()
         membership = self.get_membership()
         if not membership.starter:
             queryset = queryset.filter(responsible=self.request.user)
-        return get_object_or_404(queryset)
+        return get_object_or_404(queryset, uuid=self.kwargs["uuid"])
 
     def get_success_url(self) -> str:
         # TODO: when completing this request, probably need to take over the full response, so redirect for full page, htmx directly renders the partial
