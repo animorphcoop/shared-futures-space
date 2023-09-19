@@ -93,8 +93,10 @@
                     if (!uploadCheckbox.classList.contains('hidden')) {
                         uploadCheckbox.classList.add('hidden')
                     }
-                    const elem = document.getElementById(formId).closest('.drawer-contents')
+                    // We want to scroll the messages list to the bottom
+                    const elem = document.getElementById(targetId)
                     if (elem) {
+                        window.elem = elem
                         scrollToBottom(elem)
                     }
                 }

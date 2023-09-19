@@ -48,7 +48,7 @@ function setupMessageRefresh(messageCountURL: string, messageListURL: string, me
 
     async function refreshMessageList() {
         await htmx.ajax('GET', messageListURL, `#${messageListTargetId}`)
-        const elem = document.getElementById(messageListTargetId)?.closest('.drawer-contents')
+        const elem = document.getElementById(messageListTargetId)
         if (elem) {
             scrollToBottom(elem)
         }
