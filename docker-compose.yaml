@@ -29,6 +29,8 @@ services:
     volumes:
       - /var/lib/postgres
     restart: always
+    ports:
+      - "5432:5432"
 
   # redis-overcommit-on-host
   redis-overcommit:
