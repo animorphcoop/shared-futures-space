@@ -104,7 +104,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
 
     for river in all_rivers:
         try:
-            members = RiverMembership.objects.get(user=request.user, river=river)
+            members = RiverMembership.objects.filter(user=request.user, river=river)
             river.membership = members
             river.started_months_ago = river.get_started_months_ago
             river.current_stage = river.get_current_stage_string
