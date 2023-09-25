@@ -2,112 +2,57 @@
 - hosts: virtualmachines
   become: yes
   tasks:
-    # smoke test
-    - name: Ping my hosts
+    # smoke test and git
+    - name: ping
       ansible.builtin.ping:
-
-    # basics
-    - name: Update apt cache
-      apt:
+    - name: basics
+      ansible.builtin.apt:
         update_cache: yes
-
-    - name: Install Git
-      apt:
-        name: git
-        state: present
-
-    # docker
-    - name: Install required packages for Docker
-      apt:
         name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - gnupg
+          - vim
+          - git
+          - postgresql
+          - python3.9
+          - python3.9-venv
+          - python3.9-dev
+          - libpq-dev
+          - gcc
         state: present
-
-    - name: Download and dearmor Docker's GPG key
-      shell: 
-        cmd: rm /etc/apt/keyrings/docker.gpg; curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
-    - name: Set permissions for docker.gpg
-      file:   
-        path: /etc/apt/keyrings/docker.gpg
-        mode: a+r
-
-    - name: Add Docker repository
-      apt_repository:
-        # /etc/apt/sources.list.d/
-        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable
-        state: present
-        filename: docker
-
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-
-    - name: Install Docker engine
-      apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-          - docker-buildx-plugin
-          - docker-compose-plugin
-        state: present
-
-    - name: Start Docker service
-      service:
-        name: docker
-        state: started
-        enabled: yes
 
     # node.js and npm
-    - name: Download n package manager
-      shell:
-        cmd: curl -o /tmp/n https://raw.githubusercontent.com/tj/n/master/bin/n
-
-    - name: Install Node LTS
-      shell:
-        cmd: bash /tmp/n lts
-
-    - name: Install npm
-      shell: npm install -g npm
-
-    - name: Cleanup n
-      shell: rm /tmp/n
+    - name: add nodesource key
+      ansible.builtin.apt_key:
+        id: 6F71F525282841EEDAF851B42F59B5F99B1BE0B4
+        url: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+        keyring: /etc/apt/trusted.gpg.d/nodesource.gpg
+        state: present
+    - name: add nodesource repository
+      ansible.builtin.apt_repository:
+        repo: deb [signed-by=/etc/apt/trusted.gpg.d/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main
+    - name: install nodejs
+      ansible.builtin.apt:
+        update_cache: yes
+        name: nodejs
+        state: present
 
     # caddy
-    - name: Update and install packages for Caddy
-      apt: 
-        name: 
-          - debian-keyring
-          - debian-archive-keyring
-          - apt-transport-https
+    - name: add caddy key
+      ansible.builtin.apt_key:
+        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+        keyring: /etc/apt/trusted.gpg.d/caddy-stable.gpg
+        state: present
+    - name: add caddy deb repository
+      ansible.builtin.apt_repository:
+        repo: deb [signed-by=/etc/apt/trusted.gpg.d/caddy-stable.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    - name: add caddy deb-src repository
+      ansible.builtin.apt_repository:
+        repo: deb [signed-by=/etc/apt/trusted.gpg.d/caddy-stable.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    - name: install caddy
+      ansible.builtin.apt:
         update_cache: yes
-        state: latest
-
-    - name: Download and dearmor Caddy's GPG key
-      shell: 
-        cmd: rm /usr/share/keyrings/caddy-stable-archive-keyring.gpg; curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/gpg.key | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-
-    - name: Add Caddy repositories
-      get_url:
-        url: https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt
-        dest: /etc/apt/sources.list.d/caddy-stable.list
-        mode: '0644'
-
-    - name: Update cache
-      apt:
-        update_cache: yes
-
-    - name: Install Caddy
-      apt:
         name: caddy
-        state: latest
-
-    - name: Configure Caddyfile
-      template:
+    - name: caddyfile
+      ansible.builtin.template:
         src: Caddyfile.j2
         dest: /etc/caddy/Caddyfile
         owner: root
@@ -115,74 +60,89 @@
         mode: '0644'
 
     # deploy user and directory
-    - name: Create www directory
-      file:
+    - name: www directory
+      ansible.builtin.file:
         path: /var/www
         state: directory
         mode: '0755'
-
-    - name: Create a user
+    - name: create user
       ansible.builtin.user:
         name: deploy
         password: ""
         shell: /bin/bash
-        groups: docker,sudo
+        groups:
+          - sudo
+          - www-data
         append: yes
         createhome: yes
         skeleton: '/etc/skel'
         generate_ssh_key: yes
         ssh_key_type: 'ed25519'
-
-    - name: Change www directory ownership
-      file:
+    - name: www ownership
+      ansible.builtin.file:
         path: /var/www
         owner: deploy
         group: www-data
         recurse: yes
 
-    # repository / service
-    - name: Clone git repo
-      git:
+    # repository
+    - name: clone
+      ansible.builtin.git:
         repo: https://github.com/animorphcoop/shared-futures-space
         dest: /var/www/shared-futures-space
         version: HEAD
       become_user: deploy
-
-    - name: Configure secrets
-      template:
+    - name: secrets
+      ansible.builtin.template:
         src: secrets.py.j2
         dest: /var/www/shared-futures-space/sfs/settings/secrets.py
         owner: deploy
         group: www-data
         mode: '0664'
-
-    # start docker containers
-    - name: Get current user uid
-      command: id -u
-      register: uid
       become_user: deploy
-      changed_when: False
-
-    - name: Get current user gid
-      command: id -g
-      register: gid
+    - name: dependencies
+      ansible.builtin.pip:
+        virtualenv_command: python3 -m venv
+        virtualenv: /var/www/shared-futures-space/venv
+        requirements: /var/www/shared-futures-space/requirements.txt
       become_user: deploy
-      changed_when: False
-
-    - name: Docker compose up
-      command: docker compose up -d
-      args:
+    - name: npm
+      community.general.npm:
+        path: /var/www/shared-futures-space
+      become_user: deploy
+    - name: build
+      ansible.builtin.shell:
+        cmd: npm run build
         chdir: /var/www/shared-futures-space
-      environment:
-        USER_ID: "{{ uid.stdout }}"
-        GROUP_ID: "{{ gid.stdout }}"
       become_user: deploy
 
-    # final reboot - service should auto-come-up after system reboots
-    - name: Reboot the machine
-      reboot:
-
-    - name: Waiting for server to come back
-      wait_for_connection:
-        delay: 90
-        timeout: 300
+    - name: mkdir uwsgi
+      ansible.builtin.file:
+        path: /etc/uwsgi
+        state: directory
+        mode: '0755'
+    - name: uwsgi template
+      ansible.builtin.template:
+        src: sfs.uwsgi.ini.j2
+        dest: /etc/uwsgi/sfs.uwsgi.ini
+        owner: root
+        group: root
+        mode: '0644'
+    - name: systemd template
+      ansible.builtin.template:
+        src: sfs.service.j2
+        dest: /etc/systemd/system/sfs.service
+        owner: root
+        group: root
+        mode: '0644'
+    - name: systemd reload
+      ansible.builtin.systemd:
+        daemon_reload: true
+    - name: systemd enable
+      ansible.builtin.systemd:
+        name: sfs
+        enabled: yes
+    - name: systemd start
+      ansible.builtin.systemd:
+        name: sfs
+        state: started
