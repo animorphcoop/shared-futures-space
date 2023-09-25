@@ -12,14 +12,15 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 import sys
+from pathlib import Path
 
 from celery.schedules import crontab
 
 
-# Build paths inside the river like this: os.path.join(BASE_DIR, ...)
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = os.path.dirname(PROJECT_DIR)
-sys.path.append(os.path.normpath(os.path.join(BASE_DIR, "apps")))
+BASE_DIR = Path(__file__).resolve().parent.parent
+DJANGO_APPS_DIR = Path(BASE_DIR) / "apps"
+
+sys.path.append(str(DJANGO_APPS_DIR))
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "default-insecure-key-ov6&0l@xp6up")
 
@@ -46,6 +47,7 @@ else:
 # add apps/ to the Python path
 
 INSTALLED_APPS = [
+    "django_vite",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.modeladmin",
@@ -83,8 +85,6 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "tailwind",
-    "theme",
     "django_browser_reload",
     "widget_tweaks",
     "django_htmx",
@@ -179,15 +179,17 @@ USE_TZ: bool = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+# must correspond to build.outDir in your ViteJS configuration
+DJANGO_VITE_ASSETS_PATH = os.path.join(BASE_DIR, "sfs/vite-build")
+
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_DIR, "static"),
-    os.path.join(BASE_DIR, "apps/theme/static"),
-    os.path.join(BASE_DIR, "templates/ts_output"),
+    os.path.join(BASE_DIR, "sfs/static"),
+    DJANGO_VITE_ASSETS_PATH,
 ]
 
 # Account
@@ -222,10 +224,10 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = os.environ.get("DOMAIN_NAME", "https://sharedfutures.space")
-CSRF_TRUSTED_ORIGINS = os.environ.get(
-    "DOMAIN_NAME", "https://sharedfutures.space"
-).split(",")
+WAGTAILADMIN_BASE_URL = os.environ.get("BASE_URL", "https://sharedfutures.space")
+CSRF_TRUSTED_ORIGINS = os.environ.get("BASE_URL", "https://sharedfutures.space").split(
+    ","
+)
 
 # for @login_required
 LOGIN_URL = "/profile/login/"
@@ -237,9 +239,7 @@ WAGTAIL_USER_CUSTOM_FIELDS = ["display_name", "year_of_birth", "post_code"]
 APPEND_SLASH = True
 WAGTAIL_APPEND_SLASH = True
 
-TAILWIND_APP_NAME = "theme"
 TAGGIT_CASE_INSENSITIVE = True
-
 
 # celery
 CELERY_BROKER_URL = "redis://redis:6379"
@@ -259,7 +259,7 @@ CELERY_RESULT_SERIALIZER = "pickle"
 
 # site framework
 SITE_ID = 1
-SITE_DOMAIN = os.environ.get("DOMAIN_NAME", "https://sharedfutures.space")
+SITE_DOMAIN = os.environ.get("BASE_URL", "https://sharedfutures.space")
 
 # allauth
 AUTHENTICATION_BACKENDS = [
