@@ -90,7 +90,7 @@
       ansible.builtin.git:
         repo: https://github.com/animorphcoop/shared-futures-space
         dest: /var/www/shared-futures-space
-        version: HEAD
+        version: setup-ansible
       become_user: deploy
     - name: secrets
       ansible.builtin.template:
