@@ -1,0 +1,19 @@
+[uwsgi]
+master = True
+module = sfs.wsgi:application
+virtualenv = venv
+strict = True
+http-socket = :5000
+need-app = True
+vacuum = True
+max-requests = 5000
+processes = 5
+harakiri = 20
+enable-threads = True
+die-on-term = true
+
+env = DJANGO_SETTINGS_MODULE=sfs.settings
+env = POSTGRES_DB=sfs_stack_pg1
+env = POSTGRES_USER=sfs_stack_usr
+env = POSTGRES_PASSWORD=example_password_CHANGEME
+env = DB_HOST=db_pg
