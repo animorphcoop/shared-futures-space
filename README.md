@@ -294,6 +294,6 @@ ansible-playbook playbook.yaml -v -e @vars.yaml
 You can also run the following as an ssh check into your machine:
 
 ```sh
-ansible all -i inventory.yaml -m ping
-ansible-inventory -i inventory.yaml --list
+ansible all -m ping
+ansible-inventory --list
 ```
