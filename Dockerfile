@@ -11,7 +11,7 @@ RUN apt-get update \
 ARG user=app
 ARG group=docker
 ARG home=/home/$user
-ARG project=$home/sfs
+ARG project=$home/shared-futures-space
 
 # import from docker-compose - receive the current host user and their main group IDs
 ARG USERID
@@ -23,6 +23,7 @@ RUN adduser -u $USERID --ingroup $group --home $home --disabled-password $user
 
 # switch to new user
 USER $user
+ENV PATH="~/.local/bin:$PATH"
 
 # create directory
 RUN mkdir $project
