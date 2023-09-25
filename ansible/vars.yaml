@@ -1,6 +1,6 @@
 ---
-domain_name: example.com
-email: email@example.com
+domain_name: opencult.com
+email: zf@sirodoht.com
 secret_key: xxx
 weather_api_key: xxx
 email_host_password: xxx
