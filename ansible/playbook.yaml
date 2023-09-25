@@ -5,7 +5,7 @@
     # smoke test and git
     - name: ping
       ansible.builtin.ping:
-    - name: basics
+    - name: essentials
       ansible.builtin.apt:
         update_cache: yes
         name:
@@ -91,14 +91,6 @@
         repo: https://github.com/animorphcoop/shared-futures-space
         dest: /var/www/shared-futures-space
         version: setup-ansible
-      become_user: deploy
-    - name: secrets
-      ansible.builtin.template:
-        src: secrets.py.j2
-        dest: /var/www/shared-futures-space/sfs/settings/secrets.py
-        owner: deploy
-        group: www-data
-        mode: '0664'
       become_user: deploy
     - name: dependencies
       ansible.builtin.pip:
