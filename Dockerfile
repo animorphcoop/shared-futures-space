@@ -38,6 +38,6 @@ COPY . $project/
 # come back as root to clean up
 USER root
 
-# all future commands should run as the user in river directory
+# all future commands should run as the user in project directory
 USER $user
 WORKDIR $project
