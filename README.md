@@ -202,10 +202,6 @@ time. Rivers progress directionally from one stage to another.
 * `templates/`: includes all Django HTML templates used across all Django apps
 * `tests/`: Django tests using pytest
 
-### Directory structure
-
-All Django apps are nested within one dir, `apps`,
-
 ### New Celery tasks
 
 When adding celery task, restarting its container is required.
