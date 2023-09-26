@@ -13,15 +13,15 @@ enable-threads = True
 die-on-term = true
 
 env = DJANGO_SETTINGS_MODULE=sfs.settings
-env = DOMAIN_NAME=opencult.com
-env = SECRET_KEY=xxx
-env = DEBUG=1
-env = DJANGO_VITE_DEV_MODE=0
+env = DOMAIN_NAME={{ domain_name }}
+env = SECRET_KEY={{ secret_key }}
+env = DEBUG={{ debug_mode }}
+env = DJANGO_VITE_DEV_MODE={{ vite_dev_mode }}
 env = POSTGRES_DB=sfs_db
 env = POSTGRES_USER=sfs_user
-env = POSTGRES_PASSWORD=password
+env = POSTGRES_PASSWORD={{ pg_password }}
 env = DB_HOST=localhost
-env = GOOGLE_CLIENT_ID=xxx
-env = GOOGLE_SECRET=xxx
-env = EMAIL_HOST_PASSWORD=xxx
-env = WEATHER_API_KEY=xxx
+env = GOOGLE_CLIENT_ID={{ google_client_id }}
+env = GOOGLE_SECRET={{ google_secret }}
+env = EMAIL_HOST_PASSWORD={{ email_host_password }}
+env = WEATHER_API_KEY={{ weather_api_key }}
