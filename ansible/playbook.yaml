@@ -2,7 +2,7 @@
 - hosts: virtualmachines
   become: yes
   tasks:
-    # smoke test and git
+    # smoke test and essential dependencies
     - name: ping
       ansible.builtin.ping:
     - name: essentials
@@ -23,7 +23,6 @@
     # postgresql setup
     - name: pg user
       community.general.postgresql_user:
-        db: sfs_db
         name: sfs_user
         password: password
         expires: infinity
@@ -131,11 +130,6 @@
       community.general.npm:
         path: /var/www/shared-futures-space
       become_user: deploy
-    - name: build
-      ansible.builtin.shell:
-        cmd: npm run build
-        chdir: /var/www/shared-futures-space
-      become_user: deploy
 
     # systemd
     - name: mkdir uwsgi
@@ -173,6 +167,15 @@
     - name: npm run build
       ansible.builtin.shell:
         cmd: npm run build
+        chdir: /var/www/shared-futures-space
+      args:
+        executable: /bin/bash
+      become_user: deploy
+    - name: collectstatic
+      ansible.builtin.shell:
+        cmd: |
+          source venv/bin/activate
+          python3 manage.py collectstatic --no-input
         chdir: /var/www/shared-futures-space
       args:
         executable: /bin/bash
