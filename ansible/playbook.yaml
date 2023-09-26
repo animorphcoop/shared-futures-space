@@ -17,7 +17,35 @@
           - python3.9-dev
           - libpq-dev
           - gcc
+          - python3-psycopg2
         state: present
+
+    # postgresql setup
+    - name: pg user
+      community.general.postgresql_user:
+        db: sfs_db
+        name: sfs_user
+        password: password
+        expires: infinity
+        state: present
+      become: yes
+      become_user: postgres
+    - name: pg database
+      community.general.postgresql_db:
+        name: sfs_db
+        owner: sfs_user
+        state: present
+      become: yes
+      become_user: postgres
+    - name: pg permissions
+      community.postgresql.postgresql_privs:
+        db: sfs_db
+        privs: ALL
+        objs: ALL_IN_SCHEMA
+        role: sfs_user
+        grant_option: true
+      become: yes
+      become_user: postgres
 
     # node.js and npm
     - name: add nodesource key
@@ -90,7 +118,7 @@
       ansible.builtin.git:
         repo: https://github.com/animorphcoop/shared-futures-space
         dest: /var/www/shared-futures-space
-        version: setup-ansible
+        version: ansible-tasks
       become_user: deploy
     - name: dependencies
       ansible.builtin.pip:
@@ -137,4 +165,26 @@
     - name: systemd start
       ansible.builtin.systemd:
         name: sfs
-        state: started
+        state: restarted
+
+    - name: npm run build
+      ansible.builtin.shell:
+        cmd: npm run build
+        chdir: /var/www/shared-futures-space
+      args:
+        executable: /bin/bash
+      become_user: deploy
+
+    - name: migrations
+      ansible.builtin.shell:
+        cmd: |
+          source venv/bin/activate
+          export DB_HOST=localhost
+          export POSTGRES_DB=sfs_db
+          export POSTGRES_USER=sfs_user
+          export POSTGRES_PASSWORD=password
+          python3 manage.py migrate
+        chdir: /var/www/shared-futures-space
+      args:
+        executable: /bin/bash
+      become_user: deploy
