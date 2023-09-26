@@ -136,6 +136,7 @@
         chdir: /var/www/shared-futures-space
       become_user: deploy
 
+    # systemd
     - name: mkdir uwsgi
       ansible.builtin.file:
         path: /etc/uwsgi
@@ -167,6 +168,7 @@
         name: sfs
         state: restarted
 
+    # deployment specific
     - name: npm run build
       ansible.builtin.shell:
         cmd: npm run build
@@ -174,7 +176,6 @@
       args:
         executable: /bin/bash
       become_user: deploy
-
     - name: migrations
       ansible.builtin.shell:
         cmd: |
