@@ -17,33 +17,20 @@ services:
              python3 manage.py runserver 0.0.0.0:9000"
     ports:
       - "9000:9000"
-    environment:
-      DOMAIN_NAME: sharedfutures.space
-      BASE_URL: https://sharedfutures.space
-      DEBUG: 1
-      SECRET_KEY: xxx
-      POSTGRES_DB: sfs_db
-      POSTGRES_USER: sfs_user
-      POSTGRES_PASSWORD: password
-      DB_HOST: db_pg
-      GOOGLE_CLIENT_ID: xxx
-      GOOGLE_SECRET: xxx
-      EMAIL_HOST_PASSWORD: xxx
-      WEATHER_API_KEY: xxx
+    env_file:
+      - .env
     depends_on:
       - db_pg
 
   db_pg:
     image: postgres:12.8-alpine
-    environment:
-      POSTGRES_DB: sfs_db
-      POSTGRES_USER: sfs_user
-      POSTGRES_PASSWORD: password
     volumes:
       - dbdata:/var/lib/postgres
     restart: always
     ports:
       - "5432:5432"
+    env_file:
+      - .env
 
   # redis-overcommit-on-host
   redis-overcommit:
@@ -58,20 +45,20 @@ services:
     depends_on:
       - redis-overcommit
 
-#  celery:
-#    restart: always
-#    build:
-#      context: .
-#      args:
-#        USERID: $USER_ID
-#        GROUPID: $GROUP_ID
-#    command: bash -c "celery -A sfs worker -B -l info"
-#    volumes:
-#      - .:/home/app/sfs
-#    depends_on:
-#      - db_pg
-#      - redis
-#      - app
+  celery:
+    restart: always
+    build:
+      context: .
+      args:
+        USERID: $USER_ID
+        GROUPID: $GROUP_ID
+    command: bash -c "celery -A sfs worker -B -l info"
+    volumes:
+      - .:/home/app/sfs
+    depends_on:
+      - db_pg
+      - redis
+      - app
 
 volumes:
   dbdata:
