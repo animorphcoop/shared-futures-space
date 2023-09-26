@@ -162,12 +162,15 @@ We use [Ansible](https://docs.ansible.com/ansible/latest/) to provision
 production machines. To setup:
 
 1. Acquire ssh access into a machine.
-1. `cp ansible/.envrc.example ansible/.envrc`
+1. Run `cp ansible/.envrc.example ansible/.envrc`
 1. Edit `ansible/.envrc` with your details and settings.
 1. Run the playbook with:
 
 ```sh
 cd ansible/
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 source .envrc
 ansible-playbook playbook.yaml -v -e @vars.yaml
 ```
