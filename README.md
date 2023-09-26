@@ -14,7 +14,19 @@ EU Programmes Body (SEUPB).
 This is a Django + Wagtail + Postgres + Redis + Celery stack. We use Docker
 and Docker Compose to setup a development environment.
 
+### Environment
+
+First, we need to setup some environment variables:
+
+1. Run `cp .env.example .env`
+1. Edit `.env` with your settings and password
+
+Continue with Docker section below.
+
 ### Docker
+
+This will start the stack in dev mode, though without frontend assets.
+After this, continue in the section below to setup styles and JavaScript.
 
 Linux & MINGW64 on Windows:
 
@@ -36,9 +48,6 @@ Windows (running Linux containers):
 ```sh
 USER_ID=$(1000) GROUP_ID=$(1000) docker compose up --build
 ```
-
-This will start the stack in dev mode, though without frontend assets.
-Continue in the section below to setup styles and JavaScript.
 
 ### TypeScript
 
