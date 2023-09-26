@@ -27,6 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "default-insecure-key-ov6&0l@xp6up")
 # default true in case app is deployed without any env variables
 DEBUG = True if os.environ.get("DEBUG") == "1" else False
 
+ALLOWED_HOSTS = os.environ.get("DOMAIN_NAME", "sharedfutures.com").split(",")
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
     INTERNAL_IPS = [
@@ -37,11 +38,10 @@ if DEBUG:
         # see https://django-debug-toolbar.readthedocs.io/en/latest/tips.html#id1
         "ROOT_TAG_EXTRA_ATTRS": "hx-preserve"
     }
-    DJANGO_VITE_DEV_MODE = True
-else:
-    # let this throw exeception if env variable is undefined on non-DEBUG mode
-    ALLOWED_HOSTS = os.environ.get("DOMAIN_NAME").split(",")
 
+DJANGO_VITE_DEV_MODE = False
+if os.environ.get("DJANGO_VITE_DEV_MODE", "") == "1":
+    DJANGO_VITE_DEV_MODE = True
 
 # Application definition
 # add apps/ to the Python path
