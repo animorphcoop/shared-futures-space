@@ -170,10 +170,18 @@ USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker compose exec app python3 manag
 We use [Ansible](https://docs.ansible.com/ansible/latest/) to provision
 production machines. To setup:
 
-1. Acquire ssh access into a machine.
+1. Get a Debian 11 (bullseye) machine and its IP address.
+1. Get a domain name and configure its DNS with your machine’s IP address.
+1. Acquire SSH access into a machine. You can check if that worked with:
+
+```sh
+ansible all -m ping
+ansible-inventory --list
+```
+
 1. Run `cp ansible/.envrc.example ansible/.envrc`
-1. Edit `ansible/.envrc` with your details and settings.
-1. Run the playbook with:
+1. Edit `ansible/.envrc` with your IP, domain name, and other settings.
+1. Run the ansible playbook with:
 
 ```sh
 cd ansible/
@@ -184,12 +192,8 @@ source .envrc
 ansible-playbook playbook.yaml -v -e @vars.yaml
 ```
 
-You can also run the following as an ssh check into your machine:
-
-```sh
-ansible all -m ping
-ansible-inventory --list
-```
+You should now be able to access your Shared Future Space instance at your
+domain name!
 
 ## Resources and notes
 
