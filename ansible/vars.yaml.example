@@ -1,6 +1,8 @@
 ---
-domain_name: opencult.com
-email: zf@sirodoht.com
+debug_mode: 1
+vite_dev_mode: 0
+domain_name: sharedfutures.space
+email: email@example.com
 secret_key: xxx
 pg_password: password
 google_client_id: xxx
