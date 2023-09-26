@@ -190,3 +190,11 @@
       args:
         executable: /bin/bash
       become_user: deploy
+    - name: uwsgi restart
+      ansible.builtin.systemd:
+        name: sfs
+        state: restarted
+    - name: caddy restart
+      ansible.builtin.systemd:
+        name: caddy
+        state: restarted
