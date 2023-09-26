@@ -66,6 +66,7 @@
     # caddy
     - name: add caddy key
       ansible.builtin.apt_key:
+        id: 65760C51EDEA2017CEA2CA15155B6D79CA56EA34
         url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
         keyring: /etc/apt/trusted.gpg.d/caddy-stable.gpg
         state: present
