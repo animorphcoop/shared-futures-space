@@ -23,7 +23,7 @@ RUN adduser -u $USERID --ingroup $group --home $home --disabled-password $user
 
 # switch to new user
 USER $user
-ENV PATH="~/.local/bin:$PATH"
+ENV PATH="$user/.local/bin:$PATH"
 
 # create directory
 RUN mkdir $project
