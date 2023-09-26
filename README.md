@@ -167,19 +167,23 @@ USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker compose exec app python3 manag
 
 ## Deployment
 
+Deploy your own instance of Shared Futures in 6 simple steps!
+
 We use [Ansible](https://docs.ansible.com/ansible/latest/) to provision
 production machines. To setup:
 
 1. Get a Debian 11 (bullseye) machine and its IP address.
-1. Get a domain name and configure its DNS with your machine’s IP address.
-1. Acquire SSH access into a machine. You can check if that worked with:
+2. Get a domain name and configure its DNS with your machine’s IP address.
+3. Acquire SSH access into a machine. You can check if that worked with:
+
 ```sh
 ansible all -m ping
 ansible-inventory --list
 ```
-1. Run `cp ansible/.envrc.example ansible/.envrc`
-1. Edit `ansible/.envrc` with your IP, domain name, and other settings.
-1. Run the ansible playbook with:
+
+4. Run `cp ansible/.envrc.example ansible/.envrc`
+5. Edit `ansible/.envrc` with your IP, domain name, and other settings.
+6. Run the ansible playbook with:
 
 ```sh
 cd ansible/
