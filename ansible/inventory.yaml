@@ -1,5 +1,5 @@
 virtualmachines:
   hosts:
-    soto:
-      ansible_host: 65.108.91.7
-      ansible_user: root
+    sfs:
+      ansible_host: "{{ lookup('env', 'ANSIBLE_HOST') }}"
+      ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"

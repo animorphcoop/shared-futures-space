@@ -1,0 +1,11 @@
+---
+debug_mode: "{{ lookup('env', 'DEBUG_MODE') }}"
+vite_dev_mode: "{{ lookup('env', 'VITE_DEV_MODE') }}"
+domain_name: "{{ lookup('env', 'DOMAIN_NAME') }}"
+email: "{{ lookup('env', 'EMAIL') }}"
+secret_key: "{{ lookup('env', 'SECRET_KEY') }}"
+pg_password: "{{ lookup('env', 'PG_PASSWORD') }}"
+google_client_id: "{{ lookup('env', 'GOOGLE_CLIENT_ID') }}"
+google_secret: "{{ lookup('env', 'GOOGLE_SECRET') }}"
+email_host_password: "{{ lookup('env', 'EMAIL_HOST_PASSWORD') }}"
+weather_api_key: "{{ lookup('env', 'WEATHER_API_KEY') }}"

@@ -1,0 +1,15 @@
+# inventory.yaml
+export ANSIBLE_HOST=your.ip.address.here
+export ANSIBLE_USER=root
+
+# vars.yaml
+export DEBUG_MODE=1
+export VITE_DEV_MODE=0
+export DOMAIN_NAME=sharedfutures.space
+export EMAIL=email@example.com
+export SECRET_KEY=xxx
+export PG_PASSWORD=password
+export GOOGLE_CLIENT_ID=xxx
+export GOOGLE_SECRET=xxx
+export EMAIL_HOST_PASSWORD=xxx
+export WEATHER_API_KEY=xxx
