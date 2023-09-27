@@ -191,7 +191,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 source .envrc
-ansible-playbook playbook.yaml -v -e @vars.yaml
+ansible-playbook playbook.yaml --verbose
 ```
 
 You should now be able to access your Shared Future Space instance at your

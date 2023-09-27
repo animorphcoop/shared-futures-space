@@ -1,5 +1,7 @@
 ---
 - hosts: virtualmachines
+  vars_files:
+    - vars.yaml
   become: yes
   tasks:
     # smoke test and essential dependencies
