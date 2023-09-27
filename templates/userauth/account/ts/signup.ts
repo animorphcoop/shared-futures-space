@@ -1,12 +1,16 @@
 import { expose } from "@/templates/ts/utils.ts"
 import {
+    comparePasswords,
     emailInput,
+    getPasswordFeedback,
     inputFeedback,
     newObserver,
     passwordFeedbackOne,
     passwordFeedbackTwo,
     passwordInputOne,
-    passwordInputTwo, toggleSubmitButton,
+    passwordInputTwo,
+    processEmailValue,
+    toggleSubmitButton,
     validateInputFeedback
 } from "@/templates/userauth/account/ts/auth_helper.ts"
 
@@ -58,7 +62,10 @@ function validateSignup() {
 }
 
 expose({
-    setupObserversSignup,
+    comparePasswords,
     evaluateButtonSignup,
+    getPasswordFeedback,
+    processEmailValue,
+    setupObserversSignup,
     validateSignup,
 })
