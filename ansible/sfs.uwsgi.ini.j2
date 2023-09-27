@@ -21,7 +21,11 @@ env = POSTGRES_DB=sfs_db
 env = POSTGRES_USER=sfs_user
 env = POSTGRES_PASSWORD={{ pg_password }}
 env = DB_HOST=localhost
+env = ENABLE_ALLAUTH_SOCIAL_LOGIN={{ enable_social_login }}
 env = GOOGLE_CLIENT_ID={{ google_client_id }}
 env = GOOGLE_SECRET={{ google_secret }}
+env = EMAIL_HOST={{ email_host }}
+env = EMAIL_HOST_USER={{ email_host_user }}
 env = EMAIL_HOST_PASSWORD={{ email_host_password }}
+env = DEFAULT_FROM_EMAIL={{ default_from_email }}
 env = WEATHER_API_KEY={{ weather_api_key }}

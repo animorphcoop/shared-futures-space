@@ -275,7 +275,9 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-ENABLE_ALLAUTH_SOCIAL_LOGIN = True
+ENABLE_ALLAUTH_SOCIAL_LOGIN = False
+if os.environ.get("ENABLE_ALLAUTH_SOCIAL_LOGIN", "") == "1":
+    ENABLE_ALLAUTH_SOCIAL_LOGIN = True
 
 LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/dashboard/"
@@ -298,12 +300,17 @@ ACCOUNT_ADAPTER = "userauth.views.CustomAllauthAdapter"
 SOCIALACCOUNT_ADAPTER = "userauth.adapters.CustomSocialAccountAdapter"
 
 # email
-EMAIL_HOST = "mail.webarch.net"
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = 465
-EMAIL_HOST_USER = "sfs_mailer@animorph.coop"
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = "sfs_mailer@animorph.coop"
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
-WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY", "")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+if not EMAIL_HOST and not EMAIL_HOST_USER and not EMAIL_HOST_PASSWORD:
+    # if email hasn't been set, then enable console backend
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
