@@ -287,3 +287,7 @@ See the guide: [How to deploy your own instance](deployment-notes.md)
 
 **NOTE:** DON'T FORGET TO CHANGE FROM THE DEFAULTS IN THE PROD SERVER BEFORE RELEASE, BECAUSE THE CURRENT ONES ARE IN
 THE GIT HISTORY
+
+---
+
+Integration with OpenProject: https://www.openproject.org/blog/how-to-openproject-github-integration/
