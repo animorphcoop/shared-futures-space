@@ -26,17 +26,15 @@
     - name: pg user
       community.general.postgresql_user:
         name: sfs_user
-        password: password
+        password: "{{ pg_password }}"
         expires: infinity
         state: present
-      become: yes
       become_user: postgres
     - name: pg database
       community.general.postgresql_db:
         name: sfs_db
         owner: sfs_user
         state: present
-      become: yes
       become_user: postgres
     - name: pg permissions
       community.postgresql.postgresql_privs:
@@ -45,7 +43,6 @@
         objs: ALL_IN_SCHEMA
         role: sfs_user
         grant_option: true
-      become: yes
       become_user: postgres
 
     # node.js and npm
@@ -120,7 +117,7 @@
       ansible.builtin.git:
         repo: https://github.com/animorphcoop/shared-futures-space
         dest: /var/www/shared-futures-space
-        version: ansible-tasks
+        version: setup-ansible
       become_user: deploy
     - name: dependencies
       ansible.builtin.pip:
@@ -131,6 +128,14 @@
     - name: npm
       community.general.npm:
         path: /var/www/shared-futures-space
+      become_user: deploy
+    - name: clear working dir
+      # we discard changes because npm install changes package-lock.json
+      ansible.builtin.shell:
+        cmd: git checkout -- .
+        chdir: /var/www/shared-futures-space
+      args:
+        executable: /bin/bash
       become_user: deploy
 
     # systemd
@@ -189,7 +194,7 @@
           export DB_HOST=localhost
           export POSTGRES_DB=sfs_db
           export POSTGRES_USER=sfs_user
-          export POSTGRES_PASSWORD=password
+          export POSTGRES_PASSWORD={{ pg_password }}
           python3 manage.py migrate
         chdir: /var/www/shared-futures-space
       args:
