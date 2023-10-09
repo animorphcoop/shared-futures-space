@@ -27,7 +27,7 @@ services:
     env_file:
       - variables.env
     volumes:
-      - /var/lib/postgres
+      - dbdata:/var/lib/postgres
     restart: always
     ports:
       - "5432:5432"
@@ -59,3 +59,6 @@ services:
       - db_pg
       - redis
       - app
+
+volumes:
+  dbdata:
