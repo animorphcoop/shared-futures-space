@@ -75,7 +75,6 @@ class TaskViewMixin(HTMXMixin, ContextMixin, View):
         return get_object_or_404(queryset, uuid=self.kwargs["uuid"])
 
     def get_success_url(self) -> str:
-        # TODO: when completing this request, probably need to take over the full response, so redirect for full page, htmx directly renders the partial
         if self.request.htmx:
             return reverse(
                 "river_task_list",
