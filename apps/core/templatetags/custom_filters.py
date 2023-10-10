@@ -23,12 +23,6 @@ def strcat(value, arg):
     return str(value) + str(arg)
 
 
-@register.filter(name="to_json")
-@mark_safe
-def to_json(value):
-    return json.dumps(value)
-
-
 @register.filter(name="to_range")
 def to_range(number: int):
     return range(number)
