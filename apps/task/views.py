@@ -124,11 +124,6 @@ class CreateTaskView(LoginRequiredMixin, TaskViewMixin, CreateView):
         form.instance.topic = self.get_topic()
         return super().form_valid(form)
 
-    def form_invalid(self, form) -> HttpResponse:
-        # TODO: there might be things we don't handle here very well...
-        print("FORM INVALID")
-        return super().form_invalid(form)
-
 
 class EditTaskView(LoginRequiredMixin, TaskViewMixin, UpdateView):
     model = Task
