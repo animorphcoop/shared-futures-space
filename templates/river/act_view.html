@@ -1,6 +1,6 @@
 {% block content %}
 
-    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
+    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow cursor-pointer" %}
         <div x-data="{ openTab: 'one' }">
             <ul class="flex justify-between">
                 <li @click="openTab = 'one'; setCurrentlyActiveTabAct($data);" class="{{ li_class }}"
@@ -29,6 +29,12 @@
                     <div id="event-act-general"
                             @chatstatusupdate="setActChatOpen('one', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'act' 'general' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="act-chat-general" hx-get="{% url 'river_chat' river.slug 'act' 'general' %}"
                              hx-trigger="load"
                              hx-target="this">
@@ -43,6 +49,12 @@
                     <div id="event-act-money"
                             @chatstatusupdate="setActChatOpen('two', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'act' 'money' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="act-chat-money" hx-get="{% url 'river_chat' river.slug 'act' 'money' %}"
                              hx-trigger="load"
                              hx-target="this">
@@ -57,6 +69,12 @@
                     <div id="event-act-place"
                             @chatstatusupdate="setActChatOpen('three', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'act' 'place' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="act-chat-place" hx-get="{% url 'river_chat' river.slug 'act' 'place' %}"
                              hx-trigger="load"
                              hx-target="this">
@@ -70,6 +88,12 @@
                     <div id="event-act-time"
                             @chatstatusupdate="setActChatOpen('four', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'act' 'time' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="act-chat-time" hx-get="{% url 'river_chat' river.slug 'act' 'time' %}"
                              hx-trigger="load"
                              hx-target="this">

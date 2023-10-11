@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     "spring",
     "core",
     "poll",
+    "task",
     "django.contrib.sites",
     "allauth",
     "allauth.account",

@@ -10,6 +10,7 @@ from django.utils import timezone
 from poll.models import MultipleChoicePoll, SingleChoicePoll
 from resources.models import CaseStudy, HowTo
 from river.models import River
+from task.models import Task
 from userauth.models import UserAvatar
 from wagtail.images.models import Image
 
@@ -100,6 +101,30 @@ def admin_user(
 @pytest.fixture(scope="function")
 def test_river(db):
     return River.objects.create(title="some river", description="river to do something")
+
+
+@pytest.fixture(scope="function")
+def create_test_task(db, test_user, test_river):
+    def _create(
+        river=test_river,
+        responsible=test_user,
+        stage_name="act",
+        topic="general",
+        name="Example Task",
+        done=False,
+        **kwargs,
+    ):
+        return Task.objects.create(
+            river=river,
+            responsible=responsible,
+            stage_name=stage_name,
+            topic=topic,
+            name=name,
+            done=done,
+            **kwargs,
+        )
+
+    return _create
 
 
 @pytest.fixture(scope="function")

@@ -1,0 +1,19 @@
+{% extends 'partials/overlay-river.html' %}
+
+{% block overlay_header %}
+    <div class="flex justify-between">
+        <h2 class="text-large text-center">
+            {% block overlay_title %}{% endblock %}
+        </h2>
+        <button class="cursor-pointer inline-block" @click="overlayClose()">
+            {% include 'partials/close.html' %}
+        </button>
+    </div>
+{% endblock %}
+
+{% block river_overlay_extra %}
+    {# Closes modal on click or ESC press #}
+    <div class="absolute inset-0 -z-10"
+         @click="overlayClose()"
+         @keyup.escape.window="overlayClose()"></div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{# For creating or editing a task #}
+{% extends "partials/overlay-river-closable.html"%}
+
+{% load widget_tweaks %}
+{% load task_tags %}
+
+{% block overlay_title %}
+    <div class="text-left">
+        {% if object %}
+            Edit task
+        {% else %}
+            Make a new task
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block river_overlay_content %}
+
+    {% if object %}
+        {% url 'river_task_edit' slug stage topic object.uuid as save_task_url %}
+        {% url 'river_task_delete' slug stage topic object.uuid as delete_task_url %}
+    {% else %}
+        {% url 'river_task_add' slug stage topic as save_task_url %}
+    {% endif %}
+
+    {% if form.errors %}
+        {# TODO: these are a bit ugly like this... should render next to the fields #}
+        <div class="text-body bg-red-important/30 p-4 px-6">
+            <div>
+                {% for field, errors in form.errors.items %}
+                    <div>
+                        {{ field }}:
+
+                        {% for error in errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <form hx-post="{{ save_task_url }}"
+          hx-target="#{% task_list_id %}"
+          hx-swap="outerHTML">
+
+        {% csrf_token %}
+
+        {# Task name #}
+
+        <div class="pb-5">
+            {% include "partials/input-label.html" with for="id_name" label="Name" %}
+            {% include "partials/input-text.html" with field=form.name|attr:"autofocus" id="id_name" %}
+            <div class="text-xxs text-black-meta mt-2"><span x-characters-remaining="#id_name"></span> remaining characters</div>
+        </div>
+
+        {# Task due #}
+
+        <div class="pb-5">
+            {% include "partials/input-label.html" with for="id_due" label="Due (optional)" %}
+            {% if object %}
+                {# TODO: use the input-text partial.. finding a way to pass formatted date into it... #}
+                <input id="id_due"
+                       class="input-text"
+                       name="due"
+                       type="date"
+                       value="{{ object.due | date:"Y-m-d" }}">
+            {% else %}
+                {% include "partials/input-text.html" with field=form.due id="id_due" type="date" %}
+            {% endif %}
+        </div>
+
+        {# Task responsible #}
+
+        <div class="pb-5">
+            {% include "partials/input-label.html" with for="id_responsible" label="Swimmer responsible" %}
+            {% for member in members %}
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio"
+                           name="responsible"
+                           {% if object %}
+                             {% if object.responsible_id == member.user.id %}checked{% endif %}
+                           {% elif forloop.first %}
+                             checked
+                           {% endif %}
+                           value="{{ member.user.id }}">
+                    <img class="h-8 w-8" src={{ member.user.avatar.image_url }}>
+                    <span class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                        {{ member.user.display_name }}
+                    </span>
+                </label>
+            {% endfor %}
+        </div>
+
+        {# Action buttons #}
+
+        <div class="flex gap-3">
+            {% if object %}
+                <button class="button button-important" type="submit">Edit</button>
+
+                {# Show delete confirmation #}
+                <button class="button button-danger"
+                        hx-get="{{ delete_task_url }}"
+                        hx-target="body"
+                        hx-swap="beforeend">Delete</button>
+            {% else %}
+                <button class="button button-important">Post</button>
+            {% endif %}
+        </div>
+
+    </form>
+{% endblock %}

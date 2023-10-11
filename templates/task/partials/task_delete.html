@@ -1,0 +1,20 @@
+{# Delete confirmation modal #}
+
+{% extends "partials/overlay-river-closable.html"%}
+
+{% load task_tags %}
+
+{% block overlay_title %}
+    <div class="text-left">
+        Delete task?
+    </div>
+{% endblock %}
+
+{% block river_overlay_content %}
+    {% url 'river_task_delete' slug stage topic object.uuid as delete_task_url %}
+    <button class="button button-danger"
+            hx-post="{{ delete_task_url }}"
+            hx-params="none"
+            hx-target="#{% task_list_id %}"
+            hx-swap="outerHTML">Delete</button>
+{% endblock %}

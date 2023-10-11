@@ -1,0 +1,91 @@
+{# Closes the overlays if present using an out-of-band swap #}
+<div hx-swap-oob="outerHTML: .overlay-river"></div>
+
+{% load custom_filters %}
+{% load task_tags %}
+
+{% if slug and stage and topic %}
+
+    {% url 'river_task_add' slug stage topic as add_task_url %}
+
+    <div id="{% task_list_id %}" class="m-4" x-data="{ open: true }">
+
+        {# Task list header #}
+
+        <div class="rounded-t-xl text-button cursor-pointer p-2.5 bg-yellow uppercase flex justify-between items-center" @click="open = !open">
+            Tasks
+            <div class="w-[12] h-[8] transition duration-500 ease-out"
+                 :class="{'-rotate-180': open}">
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 7.91016L12 1.91016L10.59 0.500156L6 5.08016L1.41 0.500156L0 1.91016L6 7.91016Z"
+                          fill="#9759FF"/>
+                </svg>
+            </div>
+        </div>
+
+        {# Task list body #}
+
+        <div class="p-2.5 bg-yellow/50" :class="open ? '' : 'hidden'">
+            {% for task in page_obj %}
+
+                {% url 'river_task_edit' slug stage topic task.uuid as edit_task_url %}
+                {% url 'river_task_edit_done' slug stage topic task.uuid as edit_done_task_url %}
+                {% task_is_editable task as is_editable %}
+
+                <div class="flex gap-2 pb-3">
+                    <div class="mt-0.5">
+                        <div class="cursor-pointer {% if not is_editable %}invisible{% endif %}"
+                             hx-post="{{ edit_done_task_url }}"
+                             hx-trigger="click"
+                             hx-vals='{"done": {% if task.done %}false{% else %}true{% endif %}}'
+                             hx-target="#{% task_list_id %}"
+                             hx-swap="outerHTML">
+                            {% include 'partials/tick.html' with ticked=task.done %}
+                        </div>
+                    </div>
+                    <div class="flex-auto {% if task.done %}text-black/30{% endif %}">
+                        <div class="text-large {% if task.done %}line-through text-black/30{% endif %}">
+                            {{ task.name }}
+                        </div>
+                        <div class="flex items-center gap-2 text-xxs">
+
+                            {% if not task.done and task.due %}
+                                {% if task.is_overdue %}
+                                    <span class="text-red-600">
+                                        Overdue <span class="font-bold">for {{ task.overdue_by }}</span>
+                                    </span>
+                                {% else %}
+                                    <span>Due <span class="font-bold">in {{ task.due_in }}</span></span>
+                                {% endif %}
+                            {% endif %}
+
+                            <div class="flex items-center gap-1">
+                                <span class="{% if task.done %}text-black/30{% else %}text-black/75{% endif %}">Responsible</span>
+                                {% if task.responsible.avatar.image_url %}
+                                    <img class="h-5 w-5" src={{ task.responsible.avatar.image_url }}>
+                                {% endif %}
+                                {{ task.responsible.display_name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-1 {% if task.done or not is_editable %}invisible{% endif %}">
+                        <a href="{{ edit_task_url }}"
+                           hx-get="{{ edit_task_url }}"
+                           hx-target="body"
+                           hx-swap="beforeend">
+                            {% include 'partials/three-dots.html' %}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <button class="button button-on-colour mt-2"
+                    hx-get="{{ add_task_url }}"
+                    hx-target="body"
+                    hx-swap="beforeend">
+                Add task
+            </button>
+        </div>
+    </div>
+{% endif %}

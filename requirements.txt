@@ -12,6 +12,7 @@ psycopg2==2.9.6
 pytest-celery==0.0.0
 pytest-django==4.5.2
 pytest==7.4.0
+pytest-xdist==3.3.1
 python-magic==0.4.27
 redis==4.6.0
 uwsgi==2.0.22

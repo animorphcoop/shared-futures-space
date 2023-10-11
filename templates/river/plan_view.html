@@ -1,6 +1,6 @@
 {% block content %}
 
-    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow" %}
+    {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex flex-grow items-center justify-center tab-shadow cursor-pointer" %}
         <div x-data="{ openTab: 'one' }">
             <ul class="flex justify-between">
                 <li @click="openTab = 'one'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
@@ -29,6 +29,12 @@
                     <div id="event-plan-general"
                          @chatstatusupdate="setPlanChatOpen('one', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'general' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="plan-chat-general"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
                              hx-trigger="load"
@@ -44,6 +50,12 @@
                     <div id="event-plan-money"
                          @chatstatusupdate="setPlanChatOpen('two', $event.detail);"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'money' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="plan-chat-money"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
                              hx-trigger="load"
@@ -59,6 +71,12 @@
                     <div id="event-plan-place"
                          @chatstatusupdate="setPlanChatOpen('three', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'place' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="plan-chat-place"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
                              hx-trigger="load"
@@ -69,11 +87,16 @@
 
 
                 {# TIME TAB #}
-                {% url 'river_chat_message_count' river.slug 'plan' 'time' as message_count_url_time %}
                 <div x-show="openTab === 'four'">
                     <div id="event-plan-time"
                          @chatstatusupdate="setPlanChatOpen('four', $event.detail)"
                     >
+                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'time' %}"
+                             hx-trigger="load"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                        </div>
+
                         <div id="plan-chat-time"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"
                              hx-trigger="load"
