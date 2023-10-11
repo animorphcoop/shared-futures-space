@@ -19,14 +19,6 @@
 
     <div class="mx-4.5">
 
-        {% if show_wizard %}
-        <div class="text-medium text-center border border-2 border-yellow-500 p-4 mx-auto sm:max-w-md">
-            There are currently no post codes. Click
-            <a href="{% url 'wizard' %}" class="underline">here</a>
-            to configure your Shared Futures Space.
-        </div>
-        {% endif %}
-
         {% include "partials/vertical-spacer.html" with space="6" %}
 
         <h1 class="text-large text-center mx-auto sm:max-w-md">Welcome to a project management platform where your
@@ -58,6 +50,14 @@
 
             {% include "landing/section-heading.html" with title="Where we currently operate" %}
             {% include "partials/vertical-spacer.html" with space="9" %}
+
+            {% if show_wizard %}
+                <div class="text-medium text-center border border-2 border-yellow-500 p-4 mx-auto sm:max-w-md">
+                    There are currently no post codes. Click
+                    <a href="{% url 'wizard' %}" class="underline">here</a>
+                    to configure your Shared Futures Space.
+                </div>
+            {% endif %}
 
             <div class="grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-y-9 xl:gap-x-36">
                 {% if areas_dict %}
