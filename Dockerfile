@@ -24,16 +24,20 @@ RUN adduser -u $USERID --ingroup $group --home $home --disabled-password $user
 # switch to new user
 USER $user
 
-# create directory and copy over the code onto the container
+# create directory
 RUN mkdir $project
-COPY . $project/
 
-# create local environment and use as variable
+# install requirements in venv
+COPY requirements.txt $project/
 ENV VIRTUAL_ENV=$home/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
 # install requirements
 RUN pip install -r $project/requirements.txt
+
+# copy over the code onto the container
+COPY . $project/
 
 # come back as root to clean up
 USER root

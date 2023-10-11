@@ -12,32 +12,41 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 import sys
-from typing import Dict, List, Optional, TypedDict, Union
+from pathlib import Path
 
 from celery.schedules import crontab
 
 
-class Template(TypedDict):
-    BACKEND: str
-    DIRS: List[str]
-    APP_DIRS: bool
-    OPTIONS: Dict[str, Union[str, List[str]]]
+BASE_DIR = Path(__file__).resolve().parent.parent
+DJANGO_APPS_DIR = Path(BASE_DIR) / "apps"
 
+sys.path.append(str(DJANGO_APPS_DIR))
 
-# Build paths inside the river like this: os.path.join(BASE_DIR, ...)
-PROJECT_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR: str = os.path.dirname(PROJECT_DIR)
-sys.path.append(os.path.normpath(os.path.join(BASE_DIR, "apps")))
+SECRET_KEY = os.environ.get("SECRET_KEY", "default-insecure-key-ov6&0l@xp6up")
 
+# default true in case app is deployed without any env variables
+DEBUG = True if os.environ.get("DEBUG") == "1" else False
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+ALLOWED_HOSTS = os.environ.get("DOMAIN_NAME", "sharedfutures.com").split(",")
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+    INTERNAL_IPS = [
+        # see https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#toolbar-options
+        "0.0.0.0",
+    ]
+    DEBUG_TOOLBAR_CONFIG = {
+        # see https://django-debug-toolbar.readthedocs.io/en/latest/tips.html#id1
+        "ROOT_TAG_EXTRA_ATTRS": "hx-preserve"
+    }
 
+DJANGO_VITE_DEV_MODE = False
+if os.environ.get("DJANGO_VITE_DEV_MODE", "") == "1":
+    DJANGO_VITE_DEV_MODE = True
 
 # Application definition
 # add apps/ to the Python path
 
-INSTALLED_APPS: List[str] = [
+INSTALLED_APPS = [
     "django_vite",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -79,9 +88,12 @@ INSTALLED_APPS: List[str] = [
     "django_browser_reload",
     "widget_tweaks",
     "django_htmx",
+    "allauth.socialaccount.providers.google",
 ]
+if DEBUG:
+    INSTALLED_APPS += ["debug_toolbar"]
 
-MIDDLEWARE: List[str] = [
+MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -94,10 +106,12 @@ MIDDLEWARE: List[str] = [
     "django_htmx.middleware.HtmxMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+if DEBUG:
+    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
-ROOT_URLCONF: str = "sfs.urls"
+ROOT_URLCONF = "sfs.urls"
 
-TEMPLATES: List[Template] = [
+TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
@@ -117,14 +131,13 @@ TEMPLATES: List[Template] = [
     },
 ]
 
-WSGI_APPLICATION: str = "sfs.wsgi.application"
+WSGI_APPLICATION = "sfs.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-DATABASES: Dict[str, Dict[str, Optional[str]]] = {
+DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        # these are in app_variables.env:
         "HOST": os.environ.get("DB_HOST"),
         "NAME": os.environ.get("POSTGRES_DB"),
         "USER": os.environ.get("POSTGRES_USER"),
@@ -132,10 +145,12 @@ DATABASES: Dict[str, Dict[str, Optional[str]]] = {
     }
 }
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS: List[Dict[str, str]] = [
+AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
@@ -153,30 +168,27 @@ AUTH_PASSWORD_VALIDATORS: List[Dict[str, str]] = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE: str = "en-us"
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE: str = "UTC"
+TIME_ZONE = "UTC"
 
-USE_I18N: bool = True
-
-# USE_L10N: bool = True # defaults to true, setting it explicitly raises a warning
+USE_I18N = True
 
 USE_TZ: bool = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # must correspond to build.outDir in your ViteJS configuration
-DJANGO_VITE_ASSETS_PATH = os.path.join(PROJECT_DIR, "vite-build")
+DJANGO_VITE_ASSETS_PATH = os.path.join(BASE_DIR, "sfs/vite-build")
 
-STATICFILES_FINDERS: List[str] = [
+STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
-STATICFILES_DIRS: List[str] = [
-    os.path.join(PROJECT_DIR, "static"),
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "sfs/static"),
     DJANGO_VITE_ASSETS_PATH,
 ]
 
@@ -196,16 +208,14 @@ STORAGES = {
     },
 }
 
-STATIC_ROOT: str = os.path.join(BASE_DIR, "static")
-STATIC_URL: str = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = "/static/"
 
-MEDIA_ROOT: str = os.path.join(BASE_DIR, "media")
-MEDIA_URL: str = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
-# Wagtail settings
-
-WAGTAIL_SITE_NAME: str = "sfs"
-
+# Wagtail
+WAGTAIL_SITE_NAME = "sfs"
 WAGTAILSEARCH_BACKENDS = {
     "default": {
         "BACKEND": "wagtail.search.backends.database",
@@ -214,18 +224,26 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL: str = "https://sharedfutures.space"
-CSRF_TRUSTED_ORIGINS = [
-    "https://dev.sharedfutures.space",
-    "https://sharedfutures.space",
-]
+WAGTAILADMIN_BASE_URL = os.environ.get("BASE_URL", "https://sharedfutures.space")
+CSRF_TRUSTED_ORIGINS = os.environ.get("BASE_URL", "https://sharedfutures.space").split(
+    ","
+)
 
 # for @login_required
 LOGIN_URL = "/profile/login/"
 
-# Redis & Celery configuration
-CELERY_BROKER_URL: str = "redis://redis:6379"
-CELERY_RESULT_BACKEND: str = "redis://redis:6379"
+WAGTAIL_USER_EDIT_FORM = "userauth.forms.CustomUserEditForm"
+WAGTAIL_USER_CREATION_FORM = "userauth.forms.CustomUserCreationForm"
+WAGTAIL_USER_CUSTOM_FIELDS = ["display_name", "year_of_birth", "post_code"]
+
+APPEND_SLASH = True
+WAGTAIL_APPEND_SLASH = True
+
+TAGGIT_CASE_INSENSITIVE = True
+
+# celery
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
 CELERY_BEAT_SCHEDULE = {
     "send_daily_messages": {
         "task": "userauth.tasks.send_daily_messages",
@@ -233,13 +251,66 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-WAGTAIL_USER_EDIT_FORM: str = "userauth.forms.CustomUserEditForm"
-WAGTAIL_USER_CREATION_FORM: str = "userauth.forms.CustomUserCreationForm"
-WAGTAIL_USER_CUSTOM_FIELDS: List[str] = ["display_name", "year_of_birth", "post_code"]
+# pickle required to serialize and send EmailMultiAlternatives
+# https://docs.celeryproject.org/en/latest/userguide/calling.html#calling-serializers
+CELERY_ACCEPT_CONTENT = ["pickle"]
+CELERY_TASK_SERIALIZER = "pickle"
+CELERY_RESULT_SERIALIZER = "pickle"
 
-# urls are not strings! domain.com/page and domain.com/page/ are the same url
-# unfortunately these settings don't seem to work, so urls are in fact strings for our purposes until we can figure out why :(
-APPEND_SLASH = True
-WAGTAIL_APPEND_SLASH = True
+# site framework
+SITE_ID = 1
+SITE_DOMAIN = os.environ.get("BASE_URL", "https://sharedfutures.space")
 
-TAGGIT_CASE_INSENSITIVE = True
+# allauth
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
+GOOGLE_SECRET = os.environ.get("GOOGLE_SECRET", "")
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {"client_id": GOOGLE_CLIENT_ID, "secret": GOOGLE_SECRET, "key": ""}
+    },
+}
+
+ENABLE_ALLAUTH_SOCIAL_LOGIN = False
+if os.environ.get("ENABLE_ALLAUTH_SOCIAL_LOGIN", "") == "1":
+    ENABLE_ALLAUTH_SOCIAL_LOGIN = True
+
+LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/dashboard/"
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = None
+
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_USERNAME_REQUIRED = False
+
+# needed for oauth
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+# custom user model
+AUTH_USER_MODEL = "userauth.CustomUser"
+
+# overriding default account
+ADAPTER = "userauth.views.CustomAllauthAdapter"
+ACCOUNT_ADAPTER = "userauth.views.CustomAllauthAdapter"
+SOCIALACCOUNT_ADAPTER = "userauth.adapters.CustomSocialAccountAdapter"
+
+# email
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+if not EMAIL_HOST and not EMAIL_HOST_USER and not EMAIL_HOST_PASSWORD:
+    # if email hasn't been set, then enable console backend
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")

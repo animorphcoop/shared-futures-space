@@ -1,4 +1,3 @@
-
 version: '3'
 
 services:
@@ -11,26 +10,27 @@ services:
     volumes:
       - .:/home/app/sfs
     command: >
-        sh -c "python3 manage.py wait_for_db&&
+        sh -c "python3 manage.py wait_for_db &&
              python3 manage.py makemigrations --no-input &&
              python3 manage.py migrate --no-input &&
              python3 manage.py collectstatic --noinput &&
              python3 manage.py runserver 0.0.0.0:9000"
-
+    ports:
+      - "9000:9000"
     env_file:
-      - variables.env
+      - .env
     depends_on:
       - db_pg
 
   db_pg:
     image: postgres:12.8-alpine
-    env_file:
-      - variables.env
     volumes:
       - dbdata:/var/lib/postgres
     restart: always
     ports:
       - "5432:5432"
+    env_file:
+      - .env
 
   # redis-overcommit-on-host
   redis-overcommit:
@@ -52,7 +52,7 @@ services:
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
-    command: celery -A sfs worker -B -l info
+    command: bash -c "celery -A sfs worker -B -l info"
     volumes:
       - .:/home/app/sfs
     depends_on:
