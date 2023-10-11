@@ -67,5 +67,26 @@
     document.body.addEventListener('htmx:configRequest', (event) => {
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
     })
+
+    /* Responsive Alpine */
+
+    // Create media queries to detect Tailwind breakpoints
+    {#var smQuery = window.matchMedia("(min-width: 640px)");#}
+    {#var mdQuery = window.matchMedia("(min-width: 768px)");#}
+    var lgQuery = window.matchMedia("(min-width: 1024px)");
+    {#var xlQuery = window.matchMedia("(min-width: 1280px)");#}
+    {#var twoxlQuery = window.matchMedia("(min-width: 1536px)");#}
+
+    // Add event listeners to detect changes in media query matches
+    {#smQuery.addListener(handleSmChange);#}
+    {#mdQuery.addListener(handleMdChange);#}
+    {#lgQuery.addEventListener("change", handleLgChange);#}
+
+    window.addEventListener('alpine:init', () => {
+        Alpine.data('message', () => ({
+            message: 'Thank you',
+        }))
+    })
+
 </script>
 </html>

@@ -18,6 +18,17 @@
     {% block title %}{% include "partials/title.html" with title="Shared Futures" %}{% endblock %}
 
     <div class="mx-4.5">
+        <div class="w-full h-24 bg-red-100">
+            <h1 x-data="message" x-text="message"></h1>
+        </div>
+
+        {% if show_wizard %}
+            <div class="text-medium text-center border border-2 border-yellow-500 p-4 mx-auto sm:max-w-md">
+                There are currently no post codes. Click
+                <a href="{% url 'wizard' %}" class="underline">here</a>
+                to configure your Shared Futures Space.
+            </div>
+        {% endif %}
 
         {% include "partials/vertical-spacer.html" with space="6" %}
 
