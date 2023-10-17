@@ -18,6 +18,9 @@ cd "$(dirname "$0")"
 
 main() {
     pg_dump -Fc --no-acl sfs_db -h localhost -U sfs_user -f /home/deploy/backups/sfs-"$(date --utc +%Y%m%d-%H%M%S)".dump -w
+
+    # to restore:
+    # pg_restore -v -h localhost -cO --if-exists -d sfs_db -U sfs_user -W sfs-xxx.dump
 }
 
 main "$@"
