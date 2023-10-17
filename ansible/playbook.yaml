@@ -118,7 +118,7 @@
       ansible.builtin.git:
         repo: https://github.com/animorphcoop/shared-futures-space
         dest: /var/www/shared-futures-space
-        version: add-redis
+        version: development
       become_user: deploy
     - name: dependencies
       ansible.builtin.pip:
