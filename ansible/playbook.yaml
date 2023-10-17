@@ -14,6 +14,7 @@
           - vim
           - git
           - postgresql
+          - redis-server
           - python3.9
           - python3.9-venv
           - python3.9-dev
@@ -117,7 +118,7 @@
       ansible.builtin.git:
         repo: https://github.com/animorphcoop/shared-futures-space
         dest: /var/www/shared-futures-space
-        version: setup-ansible
+        version: add-redis
       become_user: deploy
     - name: dependencies
       ansible.builtin.pip:
@@ -151,23 +152,38 @@
         owner: root
         group: root
         mode: '0644'
-    - name: systemd template
+    - name: web systemd template
       ansible.builtin.template:
         src: sfs.service.j2
         dest: /etc/systemd/system/sfs.service
         owner: root
         group: root
         mode: '0644'
+    - name: worker systemd template
+      ansible.builtin.template:
+        src: sfsworker.service.j2
+        dest: /etc/systemd/system/sfsworker.service
+        owner: root
+        group: root
+        mode: '0644'
     - name: systemd reload
       ansible.builtin.systemd:
         daemon_reload: true
-    - name: systemd enable
+    - name: web systemd enable
       ansible.builtin.systemd:
         name: sfs
         enabled: yes
-    - name: systemd start
+    - name: web systemd start
       ansible.builtin.systemd:
         name: sfs
+        state: restarted
+    - name: worker systemd enable
+      ansible.builtin.systemd:
+        name: sfsworker
+        enabled: yes
+    - name: worker systemd start
+      ansible.builtin.systemd:
+        name: sfsworker
         state: restarted
 
     # deployment specific
