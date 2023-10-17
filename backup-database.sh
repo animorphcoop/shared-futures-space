@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+if [[ "${TRACE-0}" == "1" ]]; then
+    set -o xtrace
+fi
+
+if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
+    echo 'Usage: ./backup-database.sh
+
+This script dumps the shared futures database in Postgres custom format'
+    exit
+fi
+
+cd "$(dirname "$0")"
+
+main() {
+    pg_dump -Fc --no-acl sfs_db -h localhost -U sfs_user -f /home/deploy/backups/sfs-"$(date --utc +%Y%m%d-%H%M%S)".dump -w
+}
+
+main "$@"
