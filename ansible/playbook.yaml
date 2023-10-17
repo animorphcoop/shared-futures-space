@@ -27,7 +27,7 @@
     - name: pg user
       community.general.postgresql_user:
         name: sfs_user
-        password: "{{ pg_password }}"
+        password: "{{ pgpassword }}"
         expires: infinity
         state: present
       become_user: postgres
@@ -210,7 +210,7 @@
           export DB_HOST=localhost
           export POSTGRES_DB=sfs_db
           export POSTGRES_USER=sfs_user
-          export POSTGRES_PASSWORD={{ pg_password }}
+          export PGPASSWORD={{ pgpassword }}
           python3 manage.py migrate
         chdir: /var/www/shared-futures-space
       args:
