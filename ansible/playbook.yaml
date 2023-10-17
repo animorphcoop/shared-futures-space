@@ -123,8 +123,8 @@
     - name: Add job to crontab
       ansible.builtin.cron:
         name: backup postgres dump
-        minute: "55"
-        hour: "11"
+        minute: "00"
+        hour: "5"
         job: "PGPASSWORD={{ pgpassword }} /var/www/shared-futures-space/backup-database.sh"
       become_user: deploy
 
