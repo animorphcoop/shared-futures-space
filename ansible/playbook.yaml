@@ -113,6 +113,21 @@
         group: www-data
         recurse: yes
 
+    # postgresql backups
+    - name: backups dir
+      ansible.builtin.file:
+        path: /home/deploy/backups
+        state: directory
+        mode: '0755'
+      become_user: deploy
+    - name: Add job to crontab
+      ansible.builtin.cron:
+        name: backup postgres dump
+        minute: "55"
+        hour: "11"
+        job: "PGPASSWORD={{ pgpassword }} /var/www/shared-futures-space/backup-database.sh"
+      become_user: deploy
+
     # repository
     - name: clone
       ansible.builtin.git:
