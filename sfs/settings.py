@@ -139,10 +139,10 @@ WSGI_APPLICATION = "sfs.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get("DB_HOST"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
         "NAME": os.environ.get("POSTGRES_DB"),
         "USER": os.environ.get("POSTGRES_USER"),
-        "PASSWORD": os.environ.get("PGPASSWORD"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
     }
 }
 

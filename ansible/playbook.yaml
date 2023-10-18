@@ -27,7 +27,7 @@
     - name: pg user
       community.general.postgresql_user:
         name: sfs_user
-        password: "{{ pgpassword }}"
+        password: "{{ postgres_password }}"
         expires: infinity
         state: present
       become_user: postgres
@@ -125,7 +125,7 @@
         name: backup postgres dump
         minute: "00"
         hour: "5"
-        job: "PGPASSWORD={{ pgpassword }} /var/www/shared-futures-space/backup-database.sh"
+        job: "PGPASSWORD={{ postgres_password }} /var/www/shared-futures-space/backup-database.sh"
       become_user: deploy
 
     # repository
@@ -222,10 +222,10 @@
       ansible.builtin.shell:
         cmd: |
           source venv/bin/activate
-          export DB_HOST=localhost
+          export POSTGRES_HOST=localhost
           export POSTGRES_DB=sfs_db
           export POSTGRES_USER=sfs_user
-          export PGPASSWORD={{ pgpassword }}
+          export POSTGRES_PASSWORD={{ postgres_password }}
           python3 manage.py migrate
         chdir: /var/www/shared-futures-space
       args:
