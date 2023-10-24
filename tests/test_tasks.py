@@ -2,7 +2,6 @@ import datetime
 
 import pytest
 from django.urls import reverse
-
 from river.models import RiverMembership
 from task.models import Task
 
