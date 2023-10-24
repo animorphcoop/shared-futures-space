@@ -36,6 +36,10 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 # install requirements
 RUN pip install -r $project/requirements.txt
 
+# install dev requirements
+COPY requirements_dev.txt $project/
+RUN pip install -r $project/requirements_dev.txt
+
 # copy over the code onto the container
 COPY . $project/
 
