@@ -32,9 +32,6 @@ venv.bak/
 static/*
 static/css/dist/styles.css
 
-# Dev data
-autoupload
-
 # PyCharm
 .idea
 .idea/**/workspace.xml
