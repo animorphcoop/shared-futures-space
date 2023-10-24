@@ -30,6 +30,7 @@ from django.http import (
 )
 from django.http.request import QueryDict
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.views.generic.base import TemplateView
 from messaging.forms import ChatForm
@@ -80,56 +81,59 @@ class CustomAddDataView(TemplateView):
         form = CustomUserAddDataForm(request.POST)
         if current_user.year_of_birth is not None or current_user.post_code is not None:
             return HttpResponse(
-                "You cannot change these values yourself once they are set. Instead, make a request to the administrators via the profile edit page."
+                "You cannot change these values yourself once they are set. "
+                "Instead, make a request to the administrators via the profile edit page."
+            )
+
+        form = CustomUserAddDataForm(request.POST)
+        if not form.is_valid():
+            print("Missing fields? Request data: ", request.POST)
+            return HttpResponseRedirect(reverse("account_add_data"))
+
+        form.full_clean()
+        current_user.display_name = str(form.cleaned_data.get("display_name"))
+        current_user.year_of_birth = int(form.cleaned_data.get("year_of_birth"))
+
+        current_user.post_code, _ = PostCode.objects.get_or_create(
+            code=filter_postcode(form.cleaned_data.get("post_code"))
+        )
+
+        if len(form.cleaned_data.get("avatar")) > 0:
+            current_user.avatar, _ = UserAvatar.objects.get_or_create(
+                pk=form.cleaned_data.get("avatar")
             )
         else:
-            if form.is_valid():
-                form.full_clean()
-                current_user.display_name = str(form.cleaned_data.get("display_name"))
-                current_user.year_of_birth = int(form.cleaned_data.get("year_of_birth"))
+            random_avatar = random.randint(1, UserAvatar.objects.count())
+            current_user.avatar, _ = UserAvatar.objects.get_or_create(pk=random_avatar)
 
-                current_user.post_code = PostCode.objects.get_or_create(
-                    code=filter_postcode(form.cleaned_data.get("post_code"))
-                )[0]
-
-                if len(form.cleaned_data.get("avatar")) > 0:
-                    current_user.avatar = UserAvatar.objects.get_or_create(
-                        pk=form.cleaned_data.get("avatar")
-                    )[0]
-                else:
-                    random_avatar = random.randint(1, UserAvatar.objects.count())
-                    current_user.avatar = UserAvatar.objects.get_or_create(
-                        pk=random_avatar
-                    )[0]
-
-                if len(form.cleaned_data.get("organisation_name")) > 0:
-                    lower_org_name = form.cleaned_data.get("organisation_name").lower()
-                    if Organisation.objects.filter(
-                        name__iexact=lower_org_name
-                    ).exists():
-                        current_user.organisation = get_object_or_404(
-                            Organisation,
-                            name__iexact=form.cleaned_data.get(
-                                "organisation_name"
-                            ).lower(),
-                        )
-                    else:
-                        new_organisation = Organisation.objects.get_or_create(
-                            name=form.cleaned_data.get("organisation_name"),
-                            link=form.cleaned_data.get("organisation_url"),
-                        )[0]
-                        current_user.organisation = new_organisation
-
-                else:
-                    current_user.organisation = None
-                current_user.added_data = True
-
-                current_user.save()
-
-                return HttpResponseRedirect(reverse_lazy("dashboard"))
+        if len(form.cleaned_data.get("organisation_name")) > 0:
+            lower_org_name = form.cleaned_data.get("organisation_name").lower()
+            if Organisation.objects.filter(name__iexact=lower_org_name).exists():
+                current_user.organisation = get_object_or_404(
+                    Organisation,
+                    name__iexact=form.cleaned_data.get("organisation_name").lower(),
+                )
             else:
-                print("Missing fields? Request data: ", request.POST)
-                return HttpResponseRedirect(reverse("account_add_data"))
+                new_organisation, _ = Organisation.objects.get_or_create(
+                    name=form.cleaned_data.get("organisation_name"),
+                    link=form.cleaned_data.get("organisation_url"),
+                )
+                current_user.organisation = new_organisation
+        else:
+            current_user.organisation = None
+
+        current_user.added_data = True
+        current_user.save()
+
+        message = EmailMessage(
+            "Welcome to Shared Futures Space!",
+            render_to_string("userauth/account/emails/welcome.txt"),
+            settings.DEFAULT_FROM_EMAIL,
+            [current_user.email],
+        )
+        send_after.delay(1, message)
+
+        return HttpResponseRedirect(reverse_lazy("dashboard"))
 
 
 def add_email_address(
