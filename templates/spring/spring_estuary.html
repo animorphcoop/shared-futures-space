@@ -1,1 +1,27 @@
-{% comment %}TODO: v2 as another app to get /estuary/ path?{% endcomment %}
+{% extends "base.html" %}
+{% load static %}
+{% load area_details %}
+
+{% block content %}
+    {% get_areas as areas_dict %}
+    {% block title %}{% include "partials/title.html" with title="Shared Futures Estuary" %}{% endblock %}
+
+    <div class="mx-4.5">
+        {% include "partials/vertical-spacer.html" with space="9" %}
+
+        <div class="sm:max-w-screen-xl mx-auto">
+            {% include "landing/section-heading.html" with title="Where we currently operate" %}
+            {% include "partials/vertical-spacer.html" with space="9" %}
+
+            <div class="grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-y-9 xl:gap-x-36">
+                {% if areas_dict %}
+                    {# this is to stop it complaining when there's no areas loaded, such as during tests #}
+                    {% for key, value in areas_dict.items %}
+                        {% include "landing/rounded-image.html" with image=key slug=key title=value %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
