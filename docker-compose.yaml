@@ -53,6 +53,8 @@ services:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
     command: bash -c "celery -A sfs worker -B -l info"
+    env_file:
+      - .env
     volumes:
       - .:/home/app/sfs
     depends_on:

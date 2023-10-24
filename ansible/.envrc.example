@@ -21,6 +21,9 @@ export EMAIL=email@example.com
 
 # Used by Django to encrypt session login cookies
 export SECRET_KEY=xxx
+export POSTGRES_PASSWORD=password
+export CELERY_BROKER_URL=redis://localhost:6379
+export CELERY_RESULT_BACKEND=redis://localhost:6379
 
 # Database password for production server
 export PG_PASSWORD=password

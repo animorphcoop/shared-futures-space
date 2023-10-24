@@ -1,0 +1,34 @@
+[Unit]
+Description=sfsworker
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+Group=www-data
+WorkingDirectory=/var/www/shared-futures-space
+Environment="DJANGO_SETTINGS_MODULE=sfs.settings"
+Environment="DOMAIN_NAME={{ domain_name }}"
+Environment="SECRET_KEY={{ secret_key }}"
+Environment="DEBUG={{ debug_mode }}"
+Environment="DJANGO_VITE_DEV_MODE={{ vite_dev_mode }}"
+Environment="POSTGRES_DB=sfs_db"
+Environment="POSTGRES_USER=sfs_user"
+Environment="POSTGRES_PASSWORD={{ postgres_password }}"
+Environment="POSTGRES_HOST=localhost"
+Environment="CELERY_BROKER_URL={{ celery_broker_url }}"
+Environment="CELERY_RESULT_BACKEND={{ celery_result_backend }}"
+Environment="ENABLE_ALLAUTH_SOCIAL_LOGIN={{ enable_social_login }}"
+Environment="GOOGLE_CLIENT_ID={{ google_client_id }}"
+Environment="GOOGLE_SECRET={{ google_secret }}"
+Environment="EMAIL_HOST={{ email_host }}"
+Environment="EMAIL_HOST_USER={{ email_host_user }}"
+Environment="EMAIL_HOST_PASSWORD={{ email_host_password }}"
+Environment="DEFAULT_FROM_EMAIL={{ default_from_email }}"
+Environment="WEATHER_API_KEY={{ weather_api_key }}"
+ExecStart=/var/www/shared-futures-space/venv/bin/celery -A sfs worker -B -l info
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
