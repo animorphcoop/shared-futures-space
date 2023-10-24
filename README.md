@@ -161,35 +161,44 @@ content.
 
 ```sh
 docker compose exec app python3 manage.py upload_dev upload_conf_dev.json
-# or
-USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker compose exec app python3 manage.py upload_prod upload_conf_prod.json
 ```
 
 ## Deployment
 
-Deploy your own instance of Shared Futures in 6 simple steps!
+Deploy your own instance of Shared Futures in 8 simple steps!
 
 We use [Ansible](https://docs.ansible.com/ansible/latest/) to provision
 production machines. To setup:
 
 1. Get a Debian 11 (bullseye) machine and its IP address.
 2. Get a domain name and configure its DNS with your machine’s IP address.
-3. Acquire SSH access into a machine. You can check if that worked with:
-
-```sh
-ansible all -m ping
-ansible-inventory --list
-```
-
-4. Run `cp ansible/.envrc.example ansible/.envrc`
-5. Edit `ansible/.envrc` with your IP, domain name, and other settings.
-6. Run the ansible playbook with:
+3. Install ansible:
 
 ```sh
 cd ansible/
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+4. Acquire SSH access into a machine. Check if it worked with:
+
+```sh
+ansible all -m ping
+ansible-inventory --list
+```
+
+5. Run `cp .envrc.example .envrc` while inside the `ansible/` directory.
+6. Edit `.envrc` with your IP, domain name, and other settings.
+7. Load the environment with:
+
+```sh
+source .envrc
+```
+
+8. Run the ansible playbook with:
+
+```sh
 source .envrc
 ansible-playbook playbook.yaml --verbose
 ```
@@ -256,28 +265,3 @@ tailwind classes (which are exported as static classes at the time of
 save/build). So even if the classes are on the list in tailwind.config.js, but
 they are not used by any html element at the time of running the app you cannot
 refer to them.
-
-### Social account login
-
-To use social account logins, add the following to local.py:
-
-```
-from .base import INSTALLED_APPS
-
-INSTALLED_APPS += [
-    'allauth.socialaccount.providers.google'
-]
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': '...',
-            'secret': '...',
-            'key': ''
-        }
-    }
-}
-```
-
-Also, make sure `ENABLE_ALLAUTH_SOCIAL_LOGIN = True` is present on your settings
-file.
