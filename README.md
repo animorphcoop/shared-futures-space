@@ -165,13 +165,15 @@ docker compose exec app python3 manage.py upload_dev upload_conf_dev.json
 
 ## Deployment
 
-Deploy your own instance of Shared Futures in 8 simple steps!
+Deploy your own instance of Shared Futures in 7 simple steps!
 
 We use [Ansible](https://docs.ansible.com/ansible/latest/) to provision
 production machines. To setup:
 
 1. Get a Debian 11 (bullseye) machine and its IP address.
-2. Get a domain name and configure its DNS with your machine’s IP address.
+
+2. Get a domain name and configure its DNS with the machine’s IP address.
+
 3. Install ansible:
 
 ```sh
@@ -181,25 +183,26 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Acquire SSH access into a machine. Check if it worked with:
+4. Run `cp .envrc.example .envrc` while inside the `ansible/` directory.
+
+5. Edit `.envrc` with IP, domain name, and other settings.
+
+6. Load environment:
+
+```sh
+source .envrc
+```
+
+6. Verify acquiring SSH access has worked:
 
 ```sh
 ansible all -m ping
 ansible-inventory --list
 ```
 
-5. Run `cp .envrc.example .envrc` while inside the `ansible/` directory.
-6. Edit `.envrc` with your IP, domain name, and other settings.
-7. Load the environment with:
+7. Run the ansible playbook with:
 
 ```sh
-source .envrc
-```
-
-8. Run the ansible playbook with:
-
-```sh
-source .envrc
 ansible-playbook playbook.yaml --verbose
 ```
 
