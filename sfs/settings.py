@@ -16,10 +16,10 @@ from pathlib import Path
 
 from celery.schedules import crontab
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 DJANGO_APPS_DIR = Path(BASE_DIR) / "apps"
 
+# add apps/ to the Python path
 sys.path.append(str(DJANGO_APPS_DIR))
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "default-insecure-key-ov6&0l@xp6up")
@@ -43,8 +43,8 @@ DJANGO_VITE_DEV_MODE = False
 if os.environ.get("DJANGO_VITE_DEV_MODE", "") == "1":
     DJANGO_VITE_DEV_MODE = True
 
+
 # Application definition
-# add apps/ to the Python path
 
 INSTALLED_APPS = [
     "django_vite",
@@ -245,7 +245,9 @@ TAGGIT_CASE_INSENSITIVE = True
 # celery
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379")
+CELERY_RESULT_BACKEND = os.environ.get(
+    "CELERY_RESULT_BACKEND", "redis://localhost:6379"
+)
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_BEAT_SCHEDULE = {
     "send_daily_messages": {

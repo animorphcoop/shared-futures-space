@@ -142,6 +142,7 @@ Python black code formatting:
 
 ```sh
 docker compose exec -it app make format
+docker compose run --rm app make format
 ```
 
 Python code linting:
@@ -152,10 +153,7 @@ docker compose exec -it app make lint
 
 ## Development data
 
-Follow these instructions to fill a development database with some example
-content.
-
-1. Fetch zip with autoupload directory to be dropped into repo's root: https://hub.animorph.coop/f/261269
+Fill a development database with some example content:
 
 2. Run:
 

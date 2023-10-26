@@ -1,0 +1,28 @@
+Welcome to a project management platform where your community collaborates and
+gets stuff done!
+
+On Shared Futures, each user that signs up belongs to an area, which is dictated
+by their post code.
+
+We call areas -> *Springs*. Within each Spring you will find projects, which we
+call *Rivers*. Each River has *Swimmers* — people who contribute to it.
+
+There are 4 stages that a River can be at any point:
+
+1. Envision
+
+2. Plan
+
+3. Act
+
+4. Reflect
+
+All you need to know to get started is: to transition from one to the next
+a majority (voting YES) is required on the *Poll* submitted by the River Starter.
+More than one attempts might be required for the Poll to be successful and
+that's OK!
+
+We hope you find this platform useful for developing the projects of your
+community :)
+
+— Shared Futures Team

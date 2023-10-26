@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, include, path
 from landing.views import handle_404, handle_500
+from spring import views as spring_views
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -22,6 +23,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("profile/", include("userauth.urls")),
     path("dashboard/", include("dashboard.urls"), name="dashboard"),
     path("spring/", include("spring.urls"), name="spring"),
+    path("estuary/", spring_views.EstuaryView.as_view(), name="estuary"),
     path("river/", include("river.urls"), name="river"),
     path("action/", include("action.urls")),
     path("poll/", include("poll.urls")),

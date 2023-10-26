@@ -15,7 +15,6 @@
 
     {% include "partials/vertical-spacer.html" with space="2" %}
 
-{#    <div class="flex flex-row flex-wrap gap-6 sm:gap-x-4 justify-center">#}
     <div class="sm:grid sm:grid-cols-2 gap-6 lg:gap-9 justify-center max-w-screen-xl mx-auto">
         {% for avatar in avatars %}
             <img class="inline" src="{{ avatar.image_url|default_if_none:'#' }}" alt="avatar icon">
@@ -40,10 +39,12 @@
         {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url3='start_river' info="" bg="bg-resources-two" %}
     {% endif %}
 
-    {% if area.name != user.post_code.area.name %}
+    {% if area.name != user.post_code.area.name and request.user.post_code.area.name != 'Other' %}
         {% include "partials/call-to-action.html" with main="Feeling inspired? Think how these ideas could fit in your spring." button="Start a new river" url3='start_river' info="" bg="bg-resources-two" %}
     {% endif %}
 
-    {#    Hidden for now, unhide when Estuary exists! #}
-    {#    {% include "partials/call-to-action.html" with main="Are you interested in rivers from other areas? Explore springs from top navigation!" bg="bg-yellow" %}#}
+    {# show if user does not belong to post codes we operate #}
+    {% if area.name != user.post_code.area.name and request.user.post_code.area.name == 'Other' %}
+        {% include "partials/call-to-action.html" with main="Check out rivers on other areas." button="Go to the Estuary" url3='estuary' info="" bg="bg-resources-two" %}
+    {% endif %}
 {% endblock content %}

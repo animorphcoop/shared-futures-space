@@ -59,3 +59,8 @@ class SpringView(TemplateView):
         context = {"area": area, "rivers": rivers, "num_swimmers": num_swimmers}
 
         return render(request, "spring/spring_area.html", context)
+
+
+class EstuaryView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        return render(request, "spring/spring_estuary.html")
