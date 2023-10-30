@@ -17,6 +17,7 @@ from django.urls import reverse
 from django.utils import timezone
 from resources.models import Resource, SavedResource
 from river.models import River, RiverMembership
+from task.models import Task
 
 
 def get_weather(postcode: str) -> Tuple[str, str, Union[str, float]]:
@@ -112,6 +113,11 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         except RiverMembership.DoesNotExist:
             pass
 
+    tasks = Task.objects.filter(
+        responsible=request.user,
+        done=False,
+    ).select_related("river")
+
     # resources = ['fav resource one', 'fav resource two', 'fav resource three', 'fav resource four']
     resources = []
     saved_resources = None
@@ -126,6 +132,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
 
     context = {
         "rivers": rivers,
+        "tasks": tasks,
         "resources": resources,
         "user": request.user,
     }

@@ -6,8 +6,16 @@ from django.utils.timesince import timesince, timeuntil
 from river.models import River
 from userauth.models import CustomUser
 
+from django.db.models import F
+
 
 class Task(models.Model):
+    class Meta:
+        ordering = [
+            F("due").asc(nulls_last=True),
+            F("created_at").asc(),
+        ]
+
     class Stage(models.TextChoices):
         # tasks are only available during these stages
         PLAN = "plan"

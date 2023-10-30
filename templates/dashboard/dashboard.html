@@ -21,6 +21,7 @@
 
     <div class="lg:grid grid-cols-4 gap-9 gap-y-9 max-w-screen-xl lg:mx-auto lg:pb-9">
         <div class="col-span-2">
+            {% include "dashboard/partials/tasks.html" with title="Your tasks" reference="tasks" %}
             {% include "dashboard/partials/resources.html" with title="Saved resources" reference="resources" %}
         </div>
 
