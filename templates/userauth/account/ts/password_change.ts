@@ -1,5 +1,7 @@
 import { expose } from "@/templates/ts/utils.ts"
 import {
+    comparePasswords,
+    getPasswordFeedback,
     newObserver,
     passwordFeedbackOne,
     passwordFeedbackTwo,
@@ -44,7 +46,9 @@ function validateResetKey() {
 }
 
 expose({
-    setupObserversPsChange,
+    comparePasswords,
     evaluateButtonPsChange,
+    getPasswordFeedback,
+    setupObserversPsChange,
     validateResetKey,
 })
