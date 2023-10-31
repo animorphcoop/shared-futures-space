@@ -100,10 +100,6 @@ class ListTaskView(LoginRequiredMixin, TaskViewMixin, ListView):
     template_name = "task/tasks.html"
     template_name_htmx = "task/partials/task_list.html"
     paginate_by = 1000  # show all, as no pagination in template (yet)
-    ordering = [
-        F("due").asc(nulls_last=True),
-        F("created_at").asc(),
-    ]
 
 
 class CreateTaskView(LoginRequiredMixin, TaskViewMixin, CreateView):

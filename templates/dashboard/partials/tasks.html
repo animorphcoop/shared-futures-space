@@ -1,0 +1,50 @@
+{% extends "partials/drawer.html" %}
+
+{% block drawer_content %}
+    {# If no tasks:  #}
+    {% if tasks|length == 0 %}
+        {% include "partials/salmon-of-knowledge.html" with text="You haven't got any tasks assigned." %}
+    {% endif %}
+    {% for task in tasks %}
+
+        {% url 'view_river' task.river.slug as the_url %}
+
+        {#  Task name #}
+        <div class="px-3 pb-0 bg-gradient-to-b from-blue-second via-white rounded-t-xl">
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            <a href="{{ the_url }}" class="flex gap-4 justify-between">
+                <h3 class="text-title text-black/55">
+                    {{ task.name }}
+                </h3>
+                <div class="shrink-0 w-[18px] h-[18px]">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 1L7.59 2.41L13.17 8H1V10H13.17L7.59 15.59L9 17L17 9L9 1Z" fill="#9759FF"/>
+                    </svg>
+                </div>
+            </a>
+            {% include "partials/vertical-spacer.html" with space="1.5" %}
+        </div>
+        {#  Task status #}
+        <div class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_25%)] flex text-meta px-3 py-1.5">
+            {% if task.due %}
+                {#  Due #}
+                <div class="w-1/2">
+                    {% if task.is_overdue %}
+                        <span class="text-red-600/60 pb-0.5">Overdue</span>
+                        <span class="text-red-600">for <span class="font-bold">{{ task.overdue_by }}</span></span>
+                    {% else %}
+                        <span class="text-black/30 pb-0.5">Due</span>
+                        <span>in {{ task.due_in }}</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {#  River #}
+            <div class="w-1/2">
+                <span class="text-black/30 pb-0.5">River</span>
+                <span>{{ task.river.title }}</span>
+            </div>
+        </div>
+        {% include "partials/vertical-spacer.html" with space="2" %}
+    {% endfor %}
+{% endblock %}
