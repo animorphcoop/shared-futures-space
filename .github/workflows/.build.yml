@@ -41,4 +41,5 @@ jobs:
         export POSTGRES_USER=postgres
         export POSTGRES_PASSWORD=postgres
         python manage.py migrate
+        python manage.py collectstatic
         pytest tests
