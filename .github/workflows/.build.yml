@@ -35,4 +35,10 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements_dev.txt
     - name: Run Tests
-      run: pytest tests
+      run: |
+        export POSTGRES_HOST=localhost
+        export POSTGRES_DB=postgres
+        export POSTGRES_USER=postgres
+        export POSTGRES_PASSWORD=postgres
+        python manage.py migrate
+        pytest tests
