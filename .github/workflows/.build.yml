@@ -25,6 +25,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+    - name: Install Node.js Dependencies
+      run: npm install
+    - name: Build JavaScript
+      run: npm run build
     - name: Setup Python
       uses: actions/setup-python@v1
       with:
@@ -40,6 +47,7 @@ jobs:
         export POSTGRES_DB=postgres
         export POSTGRES_USER=postgres
         export POSTGRES_PASSWORD=postgres
+        export VITE_DEV_MODE=0
         python manage.py migrate
         python manage.py collectstatic
         pytest tests
