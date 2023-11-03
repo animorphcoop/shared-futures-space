@@ -54,6 +54,8 @@ jobs:
         export POSTGRES_DB=postgres
         export POSTGRES_USER=postgres
         export POSTGRES_PASSWORD=postgres
+        export CELERY_BROKER_URL=redis://redis:6379
+        export CELERY_RESULT_BACKEND=redis://redis:6379
         export VITE_DEV_MODE=0
         python manage.py migrate
         python manage.py collectstatic
