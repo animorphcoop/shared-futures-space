@@ -88,10 +88,10 @@
 
                 {# River stages; envision, plan, act, reflect #}
                 <section class="-mx-4.5 lg:mx-0 col-span-2"> {# Large layout, middle two columns #}
-                    {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" selected="null" locked=envision_locked %}
-                    {% include "river/plan.html" with title="plan stage" reference="plan" id="plan" selected="null" locked=plan_locked %}
-                    {% include "river/act.html" with title="act stage" reference="act" id="act" selected="null" locked=act_locked %}
-                    {% include "river/reflect.html" with title="reflect stage" reference="reflect" id="reflect" selected="null" locked=reflect_locked %}
+                    {% include "river/envision.html" with title="envision stage" reference="envision" id="envision" locked=envision_locked %}
+                    {% include "river/plan.html" with title="plan stage" reference="plan" id="plan" locked=plan_locked %}
+                    {% include "river/act.html" with title="act stage" reference="act" id="act" locked=act_locked %}
+                    {% include "river/reflect.html" with title="reflect stage" reference="reflect" id="reflect" locked=reflect_locked %}
                     {% include "partials/vertical-spacer.html" with space="20" %} {# Keeps space around the salmon so he doesn't cover drawer titles on small screens #}
                 </section>
 

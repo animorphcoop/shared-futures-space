@@ -1,13 +1,13 @@
 {% load static %}
 
-<section x-data="{selected:{{ selected }}}" class="{# sticky #} top-0 bg-white bg-drawer-blue"
+<section x-data="{selected: $screen.isDesktop ? 1 : null }" class="{# sticky #} top-0 bg-white bg-drawer-blue"
      :class="selected && 'rounded-t-xl'">
     <div class="transition-all">
         {% if not locked %}
             <button class="w-full py-4.5 px-4.5" type="button" id="{{ id }}-button"
                     @click="selected ? 1 : scrollToTop($el.id); selected !== 1 ? selected = 1 : selected = null;">
         {% else %}
-            <button class="w-full py-4.5 px-4.5" type="button">
+            <button class="w-full py-4.5 px-4.5 cursor-not-allowed" type="button">
         {% endif %}
         <h2 class="flex items-center justify-between">
                 <span class="text-header">
