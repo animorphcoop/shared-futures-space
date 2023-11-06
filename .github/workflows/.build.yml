@@ -54,12 +54,13 @@ jobs:
         pip install -r requirements_dev.txt
 
     - name: Run Tests
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_DB: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        VITE_DEV_MODE: 0
       run: |
-        export POSTGRES_HOST=localhost
-        export POSTGRES_DB=postgres
-        export POSTGRES_USER=postgres
-        export POSTGRES_PASSWORD=postgres
-        export VITE_DEV_MODE=0
         python manage.py migrate --no-input
         python manage.py collectstatic --no-input
         pytest tests
