@@ -153,12 +153,14 @@ docker compose exec -it app make lint
 
 ## Development data
 
-Fill a development database with some example content:
-
-2. Run:
+Fill a development database with demo content:
 
 ```sh
-docker compose exec app python3 manage.py upload_dev upload_conf_dev.json
+# load avatar data
+docker compose exec app python3 manage.py loaddevdata autoupload/avatars.json
+
+# load all data: avatars, areas, resources, organisations, users
+docker compose exec app python3 manage.py loaddevdata autoupload/devdata.json
 ```
 
 ## Deployment
