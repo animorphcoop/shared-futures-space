@@ -16,7 +16,7 @@ from userauth.util import get_userpair
 from wagtail.images.models import Image
 from wagtail.rich_text import RichText
 
-DATA_DIR = "devdata/"
+DATA_DIR = "autoupload/"
 
 
 def add_resources(resource_data):
@@ -185,7 +185,7 @@ class Command(BaseCommand):
             exit()
 
         add_avatars(data["User Avatars"])
-        if options["datafile"] == "devdata/avatars.json":
+        if options["datafile"] == "autoupload/avatars.json":
             # if datafile is avatars only, exit with success,
             # else continue with the rest
             exit(0)
