@@ -3,8 +3,6 @@ name: Deploy
 on:
   push:
     branches: [ development ]
-  pull_request:
-    branches: [ development ]
 
 jobs:
   build:
@@ -15,10 +13,8 @@ jobs:
     - uses: actions/setup-python@v3
       with:
         python-version: 3.9
-    - name: Change to ansible directory
-      run: cd ansible/
     - name: Install Dependencies
-      run: pip install -r requirements.txt
+      run: cd ansible/ && pip install -r requirements.txt
     - name: Run ansible playbook
       env:
         ANSIBLE_HOST: 81.95.52.39
@@ -39,4 +35,4 @@ jobs:
         EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
         DEFAULT_FROM_EMAIL: sfs_mailer@animorph.coop
         WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-      run: ansible-playbook playbook.yaml --start-at-task="clone"
+      run: cd ansible/ && ansible all -m ping
