@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ development ]
+  pull_request:
+    branches: [ development ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+      with:
+        python-version: 3.9
+    - name: Change to ansible directory
+      run: cd ansible/
+    - name: Install Dependencies
+      run: pip install -r requirements.txt
+    - name: Run ansible playbook
+      env:
+        ANSIBLE_HOST: 81.95.52.39
+        ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
+        DEBUG_MODE: 1
+        VITE_DEV_MODE: 0
+        DOMAIN_NAME: sharedfutures.space
+        EMAIL: dev@sharedfutures.space
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        CELERY_BROKER_URL: redis://localhost:6379
+        CELERY_RESULT_BACKEND: redis://localhost:6379
+        ENABLE_ALLAUTH_SOCIAL_LOGIN: 1
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+        EMAIL_HOST: mail.webarch.net
+        EMAIL_HOST_USER: sfs_mailer@animorph.coop
+        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+        DEFAULT_FROM_EMAIL: sfs_mailer@animorph.coop
+        WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+      run: ansible-playbook playbook.yaml --start-at-task="clone"
