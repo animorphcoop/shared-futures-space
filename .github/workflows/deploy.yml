@@ -12,11 +12,29 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - uses: actions/setup-python@v3
       with:
         python-version: 3.9
+
+    - name: Configure SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/sfs.key
+        chmod 600 ~/.ssh/sfs.key
+        cat >> ~/.ssh/config << EOF
+        Host sfs
+          HostName 81.95.52.39
+          User root
+          IdentityFile ~/.ssh/sfs.key
+          StrictHostKeyChecking no
+        EOF
+      env:
+        SSH_KEY: ${{ secrets.SFS_SSH_KEY }}
+
     - name: Install Dependencies
       run: cd ansible/ && pip install -r requirements.txt
+
     - name: Run ansible playbook
       env:
         ANSIBLE_HOST: 81.95.52.39
