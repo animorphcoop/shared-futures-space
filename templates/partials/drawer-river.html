@@ -1,7 +1,8 @@
 {% load static %}
 
-<section x-data="{selected: $screen.isDesktop ? 1 : null }" class="{# sticky #} top-0 bg-white bg-drawer-blue"
-     :class="selected && 'rounded-t-xl'">
+<section x-data="{selected: $screen.isDesktop && '{{ id }}' === currentStage ? 1 : null }"
+         class="top-0 bg-white bg-drawer-blue"
+         :class="selected && 'rounded-t-xl'">
     <div class="transition-all">
         {% if not locked %}
             <button class="w-full py-4.5 px-4.5" type="button" id="{{ id }}-button"
