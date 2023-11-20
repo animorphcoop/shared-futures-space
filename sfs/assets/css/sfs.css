@@ -49,24 +49,24 @@
 }
 
 /* flickity carousel dots */
-/* position dots in carousel */
-.flickity-page-dots {
-    bottom: 500px;
-}
-
-/* circles */
-.flickity-page-dots .dot {
-    width: 6px;
-    height: 6px;
+button.flickity-page-dot {
+    width: 8px;
+    height: 8px;
     opacity: 1;
-    background: rgba(0, 0, 0, 0.30);
+    background-color: rgba(0, 0, 0, 0.30);
     border: none;
     margin: 0 2px;
 }
 
 /* fill-in selected dot */
-.flickity-page-dots .dot.is-selected {
+button.flickity-page-dot.is-selected {
     background: #9759FF; /* purple */
+}
+
+/* remove the focus style */
+button.flickity-page-dot:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 /* clears the ‘X’ from Internet Explorer */

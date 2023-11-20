@@ -29,11 +29,11 @@
 
         {% include "partials/vertical-spacer.html" with space="6" %}
 
-        <h1 class="text-large text-center mx-auto sm:max-w-md">Welcome to a project management platform where your
+        <h1 class="text-large text-center mx-auto max-w-screen-desktop desktop:text-3xl">Welcome to a project management platform where your
             community collaborates and gets stuff done!</h1>
         {% include "partials/vertical-spacer.html" with space="9" %}
 
-        <div class="-mx-4.5 relative h-auto min-h-[180px] overflow-hidden sm:h-auto sm:h-12">
+        <div class="-mx-4.5 relative overflow-hidden h-auto max-h-72">
             <div class="relative w-full z-10 sm:-m-1 sm:w-[101vw]">
                 <video class="w-full object-cover object-center sm:mt-[-280px]" autoplay muted loop>
                     <source src="{% static 'images/landing/shared_futures_waters.mp4' %}" type="video/mp4">
@@ -41,7 +41,7 @@
                     Your browser does not support the video tag.
                 </video>
             </div>
-            <div class="h-1/2 z-20 absolute top-0 left-0 w-full h-full flex flex-row justify-center items-center">
+            <div class="z-20 absolute top-0 left-0 w-full h-full flex flex-row justify-center items-center">
                 {% include "partials/button.html" with url=signup_url style="primary_colour" button="Sign up" %}
                 {% include "partials/horizontal-spacer.html" with space="4" %}
                 {% include "partials/button.html" with url=login_url style="primary_colour" button="Log in" %}
@@ -50,7 +50,7 @@
 
         {% include "partials/vertical-spacer.html" with space="9" %}
 
-        <div class="sm:max-w-screen-xl mx-auto">
+        <div class="max-w-screen-desktop mx-auto">
             {% include "landing/section-heading.html" with title="What Shared Futures offers" %}
             {% include "partials/vertical-spacer.html" with space="9" %}
             {% include "landing/tabbed-resources/index.html" %}
@@ -72,7 +72,7 @@
         {% include "partials/vertical-spacer.html" with space="9" %}
 
         {% url 'resources' as resources_url %}
-        <div class="-mx-4.5">
+        <div class="-mx-4.5 desktop:flex">
             {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-resources-two" %}
             {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" bg="bg-yellow" %}
         </div>
@@ -85,22 +85,22 @@
 
         {% include "partials/vertical-spacer.html" with space="3" %}
         <div class="bg-blue-pale -mx-4.5">
-            <div class="p-4.5">
+            <div class="p-4.5 w-full max-w-screen-desktop mx-auto">
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 {% include "landing/section-heading.html" with title="get in touch 📧" %}
                 {% include "partials/vertical-spacer.html" with space="9" %}
 
-                <div class="lg:flex lg:justify-center lg:gap-6">
-                    <form class="grid grid-cols-2 gap-4" hx-post="/dashboard/contact/" hx-trigger="submit">
-                        {% include "dashboard/partials/get_in_touch_form.html" with style="primary_colour" %}
-                    </form>
-                </div>
+                <form class="" hx-post="/dashboard/contact/" hx-trigger="submit">
+                    {% include "dashboard/partials/get_in_touch_form.html" with style="primary_colour" %}
+                </form>
 
                 {% include "partials/vertical-spacer.html" with space="4.5" %}
             </div>
         </div>
 
-        {% include "partials/footer-text.html" %}
+        <div class="p-4.5 max-w-screen-desktop mx-auto">
+            {% include "partials/footer-text.html" %}
+        </div>
     </div>
 
 {% endblock content %}

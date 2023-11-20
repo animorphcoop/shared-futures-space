@@ -10,7 +10,7 @@ DJANGO_VITE_DEV_MODE = getattr(settings, "DJANGO_VITE_DEV_MODE", False)
 @register.simple_tag
 @mark_safe
 def sfs_vite_prevent_unstyled_flash(*args):
-    """Prevent a flash on unstyled html for full page loads in dev mode
+    """Prevent a flash of unstyled html for full page loads in dev mode
 
     Without this, as the CSS is loaded with vite via js module,
     there is a delay between when the browser has received all the
