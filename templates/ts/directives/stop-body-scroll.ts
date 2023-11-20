@@ -18,10 +18,16 @@ let count = 0
  *  <div x-stop-body-scroll></div>
  */
 Alpine.directive('stop-body-scroll', (
-    _,
+    el,
     { },
     { cleanup },
 ) => {
+    // This means we are not displayed on the page (e.g. a parent is display: none), so
+    // it means it's likely being used via hiding/showing an element, not adding/removing
+    // an element. This directive only supports the adding/removing element use case.
+    // If used by hiding/showing the element, you have to manage the body scroll yourself...
+    if (!el.offsetParent) return
+
     if (count === 0) {
         stopBodyScroll()
     }

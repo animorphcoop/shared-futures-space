@@ -11,6 +11,7 @@ import '@/sfs/assets/css/tailwind.css'
 
 import './directives/characters-remaining.ts'
 import './directives/stop-body-scroll.ts'
+import './alpine/magics/screen.ts'
 
 import { expose } from "./utils.ts"
 
