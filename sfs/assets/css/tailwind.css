@@ -11,7 +11,7 @@
     /* menu titles ------------------------------ */
     .text-title { /* mobile 19/34 desktop 26/34 */
         @apply font-kanit-500 text-black/75 text-[19px] leading-6
-        lg:text-[26px] lg:leading-[34px]
+        lg:text-[26px] lg:leading-[34px] relative
     }
     /* HEADER ------------------------------ */
     .text-header { /* mobile 10/Auto desktop 12/Auto */
