@@ -1,7 +1,7 @@
 {% load static %}
 
 <div class="h-full w-full fixed left-0 top-0 z-50 backdrop-blur bg-blue-blur"
-     x-data="{ open: false, toggle() { this.open = !this.open; menu = !menu } }"
+     x-data="{ open: false, close() { this.open = false; menu = false; }, toggle() { this.open = !this.open; menu = !menu } }"
      x-show="open"
      x-cloak
      @click="toggle()"
@@ -11,7 +11,7 @@
      x-transition:leave="transition ease-in duration-400"
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
-     @keyup.escape.window="toggle()"
+     @keyup.escape.window="close()"
      x-stop-body-scroll-if="open">
 
     {# Burger-cross icon #}
