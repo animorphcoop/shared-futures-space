@@ -21,6 +21,9 @@ main() {
 
     # to restore:
     # pg_restore -v -h localhost -cO --if-exists -d sfs_db -U sfs_user -W sfs-xxx.dump
+
+    # delete dumps older than 7 days
+    find /home/deploy/backups -name "sfs-*.dump" -type f -mtime +7 -delete
 }
 
 main "$@"
