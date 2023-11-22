@@ -1,8 +1,8 @@
 {% load static %}
 
-{% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex items-center justify-center sm:w-1/3 cursor-pointer" %}
+{% with li_class="rounded-[50px_50px_0px_0px] text-center px-8 h-[48px] flex items-center justify-center cursor-pointer" %}
     <div x-data="{ openTab: 'one' }" class="-mx-4.5 ">
-        <ul class="flex flex-start sm:px-24 sm:max-w-4xl sm:mx-auto">
+        <ul class="flex flex-start">
             <li @click="openTab = 'one'" class="{{ li_class }} bg-resources-one">
                 {% include "landing/tabbed-resources/title.html" with title="Collaborate" %}
             </li>

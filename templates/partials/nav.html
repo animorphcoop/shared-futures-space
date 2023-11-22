@@ -67,7 +67,7 @@
 
                 <div x-data="{selected:null}">
                     <button class="w-full p-4 pb-5 flex items-center justify-between" type="button"
-                            @click="selected !== 1 ? selected = 1 : selected = null">
+                            @click.prevent.stop="selected !== 1 ? selected = 1 : selected = null">
                         Springs
                         <div class="w-[12] h-[8] transition duration-500 ease-out"
                              :class="{'-rotate-180': selected}">
