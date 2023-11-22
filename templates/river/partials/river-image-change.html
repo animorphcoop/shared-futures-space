@@ -1,4 +1,4 @@
-{% extends "partials/overlay-river.html" %}
+{% extends "partials/overlay-river-closable.html" %}
 {% block overlay_title %}Change River title{% endblock %}
 {% load static %}
 
@@ -26,7 +26,7 @@
 
     {% include "partials/vertical-spacer.html" with space="6" %}
     <div class="flex items-center justify-center">
-        <button x-on:click="()=>{
+        <button @click="()=>{
                                 editing = !editing
                                 document.getElementById('river-image-upload').value = ''
                                 document.getElementById('image-preview').src = ''

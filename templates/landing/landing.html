@@ -72,9 +72,14 @@
         {% include "partials/vertical-spacer.html" with space="9" %}
 
         {% url 'resources' as resources_url %}
-        <div class="-mx-4.5 desktop:flex">
+        <div class="-mx-4.5 desktop:flex justify-center">
+            <div class="bg-resources-two grow"></div>
             {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-resources-two" %}
+            <div class="bg-resources-two w-12"></div>
+
+            <div class="bg-yellow w-12"></div>
             {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" bg="bg-yellow" %}
+            <div class="bg-yellow grow"></div>
         </div>
 
         {% include "partials/vertical-spacer.html" with space="9" %}
@@ -90,7 +95,7 @@
                 {% include "landing/section-heading.html" with title="get in touch 📧" %}
                 {% include "partials/vertical-spacer.html" with space="9" %}
 
-                <form class="" hx-post="/dashboard/contact/" hx-trigger="submit">
+                <form hx-post="/dashboard/contact/" hx-trigger="submit">
                     {% include "dashboard/partials/get_in_touch_form.html" with style="primary_colour" %}
                 </form>
 

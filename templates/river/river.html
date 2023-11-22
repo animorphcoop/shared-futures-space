@@ -40,11 +40,11 @@
                             {#                <p><a href="{% url 'manage_river' object.slug %}">Manage River</a></p>#}
 
                             {% if request.user in members|attrmap:'user' %}
-                                <div x-data="{ open: false }">
-                                    <button onclick="stopBodyScroll();"
-                                            type="button"
+                                <div x-data="{ open: false }"
+                                     x-stop-body-scroll-if="open">
+                                    <button type="button"
                                             {% comment %}TODO: htmx returned partial does not gel with alpine{% endcomment %}
-                                            x-on:click="()=>{ open = !open;
+                                            @click="()=>{ open = !open;
                                         if (!document.getElementById('title-change').classList.contains('hidden')) {
                                             document.getElementById('title-change').classList.add('hidden');
                                         }
@@ -73,13 +73,6 @@
 
                     {% include "partials/vertical-spacer.html" with space="3" %}
 
-                    {# CTA for rivers without enough swimmers to splash with. Show if riverstarter, and if count swimmers <3 #}
-                    {% if request.user in starters|attrmap:'user' and members.count < 3 %}
-                        <section class="-mx-4.5 bg-resources-two">
-                            {% include 'partials/call-to-action-copy.html' with text='Share' icon='link' %}
-                        </section>
-                    {% endif %}
-
                     {# River information; swimmers, description #}
                     <section class="-mx-4.5 lg:mx-0">
                         {% include "river/swimmers.html" with title="swimmers" reference="swimmers" id="swimmers" selected="null" %}
@@ -98,6 +91,15 @@
 
                 {# River information; stage bookmarks, resources. At end so knowledge salmon is always on top #}
                 <section class="-mx-4.5 lg:mx-0 col-span-1 lg:justify-items-end"> {# Large layout, last column #}
+
+
+                    {# CTA for rivers without enough swimmers to splash with. Show if riverstarter, and if count swimmers <3 #}
+                    {% if request.user in starters|attrmap:'user' and members.count < 3 %}
+                        <section class="-mx-4.5 bg-resources-two mb-6">
+                            {% include 'partials/call-to-action-copy.html' with text='Share' icon='link' %}
+                        </section>
+                    {% endif %}
+
                     {# Stage outline #}
                     <ul class="hidden lg:flex flex-col gap-3 text-right">
                         <li><a href="#envision" class="button button-on-white button-secondary">Envision</a></li>
