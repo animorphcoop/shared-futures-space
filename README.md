@@ -163,6 +163,8 @@ docker compose exec app python3 manage.py loaddevdata autoupload/avatars.json
 docker compose exec app python3 manage.py loaddevdata autoupload/devdata.json
 ```
 
+Have a look at `devdata/devdata.json` for some user accounts you can log in as.
+
 ## Deployment
 
 Deploy your own instance of Shared Futures in 7 simple steps!
