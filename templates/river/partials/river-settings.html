@@ -1,6 +1,6 @@
 {% load custom_filters %}
-<section
-        class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur">
+<section class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur"
+         @click="el => { if (el.target.classList.contains('backdrop-blur')) { open = false } }">
     <div class="bg-white mx-2.5 px-5 w-[90vw] sm:w-[336px]">
         {% include "partials/vertical-spacer.html" with space="7.5" %}
         <h2 class="text-large text-center">
@@ -28,7 +28,7 @@
 
                 <div x-data="{ editing: false }">
 
-                    <button x-on:click="()=> { editing = !editing; }"
+                    <button @click="()=> { editing = !editing; }"
                             type="button"
                             class="button button-on-white">
                         Edit River title
@@ -41,7 +41,7 @@
 
                 <div x-data="{ editing: false }">
 
-                    <button x-on:click="()=> { editing = !editing; }"
+                    <button @click="()=> { editing = !editing; }"
                             type="button"
                             class="button button-on-white">
                         Edit River description
@@ -55,7 +55,7 @@
 
             <div x-data="{ editing: false }">
 
-                <button x-on:click="()=> { editing = !editing; }"
+                <button @click="()=> { editing = !editing; }"
                         type="button"
                         class="button button-on-white">
                     Edit River image
@@ -83,7 +83,7 @@
         {# {% endif %} #}
 
         {% include "partials/vertical-spacer.html" with space="7.5" %}
-        <button onclick="enableBodyScroll();" x-on:click="open = ! open"
+        <button @click="open = false"
                 type="button"
                 class="button button-on-white">
             Back

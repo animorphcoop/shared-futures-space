@@ -34,7 +34,6 @@
 
 </head>
 
-{#<body class="antialiased w-full sm:bg-black/20 sm:flex sm:flex-col sm:items-center" x-data="{ menu: false }">#}
 <body class="antialiased w-full " x-data="{ menu: false }">
 
 {% comment %} URL-dependent navbar {% endcomment %}
@@ -44,8 +43,7 @@
 >
 </div>
 
-{#<section class="block bg-white sm:w-[360px]" :class="{'hidden': menu == true}">#}
-<section class="block bg-white" :class="{'hidden': menu == true}">
+<section class="block bg-white">
     {% wagtailuserbar %}
 
     {% block content %}

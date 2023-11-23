@@ -44,17 +44,11 @@
                 {#  Your status #}
                 <div class="w-1/2">
                     <p class="text-black/30 pb-0.5">Your status</p>
-                    {% for member in river.members %}
-                        {% if member.starter %}
-                            <p>
-                                {% if member.user == request.user %}
-                                    River Starter
-                                {% else %}
-                                    Swimmer
-                                {% endif %}
-                            </p>
-                        {% endif %}
-                    {% endfor %}
+                    {% if river.membership.starter %}
+                        River Starter
+                    {% else %}
+                        Swimmer
+                    {% endif %}
                 </div>
                 {#  River stage #}
                 <div class="w-1/2">

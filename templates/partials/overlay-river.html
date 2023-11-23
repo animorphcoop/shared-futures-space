@@ -14,15 +14,21 @@
 
         <button @click="overlayClose()">close</button>
 
+    There are two modes the closing works:
+
+    1. if you are in an "editing" context (i.e. the river settings page)
+        -> closing will set editing = false
+    2. anything else it will remove the modal element from the DOM
+
 {% endcomment %}
 
 <section class="overlay-river z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur"
-         x-data="{ overlayClose() { $el.remove() } }"
+         x-data="{ overlayClose() { editing ? (editing = false ) : $el.remove() } }"
          x-stop-body-scroll>
 
     {% block river_overlay_extra %}{% endblock %}
 
-    <div class="bg-white mx-2.5 px-5 grow">
+    <div class="bg-white mx-2.5 px-5 grow max-w-xl">
         {% include "partials/vertical-spacer.html" with space="7.5" %}
         {% block overlay_header %}
             <h2 class="text-large text-center w-full">

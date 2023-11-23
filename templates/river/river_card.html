@@ -9,8 +9,10 @@
     <div class="p-3 relative">
         <div class="">
             <div class="flex flex-start justify-between -mr-4.5">
-                <h2 class="relative text-title text-black/55">
-                    {{ river.title }}
+                <h2 class="relative text-title text-black/55 grow">
+                    <a href="{{ view_url }}" class="block">
+                        {{ river.title }}
+                    </a>
                 </h2>
                 <div class="-my-3">{% include 'partials/button-copy.html' with icon='link' path=view_url %}</div>
             </div>

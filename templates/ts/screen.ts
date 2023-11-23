@@ -7,7 +7,9 @@
  * If reactivity is needed, could use https://alpinejs.dev/advanced/reactivity
  */
 
-const matchMediaDesktop = window.matchMedia('(min-width: 1024px)');
+const desktop = '1024px'
+
+const matchMediaDesktop = window.matchMedia(`(min-width: ${desktop})`);
 
 const screen = {
     isDesktop: matchMediaDesktop.matches,

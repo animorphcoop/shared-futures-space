@@ -1,38 +1,52 @@
 {% load static %}
 
-<div x-data="{ open: false, toggle() { this.open = ! this.open } }" :class="{'fixed top-0 right-6.5': open == true}"
-     class="w-full max-w-screen-xl mx-auto relative pointer-events-auto z-50">
+<div class="h-full w-full fixed left-0 top-0 z-50 backdrop-blur bg-blue-blur"
+     x-data="{ open: false, close() { this.open = false; menu = false; }, toggle() { this.open = !this.open; menu = !menu } }"
+     x-show="open"
+     x-cloak
+     @click="toggle()"
+     x-transition:enter="transition ease-out duration-500"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-400"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     @keyup.escape.window="close()"
+     x-stop-body-scroll-if="open">
 
-    {#  Burger-cross icon  #}
-    <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
-            @click="toggle(), menu = !menu">
-        <span class="sr-only">Open main menu</span>
-        <div class="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
-            <span aria-hidden="true"
-                  class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
-                  :class="{'rotate-45': open, '-translate-y-1.5': !open}"></span>
-            <span aria-hidden="true"
-                  class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
-                  :class="{'opacity-0': open} "></span>
-            <span aria-hidden="true"
-                  class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
-                  :class="{'-rotate-45': open, 'translate-y-1.5': !open}"></span>
-        </div>
-    </button>
+    {# Burger-cross icon #}
+    {# Gets put in the header TODO: have a proper header element, not just an h1.text-title #}
+    <template x-teleport="h1.text-title">
+        <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
+                @click.stop.prevent="toggle()">
+            <span class="sr-only">Open main menu</span>
+            <div class="block w-5 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <span aria-hidden="true"
+                      class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
+                      :class="{'rotate-45': open, '-translate-y-1.5': !open}"></span>
+                <span aria-hidden="true"
+                      class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
+                      :class="{'opacity-0': open} "></span>
+                <span aria-hidden="true"
+                      class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
+                      :class="{'-rotate-45': open, 'translate-y-1.5': !open}"></span>
+            </div>
+        </button>
+    </template>
 
     {#  Menu window  #}
-    <div x-show="open"
+    <div class="h-screen desktop:fixed desktop:right-0"
+         x-show="open"
+         x-cloak
          x-transition:enter="transition ease-out duration-500"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-400"
          x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         x-cloak
-         class="h-screen lg:fixed lg:right-0">
+         x-transition:leave-end="opacity-0">
 
         {#  Menu list  #}
-        <nav class="w-full min-h-full font-kanit-500 text-xl text-black-text flex flex-col">
+        <nav class="w-full h-full max-h-full font-kanit-500 text-xl text-black-text flex flex-col">
             <h1 class="bg-white p-4 py-2.5 text-purple">
                 Menu
             </h1>
@@ -45,15 +59,15 @@
 
                 <li class="p-4 pb-5">
                     {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}" @click="toggle(), menu = !menu">Dashboard</a>
+                        <a href="{% url 'dashboard' %}" @click="toggle()">Dashboard</a>
                     {% else %}
-                        <a href="{% url 'landing' %}" @click="toggle(), menu = !menu">Landing page</a>
+                        <a href="{% url 'landing' %}" @click="toggle()">Landing page</a>
                     {% endif %}
                 </li>
 
                 <div x-data="{selected:null}">
                     <button class="w-full p-4 pb-5 flex items-center justify-between" type="button"
-                            @click="selected !== 1 ? selected = 1 : selected = null">
+                            @click.prevent.stop="selected !== 1 ? selected = 1 : selected = null">
                         Springs
                         <div class="w-[12] h-[8] transition duration-500 ease-out"
                              :class="{'-rotate-180': selected}">
@@ -75,22 +89,22 @@
 
                 {% if user.is_authenticated %}
                     <li class="p-4 pb-5">
-                        <a href="{% url 'account_all_chats' %}" @click="toggle(), menu = !menu">Messages</a>
+                        <a href="{% url 'account_all_chats' %}" @click="toggle()">Messages</a>
                     </li>
                     <li class="p-4 pb-5">
-                        <a href="{% url 'account_view' %}" @click="toggle(), menu = !menu">Profile</a>
+                        <a href="{% url 'account_view' %}" @click="toggle()">Profile</a>
                     </li>
                 {% endif %}
 
                 <li class="p-4 pb-5">
-                    <a href="{% url 'resources' %}" @click="toggle(), menu = !menu">Resources</a>
+                    <a href="{% url 'resources' %}" @click="toggle()">Resources</a>
                 </li>
 
                 <li class="p-4 pb-5">
                     {% if user.is_authenticated %}
                         <form method="post" action="{% url 'account_logout' %}">
                             {% csrf_token %}
-                            <button type="submit" @click="toggle(), menu = !menu">
+                            <button type="submit" @click="toggle()">
                                 Log out
                             </button>
                         </form>
@@ -100,7 +114,7 @@
 
             <ul class="p-4 bg-white">
                 <li class="text-meta text-purple font-kanit-600 mr-2.5">
-                    <a href="{% url 'privacy' %}" @click="toggle(), menu = !menu">
+                    <a href="{% url 'privacy' %}" @click="toggle()">
                         Privacy policy
                     </a>
                 </li>

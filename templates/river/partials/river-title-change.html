@@ -1,57 +1,54 @@
-{% extends "partials/overlay-river.html"%}
+{% extends "partials/overlay-river-closable.html"%}
 {% block overlay_title %}Change River title{% endblock %}
 {% load static %}
 
-
 {% block river_overlay_content %}
-    {{ overlay_title }}
+    <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-title" hx-swap="innerHTML" class="mb-0">
 
-        <form hx-put="{% url 'edit_river' river.slug %}" hx-target="#river-title" hx-swap="innerHTML" class="mb-0">
+        {% csrf_token %}
 
-            {% csrf_token %}
+        {% include "partials/input-label.html" with for="title" label="New River title" %}
+        <input id=river-title-input name=title type=text placeholder="{{ river.title }}" value=""
+               pattern="[a-zA-Z][a-zA-Z\s]*"
+               class="input-text input-text-invalid">
+        {% include "partials/vertical-spacer.html" with space="1.5" %}
+        {% include "partials/input-note.html" with for="title" label="You can change river title until you create the poll" %}
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
+        <div class="flex items-center justify-center">
+            <button @click="editing = !editing"
+                    type="button"
+                    class="button button-on-white">
+                Back
+            </button>
+            {% include "partials/horizontal-spacer.html" with space="4.5" %}
+            {% comment %}
+           TODO: Need to use multi-swap: https://htmx.org/extensions/multi-swap/
+           document.getElementById('river-title').innerHTML=document.getElementById('river-title-input').value;
 
-            {% include "partials/input-label.html" with for="title" label="New River title" %}
-            <input id=river-title-input name=title type=text placeholder="{{ river.title }}" value=""
-                   pattern="[a-zA-Z][a-zA-Z\s]*"
-                   class="input-text input-text-invalid">
-            {% include "partials/vertical-spacer.html" with space="1.5" %}
-            {% include "partials/input-note.html" with for="title" label="You can change river title until you create the poll" %}
-            {% include "partials/vertical-spacer.html" with space="4.5" %}
-            <div class="flex items-center justify-center">
-                <button x-on:click="editing = !editing"
-                        type="button"
-                        class="button button-on-white">
-                    Back
-                </button>
-                {% include "partials/horizontal-spacer.html" with space="4.5" %}
-                {% comment %}
-               TODO: Need to use multi-swap: https://htmx.org/extensions/multi-swap/
-               document.getElementById('river-title').innerHTML=document.getElementById('river-title-input').value;
+           {% endcomment %}
+            <button
+                    @click="()=>{
+                    enableBodyScroll();
+                    //remove settings
+                    open = !open;
 
-               {% endcomment %}
-                <button
-                        x-on:click="()=>{
-                        enableBodyScroll();
-                        //remove settings
-                        open = !open;
+                    // editing unblock
+                    editing = !editing;
 
-                        // editing unblock
-                        editing = !editing;
+                    //aligning input with placeholder in case someone wants to change again
+                    var titleInput = document.getElementById('river-title-input')
+                    titleInput.placeholder = titleInput.value
+                    setTimeout(()=>{
+                        titleInput.value = ''
+                    }, 500)
 
-                        //aligning input with placeholder in case someone wants to change again
-                        var titleInput = document.getElementById('river-title-input')
-                        titleInput.placeholder = titleInput.value
-                        setTimeout(()=>{
-                            titleInput.value = ''
-                        }, 500)
+                    }"
+                    type="submit"
+                    class="button button-on-white">
 
-                        }"
-                        type="submit"
-                        class="button button-on-white">
-
-                    Submit
-                </button>
-            </div>
-        </form>
+                Submit
+            </button>
+        </div>
+    </form>
 
 {% endblock %}

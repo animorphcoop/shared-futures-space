@@ -53,16 +53,23 @@
     {% include "dashboard/partials/notifications.html" with title="Notifications" reference="notifications" %}
 {% endcomment %}
 
-    <div class="lg:flex w-full lg:pb-9">
+    <div class="desktop:flex w-full lg:pb-9 justify-center">
         {# Messages #}
         {#  Call to action partial, replace URL variable  #}
         {% url 'account_all_chats' as the_url %}
+        <div class="bg-yellow grow"></div>
         {% include "partials/call-to-action.html" with main="Continue the conversations" button="View messages" url=the_url info="" bg="bg-yellow" %}
 
         {#  Call to action partial, replace URL variable  #}
         {% if request.user.post_code.area.name != 'Other' %}
+            <div class="bg-yellow w-24"></div>
+            <div class="bg-resources-two w-24"></div>
+
             {% url 'spring' request.user.post_code.area.name as the_url %}
             {% include "partials/call-to-action.html" with main="Ready to swim?" button="Get involved" url=the_url info="" bg="bg-resources-two" %}
+            <div class="bg-resources-two grow"></div>
+        {% else %}
+            <div class="bg-yellow grow"></div>
         {% endif %}
     </div>
 
@@ -74,7 +81,7 @@
       {% endif %}
     {% endcomment %}
 
-    <div class="max-w-screen-xl lg:mx-auto">
+    <div class="max-w-screen-desktop mx-auto">
         {% include "dashboard/partials/get_in_touch.html" with title="Get in touch" reference="get_in_touch" %}
     </div>
 

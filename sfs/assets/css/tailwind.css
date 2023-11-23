@@ -11,7 +11,7 @@
     /* menu titles ------------------------------ */
     .text-title { /* mobile 19/34 desktop 26/34 */
         @apply font-kanit-500 text-black/75 text-[19px] leading-6
-        lg:text-[26px] lg:leading-[34px]
+        lg:text-[26px] lg:leading-[34px] relative
     }
     /* HEADER ------------------------------ */
     .text-header { /* mobile 10/Auto desktop 12/Auto */
@@ -84,6 +84,13 @@
         focus:text-black-text focus:border-purple focus:ring-0
         borken:border-red-important focus:borken:ring-red-important
     }
+
+    /* When browser has autocomplete available it changes the colour, this switches it back to our intended colour */
+    input.input-text:-webkit-autofill {
+        transition: background-color 5000s ease-in-out 0s;
+        box-shadow: inset 0 0 40px 40px rgba(229, 241, 248, 1);
+    }
+
     .input-text-invalid {
         @apply invalid:border-red-important focus:invalid:ring-red-important
     }

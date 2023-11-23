@@ -1,5 +1,5 @@
-{% extends "partials/overlay-river.html" %}
-{% block overlay_title %}Change River title{% endblock %}
+{% extends "partials/overlay-river-closable.html" %}
+{% block overlay_title %}Change River image{% endblock %}
 {% load static %}
 
 {% block river_overlay_content %}
@@ -20,13 +20,13 @@
                accept="image/png, image/jpeg, image/webp">
     </div>
     {% include "partials/vertical-spacer.html" with space="6" %}
-    <div class="w-96">
-        <img id="image-preview" class="h-auto max-w-1/3"/>
+    <div class="w-full">
+        <img id="image-preview" class="h-auto"/>
     </div>
 
     {% include "partials/vertical-spacer.html" with space="6" %}
     <div class="flex items-center justify-center">
-        <button x-on:click="()=>{
+        <button @click="()=>{
                                 editing = !editing
                                 document.getElementById('river-image-upload').value = ''
                                 document.getElementById('image-preview').src = ''
@@ -40,7 +40,7 @@
         {% comment %}
                {% endcomment %}
         <button
-                x-on:click="()=>{
+                @click="()=>{
                         enableBodyScroll();
                         //remove settings
                         open = !open;
@@ -63,20 +63,15 @@
         </button>
     </div>
 </form>
+<script>
+    document.getElementById('river-image-upload').onchange = function () {
+        let src = URL.createObjectURL(this.files[0])
+        document.getElementById('image-preview').src = src
+    }
+</script>
 {% endblock %}
 
 
-{% block scripts %}
-
-    <script>
-        document.getElementById('river-image-upload').onchange = function () {
-            let src = URL.createObjectURL(this.files[0])
-            document.getElementById('image-preview').src = src
-        }
-    </script>
-
-
-{% endblock %}
 
 
 

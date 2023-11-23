@@ -42,6 +42,11 @@ export default {
     ],
     theme: {
         extend: {
+            screens: {
+                // Our definition of desktop
+                // Ensure it's the same as defined in screen.ts
+                desktop: '1024px',
+            },
             colors: {
                 transparent: "transparent",
                 current: "currentColor",
