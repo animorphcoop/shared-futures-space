@@ -239,11 +239,9 @@ class AdminRequestView(ChatView):
             return {}
 
 
-class UserChatView(ChatView):
-    form_class: Type[ChatForm] = ChatForm
+class UserChatsMixin:
+    """Adds user_chats and blocked_chats to context data"""
 
-
-class UserAllChatsView(TemplateView):
     def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["user_chats"] = []
@@ -279,6 +277,14 @@ class UserAllChatsView(TemplateView):
                 else:
                     context["user_chats"].append(user_chat)
         return context
+
+
+class UserChatView(UserChatsMixin, ChatView):
+    form_class: Type[ChatForm] = ChatForm
+
+
+class UserAllChatsView(UserChatsMixin, TemplateView):
+    pass
 
 
 def block_user_chat(request: WSGIRequest, uuid: UUID) -> HttpResponse:
