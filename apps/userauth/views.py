@@ -17,6 +17,7 @@ from allauth.account.views import (
 from area.models import PostCode, get_postcode
 from core.utils.postcode_matcher import filter_postcode
 from django.conf import settings
+from django.db.models import Count
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
@@ -248,12 +249,19 @@ class UserAllChatsView(TemplateView):
         context["user_chats"] = []
         context["blocked_chats"] = []
         for user in CustomUser.objects.all():
-            if user.uuid < self.request.user.uuid:
-                user_chat = UserPair.objects.filter(user1=user, user2=self.request.user)
-            else:
-                user_chat = UserPair.objects.filter(user1=self.request.user, user2=user)
-            if user_chat.exists() and user != self.request.user:
-                user_chat = user_chat[0]
+            [user1, user2] = sorted([user, self.request.user], key=lambda u: u.uuid)
+
+            user_chat = (
+                UserPair.objects.annotate(message_count=Count("chat__message"))
+                .filter(
+                    user1=user1,
+                    user2=user2,
+                    message_count__gt=0,
+                )
+                .first()
+            )
+
+            if user_chat and user != self.request.user:
                 user_chat.user = user
                 messages_in_chat = Message.objects.filter(chat=user_chat.chat)
                 user_chat.latest_message = (

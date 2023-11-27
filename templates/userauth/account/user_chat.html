@@ -5,9 +5,11 @@
 
 {% block content %}
 
-    {% block title %}
-        {% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}
-    {% endblock %}
-    {% include 'messaging/messages.html' with direct=direct %}
+    <div class="max-w-screen-xl mx-auto">
+        {% block title %}
+            {% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}
+        {% endblock %}
+        {% include 'messaging/messages.html' with direct=direct %}
+    </div>
 
 {% endblock %}

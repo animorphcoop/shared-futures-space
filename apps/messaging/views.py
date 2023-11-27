@@ -131,15 +131,15 @@ class ChatView(TemplateView):
                     river=river, starter=True
                 ).values_list("user", flat=True),
             }
-            if request.user.is_authenticated:
-                context["my_flags"] = list(
-                    map(
-                        lambda f: f.message.uuid,
-                        Flag.objects.filter(flagged_by=request.user),
-                    )
-                )
         else:
             context = {}  # just in case
+        if request.user.is_authenticated:
+            context["my_flags"] = list(
+                map(
+                    lambda f: f.message.uuid,
+                    Flag.objects.filter(flagged_by=request.user),
+                )
+            )
         if request.GET.get("page"):
             return render(request, "messaging/message_list.html", context)
         else:
@@ -165,6 +165,7 @@ class ChatView(TemplateView):
                 "message_post_url": reverse("user_chat", args=[user_path]),
                 "unique_id": user_path,
                 "chat_open": chat_open,
+                "members": members,
             }
         elif "slug" in kwargs:
             river = River.objects.get(slug=kwargs["slug"])
@@ -266,12 +267,12 @@ class ChatView(TemplateView):
                 m.hidden_reason = "by the river starter"
                 m.save()
                 context["message"] = m
-            context["my_flags"] = list(
-                map(
-                    lambda f: f.message.uuid,
-                    Flag.objects.filter(flagged_by=request.user),
-                )
+        context["my_flags"] = list(
+            map(
+                lambda f: f.message.uuid,
+                Flag.objects.filter(flagged_by=request.user),
             )
+        )
         return render(request, "messaging/user_message_snippet.html", context)
 
     def paginate_messages(

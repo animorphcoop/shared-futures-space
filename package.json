@@ -13,6 +13,7 @@
     "@tailwindcss/forms": "^0.5.6",
     "@tailwindcss/typography": "^0.5.10",
     "@types/alpinejs": "^3.13.0",
+    "@types/alpinejs__morph": "^3.13.3",
     "@types/flickity": "^2.2.9",
     "glob": "^10.3.4",
     "postcss": "^8.4.29",
@@ -25,6 +26,7 @@
     "vite": "^4.4.9"
   },
   "dependencies": {
+    "@alpinejs/morph": "^3.13.3",
     "alpinejs": "^3.13.0",
     "flickity": "^3.0.0",
     "htmx.org": "^1.9.5"

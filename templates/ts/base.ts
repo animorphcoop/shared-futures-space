@@ -17,6 +17,11 @@ import { expose } from "./utils.ts"
 
 expose({ htmx, Alpine, Flickity })
 
+// Plugins
+import morph from '@alpinejs/morph'
+import './alpine-morph.ts'
+Alpine.plugin(morph)
+
 /**
  * Delay starting Alpine until after all our scripts are downloaded
  * This ensures we can use any of our exposed functions in x-init attributes.
