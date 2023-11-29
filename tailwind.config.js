@@ -26,6 +26,12 @@ export default {
         "./apps/*/templates/**/*.html",
 
         /**
+         * Typescript. Also process typescript files for dynamic classnames.
+         */
+        "./templates/**/*.ts",
+        "./apps/*/templates/**/*.ts",
+
+        /**
          * JS: If you use Tailwind CSS in JavaScript, uncomment the following lines and make sure
          * patterns match your river structure.
          */

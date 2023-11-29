@@ -38,7 +38,7 @@
     }
     /* meta ------------------------------ */
     .text-meta-label { /* mobile 9/Auto */
-        @apply uppercase text-black/75 font-kanit-400 text-[9px] text-[10px] leading-[12px] tracking-[0.16em]
+        @apply uppercase text-black/75 font-kanit-400 text-[9px] text-[10px] leading-[12px] tracking-[0.1em]
     }
     .text-meta-label-desktop { /* desktop 11/14 */
         @apply text-meta-label
