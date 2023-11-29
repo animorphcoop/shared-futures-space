@@ -44,12 +44,7 @@
                                      x-stop-body-scroll-if="open">
                                     <button type="button"
                                             {% comment %}TODO: htmx returned partial does not gel with alpine{% endcomment %}
-                                            @click="()=>{ open = !open;
-                                        if (!document.getElementById('title-change').classList.contains('hidden')) {
-                                            document.getElementById('title-change').classList.add('hidden');
-                                        }
-
-                                        }"
+                                            @click="open = true"
                                             class="button button-on-white">
                                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                                              xmlns="http://www.w3.org/2000/svg">

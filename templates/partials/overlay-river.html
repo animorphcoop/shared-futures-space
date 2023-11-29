@@ -4,25 +4,42 @@
 
     A reusable overlay modal \o/
 
-    To close it you can use htmx like:
-
-    <div hx-swap-oob="outerHTML: .overlay-river"></div>
-
-    (That will close ALL open overlays open)
-
-    If you want to close within an alpine context use something like:
+    You can close it from within itself using:
 
         <button @click="overlayClose()">close</button>
 
-    There are two modes the closing works:
+    There are two modes it can work in:
 
-    1. if you are in an "editing" context (i.e. the river settings page)
-        -> closing will set editing = false
-    2. anything else it will remove the modal element from the DOM
+    - showing / hiding it - when `editing` variable is set
+
+        e.g. the river settings page
+
+        Calling `overlayClose()` will set `editing = false`
+
+    - adding / removing the element - any other situation
+
+        e.g. the task edit modal
+
+        Calling `overlayClose()` will remove the DOM element
+
+        In this mode you can also close it from an HTMX response
+        using an out of band update.
+
+        To use that, give the overlay an id using:
+
+            {% block overlay_id %}my-id{% endblock %}
+
+        And then in a later HTMX response you can include:
+
+            <div id="task-edit" hx-swap-oob="delete"></div>
+
+    Also consider using overlay-river-closable.html which let's you
+    click on the overlay to close it.
 
 {% endcomment %}
 
-<section class="overlay-river z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur"
+<section id="{% block overlay_id %}{% endblock %}"
+         class="overlay-river z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur"
          x-data="{ overlayClose() { typeof editing !== 'undefined' ? (editing = false ) : $el.remove() } }"
          x-stop-body-scroll>
 
