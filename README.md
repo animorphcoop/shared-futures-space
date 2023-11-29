@@ -185,19 +185,14 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Run `cp .envrc.example .envrc` while inside the `ansible/` directory.
+4. Run `cp envs/example.envrc envs/production.envrc` while inside the `ansible/` directory.
 
-5. Edit `.envrc` with IP, domain name, and other settings.
-
-6. Load environment:
-
-```sh
-source .envrc
-```
+5. Edit `envs/production.envrc` with IP, domain name, and other settings.
 
 6. Verify acquiring SSH access has worked:
 
 ```sh
+source envs/production.envrc
 ansible all -m ping
 ansible-inventory --list
 ```
@@ -205,7 +200,8 @@ ansible-inventory --list
 7. Run the ansible playbook with:
 
 ```sh
-ansible-playbook playbook.yaml --verbose
+ansible-playbook playbooks/base.yaml --verbose
+ansible-playbook playbooks/production.yaml --verbose
 ```
 
 You should now be able to access your Shared Future Space instance at your
