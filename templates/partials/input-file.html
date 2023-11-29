@@ -1,0 +1,39 @@
+{% comment %}
+
+    A file input field styled nicely :)
+
+    You can *either* use it with a form field object, e.g.:
+
+        {% include "partials/input-file.html" with field=form.image %}
+
+        (this will automatically set the name, accept, etc. appropriately)
+
+    OR use it freeform, e.g.:
+
+        {% include "partials/input-file.html" with id="river-image-upload" name="image" accept="image/png, image/jpeg, image/webp" %}
+
+        (you need to pass in name/accept...)
+
+    If you don't pass in an id it'll generate a random one for you.
+
+{% endcomment %}
+
+{% load custom_tags %}
+{% load widget_tweaks %}
+
+{% if not id %}
+    {% generate_id as id %}
+{% endif %}
+
+<label class="mr-2 button button-on-white cursor-pointer" for="{{ id }}">Select</label>
+{% with input_classes="file:hidden text-meta text-sm text-black/30 focus:outline-none" %}
+    {% if field %}
+        {% render_field field id=id class=input_classes %}
+    {% else %}
+        <input id="{{ id }}" type="file" name="{{ name }}" accept="{{ accept }}" class="{{ input_classes }}">
+    {% endif %}
+{% endwith %}
+
+{% for error in field.errors %}
+    <div class="text-red-600">{{ error }}</div>
+{% endfor %}

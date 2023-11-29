@@ -1,3 +1,5 @@
+import uuid
+
 from django import template
 from django.conf import settings
 from django.utils.safestring import mark_safe
@@ -5,6 +7,11 @@ from django.utils.safestring import mark_safe
 register = template.Library()
 
 DJANGO_VITE_DEV_MODE = getattr(settings, "DJANGO_VITE_DEV_MODE", False)
+
+
+@register.simple_tag
+def generate_id(*args):
+    return uuid.uuid4()
 
 
 @register.simple_tag

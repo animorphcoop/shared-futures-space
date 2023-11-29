@@ -79,6 +79,9 @@ export default {
                     two: "#C4F5F8",
                     three: "#DFF5F6",
                 },
+                green: {
+                    pale: '#C4F4E6',
+                },
                 yellow: {
                     pale: "rgba(255, 252, 192, 1)",
                     DEFAULT: "rgba(255, 250, 142, 1)",

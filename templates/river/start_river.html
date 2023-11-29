@@ -37,7 +37,7 @@
 
                             <button id="button-{{ counter }}"
                                     onclick="event.preventDefault(); selectTag(this.id, '{{ tag }}')"
-                                    class="px-1.5 py-1 bg-blue-pale rounded-sm">
+                                    class="px-1.5 py-1.5 rounded-sm flex items-center">
                                 <span class="text-meta-label text-black/55 uppercase leading-none whitespace-normal">{{ tag }}</span>
                             </button>
                         {% endwith %}
@@ -47,9 +47,7 @@
             </div>
             {% include "partials/vertical-spacer.html" with space="12" %}
             {% include "partials/input-label.html" with for="id_image" label="Upload an image" %}
-            <div class="text-meta text-black/30">
-                {% render_field form.image %}
-            </div>
+            {% include "partials/input-file.html" with field=form.image %}
 
             <input id="tags_input" name=tags type=text value="" class="hidden">
 
