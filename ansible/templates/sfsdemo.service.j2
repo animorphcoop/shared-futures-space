@@ -1,0 +1,16 @@
+[Unit]
+Description=sfsdemo
+After=network.target
+
+[Service]
+Type=simple
+User=deploydemo
+Group=www-data
+ExecStart=/var/www/shared-futures-space-demo/venv/bin/uwsgi --ini /etc/uwsgi/sfsdemo.uwsgi.ini
+ExecReload=/bin/kill -HUP $MAINPID
+WorkingDirectory=/var/www/shared-futures-space-demo
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

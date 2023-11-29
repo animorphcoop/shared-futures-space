@@ -1,0 +1,16 @@
+[Unit]
+Description=sfsdev
+After=network.target
+
+[Service]
+Type=simple
+User=deploydev
+Group=www-data
+ExecStart=/var/www/shared-futures-space-dev/venv/bin/uwsgi --ini /etc/uwsgi/sfsdev.uwsgi.ini
+ExecReload=/bin/kill -HUP $MAINPID
+WorkingDirectory=/var/www/shared-futures-space-dev
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

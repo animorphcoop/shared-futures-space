@@ -17,7 +17,8 @@ media
 celerybeat-schedule*
 
 # ansible
-ansible/.envrc
+ansible/envs/*.envrc
+!ansible/envs/example.envrc
 
 # Environments
 .env

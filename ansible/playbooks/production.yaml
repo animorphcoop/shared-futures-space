@@ -1,27 +1,23 @@
 ---
 - hosts: virtualmachines
-  vars_files:
-    - vars.yaml
   become: yes
+  vars:
+    debug_mode: "{{ lookup('env', 'DEBUG_MODE') }}"
+    vite_dev_mode: "{{ lookup('env', 'VITE_DEV_MODE') }}"
+    domain_name: "{{ lookup('env', 'DOMAIN_NAME') }}"
+    secret_key: "{{ lookup('env', 'SECRET_KEY') }}"
+    postgres_password: "{{ lookup('env', 'POSTGRES_PASSWORD') }}"
+    celery_broker_url: "{{ lookup('env', 'CELERY_BROKER_URL') }}"
+    celery_result_backend: "{{ lookup('env', 'CELERY_RESULT_BACKEND') }}"
+    enable_social_login: "{{ lookup('env', 'ENABLE_ALLAUTH_SOCIAL_LOGIN') }}"
+    google_client_id: "{{ lookup('env', 'GOOGLE_CLIENT_ID') }}"
+    google_secret: "{{ lookup('env', 'GOOGLE_SECRET') }}"
+    email_host: "{{ lookup('env', 'EMAIL_HOST') }}"
+    email_host_user: "{{ lookup('env', 'EMAIL_HOST_USER') }}"
+    email_host_password: "{{ lookup('env', 'EMAIL_HOST_PASSWORD') }}"
+    default_from_email: "{{ lookup('env', 'DEFAULT_FROM_EMAIL') }}"
+    weather_api_key: "{{ lookup('env', 'WEATHER_API_KEY') }}"
   tasks:
-    # smoke test and essential dependencies
-    - name: ping
-      ansible.builtin.ping:
-    - name: essentials
-      ansible.builtin.apt:
-        update_cache: yes
-        name:
-          - vim
-          - git
-          - postgresql
-          - redis-server
-          - python3.9
-          - python3.9-venv
-          - python3.9-dev
-          - libpq-dev
-          - gcc
-          - python3-psycopg2
-        state: present
 
     # postgresql setup
     - name: pg user
@@ -45,47 +41,6 @@
         role: sfs_user
         grant_option: true
       become_user: postgres
-
-    # node.js and npm
-    - name: add nodesource key
-      ansible.builtin.apt_key:
-        id: 6F71F525282841EEDAF851B42F59B5F99B1BE0B4
-        url: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
-        keyring: /etc/apt/trusted.gpg.d/nodesource.gpg
-        state: present
-    - name: add nodesource repository
-      ansible.builtin.apt_repository:
-        repo: deb [signed-by=/etc/apt/trusted.gpg.d/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main
-    - name: install nodejs
-      ansible.builtin.apt:
-        update_cache: yes
-        name: nodejs
-        state: present
-
-    # caddy
-    - name: add caddy key
-      ansible.builtin.apt_key:
-        id: 65760C51EDEA2017CEA2CA15155B6D79CA56EA34
-        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
-        keyring: /etc/apt/trusted.gpg.d/caddy-stable.gpg
-        state: present
-    - name: add caddy deb repository
-      ansible.builtin.apt_repository:
-        repo: deb [signed-by=/etc/apt/trusted.gpg.d/caddy-stable.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
-    - name: add caddy deb-src repository
-      ansible.builtin.apt_repository:
-        repo: deb [signed-by=/etc/apt/trusted.gpg.d/caddy-stable.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
-    - name: install caddy
-      ansible.builtin.apt:
-        update_cache: yes
-        name: caddy
-    - name: caddyfile
-      ansible.builtin.template:
-        src: Caddyfile.j2
-        dest: /etc/caddy/Caddyfile
-        owner: root
-        group: root
-        mode: '0644'
 
     # deploy user and directory
     - name: www directory
@@ -162,21 +117,21 @@
         mode: '0755'
     - name: uwsgi template
       ansible.builtin.template:
-        src: sfs.uwsgi.ini.j2
+        src: ../templates/sfs.uwsgi.ini.j2
         dest: /etc/uwsgi/sfs.uwsgi.ini
         owner: root
         group: root
         mode: '0644'
     - name: web systemd template
       ansible.builtin.template:
-        src: sfs.service.j2
+        src: ../templates/sfs.service.j2
         dest: /etc/systemd/system/sfs.service
         owner: root
         group: root
         mode: '0644'
     - name: worker systemd template
       ansible.builtin.template:
-        src: sfsworker.service.j2
+        src: ../templates/sfsworker.service.j2
         dest: /etc/systemd/system/sfsworker.service
         owner: root
         group: root
