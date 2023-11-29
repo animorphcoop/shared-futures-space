@@ -1,0 +1,44 @@
+sharedfutures.space:443 {
+    route {
+        file_server /static/* {
+            root /var/www/shared-futures-space
+        }
+        reverse_proxy 127.0.0.1:5000
+    }
+
+    tls {{ email }} {
+        on_demand
+    }
+
+    encode zstd gzip
+}
+
+dev.sharedfutures.space:443 {
+    route {
+        file_server /static/* {
+            root /var/www/shared-futures-space-dev
+        }
+        reverse_proxy 127.0.0.1:6000
+    }
+
+    tls {{ email }} {
+        on_demand
+    }
+
+    encode zstd gzip
+}
+
+demo.sharedfutures.space:443 {
+    route {
+        file_server /static/* {
+            root /var/www/shared-futures-space-demo
+        }
+        reverse_proxy 127.0.0.1:7000
+    }
+
+    tls {{ email }} {
+        on_demand
+    }
+
+    encode zstd gzip
+}
