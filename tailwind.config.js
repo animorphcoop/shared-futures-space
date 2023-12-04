@@ -74,11 +74,12 @@ export default {
                     DEFAULT: "#9759FF",
                 },
                 blue: {
-                    second: "rgba(229, 241, 248, 1)",
+                    second: "#E5F1F8",
                     pale: "#EAF3F9",
-                    button: "rgba(190, 236, 223, 1)",
-                    done: "rgba(147, 255, 224, 1)",
-                    blur: "rgba(229, 241, 248, 0.5)",
+                    button: "#BEECDF",
+                    done: "#93FFE0",
+                    blur: "#E5F1F880",
+                    tertiary: "#CEDFF2",
                 },
                 resources: {
                     one: "#CEDFF2",
@@ -89,11 +90,12 @@ export default {
                     pale: '#C4F4E6',
                 },
                 yellow: {
-                    pale: "rgba(255, 252, 192, 1)",
-                    DEFAULT: "rgba(255, 250, 142, 1)",
+                    pale: "#FFFCC0",
+                    DEFAULT: "#FFFA8E",
                 },
                 red: {
-                    important: "rgba(255, 134, 134, 1)",
+                    important: "#FF8686",
+                    focus: "#F66565",
                 },
                 correct: "#228b22",
                 incorrect: "#fe2712",
@@ -109,7 +111,8 @@ export default {
             },
             boxShadow: {
                 input: "0px 1px 1px 0px rgba(0, 0, 0, 0.15) inset",
-            },
+                button: "1px 4px 6px 2px rgba(181, 181, 181, 0.22)",
+},
             backgroundImage: {
                 "landing-enter": "linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.4)), url('/static/images/landing/landing-temporary.png'), url('/static/images/landing/landing-temporary.png')",
                 "north-belfast": "url('/static/images/landing/areas/northbelfast.jpg')",
