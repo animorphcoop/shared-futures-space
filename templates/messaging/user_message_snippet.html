@@ -94,7 +94,7 @@
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <p>{{ message.timestamp|date:"d/m/y" }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
-                    {% if user.is_authenticated and message.sender.display_name != 'salmon' and user in members and not message.hidden %}
+                    {% if not direct and user.is_authenticated and message.sender.display_name != 'salmon' and user in members and not message.hidden %}
                         <div class="inline-block">
                             {% if message.uuid in my_flags %}
                                 <svg width="8" height="10" viewBox="0 0 8 10"
