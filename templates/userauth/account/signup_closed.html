@@ -4,15 +4,13 @@
 
 {% block content %}
 
-    <div class="flex flex-col h-screen">
+    <div class="flex flex-col max-w-screen-xl mx-auto">
 
         {% block title %}{% include "partials/title.html" with title="Sign up closed" %}{% endblock %}
 
         <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">
             We are sorry, but the sign up is currently closed.
         </p>
-
-        {% include "partials/footer-gradient.html" %}
     </div>
 
 {% endblock %}

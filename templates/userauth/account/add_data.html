@@ -7,7 +7,7 @@
 
     {% block title %}{% include "partials/title.html" with title="Complete profile" %}{% endblock %}
 
-    <div class="flex flex-col h-screen sm:w-[32rem] sm:mx-auto lg:flex-row lg:w-full lg:justify-center">
+    <div class="flex flex-col sm:w-[32rem] sm:mx-auto lg:flex-row lg:w-full lg:justify-center max-w-screen-xl mx-auto">
 
         <section class="p-4 pt-2.5 flex flex-col items-end lg:w-[32rem]">
             <div class="bg-gray-light rounded-full">
@@ -146,8 +146,6 @@
         <div id="organisation-name-enter" class="hidden">
             {% include 'userauth/account/partials/organisation_name_enter.html' %}
         </div>
-
-        <div class="sm:hidden">{% include "partials/footer-gradient.html" %}</div>
     </div>
 
     {% block scripts %}
