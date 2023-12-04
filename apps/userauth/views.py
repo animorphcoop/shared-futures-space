@@ -274,8 +274,11 @@ class UserChatsMixin:
                     user_chat.blocked_by = None
                 if user_chat.blocked_by == self.request.user:
                     context["blocked_chats"].append(user_chat)
-                else:
+                elif user_chat.latest_message:
                     context["user_chats"].append(user_chat)
+        context["first_user_chat"] = (
+            context["user_chats"][0] if len(context["user_chats"]) > 0 else None
+        )
         return context
 
 
