@@ -14,6 +14,42 @@ def generate_id(*args):
     return uuid.uuid4()
 
 
+@register.simple_tag(takes_context=True)
+def active_link(context, text, *view_names, **view_params):
+    """Use to output text when the specified view is active
+
+    Using it for CSS classnames would be class, but not limited to that.
+
+    Usage examples:
+
+        When we are on the home page have pink text:
+            <a class="{% active_link 'text-pink' 'homepage' %}">homepage</a>
+
+        When we are on the homepage OR the dashboard, have pink text:
+            <a class="{% active_link 'text-pink' 'homepage' 'dashboard'%}">homepage</a>
+
+        When we are on user "nick"'s profile, have green text:
+            <a class="{% active_link 'text-green' 'profile' username="nick" %}">homepage</a>
+    """
+    request = context.get("request")
+    if request is None:
+        return ""
+
+    # Fetch our resolved route
+    current_view_name = request.resolver_match.view_name
+
+    # Match on route name
+    if current_view_name not in view_names:
+        return ""
+
+    # If provided, match on the params too
+    if view_params and view_params != request.resolver_match.kwargs:
+        return ""
+
+    # It passed! Give 'em the text
+    return text
+
+
 @register.simple_tag
 @mark_safe
 def sfs_vite_prevent_unstyled_flash(*args):

@@ -1,5 +1,6 @@
 {% comment %}uses area_delaits simple tag from area/templatetages{% endcomment %}
 {% load area_details %}
+{% load custom_tags %}
 {% get_areas as areas_dict %}
 <ul class="list-non text-black/30 -mt-2" aria-labelledby="dropdownLargeButton">
 
@@ -7,13 +8,13 @@
         {% for key, value in areas_dict.items %}
 
             {% if value == user.post_code.area.name %}
-                <li class="px-4 py-3 text-black/75">
+                <li class="px-4 py-3 text-black/75 {% active_link 'text-purple' 'spring' slug=key %}">
                     <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
                         <span>Your spring: </span>{{ value }}
                     </a>
                 </li>
             {% else %}
-                <li class="px-4 py-3">
+                <li class="px-4 py-3 {% active_link 'text-purple' 'spring' slug=key %}">
                     <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
                         {{ value }}
                     </a>
@@ -23,7 +24,7 @@
 
     {% else %}
         {% for key, value in areas_dict.items %}
-            <li class="px-4 py-3">
+            <li class="px-4 py-3 {% active_link 'text-purple' 'spring' slug=key %}">
                 <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
                     {{ value }}
                 </a>

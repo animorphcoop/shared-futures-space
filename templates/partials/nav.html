@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 
 <div class="h-full w-full fixed left-0 top-0 z-50 backdrop-blur bg-blue-blur"
      x-data="{ open: false, close() { this.open = false; menu = false; }, toggle() { this.open = !this.open; menu = !menu } }"
@@ -57,16 +58,19 @@
             {% endif %}
             <ul class="bg-gradient-to-b from-blue-second to-white overflow-y-auto grow">
 
-                <li class="p-4 pb-5">
-                    {% if user.is_authenticated %}
+                {% if user.is_authenticated %}
+                    <li class="p-4 pb-5 {% active_link 'text-purple' 'dashboard' %}">
                         <a href="{% url 'dashboard' %}" @click="toggle()">Dashboard</a>
-                    {% else %}
+                    </li>
+                {% else %}
+                    <li class="p-4 pb-5 {% active_link 'text-purple' 'landing' %}">
                         <a href="{% url 'landing' %}" @click="toggle()">Landing page</a>
-                    {% endif %}
-                </li>
+                    </li>
+                {% endif %}
 
-                <div x-data="{selected:null}">
-                    <button class="w-full p-4 pb-5 flex items-center justify-between" type="button"
+                <div x-data="{selected: null}">
+                    <button class="w-full p-4 pb-5 flex items-center justify-between {% active_link 'text-purple' 'spring' %}"
+                            type="button"
                             @click.prevent.stop="selected !== 1 ? selected = 1 : selected = null">
                         Springs
                         <div class="w-[12] h-[8] transition duration-500 ease-out"
@@ -79,24 +83,22 @@
                         </div>
                     </button>
                     <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
-                         style=""
-                         x-ref="springs"
-                         x-bind:style="selected == 1 ? 'max-height: ' + $refs.springs.scrollHeight + 'px' : ''">
+                         :style="selected == 1 ? 'max-height: ' + $el.scrollHeight + 'px' : ''">
 
                         {% include 'partials/nav-areas.html' %}
                     </div>
                 </div>
 
                 {% if user.is_authenticated %}
-                    <li class="p-4 pb-5">
+                    <li class="p-4 pb-5 {% active_link 'text-purple' 'account_all_chats' 'user_chat' %}">
                         <a href="{% url 'account_all_chats' %}" @click="toggle()">Messages</a>
                     </li>
-                    <li class="p-4 pb-5">
+                    <li class="p-4 pb-5 {% active_link 'text-purple' 'user_detail' %}">
                         <a href="{% url 'account_view' %}" @click="toggle()">Profile</a>
                     </li>
                 {% endif %}
 
-                <li class="p-4 pb-5">
+                <li class="p-4 pb-5 {% active_link 'text-purple' 'resources' 'resource_item' %}">
                     <a href="{% url 'resources' %}" @click="toggle()">Resources</a>
                 </li>
 

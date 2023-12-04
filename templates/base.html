@@ -36,12 +36,7 @@
 
 <body class="antialiased w-full " x-data="{ menu: false }">
 
-{% comment %} URL-dependent navbar {% endcomment %}
-<div hx-get="/core/check_url_nav/"
-     hx-trigger="load"
-     hx-swap="outerHTML"
->
-</div>
+{% include 'partials/nav.html' %}
 
 <section class="block bg-white">
     {% wagtailuserbar %}
