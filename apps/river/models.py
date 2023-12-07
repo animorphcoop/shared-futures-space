@@ -15,6 +15,7 @@ from taggit.models import TaggedItemBase
 from userauth.models import CustomUser
 
 from apps.core.utils.slugifier import generate_random_string
+from django.core.exceptions import ValidationError
 
 
 def new_chat() -> (

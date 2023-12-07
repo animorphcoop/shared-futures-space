@@ -1060,6 +1060,9 @@
       "avatar": "avatars/discus.png"
     },
     {
+      "avatar": "avatars/dolphin.png"
+    },
+    {
       "avatar": "avatars/goldfish.png"
     },
     {
@@ -1079,6 +1082,12 @@
     },
     {
       "avatar": "avatars/platy.png"
+    },
+    {
+      "avatar": "avatars/red_butterfly_fish.png"
+    },
+    {
+      "avatar": "avatars/undeclared_fish.png"
     },
     {
       "avatar": "avatars/wise_salmon.png"

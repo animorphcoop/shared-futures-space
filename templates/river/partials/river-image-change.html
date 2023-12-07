@@ -14,11 +14,8 @@
 
 
     {% include "partials/input-label.html" with for="image" label="Select image to preview" %}
-    <div class="text-meta text-black/30">
-        <input type="file"
-               id="river-image-upload" name="image" value=""
-               accept="image/png, image/jpeg, image/webp">
-    </div>
+    {% include "partials/input-file.html" with id="river-image-upload" name="image" accept="image/png, image/jpeg, image/webp" %}
+
     {% include "partials/vertical-spacer.html" with space="6" %}
     <div class="w-full">
         <img id="image-preview" class="h-auto"/>

@@ -38,7 +38,7 @@
     }
     /* meta ------------------------------ */
     .text-meta-label { /* mobile 9/Auto */
-        @apply uppercase text-black/75 font-kanit-400 text-[9px] text-[10px] leading-[12px] tracking-widest
+        @apply uppercase text-black/75 font-kanit-400 text-[9px] text-[10px] leading-[12px] tracking-[0.1em]
     }
     .text-meta-label-desktop { /* desktop 11/14 */
         @apply text-meta-label
@@ -60,19 +60,19 @@
         @apply button px-3 py-1;
     }
     .button-on-white {
-        @apply bg-blue-second hover:bg-resources-one focus:bg-blue-done
+        @apply bg-blue-second hover:shadow-button focus:bg-blue-tertiary
     }
     .button-on-white-reverse {
-        @apply bg-blue-done hover:bg-resources-one focus:bg-blue-done
+        @apply bg-blue-done hover:shadow-button focus:bg-blue-done
     }
     .button-on-colour {
-        @apply bg-white hover:bg-resources-one focus:bg-blue-done
+        @apply bg-white hover:shadow-button focus:bg-blue-second
     }
     .button-important {
-        @apply bg-yellow-pale hover:bg-yellow focus:bg-red-important
+        @apply bg-yellow-pale hover:shadow-button focus:bg-yellow
     }
     .button-danger {
-        @apply bg-red-important hover:bg-purple focus:bg-purple
+        @apply bg-red-important hover:shadow-button focus:bg-red-focus
         text-white
     }
 

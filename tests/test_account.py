@@ -5,11 +5,21 @@ import time
 
 import bs4
 import pytest
-from action.models import Action
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from userauth.models import CustomUser
-from userauth.util import get_system_user, slug_to_user, user_to_slug
+
+
+@pytest.fixture(scope="session")
+def celery_worker_parameters():
+    """Disable the ping check during testing
+
+    Otherwise get this error:
+        "celery.exceptions.NotRegistered: 'celery.ping'"
+
+    Issue https://github.com/celery/celery/issues/4851
+    This "fix" https://github.com/celery/celery/issues/3642#issuecomment-457773294
+    """
+    return {"perform_ping_check": False}
 
 
 @pytest.mark.django_db

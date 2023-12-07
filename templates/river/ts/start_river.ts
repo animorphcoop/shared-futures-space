@@ -14,7 +14,7 @@ function selectTag(tagElemId: string, tagName: string) {
 
     if (!selectedTags.includes(currentTagElem)) {
         if (counterValue > 0) {
-            currentTagElem.classList.add("bg-purple/25")
+            currentTagElem.classList.add("bg-green-pale")
             selectedTags.push(currentTagElem)
 
             if (tagsInput.value == "") {
@@ -28,7 +28,7 @@ function selectTag(tagElemId: string, tagName: string) {
 
     } else {
         if (counterValue < 3) {
-            currentTagElem.classList.remove("bg-purple/25")
+            currentTagElem.classList.remove("bg-green-pale")
             selectedTags.forEach((item, index) => {
                 if (item === currentTagElem)
                     selectedTags.splice(index, 1)

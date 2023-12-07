@@ -1,6 +1,11 @@
 {% load static %}
 
-<div class="pb-5 message">
+<div class="pb-5 message"
+     x-data="{ overlay: false, state: 'initial' }"
+     hx-target="this"
+     hx-ext="alpine-morph"
+     hx-swap="morph"
+     @htmx:after-swap="state = 'flagged'">
     {% if message.sender == user %}
         <div class="flex justify-end">
             {% include "partials/horizontal-spacer.html" with space="7.5" %}
@@ -89,8 +94,7 @@
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <p>{{ message.timestamp|date:"d/m/y" }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
-                    {% if user.is_authenticated and message.sender.display_name != 'salmon' and user in members and not message.hidden %}
-
+                    {% if not direct and user.is_authenticated and message.sender.display_name != 'salmon' and user in members and not message.hidden %}
                         <div class="inline-block">
                             {% if message.uuid in my_flags %}
                                 <svg width="8" height="10" viewBox="0 0 8 10"
@@ -118,23 +122,20 @@
                                             <div class="p-2.5">
                                                 <div class="flex flex-col items-center py-9 px-4.5 text-center"
                                                      x-show="state === 'initial'">
-                                                        <p class="text-large pb-6 normal-case">
-                                                            If three people flag this message then it will be hidden for
-                                                            all users.
-                                                        </p>
-                                                        <div class="flex gap-4.5">
-                                                            <button @click.prevent.stop="overlay = ! overlay"
-                                                                    class="button button-on-colour">
-                                                                Cancel
-                                                            </button>
-                                                            <button class="button button-on-colour"
-                                                                    hx-post="{{ message_post_url }}"
-                                                                    hx-vals='{"flag": "{{ message.uuid }}"}'
-                                                                    hx-target="closest .message" hx-swap="outerHTML"
-                                                                    @htmx:after-swap.window="state = 'flagged'">
-                                                                Flag message
-                                                            </button>
-                                                        </div>
+                                                    <p class="text-large pb-6 normal-case">
+                                                        If three people flag this message then it will be hidden for
+                                                        all users.
+                                                    </p>
+                                                    <div class="flex gap-4.5">
+                                                        <button @click.prevent.stop="overlay = ! overlay"
+                                                                class="button button-on-colour">
+                                                            Cancel
+                                                        </button>
+                                                        <button class="button button-on-colour"
+                                                                hx-post="{{ message_post_url }}"
+                                                                hx-vals='{"flag": "{{ message.uuid }}"}'>
+                                                            Flag message
+                                                        </button>
                                                     </div>
                                                 </div>
                                                 <div class="flex flex-col items-center py-9 px-4.5 text-center"

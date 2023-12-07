@@ -1,13 +1,31 @@
-{% extends "account/base.html" %}
+{% extends "userauth/account/all_user_chats.html" %}
 {% load django_vite %}
 
 {% comment %} Page: a messages- direct chat exchanges with another user {% endcomment %}
 
-{% block content %}
+{% url 'river_chat_message_count' slug stage topic as message_count_url %}
+{% url 'river_chat_message_list' slug stage topic as message_list_url %}
 
-    {% block title %}
-        {% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}
-    {% endblock %}
-    {% include 'messaging/messages.html' with direct=direct %}
+{% block title %}
+    {% include "partials/title.html" with title="💬 with " chat_title=other_user.display_name %}
+{% endblock %}
+
+{% block user_chat %}
+
+    <div class="bg-gray-light">
+        <div id="messages-{{ unique_id }}"
+             class="mx-4.5">
+            {% include 'messaging/message_list.html' %}
+        </div>
+
+        {% if chat_open %}
+            {% with user_pk_string=other_user.pk|stringformat:'s' %}
+                {% with user_path=other_user.display_name|add:" "|add:user_pk_string|slugify %}
+                    {% url 'user_chat' user_path as message_post_url %}
+                    {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
+                {% endwith %}
+            {% endwith %}
+        {% endif %}
+    </div>
 
 {% endblock %}
