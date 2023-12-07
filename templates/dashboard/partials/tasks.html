@@ -29,7 +29,7 @@
         <div class="bg-[linear-gradient(180deg,_#E5F1F8_0%,_#e5f1f800_25%)] flex text-meta px-3 py-1.5">
             {% if task.due %}
                 {#  Due #}
-                <div class="w-1/2">
+                <div class="w-1/2" title="{{ task.due }}">
                     {% if task.is_overdue %}
                         <span class="text-red-600/60 pb-0.5">Overdue</span>
                         <span class="text-red-600">for <span class="font-bold">{{ task.overdue_by }}</span></span>
