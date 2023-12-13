@@ -39,23 +39,23 @@ jobs:
       run: ssh sfs cat /etc/issue
 
     - name: Run ansible playbook
+      run: cd ansible/ && ansible all -m ping
       env:
         ANSIBLE_HOST: 81.95.52.39
-        ANSIBLE_USER: deployer
+        ANSIBLE_USER: ${{ secrets.SFS_ANSIBLE_USER }}
         DEBUG_MODE: 1
         VITE_DEV_MODE: 0
         DOMAIN_NAME: sharedfutures.space
         EMAIL: dev@sharedfutures.space
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        SECRET_KEY: ${{ secrets.SFS_SECRET_KEY }}
+        POSTGRES_PASSWORD: ${{ secrets.SFS_POSTGRES_PASSWORD }}
         CELERY_BROKER_URL: redis://localhost:6379
         CELERY_RESULT_BACKEND: redis://localhost:6379
         ENABLE_ALLAUTH_SOCIAL_LOGIN: 1
-        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-        GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+        GOOGLE_CLIENT_ID: ${{ secrets.SFS_GOOGLE_CLIENT_ID }}
+        GOOGLE_SECRET: ${{ secrets.SFS_GOOGLE_SECRET }}
         EMAIL_HOST: mail.webarch.net
         EMAIL_HOST_USER: sfs_mailer@animorph.coop
-        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+        EMAIL_HOST_PASSWORD: ${{ secrets.SFS_EMAIL_HOST_PASSWORD }}
         DEFAULT_FROM_EMAIL: sfs_mailer@animorph.coop
-        WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-      run: cd ansible/ && ansible all -m ping
+        WEATHER_API_KEY: ${{ secrets.SFS_WEATHER_API_KEY }}
