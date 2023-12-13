@@ -39,7 +39,7 @@ jobs:
       run: ssh sfs cat /etc/issue
 
     - name: Run ansible playbook
-      run: cd ansible/ && ansible all -m ping
+      run: cd ansible/ && ansible all -m ping -vvv
       env:
         ANSIBLE_HOST: 81.95.52.39
         ANSIBLE_USER: ${{ secrets.SFS_ANSIBLE_USER }}
