@@ -41,7 +41,7 @@ jobs:
     - name: Run ansible playbook
       env:
         ANSIBLE_HOST: 81.95.52.39
-        ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
+        ANSIBLE_USER: deployer
         DEBUG_MODE: 1
         VITE_DEV_MODE: 0
         DOMAIN_NAME: sharedfutures.space
