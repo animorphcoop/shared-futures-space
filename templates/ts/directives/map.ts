@@ -5,45 +5,44 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import pin from './map_pin.png'
 import circle from './map_circle.png'
 
-const MAPTILER_API_KEY = ""
+interface MapOptions {
+    apiKey: string
+    markers: {
+        name: string
+        icon: 'pin' | 'circle'
+        coordinates: [number, number]
+    }[]
+}
 
+/**
+ *  A directive to show a map. Usage:
+ *
+ *      <div x-map="{ markers: [] }"
+ *           @click-marker="console.log('you clicked on marker', $event.detail)"
+ *           @click-map="console.log('you clicked the map')"></div>
+ *
+ *  See the MapOptions interface for what you can put in there
+ */
 Alpine.directive('map', (
     el,
-    { },
-    { cleanup },
+    { expression },
+    { cleanup, evaluate },
 ) => {
+
+    const options = evaluate(expression) as MapOptions
+    console.log('map options!', options)
+    const markers = options?.markers ?? []
+    const apiKey = options?.apiKey
+
     const map = new maplibregl.Map({
         container: el,
         // style: `https://api.maptiler.com/maps/basic-v2/style.json?key=${MAPTILER_API_KEY}`,
         // My customized map
-        style: `https://api.maptiler.com/maps/697dfe25-8087-42f1-a3f9-73983704eebf/style.json?key=${MAPTILER_API_KEY}`,
+        style: `https://api.maptiler.com/maps/697dfe25-8087-42f1-a3f9-73983704eebf/style.json?key=${apiKey}`,
         center: [-5.9213, 54.5996],
         zoom: 15,
         attributionControl: false,
     })
-
-    const places = [
-        {
-            name: 'Foo',
-            icon: 'pin',
-            coordinates: [-5.9273, 54.5993],
-        },
-        {
-            name: 'Bar',
-            icon: 'pin',
-            coordinates: [-5.9236, 54.6009]
-        },
-        {
-            name: 'Baz',
-            icon: 'circle',
-            coordinates: [-5.9146, 54.6033],
-        },
-        {
-            name: 'Bin',
-            icon: 'circle',
-            coordinates: [-5.9202, 54.5967],
-        },
-    ]
 
     async function loadImage(id: string, url: string) {
         return new Promise((resolve, reject) => {
@@ -62,28 +61,28 @@ Alpine.directive('map', (
             loadImage('circle', circle),
         ])
 
-        map.addSource('places', {
+        map.addSource('markers', {
             type: 'geojson',
             data: {
                 type: 'FeatureCollection',
-                features: places.map(place => ({
+                features: markers.map(marker => ({
                     type: 'Feature',
                     properties: {
-                        ...place,
-                        icon: place.icon ?? 'pin',
+                        icon: marker.icon ?? 'pin',
+                        marker: JSON.stringify(marker),
                     },
                     geometry: {
                         type: 'Point',
-                        coordinates: place.coordinates,
+                        coordinates: marker.coordinates,
                     }
                 }))
             }
         });
 
         map.addLayer({
-            'id': 'places',
+            'id': 'markers',
             'type': 'symbol',
-            'source': 'places',
+            'source': 'markers',
             'layout': {
                 'icon-image': ["get", "icon"],
                 'icon-size': 1
@@ -92,13 +91,14 @@ Alpine.directive('map', (
 
         map.on('click', e => {
             const feature = map.queryRenderedFeatures(e.point, {
-                layers: ['places'],
+                layers: ['markers'],
             })?.[0]
             if (feature) {
-                el.dispatchEvent(new CustomEvent("marker-click", { detail: feature.properties }))
+                const marker = JSON.parse(feature.properties.marker)
+                el.dispatchEvent(new CustomEvent("click-marker", { detail: marker }))
             }
             else {
-                el.dispatchEvent(new CustomEvent("map-click"))
+                el.dispatchEvent(new CustomEvent("click-map"))
             }
         })
     })

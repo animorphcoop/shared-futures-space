@@ -319,3 +319,5 @@ if not EMAIL_HOST and not EMAIL_HOST_USER and not EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+
+MAPTILER_API_KEY = os.environ.get("MAPTILER_API_KEY", "NOT SET")

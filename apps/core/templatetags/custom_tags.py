@@ -14,6 +14,11 @@ def generate_id(*args):
     return uuid.uuid4()
 
 
+@register.simple_tag
+def maptiler_api_key(*args):
+    return settings.MAPTILER_API_KEY
+
+
 @register.simple_tag(takes_context=True)
 def active_link(context, text, *view_names, **view_params):
     """Use to output text when the specified view is active
