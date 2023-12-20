@@ -1,46 +1,53 @@
 import Alpine from "alpinejs";
 
-import maplibregl from 'maplibre-gl'
+import maplibregl, {GeoJSONSource} from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import pin from './map_pin.png'
 import circle from './map_circle.png'
 
-interface MapOptions {
-    apiKey: string
-    markers: {
-        name: string
-        icon: 'pin' | 'circle'
-        coordinates: [number, number]
-    }[]
+import { MAPTILER_API_KEY } from '../settings.ts'
+
+type MapCoordinates = [number, number]
+
+interface MapMarker {
+    name: string
+    icon: 'pin' | 'circle'
+    coordinates: MapCoordinates
 }
+
+interface MapOptions {
+    markers?: MapMarker[]
+    center?: MapCoordinates
+    zoom?: number
+    cursor?: string // css cursor value, e.g. pointer
+}
+
+const DEFAULT_CENTER: MapCoordinates = [-5.9213, 54.5996]
+const DEFAULT_ZOOM = 15
 
 /**
  *  A directive to show a map. Usage:
  *
  *      <div x-map="{ markers: [] }"
  *           @click-marker="console.log('you clicked on marker', $event.detail)"
- *           @click-map="console.log('you clicked the map')"></div>
+ *           @click-map="console.log('you clicked the map at coords', $event.detail)"></div>
  *
  *  See the MapOptions interface for what you can put in there
  */
 Alpine.directive('map', (
     el,
     { expression },
-    { cleanup, evaluate },
+    { cleanup, evaluateLater, effect },
 ) => {
-
-    const options = evaluate(expression) as MapOptions
-    console.log('map options!', options)
-    const markers = options?.markers ?? []
-    const apiKey = options?.apiKey
+    const optionsLater = evaluateLater(expression)
 
     const map = new maplibregl.Map({
         container: el,
         // style: `https://api.maptiler.com/maps/basic-v2/style.json?key=${MAPTILER_API_KEY}`,
         // My customized map
-        style: `https://api.maptiler.com/maps/697dfe25-8087-42f1-a3f9-73983704eebf/style.json?key=${apiKey}`,
-        center: [-5.9213, 54.5996],
-        zoom: 15,
+        style: `https://api.maptiler.com/maps/697dfe25-8087-42f1-a3f9-73983704eebf/style.json?key=${MAPTILER_API_KEY}`,
+        center: DEFAULT_CENTER,
+        zoom: DEFAULT_ZOOM,
         attributionControl: false,
     })
 
@@ -65,19 +72,9 @@ Alpine.directive('map', (
             type: 'geojson',
             data: {
                 type: 'FeatureCollection',
-                features: markers.map(marker => ({
-                    type: 'Feature',
-                    properties: {
-                        icon: marker.icon ?? 'pin',
-                        marker: JSON.stringify(marker),
-                    },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: marker.coordinates,
-                    }
-                }))
-            }
-        });
+                features: [],
+            },
+        })
 
         map.addLayer({
             'id': 'markers',
@@ -85,23 +82,72 @@ Alpine.directive('map', (
             'source': 'markers',
             'layout': {
                 'icon-image': ["get", "icon"],
-                'icon-size': 1
+                'icon-size': 1,
+                // This means markers do not fade in
+                'icon-allow-overlap': true
             }
-        });
+        })
 
         map.on('click', e => {
             const feature = map.queryRenderedFeatures(e.point, {
                 layers: ['markers'],
             })?.[0]
             if (feature) {
-                const marker = JSON.parse(feature.properties.marker)
-                el.dispatchEvent(new CustomEvent("click-marker", { detail: marker }))
+                const detail = JSON.parse(feature.properties.marker)
+                el.dispatchEvent(new CustomEvent("click-marker", { detail }))
             }
             else {
-                el.dispatchEvent(new CustomEvent("click-map"))
+                const { lng, lat } = e.lngLat
+                const detail = { coordinates: [lng, lat] }
+                el.dispatchEvent(new CustomEvent("click-map", { detail }))
             }
         })
+
+        effect(() => {
+            optionsLater(value => {
+                const options = value as MapOptions
+                console.log('setting options', options)
+                const {
+                    center,
+                    zoom,
+                    markers,
+                    cursor,
+                } = options
+                if (cursor) {
+                    map.getCanvas().style.cursor = cursor
+                }
+                if (center) {
+                    // map.setCenter(center)
+                    map.flyTo({
+                        center: center,
+                        zoom: zoom ?? DEFAULT_ZOOM,
+                    })
+                }
+                if (markers) {
+                    setMarkers(markers)
+                }
+            })
+        })
     })
+
+    function setMarkers(markers: MapMarker[]) {
+        const source = map.getSource('markers') as GeoJSONSource | undefined
+        if (!source) return
+        source.setData({
+            type: 'FeatureCollection',
+            features: markers.map(marker => ({
+                type: 'Feature',
+                properties: {
+                    icon: marker.icon ?? 'pin',
+                    marker: JSON.stringify(marker),
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: marker.coordinates,
+                }
+            }))
+        })
+    }
 
     cleanup(() => map.remove())
 })
