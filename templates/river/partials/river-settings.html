@@ -64,6 +64,19 @@
                     {% include 'river/partials/river-image-change.html' %}
                 </div>
             </div>
+            {% include "partials/vertical-spacer.html" with space="6" %}
+
+            <div x-data="{ editing: false }">
+
+                <button @click="()=> { editing = !editing; }"
+                        type="button"
+                        class="button button-on-white">
+                    Edit River location
+                </button>
+                <div id="image-change" :class="{ 'hidden': !editing }">
+                    {% include 'river/partials/river-location-change.html' %}
+                </div>
+            </div>
 
 
 

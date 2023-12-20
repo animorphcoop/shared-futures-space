@@ -23,7 +23,8 @@ services:
       - db_pg
 
   db_pg:
-    image: postgres:12.8-alpine
+    #image: postgres:12.8-alpine
+    image: postgis/postgis:12-3.4-alpine
     volumes:
       - dbdata:/var/lib/postgres
     restart: always

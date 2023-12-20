@@ -2,6 +2,8 @@ from hashlib import shake_256
 from typing import Any, Dict, List
 from urllib.parse import quote
 
+from django.contrib.gis.db.models import PointField
+
 from area.models import Area
 from django.db import models
 from django.utils import timezone
@@ -238,6 +240,7 @@ class River(ClusterableModel):
     description: models.CharField = models.CharField(max_length=2000)
     tags = ClusterTaggableManager(through=RiverTag, blank=True)
     image: models.ImageField = models.ImageField(upload_to="rivers/images/", blank=True)
+    location = PointField(geography=True, null=True)
     area: models.ForeignKey = models.ForeignKey(
         Area, on_delete=models.CASCADE, default=get_default_other_area
     )  # this is a bad default but can't really be replaced because it's used in every river creation, just immediately replaced, and it's a pain to change

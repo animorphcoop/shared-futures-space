@@ -1,0 +1,62 @@
+{% extends "partials/overlay-river-closable.html" %}
+{% block overlay_title %}Change River location{% endblock %}
+{% load static %}
+
+{% block river_overlay_content %}
+
+<form hx-post="{% url 'edit_river' river.slug %}"
+      hx-target="#river-image"
+      hx-swap="outerHTML"
+      hx-encoding='multipart/form-data'
+      class="mb-0">
+
+    {% csrf_token %}
+
+    <div x-data="{ marker: null }">
+        <div x-map="marker ? { markers: [marker], center: marker.coordinates, cursor: 'pointer' } : { cursor: 'pointer' }"
+             @click-map="marker = { ...$event.detail, icon: 'pin', name: 'yay' }"
+             class="w-full h-64 rounded"></div>
+        <pre x-show="marker"
+             x-text="marker && JSON.stringify({ markers: [marker], center: marker.coordinates }, null, 2)"
+             class="max-h-36 overflow-y-auto bg-gray-300 p-2 mt-2 text-xs"></pre>
+    </div>
+
+
+    {% include "partials/vertical-spacer.html" with space="6" %}
+    <div class="flex items-center justify-center">
+        <button @click="()=>{
+                                editing = !editing
+                                document.getElementById('river-image-upload').value = ''
+                                document.getElementById('image-preview').src = ''
+                }
+                "
+                type="button"
+                class="button button-on-white">
+            Back
+        </button>
+        {% include "partials/horizontal-spacer.html" with space="4.5" %}
+        {% comment %}
+               {% endcomment %}
+        <button
+                @click="()=>{
+                        enableBodyScroll();
+                        //remove settings
+                        open = !open;
+
+                        // editing unblock
+                        editing = !editing;
+
+                        }"
+                type="submit"
+                class="button button-on-white">
+
+            Submit
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+
+
+
+

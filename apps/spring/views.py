@@ -61,6 +61,10 @@ class SpringView(TemplateView):
         return render(request, "spring/spring_area.html", context)
 
 
+class SpringMapView(TemplateView):
+    template_name = "spring/spring_map.html"
+
+
 class EstuaryView(TemplateView):
     def get(self, request, *args, **kwargs):
         return render(request, "spring/spring_estuary.html")
