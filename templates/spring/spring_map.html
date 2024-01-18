@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load custom_tags %}
+{% load custom_filters %}
 
 {% load area_details %}
 {% get_areas as areas %}
@@ -12,7 +13,6 @@
 {% block content %}
     <div class="max-w-screen-xl mx-auto">
         {% block title %}{% include "partials/title.html" with title=area.name|add:' Map' %}{% endblock %}
-
         <div x-data="{
                 isOpen: false,
                 selectedMarker: null,
@@ -24,40 +24,17 @@
                     this.isOpen = false
                 }
             }"
-             class="relative w-full h-[500px] overflow-hidden">
+             class="relative w-full h-[600px] overflow-hidden">
             <div class="absolute h-full z-20 transition-[width,opacity] duration-300"
-                 :class="isOpen ? 'w-64 opacity-100' : 'w-0 opacity-0'">
-                <div class="absolute right-0 w-64 overflow-hidden h-full bg-white p-4 rounded-sm shadow-map-detail">
-                    <h2>deets</h2>
-                    <pre x-text="JSON.stringify(selectedMarker, null, 2)"></pre>
-                    <button @click="close()">close</button>
+                 :class="isOpen ? 'w-[340px] opacity-100' : 'w-0 opacity-0'">
+                <div class="absolute right-0 w-[340px] overflow-x-hidden h-full p-4 rounded-sm shadow-map-detail bg-white">
+                    <div x-html="selectedMarker ? selectedMarker.html : ''"></div>
+                    <button class="absolute top-1 right-1" @click="close()">
+                        {% include 'partials/close.html' with size=4 %}
+                    </button>
                 </div>
             </div>
-            <div x-map="
-                {
-                    markers: [
-                        {
-                            name: 'Foo',
-                            icon: 'pin',
-                            coordinates: [-5.9273, 54.5993],
-                        },
-                        {
-                            name: 'Bar',
-                            icon: 'pin',
-                            coordinates: [-5.9236, 54.6009]
-                        },
-                        {
-                            name: 'Baz',
-                            icon: 'circle',
-                            coordinates: [-5.9146, 54.6033],
-                        },
-                        {
-                            name: 'Bin',
-                            icon: 'circle',
-                            coordinates: [-5.9202, 54.5967],
-                        },
-                    ]
-                }"
+            <div x-map="{ markers: {{ markers|to_json }} }"
                  @click-marker="open($event.detail)"
                  @click-map="close()"
                  class="absolute w-full h-full z-10">

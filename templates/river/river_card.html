@@ -6,7 +6,8 @@
 
 <div class="mx-1.5 relative">
     <div class="absolute bg-gradient-to-b from-[#E5F1F8] to-white h-12 w-full rounded-xl"></div>
-    <div class="p-3 relative">
+    <div class="p-3 relative
+">
         <div class="">
             <div class="flex flex-start justify-between -mr-4.5">
                 <h2 class="relative text-title text-black/55 grow">
@@ -18,8 +19,9 @@
             </div>
 
             {% include "partials/vertical-spacer.html" with space="4.5" %}
+
             <div class="flex flex-row gap-1.5">
-                {% for tag in river.tags %}
+                {% for tag in river.tag_list %}
                     {% include "river/river_tag.html" with title=tag %}
                 {% endfor %}
             </div>

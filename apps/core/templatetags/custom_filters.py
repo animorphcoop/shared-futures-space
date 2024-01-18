@@ -26,3 +26,8 @@ def strcat(value, arg):
 @register.filter(name="to_range")
 def to_range(number: int):
     return range(number)
+
+
+@register.filter(name="to_json")
+def to_json(value):
+    return json.dumps(value)

@@ -17,6 +17,8 @@ from django.utils import timezone
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
+
+from core.views import HTMXMixin
 from messaging.forms import ChatForm
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView

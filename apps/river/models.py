@@ -8,6 +8,8 @@ from area.models import Area
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+
+from core.utils.tags_declusterer import tag_cluster_to_list
 from messaging.models import Chat
 from messaging.util import send_system_message
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -274,6 +276,10 @@ class River(ClusterableModel):
     @property
     def get_started_months_ago(self) -> int:
         return timezone.now().month - self.started_on.month
+
+    @property
+    def tag_list(self):
+        return tag_cluster_to_list(self.tags)
 
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super().save(*args, **kwargs)  # save first or we won't have an id
