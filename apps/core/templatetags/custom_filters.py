@@ -1,9 +1,12 @@
 import json
-from typing import Iterable, List, TypeVar
+from typing import Iterable, List, TypeVar, Optional
 
 from django import template
 from django.utils.safestring import SafeString, mark_safe
 from django.utils.timesince import timesince, timeuntil
+
+from river.models import River
+from river.util import river_marker
 
 register = template.Library()
 
@@ -31,3 +34,10 @@ def to_range(number: int):
 @register.filter(name="to_json")
 def to_json(value):
     return json.dumps(value)
+
+
+@register.filter(name="to_marker_json")
+def to_marker_json(river: Optional[River]):
+    if not river:
+        return json.dumps(None)
+    return json.dumps(river_marker(river))

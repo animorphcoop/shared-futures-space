@@ -34,7 +34,10 @@
                     </button>
                 </div>
             </div>
-            <div x-map="{ markers: {{ markers|to_json }} }"
+            <div x-map="{
+                    markers: {{ markers|to_json }},
+                    padding: isOpen ? { left: 340 } : null,
+                 }"
                  @click-marker="open($event.detail)"
                  @click-map="close()"
                  class="absolute w-full h-full z-10">

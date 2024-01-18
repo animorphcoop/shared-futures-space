@@ -2,6 +2,8 @@ import os
 from typing import Any, Dict, List, Optional, Type
 
 from django import forms
+from django.contrib.gis.forms import PointField
+from django.contrib.gis.geos import GEOSGeometry
 
 from .models import River
 
@@ -9,7 +11,7 @@ from .models import River
 class CreateRiverForm(forms.ModelForm):
     class Meta:
         model: Type[River] = River
-        fields: List[str] = ["title", "description", "tags", "image"]
+        fields: List[str] = ["title", "description", "tags", "image", "location"]
         widgets = {
             "description": forms.Textarea(),
         }
@@ -32,6 +34,14 @@ class RiverDescriptionUpdateForm(forms.ModelForm):
         widgets = {
             "description": forms.Textarea(),
         }
+
+
+class RiverLocationUpdateForm(forms.ModelForm):
+    location = PointField(srid=4326)
+
+    class Meta:
+        model: Type[River] = River
+        fields: List[str] = ["location"]
 
 
 class RiverImageUpdateForm(forms.ModelForm):

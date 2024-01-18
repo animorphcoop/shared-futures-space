@@ -1,35 +1,27 @@
 {% extends "partials/overlay-river-closable.html" %}
 {% block overlay_title %}Change River location{% endblock %}
 {% load static %}
+{% load custom_filters %}
 
 {% block river_overlay_content %}
 
-<form hx-post="{% url 'edit_river' river.slug %}"
-      hx-target="#river-image"
-      hx-swap="outerHTML"
-      hx-encoding='multipart/form-data'
+<form hx-put="{% url 'edit_river' river.slug %}"
+      hx-swap="none"
       class="mb-0">
 
     {% csrf_token %}
 
-    <div x-data="{ marker: null }">
+    <div x-data="{ marker: {{ river|to_marker_json }} }">
+        <input type="hidden" name="location" :value="marker ? `SRID=4326;POINT (${marker.coordinates.join(' ')})` : ''">
         <div x-map="marker ? { markers: [marker], center: marker.coordinates, cursor: 'pointer' } : { cursor: 'pointer' }"
-             @click-map="marker = { ...$event.detail, icon: 'pin', name: 'yay' }"
+             @click-map="marker = { ...$event.detail, icon: 'pin' }"
              class="w-full h-64 rounded"></div>
-        <pre x-show="marker"
-             x-text="marker && JSON.stringify({ marker }, null, 2)"
-             class="max-h-36 overflow-y-auto bg-gray-300 p-2 mt-2 text-xs"></pre>
     </div>
 
 
     {% include "partials/vertical-spacer.html" with space="6" %}
     <div class="flex items-center justify-center">
-        <button @click="()=>{
-                                editing = !editing
-                                document.getElementById('river-image-upload').value = ''
-                                document.getElementById('image-preview').src = ''
-                }
-                "
+        <button @click="()=>{ editing = !editing}"
                 type="button"
                 class="button button-on-white">
             Back

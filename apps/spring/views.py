@@ -1,6 +1,6 @@
 import json
 import random
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, Optional
 
 from django.template.loader import render_to_string
 
@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from river.models import River, RiverMembership
+from river.util import river_marker
 
 
 class AreaDetailView(DetailView):
@@ -68,24 +69,6 @@ class SpringView(AreaDetailView):
         return context
 
 
-random_coordinates = [
-    [-5.9273, 54.5993],
-    [-5.9236, 54.6009],
-    [-5.9146, 54.6033],
-    [-5.9202, 54.5967],
-]
-
-
-def river_marker(river: River) -> dict:
-    return {
-        "slug": river.slug,
-        "name": river.title,
-        "icon": random.sample(["pin", "circle"], 1)[0],
-        "coordinates": random.sample(random_coordinates, 1)[0],
-        "html": render_to_string("river/river_card.html", {"river": river}),
-    }
-
-
 class SpringMapView(AreaDetailView):
     template_name = "spring/spring_map.html"
 
@@ -93,7 +76,12 @@ class SpringMapView(AreaDetailView):
         context = super().get_context_data(**kwargs)
         rivers = River.objects.filter(area=self.object)
         context["rivers"] = rivers
-        context["markers"] = [river_marker(river) for river in rivers]
+        markers = []
+        for river in rivers:
+            marker = river_marker(river)
+            if marker:
+                markers.append(marker)
+        context["markers"] = markers
         return context
 
 
