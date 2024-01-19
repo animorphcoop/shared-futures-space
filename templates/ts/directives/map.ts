@@ -72,6 +72,7 @@ Alpine.directive('map', (
             zoom,
             markers,
             autofit,
+            padding,
         } = options
 
         const initialOptions: maplibregl.MapOptions = {
@@ -83,9 +84,8 @@ Alpine.directive('map', (
         }
 
         if (autofit && markers && markers.length > 0) {
-            // We can't set padding in initial options, so we use the markers to set the center
-            // after the map is created, the markers will be set, and bounds with padding will get set there
-            initialOptions.center = getBounds(markers).getCenter()
+            // Set an initial bounds, although no option to set the padding too
+            initialOptions.bounds = getBounds(markers)
         } else if (center) {
             initialOptions.center = center
         } else {
@@ -95,6 +95,11 @@ Alpine.directive('map', (
         initialOptions.zoom = zoom ?? DEFAULT_ZOOM
 
         const map = new maplibregl.Map(initialOptions)
+
+        // This padding stays with the map, then we can add additional padding later
+        // when we use fitBounds
+        map.setPadding({ top: BASE_PADDING, right: BASE_PADDING, bottom: BASE_PADDING, left: BASE_PADDING })
+
         _map = map
 
         return new Promise(resolve => {
@@ -200,7 +205,7 @@ Alpine.directive('map', (
         })
         if (autofit && markers.length > 0) {
             map.fitBounds(getBounds(markers), {
-                padding: addBasePadding(padding),
+                padding,
                 // Ensure we don't go too crazy zooming in close
                 maxZoom: DEFAULT_ZOOM,
             })
@@ -216,20 +221,4 @@ function getBounds(markers: MapMarker[]): maplibregl.LngLatBounds {
         bounds.extend(marker.coordinates)
     }
     return bounds
-}
-
-function addBasePadding(padding?: Padding): PaddingOptions {
-    const resultPadding: PaddingOptions = {
-        top: BASE_PADDING,
-        bottom: BASE_PADDING,
-        right: BASE_PADDING,
-        left: BASE_PADDING,
-    }
-    if (padding) {
-        const keys = ['top', 'bottom', 'right', 'left'] as const
-        for (const key of keys) {
-            resultPadding[key] += (padding?.[key] ?? 0)
-        }
-    }
-    return resultPadding
 }
