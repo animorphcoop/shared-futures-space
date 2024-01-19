@@ -72,7 +72,6 @@ Alpine.directive('map', (
             zoom,
             markers,
             autofit,
-            padding,
         } = options
 
         const initialOptions: maplibregl.MapOptions = {
