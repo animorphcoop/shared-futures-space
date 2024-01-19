@@ -1,0 +1,35 @@
+{% load static %}
+{% load custom_filters %}
+
+{% url 'view_river' river.slug as view_url %}
+
+<div class="relative rounded-xl bg-white h-full w-full">
+    <div class="p-3 relative">
+        <div>
+            <div class="flex flex-start justify-between items-center">
+                <h2 class="relative text-title text-black/55 grow">
+                    <a href="{{ view_url }}" class="block">
+                        {{ river.title }}
+                    </a>
+                </h2>
+                <button @click="$dispatch('close')">{% include 'partials/close.html' %}</button>
+                {% include 'partials/button.html' with url=view_url icon='arrow-right' style='mini' %}
+            </div>
+
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
+
+            <div class="flex flex-row gap-1.5">
+                {% for tag in river.tag_list %}
+                    {% include "river/river_tag.html" with title=tag %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            {% include "partials/vertical-spacer.html" with space="4.5" %}
+            <p class="text-body sm:order-3">{{ river.description|truncatewords:25 }}</p>
+        </div>
+
+    </div>
+</div>
+

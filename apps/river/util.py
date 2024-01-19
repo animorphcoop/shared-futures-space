@@ -44,5 +44,9 @@ def river_marker(river: River) -> Optional[dict]:
         "name": river.title,
         "icon": "pin",
         "coordinates": river.location.coords,
-        "html": render_to_string("river/river_card.html", {"river": river}),
+        "html": render_to_string(
+            "river/river_card.html",
+            {"river": river, "close_button": True, "view_button": True},
+        ),
+        "htmlMini": render_to_string("river/river_card_mini.html", {"river": river}),
     }

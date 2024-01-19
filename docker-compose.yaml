@@ -26,7 +26,7 @@ services:
     #image: postgres:12.8-alpine
     image: postgis/postgis:12-3.4-alpine
     volumes:
-      - dbdata:/var/lib/postgres
+      - dbdata:/var/lib/postgresql/data
     restart: always
     ports:
       - "5432:5432"

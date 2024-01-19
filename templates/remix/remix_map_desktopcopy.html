@@ -12,7 +12,7 @@
 
 {% block content %}
     <div class="max-w-screen-xl mx-auto">
-        {% block title %}{% include "partials/title.html" with title=area.name|add:' Map' %}{% endblock %}
+        {% block title %}{% include "partials/title.html" with title="Remix" %}{% endblock %}
         <div x-data="{
                 isOpen: false,
                 selectedMarker: null,
@@ -37,6 +37,7 @@
             <div x-map="{
                     markers: {{ markers|to_json }},
                     padding: isOpen ? { left: 340 } : null,
+                    autofit: true,
                  }"
                  @click-marker="open($event.detail)"
                  @click-map="close()"

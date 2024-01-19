@@ -89,9 +89,13 @@
                     </div>
                 </div>
 
+                <li class="p-4 pb-5 {% active_link 'text-purple' 'remix_map' %}">
+                    <a href="{% url 'remix_map' %}">Remix</a>
+                </li>
+
                 {% if user.is_authenticated %}
                     <li class="p-4 pb-5 {% active_link 'text-purple' 'account_all_chats' 'user_chat' %}">
-                        <a href="{% url 'account_all_chats' %}" @click="toggle()">Messages</a>
+                        <a href="{% url 'account_all_chats' %}">Messages</a>
                     </li>
                     <li class="p-4 pb-5 {% active_link 'text-purple' 'user_detail' %}">
                         <a href="{% url 'account_view' %}" @click="toggle()">Profile</a>

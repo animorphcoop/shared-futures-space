@@ -1,18 +1,10 @@
-import json
-import random
-from typing import Any, Dict, List, Union, Optional
-
-from django.template.loader import render_to_string
+from django.http import Http404
 
 from area.models import Area
-from core.utils.tags_declusterer import tag_cluster_to_list
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
-from django.urls import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from river.models import River, RiverMembership
-from river.util import river_marker
 
 
 class AreaDetailView(DetailView):
@@ -69,22 +61,5 @@ class SpringView(AreaDetailView):
         return context
 
 
-class SpringMapView(AreaDetailView):
-    template_name = "spring/spring_map.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        rivers = River.objects.filter(area=self.object)
-        context["rivers"] = rivers
-        markers = []
-        for river in rivers:
-            marker = river_marker(river)
-            if marker:
-                markers.append(marker)
-        context["markers"] = markers
-        return context
-
-
 class EstuaryView(TemplateView):
-    def get(self, request, *args, **kwargs):
-        return render(request, "spring/spring_estuary.html")
+    template_name = "spring/spring_estuary.html"

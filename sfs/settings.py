@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     "core",
     "poll",
     "task",
+    "remix",
     "django.contrib.sites",
     "allauth",
     "allauth.account",
