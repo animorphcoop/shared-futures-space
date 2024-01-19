@@ -10,7 +10,6 @@ import '@/sfs/assets/css/sfs.css'
 import '@/sfs/assets/css/tailwind.css'
 
 import './directives/bind-height.ts'
-import './directives/bind-width.ts'
 import './directives/characters-remaining.ts'
 import './directives/stop-body-scroll.ts'
 import './directives/map.ts'

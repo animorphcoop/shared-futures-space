@@ -7,8 +7,9 @@ from django.views.generic.detail import DetailView
 from river.models import River, RiverMembership
 
 
-class AreaDetailView(DetailView):
+class SpringView(DetailView):
     model = Area
+    template_name = "spring/spring_area.html"
 
     def get_object(self):
         slug = self.kwargs.get("slug")
@@ -22,10 +23,6 @@ class AreaDetailView(DetailView):
             return Area.objects.get(name__iexact=name)
         except Area.DoesNotExist:
             raise Http404()
-
-
-class SpringView(AreaDetailView):
-    template_name = "spring/spring_area.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
