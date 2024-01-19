@@ -1,0 +1,54 @@
+{% extends "partials/overlay-river-closable.html" %}
+{% block overlay_title %}Change River location{% endblock %}
+{% load static %}
+{% load custom_filters %}
+
+{% block river_overlay_content %}
+
+<form hx-put="{% url 'edit_river' river.slug %}"
+      hx-swap="none"
+      class="mb-0">
+
+    {% csrf_token %}
+
+    <div x-data="{ marker: {{ river|to_marker_json }} }">
+        <input type="hidden" name="location" :value="marker ? `SRID=4326;POINT (${marker.coordinates.join(' ')})` : ''">
+        <div x-map="marker ? { markers: [marker], center: marker.coordinates, cursor: 'pointer' } : { cursor: 'pointer' }"
+             @click-map="marker = { ...$event.detail, icon: 'pin' }"
+             class="w-full h-64 rounded"></div>
+    </div>
+
+
+    {% include "partials/vertical-spacer.html" with space="6" %}
+    <div class="flex items-center justify-center">
+        <button @click="()=>{ editing = !editing}"
+                type="button"
+                class="button button-on-white">
+            Back
+        </button>
+        {% include "partials/horizontal-spacer.html" with space="4.5" %}
+        {% comment %}
+               {% endcomment %}
+        <button
+                @click="()=>{
+                        enableBodyScroll();
+                        //remove settings
+                        open = !open;
+
+                        // editing unblock
+                        editing = !editing;
+
+                        }"
+                type="submit"
+                class="button button-on-white">
+
+            Submit
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+
+
+
+

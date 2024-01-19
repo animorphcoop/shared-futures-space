@@ -1,4 +1,5 @@
 <a href="{{ url }}"
+   {% if dispatch %}@click.prevent.stop="$dispatch('{{ dispatch }}')"{% endif %}
    class="button
         {% if style == 'primary_white' %}
             {# Show the primary button on white style #}
@@ -11,12 +12,15 @@
         {% elif style == 'important' %}
             {# Show the important style #}
             button-important
-
+        {% elif style == 'mini' %}
+            {# Show the mini style #}
+            button-mini
         {% else %}
             {# Show the danger style #}
             button-danger
 
-        {% endif %}">
+        {% endif %}
+        {{ extra_classes }}">
     {{ button }}
     {% if icon == 'link' %}
         <svg class="inline-block ml-2 mb-0.5" width="22" height="12" viewBox="0 0 22 12" fill="none"
@@ -29,9 +33,11 @@
             <path d="M16 7H3.83L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7Z" fill="#9759FF"/>
         </svg>
     {% elif icon == 'arrow-right' %}
-        <svg class="inline-block ml-2 mb-0.5" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9 1L7.59 2.41L13.17 8H1V10H13.17L7.59 15.59L9 17L17 9L9 1Z" fill="#9759FF"/>
         </svg>
+    {% elif icon == 'close' %}
+        {% include 'partials/close.html' %}
     {% else %}
         {# Show nothing #}
     {% endif %}

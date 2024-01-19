@@ -55,6 +55,23 @@
                 <input type="file" id="image" name="image">{% endcomment %}
             {% include "partials/vertical-spacer.html" with space="9" %}
 
+            {% include "partials/input-label.html" with for="location_title" label="Location" %}
+            <div x-data="{ marker: null }">
+
+                <input type="hidden" name="location" :value="marker ? `SRID=4326;POINT (${marker.coordinates.join(' ')})` : ''">
+                <div x-map="marker ? { markers: [marker], center: marker.coordinates, cursor: 'pointer' } : { cursor: 'pointer' }"
+                     @click-map="marker = { ...$event.detail, icon: 'pin' }"
+                     class="w-full h-96 rounded relative">
+                    <button class="absolute top-2 right-2 z-20 bg-white rounded-full p-2"
+                            x-show="marker"
+                            @click="marker = null" type="button">
+                        {% include 'partials/close.html' with size=6 %}
+                    </button>
+                </div>
+            </div>
+
+            {% include "partials/vertical-spacer.html" with space="9" %}
+
             <p class="text-black-text">
                 NB: All new rivers start at the Envision stage. Future stages remain
                 locked until a successful (i.e. majority YES) Poll takes place.

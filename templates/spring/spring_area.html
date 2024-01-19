@@ -28,7 +28,7 @@
             {% endif %}
         {% else %}
             {% for river in rivers %}
-                {% include "river/river_card.html" with river=river %}
+                {% include "river/river_card.html" with river=river copy_button=True %}
             {% endfor %}
         {% endif %}
     </div>

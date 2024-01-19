@@ -2,10 +2,14 @@ from hashlib import shake_256
 from typing import Any, Dict, List
 from urllib.parse import quote
 
+from django.contrib.gis.db.models import PointField
+
 from area.models import Area
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+
+from core.utils.tags_declusterer import tag_cluster_to_list
 from messaging.models import Chat
 from messaging.util import send_system_message
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -238,6 +242,8 @@ class River(ClusterableModel):
     description: models.CharField = models.CharField(max_length=2000)
     tags = ClusterTaggableManager(through=RiverTag, blank=True)
     image: models.ImageField = models.ImageField(upload_to="rivers/images/", blank=True)
+    location = PointField(geography=True, srid=4326, null=True)
+    location_exact = models.BooleanField(default=True)
     area: models.ForeignKey = models.ForeignKey(
         Area, on_delete=models.CASCADE, default=get_default_other_area
     )  # this is a bad default but can't really be replaced because it's used in every river creation, just immediately replaced, and it's a pain to change
@@ -271,6 +277,12 @@ class River(ClusterableModel):
     @property
     def get_started_months_ago(self) -> int:
         return timezone.now().month - self.started_on.month
+
+    @property
+    def tag_list(self):
+        if not hasattr(self.tags, "all"):
+            return self.tags
+        return tag_cluster_to_list(self.tags)
 
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super().save(*args, **kwargs)  # save first or we won't have an id

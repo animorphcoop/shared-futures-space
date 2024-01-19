@@ -12,7 +12,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12.8-alpine
+        image: postgis/postgis:12-3.4-alpine
         env:
           POSTGRES_PASSWORD: postgres
         options: >-
@@ -41,8 +41,8 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: Install redis
-      run: sudo apt-get install -y redis-tools redis-server
+    - name: Install packages
+      run: sudo apt-get install -y redis-tools redis-server binutils libproj-dev gdal-bin
 
     - name: Verify that redis is up
       run: redis-cli ping

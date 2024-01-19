@@ -28,6 +28,12 @@
         {# Override this in templates to add extra stylesheets #}
     {% endblock %}
 
+    <script>
+        window.settings = {
+            MAPTILER_API_KEY: "{% maptiler_api_key %}"
+        }
+    </script>
+
     {% vite_hmr_client %}
     {# Base script - pulls in all libraries and global stylesheets  #}
     {% vite_asset 'templates/ts/base.ts' %}

@@ -17,6 +17,8 @@ from django.utils import timezone
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
+
+from core.views import HTMXMixin
 from messaging.forms import ChatForm
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
@@ -31,6 +33,7 @@ from .forms import (
     RiverDescriptionUpdateForm,
     RiverImageUpdateForm,
     RiverTitleUpdateForm,
+    RiverLocationUpdateForm,
 )
 from .models import River, RiverMembership
 
@@ -185,6 +188,15 @@ class EditRiverView(UpdateView):
                     return HttpResponse(river.description)
                 return HttpResponse(
                     "Sorry, your description could not be processed, please refresh the page"
+                )
+            elif data.get("location"):
+                form = RiverLocationUpdateForm(data, instance=river)
+                if form.is_valid():
+                    river.location = form.cleaned_data.get("location")
+                    river.save()
+                    return HttpResponse(river.location)
+                return HttpResponse(
+                    "Sorry, your location could not be processed, please refresh the page"
                 )
 
             else:

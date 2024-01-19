@@ -112,7 +112,8 @@ export default {
             boxShadow: {
                 input: "0px 1px 1px 0px rgba(0, 0, 0, 0.15) inset",
                 button: "1px 4px 6px 2px rgba(181, 181, 181, 0.22)",
-},
+                'map-detail': '7px 0px 6.5px 0px rgba(0, 0, 0, 0.25)',
+            },
             backgroundImage: {
                 "landing-enter": "linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.4)), url('/static/images/landing/landing-temporary.png'), url('/static/images/landing/landing-temporary.png')",
                 "north-belfast": "url('/static/images/landing/areas/northbelfast.jpg')",
@@ -126,7 +127,7 @@ export default {
             opacity: {
                 '55': '.55',
                 '75': '.75',
-            }
+            },
         },
         fontFamily: {
             "kanit-400": ["Kanit_Regular", "sans-serif"],

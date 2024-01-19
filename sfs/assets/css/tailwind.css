@@ -71,6 +71,9 @@
     .button-important {
         @apply bg-yellow-pale hover:shadow-button focus:bg-yellow
     }
+    .button-mini {
+        @apply py-0 px-2
+    }
     .button-danger {
         @apply bg-red-important hover:shadow-button focus:bg-red-focus
         text-white

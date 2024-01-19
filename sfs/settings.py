@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.gis",
     "landing",
     "dashboard",
     "analytics",
@@ -82,6 +83,7 @@ INSTALLED_APPS = [
     "core",
     "poll",
     "task",
+    "remix",
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -138,7 +140,7 @@ WSGI_APPLICATION = "sfs.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
         "HOST": os.environ.get("POSTGRES_HOST"),
         "NAME": os.environ.get("POSTGRES_DB"),
         "USER": os.environ.get("POSTGRES_USER"),
@@ -319,3 +321,5 @@ if not EMAIL_HOST and not EMAIL_HOST_USER and not EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
+
+MAPTILER_API_KEY = os.environ.get("MAPTILER_API_KEY", "NOT SET")
