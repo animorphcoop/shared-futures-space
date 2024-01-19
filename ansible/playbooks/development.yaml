@@ -17,6 +17,7 @@
     email_host_password: "{{ lookup('env', 'EMAIL_HOST_PASSWORD') }}"
     default_from_email: "{{ lookup('env', 'DEFAULT_FROM_EMAIL') }}"
     weather_api_key: "{{ lookup('env', 'WEATHER_API_KEY') }}"
+    maptiler_api_key: "{{ lookup('env', 'MAPTILER_API_KEY') }}"
   tasks:
 
     # postgresql setup
@@ -40,6 +41,11 @@
         objs: ALL_IN_SCHEMA
         role: sfsdev_user
         grant_option: true
+      become_user: postgres
+    - name: add postgis extension
+      community.postgresql.postgresql_ext:
+        name: postgis
+        db: sfsdev_db
       become_user: postgres
 
     # deploy user and directory

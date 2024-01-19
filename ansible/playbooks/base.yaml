@@ -15,6 +15,7 @@
           - git
           # TODO: ensure there is a postgis version of postgres installed
           - postgresql
+          - postgresql-13-postgis-3
           - redis-server
           - python3.9
           - python3.9-venv
