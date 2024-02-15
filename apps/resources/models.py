@@ -1,6 +1,7 @@
 from typing import Optional
 from uuid import uuid4
 
+from django.contrib.gis.db.models import PointField
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -11,6 +12,7 @@ from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
+from wagtailgeowidget.panels import GoogleMapsPanel, LeafletPanel
 
 from apps.core.utils.slugifier import generate_random_string
 from apps.streams import blocks
@@ -55,6 +57,7 @@ class Resource(ClusterableModel):
         blank=False,
         null=False,
     )
+    location = PointField(geography=True, srid=4326, blank=True, null=True)
     link: models.CharField = models.CharField(
         max_length=200,
         blank=True,
@@ -70,6 +73,14 @@ class HowTo(Resource):
     class Meta:
         verbose_name = "How To"
         verbose_name_plural = "How Tos"
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("summary"),
+        FieldPanel("link"),
+        FieldPanel("tags"),
+        LeafletPanel("location"),
+    ]
 
 
 class CaseStudy(Resource):
@@ -91,8 +102,13 @@ class CaseStudy(Resource):
         use_json_field=True,
     )
 
-    content_panels = [
-        FieldPanel("body"),
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("summary"),
+        FieldPanel("link"),
+        FieldPanel("tags"),
+        FieldPanel("case_study_image"),
+        LeafletPanel("location"),
     ]
 
     class Meta:

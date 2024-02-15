@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "wagtail.search",
     "wagtail.admin",
     "wagtail",
+    "wagtailgeowidget",
     "modelcluster",
     "taggit",
     "django.contrib.admin",
@@ -323,3 +324,12 @@ if not EMAIL_HOST and not EMAIL_HOST_USER and not EMAIL_HOST_PASSWORD:
 WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
 
 MAPTILER_API_KEY = os.environ.get("MAPTILER_API_KEY", "NOT SET")
+
+# This is for the wagtail location editor widget
+GEO_WIDGET_EMPTY_LOCATION = True
+GEO_WIDGET_DEFAULT_LOCATION = {
+    # Belfast
+    "lat": 54.5996,
+    "lng": -5.9213,
+}
+GEO_WIDGET_ZOOM = 14

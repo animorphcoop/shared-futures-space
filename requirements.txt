@@ -17,3 +17,4 @@ python-magic==0.4.27
 redis==4.6.0
 uwsgi==2.0.22
 wagtail==5.0.2
+wagtailgeowidget==8.1.1
