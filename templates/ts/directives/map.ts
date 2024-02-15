@@ -97,6 +97,7 @@ Alpine.directive('map', (
 
         map.dragRotate.disable()
         map.touchZoomRotate.disable()
+        map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
 
         // This padding stays with the map, then we can add additional padding later
         // when we use fitBounds
