@@ -48,6 +48,19 @@
     animation-fill-mode: forwards;
 }
 
+body {
+    /* When we stop the body scrolling it causes the content
+       to jump to the side as the scrollbars appear/disappear
+       in some browsers (e.g. chrome)
+
+       This solution is just to force always having the scrollbar
+
+       scrollbar-gutter might fix it, but so far could not make it do
+       it, and besides it's not properly supported in safari yet...
+     */
+    overflow-y: scroll;
+}
+
 /* flickity carousel dots */
 button.flickity-page-dot {
     width: 8px;
