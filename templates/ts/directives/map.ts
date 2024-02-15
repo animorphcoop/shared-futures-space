@@ -95,6 +95,9 @@ Alpine.directive('map', (
 
         const map = new maplibregl.Map(initialOptions)
 
+        map.dragRotate.disable()
+        map.touchZoomRotate.disable()
+
         // This padding stays with the map, then we can add additional padding later
         // when we use fitBounds
         map.setPadding({ top: BASE_PADDING, right: BASE_PADDING, bottom: BASE_PADDING, left: BASE_PADDING })
