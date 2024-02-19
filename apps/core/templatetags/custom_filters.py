@@ -5,8 +5,8 @@ from django import template
 from django.utils.safestring import SafeString, mark_safe
 from django.utils.timesince import timesince, timeuntil
 
+from remix.markers import river_marker
 from river.models import River
-from river.util import river_marker
 
 register = template.Library()
 

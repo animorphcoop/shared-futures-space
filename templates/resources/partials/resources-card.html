@@ -1,9 +1,19 @@
 {% load static %}
 
-<li class="px-3 pt-3 bg-[linear-gradient(180deg,_#F0F0F0_0%,_#e5f1f800_15.62%)] rounded-t-xl rounded-t-xl">
-    <h2 class="font-kanit-500 text-xl text-black-large leading-tight">
-        {{ resource.title }}
-    </h2>
+{% url 'resource_item' resource.slug as the_url %}
+
+<div class="mx-1.5 px-3 pt-3 bg-white bg-[linear-gradient(180deg,_#F0F0F0_0%,_#e5f1f800_15.62%)] rounded-xl rounded-xl">
+    <div class="flex flex-start justify-between items-center">
+        <h2 class="font-kanit-500 text-xl text-black-large leading-tight grow">
+            {{ resource.title }}
+        </h2>
+        {% if close_button %}
+            {% include 'partials/button.html' with icon='close' style="mini" dispatch="close" %}
+        {% endif %}
+        {% if view_button %}
+            {% include 'partials/button.html' with url=the_url icon='arrow-right' style='mini' extra_classes="z-10" %}
+        {% endif %}
+    </div>
 
     <div class="h-4"></div>
 
@@ -17,7 +27,7 @@
         {% endif %}
 
         {% if resource.tags %}
-            {% for tag in resource.tags %}
+            {% for tag in resource.tag_list %}
                 <button class="tag bg-blue-second"
                         onclick="buttonTagSearch('{{ tag }}')"
                         hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
@@ -36,9 +46,8 @@
 
     <div class="h-4"></div>
 
-    {% url 'resource_item' resource.slug as the_url %}
     {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
 
     <div class="h-9"></div>
-</li>
+</div>
 

@@ -16,6 +16,7 @@ from wagtailgeowidget.panels import GoogleMapsPanel, LeafletPanel
 
 from apps.core.utils.slugifier import generate_random_string
 from apps.streams import blocks
+from core.utils.tags_declusterer import tag_cluster_to_list
 
 
 class ResourceTag(TaggedItemBase):
@@ -64,6 +65,12 @@ class Resource(ClusterableModel):
         null=True,
     )
     tags = ClusterTaggableManager(through=ResourceTag, blank=True)
+
+    @property
+    def tag_list(self):
+        if not hasattr(self.tags, "all"):
+            return self.tags
+        return tag_cluster_to_list(self.tags)
 
     def __str__(self) -> str:
         return f"{self.title}"

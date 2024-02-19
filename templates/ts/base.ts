@@ -12,7 +12,7 @@ import '@/sfs/assets/css/tailwind.css'
 import './directives/bind-height.ts'
 import './directives/characters-remaining.ts'
 import './directives/stop-body-scroll.ts'
-import './directives/map.ts'
+import './directives/map/map.ts'
 import './alpine/magics/screen.ts'
 
 import { expose } from "./utils.ts"

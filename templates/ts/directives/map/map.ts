@@ -2,17 +2,24 @@ import Alpine from "alpinejs";
 
 import maplibregl, {GeoJSONSource, PaddingOptions, RequireAtLeastOne} from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import pin from './map_pin.png'
-import circle from './map_circle.png'
+
+// *WARNING* this is a hacky "pre-release" version
+// See the README.md I wrote at ./maplibre-gl-svg/README.md
+import { SvgManager } from "./maplibre-gl-svg";
+
+import markerRiverFinishedSVG from './markers/river-finished.svg'
+import markerResourceSVG from './markers/resource.svg'
+import markerIdeaSVG from './markers/idea.svg'
+import markerRiverSVG from './markers/river.svg'
 import CSS from 'csstype'
 
-import { MAPTILER_API_KEY } from '../settings.ts'
+import { MAPTILER_API_KEY } from '../../settings.ts'
 
 type MapCoordinates = [number, number]
 
 interface MapMarker {
     name: string
-    icon: 'pin' | 'circle'
+    type: 'river' | 'river-approximate' | 'river-finished' | 'resource' | 'idea'
     coordinates: MapCoordinates
 }
 
@@ -50,17 +57,6 @@ Alpine.directive('map', (
     let _map: maplibregl.Map
     cleanup(() => _map?.remove())
 
-    async function loadImage(map: maplibregl.Map, id: string, url: string) {
-        return new Promise((resolve, reject) => {
-            map.loadImage(url, (err, image) => {
-                if (err) return reject(err)
-                // @ts-expect-error
-                map.addImage(id, image)
-                resolve(null)
-            })
-        })
-    }
-
     function getMap (options: MapOptions): Promise<maplibregl.Map> {
         if (_map) return Promise.resolve(_map)
 
@@ -95,6 +91,8 @@ Alpine.directive('map', (
 
         const map = new maplibregl.Map(initialOptions)
 
+        const svgManager = new SvgManager(map)
+
         map.dragRotate.disable()
         map.touchZoomRotate.disable()
         map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
@@ -107,9 +105,13 @@ Alpine.directive('map', (
 
         return new Promise(resolve => {
             map.on('load', async () => {
+                // These images map 1-to-1 with the marker "type" field
                 await Promise.all([
-                    loadImage(map, 'pin', pin),
-                    loadImage(map, 'circle', circle),
+                    svgManager.add('pin', markerRiverSVG),
+                    svgManager.add('river-finished', markerRiverFinishedSVG),
+                    svgManager.add('river', markerRiverSVG),
+                    svgManager.add('idea', markerIdeaSVG),
+                    svgManager.add('resource', markerResourceSVG),
                 ])
 
                 map.addSource('markers', {
@@ -125,7 +127,7 @@ Alpine.directive('map', (
                     'type': 'symbol',
                     'source': 'markers',
                     'layout': {
-                        'icon-image': ["get", "icon"],
+                        'icon-image': ["get", "type"],
                         'icon-size': 1,
                         // This means markers do not fade in
                         'icon-allow-overlap': true
@@ -197,7 +199,7 @@ Alpine.directive('map', (
             features: markers.map(marker => ({
                 type: 'Feature',
                 properties: {
-                    icon: marker.icon ?? 'pin',
+                    type: marker.type,
                     marker: JSON.stringify(marker),
                 },
                 geometry: {
