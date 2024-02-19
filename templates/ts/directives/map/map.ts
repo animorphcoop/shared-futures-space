@@ -89,7 +89,9 @@ Alpine.directive('map', (
             new maplibregl.NavigationControl({ showCompass: false }),
             'top-right'
         )
-        map.addControl(new FilterControl(), 'top-left')
+        if (current.options.filterControl) {
+            map.addControl(new FilterControl(), 'top-left')
+        }
 
         if (current.options.home) {
             map.addControl(new HomeControl(current, DEFAULT_ZOOM), 'top-left')

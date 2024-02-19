@@ -14,7 +14,7 @@
     <div x-data="{ marker: {{ river|to_marker_json }} }">
         <input type="hidden" name="location" :value="marker ? `SRID=4326;POINT (${marker.coordinates.join(' ')})` : ''">
         <div x-map="marker ? { markers: [marker], center: marker.coordinates, cursor: 'pointer' } : { cursor: 'pointer' }"
-             @click-map="marker = { ...$event.detail, icon: 'pin' }"
+             @click-map="marker = { ...$event.detail, type: 'river' }"
              class="w-full h-64 rounded"></div>
     </div>
 

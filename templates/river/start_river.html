@@ -60,9 +60,9 @@
 
                 <input type="hidden" name="location" :value="marker ? `SRID=4326;POINT (${marker.coordinates.join(' ')})` : ''">
                 <div x-map="marker ? { markers: [marker], center: marker.coordinates, cursor: 'pointer' } : { cursor: 'pointer' }"
-                     @click-map="marker = { ...$event.detail, icon: 'pin' }"
+                     @click-map="marker = { ...$event.detail, type: 'river' }"
                      class="w-full h-96 rounded relative">
-                    <button class="absolute top-2 right-2 z-20 bg-white rounded-full p-2"
+                    <button class="absolute top-20 right-2 z-20 bg-white rounded-full p-2"
                             x-show="marker"
                             @click="marker = null" type="button">
                         {% include 'partials/close.html' with size=6 %}

@@ -21,7 +21,8 @@ export interface MapOptions {
     zoom?: number
     cursor?: CSS.Properties['cursor']
     padding?: Padding
-    autofit?: boolean // whether to
+    autofit?: boolean
+    filterControl?: boolean
 }
 
 export interface CurrentOptions {

@@ -64,6 +64,7 @@
                     types: filterTypes,
                     padding: isOpen ? ($screen.isDesktop ? { left: 360 } : { bottom: cardHeight }) : null,
                     autofit: false,
+                    filterControl: true,
                  }"
                  @click-marker="open($event.detail)"
                  @click-map="close()"
