@@ -2,6 +2,8 @@ import json
 from io import BytesIO
 
 from allauth.account.admin import EmailAddress
+from django.contrib.gis.geos import Point
+
 from area.models import Area, PostCode
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
@@ -85,6 +87,7 @@ def add_resources(resource_data):
                 new_casestudy.tags.add(tag)
             new_casestudy.save()
 
+
 def add_organisations(data):
     for org_data in data:
         try:
@@ -152,8 +155,14 @@ def add_users(users_data):
 def add_areas(areas_data):
     for area_name in areas_data:
         try:
+            area_data = areas_data[area_name]
             this_area = Area.objects.get_or_create(name=area_name)[0]
-            for postcode in areas_data[area_name]:
+            location = area_data.get("location", None)
+            if location:
+                this_area.location = Point(
+                    float(location["lng"]), float(location["lat"])
+                )
+            for postcode in area_data["postcodes"]:
                 PostCode.objects.get_or_create(code=postcode, area=this_area)
         except Exception as e:
             print(
@@ -162,7 +171,6 @@ def add_areas(areas_data):
                 + "\nerror given: "
                 + repr(e)
             )
-
 
 
 class Command(BaseCommand):

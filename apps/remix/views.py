@@ -10,9 +10,14 @@ class RemixMapView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["home"] = None
+
+        if self.request.user.is_authenticated:
+            area = self.request.user.post_code.area
+            if area.location:
+                context["home"] = area.location.coords
 
         rivers = River.objects.exclude(location=None)
-        context["rivers"] = rivers
         markers = []
         for river in rivers:
             marker = river_marker(river)

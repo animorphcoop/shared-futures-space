@@ -17,6 +17,11 @@
              x-data="{
                 isOpen: false,
                 selectedMarker: null,
+
+                // We use the 'editing' variable as that's the what overlay sets to close it
+                editing: false,
+                filterTypes: ['resource', 'idea', 'river', 'river-finished'],
+
                 open (marker) {
                     this.isOpen = true
                     this.selectedMarker = marker
@@ -24,8 +29,18 @@
                 close () {
                     this.isOpen = false
                 },
+                openFilter () {
+                    this.editing = true
+                },
+                closeFilter () {
+                    this.editing = false
+                },
                 cardHeight: 0
             }">
+
+            <div :class="{ hidden: !editing }">
+                {% include 'remix/partials/map-filters.html' %}
+            </div>
 
             <!-- mobile, slides from bottom -->
             <div class="p-2 absolute w-full z-20 transition-[bottom,height,opacity] duration-300 overflow-hidden desktop:hidden"
@@ -43,14 +58,16 @@
                      @close="isOpen = false"></div>
             </div>
 
-
             <div x-map="{
+                    home: {{ home|to_json }},
                     markers: {{ markers|to_json }},
+                    types: filterTypes,
                     padding: isOpen ? ($screen.isDesktop ? { left: 360 } : { bottom: cardHeight }) : null,
-                    autofit: true,
+                    autofit: false,
                  }"
                  @click-marker="open($event.detail)"
                  @click-map="close()"
+                 @click-filter="openFilter()"
                  class="absolute w-full h-full z-10">
             </div>
         </div>

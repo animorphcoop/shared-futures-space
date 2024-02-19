@@ -1,36 +1,52 @@
 {
   "Areas": {
-    "North Belfast": [
-      "BT14",
-      "BT15",
-      "BT13"
-    ],
-    "West Belfast": [
-      "BT17",
-      "BT11"
-    ],
-    "East Belfast": [
-      "BT4",
-      "BT5",
-      "BT6",
-      "BT16"
-    ],
-    "South Belfast": [
-      "BT12",
-      "BT7",
-      "BT8",
-      "BT9",
-      "BT10"
-    ],
-    "Derry~Londonderry": [
-      "BT48",
-      "BT47"
-    ],
-    "Donegal": [
-      "F92",
-      "F93",
-      "F94"
-    ]
+    "North Belfast": {
+      "postcodes": [
+        "BT14",
+        "BT15",
+        "BT13"
+      ]
+    },
+    "West Belfast": {
+      "postcodes": [
+        "BT17",
+        "BT11"
+      ]
+    },
+    "East Belfast": {
+      "postcodes": [
+        "BT4",
+        "BT5",
+        "BT6",
+        "BT16"
+      ]
+    },
+    "South Belfast": {
+      "postcodes": [
+        "BT12",
+        "BT7",
+        "BT8",
+        "BT9",
+        "BT10"
+      ]
+    },
+    "Derry~Londonderry": {
+      "location": {
+        "lat": "54.5996",
+        "lng": "-5.9213"
+      },
+      "postcodes": [
+        "BT48",
+        "BT47"
+      ]
+    },
+    "Donegal": {
+      "postcodes": [
+        "F92",
+        "F93",
+        "F94"
+      ]
+    }
   },
   "Resources": {
     "How To": [

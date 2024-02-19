@@ -1,42 +1,25 @@
 import Alpine from "alpinejs";
 
-import maplibregl, {GeoJSONSource, PaddingOptions, RequireAtLeastOne} from 'maplibre-gl'
+import maplibregl, {GeoJSONSource} from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 // *WARNING* this is a hacky "pre-release" version
 // See the README.md I wrote at ./maplibre-gl-svg/README.md
-import { SvgManager } from "./maplibre-gl-svg";
+import {SvgManager} from "./maplibre-gl-svg";
 
 import markerRiverFinishedSVG from './markers/river-finished.svg'
 import markerResourceSVG from './markers/resource.svg'
 import markerIdeaSVG from './markers/idea.svg'
 import markerRiverSVG from './markers/river.svg'
-import CSS from 'csstype'
 
 import { MAPTILER_API_KEY } from '../../settings.ts'
-
-type MapCoordinates = [number, number]
-
-interface MapMarker {
-    name: string
-    type: 'river' | 'river-approximate' | 'river-finished' | 'resource' | 'idea'
-    coordinates: MapCoordinates
-}
-
-type Padding = RequireAtLeastOne<PaddingOptions>
-
-interface MapOptions {
-    markers?: MapMarker[]
-    center?: MapCoordinates
-    zoom?: number
-    cursor?: CSS.Properties['cursor']
-    padding?: Padding
-    autofit?: boolean // whether to
-}
+import { FilterControl, HomeControl } from "@/templates/ts/directives/map/controls.ts";
+import { CurrentOptions, MapCoordinates, MapMarker, MapOptions, Padding } from "@/templates/ts/directives/map/types.ts";
 
 const DEFAULT_CENTER: MapCoordinates = [-5.9213, 54.5996]
-const DEFAULT_ZOOM = 15
+const DEFAULT_ZOOM = 12
 const BASE_PADDING = 80 // always have at least this much padding
+
 
 /**
  *  A directive to show a map. Usage:
@@ -54,6 +37,10 @@ Alpine.directive('map', (
 ) => {
     const optionsLater = evaluateLater(expression)
 
+    // So we can refer to the options from anywhere...
+    const current: CurrentOptions = { options: {} }
+
+
     let _map: maplibregl.Map
     cleanup(() => _map?.remove())
 
@@ -64,6 +51,7 @@ Alpine.directive('map', (
         // This means the first view of the map is as good as we can make it
 
         const {
+            home,
             center,
             zoom,
             markers,
@@ -83,6 +71,8 @@ Alpine.directive('map', (
             initialOptions.bounds = getBounds(markers)
         } else if (center) {
             initialOptions.center = center
+        } else if (home) {
+            initialOptions.center = home
         } else {
             initialOptions.center = DEFAULT_CENTER
         }
@@ -95,7 +85,15 @@ Alpine.directive('map', (
 
         map.dragRotate.disable()
         map.touchZoomRotate.disable()
-        map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
+        map.addControl(
+            new maplibregl.NavigationControl({ showCompass: false }),
+            'top-right'
+        )
+        map.addControl(new FilterControl(), 'top-left')
+
+        if (current.options.home) {
+            map.addControl(new HomeControl(current, DEFAULT_ZOOM), 'top-left')
+        }
 
         // This padding stays with the map, then we can add additional padding later
         // when we use fitBounds
@@ -156,14 +154,23 @@ Alpine.directive('map', (
     effect(() => {
         optionsLater(async value => {
             const options = value as MapOptions
+            current.options = options
             const {
+                home,
                 center,
                 zoom,
                 markers,
+                types,
                 cursor,
                 padding,
                 autofit,
             } = options
+
+            function getMarkers(): MapMarker[] {
+                if (!markers) return []
+                if (!types || types.length === 0) return markers
+                return markers.filter(marker => types.includes(marker.type))
+            }
 
             const map = await getMap(options)
 
@@ -172,10 +179,11 @@ Alpine.directive('map', (
             if (cursor) {
                 map.getCanvas().style.cursor = cursor
             }
-            if (center) {
+            let mapCentre = center ?? home
+            if (mapCentre) {
                 const currentZoom = map.getZoom()
                 map.flyTo({
-                    center: center,
+                    center: mapCentre,
                     // in order:
                     // 1. specified zoom
                     // 2. current zoom if we're more zoomed in than default
@@ -183,11 +191,11 @@ Alpine.directive('map', (
                     zoom: zoom ?? (DEFAULT_ZOOM > currentZoom ? DEFAULT_ZOOM : currentZoom),
                 })
             }
-            setMarkers(map, markers ?? [], { padding, autofit })
+            drawMarkers(map, getMarkers(), { padding, autofit })
         })
     })
 
-    function setMarkers(map: maplibregl.Map, markers: MapMarker[], options: { padding?: Padding, autofit?: boolean } = {}) {
+    function drawMarkers(map: maplibregl.Map, markers: MapMarker[], options: { padding?: Padding, autofit?: boolean } = {}) {
         const source = map.getSource('markers') as GeoJSONSource | undefined
         if (!source) return
         const {

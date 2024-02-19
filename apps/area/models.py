@@ -2,6 +2,7 @@ import re
 from typing import Any, Dict, Tuple
 from uuid import uuid4
 
+from django.contrib.gis.db.models import PointField
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -28,6 +29,7 @@ class Area(models.Model):
     image: models.ImageField = models.ImageField(
         upload_to="areas/images/", null=True, blank=True
     )
+    location = PointField(geography=True, srid=4326, null=True)
 
     def __str__(self) -> str:
         return self.name
