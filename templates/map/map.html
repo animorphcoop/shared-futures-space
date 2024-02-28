@@ -12,7 +12,7 @@
 
 {% block content %}
     <div class="max-w-screen-xl mx-auto h-screen flex flex-col">
-        {% block title %}{% include "partials/title.html" with title="Remix" %}{% endblock %}
+        {% block title %}{% include "partials/title.html" with title="Map" %}{% endblock %}
         <div class="relative w-full h-full overflow-hidden"
              x-data="{
                 isOpen: false,
@@ -39,7 +39,7 @@
             }">
 
             <div :class="{ hidden: !editing }">
-                {% include 'remix/partials/map-filters.html' %}
+                {% include 'map/partials/map-filters.html' %}
             </div>
 
             <!-- mobile, slides from bottom -->

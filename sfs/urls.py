@@ -25,7 +25,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("spring/", include("spring.urls"), name="spring"),
     path("estuary/", spring_views.EstuaryView.as_view(), name="estuary"),
     path("river/", include("river.urls"), name="river"),
-    path("remix/", include("remix.urls"), name="remix"),
+    path("map/", include("map.urls"), name="map"),
     path("action/", include("action.urls")),
     path("poll/", include("poll.urls")),
     path("analytics/", include("analytics.urls")),
