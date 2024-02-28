@@ -60,7 +60,12 @@
           "planning",
           "toolkit",
           "guidance"
-        ]
+        ],
+        "location": {
+          "lat": "54.5996",
+          "lng": "-5.9213"
+        },
+        "location_exact": false
       },
       {
         "title": "Starting New Business Advice",

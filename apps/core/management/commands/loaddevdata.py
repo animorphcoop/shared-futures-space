@@ -28,6 +28,8 @@ def add_resources(resource_data):
                 title=new_howto_data["title"],
                 summary=new_howto_data["summary"],
                 link=new_howto_data["link"],
+                location=new_howto_data.get("location", None),
+                location_exact=new_howto_data.get("location_exact", True),
             )[0]
             for tag in new_howto_data["tags"]:
                 new_howto.tags.add(tag)
@@ -56,6 +58,8 @@ def add_resources(resource_data):
                         summary=new_casestudy_data["summary"],
                         case_study_image=img,
                         link=new_casestudy_data["link"],
+                        location=new_casestudy_data.get("location", None),
+                        location_exact=new_casestudy_data.get("location_exact", True),
                     )[0]
                     new_casestudy.body.append(
                         ("body_text", {"content": RichText(new_casestudy_data["body"])})
@@ -78,6 +82,8 @@ def add_resources(resource_data):
                 title=new_casestudy_data["title"],
                 summary=new_casestudy_data["summary"],
                 link=new_casestudy_data["link"],
+                location=new_casestudy_data.get("location", None),
+                location_exact=new_casestudy_data.get("location_exact", True),
             )[0]
             new_casestudy.body.append(
                 ("body_text", {"content": RichText(new_casestudy_data["body"])})

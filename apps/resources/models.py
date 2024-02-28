@@ -59,6 +59,7 @@ class Resource(ClusterableModel):
         null=False,
     )
     location = PointField(geography=True, srid=4326, blank=True, null=True)
+    location_exact = models.BooleanField(default=True)
     link: models.CharField = models.CharField(
         max_length=200,
         blank=True,

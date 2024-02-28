@@ -31,7 +31,7 @@ def case_study_marker(case_study: CaseStudy) -> Optional[dict]:
         "slug": case_study.slug,
         "name": case_study.title,
         "coordinates": case_study.location.coords,
-        "html": "<h1>" + case_study.title + "</h1>",
+        "approximate": not case_study.location_exact,
         "html": render_to_string(
             "resources/partials/resources-card.html",
             {"resource": case_study, "close_button": True, "view_button": True},
