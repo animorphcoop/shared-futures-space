@@ -36,7 +36,6 @@ def case_study_marker(case_study: CaseStudy) -> Optional[dict]:
             "resources/partials/resources-card.html",
             {"resource": case_study, "close_button": True, "view_button": True},
         ),
-        "htmlMini": "<h2>" + case_study.title + "</h2>",
     }
 
 

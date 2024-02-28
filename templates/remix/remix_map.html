@@ -47,7 +47,7 @@
                  x-bind-height="cardHeight"
                  :class="isOpen ? 'opacity-100' : `opacity-100`"
                  :style="{ bottom: isOpen ? 0 : `${-(cardHeight || 200) - 20}px` }">
-                <div x-html="selectedMarker ? selectedMarker.htmlMini : ''"
+                <div x-html="selectedMarker ? (selectedMarker.htmlMini || selectedMarker.html) : ''"
                      @close="isOpen = false"></div>
             </div>
 

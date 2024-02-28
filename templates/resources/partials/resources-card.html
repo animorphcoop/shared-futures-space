@@ -44,9 +44,10 @@
         {{ resource.summary }}
     </p>
 
-    <div class="h-4"></div>
-
-    {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
+    {% if learn_more_button %}
+        <div class="h-4"></div>
+        {% include "partials/button.html" with url=the_url style="primary_white" button="Learn more" %}
+    {% endif %}
 
     <div class="h-9"></div>
 </div>
