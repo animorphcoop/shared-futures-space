@@ -7,7 +7,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 // See the README.md I wrote at ./maplibre-gl-svg/README.md
 import {SvgManager} from "./maplibre-gl-svg";
 
-import { MAPTILER_API_KEY } from '../../settings.ts'
+import { MAPTILER_STYLE_URL } from '../../settings.ts'
 import { FilterControl, HomeControl } from "@/templates/ts/directives/map/controls.ts";
 import {
     CurrentOptions,
@@ -61,11 +61,19 @@ Alpine.directive('map', (
             autofit,
         } = options
 
+        function getStyleURL(): string {
+            if (MAPTILER_STYLE_URL) {
+                return MAPTILER_STYLE_URL
+            } else {
+                console.warn('USING MAPLIBRE DEMOTILES PLEASE SET MAPTILER_STYLE_URL / MAPTILER_API_KEY')
+                // Just a basic view so *something* shows up...
+                return "https://demotiles.maplibre.org/style.json"
+            }
+        }
+
         const initialOptions: maplibregl.MapOptions = {
             container: el,
-            // style: `https://api.maptiler.com/maps/basic-v2/style.json?key=${MAPTILER_API_KEY}`,
-            // My customized map
-            style: `https://api.maptiler.com/maps/697dfe25-8087-42f1-a3f9-73983704eebf/style.json?key=${MAPTILER_API_KEY}`,
+            style: getStyleURL(),
             attributionControl: false,
         }
 
