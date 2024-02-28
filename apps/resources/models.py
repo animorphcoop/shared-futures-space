@@ -116,6 +116,7 @@ class CaseStudy(Resource):
         FieldPanel("link"),
         FieldPanel("tags"),
         FieldPanel("case_study_image"),
+        FieldPanel("location_exact"),
         LeafletPanel("location"),
     ]
 
