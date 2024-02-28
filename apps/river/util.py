@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.template.loader import render_to_string
 
 from messaging.models import Chat
+from resources.models import Resource
 
 from .models import ActStage, EnvisionStage, PlanStage, ReflectStage, River
 
@@ -34,3 +35,16 @@ def get_chat_containing_river(chat: Chat) -> Optional[River]:
     if len(reflect) != 0:
         return River.objects.get(reflect_stage=reflect[0])
     return None
+
+
+def get_resource_tags() -> list[str]:
+    tags = []
+    resources = Resource.objects.all()
+
+    for resource in resources:
+        for tag in resource.tags.names():
+            if tag.lower() not in tags:
+                tags.append(tag.lower())
+
+    tags.sort()
+    return tags

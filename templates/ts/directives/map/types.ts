@@ -9,6 +9,7 @@ export interface MapMarker {
     name: string
     type: MarkerType
     coordinates: MapCoordinates
+    approximate?: boolean
 }
 
 export type Padding = RequireAtLeastOne<PaddingOptions>

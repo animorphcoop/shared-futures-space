@@ -1,0 +1,27 @@
+{% comment %}
+
+    Template for django widget to select tags.
+
+    All the logic is handled by the x-tags-select directive.
+
+{% endcomment %}
+
+<div x-tags-select="{{ widget.name }}">
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
+
+    <div class="flex flex-wrap gap-5 -m-1">
+        {% if tags %}
+            {% for tag in tags %}
+                {% with counter=forloop.counter0 %}
+
+                    <button id="button-{{ counter }}"
+                            class="px-1.5 py-1.5 rounded-sm flex items-center data-[selected]:bg-green-pale"
+                            data-tag="{{ tag }}">
+                        <span class="text-meta-label text-black/55 uppercase leading-none whitespace-normal tracking-[0.16em]">{{ tag }}</span>
+                    </button>
+                {% endwith %}
+
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>

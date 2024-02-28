@@ -52,9 +52,10 @@
             </div>
 
             <!-- desktop, slides from left -->
-            <div class="p-3 absolute h-full w-[360px] z-20 transition-[left,height,opacity] duration-300 overflow-y-auto hidden desktop:block"
+            <div class="p-3 absolute h-full w-[360px] z-20 transition-[left,height,opacity] duration-300 overflow-y-auto hidden desktop:block pointer-events-none"
                  :class="isOpen ? 'left-0 opacity-100' : `-left-[360px] opacity-100`">
                 <div x-html="selectedMarker ? selectedMarker.html : ''"
+                     class="pointer-events-auto"
                      @close="isOpen = false"></div>
             </div>
 

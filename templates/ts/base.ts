@@ -13,7 +13,9 @@ import './directives/bind-height.ts'
 import './directives/characters-remaining.ts'
 import './directives/stop-body-scroll.ts'
 import './directives/map/map.ts'
+import './directives/tags-select.ts'
 import './alpine/magics/screen.ts'
+import './alpine/magics/coords.ts'
 
 import { expose } from "./utils.ts"
 

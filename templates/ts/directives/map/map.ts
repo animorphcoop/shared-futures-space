@@ -7,14 +7,17 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 // See the README.md I wrote at ./maplibre-gl-svg/README.md
 import {SvgManager} from "./maplibre-gl-svg";
 
-import markerRiverFinishedSVG from './markers/river-finished.svg'
-import markerResourceSVG from './markers/resource.svg'
-import markerIdeaSVG from './markers/idea.svg'
-import markerRiverSVG from './markers/river.svg'
-
 import { MAPTILER_API_KEY } from '../../settings.ts'
 import { FilterControl, HomeControl } from "@/templates/ts/directives/map/controls.ts";
-import { CurrentOptions, MapCoordinates, MapMarker, MapOptions, Padding } from "@/templates/ts/directives/map/types.ts";
+import {
+    CurrentOptions,
+    MapCoordinates,
+    MapMarker,
+    MapOptions,
+    MarkerType,
+    Padding
+} from "@/templates/ts/directives/map/types.ts";
+import {icons} from "@/templates/ts/directives/map/icons.ts";
 
 const DEFAULT_CENTER: MapCoordinates = [-5.9213, 54.5996]
 const DEFAULT_ZOOM = 12
@@ -106,13 +109,18 @@ Alpine.directive('map', (
         return new Promise(resolve => {
             map.on('load', async () => {
                 // These images map 1-to-1 with the marker "type" field
-                await Promise.all([
-                    svgManager.add('pin', markerRiverSVG),
-                    svgManager.add('river-finished', markerRiverFinishedSVG),
-                    svgManager.add('river', markerRiverSVG),
-                    svgManager.add('idea', markerIdeaSVG),
-                    svgManager.add('resource', markerResourceSVG),
-                ])
+
+                const promises = []
+
+                for (const name of Object.keys(icons)) {
+                    const icon = icons[name as MarkerType]
+                    promises.push(svgManager.add(name, icon.default))
+                    if (icon.approximate) {
+                        promises.push(svgManager.add(name + '--approximate', icon.approximate))
+                    }
+                }
+
+                await Promise.all(promises)
 
                 map.addSource('markers', {
                     type: 'geojson',
@@ -127,8 +135,11 @@ Alpine.directive('map', (
                     'type': 'symbol',
                     'source': 'markers',
                     'layout': {
-                        'icon-image': ["get", "type"],
+                        'icon-image': ["get", "icon"],
                         'icon-size': 1,
+                        // TODO: hmm, decide how to do the scaling here... also should only be for approximate ones
+                        // it doesn't seem to scale the svgs very well :/
+                        // 'icon-size': ['interpolate', ['linear'], ['zoom'], 15, 1, 22, 10],
                         // This means markers do not fade in
                         'icon-allow-overlap': true
                     }
@@ -197,6 +208,14 @@ Alpine.directive('map', (
         })
     })
 
+    function getMarkerIcon (marker: MapMarker) {
+        const icon = icons[marker.type]
+        if (marker.approximate && icon.approximate) {
+            return marker.type + '--approximate'
+        }
+        return marker.type
+    }
+
     function drawMarkers(map: maplibregl.Map, markers: MapMarker[], options: { padding?: Padding, autofit?: boolean } = {}) {
         const source = map.getSource('markers') as GeoJSONSource | undefined
         if (!source) return
@@ -210,6 +229,7 @@ Alpine.directive('map', (
                 type: 'Feature',
                 properties: {
                     type: marker.type,
+                    icon: getMarkerIcon(marker),
                     marker: JSON.stringify(marker),
                 },
                 geometry: {

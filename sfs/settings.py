@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "wagtailgeowidget",
     "modelcluster",
     "taggit",
+    "django.forms",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -134,6 +135,8 @@ TEMPLATES = [
         },
     },
 ]
+
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 WSGI_APPLICATION = "sfs.wsgi.application"
 

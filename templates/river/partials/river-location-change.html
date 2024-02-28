@@ -11,11 +11,73 @@
 
     {% csrf_token %}
 
-    <div x-data="{ marker: {{ river|to_marker_json }} }">
-        <input type="hidden" name="location" :value="marker ? `SRID=4326;POINT (${marker.coordinates.join(' ')})` : ''">
-        <div x-map="marker ? { markers: [marker], center: marker.coordinates, cursor: 'pointer' } : { cursor: 'pointer' }"
-             @click-map="marker = { ...$event.detail, type: 'river' }"
-             class="w-full h-64 rounded"></div>
+    {% comment %}
+
+        This code is *very* similar to widgets/location.html
+
+        ... *but* as those river change forms aren't rendered connected to
+        the django form rendering system we cannot reuse our nice widget :(
+
+        It would be a good idea to convert those forms to htmx rendered django
+        forms, then we can use the widget system to render and validate them.
+
+    {% endcomment %}
+
+    <div data-exact="{% if river %}{{ river.location_exact }}{% endif %}"
+         data-point="{% if river %}{{ river.location }}{% endif %}"
+         x-data="{
+           coords: null,
+           exact: null,
+           marker: null
+         }"
+         x-init="
+            coords = $el.dataset.point ? $pointToCoords($el.dataset.point) : null;
+            exact = $el.dataset.exact;
+         "
+         x-effect="
+            marker = coords ? {
+                coordinates: coords,
+                approximate: exact !== 'True',
+                type: 'river'
+            } : null
+         ">
+
+        <div class="flex justify-center gap-3 my-3">
+            <label class="cursor-pointer flex items-center gap-1 text-meta-label"
+                   data-val="True"
+                   x-data="{ val: $el.dataset.val }"
+                   @click="exact = $el.dataset.val">
+                <div class="bg-white w-6 h-6 rounded-full shadow-inner flex items-center justify-center">
+                    <div x-show="exact === val"
+                         class="rounded-full h-1/3 w-1/3 bg-purple"></div>
+                </div>
+                My location is exact
+            </label>
+
+            <label class="cursor-pointer flex items-center gap-1 text-meta-label"
+                   data-val="False"
+                   x-data="{ val: $el.dataset.val }"
+                   @click="exact = $el.dataset.val">
+                <div class="bg-white w-6 h-6 rounded-full shadow-inner flex items-center justify-center">
+                    <div x-show="exact === val"
+                         class="rounded-full h-1/3 w-1/3 bg-purple"></div>
+                </div>
+                My location is approximate
+            </label>
+
+        </div>
+
+        <input name="location_exact"
+               type="hidden"
+               :value="exact">
+
+        <div x-map="{ markers: marker ? [marker] : [], center: marker ? marker.coordinates : null, cursor: 'pointer' }"
+             @click-map="coords = $event.detail.coordinates"
+             class="w-full h-96 rounded relative"></div>
+
+        <input name="location"
+               type="hidden"
+               :value="$coordsToPoint(coords)">
     </div>
 
 
@@ -27,8 +89,6 @@
             Back
         </button>
         {% include "partials/horizontal-spacer.html" with space="4.5" %}
-        {% comment %}
-               {% endcomment %}
         <button
                 @click="()=>{
                         enableBodyScroll();
