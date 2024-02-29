@@ -50,11 +50,13 @@ Alpine.directive('tags-select', (
      *     <button data-tag="co-ops" class="data-[selected]:bg-green-pale">Co-operatives</button>
      */
     el.querySelectorAll('[data-tag]').forEach(tagEl => {
+        if (!(tagEl instanceof HTMLElement)) return
         const tagValue = tagEl.dataset.tag
+        if (!tagValue) return
 
         // Set initial selected value
         if (selectedTags.has(tagValue)) {
-            tagEl.dataset.selected = true
+            tagEl.dataset.selected = 'selected'
         } else {
             delete tagEl.dataset.selected
         }
@@ -66,7 +68,7 @@ Alpine.directive('tags-select', (
                 delete tagEl.dataset.selected
                 selectedTags.delete(tagValue)
             } else if (selectedTags.size < maxTagCount) {
-                tagEl.dataset.selected = true
+                tagEl.dataset.selected = 'selected'
                 selectedTags.add(tagValue)
             }
             updateLabelSubtext()
@@ -81,7 +83,7 @@ Alpine.directive('tags-select', (
     }
 
     function updateInputValue () {
-        // This is
+        if (!inputEl) return
         inputEl.value = formatTags(Array.from(selectedTags))
     }
 })

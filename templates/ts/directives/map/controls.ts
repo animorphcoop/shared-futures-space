@@ -1,10 +1,11 @@
-import maplibregl, {IControl} from "maplibre-gl";
-import homeSVG from "@/templates/ts/directives/map/home.svg";
+import { Map, IControl } from "maplibre-gl"
+import homeSVG from "@/templates/ts/directives/map/home.svg"
+import { CurrentOptions } from "@/templates/ts/directives/map/types.ts"
 
 export class FilterControl implements IControl {
     el?: HTMLDivElement
 
-    onAdd(map: maplibregl.Map) {
+    onAdd(map: Map) {
         const div = document.createElement('div')
         div.classList.add('maplibregl-ctrl')
         const button = document.createElement('button')
@@ -33,7 +34,7 @@ export class HomeControl implements IControl {
         this.defaultZoom = defaultZoom
     }
 
-    onAdd(map: maplibregl.Map) {
+    onAdd(map: Map) {
         const div = document.createElement('div')
         div.classList.add('maplibregl-ctrl')
 

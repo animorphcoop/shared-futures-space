@@ -65,6 +65,7 @@ export class SvgManager {
 
                 //TODO: In the future consider using map.loadImage so that it goes through the request transform and image throttling.
                 //Current not doing this as there is a breaking change in loadImage in version 4.0.0 of maplibre-gl-js (callbacks changed to promises).
+                // @ts-expect-error
                 if(map._requestManager._transformRequestFn) {
                     request = map._requestManager.transformRequest(imageSrc, <ResourceType>'Image');
                 }
