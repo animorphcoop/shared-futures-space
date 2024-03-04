@@ -153,6 +153,22 @@ Alpine.directive('map', (
                     }
                 })
 
+                const initialCursor = map.getCanvas().style.cursor
+
+                map.on('mousemove', 'markers', e => {
+                    if (e.features) {
+                        map.getCanvas().style.cursor = 'pointer'
+                    }
+                })
+
+                map.on('mouseleave', 'markers', () => {
+                    if (current.options.cursor) {
+                        map.getCanvas().style.cursor = current.options.cursor
+                    } else {
+                        map.getCanvas().style.cursor = initialCursor
+                    }
+                })
+
                 map.on('click', e => {
                     const feature = map.queryRenderedFeatures(e.point, {
                         layers: ['markers'],
