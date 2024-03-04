@@ -1,4 +1,5 @@
 import { Map, IControl } from "maplibre-gl"
+import filterSVG from "@/templates/ts/directives/map/filter.svg"
 import homeSVG from "@/templates/ts/directives/map/home.svg"
 import { CurrentOptions } from "@/templates/ts/directives/map/types.ts"
 
@@ -8,12 +9,19 @@ export class FilterControl implements IControl {
     onAdd(map: Map) {
         const div = document.createElement('div')
         div.classList.add('maplibregl-ctrl')
+
         const button = document.createElement('button')
         button.classList.add('button', 'button-on-colour')
-        button.textContent = 'Filter'
         button.addEventListener('click', () => {
             map.getContainer().dispatchEvent(new CustomEvent('click-filter'))
         })
+
+        const icon = document.createElement('img')
+        icon.src = filterSVG
+        icon.style.width = '16px'
+
+        button.appendChild(icon)
+
         div.appendChild(button)
         this.el = div
         return this.el
