@@ -50,10 +50,13 @@ export class HomeControl implements IControl {
         button.classList.add('button', 'button-on-colour')
 
         button.addEventListener('click', () => {
-            map.flyTo({
-                center: this.current.options.home,
-                zoom: this.defaultZoom
-            })
+            const home = this.current.options.home
+            if (home) {
+                map.flyTo({
+                    center: home.center,
+                    zoom: home.zoom
+                })
+            }
         })
 
         const icon = document.createElement('img')

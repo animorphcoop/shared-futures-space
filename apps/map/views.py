@@ -15,7 +15,10 @@ class MapView(TemplateView):
         if self.request.user.is_authenticated:
             area = self.request.user.post_code.area
             if area.location:
-                context["home"] = area.location.coords
+                context["home"] = {
+                    "center": area.location.coords,
+                    "zoom": area.zoom,
+                }
 
         rivers = River.objects.exclude(location=None)
         markers = []

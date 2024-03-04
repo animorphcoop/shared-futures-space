@@ -16,7 +16,10 @@ export type Padding = RequireAtLeastOne<PaddingOptions>
 
 export interface MapOptions {
     types?: MarkerType[]
-    home?: MapCoordinates
+    home?: {
+        center: MapCoordinates
+        zoom: number
+    }
     markers?: MapMarker[]
     center?: MapCoordinates
     zoom?: number

@@ -1,6 +1,11 @@
 {
   "Areas": {
     "North Belfast": {
+      "location": {
+        "lat": "54.608757",
+        "lng": "-5.942537"
+      },
+      "zoom": 12,
       "postcodes": [
         "BT14",
         "BT15",
@@ -8,12 +13,22 @@
       ]
     },
     "West Belfast": {
+      "location": {
+        "lat": "54.588700",
+        "lng": "-5.958687"
+      },
+      "zoom": 12,
       "postcodes": [
         "BT17",
         "BT11"
       ]
     },
     "East Belfast": {
+      "location": {
+        "lat": "54.598896",
+        "lng": "-5.898853"
+      },
+      "zoom": 12,
       "postcodes": [
         "BT4",
         "BT5",
@@ -22,6 +37,11 @@
       ]
     },
     "South Belfast": {
+      "location": {
+        "lat": "54.583139",
+        "lng": "-5.936598"
+      },
+      "zoom": 12,
       "postcodes": [
         "BT12",
         "BT7",
@@ -32,8 +52,8 @@
     },
     "Derry~Londonderry": {
       "location": {
-        "lat": "54.5996",
-        "lng": "-5.9213"
+        "lat": "54.993868",
+        "lng": "-7.323539"
       },
       "zoom": 12,
       "postcodes": [
@@ -42,6 +62,11 @@
       ]
     },
     "Donegal": {
+      "location": {
+        "lat": "54.987975",
+        "lng": "-8.497606"
+      },
+      "zoom": 12,
       "postcodes": [
         "F92",
         "F93",

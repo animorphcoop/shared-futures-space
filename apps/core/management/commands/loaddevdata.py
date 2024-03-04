@@ -168,6 +168,9 @@ def add_areas(areas_data):
                 this_area.location = Point(
                     float(location["lng"]), float(location["lat"])
                 )
+            zoom = area_data.get("zoom", None)
+            if zoom:
+                this_area.zoom = zoom
             for postcode in area_data["postcodes"]:
                 PostCode.objects.get_or_create(code=postcode, area=this_area)
         except Exception as e:

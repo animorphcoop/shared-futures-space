@@ -83,7 +83,8 @@ Alpine.directive('map', (
         } else if (center) {
             initialOptions.center = center
         } else if (home) {
-            initialOptions.center = home
+            initialOptions.center = home.center
+            initialOptions.zoom = home.zoom
         } else {
             initialOptions.center = DEFAULT_CENTER
         }
@@ -216,7 +217,7 @@ Alpine.directive('map', (
             if (cursor) {
                 map.getCanvas().style.cursor = cursor
             }
-            let mapCentre = center ?? home
+            let mapCentre = center ?? home?.center
             if (mapCentre) {
                 const currentZoom = map.getZoom()
                 map.flyTo({

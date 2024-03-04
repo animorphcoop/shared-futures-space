@@ -30,6 +30,7 @@ class Area(models.Model):
         upload_to="areas/images/", null=True, blank=True
     )
     location = PointField(geography=True, srid=4326, null=True)
+    zoom = models.IntegerField(default=12)
 
     def __str__(self) -> str:
         return self.name
