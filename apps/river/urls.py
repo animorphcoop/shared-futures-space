@@ -21,7 +21,7 @@ from .views import (
     RiverChatMessageListView,
     RiverChatUpdateView,
     RiverChatView,
-    RiverStartView,
+    RiverStartWizardView,
     RiverView,
 )
 
@@ -29,7 +29,7 @@ from .views import (
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path(
         "create/",
-        login_required(RiverStartView.as_view(template_name="start_river.html")),
+        login_required(RiverStartWizardView.as_view()),
         name="start_river",
     ),
     path(

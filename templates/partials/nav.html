@@ -19,8 +19,8 @@
     {# Gets put in the header TODO: have a proper header element, not just an h1.text-title #}
     <template x-teleport="h1.text-title">
         <button class="text-purple flex w-6 h-6 right-3 top-[11px] absolute focus:outline-none z-10"
-                @click.stop.prevent="toggle()">
-            <span class="sr-only">Open main menu</span>
+                @click.stop.prevent="toggle()"
+                aria-label="Open main menu">
             <div class="block w-5 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <span aria-hidden="true"
                       class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
@@ -48,8 +48,11 @@
 
         {#  Menu list  #}
         <nav class="w-full h-full max-h-full font-kanit-500 text-xl text-black-text flex flex-col">
-            <h1 class="bg-white p-4 py-2.5 text-purple">
+            <h1 class="bg-white p-4 py-2.5 text-purple flex items-center">
                 Menu
+                <button @click.stop.prevent="toggle()" class="ml-auto" aria-label="Close main menu">
+                    {% include "partials/close.html" %}
+                </button>
             </h1>
             {% if not user.is_authenticated %}
                 {% url 'account_signup' as signup_url %}
@@ -89,8 +92,8 @@
                     </div>
                 </div>
 
-                <li class="p-4 pb-5 {% active_link 'text-purple' 'remix_map' %}">
-                    <a href="{% url 'remix_map' %}">Remix</a>
+                <li class="p-4 pb-5 {% active_link 'text-purple' 'map' %}">
+                    <a href="{% url 'map' %}">Map</a>
                 </li>
 
                 {% if user.is_authenticated %}

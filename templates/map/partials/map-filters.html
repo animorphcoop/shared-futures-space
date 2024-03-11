@@ -1,0 +1,48 @@
+{% extends "partials/overlay-river-closable.html" %}
+{% block overlay_title %}Filters{% endblock %}
+{% load static %}
+{% load django_vite %}
+
+{% block river_overlay_content %}
+
+    <form x-data="{
+            editTypes: filterTypes,
+          }"
+          @submit.stop.prevent="filterTypes = editTypes; overlayClose()"
+          class="flex flex-col gap-4"
+    >
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" x-model="editTypes" value="resource" >
+            <img src="{% vite_asset_url 'templates/ts/directives/map/icons/resource.svg' %}">
+            Resources
+        </label>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" x-model="editTypes" value="idea" >
+            <img src="{% vite_asset_url 'templates/ts/directives/map/icons/idea.svg' %}">
+            Ideas
+        </label>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" x-model="editTypes" value="river" >
+            <img src="{% vite_asset_url 'templates/ts/directives/map/icons/river.svg' %}">
+            Rivers
+        </label>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" x-model="editTypes" value="river-finished" >
+            <img src="{% vite_asset_url 'templates/ts/directives/map/icons/river-finished.svg' %}">
+            Rivers (finished)
+        </label>
+
+        <div class="flex items-center gap-3 mt-4">
+            <button class="button button-on-white"
+                    @click.stop.prevent="editTypes = []">
+                Clear
+            </button>
+            <button class="button button-on-white" type="submit">
+                Filter
+            </button>
+        </div>
+    </form>
+{% endblock %}

@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.template.loader import render_to_string
 
 from messaging.models import Chat
+from resources.models import Resource
 
 from .models import ActStage, EnvisionStage, PlanStage, ReflectStage, River
 
@@ -36,17 +37,14 @@ def get_chat_containing_river(chat: Chat) -> Optional[River]:
     return None
 
 
-def river_marker(river: River) -> Optional[dict]:
-    if not river.location:
-        return None
-    return {
-        "slug": river.slug,
-        "name": river.title,
-        "icon": "pin",
-        "coordinates": river.location.coords,
-        "html": render_to_string(
-            "river/river_card.html",
-            {"river": river, "close_button": True, "view_button": True},
-        ),
-        "htmlMini": render_to_string("river/river_card_mini.html", {"river": river}),
-    }
+def get_resource_tags() -> list[str]:
+    tags = []
+    resources = Resource.objects.all()
+
+    for resource in resources:
+        for tag in resource.tags.names():
+            if tag.lower() not in tags:
+                tags.append(tag.lower())
+
+    tags.sort()
+    return tags

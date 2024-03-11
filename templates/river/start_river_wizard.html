@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load django_vite %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+    {{ wizard.form.media }}
+{% endblock extra_css %}
+
+{% block content %}
+    {% block title %}{% include "partials/title.html" with title='Start a River' %}{% endblock %}
+    <div class="max-w-screen-xl mx-auto">
+        {% include "partials/vertical-spacer.html" with space="3" %}
+
+        <form method="post"
+              enctype="multipart/form-data"
+              class="m-0 px-4.5">
+
+            {% csrf_token %}
+
+            {{ wizard.management_form }}
+
+            {% comment %}
+                This is a general-purpose form rendering system using django widgets.
+            {% endcomment %}
+
+            {% for field in form %}
+                {% include "partials/input-label.html" with for=field.id_for_label label=field.label %}
+                {% if field.field.widget.input_type == 'file' %}
+                    {% include "partials/input-file.html" with field=field %}
+                {% else %}
+                    {% render_field field class="input-text" %}
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="text-red-600 my-2">{{ error }}</div>
+                {% endfor %}
+                {% include "partials/vertical-spacer.html" with space="9" %}
+            {% endfor %}
+
+            <div class="flex justify-center gap-2">
+                {% if wizard.steps.prev %}
+                    <button name="wizard_goto_step"
+                            type="submit"
+                            value="{{ wizard.steps.prev }}"
+                            class="button button-on-white">
+                        Previous
+                    </button>
+                {% endif %}
+
+                <a href="/"
+                   class="button button-on-white">Discard</a>
+
+                <button type="submit"
+                        class="button button-important">
+                    {% if wizard.steps.next %}
+                        Next
+                    {% else %}
+                        Submit
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+        {% include "partials/vertical-spacer.html" with space="6" %}
+
+    </div>
+{% endblock content %}

@@ -2,6 +2,8 @@ import json
 from io import BytesIO
 
 from allauth.account.admin import EmailAddress
+from django.contrib.gis.geos import Point
+
 from area.models import Area, PostCode
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
@@ -26,6 +28,8 @@ def add_resources(resource_data):
                 title=new_howto_data["title"],
                 summary=new_howto_data["summary"],
                 link=new_howto_data["link"],
+                location=new_howto_data.get("location", None),
+                location_exact=new_howto_data.get("location_exact", True),
             )[0]
             for tag in new_howto_data["tags"]:
                 new_howto.tags.add(tag)
@@ -54,6 +58,8 @@ def add_resources(resource_data):
                         summary=new_casestudy_data["summary"],
                         case_study_image=img,
                         link=new_casestudy_data["link"],
+                        location=new_casestudy_data.get("location", None),
+                        location_exact=new_casestudy_data.get("location_exact", True),
                     )[0]
                     new_casestudy.body.append(
                         ("body_text", {"content": RichText(new_casestudy_data["body"])})
@@ -76,6 +82,8 @@ def add_resources(resource_data):
                 title=new_casestudy_data["title"],
                 summary=new_casestudy_data["summary"],
                 link=new_casestudy_data["link"],
+                location=new_casestudy_data.get("location", None),
+                location_exact=new_casestudy_data.get("location_exact", True),
             )[0]
             new_casestudy.body.append(
                 ("body_text", {"content": RichText(new_casestudy_data["body"])})
@@ -84,6 +92,7 @@ def add_resources(resource_data):
             for tag in new_casestudy_data["tags"]:
                 new_casestudy.tags.add(tag)
             new_casestudy.save()
+
 
 def add_organisations(data):
     for org_data in data:
@@ -152,8 +161,17 @@ def add_users(users_data):
 def add_areas(areas_data):
     for area_name in areas_data:
         try:
+            area_data = areas_data[area_name]
             this_area = Area.objects.get_or_create(name=area_name)[0]
-            for postcode in areas_data[area_name]:
+            location = area_data.get("location", None)
+            if location:
+                this_area.location = Point(
+                    float(location["lng"]), float(location["lat"])
+                )
+            zoom = area_data.get("zoom", None)
+            if zoom:
+                this_area.zoom = zoom
+            for postcode in area_data["postcodes"]:
                 PostCode.objects.get_or_create(code=postcode, area=this_area)
         except Exception as e:
             print(
@@ -162,7 +180,6 @@ def add_areas(areas_data):
                 + "\nerror given: "
                 + repr(e)
             )
-
 
 
 class Command(BaseCommand):

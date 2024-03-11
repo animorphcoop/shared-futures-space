@@ -1,35 +1,28 @@
 import Alpine from "alpinejs";
 
-import maplibregl, {GeoJSONSource, PaddingOptions, RequireAtLeastOne} from 'maplibre-gl'
+import maplibregl, {GeoJSONSource} from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import pin from './map_pin.png'
-import circle from './map_circle.png'
-import CSS from 'csstype'
 
-import { MAPTILER_API_KEY } from '../settings.ts'
+// *WARNING* this is a hacky "pre-release" version
+// See the README.md I wrote at ./maplibre-gl-svg/README.md
+import {SvgManager} from "./maplibre-gl-svg";
 
-type MapCoordinates = [number, number]
-
-interface MapMarker {
-    name: string
-    icon: 'pin' | 'circle'
-    coordinates: MapCoordinates
-}
-
-type Padding = RequireAtLeastOne<PaddingOptions>
-
-interface MapOptions {
-    markers?: MapMarker[]
-    center?: MapCoordinates
-    zoom?: number
-    cursor?: CSS.Properties['cursor']
-    padding?: Padding
-    autofit?: boolean // whether to
-}
+import { MAPTILER_STYLE_URL } from '../../settings.ts'
+import { FilterControl, HomeControl } from "@/templates/ts/directives/map/controls.ts";
+import {
+    CurrentOptions,
+    MapCoordinates,
+    MapMarker,
+    MapOptions,
+    MarkerType,
+    Padding
+} from "@/templates/ts/directives/map/types.ts";
+import {icons} from "@/templates/ts/directives/map/icons.ts";
 
 const DEFAULT_CENTER: MapCoordinates = [-5.9213, 54.5996]
-const DEFAULT_ZOOM = 15
+const DEFAULT_ZOOM = 12
 const BASE_PADDING = 80 // always have at least this much padding
+
 
 /**
  *  A directive to show a map. Usage:
@@ -47,19 +40,12 @@ Alpine.directive('map', (
 ) => {
     const optionsLater = evaluateLater(expression)
 
+    // So we can refer to the options from anywhere...
+    const current: CurrentOptions = { options: {} }
+
+
     let _map: maplibregl.Map
     cleanup(() => _map?.remove())
-
-    async function loadImage(map: maplibregl.Map, id: string, url: string) {
-        return new Promise((resolve, reject) => {
-            map.loadImage(url, (err, image) => {
-                if (err) return reject(err)
-                // @ts-expect-error
-                map.addImage(id, image)
-                resolve(null)
-            })
-        })
-    }
 
     function getMap (options: MapOptions): Promise<maplibregl.Map> {
         if (_map) return Promise.resolve(_map)
@@ -68,17 +54,26 @@ Alpine.directive('map', (
         // This means the first view of the map is as good as we can make it
 
         const {
+            home,
             center,
             zoom,
             markers,
             autofit,
         } = options
 
+        function getStyleURL(): string {
+            if (MAPTILER_STYLE_URL) {
+                return MAPTILER_STYLE_URL
+            } else {
+                console.warn('USING MAPLIBRE DEMOTILES PLEASE SET MAPTILER_STYLE_URL / MAPTILER_API_KEY')
+                // Just a basic view so *something* shows up...
+                return "https://demotiles.maplibre.org/style.json"
+            }
+        }
+
         const initialOptions: maplibregl.MapOptions = {
             container: el,
-            // style: `https://api.maptiler.com/maps/basic-v2/style.json?key=${MAPTILER_API_KEY}`,
-            // My customized map
-            style: `https://api.maptiler.com/maps/697dfe25-8087-42f1-a3f9-73983704eebf/style.json?key=${MAPTILER_API_KEY}`,
+            style: getStyleURL(),
             attributionControl: false,
         }
 
@@ -87,6 +82,9 @@ Alpine.directive('map', (
             initialOptions.bounds = getBounds(markers)
         } else if (center) {
             initialOptions.center = center
+        } else if (home) {
+            initialOptions.center = home.center
+            initialOptions.zoom = home.zoom
         } else {
             initialOptions.center = DEFAULT_CENTER
         }
@@ -94,6 +92,22 @@ Alpine.directive('map', (
         initialOptions.zoom = zoom ?? DEFAULT_ZOOM
 
         const map = new maplibregl.Map(initialOptions)
+
+        const svgManager = new SvgManager(map)
+
+        map.dragRotate.disable()
+        map.touchZoomRotate.disable()
+        map.addControl(
+            new maplibregl.NavigationControl({ showCompass: false }),
+            'top-right'
+        )
+        if (current.options.filterControl) {
+            map.addControl(new FilterControl(), 'top-left')
+        }
+
+        if (current.options.home) {
+            map.addControl(new HomeControl(current, DEFAULT_ZOOM), 'top-left')
+        }
 
         // This padding stays with the map, then we can add additional padding later
         // when we use fitBounds
@@ -103,10 +117,19 @@ Alpine.directive('map', (
 
         return new Promise(resolve => {
             map.on('load', async () => {
-                await Promise.all([
-                    loadImage(map, 'pin', pin),
-                    loadImage(map, 'circle', circle),
-                ])
+                // These images map 1-to-1 with the marker "type" field
+
+                const promises = []
+
+                for (const name of Object.keys(icons)) {
+                    const icon = icons[name as MarkerType]
+                    promises.push(svgManager.add(name, icon.default))
+                    if (icon.approximate) {
+                        promises.push(svgManager.add(name + '--approximate', icon.approximate))
+                    }
+                }
+
+                await Promise.all(promises)
 
                 map.addSource('markers', {
                     type: 'geojson',
@@ -123,8 +146,27 @@ Alpine.directive('map', (
                     'layout': {
                         'icon-image': ["get", "icon"],
                         'icon-size': 1,
+                        // TODO: hmm, decide how to do the scaling here... also should only be for approximate ones
+                        // it doesn't seem to scale the svgs very well :/
+                        // 'icon-size': ['interpolate', ['linear'], ['zoom'], 15, 1, 22, 10],
                         // This means markers do not fade in
                         'icon-allow-overlap': true
+                    }
+                })
+
+                const initialCursor = map.getCanvas().style.cursor
+
+                map.on('mousemove', 'markers', e => {
+                    if (e.features) {
+                        map.getCanvas().style.cursor = 'pointer'
+                    }
+                })
+
+                map.on('mouseleave', 'markers', () => {
+                    if (current.options.cursor) {
+                        map.getCanvas().style.cursor = current.options.cursor
+                    } else {
+                        map.getCanvas().style.cursor = initialCursor
                     }
                 })
 
@@ -150,14 +192,23 @@ Alpine.directive('map', (
     effect(() => {
         optionsLater(async value => {
             const options = value as MapOptions
+            current.options = options
             const {
+                home,
                 center,
                 zoom,
                 markers,
+                types,
                 cursor,
                 padding,
                 autofit,
             } = options
+
+            function getMarkers(): MapMarker[] {
+                if (!markers) return []
+                if (!types || types.length === 0) return markers
+                return markers.filter(marker => types.includes(marker.type))
+            }
 
             const map = await getMap(options)
 
@@ -166,10 +217,11 @@ Alpine.directive('map', (
             if (cursor) {
                 map.getCanvas().style.cursor = cursor
             }
-            if (center) {
+            let mapCentre = center ?? home?.center
+            if (mapCentre) {
                 const currentZoom = map.getZoom()
                 map.flyTo({
-                    center: center,
+                    center: mapCentre,
                     // in order:
                     // 1. specified zoom
                     // 2. current zoom if we're more zoomed in than default
@@ -177,11 +229,19 @@ Alpine.directive('map', (
                     zoom: zoom ?? (DEFAULT_ZOOM > currentZoom ? DEFAULT_ZOOM : currentZoom),
                 })
             }
-            setMarkers(map, markers ?? [], { padding, autofit })
+            drawMarkers(map, getMarkers(), { padding, autofit })
         })
     })
 
-    function setMarkers(map: maplibregl.Map, markers: MapMarker[], options: { padding?: Padding, autofit?: boolean } = {}) {
+    function getMarkerIcon (marker: MapMarker) {
+        const icon = icons[marker.type]
+        if (marker.approximate && icon.approximate) {
+            return marker.type + '--approximate'
+        }
+        return marker.type
+    }
+
+    function drawMarkers(map: maplibregl.Map, markers: MapMarker[], options: { padding?: Padding, autofit?: boolean } = {}) {
         const source = map.getSource('markers') as GeoJSONSource | undefined
         if (!source) return
         const {
@@ -193,7 +253,8 @@ Alpine.directive('map', (
             features: markers.map(marker => ({
                 type: 'Feature',
                 properties: {
-                    icon: marker.icon ?? 'pin',
+                    type: marker.type,
+                    icon: getMarkerIcon(marker),
                     marker: JSON.stringify(marker),
                 },
                 geometry: {

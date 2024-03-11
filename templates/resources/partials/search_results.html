@@ -1,4 +1,4 @@
 {% for result in results %}
-    {% include "resources/partials/resources-card.html" with resource=result %}
+    {% include "resources/partials/resources-card.html" with resource=result learn_more_button=True %}
 {% endfor %}
 <script>setResultCount({{results|length}})</script>

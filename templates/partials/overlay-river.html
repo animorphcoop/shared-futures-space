@@ -40,7 +40,15 @@
 
 <section id="{% block overlay_id %}{% endblock %}"
          class="overlay-river z-20 flex justify-center items-center h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur"
-         x-data="{ overlayClose() { typeof editing !== 'undefined' ? (editing = false ) : $el.remove() } }"
+         x-data="{
+            overlayClose() {
+                if (typeof editing !== 'undefined') {
+                    editing = false
+                } else {
+                    $el.remove()
+                }
+            }
+         }"
          x-stop-body-scroll>
 
     {% block river_overlay_extra %}{% endblock %}

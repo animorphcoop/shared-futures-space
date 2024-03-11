@@ -7,6 +7,7 @@ django-htmx==1.16.0
 django-stubs==4.2.3
 django-vite==2.1.3
 django-widget-tweaks==1.4.12
+django-formtools==2.5.1
 Django==4.2.3
 psycopg2==2.9.6
 pytest-celery==0.0.0
@@ -17,3 +18,4 @@ python-magic==0.4.27
 redis==4.6.0
 uwsgi==2.0.22
 wagtail==5.0.2
+wagtailgeowidget==8.1.1

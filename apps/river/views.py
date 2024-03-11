@@ -1,5 +1,9 @@
+import os
 from itertools import chain
 from typing import Any, Dict, List, Type
+
+from django.core.files.storage import FileSystemStorage
+from formtools.wizard.views import SessionWizardView
 
 from action.models import Action
 from action.util import send_offer
@@ -29,13 +33,15 @@ from resources.views import filter_and_cluster_resources
 from userauth.util import get_userpair
 
 from .forms import (
-    CreateRiverForm,
     RiverDescriptionUpdateForm,
     RiverImageUpdateForm,
     RiverTitleUpdateForm,
     RiverLocationUpdateForm,
+    CreateRiverFormStep1,
+    CreateRiverFormStep2,
 )
 from .models import River, RiverMembership
+from .util import get_resource_tags
 
 
 class RiverView(DetailView):
@@ -434,45 +440,76 @@ class ReflectView(TemplateView):
         return ctx
 
 
-class RiverStartView(CreateView):
-    form_class = CreateRiverForm
+class RiverStartWizardView(SessionWizardView):
+    """A multistep form view for creating a river"""
 
-    def form_valid(self, form) -> HttpResponse:
-        r = super(RiverStartView, self).form_valid(form)
-        for tag in form.cleaned_data["tags"]:
-            self.object.tags.add(tag)
+    template_name = "start_river_wizard.html"
+    form_list = [
+        CreateRiverFormStep1,
+        CreateRiverFormStep2,
+    ]
+
+    # This storage will temporarily store the uploaded files for the wizard
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "tmp"))
+
+    def render_goto_step(self, goto_step, **kwargs):
+        """Save data when jumping to another step, e.g. previous step
+
+        By default, jumping to a step does _not_ save the data for the page you are on.
+        We override it to do so as suggested by the docs:
+
+        See https://django-formtools.readthedocs.io/en/latest/wizard.html#formtools.wizard.views.WizardView.render_goto_step
+
+        Inspired by https://stackoverflow.com/a/65099307
+
+        Importantly, it does *not* validate the data when jumping to a step as we
+        want to save the data regardless, e.g. when jumping back to the first page, we want to
+        still save what was entered on the second page.
+
+        (validation *does* happen when you do next/submit)
+        """
+
+        form = self.get_form(
+            data=self.request.POST,
+            files=self.request.FILES,
+        )
+
+        self.storage.set_step_data(self.storage.current_step, self.process_step(form))
+        self.storage.set_step_files(
+            self.storage.current_step, self.process_step_files(form)
+        )
+
+        return super().render_goto_step(goto_step, **kwargs)
+
+    def done(self, form_list, **kwargs):
+        """Merge data from all the forms and save/initialize the river
+
+        Form data is already validated by this point, so we don't need to recheck it.
+        """
+
+        cleaned_data = {}
+        for form in form_list:
+            cleaned_data.update(form.cleaned_data)
+
+        tags = cleaned_data.pop("tags", [])
+
+        river = River(**cleaned_data)
+        for tag in tags:
+            river.tags.add(tag)
+
         try:
             post_code = PostCode.objects.all().filter(code=self.request.user.post_code)[
                 0
             ]
-            self.object.area = post_code.area
-
+            river.area = post_code.area
         except PostCode.DoesNotExist:
             pass
 
-        self.object.save()
-        self.object.start_envision()
+        river.save()
+        river.start_envision()
 
-        return r
-
-    def get_context_data(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        context = super().get_context_data(*args, **kwargs)
-        tags = []
-        resources = Resource.objects.all()
-
-        for resource in resources:
-            for tag in resource.tags.names():
-                if tag.lower() not in tags:
-                    tags.append(tag.lower())
-
-        tags.sort()
-        context["tags"] = tags
-        return context
-
-    def get_success_url(self) -> str:
         RiverMembership.objects.create(
-            user=self.request.user, river=self.object, starter=True
+            user=self.request.user, river=river, starter=True
         )
-        return reverse_lazy("view_river", args=[self.object.slug])
+
+        return HttpResponseRedirect(reverse_lazy("view_river", args=[river.slug]))

@@ -2,13 +2,12 @@ from typing import List, Union
 
 from django.urls import URLPattern, URLResolver, path
 
-from .views import RemixMapView
+from .views import MapView
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path(
-        "map/",
-        RemixMapView.as_view(),
-        name="remix_map",
+        "",
+        MapView.as_view(),
+        name="map",
     ),
 ]
-
