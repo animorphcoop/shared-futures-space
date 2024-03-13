@@ -36,7 +36,9 @@
                             {{ area.postcode_set.all|join:", " }}
                         </td>
                         <td class="text-sm text-black-text">
-                            <img src="{{ area.image.url }}" alt="area" width="100" class="mx-auto">
+                            {% if area.image %}
+                                <img src="{{ area.image.url }}" alt="area" width="100" class="mx-auto">
+                            {% endif %}
                         </td>
                     </tr>
                     {% endif %}
