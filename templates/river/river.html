@@ -97,10 +97,10 @@
 
                     {# Stage outline #}
                     <ul class="hidden lg:flex flex-col gap-3 text-right">
-                        <li><a href="#envision" class="button button-on-white button-secondary">Envision</a></li>
-                        <li><a href="#plan" class="button button-on-white button-secondary">Plan</a></li>
-                        <li><a href="#act" class="button button-on-white button-secondary">Act</a></li>
-                        <li><a href="#reflect" class="button button-on-white button-secondary">Reflect</a></li>
+                        <li><a href="#envision" class="button button-on-white button-secondary {% if object.current_stage == 'envision' %}button-important{% endif %}">Envision</a></li>
+                        <li><a href="#plan" class="button button-on-white button-secondary {% if object.current_stage == 'plan' %}button-important{% endif %}">Plan</a></li>
+                        <li><a href="#act" class="button button-on-white button-secondary {% if object.current_stage == 'act' %}button-important{% endif %}">Act</a></li>
+                        <li><a href="#reflect" class="button button-on-white button-secondary {% if object.current_stage == 'reflect' %}button-important{% endif %}">Reflect</a></li>
                     </ul>
                     <div id="modal-container" class="invisible">
                         {% include "river/resources.html" %}
