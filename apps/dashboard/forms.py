@@ -3,6 +3,8 @@ from django import forms
 from django.conf import settings
 from django.core import mail
 
+from core.forms import LocationAndPrecisionField, LocationAndZoomField
+
 
 class ContactForm(forms.Form):
     message = forms.CharField(label="Message", widget=forms.Textarea)
@@ -38,7 +40,8 @@ class ContactForm(forms.Form):
 
 class AreaForm(forms.ModelForm):
     post_code = forms.CharField(label="Post Codes")
+    location_and_zoom = LocationAndZoomField()
 
     class Meta:
         model = Area
-        fields = ["name", "image"]
+        fields = ["name", "image", "location_and_zoom"]
