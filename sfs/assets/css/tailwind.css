@@ -54,28 +54,28 @@
     .button {
         @apply inline-block rounded-full px-4 py-4 max-h-12
         transition ease-out duration-300
-        text-button text-purple !important
+        text-button text-purple
     }
     .button-secondary {
-        @apply button px-3 py-1 !important
+        @apply button px-3 py-1
     }
     .button-on-white {
-        @apply bg-blue-second hover:shadow-button focus:bg-blue-tertiary !important
+        @apply bg-blue-second hover:shadow-button focus:bg-blue-tertiary
     }
     .button-on-white-reverse {
-        @apply bg-blue-done hover:shadow-button focus:bg-blue-done !important
+        @apply bg-blue-done hover:shadow-button focus:bg-blue-done
     }
     .button-on-colour {
-        @apply bg-white hover:shadow-button focus:bg-blue-second !important
+        @apply bg-white hover:shadow-button focus:bg-blue-second
     }
     .button-important {
-        @apply bg-yellow-pale hover:shadow-button focus:bg-yellow !important
+        @apply bg-yellow-pale hover:shadow-button focus:bg-yellow
     }
     .button-mini {
-        @apply py-0 px-2 !important
+        @apply py-0 px-2
     }
     .button-danger {
-        @apply bg-red-important hover:shadow-button focus:bg-red-focus text-white !important
+        @apply bg-red-important hover:shadow-button focus:bg-red-focus text-white
     }
 
     /* --- FORMS ---------------------------------------------------------------------------------------------------- */
