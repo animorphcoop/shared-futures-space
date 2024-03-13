@@ -78,6 +78,16 @@
         @apply bg-red-important hover:shadow-button focus:bg-red-focus text-white
     }
 
+    /* Maplibre's CSS file makes the background transparent using this selector:
+
+         .maplibregl-ctrl button:not(:disabled):hover
+
+       So we need to set the background with a higher precedence.
+    */
+    .maplibregl-ctrl .button-on-colour {
+        @apply bg-white !important
+    }
+
     /* --- FORMS ---------------------------------------------------------------------------------------------------- */
     .input-text {
         @apply block w-full px-3 py-3 font-garamond-500 text-black-text placeholder:text-black-meta
