@@ -173,6 +173,7 @@ def add_areas(areas_data):
                 this_area.zoom = zoom
             for postcode in area_data["postcodes"]:
                 PostCode.objects.get_or_create(code=postcode, area=this_area)
+            this_area.save()
         except Exception as e:
             print(
                 "could not add area with definition: "
