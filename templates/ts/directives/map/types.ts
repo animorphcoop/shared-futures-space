@@ -31,4 +31,5 @@ export interface MapOptions {
 
 export interface CurrentOptions {
     options: MapOptions
+    mapCentre?: MapCoordinates
 }
