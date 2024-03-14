@@ -16,6 +16,16 @@
 
     If you don't pass in an id it'll generate a random one for you.
 
+    It also has support for displaying existing files, e.g.:
+
+        {% include "partials/input-file.html" with field=field file=form.files|lookup:field.html_name %}
+
+    form.files has to be populated via some server logic, in the case of using a WizardForm
+    this is handled for you.
+
+    It will *look* like it's a pre-populated file input field, even though it's not
+    possible with standard HTML inputs (as the file is on the server... and it doesn't know about that).
+
 {% endcomment %}
 
 {% load custom_tags %}
@@ -26,13 +36,47 @@
 {% endif %}
 
 <label class="mr-2 button button-on-white cursor-pointer" for="{{ id }}">Select</label>
-{% with input_classes="file:hidden text-meta text-sm text-black/30 focus:outline-none" %}
-    {% if field %}
-        {% render_field field id=id class=input_classes %}
-    {% else %}
-        <input id="{{ id }}" type="file" name="{{ name }}" accept="{{ accept }}" class="{{ input_classes }}">
-    {% endif %}
-{% endwith %}
+
+<span data-file="{{ file }}"
+      data-id="{{ id }}"
+      x-data="{
+        // This is the filename of the initial file, if we have one
+        file: $el.dataset.file,
+        // Whether to show the initial file
+        showFile: false,
+        // The file input element
+        inputEl: document.getElementById($el.dataset.id),
+        // How many files are loaded in the actual element
+        // (this is 1 if the user has selected a file)
+        fileCount: 0
+      }"
+      x-init="
+        // We keep track of how many files are selected
+        fileCount = inputEl.files.length
+        inputEl.addEventListener('change', () => {
+          fileCount = inputEl.files.length
+        })"
+      x-effect="
+        if (fileCount === 0 && file) {
+          // No files selected, and we have an initial file
+          inputEl.classList.add('hidden');
+          showFile = true;
+        } else {
+          // All other cases, show the actual input element
+          inputEl.classList.remove('hidden');
+          showFile = false;
+        }">
+
+    <span x-show="showFile" x-text="file" class="text-meta text-sm text-black/30"></span>
+
+    {% with input_classes="file:hidden text-meta text-sm text-black/30 focus:outline-none" %}
+        {% if field %}
+            {% render_field field id=id class=input_classes %}
+        {% else %}
+            <input id="{{ id }}" type="file" name="{{ name }}" accept="{{ accept }}" class="{{ input_classes }}">
+        {% endif %}
+    {% endwith %}
+</span>
 
 {% for error in field.errors %}
     <div class="text-red-600">{{ error }}</div>

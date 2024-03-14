@@ -29,7 +29,8 @@ const BASE_PADDING = 80 // always have at least this much padding
  *
  *      <div x-map="{ markers: [] }"
  *           @click-marker="console.log('you clicked on marker', $event.detail)"
- *           @click-map="console.log('you clicked the map at coords', $event.detail)"></div>
+ *           @click-map="console.log('you clicked the map at coords', $event.detail)"
+ *           @zoom-end="console.log('zoom is now', $event.detail)"></div>
  *
  *  See the MapOptions interface for what you can put in there
  */
@@ -152,6 +153,10 @@ Alpine.directive('map', (
                         // This means markers do not fade in
                         'icon-allow-overlap': true
                     }
+                })
+
+                map.on('zoomend', () => {
+                    el.dispatchEvent(new CustomEvent("zoom-end", {detail: { zoom: map.getZoom() }}))
                 })
 
                 const initialCursor = map.getCanvas().style.cursor

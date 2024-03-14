@@ -36,6 +36,17 @@ def to_json(value):
     return json.dumps(value)
 
 
+@register.filter(name="lookup")
+def lookup(value, arg):
+    """Use to get dictionary values out
+
+    if foo is: { "bar": "yay"}
+
+    This will output "yay": {{ foo:lookup:"bar" }}
+    """
+    return value.get(arg, None)
+
+
 @register.filter(name="to_marker_json")
 def to_marker_json(river: Optional[River]):
     if not river:

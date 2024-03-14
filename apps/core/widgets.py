@@ -13,28 +13,43 @@ class PrecisionRadioSelect(RadioSelect):
         )
 
 
-class LocationAndPrecisionInput(MultiWidget):
-    """Widget to set coordinates and precision at once
+class LocationInput(MultiWidget):
+    """Widget to set coordinates, precision, and zoom at once
 
-    Goes hand-in-hand with LocationAndPrecisionField
+    Goes hand-in-hand with LocationField
+    Precision and zoom are both optional
     """
 
-    template_name = "river/widgets/location_and_precision.html"
+    template_name = "river/widgets/location.html"
 
-    def __init__(self, attrs=None):
-        _widgets = (
-            PrecisionRadioSelect(),
-            HiddenInput(),
+    def __init__(self, attrs=None, enable_precision=False, enable_zoom=False):
+        self.enable_precision = enable_precision
+        self.enable_zoom = enable_zoom
+        super().__init__(
+            widgets=(
+                # co-ordinates
+                HiddenInput(),
+                # precision
+                PrecisionRadioSelect(),
+                # zoom
+                HiddenInput(),
+            ),
+            attrs=attrs,
         )
-        super().__init__(_widgets, attrs)
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context["widget"]["enable_precision"] = self.enable_precision
+        context["widget"]["enable_zoom"] = self.enable_zoom
+        return context
 
     def decompress(self, value):
         if value:
             return value
-        return [True, None]
+        return [None, True, 12]
 
 
 widgets = {
-    "location_input": LocationAndPrecisionInput,
+    "location_input": LocationInput,
     "tags_input": TagsInput,
 }

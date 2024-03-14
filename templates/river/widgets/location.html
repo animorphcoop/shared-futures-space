@@ -1,0 +1,134 @@
+{% load widget_tweaks %}
+
+{% comment %}
+
+    A multi widget to set both location precision and the location co-ordinates
+    This is because they are quite interdependent, and we tie them together with alpine.js.
+
+    We get given multiple subwidgets here:
+        - widget.subwidgets.0
+            - is the co-ordinates
+            - it's value is a Point field serialized as a string
+            - we can use $coordsToPoint and $pointToCoords to convert in js
+        - widget.subwidgets.1
+            - the location precision
+            - it's value is string, either "True" or "False"
+            - it's built on top of a radio select field with those two values
+        - widget.subwidgets.2
+            - is the zoom
+            - it's value is a float value
+
+{% endcomment %}
+
+<div data-point="{{ widget.subwidgets.0.value }}"
+     data-exact="{{ widget.subwidgets.1.value.0 }}"
+     data-zoom="{{ widget.subwidgets.2.value }}"
+     x-data="{
+
+       // [lon, lat] of coords
+       coords: null,
+
+       // string of 'True' or 'False' to mean exact or approximate
+       // it's a string as that's how it gets passed back and forth for django
+       // use it boolean: exact === 'True'
+       exact: null,
+
+       // integer
+       zoom: 12,
+
+       // generated marker to show on map
+       marker: null
+     }"
+     x-init="
+        // set initial values
+        coords = $el.dataset.point ? $pointToCoords($el.dataset.point) : null;
+        exact = $el.dataset.exact;
+        zoom = parseFloat($el.dataset.zoom || '12');
+     "
+     x-effect="
+        // generate marker based on coords/exact values
+        marker = coords ? {
+            coordinates: coords,
+            approximate: exact !== 'True',
+            type: 'river'
+        } : null
+     ">
+
+    {% if widget.enable_precision %}
+
+        <div class="flex justify-center gap-3 my-3">
+            {% for group, options, index in widget.subwidgets.1.optgroups %}
+                {% for option in options %}
+                    <label class="cursor-pointer flex items-center gap-1 text-meta-label"
+                           data-val="{{ option.value|stringformat:'s' }}"
+                           x-data="{ val: $el.dataset.val }"
+                           @click="exact = $el.dataset.val">
+
+                        {# Custom "radio" control #}
+                        <div class="bg-white w-6 h-6 rounded-full shadow-inner flex items-center justify-center">
+                            {# the dot in the middle #}
+                            <div x-show="exact === val"
+                                 class="rounded-full h-1/3 w-1/3 bg-purple"></div>
+                        </div>
+
+                        {{ option.label }}
+                    </label>
+
+                    {% comment %}
+                        We *should* make this more accessibility friendly by including a normal
+                        checkbox too that is hidden for others.
+
+                        The implementation would look something like adding aria-hidden="true"
+                        to div's above, and adding this checkbox alongside it:
+
+                        <input type="radio"
+                               class="sr-only"
+                               name="{{ option.name }}"
+                               value="{{ option.value|stringformat:'s' }}"
+                               autocomplete="off"
+                               x-model="exact"
+                               {% if option.selected %}checked="checked"{% endif %}>
+
+                        The reason I haven't right now is that it would make sense that it
+                        can be reused in more than just this location checkbox, and that needs
+                        a bit more refactoring of the forms code.
+
+                    {% endcomment %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div x-map="{ markers: marker ? [marker] : [], center: marker ? marker.coordinates : null, cursor: 'pointer' }"
+         @click-map="coords = $event.detail.coordinates"
+         @zoom-end="zoom = $event.detail.zoom"
+         class="w-full h-96 rounded relative">
+        <button class="absolute top-20 right-2 z-20 bg-white rounded-full p-2"
+                x-show="coords"
+                @click="coords = null" type="button">
+            {% include 'partials/close.html' with size=6 %}
+        </button>
+    </div>
+
+    <input id="{{ widget.subwidgets.0.attrs.id }}"
+           name="{{ widget.subwidgets.0.name }}"
+           type="hidden"
+           :value="$coordsToPoint(coords)">
+
+    {% if widget.enable_precision %}
+        <input id="{{ widget.subwidgets.1.attrs.id }}"
+               name="{{ widget.subwidgets.1.name }}"
+               type="hidden"
+               :value="exact">
+    {% endif %}
+
+    {% if widget.enable_zoom %}
+        <input id="{{ widget.subwidgets.2.attrs.id }}"
+               name="{{ widget.subwidgets.2.name }}"
+               type="hidden"
+               :value="zoom">
+
+        <pre>zoom: <span x-text="zoom"></span></pre>
+    {% endif %}
+
+</div>

@@ -3,7 +3,7 @@ from typing import List, Type
 from django import forms
 from django.contrib.gis.forms import PointField
 
-from core.forms import LocationAndPrecisionField
+from core.forms import LocationField
 from .models import River
 from .widgets import TagsInput
 
@@ -20,25 +20,26 @@ class CreateRiverFormStep1(forms.ModelForm):
 
 
 class CreateRiverFormStep2(forms.ModelForm):
-    location_and_precision = LocationAndPrecisionField()
+    location = LocationField(enable_precision=True)
 
     def clean(self):
         super().clean()
 
-        # Need to split out the two values
-        location_exact, location = self.cleaned_data.pop(
-            "location_and_precision",
+        # Need to split out the co-ordinates and precision values, ignore zoom
+        location, location_exact, _ = self.cleaned_data.pop(
+            "location",
             (
+                None,
                 True,  # default to exact
                 None,
             ),
         )
-        self.cleaned_data["location_exact"] = location_exact
         self.cleaned_data["location"] = location
+        self.cleaned_data["location_exact"] = location_exact
 
     class Meta:
         model = River
-        fields = ["location_and_precision"]
+        fields = ["location"]
 
 
 class RiverTitleUpdateForm(forms.ModelForm):

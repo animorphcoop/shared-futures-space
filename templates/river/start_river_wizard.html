@@ -2,6 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load django_vite %}
+{% load custom_filters %}
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -29,7 +30,7 @@
             {% for field in form %}
                 {% include "partials/input-label.html" with for=field.id_for_label label=field.label %}
                 {% if field.field.widget.input_type == 'file' %}
-                    {% include "partials/input-file.html" with field=field %}
+                    {% include "partials/input-file.html" with field=field file=form.files|lookup:field.html_name %}
                 {% else %}
                     {% render_field field class="input-text" %}
                 {% endif %}
@@ -76,7 +77,7 @@
                     </button>
                 {% endif %}
 
-                <a href="/"
+                <a href="?discard"
                    class="button button-on-white">Discard</a>
 
                 <button type="submit"

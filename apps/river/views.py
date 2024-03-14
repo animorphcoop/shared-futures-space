@@ -452,6 +452,25 @@ class RiverStartWizardView(SessionWizardView):
     # This storage will temporarily store the uploaded files for the wizard
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "tmp"))
 
+    def get(self, request, *args, **kwargs):
+        """Support discard and restoring on get
+
+        discard:
+            if you add "?discard" to url it will clear storage
+            and send you to dashboard
+
+        restoring saved data:
+            by default if you reload the form with a GET it'll
+            reset the storage, we want to continue where we
+            left off, so we treat it as a goto step
+
+        to *not* reset storage if we just get the page again"""
+        if "discard" in self.request.GET:
+            self.storage.reset()
+            return HttpResponseRedirect(reverse_lazy("dashboard"))
+
+        return self.render_goto_step(self.steps.first)
+
     def render_goto_step(self, goto_step, **kwargs):
         """Save data when jumping to another step, e.g. previous step
 
@@ -468,16 +487,26 @@ class RiverStartWizardView(SessionWizardView):
 
         (validation *does* happen when you do next/submit)
         """
+        if self.steps.current != goto_step:
+            """Only save data if we are actually moving steps
 
-        form = self.get_form(
-            data=self.request.POST,
-            files=self.request.FILES,
-        )
+            They are the same if we resubmit the "go to step" form
+            e.g. pressing refresh in the browser
 
-        self.storage.set_step_data(self.storage.current_step, self.process_step(form))
-        self.storage.set_step_files(
-            self.storage.current_step, self.process_step_files(form)
-        )
+            We need to avoid overwriting the storage in that scenario
+            """
+            form = self.get_form(
+                data=self.request.POST,
+                files=self.request.FILES,
+            )
+
+            self.storage.set_step_data(
+                self.storage.current_step, self.process_step(form)
+            )
+            self.storage.set_step_files(
+                self.storage.current_step,
+                self.process_step_files(form),
+            )
 
         return super().render_goto_step(goto_step, **kwargs)
 
