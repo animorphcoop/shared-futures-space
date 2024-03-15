@@ -122,6 +122,9 @@
                         This poll finished at {{ poll.when_closed|date:"G:i" }} {{ poll.when_closed|date:"d/m/y" }}.
                     {% else %}
                         Please cast your vote. This vote will close in {{ poll_expires|timeuntil }}.
+                        <br><br>
+                        If there is a majority for YES, the poll closes and the next stage unlocks. If there is a majority for NO, the poll closes and you must communicate together to uncover what should be changed. It might take some discussion, rephrasing, and more than one attempt for the poll to be passed, and
+that's OK!
                     {% endif %}
                 </p>
                 <p class="block text-meta px-3.5">
