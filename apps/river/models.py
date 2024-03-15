@@ -311,19 +311,19 @@ class River(ClusterableModel):
                 kind="salmon_wizard",
                 chat=self.envision_stage.general_chat,
                 context_river=self,
-                text="I am the Salmon of Knowledge and will help you navigate the river of your project. At the bottom left you can see me, and if you click me, you can browse relevant resources.",
+                text="I am the Salmon of Knowledge! I will help you navigate the river of your project.",
             )
             send_system_message(
                 kind="salmon_wizard",
                 chat=self.envision_stage.general_chat,
                 context_river=self,
-                text="Once there are 3 swimmers in the river, you can shape the vision together. Discuss the current description and make sure it captures your collective vision for this project.",
+                text="Once 3 swimmers have joined the river, you can shape the vision together. Discuss the current description and make sure it captures your collective vision for this project.",
             )
             send_system_message(
                 kind="salmon_wizard",
                 chat=self.envision_stage.general_chat,
                 context_river=self,
-                text="When you’re ready, the river starter can launch a poll using the poll icon in the bottom right. Here they can edit the original description to include any changes that have been discussed. If the poll passes, you will move to the planning stage.",
+                text="When you’re ready, the river starter can launch a poll using the poll icon. Here they can edit the original description to include any changes that have been discussed. If the poll passes, you will move to the planning stage.",
             )
             self.save()
 
@@ -467,21 +467,21 @@ class River(ClusterableModel):
 
             # send_system_message(self.act_stage.general_chat, 'poll', context_poll=self.act_stage.general_poll)
             self.act_stage.money_poll = SingleChoicePoll.objects.create(
-                question="are all money-related actions done?",
+                question="Are all money-related actions done?",
                 options=["yes", "no"],
                 expires=timezone.now() + timezone.timedelta(days=7),
                 river=self,
             )
             # send_system_message(self.act_stage.money_chat, 'poll', context_poll=self.act_stage.money_poll)
             self.act_stage.place_poll = SingleChoicePoll.objects.create(
-                question="are all place-related actions done?",
+                question="Are all place-related actions done?",
                 options=["yes", "no"],
                 expires=timezone.now() + timezone.timedelta(days=7),
                 river=self,
             )
             # send_system_message(self.act_stage.place_chat, 'poll', context_poll=self.act_stage.place_poll)
             self.act_stage.time_poll = SingleChoicePoll.objects.create(
-                question="are all time-related actions done?",
+                question="Are all time-related actions done?",
                 options=["yes", "no"],
                 expires=timezone.now() + timezone.timedelta(days=7),
                 river=self,
