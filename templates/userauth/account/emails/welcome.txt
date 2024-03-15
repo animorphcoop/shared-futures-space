@@ -1,28 +1,29 @@
-Welcome to a project management platform where your community collaborates and
-gets stuff done!
+Welcome to a project management platform where your community collaborates and gets stuff done.
 
-On Shared Futures, each user that signs up belongs to an area, which is dictated
-by their post code.
+On Shared Futures, your account is associated with an area, dictated by the post code you enter when first setting up your account.
 
-We call areas -> *Springs*. Within each Spring you will find projects, which we
-call *Rivers*. Each River has *Swimmers* — people who contribute to it.
+Areas are known as 'Springs'. Within each Spring you will find projects, which we call 'Rivers'. Each River has 'Swimmers' — the people who contribute to it.
 
-There are 4 stages that a River can be at any point:
+You can browse Rivers in all Springs. In your home Spring you can also join and contribute to existing Rivers, or start new ones.
+
+Rivers are structured to help you move a project through from idea to completion. There are 4 stages to a River:
 
 1. Envision
+Discuss, shape, and capture your collective vision.
 
 2. Plan
+Make plans for how you'll achieve your vision.
 
 3. Act
+Share updates on how the plans are being carried out.
 
 4. Reflect
+Consider which resources on the platform helped you.
 
-All you need to know to get started is: to transition from one to the next
-a majority (voting YES) is required on the *Poll* submitted by the River Starter.
-More than one attempts might be required for the Poll to be successful and
+To move from stage one to the next, the Swimmers in a River need to agree on statements by passing a majority YES vote on a poll. The river starter can open polls in every stage. It might take some discussion, rephrasing, and more than one attempt for the poll to be passed, and
 that's OK!
 
-We hope you find this platform useful for developing the projects of your
-community :)
+What are you waiting for? Dive in and explore!
 
-— Shared Futures Team
+We hope you find this platform useful for developing the projects in your community.
+— Shared Futures Spaces
