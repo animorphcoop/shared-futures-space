@@ -39,6 +39,33 @@
                 {% include "partials/vertical-spacer.html" with space="9" %}
             {% endfor %}
 
+            {# TODO: consult design on best style for this info #}
+            <div>
+                <p>
+                    Rivers are structured to help you move a project through from idea to completion. There are 4 stages to a River:
+                </p>
+                <ol>
+                    <li>
+                        1. Envision: discuss, shape, and capture your collective vision.
+                    </li>
+                    <li>
+                        2. Plan: make plans for how you'll achieve your vision.
+                    </li>
+                    <li>
+                        3. Act: share updates on how the plans are being carried out.
+                    </li>
+                    <li>
+                        4. Reflect: consider which resources on the platform helped you.
+                    </li>
+                </ol>
+                <p>
+                    To progress through the stages, the Swimmers in this River will need to agree on statements by passing a majority YES vote on polls in each stage.
+                </p>
+                <p>
+                    The Salmon of Knowledge will offer guidance in each stage, so dive in and get started!
+                </p>
+            </div>
+
             <div class="flex justify-center gap-2">
                 {% if wizard.steps.prev %}
                     <button name="wizard_goto_step"
@@ -57,7 +84,7 @@
                     {% if wizard.steps.next %}
                         Next
                     {% else %}
-                        Submit
+                        Start river
                     {% endif %}
                 </button>
             </div>
