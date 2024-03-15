@@ -386,9 +386,9 @@ class CreateRiverPollView(TemplateView):
         ctx["stage"] = stage
         ctx["topic"] = topic
         ctx["prompt"] = {
-            "envision": "Approve shared goal",
-            "plan": "Approve plan for " + topic,
-            "act": "Query success of " + topic,
+            "envision": "Describe the shared vision",
+            "plan": "Describe the plan for " + topic,
+            "act": "Describe what happened with " + topic,
         }[stage]
         ctx["default"] = {"envision": ctx["river"].description, "plan": "", "act": ""}[
             stage
