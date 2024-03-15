@@ -17,6 +17,14 @@
                     {{ default }}
                 </textarea>
                 {% include "partials/vertical-spacer.html" with space="6" %}
+                <p class="text-meta">
+                    Creating this poll will ask Swimmers if the above statement is acceptable. Swimmers in this River need to agree on the above statement. If there is a majority YES vote, the next stage will open.
+                </p>
+                {% include "partials/vertical-spacer.html" with space="1.5" %}
+                <p class="text-meta">
+                    It might take some discussion, rephrasing, and more than one attempt for a poll to be passed, and that's OK!
+                </p>
+                {% include "partials/vertical-spacer.html" with space="6" %}
                 <span class="block flex items-center gap-3">
                 <button onclick="event.preventDefault(); removePollModal();"
                         class="button button-on-white">
