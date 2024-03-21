@@ -5,28 +5,28 @@
 <ul class="list-non text-black/30 -mt-2" aria-labelledby="dropdownLargeButton">
 
     {% if user.is_authenticated %}
-        {% for key, value in areas_dict.items %}
+        {% for key, area in areas_dict.items %}
 
-            {% if value == user.post_code.area.name %}
+            {% if area.name == user.post_code.area.name %}
                 <li class="px-4 py-3 text-black/75 {% active_link 'text-purple' 'spring' slug=key %}">
                     <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
-                        <span>Your spring: </span>{{ value }}
+                        <span>Your spring: </span>{{ area.name }}
                     </a>
                 </li>
             {% else %}
                 <li class="px-4 py-3 {% active_link 'text-purple' 'spring' slug=key %}">
                     <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
-                        {{ value }}
+                        {{ area.name }}
                     </a>
                 </li>
             {% endif %}
         {% endfor %}
 
     {% else %}
-        {% for key, value in areas_dict.items %}
+        {% for key, area in areas_dict.items %}
             <li class="px-4 py-3 {% active_link 'text-purple' 'spring' slug=key %}">
                 <a href="{% url "spring" key %}" @click="toggle(), menu = !menu">
-                    {{ value }}
+                    {{ area.name }}
                 </a>
             </li>
         {% endfor %}
