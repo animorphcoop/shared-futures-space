@@ -34,7 +34,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     ),
     path(
         "view/<str:slug>/",
-        RiverView.as_view(template_name="river.html"),
+        RiverView.as_view(),
         name="view_river",
     ),
     path(

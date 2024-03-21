@@ -22,11 +22,9 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 
-from core.views import HTMXMixin
 from messaging.forms import ChatForm
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
-from PIL.Image import Image
 from poll.models import SingleChoicePoll
 from resources.models import CaseStudy, HowTo, Resource
 from resources.views import filter_and_cluster_resources
@@ -45,6 +43,7 @@ from .util import get_resource_tags
 
 
 class RiverView(DetailView):
+    template_name = "river.html"
     model = River
 
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
