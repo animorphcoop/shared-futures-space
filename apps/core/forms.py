@@ -39,6 +39,14 @@ class LocationField(MultiValueField):
             ],
             label="Location",
         )
+        self.enable_precision = enable_precision
+        self.enable_zoom = enable_zoom
 
     def compress(self, data_list):
-        return data_list
+        location, precision, zoom = data_list or [None, True, 12]
+        data = {"location": location}
+        if self.enable_precision:
+            data["precision"] = precision
+        if self.enable_zoom:
+            data["zoom"] = zoom
+        return data

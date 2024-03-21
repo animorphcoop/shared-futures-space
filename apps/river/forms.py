@@ -23,19 +23,11 @@ class CreateRiverFormStep2(forms.ModelForm):
     location = LocationField(enable_precision=True)
 
     def clean(self):
-        super().clean()
-
-        # Need to split out the co-ordinates and precision values, ignore zoom
-        location, location_exact, _ = self.cleaned_data.pop(
-            "location",
-            (
-                None,
-                True,  # default to exact
-                None,
-            ),
-        )
-        self.cleaned_data["location"] = location
-        self.cleaned_data["location_exact"] = location_exact
+        cleaned_data = super().clean()
+        location_fields = cleaned_data.pop("location")
+        cleaned_data["location"] = location_fields["location"]
+        cleaned_data["location_exact"] = location_fields["precision"]
+        return cleaned_data
 
     class Meta:
         model = River

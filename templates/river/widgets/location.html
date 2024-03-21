@@ -31,7 +31,7 @@
        // string of 'True' or 'False' to mean exact or approximate
        // it's a string as that's how it gets passed back and forth for django
        // use it boolean: exact === 'True'
-       exact: null,
+       exact: 'True',
 
        // integer
        zoom: 12,
@@ -40,9 +40,9 @@
        marker: null
      }"
      x-init="
-        // set initial values
+        // set initial/default values
         coords = $el.dataset.point ? $pointToCoords($el.dataset.point) : null;
-        exact = $el.dataset.exact;
+        exact = $el.dataset.exact || 'True';
         zoom = parseFloat($el.dataset.zoom || '12');
      "
      x-effect="
@@ -127,8 +127,6 @@
                name="{{ widget.subwidgets.2.name }}"
                type="hidden"
                :value="zoom">
-
-        <pre>zoom: <span x-text="zoom"></span></pre>
     {% endif %}
 
 </div>
