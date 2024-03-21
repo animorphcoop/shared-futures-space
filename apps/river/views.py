@@ -323,7 +323,7 @@ class CreateRiverPollView(TemplateView):
                 return HttpResponse(
                     "could not create poll, topic not recognised (" + topic + ")"
                 )
-            if poll_ref is None or (poll_ref.closed and not poll.passed):
+            if poll_ref is None or (poll_ref.closed and not poll_ref.passed):
                 if "description" in request.POST:
                     try:
                         if stage == river.Stage.ENVISION:

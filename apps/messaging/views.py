@@ -77,6 +77,23 @@ class ChatView(TemplateView):
                 "reflect": river.reflect_stage,
             }[kwargs["stage"]]
 
+            is_member = (
+                request.user.is_authenticated
+                and river.rivermembership_set.filter(user=request.user).exists()
+            )
+
+            if is_member:
+                if kwargs["stage"] == "envision" or kwargs["stage"] == "reflect":
+                    poll_ref = stage_ref.general_poll
+                else:
+                    poll_ref = {
+                        "general": stage_ref.general_poll,
+                        "money": stage_ref.money_poll,
+                        "place": stage_ref.place_poll,
+                        "time": stage_ref.time_poll,
+                    }[kwargs["topic"]]
+                context["poll_ref"] = poll_ref
+
             context.update(
                 {
                     "river": river,
@@ -119,14 +136,6 @@ class ChatView(TemplateView):
                             and stage_ref.time_poll.passed
                         )
                     ),
-                    "poll_ref": stage_ref.general_poll
-                    if kwargs["stage"] == "envision" or kwargs["stage"] == "reflect"
-                    else {
-                        "general": stage_ref.general_poll,
-                        "money": stage_ref.money_poll,
-                        "place": stage_ref.place_poll,
-                        "time": stage_ref.time_poll,
-                    }[kwargs["topic"]],
                     "chat_ref": stage_ref.general_chat
                     if kwargs["stage"] == "envision" or kwargs["stage"] == "reflect"
                     else {
