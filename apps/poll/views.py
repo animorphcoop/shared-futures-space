@@ -25,6 +25,8 @@ from .models import (
 
 
 class PollView(TemplateView):
+    template_name = "poll/poll_view.html"
+
     def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponse:
         poll = BasePoll.objects.get(uuid=uuid)
         if hasattr(poll, "multiplechoicepoll"):
@@ -110,7 +112,9 @@ class PollView(TemplateView):
         # river slug for htmx to run conditional check if the poll is closed so to trigger refreshing on the frontend
         river = poll.river
         ctx["slug"] = river.slug
-        ctx["starters"] = RiverMembership.objects.filter(river=river).values_list(
+        ctx["starters"] = RiverMembership.objects.filter(
+            river=river, starter=True
+        ).values_list(
             "user__id", flat=True
         )  # for telling whether we should show the edit poll button
         return ctx
@@ -146,6 +150,7 @@ class PollCreateForm(ModelForm):
 
 
 class PollCreateView(CreateView):
+    template_name = "poll/poll_create.html"
     model = SingleChoicePoll
     form_class = PollCreateForm
 

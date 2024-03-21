@@ -10,12 +10,12 @@ from .views import PollCreateView, PollView, poll_edit
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path(
         "<uuid:uuid>/",
-        PollView.as_view(template_name="poll/poll_view.html"),
+        PollView.as_view(),
         name="poll_view",
     ),
     path(
         "create/",
-        PollCreateView.as_view(template_name="poll/poll_create.html"),
+        PollCreateView.as_view(),
         name="poll_create",
     ),
     path("edit/", poll_edit, name="poll_edit"),
