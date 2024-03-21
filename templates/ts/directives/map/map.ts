@@ -223,7 +223,7 @@ Alpine.directive('map', (
                 map.getCanvas().style.cursor = cursor
             }
             let mapCentre = center ?? home?.center
-            
+
             // Only move if it actually changed
             if (mapCentre && (!current.mapCentre || mapCentre[0] !== current.mapCentre[0] || mapCentre[1] !== current.mapCentre[1])) {
                 current.mapCentre = mapCentre

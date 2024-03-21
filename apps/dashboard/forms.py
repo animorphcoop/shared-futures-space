@@ -40,8 +40,24 @@ class ContactForm(forms.Form):
 
 class AreaForm(forms.ModelForm):
     post_code = forms.CharField(label="Post Codes")
-    location = LocationField()
+    location = LocationField(enable_zoom=True)
+
+    def clean(self):
+        super().clean()
+
+        # Need to split out the co-ordinates and precision values, ignore zoom
+        location, _, zoom = self.cleaned_data.pop(
+            "location",
+            (
+                None,
+                True,
+                12,
+            ),
+        )
+        print("cleaning area info!", location, zoom)
+        self.cleaned_data["location"] = location
+        self.cleaned_data["zoom"] = zoom
 
     class Meta:
         model = Area
-        fields = ["name", "image", "location"]
+        fields = ["name", "image", "location", "zoom"]

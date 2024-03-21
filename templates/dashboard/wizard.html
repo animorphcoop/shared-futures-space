@@ -25,6 +25,7 @@
                         <th class="text-sm text-black-text">Area name</th>
                         <th class="text-sm text-black-text">Post Codes</th>
                         <th class="text-sm text-black-text">Image</th>
+                        <th class="text-sm text-black-text">Zoom</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,6 +41,7 @@
                                 <img src="{{ area.image.url }}" alt="area" width="100" class="mx-auto">
                             {% endif %}
                         </td>
+                        <td class="text-sm text-black-text">{{ area.zoom }}</td>
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -82,6 +84,12 @@
                 <div class="text-meta text-black/30">
                     {% render_field form.image %}
                 </div>
+            </div>
+
+            <div class="px-4 pb-9">
+                {% include "partials/input-label.html" with for="id_location" label="Location" %}
+                {% render_field form.location %}
+                <pre>location field: {{ form.location.bound_data }}</pre>
             </div>
 
             <div class="px-4 pb-9">

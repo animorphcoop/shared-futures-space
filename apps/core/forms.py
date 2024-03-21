@@ -27,14 +27,14 @@ class LocationField(MultiValueField):
                 PointField(required=True),
                 # precision
                 forms.BooleanField(
+                    required=False,  # required on a boolean field means must be true!
                     disabled=not enable_precision,
-                    required=enable_precision,
                     widget=PrecisionRadioSelect(),
                 ),
                 # zoom
                 forms.FloatField(
-                    disabled=not enable_zoom,
                     required=enable_zoom,
+                    disabled=not enable_zoom,
                 ),
             ],
             label="Location",
