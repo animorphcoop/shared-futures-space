@@ -1,7 +1,7 @@
 from core.widgets import LocationInput, PrecisionRadioSelect
 from django import forms
 from django.contrib.gis.forms import PointField
-from django.forms import HiddenInput, MultiValueField
+from django.forms import MultiValueField
 
 
 class LocationField(MultiValueField):

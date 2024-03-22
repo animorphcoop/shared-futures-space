@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Type
+from typing import Any, Dict
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.paginator import Paginator

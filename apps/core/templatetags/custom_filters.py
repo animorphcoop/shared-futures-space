@@ -2,8 +2,6 @@ import json
 from typing import Iterable, List, Optional, TypeVar
 
 from django import template
-from django.utils.safestring import SafeString, mark_safe
-from django.utils.timesince import timesince, timeuntil
 from map.markers import river_marker
 from river.models import River
 

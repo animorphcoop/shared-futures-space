@@ -1,14 +1,12 @@
 from itertools import chain
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 from uuid import UUID
 
 from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
 from django.forms import ChoiceField, ModelChoiceField, ModelForm
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils import timezone
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from messaging.util import send_system_message

@@ -1,5 +1,4 @@
 from collections import defaultdict
-from datetime import date
 from time import sleep
 
 from analytics.models import has_visited_today

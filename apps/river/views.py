@@ -18,14 +18,13 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic.base import ContextMixin, TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import UpdateView
 from formtools.wizard.views import SessionWizardView
 from messaging.forms import ChatForm
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
 from poll.models import SingleChoicePoll
-from resources.models import CaseStudy, HowTo, Resource
-from resources.views import filter_and_cluster_resources
+from resources.models import CaseStudy, HowTo
 from userauth.util import get_userpair
 
 from .forms import (
@@ -37,7 +36,6 @@ from .forms import (
     RiverTitleUpdateForm,
 )
 from .models import River, RiverMembership
-from .util import get_resource_tags
 
 
 class RiverView(DetailView):

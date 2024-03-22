@@ -2,7 +2,6 @@ from typing import List, Union
 
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, include, path
 from landing.views import handle_404, handle_500
 from spring import views as spring_views

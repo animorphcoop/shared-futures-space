@@ -125,7 +125,6 @@ def resource_item(request: HttpRequest, slug: Optional[str]) -> HttpResponse:
 
 
 def resource_saved(request: HttpRequest, res_id: Optional[int]) -> HttpResponse:
-    resource_id = res_id
     current_user = request.user
     current_resource = None
 

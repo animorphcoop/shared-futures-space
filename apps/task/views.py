@@ -1,15 +1,11 @@
-from typing import Any, Dict, List, Union
+from typing import Any
 
 from core.views import HTMXMixin
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db import models
-from django.db.models.expressions import F
-from django.http.request import HttpRequest
-from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic.base import ContextMixin, TemplateView, View
+from django.views.generic.base import ContextMixin, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from river.models import River, RiverMembership

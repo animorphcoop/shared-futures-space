@@ -1,4 +1,3 @@
-import pytest
 from action.models import Action
 from django.urls import reverse
 from river.models import RiverMembership

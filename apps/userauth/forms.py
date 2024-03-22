@@ -9,7 +9,7 @@ from allauth.account.forms import (
 )
 from analytics.models import log_signup
 from django import forms
-from django.http import HttpRequest, QueryDict
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from wagtail import hooks
 from wagtail.users.forms import UserCreationForm, UserEditForm

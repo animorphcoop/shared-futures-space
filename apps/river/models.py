@@ -1,11 +1,8 @@
-from hashlib import shake_256
 from typing import Any, Dict, List
-from urllib.parse import quote
 
 from area.models import Area
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.contrib.gis.db.models import PointField
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -15,7 +12,6 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase
-from userauth.models import CustomUser
 
 from apps.core.utils.slugifier import generate_random_string
 
@@ -326,7 +322,7 @@ class River(ClusterableModel):
             self.save()
 
     def start_plan(self) -> None:
-        from poll.models import SingleChoicePoll
+        pass
 
         if self.current_stage == self.Stage.ENVISION:
             self.current_stage = self.Stage.PLAN
@@ -494,7 +490,7 @@ class River(ClusterableModel):
 
         from django.db.models import Q
         from poll.models import MultipleChoicePoll
-        from resources.models import CaseStudy, HowTo, Resource
+        from resources.models import CaseStudy, HowTo
 
         if self.current_stage == self.Stage.ACT:
             self.current_stage = self.Stage.REFLECT

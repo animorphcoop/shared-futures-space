@@ -1,8 +1,6 @@
 from typing import List, Union
-from uuid import UUID
 
-from django.conf import settings
-from django.urls import URLPattern, URLResolver, include, path
+from django.urls import URLPattern, URLResolver, path
 
 from .views import PollCreateView, PollView, poll_edit
 

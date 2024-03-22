@@ -1,4 +1,5 @@
 format:
+	autoflake --in-place --remove-unused-variables --remove-all-unused-imports --recursive --exclude venv,node_modules,ansible .
 	black .
 	isort --profile black .
 

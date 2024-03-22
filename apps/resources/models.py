@@ -13,7 +13,7 @@ from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
-from wagtailgeowidget.panels import GoogleMapsPanel, LeafletPanel
+from wagtailgeowidget.panels import LeafletPanel
 
 from apps.core.utils.slugifier import generate_random_string
 from apps.streams import blocks
