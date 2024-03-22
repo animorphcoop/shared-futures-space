@@ -32,7 +32,8 @@ class TaskViewMixin(HTMXMixin, ContextMixin, View):
         return self.get_membership().river
 
     def get_membership(self) -> RiverMembership:
-        return RiverMembership.objects.get(
+        return get_object_or_404(
+            RiverMembership,
             river__slug=self.get_slug(),
             user=self.request.user,
         )

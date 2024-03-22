@@ -15,10 +15,10 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import QueryDict
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, ContextMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -397,48 +397,39 @@ class CreateRiverPollView(TemplateView):
         return ctx
 
 
-class EnvisionView(TemplateView):
+class StageContextMixin(ContextMixin):
     def get_context_data(
         self, *args: List[Any], **kwargs: Dict[str, Any]
     ) -> Dict[str, Any]:
-        ctx = super().get_context_data(*args, **kwargs)
-        ctx["river"] = River.objects.get(slug=self.kwargs["slug"])
-        ctx["starters"] = RiverMembership.objects.filter(
-            river=ctx["river"], starter=True
+        context = super().get_context_data(*args, **kwargs)
+        river = get_object_or_404(River, slug=self.kwargs["slug"])
+        context["river"] = river
+
+        context["starters"] = river.rivermembership_set.filter(
+            starter=True
         ).values_list("user", flat=True)
-        return ctx
 
-
-class PlanView(TemplateView):
-    def get_context_data(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        ctx = super().get_context_data(*args, **kwargs)
-        ctx["river"] = River.objects.get(slug=self.kwargs["slug"])
-        ctx["starters"] = list(
-            RiverMembership.objects.filter(
-                river=ctx["river"], starter=True
-            ).values_list("user", flat=True)
+        context["is_member"] = (
+            self.request.user.is_authenticated
+            and river.rivermembership_set.filter(user=self.request.user).exists()
         )
-        return ctx
+        return context
 
 
-class ActView(TemplateView):
-    def get_context_data(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        ctx = super().get_context_data(*args, **kwargs)
-        ctx["river"] = River.objects.get(slug=self.kwargs["slug"])
-        return ctx
+class EnvisionView(StageContextMixin, TemplateView):
+    template_name = "envision_view.html"
 
 
-class ReflectView(TemplateView):
-    def get_context_data(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        ctx = super().get_context_data(*args, **kwargs)
-        ctx["river"] = River.objects.get(slug=self.kwargs["slug"])
-        return ctx
+class PlanView(StageContextMixin, TemplateView):
+    template_name = "plan_view.html"
+
+
+class ActView(StageContextMixin, TemplateView):
+    template_name = "act_view.html"
+
+
+class ReflectView(StageContextMixin, TemplateView):
+    template_name = "reflect_view.html"
 
 
 class RiverStartWizardView(SessionWizardView):

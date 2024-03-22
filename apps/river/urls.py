@@ -39,22 +39,22 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     ),
     path(
         "view/<str:slug>/envision/",
-        EnvisionView.as_view(template_name="envision_view.html"),
+        EnvisionView.as_view(),
         name="view_envision",
     ),
     path(
         "view/<str:slug>/plan/",
-        PlanView.as_view(template_name="plan_view.html"),
+        PlanView.as_view(),
         name="view_plan",
     ),
     path(
         "view/<str:slug>/act/",
-        ActView.as_view(template_name="act_view.html"),
+        ActView.as_view(),
         name="view_act",
     ),
     path(
         "view/<str:slug>/reflect/",
-        ReflectView.as_view(template_name="reflect_view.html"),
+        ReflectView.as_view(),
         name="view_reflect",
     ),
     path(
