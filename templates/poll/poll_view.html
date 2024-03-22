@@ -2,7 +2,10 @@
 
 {% block content %}
     <div x-init="setTimeout(()=>{refreshNewlyFinished({{ just_finished }});}, 100)"
-        class='poll-wrapper px-2.5'>
+         class='poll-wrapper px-2.5'
+         hx-target="this"
+         hx-ext="alpine-morph"
+         hx-swap="morph">
         {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
         {#  Poll header  #}
         <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-black/30{% else %}bg-yellow{% endif %}">
@@ -54,12 +57,14 @@
                       x-cloak
                       class="px-3.5"
                       x-show="editPoll"
+                      @submit="editPoll = false"
                       hx-trigger="submit[confirm('changing the poll will cancel all existing votes!')]"
-                      hx-post="{% url 'poll_edit' %}" hx-target="closest .poll-wrapper" hx-swap="outerHTML">
+                      hx-post="{% url 'poll_edit' %}">
                     <textarea name="new-description" class="input-text">{{ poll_description }}</textarea>
                     <input type="hidden" name="poll-uuid" value="{{poll.uuid}}"></input>
                     <div class="flex gap-3 mt-3">
-                        <button class="button button-on-colour">submit</button>
+                        <button class="button button-on-colour"
+                                type="submit">submit</button>
                         <button class="button button-on-colour"
                                 @click.prevent.stop="editPoll = false">cancel</button>
                     </div>
@@ -72,8 +77,7 @@
                             {#  Vote option  #}
                             <div class="flex justify-between items-center px-3.5">
                                 {% if request.user.is_active and not poll_closed %}
-                                    <form hx-post="{% url 'poll_view' poll.uuid %}" hx-target="closest .poll-wrapper"
-                                          hx-swap="outerHTML"
+                                    <form hx-post="{% url 'poll_view' poll.uuid %}"
                                           class="m-0">
                                         <button class="button button-on-colour inline-block" type="submit">
                                             {{ name }}
