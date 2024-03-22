@@ -3,7 +3,6 @@ from typing import Optional
 
 from django.db.models import Q
 from django.template.loader import render_to_string
-
 from messaging.models import Chat
 from resources.models import Resource
 

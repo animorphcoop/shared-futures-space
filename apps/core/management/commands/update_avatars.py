@@ -1,11 +1,10 @@
 import filecmp
 import json
-from os.path import join, basename, splitext
-
-from django.core.files.images import ImageFile
-from django.core.management import BaseCommand
+from os.path import basename, join, splitext
 
 from core.management.commands.loaddevdata import DATA_DIR
+from django.core.files.images import ImageFile
+from django.core.management import BaseCommand
 from userauth.models import UserAvatar
 
 

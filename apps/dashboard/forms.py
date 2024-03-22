@@ -1,9 +1,8 @@
 from area.models import Area
+from core.forms import LocationField
 from django import forms
 from django.conf import settings
 from django.core import mail
-
-from core.forms import LocationField
 
 
 class ContactForm(forms.Form):

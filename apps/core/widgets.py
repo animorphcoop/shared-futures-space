@@ -1,5 +1,4 @@
-from django.forms import RadioSelect, MultiWidget, HiddenInput
-
+from django.forms import HiddenInput, MultiWidget, RadioSelect
 from river.widgets import TagsInput
 
 

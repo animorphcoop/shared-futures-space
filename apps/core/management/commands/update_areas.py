@@ -1,8 +1,7 @@
 import json
 
-from django.core.management import BaseCommand
-
 from core.management.commands.loaddevdata import add_areas
+from django.core.management import BaseCommand
 
 
 class Command(BaseCommand):

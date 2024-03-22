@@ -1,9 +1,9 @@
 from typing import List, Type
 
+from core.forms import LocationField
 from django import forms
 from django.contrib.gis.forms import PointField
 
-from core.forms import LocationField
 from .models import River
 from .widgets import TagsInput
 

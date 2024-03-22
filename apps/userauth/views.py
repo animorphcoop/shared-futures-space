@@ -17,11 +17,11 @@ from allauth.account.views import (
 from area.models import PostCode, get_postcode
 from core.utils.postcode_matcher import filter_postcode
 from django.conf import settings
-from django.db.models import Count
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.mail import EmailMessage
+from django.db.models import Count
 from django.dispatch import receiver
 from django.http import (
     HttpRequest,

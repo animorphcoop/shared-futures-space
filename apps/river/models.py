@@ -2,14 +2,13 @@ from hashlib import shake_256
 from typing import Any, Dict, List
 from urllib.parse import quote
 
-from django.contrib.gis.db.models import PointField
-
 from area.models import Area
+from core.utils.tags_declusterer import tag_cluster_to_list
+from django.contrib.gis.db.models import PointField
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
-
-from core.utils.tags_declusterer import tag_cluster_to_list
 from messaging.models import Chat
 from messaging.util import send_system_message
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -19,7 +18,6 @@ from taggit.models import TaggedItemBase
 from userauth.models import CustomUser
 
 from apps.core.utils.slugifier import generate_random_string
-from django.core.exceptions import ValidationError
 
 
 def new_chat() -> (

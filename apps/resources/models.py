@@ -1,6 +1,7 @@
 from typing import Optional
 from uuid import uuid4
 
+from core.utils.tags_declusterer import tag_cluster_to_list
 from django.contrib.gis.db.models import PointField
 from django.db import models
 from django.db.models.signals import post_save
@@ -16,7 +17,6 @@ from wagtailgeowidget.panels import GoogleMapsPanel, LeafletPanel
 
 from apps.core.utils.slugifier import generate_random_string
 from apps.streams import blocks
-from core.utils.tags_declusterer import tag_cluster_to_list
 
 
 class ResourceTag(TaggedItemBase):

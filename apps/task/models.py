@@ -1,12 +1,11 @@
 from uuid import uuid4
 
 from django.db import models
+from django.db.models import F
 from django.utils import timezone
 from django.utils.timesince import timesince, timeuntil
 from river.models import River
 from userauth.models import CustomUser
-
-from django.db.models import F
 
 
 class Task(models.Model):

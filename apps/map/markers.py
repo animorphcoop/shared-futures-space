@@ -1,8 +1,7 @@
 from django.template.loader import render_to_string
-from typing_extensions import Optional
-
 from resources.models import CaseStudy, HowTo
 from river.models import River
+from typing_extensions import Optional
 
 
 def river_marker(river: River) -> Optional[dict]:

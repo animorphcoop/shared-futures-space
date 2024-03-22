@@ -2,9 +2,8 @@ import json
 from io import BytesIO
 
 from allauth.account.admin import EmailAddress
-from django.contrib.gis.geos import Point
-
 from area.models import Area, PostCode
+from django.contrib.gis.geos import Point
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from django.utils import timezone

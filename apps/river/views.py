@@ -2,26 +2,24 @@ import os
 from itertools import chain
 from typing import Any, Dict, List, Type
 
-from django.core.files.storage import FileSystemStorage
-from formtools.wizard.views import SessionWizardView
-
 from action.models import Action
 from action.util import send_offer
 from area.models import PostCode
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import QueryDict
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic.base import TemplateView, ContextMixin
+from django.views.generic.base import ContextMixin, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
-
+from formtools.wizard.views import SessionWizardView
 from messaging.forms import ChatForm
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
@@ -31,12 +29,12 @@ from resources.views import filter_and_cluster_resources
 from userauth.util import get_userpair
 
 from .forms import (
-    RiverDescriptionUpdateForm,
-    RiverImageUpdateForm,
-    RiverTitleUpdateForm,
-    RiverLocationUpdateForm,
     CreateRiverFormStep1,
     CreateRiverFormStep2,
+    RiverDescriptionUpdateForm,
+    RiverImageUpdateForm,
+    RiverLocationUpdateForm,
+    RiverTitleUpdateForm,
 )
 from .models import River, RiverMembership
 from .util import get_resource_tags
