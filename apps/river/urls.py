@@ -59,7 +59,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     ),
     path(
         "view/<str:slug>/createpoll/<str:stage>/<str:topic>/",
-        CreateRiverPollView.as_view(template_name="create_river_poll.html"),
+        CreateRiverPollView.as_view(),
         name="create_river_poll",
     ),
     path(

@@ -102,3 +102,6 @@ input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
     display: none;
 }
+
+/* See https://alpinejs.dev/directives/cloak */
+[x-cloak] { display: none !important; }

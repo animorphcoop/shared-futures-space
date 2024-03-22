@@ -291,6 +291,8 @@ class RiverChatUpdateView(ChatUpdateCheck):
 
 
 class CreateRiverPollView(TemplateView):
+    template_name = "create_river_poll.html"
+
     def post(
         self, request: WSGIRequest, slug: str, stage: str, topic: str
     ) -> HttpResponse:

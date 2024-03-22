@@ -38,19 +38,31 @@
         {#  Poll body  #}
         <div>
             {#  Poll description  #}
-            <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}">
+            <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}"
+                 x-data="{ editPoll: false }">
                 {% include "partials/vertical-spacer.html" with space="3" %}
-                <div id="poll-description-{{poll.uuid}}">
-                    <p class="text-body px-3.5 block">{{ poll_description }}</p>
-                    {% if request.user.id in starters %}<button onclick="document.getElementById('poll-description-{{poll.uuid}}').style.display = 'none'; document.getElementById('poll-edit-{{poll.uuid}}').style.display = 'block';">edit</button>{% endif %}
+                <div id="poll-description-{{poll.uuid}}"
+                     class="px-3.5"
+                     x-show="!editPoll">
+                    <p class="text-body block">{{ poll_description }}</p>
+                    {% if request.user.id in starters and not poll_closed %}
+                        <button class="button button-on-colour mt-3"
+                                @click="editPoll = true">edit</button>
+                    {% endif %}
                 </div>
-                <form id="poll-edit-{{poll.uuid}}" style="display:none" hx-trigger="submit[confirm('changing the poll will cancel all existing votes!')]"
-                      onsubmit="document.getElementById('poll-description-{{poll.uuid}}').style.display = 'block';
-                                document.getElementById('poll-edit-{{poll.uuid}}').style.display = 'none';"
+                <form id="poll-edit-{{poll.uuid}}"
+                      x-cloak
+                      class="px-3.5"
+                      x-show="editPoll"
+                      hx-trigger="submit[confirm('changing the poll will cancel all existing votes!')]"
                       hx-post="{% url 'poll_edit' %}" hx-target="closest .poll-wrapper" hx-swap="outerHTML">
-                    <textarea name="new-description">{{poll_description}}</textarea>
+                    <textarea name="new-description" class="input-text">{{ poll_description }}</textarea>
                     <input type="hidden" name="poll-uuid" value="{{poll.uuid}}"></input>
-                    <button>submit</button>
+                    <div class="flex gap-3 mt-3">
+                        <button class="button button-on-colour">submit</button>
+                        <button class="button button-on-colour"
+                                @click.prevent.stop="editPoll = false">cancel</button>
+                    </div>
                 </form>
                 {% include "partials/vertical-spacer.html" with space="5" %}
                 {#  Vote options list  #}
@@ -118,9 +130,7 @@
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 {#  Poll timing information  #}
                 <p class="block text-meta px-3.5">
-                    {% if poll_closed %}
-                        This poll finished at {{ poll.when_closed|date:"G:i" }} {{ poll.when_closed|date:"d/m/y" }}.
-                    {% else %}
+                    {% if not poll_closed %}
                         Please cast your vote. This vote will close in {{ poll_expires|timeuntil }}.
                         <br><br>
                         If there is a majority for YES, the poll closes and the next stage unlocks. If there is a majority for NO, the poll closes and you must communicate together to uncover what should be changed. It might take some discussion, rephrasing, and more than one attempt for the poll to be passed, and

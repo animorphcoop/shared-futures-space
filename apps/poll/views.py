@@ -183,6 +183,9 @@ class PollCreateView(CreateView):
 def poll_edit(request: WSGIRequest) -> HttpResponse:
     # update description of poll, return new description for htmx
     poll = BasePoll.objects.get(uuid=request.POST["poll-uuid"])
+    if poll.closed:
+        raise PermissionDenied("poll is closed")
+
     if RiverMembership.objects.get(user=request.user, river=poll.river).starter:
         poll.closed = True
         poll.save()
