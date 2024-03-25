@@ -2,19 +2,13 @@ import json
 from io import BytesIO
 
 from allauth.account.admin import EmailAddress
-from django.contrib.gis.geos import Point
-
 from area.models import Area, PostCode
+from django.contrib.gis.geos import Point
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
-from django.utils import timezone
-from messaging.models import Message
 from PIL import Image as PillowImage
-from poll.models import SingleChoicePoll, SingleVote
 from resources.models import CaseStudy, HowTo
-from river.models import River, RiverMembership
 from userauth.models import CustomUser, Organisation, UserAvatar
-from userauth.util import get_userpair
 from wagtail.images.models import Image
 from wagtail.rich_text import RichText
 
@@ -173,6 +167,7 @@ def add_areas(areas_data):
                 this_area.zoom = zoom
             for postcode in area_data["postcodes"]:
                 PostCode.objects.get_or_create(code=postcode, area=this_area)
+            this_area.save()
         except Exception as e:
             print(
                 "could not add area with definition: "

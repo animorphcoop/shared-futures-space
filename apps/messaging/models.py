@@ -90,7 +90,7 @@ class Message(models.Model):
         return text
 
     def flagged(self, user) -> None:
-        from userauth.models import CustomUser
+        pass
 
         existing = Flag.objects.filter(message=self, flagged_by=user)
         if len(existing) == 0:

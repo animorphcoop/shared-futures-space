@@ -8,7 +8,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from userauth.models import CustomUser
-from userauth.util import get_system_user
 
 
 class BaseVote(models.Model):
@@ -149,7 +148,7 @@ class BasePoll(models.Model):
                     river.save()
 
     def get_poll_context(self, poll):
-        from river.models import ActStage, EnvisionStage, PlanStage, ReflectStage, River
+        from river.models import ActStage, EnvisionStage, PlanStage, River
 
         es = EnvisionStage.objects.filter(general_poll=poll)
         if es.exists():

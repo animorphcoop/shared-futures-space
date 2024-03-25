@@ -15,5 +15,5 @@ def get_areas() -> OD[str, str]:
     areas_dict = OrderedDict()  # to remember order of inserting
     for area in Area.objects.all().order_by("name"):
         if area.name != "Other":
-            areas_dict[slugify(area.name)] = area.name
+            areas_dict[slugify(area.name)] = area
     return areas_dict

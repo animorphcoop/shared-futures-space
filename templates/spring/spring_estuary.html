@@ -16,8 +16,8 @@
             <div class="grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-y-9 xl:gap-x-36">
                 {% if areas_dict %}
                     {# this is to stop it complaining when there's no areas loaded, such as during tests #}
-                    {% for key, value in areas_dict.items %}
-                        {% include "landing/rounded-image.html" with image=key slug=key title=value %}
+                    {% for key, area in areas_dict.items %}
+                        {% include "landing/rounded-image.html" with image=area.image slug=key title=area.name %}
                     {% endfor %}
                 {% endif %}
             </div>

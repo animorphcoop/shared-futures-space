@@ -25,12 +25,12 @@ def get_postcode(code):
 
 class Area(models.Model):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
-    name: models.CharField = models.CharField(max_length=50)
+    name: models.CharField = models.CharField(max_length=50, unique=True)
     image: models.ImageField = models.ImageField(
         upload_to="areas/images/", null=True, blank=True
     )
     location = PointField(geography=True, srid=4326, null=True)
-    zoom = models.IntegerField(default=12)
+    zoom = models.FloatField(default=12)
 
     def __str__(self) -> str:
         return self.name

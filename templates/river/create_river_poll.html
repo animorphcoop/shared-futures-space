@@ -13,9 +13,7 @@
             <form hx-post="{% url 'create_river_poll' slug stage topic %}"
                   hx-swap="none" class="m-x" id="poll-form-{{stage}}-{{topic}}">
                 {% csrf_token %}
-                <textarea class="block w-full h-2/3 px-3 py-1.5 rounded text-body" name=description>
-                    {{ default }}
-                </textarea>
+                <textarea class="block w-full h-2/3 px-3 py-1.5 rounded text-body" name=description>{{ default }}</textarea>
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 <p class="text-meta">
                     Creating this poll will ask Swimmers if the above statement is acceptable. Swimmers in this River need to agree on the above statement. If there is a majority YES vote, the next stage will open.

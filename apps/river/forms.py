@@ -1,30 +1,11 @@
-import os
-from typing import Any, Dict, List, Optional, Type
+from typing import List, Type
 
+from core.forms import LocationField
 from django import forms
 from django.contrib.gis.forms import PointField
-from django.contrib.gis.geos import GEOSGeometry
-from django.forms import Widget, MultiValueField, RadioSelect
 
 from .models import River
-from .widgets import TagsInput, LocationInput, PrecisionRadioSelect
-
-
-class LocationField(MultiValueField):
-    """Custom multi field to set precision and coordinates in one go"""
-
-    def __init__(self):
-        super().__init__(
-            widget=LocationInput(),
-            fields=[
-                forms.BooleanField(widget=PrecisionRadioSelect()),
-                PointField(),
-            ],
-            label="Location",
-        )
-
-    def compress(self, data_list):
-        return data_list
+from .widgets import TagsInput
 
 
 class CreateRiverFormStep1(forms.ModelForm):
@@ -39,25 +20,18 @@ class CreateRiverFormStep1(forms.ModelForm):
 
 
 class CreateRiverFormStep2(forms.ModelForm):
-    location_with_precision = LocationField()
+    location = LocationField(enable_precision=True)
 
     def clean(self):
-        super().clean()
-
-        # Need to split out the two values
-        location_exact, location = self.cleaned_data.pop(
-            "location_with_precision",
-            (
-                True,  # default to exact
-                None,
-            ),
-        )
-        self.cleaned_data["location_exact"] = location_exact
-        self.cleaned_data["location"] = location
+        cleaned_data = super().clean()
+        location_fields = cleaned_data.pop("location")
+        cleaned_data["location"] = location_fields["location"]
+        cleaned_data["location_exact"] = location_fields["precision"]
+        return cleaned_data
 
     class Meta:
         model = River
-        fields = ["location_with_precision"]
+        fields = ["location"]
 
 
 class RiverTitleUpdateForm(forms.ModelForm):

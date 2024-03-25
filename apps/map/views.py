@@ -1,6 +1,5 @@
 from django.views.generic import TemplateView
-
-from map.markers import river_marker, case_study_marker
+from map.markers import case_study_marker, river_marker
 from resources.models import CaseStudy, HowTo
 from river.models import River
 

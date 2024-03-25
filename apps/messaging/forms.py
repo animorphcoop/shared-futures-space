@@ -40,7 +40,7 @@ class ChatForm(forms.ModelForm):
                     return cleaned_data
                 else:
                     raise forms.ValidationError("File types is not allowed")
-            except Exception as e:
+            except Exception:
                 raise forms.ValidationError("Can not identify file type")
 
         return cleaned_data

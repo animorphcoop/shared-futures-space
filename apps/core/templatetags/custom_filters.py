@@ -1,10 +1,7 @@
 import json
-from typing import Iterable, List, TypeVar, Optional
+from typing import Iterable, List, Optional, TypeVar
 
 from django import template
-from django.utils.safestring import SafeString, mark_safe
-from django.utils.timesince import timesince, timeuntil
-
 from map.markers import river_marker
 from river.models import River
 
@@ -34,6 +31,17 @@ def to_range(number: int):
 @register.filter(name="to_json")
 def to_json(value):
     return json.dumps(value)
+
+
+@register.filter(name="lookup")
+def lookup(value, arg):
+    """Use to get dictionary values out
+
+    if foo is: { "bar": "yay"}
+
+    This will output "yay": {{ foo:lookup:"bar" }}
+    """
+    return value.get(arg, None)
 
 
 @register.filter(name="to_marker_json")

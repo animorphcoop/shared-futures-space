@@ -29,7 +29,8 @@ const BASE_PADDING = 80 // always have at least this much padding
  *
  *      <div x-map="{ markers: [] }"
  *           @click-marker="console.log('you clicked on marker', $event.detail)"
- *           @click-map="console.log('you clicked the map at coords', $event.detail)"></div>
+ *           @click-map="console.log('you clicked the map at coords', $event.detail)"
+ *           @zoom-end="console.log('zoom is now', $event.detail)"></div>
  *
  *  See the MapOptions interface for what you can put in there
  */
@@ -154,6 +155,10 @@ Alpine.directive('map', (
                     }
                 })
 
+                map.on('zoomend', () => {
+                    el.dispatchEvent(new CustomEvent("zoom-end", {detail: { zoom: map.getZoom() }}))
+                })
+
                 const initialCursor = map.getCanvas().style.cursor
 
                 map.on('mousemove', 'markers', e => {
@@ -218,7 +223,10 @@ Alpine.directive('map', (
                 map.getCanvas().style.cursor = cursor
             }
             let mapCentre = center ?? home?.center
-            if (mapCentre) {
+
+            // Only move if it actually changed
+            if (mapCentre && (!current.mapCentre || mapCentre[0] !== current.mapCentre[0] || mapCentre[1] !== current.mapCentre[1])) {
+                current.mapCentre = mapCentre
                 const currentZoom = map.getZoom()
                 map.flyTo({
                     center: mapCentre,

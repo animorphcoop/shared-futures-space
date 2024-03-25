@@ -1,4 +1,5 @@
 from area.models import Area
+from core.forms import LocationField
 from django import forms
 from django.conf import settings
 from django.core import mail
@@ -38,7 +39,16 @@ class ContactForm(forms.Form):
 
 class AreaForm(forms.ModelForm):
     post_code = forms.CharField(label="Post Codes")
+    location = LocationField(enable_zoom=True)
+    zoom = forms.IntegerField(required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # the "location" field gives us a dict with the multiple values
+        # which we can include directly in our cleaned data here
+        cleaned_data.update(cleaned_data.pop("location"))
+        return cleaned_data
 
     class Meta:
         model = Area
-        fields = ["name", "image"]
+        fields = ["name", "image", "location", "zoom"]

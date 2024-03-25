@@ -1,7 +1,5 @@
 from django import template
-from django.conf import settings
 from django.template import RequestContext
-from django.utils.safestring import mark_safe
 from river.models import RiverMembership
 from task.models import Task
 

@@ -3,8 +3,7 @@
 from datetime import date
 
 import pytest
-from allauth.account.admin import EmailAddress
-from analytics.models import AnalyticsEvent, AnalyticsSession
+from analytics.models import AnalyticsEvent
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 

@@ -3,11 +3,9 @@
 import datetime
 
 import bs4
-import pytest
 from django.urls import reverse
-from messaging.models import Message
 from river.models import RiverMembership
-from userauth.util import get_system_user, slug_to_user, user_to_slug
+from userauth.util import get_system_user, user_to_slug
 
 
 def test_river_chat_basics(client, test_user, test_river):
@@ -62,7 +60,7 @@ def test_direct_chat_basics(client, test_user, other_test_user):
         get_userpair,
     )
 
-    pair = get_userpair(other_test_user, test_user)
+    get_userpair(other_test_user, test_user)
     client.force_login(test_user)
     client.post(
         reverse("user_chat", args=[user_to_slug(other_test_user)]),
@@ -78,7 +76,7 @@ def test_direct_chat_interface(client, test_user, other_test_user):
         get_userpair,
     )
 
-    pair = get_userpair(test_user, other_test_user)
+    get_userpair(test_user, other_test_user)
     chat_url = reverse("user_chat", args=[user_to_slug(other_test_user)])
     client.force_login(test_user)
     for i in range(20):

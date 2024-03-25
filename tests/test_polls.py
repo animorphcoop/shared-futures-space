@@ -1,9 +1,7 @@
 # tests for using polls
 
-import pytest
 from django.urls import reverse
 from django.utils import timezone
-from messaging.util import send_system_message
 from poll.models import MultipleChoicePoll, MultipleVote, SingleChoicePoll, SingleVote
 from river.models import RiverMembership
 from userauth.util import get_system_user

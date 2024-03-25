@@ -36,10 +36,10 @@
                         </p>
                         {% load area_details %}
                         {% get_areas as areas_dict %}
-                        {% for key, value in areas_dict.items %}
+                        {% for key, area in areas_dict.items %}
                             <a href="{% url "spring" key %}"
                                class="button button-on-colour inline-block">
-                                {{ value }}
+                                {{ area.name }}
                             </a>
                         {% endfor %}
                     </div>

@@ -1,6 +1,5 @@
 from typing import List, Union
 
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, include, path, re_path
 

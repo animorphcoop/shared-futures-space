@@ -1,14 +1,12 @@
 from itertools import chain
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 from uuid import UUID
 
 from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
 from django.forms import ChoiceField, ModelChoiceField, ModelForm
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils import timezone
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from messaging.util import send_system_message
@@ -25,6 +23,8 @@ from .models import (
 
 
 class PollView(TemplateView):
+    template_name = "poll/poll_view.html"
+
     def post(self, request: WSGIRequest, uuid: UUID) -> HttpResponse:
         poll = BasePoll.objects.get(uuid=uuid)
         if hasattr(poll, "multiplechoicepoll"):
@@ -110,7 +110,9 @@ class PollView(TemplateView):
         # river slug for htmx to run conditional check if the poll is closed so to trigger refreshing on the frontend
         river = poll.river
         ctx["slug"] = river.slug
-        ctx["starters"] = RiverMembership.objects.filter(river=river).values_list(
+        ctx["starters"] = RiverMembership.objects.filter(
+            river=river, starter=True
+        ).values_list(
             "user__id", flat=True
         )  # for telling whether we should show the edit poll button
         return ctx
@@ -146,6 +148,7 @@ class PollCreateForm(ModelForm):
 
 
 class PollCreateView(CreateView):
+    template_name = "poll/poll_create.html"
     model = SingleChoicePoll
     form_class = PollCreateForm
 
@@ -178,6 +181,9 @@ class PollCreateView(CreateView):
 def poll_edit(request: WSGIRequest) -> HttpResponse:
     # update description of poll, return new description for htmx
     poll = BasePoll.objects.get(uuid=request.POST["poll-uuid"])
+    if poll.closed:
+        raise PermissionDenied("poll is closed")
+
     if RiverMembership.objects.get(user=request.user, river=poll.river).starter:
         poll.closed = True
         poll.save()

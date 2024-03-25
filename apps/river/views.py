@@ -2,49 +2,44 @@ import os
 from itertools import chain
 from typing import Any, Dict, List, Type
 
-from django.core.files.storage import FileSystemStorage
-from formtools.wizard.views import SessionWizardView
-
 from action.models import Action
 from action.util import send_offer
 from area.models import PostCode
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import QueryDict
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic.base import TemplateView
+from django.views.generic.base import ContextMixin, TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
-
-from core.views import HTMXMixin
+from django.views.generic.edit import UpdateView
+from formtools.wizard.views import SessionWizardView
 from messaging.forms import ChatForm
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
-from PIL.Image import Image
 from poll.models import SingleChoicePoll
-from resources.models import CaseStudy, HowTo, Resource
-from resources.views import filter_and_cluster_resources
+from resources.models import CaseStudy, HowTo
 from userauth.util import get_userpair
 
 from .forms import (
-    RiverDescriptionUpdateForm,
-    RiverImageUpdateForm,
-    RiverTitleUpdateForm,
-    RiverLocationUpdateForm,
     CreateRiverFormStep1,
     CreateRiverFormStep2,
+    RiverDescriptionUpdateForm,
+    RiverImageUpdateForm,
+    RiverLocationUpdateForm,
+    RiverTitleUpdateForm,
 )
 from .models import River, RiverMembership
-from .util import get_resource_tags
 
 
 class RiverView(DetailView):
+    template_name = "river.html"
     model = River
 
     def post(self, request: WSGIRequest, slug: str) -> HttpResponse:
@@ -292,6 +287,8 @@ class RiverChatUpdateView(ChatUpdateCheck):
 
 
 class CreateRiverPollView(TemplateView):
+    template_name = "create_river_poll.html"
+
     def post(
         self, request: WSGIRequest, slug: str, stage: str, topic: str
     ) -> HttpResponse:
@@ -324,7 +321,7 @@ class CreateRiverPollView(TemplateView):
                 return HttpResponse(
                     "could not create poll, topic not recognised (" + topic + ")"
                 )
-            if poll_ref is None or (poll_ref.closed and not poll.passed):
+            if poll_ref is None or (poll_ref.closed and not poll_ref.passed):
                 if "description" in request.POST:
                     try:
                         if stage == river.Stage.ENVISION:
@@ -396,48 +393,39 @@ class CreateRiverPollView(TemplateView):
         return ctx
 
 
-class EnvisionView(TemplateView):
+class StageContextMixin(ContextMixin):
     def get_context_data(
         self, *args: List[Any], **kwargs: Dict[str, Any]
     ) -> Dict[str, Any]:
-        ctx = super().get_context_data(*args, **kwargs)
-        ctx["river"] = River.objects.get(slug=self.kwargs["slug"])
-        ctx["starters"] = RiverMembership.objects.filter(
-            river=ctx["river"], starter=True
+        context = super().get_context_data(*args, **kwargs)
+        river = get_object_or_404(River, slug=self.kwargs["slug"])
+        context["river"] = river
+
+        context["starters"] = river.rivermembership_set.filter(
+            starter=True
         ).values_list("user", flat=True)
-        return ctx
 
-
-class PlanView(TemplateView):
-    def get_context_data(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        ctx = super().get_context_data(*args, **kwargs)
-        ctx["river"] = River.objects.get(slug=self.kwargs["slug"])
-        ctx["starters"] = list(
-            RiverMembership.objects.filter(
-                river=ctx["river"], starter=True
-            ).values_list("user", flat=True)
+        context["is_member"] = (
+            self.request.user.is_authenticated
+            and river.rivermembership_set.filter(user=self.request.user).exists()
         )
-        return ctx
+        return context
 
 
-class ActView(TemplateView):
-    def get_context_data(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        ctx = super().get_context_data(*args, **kwargs)
-        ctx["river"] = River.objects.get(slug=self.kwargs["slug"])
-        return ctx
+class EnvisionView(StageContextMixin, TemplateView):
+    template_name = "envision_view.html"
 
 
-class ReflectView(TemplateView):
-    def get_context_data(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        ctx = super().get_context_data(*args, **kwargs)
-        ctx["river"] = River.objects.get(slug=self.kwargs["slug"])
-        return ctx
+class PlanView(StageContextMixin, TemplateView):
+    template_name = "plan_view.html"
+
+
+class ActView(StageContextMixin, TemplateView):
+    template_name = "act_view.html"
+
+
+class ReflectView(StageContextMixin, TemplateView):
+    template_name = "reflect_view.html"
 
 
 class RiverStartWizardView(SessionWizardView):
@@ -451,6 +439,25 @@ class RiverStartWizardView(SessionWizardView):
 
     # This storage will temporarily store the uploaded files for the wizard
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "tmp"))
+
+    def get(self, request, *args, **kwargs):
+        """Support discard and restoring on get
+
+        discard:
+            if you add "?discard" to url it will clear storage
+            and send you to dashboard
+
+        restoring saved data:
+            by default if you reload the form with a GET it'll
+            reset the storage, we want to continue where we
+            left off, so we treat it as a goto step
+
+        to *not* reset storage if we just get the page again"""
+        if "discard" in self.request.GET:
+            self.storage.reset()
+            return HttpResponseRedirect(reverse_lazy("dashboard"))
+
+        return self.render_goto_step(self.steps.first)
 
     def render_goto_step(self, goto_step, **kwargs):
         """Save data when jumping to another step, e.g. previous step
@@ -468,16 +475,26 @@ class RiverStartWizardView(SessionWizardView):
 
         (validation *does* happen when you do next/submit)
         """
+        if self.steps.current != goto_step:
+            """Only save data if we are actually moving steps
 
-        form = self.get_form(
-            data=self.request.POST,
-            files=self.request.FILES,
-        )
+            They are the same if we resubmit the "go to step" form
+            e.g. pressing refresh in the browser
 
-        self.storage.set_step_data(self.storage.current_step, self.process_step(form))
-        self.storage.set_step_files(
-            self.storage.current_step, self.process_step_files(form)
-        )
+            We need to avoid overwriting the storage in that scenario
+            """
+            form = self.get_form(
+                data=self.request.POST,
+                files=self.request.FILES,
+            )
+
+            self.storage.set_step_data(
+                self.storage.current_step, self.process_step(form)
+            )
+            self.storage.set_step_files(
+                self.storage.current_step,
+                self.process_step_files(form),
+            )
 
         return super().render_goto_step(goto_step, **kwargs)
 

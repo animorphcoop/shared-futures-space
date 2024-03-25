@@ -1,7 +1,3 @@
-from itertools import chain
-
-import bs4
-import pytest
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.urls import reverse
 from resources.models import CaseStudy, HowTo
@@ -55,7 +51,7 @@ def test_resource_add(client, test_user, test_image):
 
 
 def test_resource_search(client, test_how_to_resource, test_case_study_resource):
-    resource_page = client.get(reverse("resources")).content.decode("utf-8")
+    client.get(reverse("resources")).content.decode("utf-8")
     # we can't test the search with a request because it's done client-side by htmx requesting filter_and_cluster_resources after /resources/ loads
     assert test_how_to_resource in filter_and_cluster_resources(
         test_how_to_resource.title, order_by="oldest"

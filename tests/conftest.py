@@ -3,8 +3,7 @@ from io import BytesIO
 
 import pytest
 from allauth.account.admin import EmailAddress
-from area.models import Area, PostCode
-from django.conf import settings
+from area.models import PostCode
 from django.core.files.images import ImageFile
 from django.utils import timezone
 from poll.models import MultipleChoicePoll, SingleChoicePoll

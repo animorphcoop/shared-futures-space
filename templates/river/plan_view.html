@@ -29,11 +29,13 @@
                     <div id="event-plan-general"
                          @chatstatusupdate="setPlanChatOpen('one', $event.detail)"
                     >
-                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'general' %}"
-                             hx-trigger="load"
-                             hx-target="this"
-                             hx-swap="outerHTML">
-                        </div>
+                        {% if is_member %}
+                            <div hx-get="{% url 'river_task_list' river.slug 'plan' 'general' %}"
+                                 hx-trigger="load"
+                                 hx-target="this"
+                                 hx-swap="outerHTML">
+                            </div>
+                        {% endif %}
 
                         <div id="plan-chat-general"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'general' %}"
@@ -50,11 +52,13 @@
                     <div id="event-plan-money"
                          @chatstatusupdate="setPlanChatOpen('two', $event.detail);"
                     >
-                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'money' %}"
-                             hx-trigger="load"
-                             hx-target="this"
-                             hx-swap="outerHTML">
-                        </div>
+                        {% if is_member %}
+                            <div hx-get="{% url 'river_task_list' river.slug 'plan' 'money' %}"
+                                 hx-trigger="load"
+                                 hx-target="this"
+                                 hx-swap="outerHTML">
+                            </div>
+                        {% endif %}
 
                         <div id="plan-chat-money"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'money' %}"
@@ -71,11 +75,13 @@
                     <div id="event-plan-place"
                          @chatstatusupdate="setPlanChatOpen('three', $event.detail)"
                     >
-                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'place' %}"
-                             hx-trigger="load"
-                             hx-target="this"
-                             hx-swap="outerHTML">
-                        </div>
+                        {% if is_member %}
+                            <div hx-get="{% url 'river_task_list' river.slug 'plan' 'place' %}"
+                                 hx-trigger="load"
+                                 hx-target="this"
+                                 hx-swap="outerHTML">
+                            </div>
+                        {% endif %}
 
                         <div id="plan-chat-place"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'place' %}"
@@ -91,11 +97,13 @@
                     <div id="event-plan-time"
                          @chatstatusupdate="setPlanChatOpen('four', $event.detail)"
                     >
-                        <div hx-get="{% url 'river_task_list' river.slug 'plan' 'time' %}"
-                             hx-trigger="load"
-                             hx-target="this"
-                             hx-swap="outerHTML">
-                        </div>
+                        {% if is_member %}
+                            <div hx-get="{% url 'river_task_list' river.slug 'plan' 'time' %}"
+                                 hx-trigger="load"
+                                 hx-target="this"
+                                 hx-swap="outerHTML">
+                            </div>
+                        {% endif %}
 
                         <div id="plan-chat-time"
                              hx-get="{% url 'river_chat' river.slug 'plan' 'time' %}"

@@ -1,10 +1,8 @@
 # tests for the rivers app workflows
 
 import bs4
-import pytest
 from django.urls import reverse
 from river.models import River, RiverMembership
-from userauth.util import user_to_slug
 
 
 def test_river_view(client, test_river):
