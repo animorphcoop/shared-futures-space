@@ -175,9 +175,7 @@ def wizard(request):
     area_list = Area.objects.all()
     if request.method == "POST":
         form = AreaForm(request.POST, request.FILES)
-        print("checking data validity", form.data)
         if form.is_valid():
-            print("saving form with data", form.cleaned_data)
             area = form.save()
             post_code_list = form.cleaned_data["post_code"]
             for pc in post_code_list.split(","):
