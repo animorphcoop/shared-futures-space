@@ -37,7 +37,7 @@
 
 <label class="mr-2 button button-on-white cursor-pointer" for="{{ id }}">Select</label>
 
-<span data-file="{{ file }}"
+<span data-file="{% if file %}{{ file }}{% endif %}"
       data-id="{{ id }}"
       x-data="{
         // This is the filename of the initial file, if we have one
