@@ -8,7 +8,7 @@
          hx-swap="morph">
         {#  Poll wrapper, links header to body, removed collapsable x-data="{selected:true}" #}
         {#  Poll header  #}
-        <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-black/30{% else %}bg-yellow{% endif %}">
+        <div class="rounded-t-xl flex items-center justify-between h-12 px-3.5 {% if poll_closed %}bg-grey-30{% else %}bg-yellow{% endif %}">
             <button class="w-full" type="button">
                 {# removed collapsable @click="selected !== 1 ? selected = 1 : selected = null" #}
                 <h3 class="flex items-center justify-between">
