@@ -24,9 +24,10 @@ class CreateRiverFormStep2(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        location_fields = cleaned_data.pop("location")
-        cleaned_data["location"] = location_fields["location"]
-        cleaned_data["location_exact"] = location_fields["precision"]
+        location_fields = cleaned_data.pop("location", None)
+        if location_fields:
+            cleaned_data["location"] = location_fields["location"]
+            cleaned_data["location_exact"] = location_fields["precision"]
         return cleaned_data
 
     class Meta:

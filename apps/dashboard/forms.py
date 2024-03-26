@@ -46,7 +46,7 @@ class AreaForm(forms.ModelForm):
         cleaned_data = super().clean()
         # the "location" field gives us a dict with the multiple values
         # which we can include directly in our cleaned data here
-        cleaned_data.update(cleaned_data.pop("location"))
+        cleaned_data.update(cleaned_data.pop("location", {}))
         return cleaned_data
 
     class Meta:
