@@ -14,7 +14,7 @@
 
         {# Task list header #}
 
-        <div class="rounded-t-xl text-button cursor-pointer p-2.5 bg-yellow uppercase flex justify-between items-center" @click="open = !open">
+        <div class="rounded-t-xl text-header cursor-pointer p-4.5 bg-yellow uppercase flex justify-between items-center" @click="open = !open">
             Tasks
             <div class="w-[12] h-[8] transition duration-500 ease-out"
                  :class="{'-rotate-180': open}">
@@ -47,27 +47,27 @@
                         </div>
                     </div>
                     <div class="flex-auto {% if task.done %}text-black/30{% endif %}">
-                        <div class="text-large {% if task.done %}line-through text-black/30{% endif %}">
+                        <div class="text-body {% if task.done %}line-through text-black/30{% endif %}">
                             {{ task.name }}
                         </div>
-                        <div class="flex items-center gap-2 text-xxs">
+                        <div class="flex items-center gap-2 text-meta">
 
                             {% if not task.done and task.due %}
                                 {% if task.is_overdue %}
-                                    <span class="text-red-600" title="{{ task.due }}">
-                                        Overdue <span class="font-bold">for {{ task.overdue_by }}</span>
+                                    <span class="text-red-important" title="{{ task.due }}">
+                                        Overdue for {{ task.overdue_by }}
                                     </span>
                                 {% else %}
-                                    <span title="{{ task.due }}">Due <span class="font-bold">in {{ task.due_in }}</span></span>
+                                    <span title="{{ task.due }}"><span class="text-black/30">Due in</span> <span class="{% if task.done %}text-black/30{% else %}text-black/75{% endif %}">{{ task.due_in }}</span></span>
                                 {% endif %}
                             {% endif %}
 
                             <div class="flex items-center gap-1">
-                                <span class="{% if task.done %}text-black/30{% else %}text-black/75{% endif %}">Responsible</span>
+                                <span class="text-black/30">Responsible</span>
                                 {% if task.responsible.avatar.image_url %}
                                     <img class="h-5 w-5" src={{ task.responsible.avatar.image_url }}>
                                 {% endif %}
-                                {{ task.responsible.display_name }}
+                                <span class="{% if task.done %}text-black/30{% else %}text-black/75{% endif %}">{{ task.responsible.display_name }}</span>
                             </div>
                         </div>
                     </div>
