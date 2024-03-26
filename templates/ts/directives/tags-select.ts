@@ -47,7 +47,7 @@ Alpine.directive('tags-select', (
      *
      *  You can use this to set tailwind classes in the template, e.g.:
      *
-     *     <button data-tag="co-ops" class="data-[selected]:bg-green-pale">Co-operatives</button>
+     *     <button data-tag="co-ops" class="data-[selected]:bg-green">Co-operatives</button>
      */
     el.querySelectorAll('[data-tag]').forEach(tagEl => {
         if (!(tagEl instanceof HTMLElement)) return

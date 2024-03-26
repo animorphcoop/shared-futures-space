@@ -11,10 +11,10 @@
          {% comment %}TODO: Abstract into a component, review styles, restricted width of title in case it's long, pushed icons to top-right{% endcomment %}
 
         {% url 'resource_item' resource.slug as the_url %}
-        <div class="bg-gradient-to-b from-gray-light via-white rounded-t-xl flex justify-between">
+        <div class="bg-gradient-to-b from-grey-10 via-white rounded-t-xl flex justify-between">
 
             <div class="w-3/4 h-full pt-2">
-                <h3 class="font-kanit-500 text-black-large text-xl p-3">
+                <h3 class="font-kanit-500 text-black/55 text-xl p-3">
                     {{ resource.title }}
                 </h3>
             </div>

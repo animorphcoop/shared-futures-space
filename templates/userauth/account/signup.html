@@ -26,7 +26,7 @@
 
                 {% comment %}controlled via js/ts{% endcomment %}
                 <span id="email-feedback"
-                      class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 1</span>
+                      class="hidden block text-red font-kanit-400 text-xxs pt-2">Feedback 1</span>
 
             </div>
 
@@ -37,7 +37,7 @@
 
 
                 <span id="password-feedback1"
-                      class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 2</span>
+                      class="hidden block text-red font-kanit-400 text-xxs pt-2">Feedback 2</span>
 
             </div>
 
@@ -47,7 +47,7 @@
 
 
                 <span id="password-feedback2"
-                      class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Feedback 3</span>
+                      class="hidden block text-red font-kanit-400 text-xxs pt-2">Feedback 3</span>
 
             </div>
 
@@ -56,7 +56,7 @@
                 Policy</a>.
             </p>{% endcomment %}
             <div class="px-4 flex items-center">
-                <input required class="rounded-full purple bg-blue-second border border-solid border-blue-second w-18 h-18
+                <input required class="rounded-full purple bg-blue-light border border-solid border-blue-light w-18 h-18
                                     focus:outline-none focus:ring-white
                                     {# checked:bg-none #} checked:bg-purple checked:bg-[url('data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='4.5' cy='4.5' r='4.5' fill='%239759FF'/%3E%3C/svg%3E')]
                                     focus:checked:bg-purple hover:checked:bg-purple"
@@ -64,7 +64,7 @@
                        id="privacy-input"
                        for="privacy-consent">
                 <div class="w-1.5"></div>
-                <label class="uppercase font-kanit-400 text-xxs text-black-text text-center tracking-widest"
+                <label class="uppercase font-kanit-400 text-xxs text-black/75 text-center tracking-widest"
                        id="privacy-label" for="privacy-consent">
                     I have read and consent to the <a href="{% url 'privacy' %}" class="font-kanit-600 text-purple">Privacy
                     Policy</a>.
@@ -86,7 +86,7 @@
             </section>
 
             <section class="bg-yellow text-center">
-                <h2 class="py-3 font-kanit-400 text-xxxs tracking-wide text-black-text">
+                <h2 class="py-3 font-kanit-400 text-xxxs tracking-wide text-black/75">
                     Already have a Shared Futures account?
                 </h2>
 

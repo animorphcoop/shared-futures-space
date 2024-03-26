@@ -9,7 +9,7 @@
     <div class="main-carousel">
         {% for resource in resources %}
             <div class="px-3 py-6 w-full text bg-white">
-                <h1 class="font-garamond-500 text-22 text-black-large">{{ resource.title }}</h1>
+                <h1 class="font-garamond-500 text-22 text-black/55">{{ resource.title }}</h1>
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <div class="flex flex-row flex-wrap gap-1.5 items-start">
                     {% for tag in resource.tags.all %}
@@ -17,7 +17,7 @@
                     {% endfor %}
                 </div>
                 {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="font-garamond-500 text-base leading-5 text-black-text">{{ resource.summary }}</p>
+                <p class="font-garamond-500 text-base leading-5 text-black/75">{{ resource.summary }}</p>
                 {% include "partials/vertical-spacer.html" with space="6" %}
 
                 {% url 'resource_item' resource.slug as the_url %}

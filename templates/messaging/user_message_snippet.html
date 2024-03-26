@@ -34,7 +34,7 @@
                 {% endif %}
 
                 {% include "partials/vertical-spacer.html" with space="1.5" %}
-                <span class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase self-end">
+                <span class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black/30 uppercase self-end">
                     {{ message.timestamp|date:"G:i" }} {{ message.timestamp|date:"d/m/y" }}
                 </span>
 
@@ -87,7 +87,7 @@
 
                 {% include "partials/vertical-spacer.html" with space="1.5" %}
 
-                <div class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black-meta uppercase flex">
+                <div class="font-kanit-400 text-[9px] leading-3 tracking-widest text-black/30 uppercase flex">
                     <p>{{ message.sender.display_name }}</p>
                     {% include "partials/horizontal-spacer.html" with space="1.5" %}
                     <p>{{ message.timestamp|date:"G:i" }}</p>
@@ -99,7 +99,7 @@
                             {% if message.uuid in my_flags %}
                                 <svg width="8" height="10" viewBox="0 0 8 10"
                                      xmlns="http://www.w3.org/2000/svg"
-                                     class="fill-red-important">
+                                     class="fill-red">
                                     <path d="M0 10V0H4.42857L4.78571 1.49254H7.92857V6.86567H4.92857L4.57143 5.37313H0.785714V10H0ZM5.57143 6.04478H7.21429V2.31343H4.21429L3.85714 0.820896H0.785714V4.55224H5.21429L5.57143 6.04478Z"/>
                                 </svg>
                             {% else %}
@@ -118,7 +118,7 @@
                                          @keyup.escape.window="overlay = false">
                                     {#  White modal background  #}
                                     <div class="w-full bg-white m-2.5 sm:w-[360px]">
-                                        <div class="bg-red-important/30 sm:w-[360px]">
+                                        <div class="bg-red-light sm:w-[360px]">
                                             <div class="p-2.5">
                                                 <div class="flex flex-col items-center py-9 px-4.5 text-center"
                                                      x-show="state === 'initial'">

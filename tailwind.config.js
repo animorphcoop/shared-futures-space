@@ -59,46 +59,43 @@ export default {
                 white: {
                     DEFAULT: "#FFFFFF",
                 },
-                gray: {
-                    lightest: "#DCDCDC",
-                    light: "rgba(240, 240, 240, 1)",
-                    DEFAULT: "rgba(0, 0, 0, 0.5)", //#777777
+                grey: { // new, matching new Figma primitive colours
+                    10: "#E5E5E5",
+                    15: "#D9D9D9",
+                    30: "#B2B2B2",
+                    55: "#737373",
+                    75: "#404040",
                 },
                 black: {
                     DEFAULT: "#000000",
-                    meta: "rgba(0, 0, 0, 0.30);",
-                    large: "rgba(0, 0, 0, 0.55);",
-                    text: "rgba(0, 0, 0, 0.75);",
                 },
                 purple: {
                     DEFAULT: "#9759FF",
                 },
-                blue: {
-                    second: "#E5F1F8",
-                    pale: "#EAF3F9",
-                    button: "#BEECDF",
-                    done: "#93FFE0",
-                    blur: "#E5F1F880",
-                    tertiary: "#CEDFF2",
-                },
-                resources: {
-                    one: "#CEDFF2",
-                    two: "#C4F5F8",
-                    three: "#DFF5F6",
-                },
-                green: {
-                    pale: '#C4F4E6',
+                turquoise: {
+                    DEFAULT: "#79CBD0",
                 },
                 yellow: {
-                    pale: "#FFFCC0",
                     DEFAULT: "#FFFA8E",
+                    light: "#FFFCC0",
                 },
                 red: {
-                    important: "#FF8686",
+                    DEFAULT: "#FF8686",
+                    light: "#F2CACA",
                     focus: "#F66565",
                 },
-                correct: "#228b22",
-                incorrect: "#fe2712",
+                blue: {
+                    DEFAULT: "#CEDFF2",
+                    light: "#E5F1F8",
+                    blur: "#E5F1F880",
+                },
+                sky: {
+                    DEFAULT: "#C4F5F8",
+                    light: "#DFFFF6",
+                },
+                green: {
+                    DEFAULT: "#C4F4E6",
+                },
             },
             fontSize: {
                 xxxs: ["0.5625rem", "0.75rem"],

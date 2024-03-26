@@ -13,12 +13,12 @@ TODO: is that covered in Figma?
         <form class="px-4" method=post>
             {% csrf_token %}
             <fieldset>
-                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text" for=kind>
+                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black/75" for=kind>
                     What would you like to change?
                 </label>
                 <select id=kind
                     name=kind
-                    class="mb-9 form-control block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
+                    class="mb-9 form-control block w-full px-3 py-2.5 font-garamond-500 grey-75 bg-grey-10 shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:grey-75 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
                     <option value="">Please choose an option</option>
                     <option value=make_editor>Editor status</option>
                     <option value=change_postcode>Postcode</option>
@@ -26,16 +26,16 @@ TODO: is that covered in Figma?
                     <option value=other>Other</option>
                 </select>
 
-                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text" for=reason>
-                    Why do you want this change? <span class="block pt-1 text-black-meta">Please include the new postcode or year of birth if relevant.</span>
+                <label class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black/75" for=reason>
+                    Why do you want this change? <span class="block pt-1 text-black/30">Please include the new postcode or year of birth if relevant.</span>
                 </label>
                 <textarea id=reason
                     name=reason
                     maxlength=1000
-                    class="mb-9 form-control block w-full px-3 py-2.5 font-garamond-500 text-gray-700 bg-gray-light shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
+                    class="mb-9 form-control block w-full px-3 py-2.5 font-garamond-500 grey-75 bg-grey-10 shadow-input bg-clip-padding border border-solid border-white transition ease-in-out m-0 focus:grey-75 focus:bg-white focus:outline-none focus:border-purple focus:bg-white focus:ring-0">
                 </textarea>
 
-                <button class="button button-on-white disabled:bg-gray-light"
+                <button class="button button-on-white disabled:bg-grey-10"
                     type="submit">Submit
                 </button>
             </fieldset>

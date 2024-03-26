@@ -29,7 +29,7 @@
             {% if request.user.post_code.area.name != 'Other' %}
                 {% include "dashboard/partials/rivers.html" with title="Your rivers" reference="rivers" %}
             {% else %}
-                <section class="bg-resources-two">
+                <section class="bg-sky">
                     <div class="flex flex-col gap-6 items-center py-9 px-4.5 text-center">
                         <p class="text-large text-22">
                             Which spring would you like to explore?
@@ -63,11 +63,11 @@
         {#  Call to action partial, replace URL variable  #}
         {% if request.user.post_code.area.name != 'Other' %}
             <div class="bg-yellow w-24"></div>
-            <div class="bg-resources-two w-24"></div>
+            <div class="bg-sky w-24"></div>
 
             {% url 'spring' request.user.post_code.area.name as the_url %}
-            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Get involved" url=the_url info="" bg="bg-resources-two" %}
-            <div class="bg-resources-two grow"></div>
+            {% include "partials/call-to-action.html" with main="Ready to swim?" button="Get involved" url=the_url info="" bg="bg-sky" %}
+            <div class="bg-sky grow"></div>
         {% else %}
             <div class="bg-yellow grow"></div>
         {% endif %}

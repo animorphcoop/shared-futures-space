@@ -39,7 +39,7 @@ alpinejs_1.default.directive('tags-select', function (el, _a) {
      *
      *  You can use this to set tailwind classes in the template, e.g.:
      *
-     *     <button data-tag="co-ops" class="data-[selected]:bg-green-pale">Co-operatives</button>
+     *     <button data-tag="co-ops" class="data-[selected]:bg-green">Co-operatives</button>
      */
     el.querySelectorAll('[data-tag]').forEach(function (tagEl) {
         if (!(tagEl instanceof HTMLElement))

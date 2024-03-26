@@ -1,31 +1,31 @@
 {% load static %}
 
 {% with li_class="rounded-[50px_50px_0px_0px] text-center px-8 h-[48px] flex items-center justify-center cursor-pointer" %}
-    <div x-data="{ openTab: 'one' }" class="-mx-4.5 ">
+    <div x-data="{ openTab: 'blue' }" class="-mx-4.5 ">
         <ul class="flex flex-start">
-            <li @click="openTab = 'one'" class="{{ li_class }} bg-resources-one">
+            <li @click="openTab = 'blue'" class="{{ li_class }} bg-blue">
                 {% include "landing/tabbed-resources/title.html" with title="Collaborate" %}
             </li>
-            <li @click="openTab = 'two'" class="{{ li_class }} bg-resources-two">
+            <li @click="openTab = 'sky'" class="{{ li_class }} bg-sky">
                 {% include "landing/tabbed-resources/title.html" with title="Learn" %}
             </li>
-            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
+            <li @click="openTab = 'sky-light'" class="{{ li_class }} bg-sky-light">
                 {% include "landing/tabbed-resources/title.html" with title="Decide" %}
             </li>
 
-            {% comment %}            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
+            {% comment %}            <li @click="openTab = 'three'" class="{{ li_class }} bg-sky-light">
                 {% include "landing/tabbed-resources/title.html" with title="co creation" %}
             </li>{% endcomment %}
         </ul>
-        <div :class="`bg-resources-${openTab}`" class="w-full pt-6 pb-9 px-4.5 min-h-[486px] sm:flex sm:items-center">
-            <div x-show="openTab === 'one'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
+        <div :class="`bg-${openTab}`" class="w-full pt-6 pb-9 px-4.5 min-h-[486px] sm:flex sm:items-center">
+            <div x-show="openTab === 'blue'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
                 <div class="px-3 sm:max-w-lg sm:mx-auto sm:w-1/2">
                     {% include "landing/main-heading.html" with title="Find like-minded people in your area and create together. We call projects 'rivers' because they flow and cannot be stopped!" %}
                 </div>
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 <div class="sm:max-w-sm sm:mx-auto sm:px-6 md:px-12 sm:w-1/2">
                     <div>
-                        <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
+                        <p class="bg-white font-garamond-500 text-black/55 text-base px-3 py-2.5 rounded-xl leading-tight">
                             Hi all! Let's turn the derelict street corner plot into a community green space and run
                             gardening activities for children.
                         </p>
@@ -37,7 +37,7 @@
                     </div>
                     {% include "partials/vertical-spacer.html" with space="6" %}
                     <div class="flex flex-col items-end">
-                        <p class="bg-white font-garamond-500 text-black-large text-right text-base px-3 py-2.5 rounded-xl leading-tight">
+                        <p class="bg-white font-garamond-500 text-black/55 text-right text-base px-3 py-2.5 rounded-xl leading-tight">
                             Hi Grace, amazing! This space has so much potential, my kids would love that, we don't have
                             a garden!
                         </p>
@@ -49,7 +49,7 @@
                     </div>
                     {% include "partials/vertical-spacer.html" with space="6" %}
                     <div>
-                        <p class="bg-white font-garamond-500 text-black-large text-base px-3 py-2.5 rounded-xl leading-tight">
+                        <p class="bg-white font-garamond-500 text-black/55 text-base px-3 py-2.5 rounded-xl leading-tight">
                             Hello, I don't know about gardening but can dig a hole, happy to help with carrying things
                             too!
                         </p>
@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <div x-show="openTab === 'two'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
+            <div x-show="openTab === 'sky'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
                 <div class="px-3 sm:max-w-lg sm:mx-auto sm:w-1/2">
                     {% include "landing/main-heading.html" with title="Explore a range of helpful resources that are mapped onto your river by the salmon of knowledge!" %}
                 </div>
@@ -70,15 +70,15 @@
                 <div class="sm:max-w-sm sm:mx-auto sm:px-6 md:px-12 sm:w-1/2">
                     {# WET SALMON #}
                     <section class="flex flex-col items-center">
-                        <div class="bg-blue-pale rounded-full">
+                        <div class="bg-blue-light rounded-full">
                             <p class="text-large p-2.5 px-10">
                                 How can I help you?
                             </p>
                         </div>
                         <div class="flex flex-col p-1 w-10">
-                            <div class="rounded-full bg-blue-pale w-5 h-5 mt-1 self-end"></div>
-                            <div class="rounded-full bg-blue-pale w-3.5 h-3.5 mt-1 self-start"></div>
-                            <div class="rounded-full bg-blue-pale w-2.5 h-2.5 mt-2 self-center"></div>
+                            <div class="rounded-full bg-blue-light w-5 h-5 mt-1 self-end"></div>
+                            <div class="rounded-full bg-blue-light w-3.5 h-3.5 mt-1 self-start"></div>
+                            <div class="rounded-full bg-blue-light w-2.5 h-2.5 mt-2 self-center"></div>
                         </div>
                         <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
                              class="fish self-start w-44 h-auto -my-12 ml-3">
@@ -93,7 +93,7 @@
                 </div>
             </div>
 
-            <div x-show="openTab === 'three'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
+            <div x-show="openTab === 'sky-light'" class="sm:mx-auto sm:flex sm:flex-row-reverse sm:items-center sm:max-w-4xl">
                 <div class="px-3 sm:max-w-lg sm:mx-auto sm:w-1/2">
                     {% include "landing/main-heading.html" with title="Projects go through stages with dedicated chats. Polls conclude stages to ensure shared understanding and agreement on what to do next." %}
                 </div>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <div class="bg-white">
-                        <div class="bg-yellow/50">
+                        <div class="bg-yellow-light">
                             {% include "partials/vertical-spacer.html" with space="3" %}
                             <p class="text-body px-3.5 block">
                                 What we agree: “The old lookout tower is rotting and is dangerous. We propose to renew

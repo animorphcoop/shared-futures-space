@@ -47,7 +47,7 @@
          x-transition:leave-end="opacity-0">
 
         {#  Menu list  #}
-        <nav class="w-full h-full max-h-full font-kanit-500 text-xl text-black-text flex flex-col">
+        <nav class="w-full h-full max-h-full font-kanit-500 text-xl text-black/75 flex flex-col">
             <h1 class="bg-white p-4 py-2.5 text-purple flex items-center">
                 Menu
                 <button @click.stop.prevent="toggle()" class="ml-auto" aria-label="Close main menu">
@@ -57,9 +57,9 @@
             {% if not user.is_authenticated %}
                 {% url 'account_signup' as signup_url %}
                 {% url 'account_login' as login_url %}
-                {% include "partials/call-to-action.html" with main="For the full experience please sign up, it won't take a minute." button="Sign up" url=signup_url button2="Log in" url2=login_url info="If you are not logged in you can not participate in projects, you can only observe." bg="bg-blue-done" %}
+                {% include "partials/call-to-action.html" with main="For the full experience please sign up, it won't take a minute." button="Sign up" url=signup_url button2="Log in" url2=login_url info="If you are not logged in you can not participate in projects, you can only observe." bg="bg-sky" %}
             {% endif %}
-            <ul class="bg-gradient-to-b from-blue-second to-white overflow-y-auto grow">
+            <ul class="bg-gradient-to-b from-blue-light to-white overflow-y-auto grow">
 
                 {% if user.is_authenticated %}
                     <li class="p-4 pb-5 {% active_link 'text-purple' 'dashboard' %}">

@@ -10,15 +10,15 @@
     <div class="flex flex-col sm:w-[32rem] sm:mx-auto lg:flex-row lg:w-full lg:justify-center max-w-screen-xl mx-auto">
 
         <section class="p-4 pt-2.5 flex flex-col items-end lg:w-[32rem]">
-            <div class="bg-gray-light rounded-full">
-                <p class="font-garamond-500 text-black-large text-center text-22 p-2.5">
+            <div class="bg-grey-10 rounded-full">
+                <p class="font-garamond-500 text-black/55 text-center text-22 p-2.5">
                     Welcome! Just a few questions to help personalise your experience.
                 </p>
             </div>
             <div class="flex flex-col p-1 mr-4 w-12">
-                <div class="rounded-full bg-gray-light w-3 h-3 self-start"></div>
-                <div class="rounded-full bg-gray-light w-3.5 h-3.5 mt-1 self-end"></div>
-                <div class="rounded-full bg-gray-light w-2 h-2 mt-1 self-center"></div>
+                <div class="rounded-full bg-grey-10 w-3 h-3 self-start"></div>
+                <div class="rounded-full bg-grey-10 w-3.5 h-3.5 mt-1 self-end"></div>
+                <div class="rounded-full bg-grey-10 w-2 h-2 mt-1 self-center"></div>
             </div>
             <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge" class="w-36 h-auto">
         </section>
@@ -86,19 +86,19 @@
                     {% include "partials/input-label.html" with label="Organisation" %}
                     <div class="h-6"></div>
                     <div class="flex flex-col">
-                        <p class="block font-garamond-500 text-22 text-black-large text-center">
+                        <p class="block font-garamond-500 text-22 text-black/55 text-center">
                             Will you be representing your organisation on Shared Futures?
                         </p>
                         {% include "partials/vertical-spacer.html" with space="4" %}
                         <div class="flex justify-center items-center">
-                            <input class="rounded-full purple bg-blue-second border border-solid border-blue-second w-18 h-18
+                            <input class="rounded-full purple bg-blue-light border border-solid border-blue-light w-18 h-18
                                     focus:outline-none focus:ring-white
                                     {# checked:bg-none #} checked:bg-purple checked:bg-[url('data:image/svg+xml,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='4.5' cy='4.5' r='4.5' fill='%239759FF'/%3E%3C/svg%3E')]
                                     focus:checked:bg-purple hover:checked:bg-purple"
                                    type="checkbox" id="organisation-checkbox"
                                    onclick="toggleOrganisationsAdd();">
                             {% include "partials/horizontal-spacer.html" with space="1.5" %}
-                            <label class="uppercase font-kanit-400 text-xxs text-black-text text-center tracking-widest"
+                            <label class="uppercase font-kanit-400 text-xxs text-black/75 text-center tracking-widest"
                                    id="organisation-label" for="organisation-checkbox">
                                 Yes
                             </label>

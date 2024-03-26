@@ -23,7 +23,7 @@
             {% include "partials/vertical-spacer.html" with space="4" %}
 
             {% if form.non_field_errors %}
-                <div class="text-large text-center bg-red-important/30 p-4 px-6 mx-4">
+                <div class="text-large text-center bg-red-light p-4 px-6 mx-4">
                     {% for error in form.non_field_errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
@@ -35,7 +35,7 @@
                 {% include "partials/input-label.html" with for="email-input" label="Email" %}
                 {% include "partials/input-text.html" with field=form.login id="email-input" name="email-input" type="text" %}
                 {% comment %}controlled via js/ts{% endcomment %}
-                <span id="email-feedback" class="hidden block text-red-important font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
+                <span id="email-feedback" class="hidden block text-red font-kanit-400 text-xxs pt-2">Please enter a valid email address.</span>
             </div>
 
             <div class="px-4 pb-4.5">

@@ -73,9 +73,9 @@
 
         {% url 'resources' as resources_url %}
         <div class="-mx-4.5 desktop:flex justify-center">
-            <div class="bg-resources-two grow"></div>
-            {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-resources-two" %}
-            <div class="bg-resources-two w-12"></div>
+            <div class="bg-sky grow"></div>
+            {% include "partials/call-to-action.html" with main="Would you like to find out what services and resources are available in your area?" button="See resources" url=resources_url info="" bg="bg-sky" %}
+            <div class="bg-sky w-12"></div>
 
             <div class="bg-yellow w-12"></div>
             {% include "partials/call-to-action.html" with main="Do you have a project in mind you would like to find like minded people to deliver?" button="Sign up" url=signup_url info="" bg="bg-yellow" %}
@@ -89,7 +89,7 @@
         {% include "partials/vertical-spacer.html" with space="9" %}
 
         {% include "partials/vertical-spacer.html" with space="3" %}
-        <div class="bg-blue-pale -mx-4.5">
+        <div class="bg-blue-light -mx-4.5">
             <div class="p-4.5 w-full max-w-screen-desktop mx-auto">
                 {% include "partials/vertical-spacer.html" with space="6" %}
                 {% include "landing/section-heading.html" with title="get in touch 📧" %}

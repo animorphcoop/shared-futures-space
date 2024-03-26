@@ -4,24 +4,24 @@
 <section class="z-20 flex justify-center items-center flex-col h-full fixed left-0 top-0 backdrop-blur bg-blue-blur sm:w-full">
     <div class="bg-white mx-2.5 sm:w-[336px]">
         <div class="p-6 mx-5 bg-white">
-            <h2 class="font-garamond-500 text-black-large text-xl text-22 text-center">
+            <h2 class="font-garamond-500 text-black/55 text-xl text-22 text-center">
                 Please select your organisation from the list.
             </h2>
         </div>
 
         <div class="rounded-t-xl w-full px-5 mb-5">
-            <div class="bg-yellow-pale rounded-t-xl shadow-xl">
-                <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text px-3 py-5 text-center">
+            <div class="bg-yellow rounded-t-xl shadow-xl">
+                <h3 class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black/75 px-3 py-5 text-center">
                     Organisations in our system
                 </h3>
             </div>
-            <ul class="bg-blue-second max-h-72 overflow-y-auto divide-y divide-solid divide-white">
+            <ul class="bg-yellow-light max-h-72 overflow-y-auto divide-y divide-solid divide-white">
                 {% for organisation in organisations %}
                     {% if organisation.name != "" %}
-                        <li class="border-b-blue-done last:border-none mix-blend-multiply bg-[linear-gradient(180deg,_#e5f1f842_0%,_#e5f1f800_9%)]">
+                        <li class="border-b-yellow last:border-none mix-blend-multiply">
                             <button onclick="selectOrganisation(this.innerText)"
                                     class="group px-3 py-3.5 w-full text-left leading-normal
-                                    font-garamond-500 text-black-text text-sm
+                                    font-garamond-500 text-black/75 text-sm
                                     focus:text-purple
                                     transition ease-out duration-300
                                     flex justify-between items-center">

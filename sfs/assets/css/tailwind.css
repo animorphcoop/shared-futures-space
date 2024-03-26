@@ -5,7 +5,7 @@
     /* --- TYPOGRAPHY ----------------------------------------------------------------------------------------------- */
     /* prompts descriptions ------------------------------ */
     .text-large { /* mobile 22/28 desktop 26/34  */
-        @apply text-black/55 font-garamond-500 text-black-large text-[22px] leading-[28px]
+        @apply text-black/55 font-garamond-500 text-black/55 text-[22px] leading-[28px]
         lg:text-[26px] lg:leading-[34px]
     }
     /* menu titles ------------------------------ */
@@ -15,7 +15,7 @@
     }
     /* HEADER ------------------------------ */
     .text-header { /* mobile 10/Auto desktop 12/Auto */
-        @apply uppercase text-black-text font-kanit-600 text-[10px] tracking-widest leading-normal
+        @apply uppercase text-black/75 font-kanit-600 text-[10px] tracking-widest leading-normal
         lg:text-[12px]
     }
     /* body ------------------------------ */
@@ -60,22 +60,22 @@
         @apply button px-3 py-1
     }
     .button-on-white {
-        @apply bg-blue-second hover:shadow-button focus:bg-blue-tertiary
+        @apply bg-blue-light hover:shadow-button focus:bg-blue
     }
     .button-on-white-reverse {
-        @apply bg-blue-done hover:shadow-button focus:bg-blue-done
+        @apply bg-green hover:shadow-button focus:bg-green
     }
     .button-on-colour {
-        @apply bg-white hover:shadow-button focus:bg-blue-second
+        @apply bg-white hover:shadow-button focus:bg-blue-light
     }
     .button-important {
-        @apply bg-yellow-pale hover:shadow-button focus:bg-yellow
+        @apply bg-yellow-light hover:shadow-button focus:bg-yellow
     }
     .button-mini {
         @apply py-0 px-2
     }
     .button-danger {
-        @apply bg-red-important hover:shadow-button focus:bg-red-focus text-white
+        @apply bg-red hover:shadow-button focus:bg-red-focus text-white
     }
 
     /* Maplibre's CSS file makes the background transparent using this selector:
@@ -90,11 +90,11 @@
 
     /* --- FORMS ---------------------------------------------------------------------------------------------------- */
     .input-text {
-        @apply block w-full px-3 py-3 font-garamond-500 text-black-text placeholder:text-black-meta
-        bg-blue-second bg-clip-padding border border-solid border-transparent
+        @apply block w-full px-3 py-3 font-garamond-500 text-black/75 placeholder:text-black/30
+        bg-blue-light bg-clip-padding border border-solid border-transparent
         transition ease-in-out
-        focus:text-black-text focus:border-purple focus:ring-0
-        borken:border-red-important focus:borken:ring-red-important
+        focus:text-black/75 focus:border-purple focus:ring-0
+        borken:border-red focus:borken:ring-red
     }
 
     /* When browser has autocomplete available it changes the colour, this switches it back to our intended colour */
@@ -104,7 +104,7 @@
     }
 
     .input-text-invalid {
-        @apply invalid:border-red-important focus:invalid:ring-red-important
+        @apply invalid:border-red focus:invalid:ring-red
     }
 
     /* --- DRAWERS -------------------------------------------------------------------------------------------------- */

@@ -36,15 +36,15 @@
     {% include "partials/vertical-spacer.html" with space="4.5" %}
 
     {% if area.name == user.post_code.area.name %}
-        {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url3='start_river' info="" bg="bg-resources-two" %}
+        {% include "partials/call-to-action.html" with main="You can’t find anything that fits your idea? Please consider starting your own river!" button="Start a new river" url3='start_river' info="" bg="bg-sky" %}
     {% endif %}
 
     {% if area.name != user.post_code.area.name and request.user.post_code.area.name != 'Other' %}
-        {% include "partials/call-to-action.html" with main="Feeling inspired? Think how these ideas could fit in your spring." button="Start a new river" url3='start_river' info="" bg="bg-resources-two" %}
+        {% include "partials/call-to-action.html" with main="Feeling inspired? Think how these ideas could fit in your spring." button="Start a new river" url3='start_river' info="" bg="bg-sky" %}
     {% endif %}
 
     {# show if user does not belong to post codes we operate #}
     {% if area.name != user.post_code.area.name and request.user.post_code.area.name == 'Other' %}
-        {% include "partials/call-to-action.html" with main="Check out rivers on other areas." button="Go to the Estuary" url3='estuary' info="" bg="bg-resources-two" %}
+        {% include "partials/call-to-action.html" with main="Check out rivers on other areas." button="Go to the Estuary" url3='estuary' info="" bg="bg-sky" %}
     {% endif %}
 {% endblock content %}

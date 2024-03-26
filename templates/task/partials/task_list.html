@@ -28,7 +28,7 @@
 
         {# Task list body #}
 
-        <div class="p-2.5 bg-yellow/50" :class="open ? '' : 'hidden'">
+        <div class="p-2.5 bg-yellow-light" :class="open ? '' : 'hidden'">
             {% for task in page_obj %}
 
                 {% url 'river_task_edit' slug stage topic task.uuid as edit_task_url %}
@@ -54,7 +54,7 @@
 
                             {% if not task.done and task.due %}
                                 {% if task.is_overdue %}
-                                    <span class="text-red-important" title="{{ task.due }}">
+                                    <span class="text-red" title="{{ task.due }}">
                                         Overdue for {{ task.overdue_by }}
                                     </span>
                                 {% else %}

@@ -27,7 +27,7 @@
 
     {% if form.errors %}
         {# TODO: these are a bit ugly like this... should render next to the fields #}
-        <div class="text-body bg-red-important/30 p-4 px-6">
+        <div class="text-body bg-red-light p-4 px-6">
             <div>
                 {% for field, errors in form.errors.items %}
                     <div>
@@ -53,7 +53,7 @@
         <div class="pb-5">
             {% include "partials/input-label.html" with for="id_name" label="Name" %}
             {% include "partials/input-text.html" with field=form.name|attr:"autofocus" id="id_name" %}
-            <div class="text-xxs text-black-meta mt-2"><span x-characters-remaining="#id_name"></span> remaining characters</div>
+            <div class="text-xxs text-black/30 mt-2"><span x-characters-remaining="#id_name"></span> remaining characters</div>
         </div>
 
         {# Task due #}
@@ -87,7 +87,7 @@
                            {% endif %}
                            value="{{ member.user.id }}">
                     <img class="h-8 w-8" src={{ member.user.avatar.image_url }}>
-                    <span class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+                    <span class="uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black/75">
                         {{ member.user.display_name }}
                     </span>
                 </label>

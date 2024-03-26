@@ -41,7 +41,7 @@
         {#  Poll body  #}
         <div>
             {#  Poll description  #}
-            <div class="{% if poll_closed %}bg-gray-light{% else %}bg-yellow/50{% endif %}"
+            <div class="{% if poll_closed %}bg-grey-10{% else %}bg-yellow-light{% endif %}"
                  x-data="{ editPoll: false }">
                 {% include "partials/vertical-spacer.html" with space="3" %}
                 <div id="poll-description-{{poll.uuid}}"
@@ -87,7 +87,7 @@
                                         {% csrf_token %}
                                     </form>
                                 {% else %}
-                                    <span class="text-button {% if name in poll_results_winners %}text-red-important{% else %}text-black/30{% endif %} inline-block"> {#  Winning option is text-red-important  #}
+                                    <span class="text-button {% if name in poll_results_winners %}text-red{% else %}text-black/30{% endif %} inline-block"> {#  Winning option is text-red  #}
                                         {{ name }}
                                     </span>
                                 {% endif %}

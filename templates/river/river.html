@@ -91,7 +91,7 @@
                     <div class="lg:sticky lg:top-2 z-10">
                         {# CTA for rivers without enough swimmers to splash with. Show if riverstarter, and if count swimmers <3 #}
                         {% if request.user in starters|attrmap:'user' and members.count < 3 %}
-                            <section class="-mx-4.5 bg-resources-two mb-6">
+                            <section class="-mx-4.5 bg-sky mb-6">
                                 {% include 'partials/call-to-action-copy.html' with text='Share' icon='link' %}
                             </section>
                         {% endif %}
@@ -113,7 +113,7 @@
                                     id="show-modal">
                                 <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
                                      class="w-9 h-auto">
-                                <span class="absolute -top-1.5 -right-1.5 bg-red-important text-white px-1 py-px rounded-sm">{{ resources|length }}</span>
+                                <span class="absolute -top-1.5 -right-1.5 bg-red text-white px-1 py-px rounded-sm">{{ resources|length }}</span>
                             </button>
                         </div>
                     </div>

@@ -1,9 +1,9 @@
 {% load static %}
 <div class="justify-self-center">
     <a href="{% url "spring" slug %}">
-        <div class="bg-gray-100 {% if not image %}bg-{{ slug }} {% endif %}bg-center bg-cover h-[42.5vw] w-[42.5vw] md:h-[27.5vw] md:w-[27.5vw] max-h-80 max-w-xs rounded-full"
+        <div class="bg-grey-10 {% if not image %}bg-{{ slug }} {% endif %}bg-center bg-cover h-[42.5vw] w-[42.5vw] md:h-[27.5vw] md:w-[27.5vw] max-h-80 max-w-xs rounded-full"
              style="{% if image %}background-image: url('{{ image.url }}');{% endif %}"></div>
         {% include "partials/vertical-spacer.html" with space="3" %}
-        <h3 class="uppercase text-center text-black-text font-kanit-400 text-[9px] leading-3 tracking-widest">{{ title }}</h3>
+        <h3 class="uppercase text-center text-black/75 font-kanit-400 text-[9px] leading-3 tracking-widest">{{ title }}</h3>
     </a>
 </div>

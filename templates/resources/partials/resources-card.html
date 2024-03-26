@@ -4,7 +4,7 @@
 
 <div class="mx-1.5 px-3 pt-3 bg-white bg-[linear-gradient(180deg,_#F0F0F0_0%,_#e5f1f800_15.62%)] rounded-xl rounded-xl">
     <div class="flex flex-start justify-between items-center">
-        <h2 class="font-kanit-500 text-xl text-black-large leading-tight grow">
+        <h2 class="font-kanit-500 text-xl text-black/55 leading-tight grow">
             {{ resource.title }}
         </h2>
         {% if close_button %}
@@ -28,7 +28,7 @@
 
         {% if resource.tags %}
             {% for tag in resource.tag_list %}
-                <button class="tag bg-blue-second"
+                <button class="tag bg-blue-light"
                         onclick="buttonTagSearch('{{ tag }}')"
                         hx-post="{% url 'resource_search' %}" hx-vals='{"search": "{{ tag }}"}'
                         hx-target="#search-results">
@@ -40,7 +40,7 @@
 
     <div class="h-6"></div>
 
-    <p class="mb-0.5 font-garamond-500 text-black-text text-base leading-5 whitespace-normal">
+    <p class="mb-0.5 font-garamond-500 text-black/75 text-base leading-5 whitespace-normal">
         {{ resource.summary }}
     </p>
 

@@ -3,16 +3,16 @@
 {% with li_class="rounded-[50px_50px_0px_0px] text-center px-6 h-[48px] flex items-center justify-center" %}
     <div x-data="{ openTab: 'one' }" class="-mx-4.5">
         <ul class="flex flex-start">
-            <li @click="openTab = 'one'" class="{{ li_class }} bg-resources-one">
+            <li @click="openTab = 'one'" class="{{ li_class }} bg-blue">
                 {% include "landing/tabbed-resources/title.html" with title="Collaborate" %}
             </li>
-            <li @click="openTab = 'two'" class="{{ li_class }} bg-resources-two">
+            <li @click="openTab = 'two'" class="{{ li_class }} bg-sky">
                 {% include "landing/tabbed-resources/title.html" with title="Learn" %}
             </li>
-            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
+            <li @click="openTab = 'three'" class="{{ li_class }} bg-sky-light">
                 {% include "landing/tabbed-resources/title.html" with title="Decide" %}
             </li>
-            <li @click="openTab = 'three'" class="{{ li_class }} bg-resources-three">
+            <li @click="openTab = 'three'" class="{{ li_class }} bg-sky-light">
                 {% include "landing/tabbed-resources/title.html" with title="Decide" %}
             </li>
         </ul>

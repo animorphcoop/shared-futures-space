@@ -268,7 +268,7 @@ class ChatView(TemplateView):
                     )
                 else:
                     return HttpResponse(
-                        "<span class='block text-body text-red-important text-center'>Sorry, the file format not supported.</span>"
+                        "<span class='block text-body text-red text-center'>Sorry, the file format not supported.</span>"
                     )
             if "flag" in request.POST:
                 m = Message.objects.get(uuid=request.POST["flag"])

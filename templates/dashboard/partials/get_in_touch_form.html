@@ -1,7 +1,7 @@
 <div class="flex flex-col desktop:flex-row gap-6">
     <div class="basis-1/2 flex flex-col gap-6">
         <div>
-            <label for="subject" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+            <label for="subject" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black/75">
                 Subject
             </label>
             <select id="subject" name="subject" class="input-text {% if style == 'primary_colour' %}bg-white{% endif %}" tabindex="1">
@@ -17,7 +17,7 @@
         </div>
 
         <div>
-            <label for="email" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+            <label for="email" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black/75">
                 Email
             </label>
             <input type="email" name="email" id="email" class="input-text {% if style == 'primary_colour' %}bg-white{% endif %}" tabindex="2" required>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="basis-1/2">
-        <label for="message" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black-text">
+        <label for="message" class="block pb-2.5 uppercase font-kanit-600 font-medium text-xxs tracking-widest text-black/75">
             Message
         </label>
         <textarea name="message" id="message" cols="30" rows="12" class="input-text {% if style == 'primary_colour' %}bg-white{% endif %}" tabindex="3"></textarea>
@@ -41,7 +41,7 @@
 </div>
 
 {% if form.errors %}
-    <div class="text-body bg-red-important/30 p-4 px-6">
+    <div class="text-body bg-red-light p-4 px-6">
         <div>
             {% for field, errors in form.errors.items %}
                 <div>

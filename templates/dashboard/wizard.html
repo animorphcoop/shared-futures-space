@@ -13,7 +13,7 @@
 
         {% if show_finish %}
         <div class="p-4 mx-auto sm:w-[32rem] sm:mx-auto">
-            <p class="text-sm text-black-text">
+            <p class="text-sm text-black/75">
                 Area added! Add more areas below or skip to the bottom to complete the wizard.
             </p>
         </div>
@@ -22,26 +22,26 @@
             <table class="table-auto w-full">
                 <thead>
                     <tr class="border border-black-500">
-                        <th class="text-sm text-black-text">Area name</th>
-                        <th class="text-sm text-black-text">Post Codes</th>
-                        <th class="text-sm text-black-text">Image</th>
-                        <th class="text-sm text-black-text">Zoom</th>
+                        <th class="text-sm text-black/75">Area name</th>
+                        <th class="text-sm text-black/75">Post Codes</th>
+                        <th class="text-sm text-black/75">Image</th>
+                        <th class="text-sm text-black/75">Zoom</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for area in area_list %}
                     {% if area.name != "Other" %}
                     <tr class="border border-black-500 text-center">
-                        <td class="text-sm text-black-text">{{ area.name }}</td>
-                        <td class="text-sm text-black-text">
+                        <td class="text-sm text-black/75">{{ area.name }}</td>
+                        <td class="text-sm text-black/75">
                             {{ area.postcode_set.all|join:", " }}
                         </td>
-                        <td class="text-sm text-black-text">
+                        <td class="text-sm text-black/75">
                             {% if area.image %}
                                 <img src="{{ area.image.url }}" alt="area" width="100" class="mx-auto">
                             {% endif %}
                         </td>
-                        <td class="text-sm text-black-text">{{ area.zoom }}</td>
+                        <td class="text-sm text-black/75">{{ area.zoom }}</td>
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -58,7 +58,7 @@
             <h1 class="text-title text-black/55 p-4">Add area</h1>
 
             {% if form.non_field_errors %}
-                <div class="text-large text-center bg-red-important/30 p-4 px-6 mx-4">
+                <div class="text-large text-center bg-red-light p-4 px-6 mx-4">
                     {% for error in form.non_field_errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
@@ -74,7 +74,7 @@
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="text-input" label="Post Codes" %}
                 {% include "partials/input-text.html" with field=form.post_code id="text-input" name="text-input" type="text" %}
-                <p class="text-sm text-black-text">
+                <p class="text-sm text-black/75">
                     Comma separated list of the post codes of the area.
                 </p>
             </div>

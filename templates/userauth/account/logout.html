@@ -10,7 +10,7 @@ TODO: should logging out occur automatically after pressing that nav link?
 
         {% block title %}{% include "partials/title.html" with title="Log out" %}{% endblock %}
 
-        <p class="font-garamond-500 text-black-text text-xl text-22 px-4 pb-9">Are you sure you want to log out?</p>
+        <p class="font-garamond-500 text-black/75 text-xl text-22 px-4 pb-9">Are you sure you want to log out?</p>
 
         <form class="px-4" method="post" action="{% url 'account_logout' %}">
             {% csrf_token %}
@@ -18,7 +18,7 @@ TODO: should logging out occur automatically after pressing that nav link?
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
             {% endif %}
             <button type="submit"
-                class="button button-on-white disabled:bg-gray-light">
+                class="button button-on-white disabled:bg-grey-10">
                 Log out
             </button>
         </form>
