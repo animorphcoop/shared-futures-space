@@ -4,19 +4,19 @@
         <div x-data="{ openTab: 'one' }">
             <ul class="flex justify-between">
                 <li @click="openTab = 'one'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
-                    :class="openTab == 'one' ? 'tab-shadow-selected' : 'tab-shadow'">
+                    :class="openTab == 'one' ? '' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="General" %}
                 </li>
                 <li @click="openTab = 'two'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
-                    :class="openTab == 'two' ? 'tab-shadow-selected' : 'tab-shadow'">
+                    :class="openTab == 'two' ? '' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Money" %}
                 </li>
                 <li @click="openTab = 'three'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
-                    :class="openTab == 'three' ? 'tab-shadow-selected' : 'tab-shadow'">
+                    :class="openTab == 'three' ? '' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Place" %}
                 </li>
                 <li @click="openTab = 'four'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
-                    :class="openTab == 'four' ? 'tab-shadow-selected' : 'tab-shadow'">
+                    :class="openTab == 'four' ? '' : 'tab-shadow'">
                     {% include "landing/tabbed-resources/title.html" with title="Time" %}
                 </li>
             </ul>
