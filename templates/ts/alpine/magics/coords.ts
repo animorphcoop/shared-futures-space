@@ -15,7 +15,8 @@ const POINT_RE = /POINT\s*\(\s*([0-9.-]+)\s*([0-9.-]+)\s*\)/
  *  to: [ -5.906794613646412, 54.59393145818788 ]
  */
 Alpine.magic('pointToCoords', () => {
-    return (point: string): MapCoordinates | null => {
+    return (point?: string): MapCoordinates | null => {
+        if (!point) return null
         const m = POINT_RE.exec(point)
         if (m) return [parseFloat(m[1]), parseFloat(m[2])]
         return null
@@ -26,7 +27,7 @@ Alpine.magic('pointToCoords', () => {
  *  ... and the other way around
  */
 Alpine.magic('coordsToPoint', () => {
-    return (coords: MapCoordinates | null): string => {
+    return (coords?: MapCoordinates): string => {
         if (!coords) return ''
         return `SRID=4326;POINT (${coords.join(' ')})`
     }

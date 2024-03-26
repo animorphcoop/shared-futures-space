@@ -22,6 +22,10 @@ class CreateRiverFormStep1(forms.ModelForm):
 class CreateRiverFormStep2(forms.ModelForm):
     location = LocationField(enable_precision=True)
 
+    def __init__(self, *args, current_user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["location"].widget.current_user = current_user
+
     def clean(self):
         cleaned_data = super().clean()
         location_fields = cleaned_data.pop("location", None)

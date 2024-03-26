@@ -1,4 +1,5 @@
 {% load widget_tweaks %}
+{% load custom_tags %}
 
 {% comment %}
 
@@ -20,31 +21,31 @@
 
 {% endcomment %}
 
-<div data-point="{{ widget.subwidgets.0.value }}"
+<div data-area-center="{{ widget.current_user.post_code.area.location }}"
+     data-area-zoom="{{ widget.current_user.post_code.area.zoom }}"
+     data-point="{{ widget.subwidgets.0.value }}"
      data-exact="{{ widget.subwidgets.1.value.0 }}"
      data-zoom="{{ widget.subwidgets.2.value }}"
      x-data="{
+       // We might have a default area, so we want to go
+       // to that if we haven't yet selected a point
+       areaCenter: $pointToCoords($el.dataset.areaCenter),
+       areaZoom: $el.dataset.areaZoom,
 
        // [lon, lat] of coords
-       coords: null,
+       coords: $pointToCoords($el.dataset.point),
 
        // string of 'True' or 'False' to mean exact or approximate
        // it's a string as that's how it gets passed back and forth for django
        // use it boolean: exact === 'True'
-       exact: 'True',
+       exact: $el.dataset.exact || 'True',
 
        // integer
-       zoom: 12,
+       zoom: parseFloat($el.dataset.zoom || '12'),
 
        // generated marker to show on map
        marker: null
      }"
-     x-init="
-        // set initial/default values
-        coords = $el.dataset.point ? $pointToCoords($el.dataset.point) : null;
-        exact = $el.dataset.exact || 'True';
-        zoom = parseFloat($el.dataset.zoom || '12');
-     "
      x-effect="
         // generate marker based on coords/exact values
         marker = coords ? {
@@ -99,7 +100,13 @@
         </div>
     {% endif %}
 
-    <div x-map="{ markers: marker ? [marker] : [], center: marker ? marker.coordinates : null, cursor: 'pointer' }"
+    <div x-map="{
+           markers: marker ? [marker] : [],
+           center: marker ? marker.coordinates : areaCenter,
+           cursor: 'pointer',
+           zoom: marker ? null : areaZoom,
+           home: areaCenter && areaZoom ? { center: areaCenter, zoom: areaZoom } : null
+         }"
          @click-map="coords = $event.detail.coordinates"
          @zoom-end="zoom = $event.detail.zoom"
          class="w-full h-96 rounded relative">

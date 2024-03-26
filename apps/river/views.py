@@ -442,6 +442,13 @@ class RiverStartWizardView(SessionWizardView):
     # This storage will temporarily store the uploaded files for the wizard
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "tmp"))
 
+    def get_form_kwargs(self, step=None):
+        kwargs = super().get_form_kwargs(step)
+        # for some reason it passes step as string
+        if str(step) == "1" and self.request.user.is_authenticated:
+            kwargs["current_user"] = self.request.user
+        return kwargs
+
     def get(self, request, *args, **kwargs):
         """Support discard and restoring on get
 

@@ -49,7 +49,9 @@ export class HomeControl implements IControl {
         const button = document.createElement('button')
         button.classList.add('button', 'button-on-colour')
 
-        button.addEventListener('click', () => {
+        button.addEventListener('click', event => {
+            event.stopPropagation()
+            event.preventDefault()
             const home = this.current.options.home
             if (home) {
                 map.flyTo({

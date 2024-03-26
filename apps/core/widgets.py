@@ -40,6 +40,8 @@ class LocationInput(MultiWidget):
         context = super().get_context(name, value, attrs)
         context["widget"]["enable_precision"] = self.enable_precision
         context["widget"]["enable_zoom"] = self.enable_zoom
+        if self.current_user:
+            context["widget"]["current_user"] = self.current_user
         return context
 
     def decompress(self, value):
