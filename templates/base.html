@@ -40,7 +40,10 @@
 
 </head>
 
-<body class="antialiased w-full " x-data="{ menu: false }">
+<body class="antialiased w-full"
+      x-data="{ menu: false }">
+
+{% sfs_vite_prevent_unstyled_flash %}
 
 {% include 'partials/nav.html' %}
 
@@ -57,8 +60,6 @@
 {% block extra_js %}
     {# Override this in templates to add extra javascript #}
 {% endblock %}
-
-{% sfs_vite_prevent_unstyled_flash %}
 
 </body>
 

@@ -68,6 +68,14 @@ def sfs_vite_prevent_unstyled_flash(*args):
 
     The "DOMContentLoaded" event fires when all deferred scripts have
     been executed, and vite has injected the CSS by then.
+
+    If you still see a flash of unstyled content, then make sure you place this
+    right after the opening <body> tag, e.g.:
+
+        <body>
+          {% sfs_vite_prevent_unstyled_flash %}
+          <!-- other stuff here -->
+        </body>
     """
     if not DJANGO_VITE_DEV_MODE:
         return ""
