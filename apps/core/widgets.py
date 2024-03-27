@@ -24,6 +24,7 @@ class LocationInput(MultiWidget):
     def __init__(self, attrs=None, enable_precision=False, enable_zoom=False):
         self.enable_precision = enable_precision
         self.enable_zoom = enable_zoom
+        self.current_user = None
         super().__init__(
             widgets=(
                 # co-ordinates
