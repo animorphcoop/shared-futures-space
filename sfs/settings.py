@@ -24,7 +24,7 @@ sys.path.append(str(DJANGO_APPS_DIR))
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "default-insecure-key-ov6&0l@xp6up")
 
-# default true in case app is deployed without any env variables
+# default False in case app is deployed without any env variables
 DEBUG = True if os.environ.get("DEBUG") == "1" else False
 
 ALLOWED_HOSTS = os.environ.get("DOMAIN_NAME", "sharedfutures.com").split(",")
