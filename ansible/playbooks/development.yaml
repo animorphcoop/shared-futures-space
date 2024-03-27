@@ -6,6 +6,9 @@
     vite_dev_mode: "{{ lookup('env', 'VITE_DEV_MODE') }}"
     domain_name: "{{ lookup('env', 'DOMAIN_NAME') }}"
     secret_key: "{{ lookup('env', 'SECRET_KEY') }}"
+    postgres_host: "localhost"
+    postgres_db: "sfsdev_db"
+    postgres_user: "sfsdev_user"
     postgres_password: "{{ lookup('env', 'POSTGRES_PASSWORD') }}"
     celery_broker_url: "{{ lookup('env', 'CELERY_BROKER_URL') }}"
     celery_result_backend: "{{ lookup('env', 'CELERY_RESULT_BACKEND') }}"
@@ -100,6 +103,17 @@
         executable: /bin/bash
       become_user: deploydev
 
+    # create an env file
+    - name: env file
+      ansible.builtin.template:
+        src: ../templates/sharedfutures.env
+        dest: /var/www/shared-futures-space-dev/sharedfutures.env
+        owner: root
+        group: root
+        mode: '0644'
+      tags:
+        - env
+
     # systemd
     - name: mkdir uwsgi
       ansible.builtin.file:
@@ -153,9 +167,9 @@
       ansible.builtin.shell:
         cmd: |
           source venv/bin/activate
-          export POSTGRES_HOST=localhost
-          export POSTGRES_DB=sfsdev_db
-          export POSTGRES_USER=sfsdev_user
+          export POSTGRES_HOST={{ postgres_host }}
+          export POSTGRES_DB={{ postgres_db }}
+          export POSTGRES_USER={{ postgres_user }}
           export POSTGRES_PASSWORD={{ postgres_password }}
           python3 manage.py migrate
         chdir: /var/www/shared-futures-space-dev

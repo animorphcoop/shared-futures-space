@@ -8,6 +8,7 @@ User=deploydev
 Group=www-data
 ExecStart=/var/www/shared-futures-space-dev/venv/bin/uwsgi --ini /etc/uwsgi/sfsdev.uwsgi.ini
 ExecReload=/bin/kill -HUP $MAINPID
+EnvironmentFile=/var/www/shared-futures-space-dev/sharedfutures.env
 WorkingDirectory=/var/www/shared-futures-space-dev
 TimeoutSec=15
 Restart=always
