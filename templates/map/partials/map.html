@@ -26,12 +26,14 @@
                 cardHeight: 0
             }">
 
-    <div :class="{ hidden: !editing }">
+    <div x-cloak
+         :class="{ hidden: !editing }">
         {% include 'map/partials/map-filters.html' %}
     </div>
 
     <!-- mobile, slides from bottom -->
-    <div class="p-2 absolute w-full z-20 transition-[bottom,height,opacity] duration-300 overflow-hidden desktop:hidden"
+    <div x-cloak
+         class="p-2 absolute w-full z-20 transition-[bottom,height,opacity] duration-300 overflow-hidden desktop:hidden"
          x-bind-height="cardHeight"
          :class="isOpen ? 'opacity-100' : `opacity-100`"
          :style="{ bottom: isOpen ? 0 : `${-(cardHeight || 200) - 20}px` }">
@@ -40,7 +42,8 @@
     </div>
 
     <!-- desktop, slides from left -->
-    <div class="pl-3 pb-3 absolute h-full w-[360px] z-20 transition-[left,height,opacity] duration-300 overflow-y-auto pointer-events-none hidden desktop:flex desktop:flex-row desktop:items-end"
+    <div x-cloak
+         class="pl-3 pb-3 absolute h-full w-[360px] z-20 transition-[left,height,opacity] duration-300 overflow-y-auto pointer-events-none hidden desktop:flex desktop:flex-row desktop:items-end"
          :class="isOpen ? 'left-0 opacity-100' : `-left-[360px] opacity-100`">
         <div x-html="selectedMarker ? selectedMarker.html : ''"
              class="pointer-events-auto"
