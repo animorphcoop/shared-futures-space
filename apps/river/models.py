@@ -433,6 +433,16 @@ class River(ClusterableModel):
                 context_river=self,
                 text="As each aspect of the project concludes, you can use the polls in each tab to record this. When all polls have passed, you will progress to the reflect stage.",
             )
+
+            if not self.location:
+                send_system_message(
+                    kind="salmon_wizard",
+                    chat=self.act_stage.general_chat,
+                    context_river=self,
+                    # TODO: write/rewrite/confirm this message (https://op.animorph.coop/wp/840)
+                    text="There is no location set yet, if you are a river starter using the settings menu to set a location",
+                )
+
             send_system_message(
                 kind="salmon_wizard",
                 chat=self.act_stage.money_chat,
