@@ -35,6 +35,18 @@ class CreateRiverFormStep2(forms.ModelForm):
         fields = ["location"]
 
 
+class CreateRiverFormStep3(forms.ModelForm):
+    """A step just to show the help file
+
+    The template checks if we're the last step
+    and shows the help info if so
+    """
+
+    class Meta:
+        model = River
+        fields = []
+
+
 class RiverTitleUpdateForm(forms.ModelForm):
     title = forms.CharField(max_length=100)
 

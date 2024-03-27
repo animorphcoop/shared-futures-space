@@ -30,6 +30,7 @@ from userauth.util import get_userpair
 from .forms import (
     CreateRiverFormStep1,
     CreateRiverFormStep2,
+    CreateRiverFormStep3,
     RiverDescriptionUpdateForm,
     RiverImageUpdateForm,
     RiverLocationUpdateForm,
@@ -435,6 +436,7 @@ class RiverStartWizardView(SessionWizardView):
     form_list = [
         CreateRiverFormStep1,
         CreateRiverFormStep2,
+        CreateRiverFormStep3,
     ]
 
     # This storage will temporarily store the uploaded files for the wizard

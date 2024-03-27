@@ -12,7 +12,7 @@
 
 {% block content %}
     {% block title %}{% include "partials/title.html" with title='Start a River' %}{% endblock %}
-    <div class="max-w-screen-xl mx-auto">
+    <div class="max-w-screen-sm mx-auto">
         {% include "partials/vertical-spacer.html" with space="3" %}
 
         <form method="post"
@@ -34,77 +34,13 @@
                 {% else %}
                     {% render_field field class="input-text" %}
                 {% endif %}
-                {% for error in field.errors %}
-                    <div class="text-red-600 my-2">{{ error }}</div>
-                {% endfor %}
                 {% include "partials/vertical-spacer.html" with space="9" %}
             {% endfor %}
 
-
-
-            {# TODO: move below div to correct place for appearing on final step #}
-            <div>
-                <h2 class="text-header text-[12px]">Structure of Rivers</h2>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-                <p class="text-body text-black/55">
-                    Rivers are structured to help you move a project through from idea to completion. There are 4 stages to a River:
-                </p>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <ol class="flex flex-col gap-4.5">
-                    <li class="bg-[#E5F1F833] rounded-t-lg px-3 pt-1.5 pb-3">
-                        <h3 class="text-header text-center">1. Envision</h3>
-                        <p class="text-body text-black/55 sm:text-center">Discuss, shape, and capture your collective vision.</p>
-                    </li>
-                    <li class="bg-[#E5F1F840] rounded-t-lg px-3 pt-1.5 pb-3">
-                        <h3 class="text-header text-center">2. Plan</h3>
-                        <p class="text-body text-black/55 sm:text-center"> Make plans for how you'll achieve your vision.</p>
-                    </li>
-                    <li class="bg-[#E5F1F860] rounded-t-lg px-3 pt-1.5 pb-3">
-                        <h3 class="text-header text-center">3. Act</h3>
-                        <p class="text-body text-black/55 sm:text-center">Share updates on how the plans are being carried out.</p>
-                    </li>
-                    <li class="bg-[#E5F1F880] rounded-t-lg px-3 pt-1.5 pb-3">
-                        <h3 class="text-header text-center">4. Reflect</h3>
-                        <p class="text-body text-black/55 sm:text-center">Consider which resources on the platform helped you.</p>
-                    </li>
-                </ol>
-                {% include "partials/vertical-spacer.html" with space="3" %}
-                <p class="text-body text-black/55">
-                    To progress through the stages, the Swimmers in this River will need to agree on statements by passing a majority YES vote on polls in each stage.
-                </p>
+            {% if wizard.steps.current == wizard.steps.last %}
+                {% include "partials/river-start-help.html" %}
                 {% include "partials/vertical-spacer.html" with space="9" %}
-                <h2 class="text-header text-[12px]">Help</h2>
-                {% include "partials/vertical-spacer.html" with space="6" %}
-
-                {# Call to action type salmon of knowledge #}
-                <div class="max-w-3xl flex flex-col items-center hidden sm:block">
-                    <div class="bg-blue-light rounded-full">
-                        <p class="text-large text-center p-2.5 px-10">
-                            The Salmon of Knowledge will offer guidance in each stage, so dive in and get started!
-                        </p>
-                    </div>
-                    <div class="flex flex-col p-1 pl-48 w-10 self-start">
-                        <div class="rounded-full bg-blue-light w-5 h-5 mt-1 self-end"></div>
-                        <div class="rounded-full bg-blue-light w-3.5 h-3.5 mt-1 self-start"></div>
-                        <div class="rounded-full bg-blue-light w-2.5 h-2.5 mt-2 self-center"></div>
-                    </div>
-                    <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
-                         class="fish self-start w-44 h-auto -my-12 ml-3">
-                </div>
-
-                {# Resources type salmon of knowledge #}
-                <div class="flex gap-4.5 sm:hidden">
-                    <div class="self-center button button-on-white p-1 drop-shadow-lg flex-shrink-0">
-                        <img src="{% static 'images/avatars/salmon_1.png' %}" alt="Salmon of Knowledge"
-                             class="w-9 h-auto">
-                    </div>
-                    <p class="text-body text-black/55">
-                        The Salmon of Knowledge will offer guidance in each stage, so dive in and get started!
-                    </p>
-                </div>
-            </div>
-
-
+            {% endif %}
 
             <div class="flex justify-center gap-2">
                 {% if wizard.steps.prev %}
