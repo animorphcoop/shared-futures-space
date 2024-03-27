@@ -21,6 +21,7 @@
     default_from_email: "{{ lookup('env', 'DEFAULT_FROM_EMAIL') }}"
     weather_api_key: "{{ lookup('env', 'WEATHER_API_KEY') }}"
     maptiler_api_key: "{{ lookup('env', 'MAPTILER_API_KEY') }}"
+    http_port: 6000
   tasks:
 
     # postgresql setup
