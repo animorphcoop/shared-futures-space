@@ -1,0 +1,5 @@
+[tools]
+# same as on server currently
+python = "3.9.2"
+[env]
+_.python.venv = ".venv"
