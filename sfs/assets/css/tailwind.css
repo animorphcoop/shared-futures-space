@@ -94,7 +94,7 @@
         bg-blue-light bg-clip-padding border border-solid border-transparent
         transition ease-in-out
         focus:text-black/75 focus:border-purple focus:ring-0
-        borken:border-red focus:borken:ring-red
+        borken:border-red focus:borken:ring-red focus-visible:outline-none
     }
 
     /* When browser has autocomplete available it changes the colour, this switches it back to our intended colour */
