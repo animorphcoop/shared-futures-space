@@ -5,6 +5,9 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from map.markers import river_marker
+from river.models import River
+
 
 def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     if PostCode.objects.all().count() == 0 and not request.user.is_authenticated:
@@ -19,7 +22,14 @@ def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("dashboard"))
     else:
-        return render(request, "landing/landing.html")
+        rivers = River.objects.exclude(location=None)
+        markers = []
+        for river in rivers:
+            marker = river_marker(river)
+            if marker:
+                markers.append(marker)
+        context = {"markers": markers}
+        return render(request, "landing/landing.html", context)
 
 
 def privacy(request: HttpRequest) -> HttpResponse:

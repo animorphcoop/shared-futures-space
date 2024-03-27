@@ -44,6 +44,10 @@ Alpine.directive('map', (
     // So we can refer to the options from anywhere...
     const current: CurrentOptions = { options: {} }
 
+    // We only autofit once on initial set of markers...
+    // Or it autofits when you change *anything* in the options
+    let autofitDone = false
+
 
     let _map: maplibregl.Map
     cleanup(() => _map?.remove())
@@ -60,6 +64,7 @@ Alpine.directive('map', (
             zoom,
             markers,
             autofit,
+            scrollZoom,
         } = options
 
         function getStyleURL(): string {
@@ -98,6 +103,9 @@ Alpine.directive('map', (
 
         map.dragRotate.disable()
         map.touchZoomRotate.disable()
+        if (!scrollZoom) {
+            map.scrollZoom.disable()
+        }
         map.addControl(
             new maplibregl.NavigationControl({ showCompass: false }),
             'top-right'
@@ -271,7 +279,8 @@ Alpine.directive('map', (
                 }
             }))
         })
-        if (autofit && markers.length > 0) {
+        if (autofit && !autofitDone && markers.length > 0) {
+            autofitDone = true
             map.fitBounds(getBounds(markers), {
                 padding,
                 // Ensure we don't go too crazy zooming in close

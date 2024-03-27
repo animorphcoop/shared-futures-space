@@ -70,6 +70,11 @@
         </div>
 
         {% include "partials/vertical-spacer.html" with space="9" %}
+        {% include "landing/section-heading.html" with title="Explore what we have been doing" %}
+        {% include "partials/vertical-spacer.html" with space="6" %}
+        <div class="h-[420px] lg:h-[600px] -mx-4.5">
+            {% include "map/partials/map.html" with autofit=True %}
+        </div>
 
         {% url 'resources' as resources_url %}
         <div class="-mx-4.5 desktop:flex justify-center">

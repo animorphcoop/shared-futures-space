@@ -27,6 +27,10 @@ export interface MapOptions {
     padding?: Padding
     autofit?: boolean
     filterControl?: boolean
+    // Enable zooming when you scroll
+    // Is annoying on content/landing-type pages
+    // But useful in more focused places
+    scrollZoom?: boolean
 }
 
 export interface CurrentOptions {

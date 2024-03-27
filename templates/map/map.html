@@ -13,66 +13,7 @@
 {% block content %}
     <div class="max-w-screen-xl mx-auto h-screen flex flex-col">
         {% block title %}{% include "partials/title.html" with title="Map" %}{% endblock %}
-        <div class="relative w-full h-full overflow-hidden"
-             x-data="{
-                isOpen: false,
-                selectedMarker: null,
-
-                // We use the 'editing' variable as that's the what overlay sets to close it
-                editing: false,
-                filterTypes: ['resource', 'idea', 'river', 'river-finished'],
-
-                open (marker) {
-                    this.isOpen = true
-                    this.selectedMarker = marker
-                },
-                close () {
-                    this.isOpen = false
-                },
-                openFilter () {
-                    this.isOpen = false
-                    this.editing = true
-                },
-                closeFilter () {
-                    this.editing = false
-                },
-                cardHeight: 0
-            }">
-
-            <div :class="{ hidden: !editing }">
-                {% include 'map/partials/map-filters.html' %}
-            </div>
-
-            <!-- mobile, slides from bottom -->
-            <div class="p-2 absolute w-full z-20 transition-[bottom,height,opacity] duration-300 overflow-hidden desktop:hidden"
-                 x-bind-height="cardHeight"
-                 :class="isOpen ? 'opacity-100' : `opacity-100`"
-                 :style="{ bottom: isOpen ? 0 : `${-(cardHeight || 200) - 20}px` }">
-                <div x-html="selectedMarker ? (selectedMarker.htmlMini || selectedMarker.html) : ''"
-                     @close="isOpen = false"></div>
-            </div>
-
-            <!-- desktop, slides from left -->
-            <div class="pl-3 pb-3 absolute h-full w-[360px] z-20 transition-[left,height,opacity] duration-300 overflow-y-auto pointer-events-none hidden desktop:flex desktop:flex-row desktop:items-end"
-                 :class="isOpen ? 'left-0 opacity-100' : `-left-[360px] opacity-100`">
-                <div x-html="selectedMarker ? selectedMarker.html : ''"
-                     class="pointer-events-auto"
-                     @close="isOpen = false"></div>
-            </div>
-
-            <div x-map="{
-                    home: {{ home|to_json }},
-                    markers: {{ markers|to_json }},
-                    types: filterTypes,
-                    padding: isOpen ? ($screen.isDesktop ? { left: 360 } : { bottom: cardHeight }) : null,
-                    autofit: false,
-                    filterControl: true,
-                 }"
-                 @click-marker="open($event.detail)"
-                 @click-map="close()"
-                 @click-filter="openFilter()"
-                 class="absolute w-full h-full z-10">
-            </div>
+        {% include "map/partials/map.html" with filter_control=True %}
         </div>
     </div>
 {% endblock content %}
