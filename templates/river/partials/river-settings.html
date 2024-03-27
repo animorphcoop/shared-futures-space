@@ -1,5 +1,6 @@
 {% load custom_filters %}
 <section class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur bg-blue-blur"
+         x-cloak
          @click="el => { if (el.target.classList.contains('backdrop-blur')) { open = false } }">
     <div class="bg-white mx-2.5 px-5 w-[90vw] sm:w-[336px]">
         {% include "partials/vertical-spacer.html" with space="7.5" %}
