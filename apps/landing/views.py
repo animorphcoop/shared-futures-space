@@ -4,7 +4,6 @@ from area.models import PostCode
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
 from map.markers import river_marker
 from river.models import River
 
