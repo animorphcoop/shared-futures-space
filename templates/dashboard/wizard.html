@@ -25,7 +25,6 @@
                         <th class="text-sm text-black/75">Area name</th>
                         <th class="text-sm text-black/75">Post Codes</th>
                         <th class="text-sm text-black/75">Image</th>
-                        <th class="text-sm text-black/75">Zoom</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,7 +40,6 @@
                                 <img src="{{ area.image.url }}" alt="area" width="100" class="mx-auto">
                             {% endif %}
                         </td>
-                        <td class="text-sm text-black/75">{{ area.zoom }}</td>
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -82,7 +80,7 @@
             <div class="px-4 pb-9">
                 {% include "partials/input-label.html" with for="id_image" label="Upload an image" %}
                 <div class="text-meta text-black/30">
-                    {% render_field form.image %}
+                    {% include "partials/input-file.html" with field=form.image %}
                 </div>
             </div>
 

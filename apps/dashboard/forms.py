@@ -41,6 +41,7 @@ class AreaForm(forms.ModelForm):
     post_code = forms.CharField(label="Post Codes")
     location = LocationField(enable_zoom=True)
     zoom = forms.IntegerField(required=False)
+    image = forms.ImageField(required=True)
 
     def clean(self):
         cleaned_data = super().clean()
