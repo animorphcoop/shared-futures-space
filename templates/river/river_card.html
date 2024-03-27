@@ -74,9 +74,8 @@
             {% include "partials/vertical-spacer.html" with space="6" %}
 
             <div class="flex items-center justify-center overflow-hidden h-[262px] w-full rounded-[10px_10px_0_0]">
-                <img src="
-                        {% if river.image %}{{ river.image.url }}{% else %}{% static 'images/spring/spring_image_placeholder.png' %}{% endif %}"
-                     class="object-cover w-full h-full" alt="" title="">
+                <img class="object-cover w-full h-full"
+                     src="{{ river.image_url }}">
             </div>
 
         </div>

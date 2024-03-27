@@ -4,6 +4,7 @@ from area.models import Area
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.contrib.gis.db.models import PointField
 from django.db import models
+from django.templatetags.static import static
 from django.utils import timezone
 from django.utils.text import slugify
 from messaging.models import Chat
@@ -277,6 +278,14 @@ class River(ClusterableModel):
         if not hasattr(self.tags, "all"):
             return self.tags
         return tag_cluster_to_list(self.tags)
+
+    @property
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        # we have 6 images, so consistently pick the same one based on id
+        num = (self.id % 6) + 1
+        return static(f"images/river/river_image_placeholder_{num:02d}.png")
 
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         super().save(*args, **kwargs)  # save first or we won't have an id
