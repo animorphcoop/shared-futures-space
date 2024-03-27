@@ -67,9 +67,28 @@
                     </svg>
                 </button>
             </div>
+
+            {% if river.current_stage == stage and request.user.id in starters and poll_possible and members|length > 2 %}
+                {% if poll_ref == None and not poll_ref.passed %}
+                    <button id="poll-create-button-{{ stage }}-{{ topic }}"
+                            hx-get="{% url 'create_river_poll' river.slug stage topic %}"
+                            hx-target="#poll-creation-{{ stage }}-{{ topic }}"
+                            class="button button-on-white p-1 drop-shadow-lg w-[44px] h-[44px] flex items-center justify-center ml-2"
+                            type="button">
+                        {# Poll creation button #}
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16ZM4 7H6V14H4V7ZM8 4H10V14H8V4ZM12 10H14V14H12V10Z"
+                                  fill="#9759FF"/>
+                        </svg>
+                    </button>
+                {% endif %}
+            {% endif %}
         </div>
 
     </form>
+    {# where the modal goes - needs to be outside most of the divs to render properly #}
+    <div id="poll-creation-{{ stage }}-{{ topic }}"></div>
 {% endif %}
 
 {% block scripts %}
