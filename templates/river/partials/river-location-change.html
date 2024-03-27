@@ -25,6 +25,7 @@
 
     <div data-exact="{% if river %}{{ river.location_exact }}{% endif %}"
          data-point="{% if river %}{{ river.location }}{% endif %}"
+         x-cloak
          x-data="{
            coords: null,
            exact: null,
