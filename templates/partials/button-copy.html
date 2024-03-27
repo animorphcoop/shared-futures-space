@@ -10,7 +10,8 @@
                   fill="#9759FF"/>
         </svg>
     </button>
-    <div class="" :class="overlay || 'hidden'">
+    <div x-cloak
+         :class="overlay || 'hidden'">
         {# WET MODAL, Modal blurred backerground overlay #}
         <section
                  class="z-20 flex overflow-hidden justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur px-4.5"
