@@ -64,7 +64,7 @@ Alpine.directive('map', (
             zoom,
             markers,
             autofit,
-            scrollZoom,
+            disableScrollZoom,
         } = options
 
         function getStyleURL(): string {
@@ -103,7 +103,7 @@ Alpine.directive('map', (
 
         map.dragRotate.disable()
         map.touchZoomRotate.disable()
-        if (!scrollZoom) {
+        if (disableScrollZoom) {
             map.scrollZoom.disable()
         }
         map.addControl(

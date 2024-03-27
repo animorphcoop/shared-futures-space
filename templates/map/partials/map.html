@@ -57,6 +57,7 @@
                     padding: isOpen ? ($screen.isDesktop ? { left: 360 } : { bottom: cardHeight }) : null,
                     autofit: {{ autofit|to_json }},
                     filterControl: {{ filter_control|to_json }},
+                    disableScrollZoom: {{ disable_scroll_zoom|to_json }}
                  }"
          @click-marker="open($event.detail)"
          @click-map="close()"
