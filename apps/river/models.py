@@ -283,8 +283,8 @@ class River(ClusterableModel):
     def image_url(self):
         if self.image:
             return self.image.url
-        # we have 6 images, so consistently pick the same one based on id
-        num = (self.id % 6) + 1
+        # we have 3 images, so consistently pick the same one based on id
+        num = (self.id % 3) + 1
         return static(f"images/river/river_image_placeholder_{num:02d}.png")
 
     def save(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
