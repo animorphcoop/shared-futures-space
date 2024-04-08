@@ -8,7 +8,7 @@ import {
   PerspectiveCamera,
   Scene,
   TextureLoader, Vector2,
-  WebGLRenderer
+  WebGLRenderer, WebGLRendererParameters
 } from 'three'
 import modelInfos, {getModel, ModelInfo} from './models.ts'
 
@@ -33,12 +33,13 @@ export interface RemixScene {
 }
 
 export interface RemixAPI {
-  loadingCount: number,
-  modelInfos: ModelInfo[],
-  objects: string[],
+  loadingCount: number
+  modelInfos: ModelInfo[]
+  objects: string[]
   remixAdd: (modelName: string) => Promise<Object3D>
   remixImport: (scene: RemixScene) => void
-  remixExport: () => RemixScene,
+  remixExport: () => RemixScene
+  remixSnapshot: () => void
 }
 
 export interface RemixSetup {
@@ -57,14 +58,19 @@ export const callback: RemixSetup = async (
 
   const objects: Object3D[] = []
 
-  data.modelInfos = Object.values(modelInfos)
+  let snap = false
 
-  async function remixAdd (modelName: string): Promise<Object3D> {
+  data.modelInfos = Object.values(modelInfos)
+  data.remixSnapshot = () => {
+    snap = true
+  }
+
+  async function add (modelName: string): Promise<Object3D> {
     try {
       data.loadingCount++
       const model = await getModel(modelName)
       const instance = model.scene.clone()
-      instance.modelName = modelName
+      instance.userData.modelName = modelName
       scene.add(instance)
       objects.push(instance)
       return instance
@@ -73,7 +79,7 @@ export const callback: RemixSetup = async (
     }
   }
 
-  data.remixAdd = remixAdd
+  data.remixAdd = add
 
   data.remixExport = () => {
     const exportData: RemixScene = {
@@ -82,7 +88,7 @@ export const callback: RemixSetup = async (
     for (const object of objects) {
       const { position, rotation } = object
       exportData.objects.push({
-        modelName: object.modelName,
+        modelName: object.userData.modelName,
         position: { x: position.x, y: position.y, z: position.z },
         rotation: { y: rotation.y },
         scale: object.scale.x, // we always scale them all the same
@@ -97,13 +103,18 @@ export const callback: RemixSetup = async (
       scene.remove(object)
     }
     objects.length = 0
-    await Promise.all(importScene.objects.map(async importObject => {
-      const object = await remixAdd(importObject.modelName)
-      const { position, scale, rotation } = importObject
-      object.position.set(position.x, position.y, position.z)
-      object.rotation.set(0, rotation.y, 0)
-      object.scale.set(scale, scale, scale)
-    }))
+    try {
+      data.loadingCount++
+      await Promise.all(importScene.objects.map(async importObject => {
+        const object = await add(importObject.modelName)
+        const {position, scale, rotation} = importObject
+        object.position.set(position.x, position.y, position.z)
+        object.rotation.set(0, rotation.y, 0)
+        object.scale.set(scale, scale, scale)
+      }))
+    } finally {
+      --data.loadingCount
+    }
   }
 
   const aspectRatio = 16 / 9
@@ -133,7 +144,13 @@ export const callback: RemixSetup = async (
   scene.add(camera)
 
   const canvas = el.querySelector('canvas')
-  const renderer = new WebGLRenderer(canvas ? { canvas } : {})
+  const rendererOptions: WebGLRendererParameters = {
+    antialias: true,
+  }
+  if (canvas) {
+    rendererOptions.canvas = canvas
+  }
+  const renderer = new WebGLRenderer(rendererOptions)
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
   if (!canvas) {
@@ -175,6 +192,13 @@ export const callback: RemixSetup = async (
     requestAnimationFrame(animate)
     // renderer.render(scene, camera)
     composer.render()
+    if (snap) {
+      snap = false
+      const dataURL = renderer.domElement.toDataURL()
+      const img = new Image()
+      img.src = dataURL
+      document.body.appendChild(img)
+    }
   }
 
   animate()

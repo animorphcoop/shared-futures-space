@@ -17,6 +17,7 @@ Alpine.directive('remix', async (el, directive, utilities) => {
     remixAdd: () => {throw new Error("Not implemented!")},
     remixImport: () => {},
     remixExport: () => ({ objects: [] }),
+    remixSnapshot: () => {},
   })
 
   const destroyScope = Alpine.addScopeToNode(el, data)

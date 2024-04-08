@@ -4,30 +4,30 @@
 {% block content %}
     <div class="max-w-screen-xl mx-auto">
         {% block title %}{% include "partials/title.html" with title="Remix" %}{% endblock %}
-        <div class="w-full bg-red"
-                style="border: 2px solid red;"
+        <div class="w-full rounded-xl overflow-hidden"
                 x-remix>
-            <canvas></canvas>
-            <button class="button button-on-colour"
+            <canvas class="rounded-xl"></canvas>
+            <button class="button button-on-white"
                     @click="console.log(JSON.stringify(remixExport()))">
                 export
             </button>
-            <button class="button button-on-colour"
+            <button class="button button-on-white"
                     @click='remixImport({"objects":[{"modelName":"nature_Quaking_Aspen_002","position":{"x":-4.5561543158379765,"y":0,"z":1.9737086157704482},"rotation":{"y":0},"scale":1},{"modelName":"nature_Tree_container_002","position":{"x":3.473391231780821,"y":0,"z":5.187309418893066},"rotation":{"y":-5.692650334075726},"scale":1},{"modelName":"playground_Swing_002","position":{"x":-2.8247389387068704,"y":-6.661338147750939e-16,"z":-2.9385968937780746},"rotation":{"y":0.9755011135857468},"scale":1.2890325998179457},{"modelName":"playground_Swing_003","position":{"x":0.1171486638672472,"y":0,"z":4.864061334951154},"rotation":{"y":-1.0556792873051224},"scale":1}]})'>
                 import
             </button>
+
+            <button class="button button-on-white"
+                    @click='remixSnapshot()'>
+                snapshot
+            </button>
             <div class="flex flex-wrap gap-2 p-2">
                 <template x-for="model in modelInfos">
-                    <button class="bg-blue-600 p-2"
+                    <button class="button"
                             @click="remixAdd(model.name)">
                         <span x-text="model.name"></span>
                     </button>
                 </template>
             </div>
-
-            <pre>objects: <span x-text="JSON.stringify(objects, null, 2)"></span></pre>
-            <pre>models: <span x-text="JSON.stringify(modelInfos, null, 2)"></span></pre>
-
         </div>
     </div>
 {% endblock %}
