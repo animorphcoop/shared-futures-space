@@ -1,5 +1,6 @@
 import {DirectiveData, DirectiveUtilities, ElementWithXAttributes} from "alpinejs"
 
+import anime from 'animejs/lib/anime.es.js'
 import {
   AmbientLight, Camera,
   Color,
@@ -65,14 +66,27 @@ export const callback: RemixSetup = async (
     snap = true
   }
 
-  async function add (modelName: string): Promise<Object3D> {
+  async function add (modelName: string, animate: boolean = true): Promise<Object3D> {
     try {
       data.loadingCount++
       const model = await getModel(modelName)
       const instance = model.scene.clone()
       instance.userData.modelName = modelName
+      if (animate) {
+        instance.scale.set(0, 0, 0)
+      }
       scene.add(instance)
       objects.push(instance)
+
+      if (animate) {
+        anime({
+          targets: [instance.scale],
+          x: 1, y: 1, z: 1,
+          easing: "easeInOutSine",
+          duration: 300,
+        });
+      }
+
       return instance
     } finally {
       --data.loadingCount
@@ -106,11 +120,18 @@ export const callback: RemixSetup = async (
     try {
       data.loadingCount++
       await Promise.all(importScene.objects.map(async importObject => {
-        const object = await add(importObject.modelName)
+        const object = await add(importObject.modelName, false)
         const {position, scale, rotation} = importObject
         object.position.set(position.x, position.y, position.z)
         object.rotation.set(0, rotation.y, 0)
-        object.scale.set(scale, scale, scale)
+        //object.scale.set(scale, scale, scale)
+        object.scale.set(0, 0, 0)
+        anime({
+          targets: [object.scale],
+          x: scale, y: scale, z: scale,
+          easing: "easeInOutSine",
+          duration: 300,
+        });
       }))
     } finally {
       --data.loadingCount

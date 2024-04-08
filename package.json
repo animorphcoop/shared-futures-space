@@ -30,6 +30,7 @@
   "dependencies": {
     "@alpinejs/morph": "^3.13.3",
     "alpinejs": "^3.13.0",
+    "animejs": "^3.2.2",
     "flickity": "^3.0.0",
     "htmx.org": "^1.9.5",
     "maplibre-gl": "^3.6.2",
