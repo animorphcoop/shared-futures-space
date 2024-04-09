@@ -303,7 +303,6 @@ function useOutlineComposer(
   function updateResolution() {
     const width = domElement.clientWidth
     const height = domElement.clientHeight
-    console.log("updating dimensions!", width, height)
     // TODO: hmm the resolution doesn't seem to go back up
     // renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
     outlinePass.resolution.set(width, height)
