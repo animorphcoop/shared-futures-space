@@ -39,17 +39,26 @@ export interface RemixScene {
   objects: RemixObject[]
 }
 
+export type RemixMode = "draw" | "text" | "build"
+
 export type RemixTransformAction = "move" | "rotate" | "scale" | "remove"
 
 export interface RemixScope {
   loadingCount: number
   modelInfos: ModelInfo[]
   objects: string[]
+  mode: RemixMode
   transformAction: RemixTransformAction
   addObject: (modelName: string) => Promise<Object3D>
   importScene: (scene: RemixScene) => void
   exportScene: () => RemixScene
   createSnapshot: () => void
+  draw: {
+    mode: "draw" | "erase"
+    colour: string
+    strokeWidth: number
+    palette: string[]
+  }
 }
 
 export function defaultRemixScope(): RemixScope {
@@ -57,11 +66,27 @@ export function defaultRemixScope(): RemixScope {
     loadingCount: 0,
     modelInfos: [],
     objects: [],
+    mode: "build",
     transformAction: "move",
     addObject: throwNotImplementedError,
     importScene: throwNotImplementedError,
     exportScene: throwNotImplementedError,
     createSnapshot: throwNotImplementedError,
+    draw: {
+      mode: "draw",
+      colour: "#DBEDB5",
+      strokeWidth: 10,
+      palette: [
+        "#F5F5F5",
+        "#D9D9D9",
+        "#000000",
+        "#DBEDB5",
+        "#D98585",
+        "#9AC1E5",
+        "#378799",
+        "#9A500C",
+      ],
+    },
   }
 }
 
@@ -184,19 +209,21 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
 
   scene.add(camera)
 
-  let canvas = el.querySelector("canvas")
+  let buildCanvas = el.querySelector(
+    "canvas.remix__build",
+  ) as HTMLCanvasElement | null
   const rendererOptions: WebGLRendererParameters = {
     antialias: true,
   }
-  if (canvas) {
-    rendererOptions.canvas = canvas
+  if (buildCanvas) {
+    rendererOptions.canvas = buildCanvas
   }
   const renderer = new WebGLRenderer(rendererOptions)
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
-  if (!canvas) {
+  if (!buildCanvas) {
     el.appendChild(renderer.domElement)
-    canvas = renderer.domElement
+    buildCanvas = renderer.domElement
   }
 
   const {
@@ -212,7 +239,7 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
   } = useTransform({
     objects,
     camera,
-    canvas,
+    canvas: buildCanvas,
     onSelect(selectedObjects) {
       outlinePass.selectedObjects = selectedObjects
     },
@@ -231,12 +258,20 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
     },
   })
 
+  let drawContainer = el.querySelector(
+    "div.remix__draw",
+  ) as HTMLDivElement | null
+  if (!drawContainer) throw new Error('Missing <div class="remix__draw"></div>')
+
   const { setEnabled: setDrawEnabled, dispose: disposeDraw } = useDraw({
-    canvas,
+    scope,
+    container: drawContainer,
   })
 
-  setTransformEnabled(true)
-  setDrawEnabled(false)
+  effect(() => {
+    setTransformEnabled(scope.mode === "build")
+    setDrawEnabled(scope.mode === "draw")
+  })
 
   effect(() => {
     console.log("scope.transformAction ->", scope.transformAction)

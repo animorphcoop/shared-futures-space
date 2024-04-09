@@ -6,10 +6,13 @@
          x-data="{ editing: false }">
         {% block title %}{% include "partials/title.html" with title="Remix" %}{% endblock %}
         <div class="w-full rounded-xl overflow-hidden relative"
+             x-cloak
              x-remix="{ models: {{ models|to_json }} }">
-            <canvas class="rounded-xl"></canvas>
+            <canvas class="remix__build rounded-xl"></canvas>
+            <div class="remix__draw rounded-xl absolute w-full top-0 z-10"></div>
 
-            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0">
+            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0"
+                 x-show="mode === 'build'">
                 <button class="button button-on-colour"
                         @click="editing = true">
                     ADD
@@ -32,15 +35,46 @@
             </div>
 
             <div class="flex justify-center gap-4 p-4">
-                <button class="button button-on-white">
+                <button class="button button-on-white"
+                        :class="mode === 'draw' && 'button-important'"
+                        @click="mode = 'draw'">
                     draw
                 </button>
-                <button class="button button-on-white">
+                <button class="button button-on-white"
+                        :class="mode === 'text' && 'button-important'"
+                        @click="mode = 'text'">
                     text
                 </button>
-                <button class="button button-on-white">
+                <button class="button button-on-white"
+                        :class="mode === 'build' && 'button-important'"
+                        @click="mode = 'build'">
                     build
                 </button>
+            </div>
+
+            <div x-show="mode === 'draw'">
+                {# Draw options #}
+
+                <div class="flex justify-center gap-4 p-4">
+                    <template x-for="colour in draw.palette">
+                        <div class="rounded-full w-8 h-8 cursor-pointer flex items-center justify-center"
+                             :class="draw.colour === colour && 'shadow-inner'"
+                             :style="`background-color: ${colour}`"
+                             @click="draw.colour = colour">
+                            <div class="bg-white w-3 h-3 rounded-full"
+                                 x-show="draw.colour === colour"></div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="flex justify-center p-4">
+                    <input type="range"
+                           min="5"
+                           max="30"
+                           step="0.1"
+                           class="w-64"
+                           x-model="draw.strokeWidth">
+                </div>
             </div>
 
             <div class="flex justify-center gap-4 p-4">

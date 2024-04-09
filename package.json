@@ -35,6 +35,7 @@
     "animejs": "^3.2.2",
     "flickity": "^3.0.0",
     "htmx.org": "^1.9.5",
+    "konva": "^9.3.6",
     "maplibre-gl": "^3.6.2",
     "three": "^0.163.0"
   },
