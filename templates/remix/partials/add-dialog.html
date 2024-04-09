@@ -9,7 +9,7 @@
     <div class="flex flex-wrap justify-center gap-2 p-2">
         {% for model in models %}
             <button class="button"
-                    @click="remixAdd('{{ model.name }}'); overlayClose()">
+                    @click="addObject('{{ model.name }}'); overlayClose()">
                 {{ model.name }}
             </button>
         {% endfor %}

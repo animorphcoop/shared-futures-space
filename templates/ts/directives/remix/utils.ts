@@ -6,3 +6,7 @@ export function findGroup(obj: Object3D, group: Object3D | null = null) {
   if (obj.parent === null) return group
   return findGroup(obj.parent, group)
 }
+
+export const throwNotImplementedError = () => {
+  throw new Error("Not implemented!")
+}

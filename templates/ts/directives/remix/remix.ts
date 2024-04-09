@@ -15,7 +15,7 @@ import {
   WebGLRenderer,
   WebGLRendererParameters,
 } from "three"
-import modelInfos, { getModel, ModelInfo } from "./models.ts"
+import { getModel, ModelInfo } from "./models.ts"
 
 import bg from "./bg.jpg?url"
 import { useTransform } from "@/templates/ts/directives/remix/transform.ts"
@@ -25,6 +25,8 @@ import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js"
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js"
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js"
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js"
+import { useDraw } from "@/templates/ts/directives/remix/draw.ts"
+import { throwNotImplementedError } from "@/templates/ts/directives/remix/utils.ts"
 
 export interface RemixObject {
   modelName: string
@@ -37,52 +39,46 @@ export interface RemixScene {
   objects: RemixObject[]
 }
 
-export type RemixTransformMode = "move" | "rotate" | "scale" | "remove"
+export type RemixTransformAction = "move" | "rotate" | "scale" | "remove"
 
-export interface RemixAPI {
+export interface RemixScope {
   loadingCount: number
   modelInfos: ModelInfo[]
   objects: string[]
-  remixTransformMode: RemixTransformMode
-  remixSetTransformMode: (mode: RemixTransformMode) => void
-  remixAdd: (modelName: string) => Promise<Object3D>
-  remixImport: (scene: RemixScene) => void
-  remixExport: () => RemixScene
-  remixSnapshot: () => void
+  transformAction: RemixTransformAction
+  addObject: (modelName: string) => Promise<Object3D>
+  importScene: (scene: RemixScene) => void
+  exportScene: () => RemixScene
+  createSnapshot: () => void
 }
 
-const notImplemented = () => {
-  throw new Error("Not implemented!")
-}
-
-export function emptyRemix(): RemixAPI {
+export function defaultRemixScope(): RemixScope {
   return {
     loadingCount: 0,
-    modelInfos: Object.values(modelInfos),
+    modelInfos: [],
     objects: [],
-    remixTransformMode: "move",
-    remixSetTransformMode: notImplemented,
-    remixAdd: notImplemented,
-    remixImport: notImplemented,
-    remixExport: notImplemented,
-    remixSnapshot: notImplemented,
+    transformAction: "move",
+    addObject: throwNotImplementedError,
+    importScene: throwNotImplementedError,
+    exportScene: throwNotImplementedError,
+    createSnapshot: throwNotImplementedError,
   }
 }
 
 export interface RemixSetup {
   el: ElementWithXAttributes
-  data: RemixAPI
+  scope: RemixScope
+  effect: DirectiveUtilities["effect"]
   cleanup: DirectiveUtilities["cleanup"]
 }
 
-export async function setup({ el, data, cleanup }: RemixSetup) {
+export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
   const objects: Object3D[] = []
 
-  let snap = false
+  let snapshot = false
 
-  data.modelInfos = Object.values(modelInfos)
-  data.remixSnapshot = () => {
-    snap = true
+  scope.createSnapshot = () => {
+    snapshot = true
   }
 
   async function add(
@@ -90,8 +86,8 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     animate: boolean = true,
   ): Promise<Object3D> {
     try {
-      setMode("move")
-      data.loadingCount++
+      scope.transformAction = "move"
+      scope.loadingCount++
       const model = await getModel(modelName)
       const instance = model.scene.clone()
       instance.userData.modelName = modelName
@@ -114,13 +110,13 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
 
       return instance
     } finally {
-      --data.loadingCount
+      --scope.loadingCount
     }
   }
 
-  data.remixAdd = add
+  scope.addObject = add
 
-  data.remixExport = () => {
+  scope.exportScene = () => {
     const exportData: RemixScene = {
       objects: [],
     }
@@ -136,14 +132,14 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     return exportData
   }
 
-  data.remixImport = async (importScene: RemixScene) => {
+  scope.importScene = async (importScene: RemixScene) => {
     // Clear out old objects
     for (const object of objects) {
       scene.remove(object)
     }
     objects.length = 0
     try {
-      data.loadingCount++
+      scope.loadingCount++
       await Promise.all(
         importScene.objects.map(async (importObject) => {
           const object = await add(importObject.modelName, false)
@@ -163,7 +159,7 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
         }),
       )
     } finally {
-      --data.loadingCount
+      --scope.loadingCount
     }
   }
 
@@ -188,7 +184,7 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
 
   scene.add(camera)
 
-  const canvas = el.querySelector("canvas")
+  let canvas = el.querySelector("canvas")
   const rendererOptions: WebGLRendererParameters = {
     antialias: true,
   }
@@ -200,6 +196,7 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
   renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
   if (!canvas) {
     el.appendChild(renderer.domElement)
+    canvas = renderer.domElement
   }
 
   const {
@@ -208,39 +205,54 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     dispose: disposeComposer,
   } = useOutlineComposer(scene, camera, renderer)
 
-  const { setMode: setTransformMode, dispose: disposeTransform } = useTransform(
-    {
-      objects,
-      camera,
-      domElement: renderer.domElement,
-      onSelect(selectedObjects) {
-        outlinePass.selectedObjects = selectedObjects
-      },
-      onRemove(toRemove) {
-        anime({
-          targets: toRemove.map((obj) => obj.scale),
-          x: 0,
-          y: 0,
-          z: 0,
-          easing: "easeInOutSine",
-          duration: 300,
-          complete() {
-            scene.remove(...toRemove)
-          },
-        })
-      },
+  const {
+    setEnabled: setTransformEnabled,
+    setAction: _setTransFormAction,
+    dispose: disposeTransform,
+  } = useTransform({
+    objects,
+    camera,
+    canvas,
+    onSelect(selectedObjects) {
+      outlinePass.selectedObjects = selectedObjects
     },
-  )
+    onRemove(toRemove) {
+      anime({
+        targets: toRemove.map((object) => object.scale),
+        x: 0,
+        y: 0,
+        z: 0,
+        easing: "easeInOutSine",
+        duration: 300,
+        complete() {
+          scene.remove(...toRemove)
+        },
+      })
+    },
+  })
 
-  function setMode(mode: RemixTransformMode) {
-    data.remixTransformMode = mode
-    setTransformMode(mode)
-  }
+  const { setEnabled: setDrawEnabled, dispose: disposeDraw } = useDraw({
+    canvas,
+  })
 
-  data.remixSetTransformMode = setMode
+  setTransformEnabled(true)
+  setDrawEnabled(false)
+
+  effect(() => {
+    console.log("scope.transformAction ->", scope.transformAction)
+    _setTransFormAction(scope.transformAction)
+  })
+
+  // function setTransformAction(action: RemixTransformAction) {
+  //   scope.transformAction = action
+  //   _setTransFormAction(action)
+  // }
+
+  // scope.setTransformAction = setTransformAction
 
   cleanup(() => {
     disposeTransform()
+    disposeDraw()
     disposeComposer()
   })
 
@@ -257,8 +269,8 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     requestAnimationFrame(animate)
     // renderer.render(scene, camera)
     composer.render()
-    if (snap) {
-      snap = false
+    if (snapshot) {
+      snapshot = false
       const dataURL = renderer.domElement.toDataURL()
       const img = new Image()
       img.src = dataURL

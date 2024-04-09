@@ -15,33 +15,45 @@
                     ADD
                 </button>
                 <button class="button button-on-colour"
-                        :class="remixTransformMode === 'move' && 'button-important'"
-                        @click="remixSetTransformMode('move')">
+                        :class="transformAction === 'move' && 'button-important'"
+                        @click="transformAction = 'move'">
                     MOVE
                 </button>
                 <button class="button button-on-colour"
-                        :class="remixTransformMode === 'rotate' && 'button-important'"
-                        @click="remixSetTransformMode('rotate')">
+                        :class="transformAction === 'rotate' && 'button-important'"
+                        @click="transformAction = 'rotate'">
                     ROTATE
                 </button>
                 <button class="button button-on-colour"
-                        :class="remixTransformMode === 'remove' && 'button-important'"
-                        @click="remixSetTransformMode('remove')">
+                        :class="transformAction === 'remove' && 'button-important'"
+                        @click="transformAction = 'remove'">
                     REMOVE
                 </button>
             </div>
 
             <div class="flex justify-center gap-4 p-4">
+                <button class="button button-on-white">
+                    draw
+                </button>
+                <button class="button button-on-white">
+                    text
+                </button>
+                <button class="button button-on-white">
+                    build
+                </button>
+            </div>
+
+            <div class="flex justify-center gap-4 p-4">
                 <button class="button button-on-white"
-                        @click="console.log(JSON.stringify(remixExport()))">
+                        @click="console.log(JSON.stringify(exportScene()))">
                     export
                 </button>
                 <button class="button button-on-white"
-                        @click='remixImport({"objects":[{"modelName":"nature_Quaking_Aspen_002","position":{"x":-4.5561543158379765,"y":0,"z":1.9737086157704482},"rotation":{"y":0},"scale":1},{"modelName":"nature_Tree_container_002","position":{"x":3.473391231780821,"y":0,"z":5.187309418893066},"rotation":{"y":-5.692650334075726},"scale":1},{"modelName":"playground_Swing_002","position":{"x":-2.8247389387068704,"y":-6.661338147750939e-16,"z":-2.9385968937780746},"rotation":{"y":0.9755011135857468},"scale":1.2890325998179457},{"modelName":"playground_Swing_003","position":{"x":0.1171486638672472,"y":0,"z":4.864061334951154},"rotation":{"y":-1.0556792873051224},"scale":1}]})'>
+                        @click='importScene({"objects":[{"modelName":"nature_Quaking_Aspen_002","position":{"x":-4.5561543158379765,"y":0,"z":1.9737086157704482},"rotation":{"y":0},"scale":1},{"modelName":"nature_Tree_container_002","position":{"x":3.473391231780821,"y":0,"z":5.187309418893066},"rotation":{"y":-5.692650334075726},"scale":1},{"modelName":"playground_Swing_002","position":{"x":-2.8247389387068704,"y":-6.661338147750939e-16,"z":-2.9385968937780746},"rotation":{"y":0.9755011135857468},"scale":1.2890325998179457},{"modelName":"playground_Swing_003","position":{"x":0.1171486638672472,"y":0,"z":4.864061334951154},"rotation":{"y":-1.0556792873051224},"scale":1}]})'>
                     import
                 </button>
                 <button class="button button-on-white"
-                        @click='remixSnapshot()'>
+                        @click='createSnapshot()'>
                     snapshot
                 </button>
             </div>

@@ -1,11 +1,11 @@
 import { Object3D, Camera, Intersection, Object3DEventMap } from "three"
 import { Plane, Raycaster, Vector2, Vector3 } from "three"
 import { findGroup } from "./utils.ts"
-import { RemixTransformMode } from "@/templates/ts/directives/remix/remix.ts"
+import { RemixTransformAction } from "@/templates/ts/directives/remix/remix.ts"
 import { Property } from "csstype"
 
-function cursorForMode(
-  mode: RemixTransformMode,
+function getCursor(
+  mode: RemixTransformAction,
   hover: boolean,
 ): Property.Cursor {
   if (mode === "rotate") {
@@ -20,26 +20,37 @@ function cursorForMode(
   return "default"
 }
 
+export interface RemixTransform {
+  objects: Object3D[]
+  camera: Camera
+  canvas: HTMLCanvasElement
+  onSelect: (selected: Object3D[]) => void
+  onRemove: (selected: Object3D[]) => void
+}
+
 export function useTransform({
   objects,
   camera,
-  domElement,
+  canvas,
   onSelect,
   onRemove,
-}: {
-  objects: Object3D[]
-  camera: Camera
-  domElement: HTMLCanvasElement
-  onSelect: (selected: Object3D[]) => void
-  onRemove: (selected: Object3D[]) => void
-}) {
-  domElement.style.touchAction = "none" // disable touch scroll
+}: RemixTransform) {
+  canvas.style.touchAction = "none" // disable touch scroll
 
-  let mode: RemixTransformMode = "move"
-  let originalMode: RemixTransformMode | null
+  function setEnabled(enabled: boolean) {
+    if (enabled) {
+      activate()
+    } else {
+      onPointerCancel()
+      deactivate()
+    }
+  }
 
-  function setMode(newMode: RemixTransformMode) {
-    mode = newMode
+  let action: RemixTransformAction = "move"
+  let originalAction: RemixTransformAction | null
+
+  function setAction(value: RemixTransformAction) {
+    action = value
   }
 
   const rotateSpeed = 6
@@ -73,18 +84,18 @@ export function useTransform({
   const intersections: Intersection<Object3D<Object3DEventMap>>[] = []
 
   function activate() {
-    domElement.addEventListener("pointermove", onPointerMove)
-    domElement.addEventListener("pointerdown", onPointerDown)
-    domElement.addEventListener("pointerup", onPointerCancel)
-    domElement.addEventListener("pointerleave", onPointerCancel)
+    canvas.addEventListener("pointermove", onPointerMove)
+    canvas.addEventListener("pointerdown", onPointerDown)
+    canvas.addEventListener("pointerup", onPointerCancel)
+    canvas.addEventListener("pointerleave", onPointerCancel)
   }
 
   function deactivate() {
-    domElement.removeEventListener("pointermove", onPointerMove)
-    domElement.removeEventListener("pointerdown", onPointerDown)
-    domElement.removeEventListener("pointerup", onPointerCancel)
-    domElement.removeEventListener("pointerleave", onPointerCancel)
-    domElement.style.cursor = ""
+    canvas.removeEventListener("pointermove", onPointerMove)
+    canvas.removeEventListener("pointerdown", onPointerDown)
+    canvas.removeEventListener("pointerup", onPointerCancel)
+    canvas.removeEventListener("pointerleave", onPointerCancel)
+    canvas.style.cursor = ""
   }
 
   function dispose() {
@@ -92,7 +103,7 @@ export function useTransform({
   }
 
   function updatePointer(event: PointerEvent) {
-    const rect = domElement.getBoundingClientRect()
+    const rect = canvas.getBoundingClientRect()
     pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
     pointer.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1
   }
@@ -100,36 +111,29 @@ export function useTransform({
   function onPointerDown(event: PointerEvent) {
     updatePointer(event)
     if (event.shiftKey) {
-      originalMode = mode
-      mode = "move"
+      originalAction = action
+      action = "move"
     } else if (event.ctrlKey) {
-      originalMode = mode
-      mode = "rotate"
+      originalAction = action
+      action = "rotate"
     } else if (event.altKey) {
-      originalMode = mode
-      mode = "scale"
+      originalAction = action
+      action = "scale"
     }
-    // if (event.shiftKey) {
-    //     mode = "rotate"
-    // } else if (event.ctrlKey) {
-    //     mode = "scale"
-    // } else {
-    //     mode = "move"
-    // }
     intersections.length = 0
     raycaster.setFromCamera(pointer, camera)
     raycaster.intersectObjects(objects, recursive, intersections)
     if (intersections.length > 0) {
       selected = findGroup(intersections[0].object)
       if (selected) {
-        domElement.style.cursor = cursorForMode(mode, false)
-        if (mode === "move") {
+        canvas.style.cursor = getCursor(action, false)
+        if (action === "move") {
           planeIntersect.copy(intersections[0].point)
           plane.setFromNormalAndCoplanarPoint(planeNormal, planeIntersect)
           shift.subVectors(selected.position, intersections[0].point)
-        } else if (mode === "scale") {
+        } else if (action === "scale") {
           originalScale.copy(selected.scale)
-        } else if (mode === "remove") {
+        } else if (action === "remove") {
           onRemove([selected])
         }
       }
@@ -144,16 +148,16 @@ export function useTransform({
 
     if (selected) {
       // transform selected
-      if (mode === "move") {
+      if (action === "move") {
         if (raycaster.ray.intersectPlane(plane, intersection)) {
           raycaster.ray.intersectPlane(plane, planeIntersect)
           selected.position.addVectors(planeIntersect, shift)
         }
-      } else if (mode === "rotate") {
+      } else if (action === "rotate") {
         diff.subVectors(pointer, previousPointer).multiplyScalar(rotateSpeed)
         // "x" is horizontal mouse movement, which we turn into rotation on the "y" axis
         selected.rotation.y += diff.x
-      } else if (mode === "scale") {
+      } else if (action === "scale") {
         diff.subVectors(pointer, originalPointer)
         selected.scale.copy(originalScale).multiplyScalar(diff.y + 1)
       }
@@ -171,16 +175,16 @@ export function useTransform({
           const object = findGroup(intersections[0].object)
           if (object) {
             if (hovered !== object && hovered !== null) {
-              domElement.style.cursor = "auto"
+              canvas.style.cursor = "auto"
               hovered = null
             }
             if (hovered !== object) {
-              domElement.style.cursor = cursorForMode(mode, true) // "grab"
+              canvas.style.cursor = getCursor(action, true) // "grab"
               hovered = object
             }
           }
         } else if (hovered !== null) {
-          domElement.style.cursor = "auto"
+          canvas.style.cursor = "auto"
           hovered = null
         }
       }
@@ -197,15 +201,15 @@ export function useTransform({
   }
 
   function onPointerCancel() {
-    if (originalMode) {
-      mode = originalMode
-      originalMode = null
+    if (originalAction) {
+      action = originalAction
+      originalAction = null
     }
     if (selected) {
       selected = null
       onSelect([])
     }
-    domElement.style.cursor = hovered ? cursorForMode(mode, true) : "auto"
+    canvas.style.cursor = hovered ? getCursor(action, true) : "auto"
     const select = hovered ?? selected
     if (select) {
       onSelect([select])
@@ -214,10 +218,9 @@ export function useTransform({
     }
   }
 
-  activate()
-
   return {
     dispose,
-    setMode,
+    setAction,
+    setEnabled,
   }
 }
