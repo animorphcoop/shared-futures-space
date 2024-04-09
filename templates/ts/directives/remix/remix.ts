@@ -1,32 +1,35 @@
 import { DirectiveUtilities, ElementWithXAttributes } from "alpinejs"
 
-import anime from 'animejs/lib/anime.es.js'
+import anime from "animejs/lib/anime.es.js"
 
 import {
-  AmbientLight, Camera,
+  AmbientLight,
+  Camera,
   Color,
   DirectionalLight,
   Object3D,
   PerspectiveCamera,
   Scene,
-  TextureLoader, Vector2,
-  WebGLRenderer, WebGLRendererParameters
-} from 'three'
-import modelInfos, {getModel, ModelInfo} from './models.ts'
+  TextureLoader,
+  Vector2,
+  WebGLRenderer,
+  WebGLRendererParameters,
+} from "three"
+import modelInfos, { getModel, ModelInfo } from "./models.ts"
 
-import bg from './bg.jpg?url'
-import {useTransform} from "@/templates/ts/directives/remix/transform.ts";
+import bg from "./bg.jpg?url"
+import { useTransform } from "@/templates/ts/directives/remix/transform.ts"
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js"
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
-import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
-import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js"
+import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js"
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js"
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js"
+import { FXAAShader } from "three/addons/shaders/FXAAShader.js"
 
 export interface RemixObject {
   modelName: string
-  position: { x: number, y: number, z: number },
-  rotation: { y: number },
+  position: { x: number; y: number; z: number }
+  rotation: { y: number }
   scale: number
 }
 
@@ -34,7 +37,7 @@ export interface RemixScene {
   objects: RemixObject[]
 }
 
-export type RemixTransformMode = 'move' | 'rotate' | 'scale' | 'remove'
+export type RemixTransformMode = "move" | "rotate" | "scale" | "remove"
 
 export interface RemixAPI {
   loadingCount: number
@@ -48,8 +51,26 @@ export interface RemixAPI {
   remixSnapshot: () => void
 }
 
+const notImplemented = () => {
+  throw new Error("Not implemented!")
+}
+
+export function emptyRemix(): RemixAPI {
+  return {
+    loadingCount: 0,
+    modelInfos: Object.values(modelInfos),
+    objects: [],
+    remixTransformMode: "move",
+    remixSetTransformMode: notImplemented,
+    remixAdd: notImplemented,
+    remixImport: notImplemented,
+    remixExport: notImplemented,
+    remixSnapshot: notImplemented,
+  }
+}
+
 export interface RemixSetup {
-  el: ElementWithXAttributes,
+  el: ElementWithXAttributes
   data: RemixAPI
   cleanup: DirectiveUtilities["cleanup"]
 }
@@ -64,8 +85,12 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     snap = true
   }
 
-  async function add (modelName: string, animate: boolean = true): Promise<Object3D> {
+  async function add(
+    modelName: string,
+    animate: boolean = true,
+  ): Promise<Object3D> {
     try {
+      setMode("move")
       data.loadingCount++
       const model = await getModel(modelName)
       const instance = model.scene.clone()
@@ -79,7 +104,9 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
       if (animate) {
         anime({
           targets: [instance.scale],
-          x: 1, y: 1, z: 1,
+          x: 1,
+          y: 1,
+          z: 1,
           easing: "easeInOutSine",
           duration: 300,
         })
@@ -117,20 +144,24 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     objects.length = 0
     try {
       data.loadingCount++
-      await Promise.all(importScene.objects.map(async importObject => {
-        const object = await add(importObject.modelName, false)
-        const {position, scale, rotation} = importObject
-        object.position.set(position.x, position.y, position.z)
-        object.rotation.set(0, rotation.y, 0)
-        //object.scale.set(scale, scale, scale)
-        object.scale.set(0, 0, 0)
-        anime({
-          targets: [object.scale],
-          x: scale, y: scale, z: scale,
-          easing: "easeInOutSine",
-          duration: 300,
-        });
-      }))
+      await Promise.all(
+        importScene.objects.map(async (importObject) => {
+          const object = await add(importObject.modelName, false)
+          const { position, scale, rotation } = importObject
+          object.position.set(position.x, position.y, position.z)
+          object.rotation.set(0, rotation.y, 0)
+          //object.scale.set(scale, scale, scale)
+          object.scale.set(0, 0, 0)
+          anime({
+            targets: [object.scale],
+            x: scale,
+            y: scale,
+            z: scale,
+            easing: "easeInOutSine",
+            duration: 300,
+          })
+        }),
+      )
     } finally {
       --data.loadingCount
     }
@@ -150,19 +181,14 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
   const directionalLight = new DirectionalLight(lightColour, 2.4)
   scene.add(directionalLight)
 
-  const camera = new PerspectiveCamera(
-      30,
-      aspectRatio,
-      0.1,
-      1000,
-  )
+  const camera = new PerspectiveCamera(30, aspectRatio, 0.1, 1000)
 
   camera.position.set(0, 2, 16)
   camera.lookAt(scene.position)
 
   scene.add(camera)
 
-  const canvas = el.querySelector('canvas')
+  const canvas = el.querySelector("canvas")
   const rendererOptions: WebGLRendererParameters = {
     antialias: true,
   }
@@ -170,7 +196,7 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     rendererOptions.canvas = canvas
   }
   const renderer = new WebGLRenderer(rendererOptions)
-  renderer.setPixelRatio( window.devicePixelRatio )
+  renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
   if (!canvas) {
     el.appendChild(renderer.domElement)
@@ -182,32 +208,36 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     dispose: disposeComposer,
   } = useOutlineComposer(scene, camera, renderer)
 
-  const { setMode, dispose: disposeTransform } = useTransform({
-    objects,
-    camera,
-    domElement: renderer.domElement,
-    onSelect (selectedObjects) {
-      outlinePass.selectedObjects = selectedObjects
+  const { setMode: setTransformMode, dispose: disposeTransform } = useTransform(
+    {
+      objects,
+      camera,
+      domElement: renderer.domElement,
+      onSelect(selectedObjects) {
+        outlinePass.selectedObjects = selectedObjects
+      },
+      onRemove(toRemove) {
+        anime({
+          targets: toRemove.map((obj) => obj.scale),
+          x: 0,
+          y: 0,
+          z: 0,
+          easing: "easeInOutSine",
+          duration: 300,
+          complete() {
+            scene.remove(...toRemove)
+          },
+        })
+      },
     },
-    onRemove (toRemove) {
-      anime({
-        targets: toRemove.map(obj => obj.scale),
-        x: 0, y: 0, z: 0,
-        easing: "easeInOutSine",
-        duration: 300,
-        complete () {
-          scene.remove(...toRemove)
-        }
-      })
-    }
-  })
+  )
 
-  function setTransformMode(mode: RemixTransformMode) {
+  function setMode(mode: RemixTransformMode) {
     data.remixTransformMode = mode
-    setMode(mode)
+    setTransformMode(mode)
   }
 
-  data.remixSetTransformMode = setTransformMode
+  data.remixSetTransformMode = setMode
 
   cleanup(() => {
     disposeTransform()
@@ -218,10 +248,9 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
     renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
   }
 
-
-  window.addEventListener( 'resize', resizeRenderer )
+  window.addEventListener("resize", resizeRenderer)
   cleanup(() => {
-    window.removeEventListener('resize', resizeRenderer)
+    window.removeEventListener("resize", resizeRenderer)
   })
 
   function animate() {
@@ -240,7 +269,11 @@ export async function setup({ el, data, cleanup }: RemixSetup) {
   animate()
 }
 
-function useOutlineComposer(scene: Scene, camera: Camera, renderer: WebGLRenderer) {
+function useOutlineComposer(
+  scene: Scene,
+  camera: Camera,
+  renderer: WebGLRenderer,
+) {
   const composer = new EffectComposer(renderer)
 
   const renderPass = new RenderPass(scene, camera)
@@ -249,9 +282,9 @@ function useOutlineComposer(scene: Scene, camera: Camera, renderer: WebGLRendere
   const domElement = renderer.domElement
 
   const outlinePass = new OutlinePass(
-      new Vector2(domElement.clientWidth, domElement.clientHeight),
-      scene,
-      camera,
+    new Vector2(domElement.clientWidth, domElement.clientHeight),
+    scene,
+    camera,
   )
   outlinePass.visibleEdgeColor = new Color(0xffffff)
   composer.addPass(outlinePass)
@@ -262,27 +295,24 @@ function useOutlineComposer(scene: Scene, camera: Camera, renderer: WebGLRendere
   const effectFXAA = new ShaderPass(FXAAShader)
 
   effectFXAA.uniforms["resolution"].value.set(
-      1 / domElement.clientWidth,
-      1 / domElement.clientHeight,
+    1 / domElement.clientWidth,
+    1 / domElement.clientHeight,
   )
   composer.addPass(effectFXAA)
 
   function updateResolution() {
     const width = domElement.clientWidth
     const height = domElement.clientHeight
-    console.log('updating dimensions!', width, height)
+    console.log("updating dimensions!", width, height)
     // TODO: hmm the resolution doesn't seem to go back up
     // renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
     outlinePass.resolution.set(width, height)
-    effectFXAA.uniforms["resolution"].value.set(
-        1 / width,
-        1 / height,
-    )
+    effectFXAA.uniforms["resolution"].value.set(1 / width, 1 / height)
   }
 
-  window.addEventListener( 'resize', updateResolution )
-  function dispose () {
-    window.removeEventListener('resize', updateResolution)
+  window.addEventListener("resize", updateResolution)
+  function dispose() {
+    window.removeEventListener("resize", updateResolution)
   }
 
   return {
