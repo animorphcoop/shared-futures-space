@@ -1,0 +1,17 @@
+{% extends "partials/overlay-river-closable.html" %}
+{% comment %}
+	TODO: obvs this is not a "river" but the overlay is generic... so change it to a generic name!
+{% endcomment %}
+{% block overlay_title %}Select what to place in your image{% endblock %}
+{% load static %}
+
+{% block river_overlay_content %}
+    <div class="flex flex-wrap justify-center gap-2 p-2">
+        {% for model in models %}
+            <button class="button"
+                    @click="remixAdd('{{ model.name }}'); overlayClose()">
+                {{ model.name }}
+            </button>
+        {% endfor %}
+    </div>
+{% endblock %}

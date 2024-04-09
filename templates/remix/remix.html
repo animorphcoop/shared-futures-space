@@ -1,12 +1,36 @@
 {% extends "base.html" %}
-
+{% load custom_filters %}
 
 {% block content %}
-    <div class="max-w-screen-xl mx-auto">
+    <div class="max-w-screen-xl mx-auto"
+         x-data="{ editing: false }">
         {% block title %}{% include "partials/title.html" with title="Remix" %}{% endblock %}
-        <div class="w-full rounded-xl overflow-hidden"
-                x-remix>
+        <div class="w-full rounded-xl overflow-hidden relative"
+             x-remix="{ models: {{ models|to_json }} }">
             <canvas class="rounded-xl"></canvas>
+
+            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0">
+                <button class="button button-on-colour"
+                        @click="editing = true">
+                    ADD
+                </button>
+                <button class="button button-on-colour"
+                        :class="remixTransformMode === 'move' && 'button-important'"
+                        @click="remixSetTransformMode('move')">
+                    MOVE
+                </button>
+                <button class="button button-on-colour"
+                        :class="remixTransformMode === 'rotate' && 'button-important'"
+                        @click="remixSetTransformMode('rotate')">
+                    ROTATE
+                </button>
+                <button class="button button-on-colour"
+                        :class="remixTransformMode === 'remove' && 'button-important'"
+                        @click="remixSetTransformMode('remove')">
+                    REMOVE
+                </button>
+            </div>
+
             <div class="flex justify-center gap-4 p-4">
                 <button class="button button-on-white"
                         @click="console.log(JSON.stringify(remixExport()))">
@@ -21,14 +45,8 @@
                     snapshot
                 </button>
             </div>
-            <div class="flex flex-wrap justify-center gap-2 p-2">
-                <template x-for="model in modelInfos">
-                    <button class="button"
-                            @click="remixAdd(model.name)">
-                        <span x-text="model.name"></span>
-                    </button>
-                </template>
-            </div>
+
+            {% include "remix/partials/add-dialog.html" with models=models %}
         </div>
     </div>
 {% endblock %}

@@ -1,6 +1,7 @@
-import {DirectiveData, DirectiveUtilities, ElementWithXAttributes} from "alpinejs"
+import { DirectiveUtilities, ElementWithXAttributes } from "alpinejs"
 
 import anime from 'animejs/lib/anime.es.js'
+
 import {
   AmbientLight, Camera,
   Color,
@@ -16,11 +17,11 @@ import modelInfos, {getModel, ModelInfo} from './models.ts'
 import bg from './bg.jpg?url'
 import {useTransform} from "@/templates/ts/directives/remix/transform.ts";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js"
-import {RenderPass} from "three/addons/postprocessing/RenderPass.js";
-import {OutlinePass} from "three/addons/postprocessing/OutlinePass.js";
-import {OutputPass} from "three/addons/postprocessing/OutputPass.js";
-import {ShaderPass} from "three/addons/postprocessing/ShaderPass.js";
-import {FXAAShader} from "three/addons/shaders/FXAAShader.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
 
 export interface RemixObject {
   modelName: string
@@ -33,10 +34,14 @@ export interface RemixScene {
   objects: RemixObject[]
 }
 
+export type RemixTransformMode = 'move' | 'rotate' | 'scale' | 'remove'
+
 export interface RemixAPI {
   loadingCount: number
   modelInfos: ModelInfo[]
   objects: string[]
+  remixTransformMode: RemixTransformMode
+  remixSetTransformMode: (mode: RemixTransformMode) => void
   remixAdd: (modelName: string) => Promise<Object3D>
   remixImport: (scene: RemixScene) => void
   remixExport: () => RemixScene
@@ -44,19 +49,12 @@ export interface RemixAPI {
 }
 
 export interface RemixSetup {
-  (el: ElementWithXAttributes, directive: DirectiveData, utilities: DirectiveUtilities, data: RemixAPI): void;
+  el: ElementWithXAttributes,
+  data: RemixAPI
+  cleanup: DirectiveUtilities["cleanup"]
 }
 
-export const callback: RemixSetup = async (
-    el,
-    {},
-    { cleanup },
-    data,
-) => {
-  console.log('remix!')
-
-  console.log('imported models', modelInfos)
-
+export async function setup({ el, data, cleanup }: RemixSetup) {
   const objects: Object3D[] = []
 
   let snap = false
@@ -84,7 +82,7 @@ export const callback: RemixSetup = async (
           x: 1, y: 1, z: 1,
           easing: "easeInOutSine",
           duration: 300,
-        });
+        })
       }
 
       return instance
@@ -184,15 +182,32 @@ export const callback: RemixSetup = async (
     dispose: disposeComposer,
   } = useOutlineComposer(scene, camera, renderer)
 
-  const { dispose: disposeTransform } = useTransform({
+  const { setMode, dispose: disposeTransform } = useTransform({
     objects,
     camera,
     domElement: renderer.domElement,
     onSelect (selectedObjects) {
       outlinePass.selectedObjects = selectedObjects
+    },
+    onRemove (toRemove) {
+      anime({
+        targets: toRemove.map(obj => obj.scale),
+        x: 0, y: 0, z: 0,
+        easing: "easeInOutSine",
+        duration: 300,
+        complete () {
+          scene.remove(...toRemove)
+        }
+      })
     }
   })
 
+  function setTransformMode(mode: RemixTransformMode) {
+    data.remixTransformMode = mode
+    setMode(mode)
+  }
+
+  data.remixSetTransformMode = setTransformMode
 
   cleanup(() => {
     disposeTransform()

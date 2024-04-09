@@ -2,6 +2,8 @@ import { REVISION } from "three"
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js"
 import { GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 
+// TODO: tidy this up a bit as we don't need the import bit now...
+
 const loader = new GLTFLoader()
 
 // Draco loader enables us to load compressed models
@@ -12,14 +14,14 @@ const decoderPath = `https://cdn.jsdelivr.net/npm/three@0.${REVISION}.0/examples
 dracoLoader.setDecoderPath(decoderPath)
 loader.setDRACOLoader(dracoLoader)
 
-const importedModels = import.meta.glob(
-    './models/*.glb',
-    {
-        query: '?url',
-        import: 'default',
-        eager: true,
-    },
-)
+// const importedModels = import.meta.glob(
+//     './models/*.glb',
+//     {
+//         query: '?url',
+//         import: 'default',
+//         eager: true,
+//     },
+// )
 
 export interface ModelInfo {
     name: string
@@ -33,18 +35,16 @@ export interface ModelInfo {
 const modelInfos: {[name: string]: ModelInfo} = {}
 const models: {[name: string]: Promise<GLFT>} = {}
 
-for (const key of Object.keys(importedModels)) {
-    // Name is basename of file without extension, e.g. './models/bench_001.glb' -> 'bench_001'
-    const name = key.substring(key.lastIndexOf('/') + 1, key.lastIndexOf('.'))
-    const modelUrl = importedModels[key] as string
-    modelInfos[name] = {
-        name,
-        previewUrl: 'notdone',
-        modelUrl,
-    }
-}
-
-
+// for (const key of Object.keys(importedModels)) {
+//     // Name is basename of file without extension, e.g. './models/bench_001.glb' -> 'bench_001'
+//     const name = key.substring(key.lastIndexOf('/') + 1, key.lastIndexOf('.'))
+//     const modelUrl = importedModels[key] as string
+//     modelInfos[name] = {
+//         name,
+//         previewUrl: 'notdone',
+//         modelUrl,
+//     }
+// }
 
 export async function getModel(modelName: string): GLFT {
     if (modelName in models) return await models[modelName]
