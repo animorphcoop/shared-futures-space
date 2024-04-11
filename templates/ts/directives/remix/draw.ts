@@ -1,5 +1,9 @@
 import Konva from "konva"
 import { RemixScope } from "@/templates/ts/directives/remix/remix.ts"
+import {
+  getPointerPosition,
+  useFitStageIntoParentContainer,
+} from "@/templates/ts/directives/remix/konva-utils.ts"
 
 export interface RemixDraw {
   scope: RemixScope
@@ -25,18 +29,10 @@ export function useDraw({ scope, container }: RemixDraw) {
   let drawMode = "brush"
   let lastLine: Konva.Line
 
-  function getPointerPosition(): Konva.Vector2d | null {
-    const position = stage.getPointerPosition()
-    if (!position) return null
-    const stageTransform = stage.getAbsoluteTransform().copy()
-    return stageTransform.invert().point(position)
-  }
-
   stage.on("mousedown touchstart", () => {
     isDrawing = true
 
-    const position = getPointerPosition()
-    if (!position) return
+    const position = getPointerPosition(stage)
 
     lastLine = new Konva.Line({
       stroke: scope.draw.colour,
@@ -65,22 +61,18 @@ export function useDraw({ scope, container }: RemixDraw) {
     // prevent scrolling on touch devices
     e.evt.preventDefault()
 
-    const position = getPointerPosition()
-    if (!position) return
+    const position = getPointerPosition(stage)
     const newPoints = lastLine.points().concat([position.x, position.y])
     lastLine.points(newPoints)
   })
 
-  function fitStageIntoParentContainer() {
-    const containerWidth = container.offsetWidth
-    const scale = containerWidth / sceneWidth
-    stage.width(sceneWidth * scale)
-    stage.height(sceneHeight * scale)
-    stage.scale({ x: scale, y: scale })
-  }
-
+  const fitStageIntoParentContainer = useFitStageIntoParentContainer(
+    stage,
+    container,
+    sceneWidth,
+    sceneHeight,
+  )
   fitStageIntoParentContainer()
-
   window.addEventListener("resize", fitStageIntoParentContainer)
 
   function setEnabled(enabled: boolean) {
@@ -92,27 +84,12 @@ export function useDraw({ scope, container }: RemixDraw) {
   }
   function activate() {
     container.style.pointerEvents = ""
-    container.addEventListener("pointermove", onPointerMove)
-    container.addEventListener("pointerdown", onPointerDown)
-    container.addEventListener("pointerleave", onPointerCancel)
-    container.addEventListener("pointerup", onPointerCancel)
   }
 
   function deactivate() {
     container.style.pointerEvents = "none"
-
-    container.removeEventListener("pointermove", onPointerMove)
-    container.removeEventListener("pointerdown", onPointerDown)
-    container.removeEventListener("pointerup", onPointerCancel)
-    container.removeEventListener("pointerleave", onPointerCancel)
     container.style.cursor = ""
   }
-
-  function onPointerMove(event: PointerEvent) {}
-
-  function onPointerDown(event: PointerEvent) {}
-
-  function onPointerCancel(event: PointerEvent) {}
 
   function dispose() {
     deactivate()

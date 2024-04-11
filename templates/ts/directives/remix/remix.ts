@@ -27,6 +27,9 @@ import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js"
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js"
 import { useDraw } from "@/templates/ts/directives/remix/draw.ts"
 import { throwNotImplementedError } from "@/templates/ts/directives/remix/utils.ts"
+import { useText } from "@/templates/ts/directives/remix/text.ts"
+import { useTextFabric } from "@/templates/ts/directives/remix/text-fabric.ts"
+import { renderColorRamp } from "maplibre-gl/src/util/color_ramp.ts"
 
 export interface RemixObject {
   modelName: string
@@ -66,7 +69,7 @@ export function defaultRemixScope(): RemixScope {
     loadingCount: 0,
     modelInfos: [],
     objects: [],
-    mode: "build",
+    mode: "text",
     transformAction: "move",
     addObject: throwNotImplementedError,
     importScene: throwNotImplementedError,
@@ -221,6 +224,7 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
   const renderer = new WebGLRenderer(rendererOptions)
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
+  // renderer.setSize(1920, 1080)
   if (!buildCanvas) {
     el.appendChild(renderer.domElement)
     buildCanvas = renderer.domElement
@@ -230,6 +234,7 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
     composer,
     outlinePass,
     dispose: disposeComposer,
+    updateSize: updateComposerSize,
   } = useOutlineComposer(scene, camera, renderer)
 
   const {
@@ -263,36 +268,49 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
   ) as HTMLDivElement | null
   if (!drawContainer) throw new Error('Missing <div class="remix__draw"></div>')
 
+  let textContainer = el.querySelector(
+    "div.remix__text",
+  ) as HTMLDivElement | null
+  if (!textContainer) throw new Error('Missing <div class="remix__text"></div>')
+
   const { setEnabled: setDrawEnabled, dispose: disposeDraw } = useDraw({
     scope,
     container: drawContainer,
   })
 
+  // const { setEnabled: setTextEnabled, dispose: disposeText } = useText({
+  //   scope,
+  //   container: textContainer,
+  // })
+
+  const { setEnabled: setTextEnabled, dispose: disposeText } = useTextFabric({
+    scope,
+    container: textContainer,
+  })
+
   effect(() => {
     setTransformEnabled(scope.mode === "build")
+    setTextEnabled(scope.mode === "text")
     setDrawEnabled(scope.mode === "draw")
   })
 
   effect(() => {
-    console.log("scope.transformAction ->", scope.transformAction)
     _setTransFormAction(scope.transformAction)
   })
-
-  // function setTransformAction(action: RemixTransformAction) {
-  //   scope.transformAction = action
-  //   _setTransFormAction(action)
-  // }
-
-  // scope.setTransformAction = setTransformAction
 
   cleanup(() => {
     disposeTransform()
     disposeDraw()
+    disposeText()
     disposeComposer()
   })
 
   function resizeRenderer() {
-    renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
+    // renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
+    const width = el.clientWidth
+    const height = el.clientWidth / aspectRatio
+    renderer.setSize(width, height)
+    updateComposerSize(width, height)
   }
 
   window.addEventListener("resize", resizeRenderer)
@@ -306,10 +324,27 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
     composer.render()
     if (snapshot) {
       snapshot = false
-      const dataURL = renderer.domElement.toDataURL()
-      const img = new Image()
-      img.src = dataURL
-      document.body.appendChild(img)
+      const outputCanvas = document.createElement("canvas")
+      const textCanvas = textContainer?.querySelector(
+        "canvas.lower-canvas",
+      ) as HTMLCanvasElement | null
+      const drawCanvas = drawContainer?.querySelector("canvas")
+      console.log("textCanvas", textCanvas)
+      const buildCanvas = renderer.domElement
+      outputCanvas.width = buildCanvas.width
+      outputCanvas.height = buildCanvas.height
+
+      const context = outputCanvas.getContext("2d")
+      if (context && drawCanvas && textCanvas) {
+        context.drawImage(buildCanvas, 0, 0)
+        context.drawImage(drawCanvas, 0, 0)
+        context.drawImage(textCanvas, 0, 0)
+
+        const dataURL = outputCanvas.toDataURL()
+        const img = new Image()
+        img.src = dataURL
+        document.body.appendChild(img)
+      }
     }
   }
 
@@ -327,6 +362,8 @@ function useOutlineComposer(
   composer.addPass(renderPass)
 
   const domElement = renderer.domElement
+
+  renderPass.setSize(domElement.clientWidth, domElement.clientHeight)
 
   const outlinePass = new OutlinePass(
     new Vector2(domElement.clientWidth, domElement.clientHeight),
@@ -347,23 +384,17 @@ function useOutlineComposer(
   )
   composer.addPass(effectFXAA)
 
-  function updateResolution() {
-    const width = domElement.clientWidth
-    const height = domElement.clientHeight
-    // TODO: hmm the resolution doesn't seem to go back up
-    // renderer.setSize(el.clientWidth, el.clientWidth / aspectRatio)
-    outlinePass.resolution.set(width, height)
+  function updateSize(width: number, height: number) {
+    composer.setSize(width, height)
     effectFXAA.uniforms["resolution"].value.set(1 / width, 1 / height)
   }
 
-  window.addEventListener("resize", updateResolution)
-  function dispose() {
-    window.removeEventListener("resize", updateResolution)
-  }
+  function dispose() {}
 
   return {
     dispose,
     composer,
     outlinePass,
+    updateSize,
   }
 }

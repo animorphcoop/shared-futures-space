@@ -33,10 +33,13 @@
     "@alpinejs/morph": "^3.13.3",
     "alpinejs": "^3.13.0",
     "animejs": "^3.2.2",
+    "fabric": "^6.0.0-beta20",
     "flickity": "^3.0.0",
     "htmx.org": "^1.9.5",
+    "install": "^0.13.0",
     "konva": "^9.3.6",
     "maplibre-gl": "^3.6.2",
+    "npm": "^10.5.2",
     "three": "^0.163.0"
   },
   "prettier": {
