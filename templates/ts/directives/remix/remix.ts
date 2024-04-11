@@ -25,10 +25,16 @@ import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js"
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js"
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js"
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js"
-import { useDraw } from "@/templates/ts/directives/remix/draw.ts"
+import {
+  RemixDrawScene,
+  useDraw,
+} from "@/templates/ts/directives/remix/draw.ts"
 import { throwNotImplementedError } from "@/templates/ts/directives/remix/utils.ts"
 import { useText } from "@/templates/ts/directives/remix/text.ts"
-import { useTextFabric } from "@/templates/ts/directives/remix/text-fabric.ts"
+import {
+  RemixTextScene,
+  useTextFabric,
+} from "@/templates/ts/directives/remix/text-fabric.ts"
 import { renderColorRamp } from "maplibre-gl/src/util/color_ramp.ts"
 
 export interface RemixObject {
@@ -40,6 +46,8 @@ export interface RemixObject {
 
 export interface RemixScene {
   objects: RemixObject[]
+  text?: RemixTextScene
+  draw?: RemixDrawScene
 }
 
 export type RemixMode = "draw" | "text" | "build"
@@ -144,53 +152,6 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
 
   scope.addObject = add
 
-  scope.exportScene = () => {
-    const exportData: RemixScene = {
-      objects: [],
-    }
-    for (const object of objects) {
-      const { position, rotation } = object
-      exportData.objects.push({
-        modelName: object.userData.modelName,
-        position: { x: position.x, y: position.y, z: position.z },
-        rotation: { y: rotation.y },
-        scale: object.scale.x, // we always scale them all the same
-      })
-    }
-    return exportData
-  }
-
-  scope.importScene = async (importScene: RemixScene) => {
-    // Clear out old objects
-    for (const object of objects) {
-      scene.remove(object)
-    }
-    objects.length = 0
-    try {
-      scope.loadingCount++
-      await Promise.all(
-        importScene.objects.map(async (importObject) => {
-          const object = await add(importObject.modelName, false)
-          const { position, scale, rotation } = importObject
-          object.position.set(position.x, position.y, position.z)
-          object.rotation.set(0, rotation.y, 0)
-          //object.scale.set(scale, scale, scale)
-          object.scale.set(0, 0, 0)
-          anime({
-            targets: [object.scale],
-            x: scale,
-            y: scale,
-            z: scale,
-            easing: "easeInOutSine",
-            duration: 300,
-          })
-        }),
-      )
-    } finally {
-      --scope.loadingCount
-    }
-  }
-
   const aspectRatio = 16 / 9
 
   const texture = new TextureLoader().load(bg)
@@ -273,7 +234,13 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
   ) as HTMLDivElement | null
   if (!textContainer) throw new Error('Missing <div class="remix__text"></div>')
 
-  const { setEnabled: setDrawEnabled, dispose: disposeDraw } = useDraw({
+  const {
+    setEnabled: setDrawEnabled,
+    dispose: disposeDraw,
+    importScene: importSceneDraw,
+    exportScene: exportSceneDraw,
+    clearScene: clearSceneDraw,
+  } = useDraw({
     scope,
     container: drawContainer,
   })
@@ -283,7 +250,14 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
   //   container: textContainer,
   // })
 
-  const { setEnabled: setTextEnabled, dispose: disposeText } = useTextFabric({
+  const {
+    setEnabled: setTextEnabled,
+    dispose: disposeText,
+    exportScene: exportSceneText,
+    importScene: importSceneText,
+    clearScene: clearSceneText,
+    onSnapshot: onSnapshotText,
+  } = useTextFabric({
     scope,
     container: textContainer,
   })
@@ -318,12 +292,73 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
     window.removeEventListener("resize", resizeRenderer)
   })
 
+  scope.exportScene = () => {
+    const exportData: RemixScene = {
+      objects: [],
+      text: exportSceneText(),
+      draw: exportSceneDraw(),
+    }
+    for (const object of objects) {
+      const { position, rotation } = object
+      exportData.objects.push({
+        modelName: object.userData.modelName,
+        position: { x: position.x, y: position.y, z: position.z },
+        rotation: { y: rotation.y },
+        scale: object.scale.x, // we always scale them all the same
+      })
+    }
+    return exportData
+  }
+
+  scope.importScene = async (importScene: RemixScene) => {
+    // Clear out old objects
+    for (const object of objects) {
+      scene.remove(object)
+    }
+    objects.length = 0
+    try {
+      scope.loadingCount++
+      await Promise.all(
+        importScene.objects.map(async (importObject) => {
+          const object = await add(importObject.modelName, false)
+          const { position, scale, rotation } = importObject
+          object.position.set(position.x, position.y, position.z)
+          object.rotation.set(0, rotation.y, 0)
+          //object.scale.set(scale, scale, scale)
+          object.scale.set(0, 0, 0)
+          anime({
+            targets: [object.scale],
+            x: scale,
+            y: scale,
+            z: scale,
+            easing: "easeInOutSine",
+            duration: 300,
+          })
+        }),
+      )
+
+      clearSceneText()
+      clearSceneDraw()
+
+      // Text
+      if (importScene.text) {
+        importSceneText(importScene.text)
+      }
+      if (importScene.draw) {
+        importSceneDraw(importScene.draw)
+      }
+    } finally {
+      --scope.loadingCount
+    }
+  }
+
   function animate() {
     requestAnimationFrame(animate)
     // renderer.render(scene, camera)
     composer.render()
     if (snapshot) {
       snapshot = false
+      onSnapshotText()
       const outputCanvas = document.createElement("canvas")
       const textCanvas = textContainer?.querySelector(
         "canvas.lower-canvas",

@@ -12,7 +12,7 @@
             <div class="remix__draw rounded-xl absolute w-full top-0 z-10"></div>
             <div class="remix__text rounded-xl absolute w-full top-0 z-10"></div>
 
-            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0"
+            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0 z-20"
                  x-show="mode === 'build'">
                 <button class="button button-on-colour"
                         @click="editing = true">
@@ -80,8 +80,12 @@
 
             <div class="flex justify-center gap-4 p-4">
                 <button class="button button-on-white"
-                        @click="console.log(JSON.stringify(exportScene()))">
-                    export
+                        @click="localStorage.setItem('scene', JSON.stringify(exportScene()))">
+                    save
+                </button>
+                <button class="button button-on-white"
+                        @click="localStorage.getItem('scene') && importScene(JSON.parse(localStorage.getItem('scene')))">
+                    load
                 </button>
                 <button class="button button-on-white"
                         @click='importScene({"objects":[{"modelName":"nature_Quaking_Aspen_002","position":{"x":-4.5561543158379765,"y":0,"z":1.9737086157704482},"rotation":{"y":0},"scale":1},{"modelName":"nature_Tree_container_002","position":{"x":3.473391231780821,"y":0,"z":5.187309418893066},"rotation":{"y":-5.692650334075726},"scale":1},{"modelName":"playground_Swing_002","position":{"x":-2.8247389387068704,"y":-6.661338147750939e-16,"z":-2.9385968937780746},"rotation":{"y":0.9755011135857468},"scale":1.2890325998179457},{"modelName":"playground_Swing_003","position":{"x":0.1171486638672472,"y":0,"z":4.864061334951154},"rotation":{"y":-1.0556792873051224},"scale":1}]})'>

@@ -1,5 +1,8 @@
 import Konva from "konva"
-import { RemixScope } from "@/templates/ts/directives/remix/remix.ts"
+import {
+  RemixScene,
+  RemixScope,
+} from "@/templates/ts/directives/remix/remix.ts"
 import {
   getPointerPosition,
   useFitStageIntoParentContainer,
@@ -10,9 +13,21 @@ export interface RemixDraw {
   container: HTMLDivElement
 }
 
+export interface RemixDrawSceneEntry {
+  colour: string
+  width: number
+  points: number[]
+}
+
+export interface RemixDrawScene {
+  lines: RemixDrawSceneEntry[]
+}
+
 export function useDraw({ scope, container }: RemixDraw) {
   const sceneWidth = 1920
   const sceneHeight = 1080
+
+  const lines: Konva.Line[] = []
 
   const stage = new Konva.Stage({
     container,
@@ -46,6 +61,7 @@ export function useDraw({ scope, container }: RemixDraw) {
       points: [position.x, position.y, position.x, position.y],
     })
     layer.add(lastLine)
+    lines.push(lastLine)
   })
 
   stage.on("mouseup touchend", () => {
@@ -91,6 +107,42 @@ export function useDraw({ scope, container }: RemixDraw) {
     container.style.cursor = ""
   }
 
+  function exportLine(line: Konva.Line): RemixDrawSceneEntry {
+    return {
+      colour: line.stroke(),
+      width: line.strokeWidth(),
+      points: line.points(),
+    }
+  }
+
+  function exportScene(): RemixDrawScene {
+    return {
+      lines: lines.map(exportLine),
+    }
+  }
+
+  function importScene(scene: RemixDrawScene) {
+    for (const entry of scene.lines) {
+      const line = new Konva.Line({
+        stroke: entry.colour,
+        strokeWidth: entry.width,
+        globalCompositeOperation:
+          drawMode === "brush" ? "source-over" : "destination-out",
+        // round cap for smoother lines
+        lineCap: "round",
+        lineJoin: "round",
+        // add point twice, so we have some drawings even on a simple click
+        points: entry.points,
+      })
+      layer.add(line)
+      lines.push(line)
+    }
+  }
+
+  function clearScene() {
+    stage.clear()
+  }
+
   function dispose() {
     deactivate()
     window.removeEventListener("resize", fitStageIntoParentContainer)
@@ -99,5 +151,8 @@ export function useDraw({ scope, container }: RemixDraw) {
   return {
     dispose,
     setEnabled,
+    exportScene,
+    importScene,
+    clearScene,
   }
 }
