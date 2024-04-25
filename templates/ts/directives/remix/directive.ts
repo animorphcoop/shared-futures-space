@@ -1,11 +1,9 @@
 import Alpine from "alpinejs"
-import {
-  defaultRemixScope,
-  RemixScope,
-} from "@/templates/ts/directives/remix/remix.ts"
+import { defaultRemixScope } from "@/templates/ts/directives/remix/remix.ts"
 import modelInfos, {
   ModelInfo,
 } from "@/templates/ts/directives/remix/models.ts"
+import { RemixScope } from "@/templates/ts/directives/remix/types.ts"
 
 export interface RemixDirectiveOptions {
   models: ModelInfo[]

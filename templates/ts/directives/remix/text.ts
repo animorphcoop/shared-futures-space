@@ -1,177 +1,101 @@
-import Konva from "konva"
+import { Canvas, ITextProps, Textbox } from "fabric"
 import {
-  getPointerPosition,
-  useFitStageIntoParentContainer,
-} from "@/templates/ts/directives/remix/konva-utils.ts"
-import Alpine from "alpinejs"
-import { RemixScope } from "@/templates/ts/directives/remix/remix.ts"
+  RemixScope,
+  RemixTextScene,
+  RemixTextSceneEntry,
+} from "@/templates/ts/directives/remix/types.ts"
 
-export interface RemixText {
+export interface RemixTextFabric {
   scope: RemixScope
   container: HTMLDivElement
 }
 
-export function useText({ scope, container }: RemixText) {
+export function useText({ scope: _, container }: RemixTextFabric) {
+  const canvasEl: HTMLCanvasElement = document.createElement("canvas")
+  container.appendChild(canvasEl)
+  const defaultWidth = 280
+
+  const canvas = new Canvas(canvasEl)
+
+  const textboxes: Textbox[] = []
+
+  function add(value: string = "") {
+    const textbox = createTextbox(value, {
+      top: sceneHeight / 2,
+      left: sceneWidth / 2,
+    })
+    canvas.setActiveObject(textbox)
+    textbox.enterEditing()
+  }
+
+  canvas.on("mouse:dblclick", (event) => {
+    if (!event.target) {
+      // Add a new textbox!
+      const position = event.scenePoint
+      const textbox = createTextbox("", {
+        top: position.y,
+        left: position.x,
+      })
+      canvas.setActiveObject(textbox)
+      textbox.enterEditing()
+    }
+  })
+
   const sceneWidth = 1920
   const sceneHeight = 1080
 
-  const objects: Konva.Group[] = []
+  const scale = container.clientWidth / sceneWidth
 
-  const stage = new Konva.Stage({
-    container,
-    width: sceneWidth,
-    height: sceneHeight,
+  canvas.setDimensions({
+    width: sceneWidth * scale,
+    height: sceneHeight * scale,
   })
+  canvas.setZoom(scale)
 
-  container.style.pointerEvents = "none"
-
-  const layer = new Konva.Layer()
-  stage.add(layer)
-
-  var textNode = new Konva.Text({
-    text: "Some text here",
-    x: 50,
-    y: 80,
-    fontSize: 60,
-    draggable: true,
-    width: 500,
-  })
-
-  layer.add(textNode)
-
-  const tr = new Konva.Transformer({
-    node: textNode,
-    enabledAnchors: ["middle-left", "middle-right"],
-    // set minimum width of text
-    boundBoxFunc: function (oldBox, newBox) {
-      newBox.width = Math.max(30, newBox.width)
-      return newBox
-    },
-  })
-
-  textNode.on("transform", function () {
-    // reset scale, so only with is changing by transformer
-    textNode.setAttrs({
-      width: textNode.width() * textNode.scaleX(),
-      scaleX: 1,
+  function createTextbox(value: string, options: Partial<ITextProps>) {
+    // Defaults
+    const text = new Textbox(value, {
+      originX: "center",
+      width: defaultWidth,
+      fontSize: 40,
+      textAlign: "center",
+      cornerColor: "rgb(151, 89, 255)",
+      borderColor: "rgb(151, 89, 255)",
+      backgroundColor: "#FAFFC6",
+      fontFamily: "sans",
+      ...options,
     })
-  })
+    text.setControlsVisibility({
+      mt: false,
+      mb: false,
+    })
 
-  layer.add(tr)
+    canvas.add(text)
+    textboxes.push(text)
+    return text
+  }
 
-  stage.on("click", (event) => {
-    if (event.target === stage) {
-      const { x, y } = getPointerPosition(stage)
+  function fitStageIntoParentContainer() {
+    const scaleRatio = container.clientWidth / sceneWidth
 
-      console.log("click!", event.target)
-      const padding = 30
+    const newWidth = canvas.getWidth() * scaleRatio
 
-      const foop = Alpine.reactive({
-        x: 0,
-        width: 500,
-        height: 0,
-      })
+    canvas.setDimensions({
+      width: newWidth,
+      height: newWidth / (16 / 9),
+    })
 
-      // https://codesandbox.io/p/sandbox/react-konva-editable-resizable-text-55kyv?file=%2Fsrc%2FStickyNote.jsx%3A34%2C34
-      var group = new Konva.Group({
-        x,
-        y,
-        draggable: true,
-        width: foop.width,
-        height: foop.height,
-      })
+    const containerWidth = container.offsetWidth
+    const scale = containerWidth / sceneWidth
 
-      const rect = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: foop.width,
-        height: foop.height,
-        fill: "#FAFFC6",
-        cornerRadius: 10,
-        shadowBlur: 50,
-        shadowOffset: { x: 30, y: 30 },
-        shadowColor: "#666666",
-      })
+    canvas.setDimensions({
+      width: sceneWidth * scale,
+      height: sceneHeight * scale,
+    })
+    canvas.setZoom(scale)
+  }
 
-      var textNode = new Konva.Text({
-        text: "new text node",
-        x: padding,
-        y: padding,
-        fontSize: 40,
-        // draggable: true,
-        width: foop.width - padding * 2,
-        // height: initialHeight,
-        // sceneFunc(context, shape) {
-        //   context.fillStyle = "rgb(255,255,204)"
-        //   context.fillRect(0, 0, shape.width(), shape.height())
-        //   ;(shape as Konva.Text)._sceneFunc(context)
-        // },
-      })
-
-      const tr = new Konva.Transformer({
-        node: textNode,
-        rotateEnabled: false,
-        enabledAnchors: ["middle-left", "middle-right"],
-        // set minimum width of text
-        boundBoxFunc: (_, newBox) => {
-          newBox.width = Math.max(30, newBox.width)
-          return newBox
-        },
-      })
-
-      group.add(rect)
-      group.add(textNode)
-      group.add(tr)
-
-      objects.push(group)
-
-      foop.width = textNode.width() + padding * 2
-      foop.height = textNode.height() + padding * 2
-
-      textNode.on("transform", function () {
-        // console.log("transform", textNode.x(), textNode.y())
-        const textWidth = textNode.width() * textNode.scaleX()
-        const textHeight = textNode.height() * textNode.scaleY()
-        const x = textNode.x()
-        // const transformX = textNode.x() - 30
-        // console.log("transformX", transformX)
-        textNode.setAttrs({
-          // x: 0,
-          width: textWidth,
-          scaleX: 1,
-        })
-        // foop.x += transformX
-        console.log("x", x)
-
-        foop.x = x - padding
-        foop.width = textWidth + padding * 2
-        foop.height = textHeight + padding * 2
-
-        // group.setAttrs({ width, height })
-        // rect.setAttrs({ width, height })
-      })
-
-      // TODO: switch to the one that cleans up?
-      Alpine.effect(() => {
-        const width = foop.width
-        const height = foop.height
-        group.setAttrs({ width, height })
-        rect.setAttrs({ width, height })
-      })
-
-      Alpine.effect(() => {
-        console.log("setting rect x to", foop.x)
-        rect.setAttrs({ x: foop.x })
-      })
-
-      // layer.add(tr)
-
-      // group.add(textNode)
-      layer.add(group)
-    } else if (event.target instanceof Konva.Text) {
-      console.log("clicked some text!")
-    }
-  })
+  window.addEventListener("resize", fitStageIntoParentContainer)
 
   function activate() {
     container.style.pointerEvents = ""
@@ -182,18 +106,10 @@ export function useText({ scope, container }: RemixText) {
     container.style.cursor = ""
   }
 
-  const fitStageIntoParentContainer = useFitStageIntoParentContainer(
-    stage,
-    container,
-    sceneWidth,
-    sceneHeight,
-  )
-  fitStageIntoParentContainer()
-  window.addEventListener("resize", fitStageIntoParentContainer)
-
   function dispose() {
     deactivate()
     window.removeEventListener("resize", fitStageIntoParentContainer)
+    container.removeChild(canvasEl)
   }
 
   function setEnabled(enabled: boolean) {
@@ -204,8 +120,62 @@ export function useText({ scope, container }: RemixText) {
     }
   }
 
+  function exportTextbox(textbox: Textbox): RemixTextSceneEntry {
+    return {
+      text: textbox.text,
+      top: textbox.top,
+      left: textbox.left,
+      angle: textbox.angle,
+      width: textbox.width,
+      height: textbox.height,
+      scale: textbox.scaleX,
+    }
+  }
+
+  function exportScene(): RemixTextScene {
+    return {
+      textboxes: textboxes.map(exportTextbox),
+    }
+  }
+
+  async function importScene(data: RemixTextScene) {
+    for (const box of data.textboxes) {
+      createTextbox(box.text, {
+        top: box.top,
+        left: box.left,
+        width: box.width,
+        height: box.height,
+        angle: box.angle,
+        scaleX: box.scale,
+        scaleY: box.scale,
+      })
+    }
+  }
+
+  function clearScene() {
+    canvas.clear()
+    textboxes.length = 0
+  }
+
+  function onSnapshot() {
+    canvas.discardActiveObject()
+    canvas.renderAll()
+  }
+
+  function getCanvas() {
+    return container?.querySelector(
+      "canvas.lower-canvas",
+    ) as HTMLCanvasElement | null
+  }
+
   return {
+    add,
     dispose,
     setEnabled,
+    exportScene,
+    importScene,
+    clearScene,
+    onSnapshot,
+    getCanvas,
   }
 }

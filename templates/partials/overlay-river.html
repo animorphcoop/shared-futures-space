@@ -55,7 +55,7 @@
 
     {% block river_overlay_extra %}{% endblock %}
 
-    <div class="bg-white mx-2.5 px-5 grow max-w-xl">
+    <div class="bg-white mx-2.5 px-5 grow max-w-xl max-h-[90vh] flex flex-col">
         {% include "partials/vertical-spacer.html" with space="7.5" %}
         {% block overlay_header %}
             <h2 class="text-large text-center w-full">
@@ -65,10 +65,11 @@
 
         {% include "partials/vertical-spacer.html" with space="6" %}
 
-
-        {% block river_overlay_content %}
-            # River overlay contents
-        {% endblock %}
+        <div class="overflow-y-auto">
+            {% block river_overlay_content %}
+                # River overlay contents
+            {% endblock %}
+        </div>
         {% include "partials/vertical-spacer.html" with space="7.5" %}
 
     </div>

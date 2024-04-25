@@ -4,13 +4,16 @@
 {% endcomment %}
 {% block overlay_title %}Select what to place in your image{% endblock %}
 {% load static %}
+{% load custom_filters %}
 
 {% block river_overlay_content %}
-    <div class="flex flex-wrap justify-center gap-2 p-2">
+    <div class="grid grid-cols-4">
         {% for model in models %}
-            <button class="button"
-                    @click="addObject('{{ model.name }}'); overlayClose()">
-                {{ model.name }}
+            <button class="p-3"
+                    @click="build.add('{{ model.name }}'); overlayClose()">
+                <img src="{{ model.previewUrl }}"
+                     alt="{{ model.displayName }}"
+                     class="w-full">
             </button>
         {% endfor %}
     </div>

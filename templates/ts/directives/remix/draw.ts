@@ -1,12 +1,9 @@
 import Konva from "konva"
 import {
-  RemixScene,
-  RemixScope,
-} from "@/templates/ts/directives/remix/remix.ts"
-import {
   getPointerPosition,
   useFitStageIntoParentContainer,
 } from "@/templates/ts/directives/remix/konva-utils.ts"
+import { RemixScope } from "@/templates/ts/directives/remix/types.ts"
 
 export interface RemixDraw {
   scope: RemixScope
@@ -121,7 +118,7 @@ export function useDraw({ scope, container }: RemixDraw) {
     }
   }
 
-  function importScene(scene: RemixDrawScene) {
+  async function importScene(scene: RemixDrawScene) {
     for (const entry of scene.lines) {
       const line = new Konva.Line({
         stroke: entry.colour,
@@ -148,11 +145,16 @@ export function useDraw({ scope, container }: RemixDraw) {
     window.removeEventListener("resize", fitStageIntoParentContainer)
   }
 
+  function getCanvas() {
+    return container?.querySelector("canvas")
+  }
+
   return {
     dispose,
     setEnabled,
     exportScene,
     importScene,
     clearScene,
+    getCanvas,
   }
 }

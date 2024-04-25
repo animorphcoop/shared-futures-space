@@ -1,13 +1,13 @@
 import { Object3D, Camera, Intersection, Object3DEventMap } from "three"
 import { Plane, Raycaster, Vector2, Vector3 } from "three"
 import { findGroup } from "./utils.ts"
-import { RemixTransformAction } from "@/templates/ts/directives/remix/remix.ts"
 import { Property } from "csstype"
+import {
+  RemixBuildAction,
+  RemixScope,
+} from "@/templates/ts/directives/remix/types.ts"
 
-function getCursor(
-  mode: RemixTransformAction,
-  hover: boolean,
-): Property.Cursor {
+function getCursor(mode: RemixBuildAction, hover: boolean): Property.Cursor {
   if (mode === "rotate") {
     return "ew-resize"
   } else if (mode === "scale") {
@@ -21,6 +21,7 @@ function getCursor(
 }
 
 export interface RemixTransform {
+  scope: RemixScope
   objects: Object3D[]
   camera: Camera
   canvas: HTMLCanvasElement
@@ -29,6 +30,7 @@ export interface RemixTransform {
 }
 
 export function useTransform({
+  scope,
   objects,
   camera,
   canvas,
@@ -46,11 +48,10 @@ export function useTransform({
     }
   }
 
-  let action: RemixTransformAction = "move"
-  let originalAction: RemixTransformAction | null
+  let originalAction: RemixBuildAction | null
 
-  function setAction(value: RemixTransformAction) {
-    action = value
+  function setAction(value: RemixBuildAction) {
+    scope.build.action = value
   }
 
   const rotateSpeed = 6
@@ -111,14 +112,14 @@ export function useTransform({
   function onPointerDown(event: PointerEvent) {
     updatePointer(event)
     if (event.shiftKey) {
-      originalAction = action
-      action = "move"
+      originalAction = scope.build.action
+      scope.build.action = "move"
     } else if (event.ctrlKey) {
-      originalAction = action
-      action = "rotate"
+      originalAction = scope.build.action
+      scope.build.action = "rotate"
     } else if (event.altKey) {
-      originalAction = action
-      action = "scale"
+      originalAction = scope.build.action
+      scope.build.action = "scale"
     }
     intersections.length = 0
     raycaster.setFromCamera(pointer, camera)
@@ -126,14 +127,14 @@ export function useTransform({
     if (intersections.length > 0) {
       selected = findGroup(intersections[0].object)
       if (selected) {
-        canvas.style.cursor = getCursor(action, false)
-        if (action === "move") {
+        canvas.style.cursor = getCursor(scope.build.action, false)
+        if (scope.build.action === "move") {
           planeIntersect.copy(intersections[0].point)
           plane.setFromNormalAndCoplanarPoint(planeNormal, planeIntersect)
           shift.subVectors(selected.position, intersections[0].point)
-        } else if (action === "scale") {
+        } else if (scope.build.action === "scale") {
           originalScale.copy(selected.scale)
-        } else if (action === "remove") {
+        } else if (scope.build.action === "remove") {
           onRemove([selected])
         }
       }
@@ -148,16 +149,16 @@ export function useTransform({
 
     if (selected) {
       // transform selected
-      if (action === "move") {
+      if (scope.build.action === "move") {
         if (raycaster.ray.intersectPlane(plane, intersection)) {
           raycaster.ray.intersectPlane(plane, planeIntersect)
           selected.position.addVectors(planeIntersect, shift)
         }
-      } else if (action === "rotate") {
+      } else if (scope.build.action === "rotate") {
         diff.subVectors(pointer, previousPointer).multiplyScalar(rotateSpeed)
         // "x" is horizontal mouse movement, which we turn into rotation on the "y" axis
         selected.rotation.y += diff.x
-      } else if (action === "scale") {
+      } else if (scope.build.action === "scale") {
         diff.subVectors(pointer, originalPointer)
         selected.scale.copy(originalScale).multiplyScalar(diff.y + 1)
       }
@@ -179,7 +180,7 @@ export function useTransform({
               hovered = null
             }
             if (hovered !== object) {
-              canvas.style.cursor = getCursor(action, true) // "grab"
+              canvas.style.cursor = getCursor(scope.build.action, true) // "grab"
               hovered = object
             }
           }
@@ -202,14 +203,14 @@ export function useTransform({
 
   function onPointerCancel() {
     if (originalAction) {
-      action = originalAction
+      scope.build.action = originalAction
       originalAction = null
     }
     if (selected) {
       selected = null
       onSelect([])
     }
-    canvas.style.cursor = hovered ? getCursor(action, true) : "auto"
+    canvas.style.cursor = hovered ? getCursor(scope.build.action, true) : "auto"
     const select = hovered ?? selected
     if (select) {
       onSelect([select])

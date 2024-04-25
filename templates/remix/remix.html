@@ -3,7 +3,8 @@
 
 {% block content %}
     <div class="max-w-screen-xl mx-auto"
-         x-data="{ editing: false }">
+         x-data="{ editing: false }"
+         x-stop-body-scroll-if="editing">
         {% block title %}{% include "partials/title.html" with title="Remix" %}{% endblock %}
         <div class="w-full rounded-xl overflow-hidden relative"
              x-cloak
@@ -16,40 +17,52 @@
                  x-show="mode === 'build'">
                 <button class="button button-on-colour"
                         @click="editing = true">
-                    ADD
+                    Add
                 </button>
-                <button class="button button-on-colour"
-                        :class="transformAction === 'move' && 'button-important'"
-                        @click="transformAction = 'move'">
-                    MOVE
+                <button x-show="build.objectCount > 0"
+                        class="button button-on-colour"
+                        :class="build.action === 'move' && 'button-important'"
+                        @click="build.action = 'move'">
+                    Move
                 </button>
-                <button class="button button-on-colour"
-                        :class="transformAction === 'rotate' && 'button-important'"
-                        @click="transformAction = 'rotate'">
-                    ROTATE
+                <button x-show="build.objectCount > 0"
+                        class="button button-on-colour"
+                        :class="build.action === 'rotate' && 'button-important'"
+                        @click="build.action = 'rotate'">
+                    Rotate
                 </button>
+                <button x-show="build.objectCount > 0"
+                        class="button button-on-colour"
+                        :class="build.action === 'remove' && 'button-important'"
+                        @click="build.action = 'remove'">
+                    Remove
+                </button>
+                <pre class="text-red-600" x-html="build.objectCount"></pre>
+            </div>
+
+            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0 z-20"
+                 x-show="mode === 'text'">
                 <button class="button button-on-colour"
-                        :class="transformAction === 'remove' && 'button-important'"
-                        @click="transformAction = 'remove'">
-                    REMOVE
+                        @click="text.add('')">
+                    Add
                 </button>
             </div>
 
             <div class="flex justify-center gap-4 p-4">
                 <button class="button button-on-white"
+                        :class="mode === 'build' && 'button-important'"
+                        @click="mode = 'build'">
+                    Build
+                </button>
+                <button class="button button-on-white"
                         :class="mode === 'draw' && 'button-important'"
                         @click="mode = 'draw'">
-                    draw
+                    Draw
                 </button>
                 <button class="button button-on-white"
                         :class="mode === 'text' && 'button-important'"
                         @click="mode = 'text'">
-                    text
-                </button>
-                <button class="button button-on-white"
-                        :class="mode === 'build' && 'button-important'"
-                        @click="mode = 'build'">
-                    build
+                    Text
                 </button>
             </div>
 

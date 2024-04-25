@@ -5,6 +5,9 @@ from django.views.generic import TemplateView
 
 from sfs import settings
 
+REMIX_MODEL_DIR = f"{settings.MEDIA_URL}remix/models"
+REMIX_MODEL_PNG_DIR = f"{REMIX_MODEL_DIR}/png"
+
 
 class RemixView(TemplateView):
     template_name = "remix/remix.html"
@@ -15,14 +18,14 @@ class RemixView(TemplateView):
         models = []
         if storage.exists("remix/models"):
             _, filenames = storage.listdir("remix/models")
-            for filename in filenames:
+            for filename in sorted(filenames):
                 name, ext = splitext(filename)
                 if ext == ".glb":
                     models.append(
                         {
                             "name": name,
-                            "previewUrl": "notreadyyet",
-                            "modelUrl": f"{settings.MEDIA_URL}remix/models/{filename}",
+                            "previewUrl": f"{REMIX_MODEL_PNG_DIR}/{name}.png",
+                            "modelUrl": f"{REMIX_MODEL_DIR}/{filename}",
                         }
                     )
 

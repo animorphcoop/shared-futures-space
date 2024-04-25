@@ -14,15 +14,6 @@ const decoderPath = `https://cdn.jsdelivr.net/npm/three@0.${REVISION}.0/examples
 dracoLoader.setDecoderPath(decoderPath)
 loader.setDRACOLoader(dracoLoader)
 
-// const importedModels = import.meta.glob(
-//     './models/*.glb',
-//     {
-//         query: '?url',
-//         import: 'default',
-//         eager: true,
-//     },
-// )
-
 export interface ModelInfo {
   name: string
   previewUrl: string
@@ -32,17 +23,6 @@ export interface ModelInfo {
 // name -> url (that we can pass to our GLTFLoader)
 const modelInfos: { [name: string]: ModelInfo } = {}
 const models: { [name: string]: Promise<GLTF> } = {}
-
-// for (const key of Object.keys(importedModels)) {
-//     // Name is basename of file without extension, e.g. './models/bench_001.glb' -> 'bench_001'
-//     const name = key.substring(key.lastIndexOf('/') + 1, key.lastIndexOf('.'))
-//     const modelUrl = importedModels[key] as string
-//     modelInfos[name] = {
-//         name,
-//         previewUrl: 'notdone',
-//         modelUrl,
-//     }
-// }
 
 export async function getModel(modelName: string): Promise<GLTF> {
   if (modelName in models) return await models[modelName]
