@@ -1,0 +1,20 @@
+{% extends "partials/overlay-river-closable.html" %}
+{% comment %}
+	TODO: obvs this is not a "river" but the overlay is generic... so change it to a generic name!
+{% endcomment %}
+{% block overlay_title %}Select what to place in your image{% endblock %}
+{% load static %}
+{% load custom_filters %}
+
+{% block river_overlay_content %}
+    <div class="grid grid-cols-4">
+        {% for model in models %}
+            <button class="p-3"
+                    @click="build.add('{{ model.name }}'); overlayClose()">
+                <img src="{{ model.previewUrl }}"
+                     alt="{{ model.displayName }}"
+                     class="w-full">
+            </button>
+        {% endfor %}
+    </div>
+{% endblock %}

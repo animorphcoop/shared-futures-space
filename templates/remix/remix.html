@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+    <div class="max-w-screen-xl mx-auto"
+         x-data="{ editing: false }"
+         x-stop-body-scroll-if="editing">
+        {% block title %}{% include "partials/title.html" with title="Remix" %}{% endblock %}
+        <div class="w-full rounded-xl overflow-hidden relative"
+             x-cloak
+             x-remix="{ models: {{ models|to_json }} }">
+            <canvas class="remix__build rounded-xl"></canvas>
+            <div class="remix__draw rounded-xl absolute w-full top-0 z-10"></div>
+            <div class="remix__text rounded-xl absolute w-full top-0 z-10"></div>
+
+            {# Build actions #}
+
+            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0 z-20"
+                 x-show="mode === 'build'">
+                <button class="button button-on-colour"
+                        :title="build.objectCount >= 10 ? 'Maximum of 10 objects' : 'Add'"
+                        :disabled="build.objectCount >= 10"
+                        @click="editing = true">
+                    Add
+                </button>
+                <button x-show="build.objectCount > 0"
+                        class="button button-on-colour"
+                        :class="build.action === 'move' && 'button-important'"
+                        @click="build.action = 'move'">
+                    Move
+                </button>
+                <button x-show="build.objectCount > 0"
+                        class="button button-on-colour"
+                        :class="build.action === 'rotate' && 'button-important'"
+                        @click="build.action = 'rotate'">
+                    Rotate
+                </button>
+                <button x-show="build.objectCount > 0"
+                        class="button button-on-colour"
+                        :class="build.action === 'remove' && 'button-important'"
+                        @click="build.action = 'remove'">
+                    Remove
+                </button>
+            </div>
+
+            {# Text actions #}
+
+            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0 z-20"
+                 x-show="mode === 'text'">
+                <button class="button button-on-colour"
+                        @click="text.add('')">
+                    Add
+                </button>
+                <button x-show="text.objectCount > 0"
+                        class="button button-on-colour"
+                        :class="text.action === 'move' && 'button-important'"
+                        @click="text.action = 'move'">
+                    Move
+                </button>
+                <button x-show="text.objectCount > 0"
+                        class="button button-on-colour"
+                        :class="text.action === 'remove' && 'button-important'"
+                        @click="text.action = 'remove'">
+                    Remove
+                </button>
+            </div>
+
+            {# Draw actions #}
+
+            <div class="flex flex-col gap-3 m-3 absolute top-0 right-0 z-20"
+                 x-show="mode === 'draw'">
+                <button class="button button-on-colour"
+                        :class="draw.action === 'draw' && 'button-important'"
+                        @click="draw.action = 'draw'">
+                    Draw
+                </button>
+                <button class="button button-on-colour"
+                        :class="draw.action === 'erase' && 'button-important'"
+                        @click="draw.action = 'erase'">
+                    Erase
+                </button>
+                <button class="button button-on-colour"
+                        @click="draw.clear()">
+                    Clear
+                </button>
+            </div>
+
+            {# Mode selector #}
+
+            <div class="flex justify-center gap-4 p-4">
+                <button class="button button-on-white"
+                        :class="mode === 'build' && 'button-important'"
+                        @click="mode = 'build'">
+                    Build
+                </button>
+                <button class="button button-on-white"
+                        :class="mode === 'draw' && 'button-important'"
+                        @click="mode = 'draw'">
+                    Draw
+                </button>
+                <button class="button button-on-white"
+                        :class="mode === 'text' && 'button-important'"
+                        @click="mode = 'text'">
+                    Text
+                </button>
+            </div>
+
+            {# Draw controls #}
+
+            <div x-show="mode === 'draw'">
+                <div class="flex justify-center gap-4 p-4">
+                    <template x-for="colour in draw.palette">
+                        <div class="rounded-full w-8 h-8 cursor-pointer flex items-center justify-center"
+                             :class="draw.colour === colour && 'shadow-inner'"
+                             :style="`background-color: ${colour}`"
+                             @click="draw.colour = colour">
+                            <div class="bg-white w-3 h-3 rounded-full"
+                                 x-show="draw.colour === colour"></div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="flex justify-center p-4">
+                    <input type="range"
+                           min="5"
+                           max="30"
+                           step="0.1"
+                           class="w-64"
+                           x-model="draw.strokeWidth">
+                </div>
+            </div>
+
+            {# Dev controls #}
+
+            {% if False %}
+
+            <div class="flex justify-center gap-4 p-4">
+                <button class="button button-on-white"
+                        @click="localStorage.setItem('scene', JSON.stringify(exportScene()))">
+                    Save to local storage
+                </button>
+                <button class="button button-on-white"
+                        @click="localStorage.getItem('scene') && importScene(JSON.parse(localStorage.getItem('scene')))">
+                    Load from local storage
+                </button>
+                <button class="button button-on-white"
+                        @click='createSnapshot()'>
+                    Download snapshot
+                </button>
+            </div>
+
+            {% endif %}
+
+            {% include "remix/partials/add-dialog.html" with models=models %}
+        </div>
+    </div>
+{% endblock %}

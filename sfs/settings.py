@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "messaging",
     "action",
     "river",
+    "remix",
     "resources",
     "search",
     "spring",
