@@ -8,6 +8,18 @@ import {
   RemixScope,
 } from "@/templates/ts/directives/remix/types.ts"
 
+/*
+  The remix scope holds what we need to pass between the directive and the
+  template. Anything that we need to reference in the template should be here.
+
+  It gets created as a reactive object, so everything stays up to date nicely.
+
+  The "throwNotImplementedError" is used for all the functions/methods because
+  we need to initialize the scope early on when we define the directive.
+
+  ... but we lazy load all the libraries, so don't have all the right context
+  available at the time of scope initialization.
+ */
 export function defaultRemixScope(): RemixScope {
   return {
     loadingCount: 0,

@@ -1,9 +1,5 @@
 import Konva from "konva"
 import {
-  getPointerPosition,
-  useFitStageIntoParentContainer,
-} from "@/templates/ts/directives/remix/konva-utils.ts"
-import {
   RemixDrawAction,
   RemixScope,
 } from "@/templates/ts/directives/remix/types.ts"
@@ -162,5 +158,28 @@ export function useDraw({ scope, container }: RemixDraw) {
     importScene,
     clearScene,
     getCanvas,
+  }
+}
+
+function getPointerPosition(stage: Konva.Stage): Konva.Vector2d {
+  if (!stage) throw new Error("no stage!")
+  const position = stage.getPointerPosition()
+  if (!position) throw new Error("could not get position")
+  const stageTransform = stage.getAbsoluteTransform().copy()
+  return stageTransform.invert().point(position)
+}
+
+function useFitStageIntoParentContainer(
+  stage: Konva.Stage,
+  container: HTMLDivElement,
+  sceneWidth: number,
+  sceneHeight: number,
+) {
+  return () => {
+    const containerWidth = container.offsetWidth
+    const scale = containerWidth / sceneWidth
+    stage.width(sceneWidth * scale)
+    stage.height(sceneHeight * scale)
+    stage.scale({ x: scale, y: scale })
   }
 }

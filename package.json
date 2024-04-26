@@ -39,7 +39,6 @@
     "install": "^0.13.0",
     "konva": "^9.3.6",
     "maplibre-gl": "^3.6.2",
-    "npm": "^10.5.2",
     "three": "^0.163.0"
   },
   "prettier": {
