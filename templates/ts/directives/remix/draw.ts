@@ -3,7 +3,10 @@ import {
   getPointerPosition,
   useFitStageIntoParentContainer,
 } from "@/templates/ts/directives/remix/konva-utils.ts"
-import { RemixScope } from "@/templates/ts/directives/remix/types.ts"
+import {
+  RemixDrawAction,
+  RemixScope,
+} from "@/templates/ts/directives/remix/types.ts"
 
 export interface RemixDraw {
   scope: RemixScope
@@ -14,6 +17,7 @@ export interface RemixDrawSceneEntry {
   colour: string
   width: number
   points: number[]
+  action: RemixDrawAction
 }
 
 export interface RemixDrawScene {
@@ -38,27 +42,26 @@ export function useDraw({ scope, container }: RemixDraw) {
   stage.add(layer)
 
   let isDrawing = false
-  let drawMode = "brush"
-  let lastLine: Konva.Line
+  let activeLine: Konva.Line
 
   stage.on("mousedown touchstart", () => {
     isDrawing = true
 
     const position = getPointerPosition(stage)
 
-    lastLine = new Konva.Line({
+    activeLine = new Konva.Line({
       stroke: scope.draw.colour,
       strokeWidth: scope.draw.strokeWidth,
       globalCompositeOperation:
-        drawMode === "brush" ? "source-over" : "destination-out",
+        scope.draw.action === "draw" ? "source-over" : "destination-out",
       // round cap for smoother lines
       lineCap: "round",
       lineJoin: "round",
       // add point twice, so we have some drawings even on a simple click
       points: [position.x, position.y, position.x, position.y],
     })
-    layer.add(lastLine)
-    lines.push(lastLine)
+    layer.add(activeLine)
+    lines.push(activeLine)
   })
 
   stage.on("mouseup touchend", () => {
@@ -75,8 +78,8 @@ export function useDraw({ scope, container }: RemixDraw) {
     e.evt.preventDefault()
 
     const position = getPointerPosition(stage)
-    const newPoints = lastLine.points().concat([position.x, position.y])
-    lastLine.points(newPoints)
+    const newPoints = activeLine.points().concat([position.x, position.y])
+    activeLine.points(newPoints)
   })
 
   const fitStageIntoParentContainer = useFitStageIntoParentContainer(
@@ -109,6 +112,8 @@ export function useDraw({ scope, container }: RemixDraw) {
       colour: line.stroke(),
       width: line.strokeWidth(),
       points: line.points(),
+      action:
+        line.globalCompositeOperation() === "source-over" ? "draw" : "erase",
     }
   }
 
@@ -124,7 +129,7 @@ export function useDraw({ scope, container }: RemixDraw) {
         stroke: entry.colour,
         strokeWidth: entry.width,
         globalCompositeOperation:
-          drawMode === "brush" ? "source-over" : "destination-out",
+          entry.action === "draw" ? "source-over" : "destination-out",
         // round cap for smoother lines
         lineCap: "round",
         lineJoin: "round",
@@ -137,7 +142,8 @@ export function useDraw({ scope, container }: RemixDraw) {
   }
 
   function clearScene() {
-    stage.clear()
+    lines.length = 0
+    layer.destroyChildren()
   }
 
   function dispose() {

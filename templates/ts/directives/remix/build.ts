@@ -80,10 +80,10 @@ export function useBuild({
   scene.background = texture
 
   const lightColour = 0xeeeeee
-  const light = new AmbientLight(lightColour, 0.6)
+  const light = new AmbientLight(lightColour, 1.2)
   scene.add(light)
 
-  const directionalLight = new DirectionalLight(lightColour, 2.4)
+  const directionalLight = new DirectionalLight(lightColour, 3)
   scene.add(directionalLight)
 
   /* The camera parameters are important, to try and make the objects in the scene look

@@ -77,6 +77,9 @@
     .button-danger {
         @apply bg-red hover:shadow-button focus:bg-red-focus text-white
     }
+    .button[disabled] {
+        @apply bg-grey-10 text-grey-55 hover:shadow-none cursor-not-allowed
+    }
 
     /* Maplibre's CSS file makes the background transparent using this selector:
 

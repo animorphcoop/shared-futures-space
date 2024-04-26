@@ -22,7 +22,7 @@ export function defaultRemixScope(): RemixScope {
       objectCount: 0,
     },
     draw: {
-      mode: "draw",
+      action: "draw",
       colour: "#DBEDB5",
       strokeWidth: 10,
       palette: [
@@ -35,10 +35,12 @@ export function defaultRemixScope(): RemixScope {
         "#378799",
         "#9A500C",
       ],
+      clear: throwNotImplementedError,
     },
     text: {
       action: "move",
       add: throwNotImplementedError,
+      objectCount: 0,
     },
   }
 }
@@ -73,6 +75,7 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
 
   scope.build.add = build.add
   scope.text.add = text.add
+  scope.draw.clear = draw.clearScene
 
   effect(() => {
     build.setEnabled(scope.mode === "build")
@@ -124,28 +127,46 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
       // otherwise the three.js canvas data is not available
 
       snapshot = false
-      text.onSnapshot()
-      const outputCanvas = document.createElement("canvas")
+      buildSnapshot()
+    }
+  }
 
-      const buildCanvas = build.getCanvas()
-      const textCanvas = text.getCanvas()
-      const drawCanvas = draw.getCanvas()
-      outputCanvas.width = buildCanvas.width
-      outputCanvas.height = buildCanvas.height
+  function buildSnapshot() {
+    text.onSnapshot()
+    const outputCanvas = document.createElement("canvas")
 
-      const context = outputCanvas.getContext("2d")
-      if (context && drawCanvas && textCanvas) {
-        context.drawImage(buildCanvas, 0, 0)
-        context.drawImage(drawCanvas, 0, 0)
-        context.drawImage(textCanvas, 0, 0)
+    const buildCanvas = build.getCanvas()
+    const textCanvas = text.getCanvas()
+    const drawCanvas = draw.getCanvas()
+    outputCanvas.width = buildCanvas.width
+    outputCanvas.height = buildCanvas.height
 
-        const dataURL = outputCanvas.toDataURL()
-        const img = new Image()
-        img.src = dataURL
-        document.body.appendChild(img)
-      }
+    const context = outputCanvas.getContext("2d")
+    if (context && drawCanvas && textCanvas) {
+      context.drawImage(buildCanvas, 0, 0)
+      context.drawImage(drawCanvas, 0, 0)
+      context.drawImage(textCanvas, 0, 0)
+      downloadCanvas(outputCanvas, "snapshot.png")
     }
   }
 
   animate()
+}
+
+function downloadCanvas(canvas: HTMLCanvasElement, filename: string) {
+  canvas.toBlob((blob) => {
+    if (!blob) return
+    const objectURL = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = objectURL
+    a.download = filename
+    function click() {
+      a.removeEventListener("click", click)
+      setTimeout(() => {
+        URL.revokeObjectURL(objectURL)
+      }, 200)
+    }
+    a.addEventListener("click", click)
+    a.click()
+  })
 }

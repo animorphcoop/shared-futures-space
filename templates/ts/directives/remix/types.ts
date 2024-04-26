@@ -10,18 +10,20 @@ export interface RemixScope {
   exportScene: () => RemixScene
   createSnapshot: () => void
   build: {
-    add: (modelName: string) => Promise<Object3D>
     action: RemixBuildAction
     objectCount: number
+    add: (modelName: string) => Promise<Object3D>
   }
   draw: {
-    mode: "draw" | "erase"
+    action: RemixDrawAction
     colour: string
     strokeWidth: number
     palette: string[]
+    clear: () => void
   }
   text: {
     action: RemixTextAction
+    objectCount: number
     add: () => void
   }
 }
@@ -62,3 +64,5 @@ export interface RemixBuildObject {
 }
 
 export type RemixTextAction = "move" | "remove"
+
+export type RemixDrawAction = "draw" | "erase"

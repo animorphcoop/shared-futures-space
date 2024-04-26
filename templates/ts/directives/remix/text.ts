@@ -10,7 +10,7 @@ export interface RemixTextFabric {
   container: HTMLDivElement
 }
 
-export function useText({ scope: _, container }: RemixTextFabric) {
+export function useText({ scope, container }: RemixTextFabric) {
   const canvasEl: HTMLCanvasElement = document.createElement("canvas")
   container.appendChild(canvasEl)
   const defaultWidth = 280
@@ -27,6 +27,21 @@ export function useText({ scope: _, container }: RemixTextFabric) {
     canvas.setActiveObject(textbox)
     textbox.enterEditing()
   }
+
+  canvas.on("mouse:down", (event) => {
+    if (
+      scope.text.action === "remove" &&
+      event.target &&
+      event.target instanceof Textbox
+    ) {
+      const idx = textboxes.indexOf(event.target)
+      if (idx !== -1) {
+        textboxes.splice(idx, 1)
+      }
+      canvas.remove(event.target)
+      updateObjectCount()
+    }
+  })
 
   canvas.on("mouse:dblclick", (event) => {
     if (!event.target) {
@@ -72,6 +87,8 @@ export function useText({ scope: _, container }: RemixTextFabric) {
 
     canvas.add(text)
     textboxes.push(text)
+    updateObjectCount()
+    scope.text.action = "move"
     return text
   }
 
@@ -104,6 +121,8 @@ export function useText({ scope: _, container }: RemixTextFabric) {
   function deactivate() {
     container.style.pointerEvents = "none"
     container.style.cursor = ""
+    canvas.discardActiveObject()
+    canvas.renderAll()
   }
 
   function dispose() {
@@ -155,6 +174,11 @@ export function useText({ scope: _, container }: RemixTextFabric) {
   function clearScene() {
     canvas.clear()
     textboxes.length = 0
+    updateObjectCount()
+  }
+
+  function updateObjectCount() {
+    scope.text.objectCount = textboxes.length
   }
 
   function onSnapshot() {
