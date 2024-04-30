@@ -1,5 +1,7 @@
 from typing import Any, Dict, List
 
+from django.urls import reverse
+
 from area.models import Area
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.contrib.gis.db.models import PointField
@@ -7,7 +9,7 @@ from django.db import models
 from django.templatetags.static import static
 from django.utils import timezone
 from django.utils.text import slugify
-from messaging.models import Chat
+from messaging.models import Chat, new_chat
 from messaging.util import send_system_message
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
@@ -15,14 +17,6 @@ from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase
 
 from apps.core.utils.slugifier import generate_random_string
-
-
-def new_chat() -> (
-    int
-):  # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
-    c = Chat()
-    c.save()
-    return c.id
 
 
 # STAGES
@@ -555,3 +549,6 @@ class River(ClusterableModel):
         print(self)
         self.current_stage = self.Stage.FINISHED
         self.save()
+
+    def get_absolute_url(self):
+        return reverse("view_river", kwargs={"slug": self.slug})

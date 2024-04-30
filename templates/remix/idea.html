@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% block title %}{% include "partials/title.html" with title="Remix" extra_title=object.title %}{% endblock %}
+    <p>{{ object.description }}</p>
+    <ul>
+        {% for image in object.background_images.all %}
+            <li>
+                <img src="{{ image.image.url }}">
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -118,3 +118,11 @@ class Flag(models.Model):
     flagged_by: models.ForeignKey = models.ForeignKey(
         "userauth.CustomUser", on_delete=models.SET_NULL, null=True
     )
+
+
+def new_chat() -> (
+    int
+):  # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
+    c = Chat()
+    c.save()
+    return c.id

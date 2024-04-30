@@ -2,6 +2,8 @@
 
 import django.db.models.deletion
 import modelcluster.contrib.taggit
+
+import messaging.models
 import river.models
 from django.conf import settings
 from django.db import migrations, models
@@ -91,7 +93,7 @@ class Migration(migrations.Migration):
             model_name="reflectstage",
             name="chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 to="messaging.chat",
             ),
@@ -100,7 +102,7 @@ class Migration(migrations.Migration):
             model_name="planstage",
             name="dates_chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 related_name="plan_dates_chat",
                 to="messaging.chat",
@@ -121,7 +123,7 @@ class Migration(migrations.Migration):
             model_name="planstage",
             name="funding_chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 related_name="plan_funding_chat",
                 to="messaging.chat",
@@ -142,7 +144,7 @@ class Migration(migrations.Migration):
             model_name="planstage",
             name="general_chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 related_name="plan_general_chat",
                 to="messaging.chat",
@@ -163,7 +165,7 @@ class Migration(migrations.Migration):
             model_name="planstage",
             name="location_chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 related_name="plan_location_chat",
                 to="messaging.chat",
@@ -184,7 +186,7 @@ class Migration(migrations.Migration):
             model_name="envisionstage",
             name="chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 to="messaging.chat",
             ),
@@ -203,7 +205,7 @@ class Migration(migrations.Migration):
             model_name="actstage",
             name="dates_chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 related_name="act_dates_chat",
                 to="messaging.chat",
@@ -224,7 +226,7 @@ class Migration(migrations.Migration):
             model_name="actstage",
             name="funding_chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 related_name="act_funding_chat",
                 to="messaging.chat",
@@ -245,7 +247,7 @@ class Migration(migrations.Migration):
             model_name="actstage",
             name="general_chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 related_name="act_general_chat",
                 to="messaging.chat",
@@ -266,7 +268,7 @@ class Migration(migrations.Migration):
             model_name="actstage",
             name="location_chat",
             field=models.ForeignKey(
-                default=river.models.new_chat,
+                default=messaging.models.new_chat,
                 on_delete=django.db.models.deletion.SET_DEFAULT,
                 related_name="act_location_chat",
                 to="messaging.chat",

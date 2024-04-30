@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Type
 from action.models import Action
 from action.util import send_offer
 from area.models import PostCode
+from core.forms import SharedFuturesWizardView
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -13,7 +14,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import QueryDict
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic.base import ContextMixin, TemplateView
@@ -429,7 +430,7 @@ class ReflectView(StageContextMixin, TemplateView):
     template_name = "reflect_view.html"
 
 
-class RiverStartWizardView(SessionWizardView):
+class RiverStartWizardView(SharedFuturesWizardView):
     """A multistep form view for creating a river"""
 
     template_name = "start_river_wizard.html"
@@ -448,64 +449,6 @@ class RiverStartWizardView(SessionWizardView):
         if str(step) == "1" and self.request.user.is_authenticated:
             kwargs["current_user"] = self.request.user
         return kwargs
-
-    def get(self, request, *args, **kwargs):
-        """Support discard and restoring on get
-
-        discard:
-            if you add "?discard" to url it will clear storage
-            and send you to dashboard
-
-        restoring saved data:
-            by default if you reload the form with a GET it'll
-            reset the storage, we want to continue where we
-            left off, so we treat it as a goto step
-
-        to *not* reset storage if we just get the page again"""
-        if "discard" in self.request.GET:
-            self.storage.reset()
-            return HttpResponseRedirect(reverse_lazy("dashboard"))
-
-        return self.render_goto_step(self.steps.first)
-
-    def render_goto_step(self, goto_step, **kwargs):
-        """Save data when jumping to another step, e.g. previous step
-
-        By default, jumping to a step does _not_ save the data for the page you are on.
-        We override it to do so as suggested by the docs:
-
-        See https://django-formtools.readthedocs.io/en/latest/wizard.html#formtools.wizard.views.WizardView.render_goto_step
-
-        Inspired by https://stackoverflow.com/a/65099307
-
-        Importantly, it does *not* validate the data when jumping to a step as we
-        want to save the data regardless, e.g. when jumping back to the first page, we want to
-        still save what was entered on the second page.
-
-        (validation *does* happen when you do next/submit)
-        """
-        if self.steps.current != goto_step:
-            """Only save data if we are actually moving steps
-
-            They are the same if we resubmit the "go to step" form
-            e.g. pressing refresh in the browser
-
-            We need to avoid overwriting the storage in that scenario
-            """
-            form = self.get_form(
-                data=self.request.POST,
-                files=self.request.FILES,
-            )
-
-            self.storage.set_step_data(
-                self.storage.current_step, self.process_step(form)
-            )
-            self.storage.set_step_files(
-                self.storage.current_step,
-                self.process_step_files(form),
-            )
-
-        return super().render_goto_step(goto_step, **kwargs)
 
     def done(self, form_list, **kwargs):
         """Merge data from all the forms and save/initialize the river
@@ -538,4 +481,4 @@ class RiverStartWizardView(SessionWizardView):
             user=self.request.user, river=river, starter=True
         )
 
-        return HttpResponseRedirect(reverse_lazy("view_river", args=[river.slug]))
+        return redirect(river)
