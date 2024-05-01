@@ -1,4 +1,6 @@
 from django.template.loader import render_to_string
+
+from remix.models import RemixIdea
 from resources.models import CaseStudy, HowTo
 from river.models import River
 from typing_extensions import Optional
@@ -51,4 +53,19 @@ def how_to_marker(how_to: HowTo) -> Optional[dict]:
             {"resource": how_to, "close_button": True, "view_button": True},
         ),
         "htmlMini": "<h2>" + how_to.title + "</h2>",
+    }
+
+
+def idea_marker(idea: RemixIdea) -> Optional[dict]:
+    if not idea.location:
+        return
+    return {
+        "type": "idea",
+        "uuid": str(idea.uuid),
+        "name": idea.title,
+        "coordinates": idea.location.coords,
+        "html": render_to_string(
+            "remix/partials/idea-card.html",
+            {"idea": idea},
+        ),
     }

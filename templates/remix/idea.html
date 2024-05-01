@@ -1,6 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="flex flex-col h-screen">
+
+        {% block title %}{% include "partials/title.html" with title="Remix" extra_title=object.title %}{% endblock %}
+
+        <div class="mx-4.5">
+
+            {# Image #}
+            {% if object.background_images.all %}
+                <div class="-mx-4.5">
+                    <div class="flex items-center justify-center overflow-hidden h-[262px] lg:h-[362px] w-full">
+                        {# TODO: show the carousel with all the images #}
+                        <img class="object-cover w-full h-full"
+                             src="{{ object.background_images.all.0.image.url }}">
+                    </div>
+                </div>
+
+                {% include "partials/vertical-spacer.html" with space="3" %}
+            {% endif %}
+
+            <div class="lg:grid grid-cols-4 gap-9 max-w-screen-xl mx-auto">
+            <div class="col-span-1"> {# Large layout, first column #}
+            <div class="lg:sticky lg:top-2 z-10">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-title text-black/55">
+                        {{ object.title }}
+                    </h1>
+                </div>
+
+                {% include "partials/vertical-spacer.html" with space="3" %}
+
+                {# Idea information #}
+                <section class="-mx-4.5 lg:mx-0">
+                    {% include "remix/partials/idea-description.html" with title="Description" reference="description" id="description" selected="null" %}
+                    {% include "remix/partials/idea-location.html" with title="Location" reference="location" id="location" selected="null" %}
+                    {% include "remix/partials/idea-remixes.html" with title="See all remixes" reference="remixes" id="remixes" selected="null" %}
+                </section>
+            </div>
+
+        </div>
+    </div>
+
+
+    {% comment %}
     {% block title %}{% include "partials/title.html" with title="Remix" extra_title=object.title %}{% endblock %}
     <p>{{ object.description }}</p>
     <ul>
@@ -10,4 +53,5 @@
             </li>
         {% endfor %}
     </ul>
+    {% endcomment %}
 {% endblock %}

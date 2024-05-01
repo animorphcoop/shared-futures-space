@@ -13,6 +13,7 @@ from django.views.generic import TemplateView, FormView, CreateView, DetailView
 from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
 
 from core.forms import SharedFuturesWizardView
+from map.markers import idea_marker
 from remix.forms import (
     StartIdeaLocationStep,
     StartIdeaTitleAndDescriptionStep,
@@ -24,6 +25,33 @@ from sfs import settings
 
 REMIX_MODEL_DIR = f"{settings.MEDIA_URL}remix/models"
 REMIX_MODEL_PNG_DIR = f"{REMIX_MODEL_DIR}/png"
+
+
+class RemixMapView(TemplateView):
+    template_name = "remix/map.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["home"] = None
+
+        if self.request.user.is_authenticated:
+            area = self.request.user.post_code.area
+            if area.location:
+                context["home"] = {
+                    "center": area.location.coords,
+                    "zoom": area.zoom,
+                }
+
+        ideas = RemixIdea.objects.all()
+
+        markers = []
+        for idea in ideas:
+            marker = idea_marker(idea)
+            if marker:
+                markers.append(marker)
+
+        context["markers"] = markers
+        return context
 
 
 class RemixIdeaStartWizardView(LoginRequiredMixin, SharedFuturesWizardView):
@@ -94,7 +122,7 @@ class RemixIdeaView(DetailView):
     slug_url_kwarg = "uuid"
 
 
-class RemixView(TemplateView):
+class RemixPlaygroundView(TemplateView):
     template_name = "remix/remix.html"
 
     def get_context_data(self, **kwargs):

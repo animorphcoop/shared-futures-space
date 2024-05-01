@@ -22,11 +22,12 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from formtools.wizard.views import SessionWizardView
 from messaging.forms import ChatForm
+from messaging.models import Message
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
 from poll.models import SingleChoicePoll
 from resources.models import CaseStudy, HowTo
-from userauth.util import get_userpair
+from userauth.util import get_userpair, get_system_user
 
 from .forms import (
     CreateRiverFormStep1,

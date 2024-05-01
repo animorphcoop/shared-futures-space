@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% load area_details %}
+{% get_areas as areas %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+    <div class="max-w-screen-xl mx-auto h-screen flex flex-col">
+        {% block title %}{% include "partials/title.html" with title="Remix Map" %}{% endblock %}
+        {% include "map/partials/map.html" with filter_control=False  %}
+    </div>
+{% endblock content %}

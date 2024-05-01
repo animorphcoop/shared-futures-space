@@ -23,6 +23,12 @@ class RemixIdea(models.Model):
     def get_absolute_url(self):
         return reverse("remix_idea_view", kwargs={"uuid": self.uuid})
 
+    @property
+    def marker(self):
+        from map.markers import idea_marker
+
+        return idea_marker(self)
+
 
 class RemixBackgroundImage(models.Model):
     """A background for the remix scene"""
