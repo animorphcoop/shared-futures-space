@@ -5,7 +5,6 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js"
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js"
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js"
 
-import bg from "./bg.jpg?url"
 import {
   AmbientLight,
   Camera,
@@ -14,6 +13,7 @@ import {
   Object3D,
   PerspectiveCamera,
   Scene,
+  SRGBColorSpace,
   TextureLoader,
   Vector2,
   WebGLRenderer,
@@ -74,10 +74,15 @@ export function useBuild({
     }
   }
 
-  const texture = new TextureLoader().load(bg)
+  const texture = new TextureLoader().load(scope.background)
+  texture.colorSpace = SRGBColorSpace
 
   const scene = new Scene()
-  scene.background = texture
+
+  new TextureLoader().load(scope.background, (texture) => {
+    texture.colorSpace = SRGBColorSpace
+    scene.background = texture
+  })
 
   const lightColour = 0xeeeeee
   const light = new AmbientLight(lightColour, 1.2)

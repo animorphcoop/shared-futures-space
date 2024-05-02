@@ -8,6 +8,9 @@ from .views import (
     RemixIdeaView,
     RemixIdeaStartWizardView,
     RemixMapView,
+    CreateRemixView,
+    RemixView,
+    UpdateRemixView,
 )
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
@@ -22,13 +25,24 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         name="remix_playground",
     ),
     path(
-        "create/",
+        "create/idea/",
         RemixIdeaStartWizardView.as_view(),
         name="start_remix_idea",
     ),
     path(
-        "<uuid:uuid>/",
+        "idea/<uuid:uuid>/",
         RemixIdeaView.as_view(),
-        name="remix_idea_view",
+        name="remix_idea",
+    ),
+    path("create/remix/", CreateRemixView.as_view(), name="create_remix"),
+    path(
+        "<uuid:uuid>/",
+        RemixView.as_view(),
+        name="remix_view",
+    ),
+    path(
+        "<int:pk>/update/",
+        UpdateRemixView.as_view(),
+        name="remix_update",
     ),
 ]

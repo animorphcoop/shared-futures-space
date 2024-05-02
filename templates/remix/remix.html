@@ -8,7 +8,11 @@
         {% block title %}{% include "partials/title.html" with title="Remix" %}{% endblock %}
         <div class="w-full rounded-xl overflow-hidden relative"
              x-cloak
-             x-remix="{ models: {{ models|to_json }} }">
+             x-remix="{
+               background: {{ object.background_image.image.url|to_json }},
+               models: {{ models|to_json }},
+               scene: {{ object.scene|to_json }}
+             }">
             <canvas class="remix__build rounded-xl"></canvas>
             <div class="remix__draw rounded-xl absolute w-full top-0 z-10"></div>
             <div class="remix__text rounded-xl absolute w-full top-0 z-10"></div>
@@ -128,6 +132,24 @@
                            class="w-64"
                            x-model="draw.strokeWidth">
                 </div>
+            </div>
+
+            <div class="flex justify-center gap-4 p-4">
+                <form action="{% url 'remix_update' object.id %}"
+                      enctype="multipart/form-data"
+                      method="post">
+                    {% csrf_token %}
+                    <button class="button button-on-white"
+                            @click.stop.prevent="exportAll().then(data => {
+                                const form = $el.form
+                                form.addEventListener('formdata', (event) => {
+                                    event.formData.append('scene', JSON.stringify(data.scene))
+                                    event.formData.append('snapshot', data.snapshot, 'snapshot.png')
+                                })
+                                $el.form.submit()
+                            })"
+                    >Publish</button>
+                </form>
             </div>
 
             {# Dev controls #}

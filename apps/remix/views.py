@@ -6,25 +6,35 @@ from PIL import Image
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage, FileSystemStorage
 from django import forms
+from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import redirect
-from django.views.generic import TemplateView, FormView, CreateView, DetailView
+from django.views import View
+from django.views.generic import (
+    TemplateView,
+    FormView,
+    CreateView,
+    DetailView,
+    UpdateView,
+)
+from django.views.generic.edit import ModelFormMixin
 from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
 
 from core.forms import SharedFuturesWizardView
+from dashboard.forms import AreaForm
 from map.markers import idea_marker
 from remix.forms import (
     StartIdeaLocationStep,
     StartIdeaTitleAndDescriptionStep,
     StartIdeaImagesStep,
-    ImageForm,
+    CreateRemixForm,
+    UpdateRemixForm,
 )
-from remix.models import RemixIdea, RemixBackgroundImage
+from remix.models import RemixIdea, RemixBackgroundImage, Remix
+from remix.three_models import list_three_models
 from sfs import settings
-
-REMIX_MODEL_DIR = f"{settings.MEDIA_URL}remix/models"
-REMIX_MODEL_PNG_DIR = f"{REMIX_MODEL_DIR}/png"
 
 
 class RemixMapView(TemplateView):
@@ -122,25 +132,48 @@ class RemixIdeaView(DetailView):
     slug_url_kwarg = "uuid"
 
 
+class RemixView(DetailView):
+    template_name = "remix/remix.html"
+    model = Remix
+
+    # TODO: maybe include a slug, from the title?
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["models"] = list_three_models()
+        return context
+
+
+class CreateRemixView(View):
+    def post(self, request: WSGIRequest):
+        form = CreateRemixForm(request.POST, request.FILES, request=request)
+        if form.is_valid():
+            remix = form.save()
+            return redirect(remix)
+        # failure is not an option!
+        raise ValidationError("could not create remix!")
+
+
+class UpdateRemixView(ModelFormMixin, View):
+    model = Remix
+    form_class = UpdateRemixForm
+
+    def post(self, request: WSGIRequest, pk=None):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            remix = form.save()
+            return redirect(remix.idea)  # we go back to the idea
+        # failure is not an option!
+        raise ValidationError("could not update remix!")
+
+
 class RemixPlaygroundView(TemplateView):
     template_name = "remix/remix.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        storage = default_storage
-        models = []
-        if storage.exists("remix/models"):
-            _, filenames = storage.listdir("remix/models")
-            for filename in sorted(filenames):
-                name, ext = splitext(filename)
-                if ext == ".glb":
-                    models.append(
-                        {
-                            "name": name,
-                            "previewUrl": f"{REMIX_MODEL_PNG_DIR}/{name}.png",
-                            "modelUrl": f"{REMIX_MODEL_DIR}/{filename}",
-                        }
-                    )
-
-        context["models"] = models
+        context["models"] = list_three_models()
         return context

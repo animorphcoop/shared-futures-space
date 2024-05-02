@@ -1,7 +1,7 @@
 from django import forms
 
 from core.forms import LocationField
-from remix.models import RemixIdea, RemixBackgroundImage
+from remix.models import RemixIdea, Remix
 
 
 class StartIdeaLocationStep(forms.ModelForm):
@@ -47,14 +47,6 @@ class MultipleImageField(forms.ImageField):
         return result
 
 
-class ImageForm(forms.ModelForm):
-    image = forms.ImageField(label="Image")
-
-    class Meta:
-        model = RemixBackgroundImage
-        fields = ("image",)
-
-
 class StartIdeaImagesStep(forms.Form):
     """A form that dynamically adds image fields depending on how many we have"""
 
@@ -66,3 +58,32 @@ class StartIdeaImagesStep(forms.Form):
         for i in range(field_count):
             field_name = self.add_prefix(f"image_{i}")
             self.fields[field_name] = forms.ImageField(required=False, label="")
+
+
+class CreateRemixForm(forms.ModelForm):
+    def __init__(self, *args, request=None, **kwargs):
+        self.request = request
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        remix = super().save(commit=False)
+        remix.user = self.request.user
+        if commit:
+            remix.save()
+        return remix
+
+    class Meta:
+        model = Remix
+        fields = (
+            "idea",
+            "background_image",
+        )
+
+
+class UpdateRemixForm(forms.ModelForm):
+    class Meta:
+        model = Remix
+        fields = (
+            "scene",
+            "snapshot",
+        )

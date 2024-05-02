@@ -21,7 +21,7 @@ class RemixIdea(models.Model):
     chat = models.ForeignKey(Chat, default=new_chat, on_delete=models.SET_DEFAULT)
 
     def get_absolute_url(self):
-        return reverse("remix_idea_view", kwargs={"uuid": self.uuid})
+        return reverse("remix_idea", kwargs={"uuid": self.uuid})
 
     @property
     def marker(self):
@@ -44,9 +44,15 @@ class Remix(models.Model):
     """A remix!"""
 
     uuid = models.UUIDField(default=uuid4, editable=False)
+    idea = models.ForeignKey(
+        RemixIdea, related_name="remixes", on_delete=models.CASCADE
+    )
     user = models.ForeignKey("userauth.CustomUser", on_delete=models.CASCADE)
     background_image = models.ForeignKey(
         RemixBackgroundImage, related_name="background_image", on_delete=models.CASCADE
     )
-    scene = models.JSONField()
+    scene = models.JSONField(null=True)
     snapshot = models.ImageField(upload_to="remix/snapshots/", blank=True)
+
+    def get_absolute_url(self):
+        return reverse("remix_view", kwargs={"uuid": self.uuid})

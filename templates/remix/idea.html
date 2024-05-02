@@ -8,17 +8,49 @@
         <div class="mx-4.5">
 
             {# Image #}
+            {% if false %}
             {% if object.background_images.all %}
                 <div class="-mx-4.5">
-                    <div class="flex items-center justify-center overflow-hidden h-[262px] lg:h-[362px] w-full">
+                    <div class="flex items-center justify-center overflow-hidden h-[262px] lg:h-[362px] w-full relative">
                         {# TODO: show the carousel with all the images #}
                         <img class="object-cover w-full h-full"
                              src="{{ object.background_images.all.0.image.url }}">
+                        <form action="{% url 'create_remix' %}"
+                              method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="background_image" value="{{ object.background_images.all.0.id }}">
+                            <button class="button button-on-white absolute bottom-3 right-3">Remix</button>
+                        </form>
                     </div>
                 </div>
 
                 {% include "partials/vertical-spacer.html" with space="3" %}
             {% endif %}
+            {% endif %}
+
+            {# Image carousel #}
+            <div class="-mx-4.5" data-flickity="{}">
+                {% for image in object.background_images.all %}
+                    <div class="flex items-center justify-center overflow-hidden h-[262px] lg:h-[362px] w-full">
+                        <div class="w-full h-full relative">
+                            <img class="object-cover w-full h-full"
+                                 src="{{ image.image.url }}">
+                            <form action="{% url 'create_remix' %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="idea" value="{{ object.id }}">
+                                <input type="hidden" name="background_image" value="{{ image.id }}">
+                                <button class="button button-on-white absolute bottom-3 right-3">Remix</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% include "partials/vertical-spacer.html" with space="3" %}
+
+
+
+
 
             <div class="lg:grid grid-cols-4 gap-9 max-w-screen-xl mx-auto">
             <div class="col-span-1"> {# Large layout, first column #}

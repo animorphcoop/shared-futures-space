@@ -22,11 +22,13 @@ import {
  */
 export function defaultRemixScope(): RemixScope {
   return {
+    background: "",
     loadingCount: 0,
     modelInfos: [],
     importScene: throwNotImplementedError,
     exportScene: throwNotImplementedError,
-    createSnapshot: throwNotImplementedError,
+    exportSnapshot: throwNotImplementedError,
+    exportAll: throwNotImplementedError,
     mode: "build",
     build: {
       add: throwNotImplementedError,
@@ -64,11 +66,20 @@ export interface RemixSetup {
   cleanup: DirectiveUtilities["cleanup"]
 }
 
-export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
-  let snapshot = false
+type SnapshotCallback = (snapshot: Blob) => void
 
-  scope.createSnapshot = () => {
-    snapshot = true
+export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
+  let snapshotCallback: SnapshotCallback | null = null
+
+  scope.exportSnapshot = () => {
+    return new Promise((resolve) => {
+      snapshotCallback = resolve
+    })
+  }
+  scope.exportAll = async () => {
+    const scene = scope.exportScene()
+    const snapshot = await scope.exportSnapshot()
+    return { scene, snapshot }
   }
 
   let drawContainer = el.querySelector(
@@ -134,16 +145,20 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
   function animate() {
     requestAnimationFrame(animate)
     build.animate()
-    if (snapshot) {
+    if (snapshotCallback) {
       // We have to do the snapshot in this loop immediately after render()
       // otherwise the three.js canvas data is not available
 
-      snapshot = false
-      buildSnapshot()
+      buildSnapshot().then((blob) => {
+        if (snapshotCallback) {
+          snapshotCallback(blob)
+        }
+        snapshotCallback = null
+      })
     }
   }
 
-  function buildSnapshot() {
+  async function buildSnapshot(): Promise<Blob> {
     text.onSnapshot()
     const outputCanvas = document.createElement("canvas")
 
@@ -158,27 +173,43 @@ export async function setup({ el, scope, cleanup, effect }: RemixSetup) {
       context.drawImage(buildCanvas, 0, 0)
       context.drawImage(drawCanvas, 0, 0)
       context.drawImage(textCanvas, 0, 0)
-      downloadCanvas(outputCanvas, "snapshot.png")
+      // downloadCanvas(outputCanvas, "snapshot.png")
+      return await toBlob(outputCanvas)
     }
+    throw new Error("failed to create snapshot")
+  }
+
+  if (scope.scene) {
+    scope.importScene(scope.scene)
   }
 
   animate()
 }
 
-function downloadCanvas(canvas: HTMLCanvasElement, filename: string) {
-  canvas.toBlob((blob) => {
-    if (!blob) return
-    const objectURL = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = objectURL
-    a.download = filename
-    function click() {
-      a.removeEventListener("click", click)
-      setTimeout(() => {
-        URL.revokeObjectURL(objectURL)
-      }, 200)
-    }
-    a.addEventListener("click", click)
-    a.click()
+async function toBlob(canvas: HTMLCanvasElement): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) {
+        resolve(blob)
+      } else {
+        reject()
+      }
+    })
   })
+}
+
+// @ts-expect-error
+function downloadBlob(blob: Blob, filename: string) {
+  const objectURL = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = objectURL
+  a.download = filename
+  function click() {
+    a.removeEventListener("click", click)
+    setTimeout(() => {
+      URL.revokeObjectURL(objectURL)
+    }, 200)
+  }
+  a.addEventListener("click", click)
+  a.click()
 }
