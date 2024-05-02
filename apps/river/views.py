@@ -22,7 +22,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from formtools.wizard.views import SessionWizardView
 from messaging.forms import ChatForm
-from messaging.models import Message
+from messaging.models import Message, Chat
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
 from poll.models import SingleChoicePoll
@@ -278,10 +278,84 @@ class ManageRiverView(TemplateView):
 
 
 class RiverChatView(ChatView):
+    template_name = "river_chat.html"
     form_class: Type[ChatForm] = ChatForm
 
+    def get_context_data(self, **kwargs):
+        request = self.request
+        context = super().get_context_data(**kwargs)
 
-class RiverChatMessageListView(ChatView):
+        river = River.objects.get(slug=kwargs["slug"])
+        chat = river.get_chat(kwargs["stage"], kwargs["topic"])
+        message_list = Message.objects.all().filter(chat=chat).order_by("timestamp")
+        members = list(
+            map(lambda x: x.user, RiverMembership.objects.filter(river=river))
+        )
+
+        pagination_data = self.paginate_messages(request, message_list)
+
+        chat_poll = river.get_poll(kwargs["stage"], kwargs["topic"])
+        stage_ref = river.get_stage(kwargs["stage"])
+
+        is_member = (
+            request.user.is_authenticated
+            and river.rivermembership_set.filter(user=request.user).exists()
+        )
+
+        if is_member:
+            context["poll_ref"] = chat_poll
+
+        context.update(
+            {
+                "chat_ref": chat,
+                "members": members,
+                "river": river,
+                "slug": kwargs["slug"],
+                "stage": kwargs["stage"],
+                "topic": kwargs["topic"],
+                "page_obj": pagination_data["page_obj"],
+                "system_user": get_system_user(),
+                "message_count": message_list.count(),
+                "page_number": pagination_data["page_number"],
+                "messages_displayed_count": pagination_data["messages_displayed_count"],
+                "messages_left_count": pagination_data["messages_left_count"],
+                "direct": False,
+                "message_post_url": reverse(
+                    "river_chat",
+                    args=[kwargs["slug"], kwargs["stage"], kwargs["topic"]],
+                ),
+                "unique_id": kwargs["stage"] + "-" + kwargs["topic"],
+                "chat_open": chat_poll is None
+                or not chat_poll.closed
+                or (chat_poll.closed and not chat_poll.passed),
+                "stage_ref": stage_ref,
+                # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
+                "poll_possible": True
+                if kwargs["stage"] == "envision"
+                else (
+                    False
+                    if kwargs["stage"] == "reflect"
+                    else (kwargs["topic"] != "general")
+                    or (
+                        kwargs["topic"] == "general"
+                        and stage_ref.money_poll
+                        and stage_ref.money_poll.passed
+                        and stage_ref.place_poll
+                        and stage_ref.place_poll.passed
+                        and stage_ref.time_poll
+                        and stage_ref.time_poll.passed
+                    )
+                ),
+                "starters": RiverMembership.objects.filter(
+                    river=river, starter=True
+                ).values_list("user", flat=True),
+            }
+        )
+
+        return context
+
+
+class RiverChatMessageListView(RiverChatView):
     pass
 
 
