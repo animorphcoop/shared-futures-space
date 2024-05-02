@@ -168,12 +168,3 @@ class UpdateRemixView(ModelFormMixin, View):
             return redirect(remix.idea)  # we go back to the idea
         # failure is not an option!
         raise ValidationError("could not update remix!")
-
-
-class RemixPlaygroundView(TemplateView):
-    template_name = "remix/remix.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["models"] = list_three_models()
-        return context

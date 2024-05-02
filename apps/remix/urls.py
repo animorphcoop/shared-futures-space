@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, path
 
 from .views import (
-    RemixPlaygroundView,
     RemixIdeaView,
     RemixIdeaStartWizardView,
     RemixMapView,
@@ -20,11 +19,6 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         name="remix_map",
     ),
     path(
-        "playground/",
-        RemixPlaygroundView.as_view(),
-        name="remix_playground",
-    ),
-    path(
         "create/idea/",
         RemixIdeaStartWizardView.as_view(),
         name="start_remix_idea",
@@ -38,7 +32,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path(
         "<uuid:uuid>/",
         RemixView.as_view(),
-        name="remix_view",
+        name="remix",
     ),
     path(
         "<int:pk>/update/",

@@ -55,4 +55,4 @@ class Remix(models.Model):
     snapshot = models.ImageField(upload_to="remix/snapshots/", blank=True)
 
     def get_absolute_url(self):
-        return reverse("remix_view", kwargs={"uuid": self.uuid})
+        return reverse("remix", kwargs={"uuid": self.uuid})
