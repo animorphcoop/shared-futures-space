@@ -5,7 +5,7 @@ import { Object3D } from "three"
 export interface RemixScope {
   loadingCount: number
   background: string // background image URL
-  scene: object // starting scene
+  scene?: object // starting scene
   modelInfos: ModelInfo[]
   mode: RemixMode
   importScene: (scene: RemixScene) => void
