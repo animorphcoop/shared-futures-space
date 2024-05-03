@@ -1,0 +1,17 @@
+<form action="{% url 'create_remix' %}"
+      method="post">
+    {% csrf_token %}
+    <input type="hidden" name="idea" value="{{ idea_id }}">
+    {% if message_id %}
+        <input type="hidden" name="message" value="{{ message_id }}">
+    {% endif %}
+    {% if remix_id %}
+        <input type="hidden" name="remix" value="{{ remix_id }}">
+    {% endif %}
+    {% if background_image_id %}
+        <input type="hidden" name="background_image" value="{{ background_image_id }}">
+    {% endif %}
+    <button class="button button-on-white">
+        Remix
+    </button>
+</form>

@@ -6,7 +6,7 @@
              class="mx-4.5 max-h-[50vh] overflow-y-auto selected"
              x-setup-message-refresh="[`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`]"
         >
-            {% include 'messaging/message_list.html' %}
+            {% include 'messaging/message_list.html' with remix_images_for_idea=remix_images_for_idea %}
         </div>
         {% if chat_open %}
             {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}

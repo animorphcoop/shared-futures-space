@@ -5,11 +5,17 @@
     {% include "partials/vertical-spacer.html" with space="3" %}
     <div class="flex flex-col gap-3">
         {% for remix in remixes %}
-            <div>
-                <a href="{% url 'remix' remix.uuid %}">
-                    <img src="{{ remix.snapshot.url }}"
-                         class="w-full">
+            <div class="relative">
+                {% if user == remix.user %}
+                <a href="{% url 'remix' remix.uuid %}" title="Click to edit">
+                    <img src="{{ remix.snapshot.url }}" class="w-full">
                 </a>
+                {% else %}
+                    <img src="{{ remix.snapshot.url }}" class="w-full">
+                {% endif %}
+                <div class="absolute bottom-2 right-2">
+                    {% include "remix/partials/create_remix_button.html" with idea_id=object.id remix_id=remix.id %}
+                </div>
             </div>
         {% endfor %}
     </div>

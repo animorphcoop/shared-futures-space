@@ -1,7 +1,13 @@
+from os.path import basename
+
 from django import forms
+from django.core.files import File
+from django.core.files.base import ContentFile
 
 from core.forms import LocationField
-from remix.models import RemixIdea, Remix
+from core.utils.images import ensure_image_field_crop
+from messaging.models import Message
+from remix.models import RemixIdea, Remix, RemixBackgroundImage
 
 
 class StartIdeaLocationStep(forms.ModelForm):
@@ -61,22 +67,71 @@ class StartIdeaImagesStep(forms.Form):
 
 
 class CreateRemixForm(forms.ModelForm):
-    def __init__(self, *args, request=None, **kwargs):
-        self.request = request
+    # Sources of remix background images are:
+
+    # 1. an idea initial background image
+    background_image = forms.ModelChoiceField(
+        queryset=RemixBackgroundImage.objects.filter(initial_image=True), required=False
+    )
+
+    # 2. a chat message image
+    message = forms.ModelChoiceField(queryset=Message.objects, required=False)
+
+    # 3. another remix
+    remix = forms.ModelChoiceField(queryset=Remix.objects, required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
         super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # TODO: check the background_image/remix/message are from this idea
+        # or raise a ValidationError
+        return cleaned_data
 
     def save(self, commit=True):
         remix = super().save(commit=False)
         remix.user = self.request.user
+
+        if message := self.cleaned_data.get("message", None):
+            remix.background_image = self.copy_background_image_from_message(message)
+        if source_remix := self.cleaned_data.get("remix", None):
+            remix.scene = source_remix.scene
+            remix.background_image = source_remix.background_image
+
         if commit:
             remix.save()
         return remix
+
+    def copy_background_image_from_message(self, message: Message):
+        idea = self.cleaned_data.get("idea")
+
+        background_image = idea.background_images.filter(from_message=message).first()
+
+        if background_image:
+            # we can reuse it \o/
+            return background_image
+
+        # We have to copy the image
+        # This copies it in memory, good enough for now...
+        copied_image = ContentFile(message.image.file.read())
+        copied_image.name = basename(message.image.name)
+
+        background_image = idea.background_images.create(
+            image=copied_image,
+            from_message=message,
+        )
+        ensure_image_field_crop(background_image.image, 16 / 9)
+
+        return background_image
 
     class Meta:
         model = Remix
         fields = (
             "idea",
             "background_image",
+            "message",
         )
 
 

@@ -15,7 +15,14 @@
                 </span>
 
                 {% if message.image %}
-                    <img src="{{ message.image.url }}" alt="none" class="pt-1.5">
+                    <div class="relative">
+                        <img src="{{ message.image.url }}" alt="none" class="pt-1.5">
+                        {% if remix_images_for_idea %}
+                            <div class="absolute bottom-2 right-2">
+                                {% include "remix/partials/create_remix_button.html" with idea_id=remix_images_for_idea message_id=message.id %}
+                            </div>
+                        {% endif %}
+                    </div>
                 {% endif %}
                 {% if message.file %}
                     <div class="text-right mr-2">

@@ -10,18 +10,14 @@
         <div class="mx-4.5">
             {# Image carousel #}
             <div class="-mx-4.5" data-flickity="{}">
-                {% for image in object.background_images.all %}
+                {% for background_image in initial_background_images %}
                     <div class="flex items-center justify-center overflow-hidden h-[262px] lg:h-[362px] w-full">
                         <div class="w-full h-full relative">
                             <img class="object-cover w-full h-full"
-                                 src="{{ image.image.url }}">
-                            <form action="{% url 'create_remix' %}"
-                                  method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="idea" value="{{ object.id }}">
-                                <input type="hidden" name="background_image" value="{{ image.id }}">
-                                <button class="button button-on-white absolute bottom-3 right-3">Remix</button>
-                            </form>
+                                 src="{{ background_image.image.url }}">
+                            <div class="absolute bottom-2 right-2">
+                                {% include "remix/partials/create_remix_button.html" with idea_id=object.id background_image_id=background_image.id  %}
+                            </div>
                         </div>
                     </div>
                 {% endfor %}

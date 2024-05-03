@@ -23,7 +23,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     ),
     path(
         "create/idea/",
-        RemixIdeaStartWizardView.as_view(),
+        login_required(RemixIdeaStartWizardView.as_view()),
         name="start_remix_idea",
     ),
     path(
@@ -48,15 +48,17 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         ),
         name="remix_idea_chat_message_list",
     ),
-    path("create/remix/", CreateRemixView.as_view(), name="create_remix"),
+    path(
+        "create/remix/", login_required(CreateRemixView.as_view()), name="create_remix"
+    ),
     path(
         "<uuid:uuid>/",
-        RemixView.as_view(),
+        login_required(RemixView.as_view()),
         name="remix",
     ),
     path(
         "<int:pk>/update/",
-        UpdateRemixView.as_view(),
+        login_required(UpdateRemixView.as_view()),
         name="remix_update",
     ),
 ]

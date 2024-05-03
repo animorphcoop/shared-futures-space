@@ -25,6 +25,7 @@ from django.views.generic.edit import ModelFormMixin
 from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
 
 from core.forms import SharedFuturesWizardView
+from core.utils.images import crop_image, ensure_image_field_crop
 from dashboard.forms import AreaForm
 from map.markers import idea_marker
 from messaging.models import Message
@@ -38,7 +39,6 @@ from remix.forms import (
 )
 from remix.models import RemixIdea, RemixBackgroundImage, Remix
 from remix.three_models import list_three_models
-from river.models import River
 from sfs import settings
 from userauth.util import get_system_user
 
@@ -70,7 +70,7 @@ class RemixMapView(TemplateView):
         return context
 
 
-class RemixIdeaStartWizardView(LoginRequiredMixin, SharedFuturesWizardView):
+class RemixIdeaStartWizardView(SharedFuturesWizardView):
     template_name = "remix/start_idea_wizard.html"
 
     form_list = [
@@ -106,26 +106,12 @@ class RemixIdeaStartWizardView(LoginRequiredMixin, SharedFuturesWizardView):
         if images:
             for image in images:
                 background_image = RemixBackgroundImage.objects.create(
-                    idea=idea, image=image
+                    idea=idea,
+                    image=image,
+                    initial_image=True,
                 )
-                with Image.open(background_image.image.file) as img:
-                    width, height = img.size
-                    target_aspect_ratio = 16 / 9
-                    aspect_ratio = width / height
-                    if aspect_ratio > target_aspect_ratio:
-                        # wider than 16/9
-                        # need to modify width
-                        new_width = target_aspect_ratio * height
-                        offset = int(abs(width - new_width) / 2)
-                        cropped = img.crop([offset, 0, width - offset, height])
-                        cropped.save(background_image.image.path)
-                    elif aspect_ratio < target_aspect_ratio:
-                        # taller than 16 / 9
-                        # need to modify height
-                        new_height = width / target_aspect_ratio
-                        offset = int(abs(new_height - height) / 2)
-                        cropped = img.crop([0, offset, width, height - offset])
-                        cropped.save(background_image.image.path)
+                ensure_image_field_crop(background_image.image, 16 / 9)
+
         return redirect(idea)
 
 
@@ -139,7 +125,12 @@ class RemixIdeaView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["remixes"] = self.object.remixes.exclude(snapshot="")
+        context["initial_background_images"] = self.object.background_images.filter(
+            initial_image=True
+        )
+        context["remixes"] = self.object.remixes.exclude(snapshot="").order_by(
+            "-created_at"
+        )
         return context
 
 
@@ -180,6 +171,7 @@ class RemixIdeaChatView(ChatView):
                 ),
                 "unique_id": idea.uuid,
                 "chat_open": True,
+                "remix_images_for_idea": idea.id,
             }
         )
 
