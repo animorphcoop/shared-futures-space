@@ -38,8 +38,12 @@ class ChatView(TemplateView):
             elif "starter_hide" in request.POST:
                 return self.hide_message(chat, context)
 
+        # TODO: send a more appropriate response when we couldn't do anything
+        return render(request, "messaging/user_message_snippet.html", context)
+
     def render_message(self, message: Message, context):
         request = self.request
+        context["message"] = message
         return render(request, "messaging/user_message_snippet.html", context)
 
     def get_context_data(self, **kwargs):
@@ -81,7 +85,6 @@ class ChatView(TemplateView):
                 file=chat_form.cleaned_data.get("file", None),
                 chat=chat,
             )
-            context["message"] = message
             return self.render_message(message, context)
 
         # TODO: should it be status 400?
@@ -93,7 +96,6 @@ class ChatView(TemplateView):
         request = self.request
         message = Message.objects.get(uuid=request.POST["flag"])
         message.flagged(request.user)
-        context["message"] = message
         return self.render_message(message, context)
 
     def hide_message(self, chat, context):
@@ -107,7 +109,6 @@ class ChatView(TemplateView):
             message.hidden = not message.hidden
             message.hidden_reason = "by the river starter"
             message.save()
-            context["message"] = message
             return self.render_message(message, context)
 
     def paginate_messages(
