@@ -38,14 +38,9 @@
                 {% include "partials/vertical-spacer.html" with space="9" %}
             {% endfor %}
 
-            {% if wizard.steps.current == wizard.steps.last %}
-                <pre>placeholder for help text</pre>
-                {% include "partials/vertical-spacer.html" with space="9" %}
-            {% endif %}
-
-            {% if wizard.steps.current == "2" %}
-                {# Our image upload page :/ #}
-                <h1>Image upload!</h1>
+            {% if wizard.steps.current == "0" %}
+                <h1>Placeholder for help information</h1>
+                <p>Loreum ipsum, etc...</p>
             {% endif %}
 
             <div class="flex justify-center gap-2">
