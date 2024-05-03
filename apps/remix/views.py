@@ -10,7 +10,9 @@ from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage, FileSystemStorage
 from django import forms
 from django.core.handlers.wsgi import WSGIRequest
-from django.shortcuts import redirect
+from django.http import HttpResponse
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.views.generic import (
     TemplateView,
@@ -25,6 +27,8 @@ from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
 from core.forms import SharedFuturesWizardView
 from dashboard.forms import AreaForm
 from map.markers import idea_marker
+from messaging.models import Message
+from messaging.views import ChatView, ChatUpdateCheck
 from remix.forms import (
     StartIdeaLocationStep,
     StartIdeaTitleAndDescriptionStep,
@@ -34,7 +38,9 @@ from remix.forms import (
 )
 from remix.models import RemixIdea, RemixBackgroundImage, Remix
 from remix.three_models import list_three_models
+from river.models import River
 from sfs import settings
+from userauth.util import get_system_user
 
 
 class RemixMapView(TemplateView):
@@ -130,6 +136,66 @@ class RemixIdeaView(DetailView):
     # TODO: maybe include a slug, from the title?
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
+
+
+class RemixIdeaChatView(ChatView):
+    template_name = "remix/chat.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        request = self.request
+
+        idea = get_object_or_404(RemixIdea, uuid=kwargs["uuid"])
+        chat = idea.chat
+
+        # TODO: fix blatant lie! it's any registered user.. but can't include all those
+        # Adding the request user ensures this user can post messages...
+        members = [request.user]
+
+        message_list = Message.objects.all().filter(chat=chat).order_by("timestamp")
+
+        pagination_data = self.paginate_messages(request, message_list)
+
+        context.update(
+            {
+                "chat_ref": chat,
+                "members": members,
+                "system_user": get_system_user(),
+                "page_obj": pagination_data["page_obj"],
+                "page_number": pagination_data["page_number"],
+                "messages_displayed_count": pagination_data["messages_displayed_count"],
+                "messages_left_count": pagination_data["messages_left_count"],
+                "message_post_url": reverse("remix_idea_chat", args=[idea.uuid]),
+                "message_count_url": reverse(
+                    "remix_idea_chat_message_count", args=[idea.uuid]
+                ),
+                "message_list_url": reverse(
+                    "remix_idea_chat_message_list", args=[idea.uuid]
+                ),
+                "unique_id": idea.uuid,
+                "chat_open": True,
+            }
+        )
+
+        return context
+
+
+class RemixIdeaChatMessageListView(RemixIdeaChatView):
+    pass
+
+
+class RemixIdeaChatUpdateView(DetailView):
+    model = RemixIdea
+
+    # TODO: maybe include a slug, from the title?
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
+
+    def render_to_response(self, context, **response_kwargs):
+        chat = self.object.chat
+        message_list = Message.objects.all().filter(chat=chat).order_by("timestamp")
+        return HttpResponse(message_list.count())
 
 
 class RemixView(DetailView):

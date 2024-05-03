@@ -10,6 +10,9 @@ from .views import (
     CreateRemixView,
     RemixView,
     UpdateRemixView,
+    RemixIdeaChatView,
+    RemixIdeaChatUpdateView,
+    RemixIdeaChatMessageListView,
 )
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
@@ -27,6 +30,23 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
         "idea/<uuid:uuid>/",
         RemixIdeaView.as_view(),
         name="remix_idea",
+    ),
+    path(
+        "idea/<uuid:uuid>/chat/",
+        RemixIdeaChatView.as_view(),
+        name="remix_idea_chat",
+    ),
+    path(
+        "idea/<uuid:uuid>/chat/count/",
+        RemixIdeaChatUpdateView.as_view(),
+        name="remix_idea_chat_message_count",
+    ),
+    path(
+        "idea/<uuid:uuid>/chat/message_list/",
+        RemixIdeaChatMessageListView.as_view(
+            template_name="messaging/message_list.html"
+        ),
+        name="remix_idea_chat_message_list",
     ),
     path("create/remix/", CreateRemixView.as_view(), name="create_remix"),
     path(

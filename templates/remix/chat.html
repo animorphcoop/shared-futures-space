@@ -1,0 +1,20 @@
+{% load static %}
+
+{% block content %}
+    <div>
+        <div id="messages-{{ unique_id }}"
+             class="mx-4.5 max-h-[50vh] overflow-y-auto selected"
+             x-setup-message-refresh="[`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`]"
+        >
+            {% include 'messaging/message_list.html' %}
+        </div>
+        {% if chat_open %}
+            {% include 'messaging/chatbox_snippet.html' with direct=direct message_post_url=message_post_url %}
+        {% endif %}
+
+        {% if not user.is_authenticated %}
+            {% url 'account_login' as the_url %}
+            {% include "partials/call-to-action.html" with main="To participate in the project you need to be logged in." button="Log in" url=the_url  bg="bg-sky" %}
+        {% endif %}
+    </div>
+{% endblock %}

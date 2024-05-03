@@ -282,8 +282,8 @@ class RiverChatView(ChatView):
     form_class: Type[ChatForm] = ChatForm
 
     def get_context_data(self, **kwargs):
-        request = self.request
         context = super().get_context_data(**kwargs)
+        request = self.request
 
         river = River.objects.get(slug=kwargs["slug"])
         chat = river.get_chat(kwargs["stage"], kwargs["topic"])
