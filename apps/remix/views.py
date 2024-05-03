@@ -36,6 +36,7 @@ from remix.forms import (
     StartIdeaImagesStep,
     CreateRemixForm,
     UpdateRemixForm,
+    HelpStep,
 )
 from remix.models import RemixIdea, RemixBackgroundImage, Remix
 from remix.three_models import list_three_models
@@ -74,6 +75,7 @@ class RemixIdeaStartWizardView(SharedFuturesWizardView):
     template_name = "remix/start_idea_wizard.html"
 
     form_list = [
+        HelpStep,
         StartIdeaLocationStep,
         StartIdeaTitleAndDescriptionStep,
         StartIdeaImagesStep,
