@@ -137,6 +137,11 @@ class RemixIdeaView(DetailView):
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["remixes"] = self.object.remixes.exclude(snapshot="")
+        return context
+
 
 class RemixIdeaChatView(ChatView):
     template_name = "remix/chat.html"

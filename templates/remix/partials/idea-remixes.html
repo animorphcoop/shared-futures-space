@@ -4,7 +4,7 @@
 {% block drawer_content %}
     {% include "partials/vertical-spacer.html" with space="3" %}
     <div class="flex flex-col gap-3">
-        {% for remix in object.remixes.all %}
+        {% for remix in remixes %}
             <div>
                 <a href="{% url 'remix' remix.uuid %}">
                     <img src="{{ remix.snapshot.url }}"
