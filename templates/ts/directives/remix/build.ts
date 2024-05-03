@@ -5,7 +5,6 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js"
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js"
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js"
 
-import bg from "./bg.jpg?url"
 import {
   AmbientLight,
   Camera,
@@ -14,6 +13,7 @@ import {
   Object3D,
   PerspectiveCamera,
   Scene,
+  SRGBColorSpace,
   TextureLoader,
   Vector2,
   WebGLRenderer,
@@ -58,6 +58,7 @@ export function useBuild({
       objects.push(instance)
 
       if (animate) {
+        // Animated appearances!
         anime({
           targets: [instance.scale],
           x: 1,
@@ -74,10 +75,15 @@ export function useBuild({
     }
   }
 
-  const texture = new TextureLoader().load(bg)
+  const texture = new TextureLoader().load(scope.background)
+  texture.colorSpace = SRGBColorSpace
 
   const scene = new Scene()
-  scene.background = texture
+
+  new TextureLoader().load(scope.background, (texture) => {
+    texture.colorSpace = SRGBColorSpace
+    scene.background = texture
+  })
 
   const lightColour = 0xeeeeee
   const light = new AmbientLight(lightColour, 1.2)
@@ -126,6 +132,7 @@ export function useBuild({
     updateSize: updateComposerSize,
   } = useOutlineComposer(scene, camera, renderer)
 
+  // Wire up the transformation module
   const transform = useTransform({
     scope,
     objects,
@@ -135,6 +142,7 @@ export function useBuild({
       outlinePass.selectedObjects = selectedObjects
     },
     onRemove(toRemove) {
+      // Animated removals!
       anime({
         targets: toRemove.map((object) => object.scale),
         x: 0,
@@ -177,6 +185,9 @@ export function useBuild({
 
   function animate() {
     composer.render()
+    // Keeps track of the object count, could do on add/remove but here
+    // we *know* always be correct and we didn't miss something with some
+    // dodgy coding... :)
     scope.build.objectCount = objects.length
   }
 
@@ -200,7 +211,7 @@ export function useBuild({
         modelName: object.userData.modelName,
         position: { x: position.x, y: position.y, z: position.z },
         rotation: { y: rotation.y },
-        scale: object.scale.x, // we always scale them all the same
+        scale: object.scale.x, // we scale all axes the same
       })
     }
     return {
@@ -215,7 +226,6 @@ export function useBuild({
         const { position, scale, rotation } = importObject
         object.position.set(position.x, position.y, position.z)
         object.rotation.set(0, rotation.y, 0)
-        //object.scale.set(scale, scale, scale)
         object.scale.set(0, 0, 0)
         anime({
           targets: [object.scale],
@@ -241,6 +251,13 @@ export function useBuild({
   }
 }
 
+/**
+ * This is how the outlining works when you hover over an object.
+ *
+ * It returns an OutlinePass object where you can set:
+ *
+ *  outlinePass.selectedObjects = [objects, you, want, outlined]
+ */
 function useOutlineComposer(
   scene: Scene,
   camera: Camera,

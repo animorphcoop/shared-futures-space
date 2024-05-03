@@ -1,0 +1,26 @@
+{% load static %}
+{% load custom_filters %}
+
+{% url 'remix_idea' idea.uuid as view_url %}
+
+<div class="mx-1.5 relative">
+    <div class="p-3 relative bg-white rounded-xl">
+        <div class="absolute top-0 left-0 right-0 bg-gradient-to-b from-[#E5F1F8] to-white h-12 rounded-xl"></div>
+        <div class="flex flex-start justify-between items-center">
+            <h2 class="relative text-title text-black/55 grow">
+                <a href="{{ view_url }}" class="block">
+                    {{ idea.title }}
+                </a>
+            </h2>
+            {% include 'partials/button.html' with url=view_url icon='arrow-right' style='mini' extra_classes="z-10" %}
+        </div>
+
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
+
+        <p class="text-body sm:order-3">{{ idea.description|truncatewords:25 }}</p>
+
+        {% include "partials/vertical-spacer.html" with space="4.5" %}
+        {% include "partials/button.html" with url=view_url style="primary_white" button="View idea" %}
+    </div>
+</div>
+

@@ -1,0 +1,9 @@
+{% extends "partials/drawer.html" %}
+
+{% block drawer_content %}
+    {% include "partials/vertical-spacer.html" with space="3" %}
+    <p class="font-garamond-500 text-base leading-5 text-black/75 overflow-y-auto max-h-[100vh]">
+        {{ object.description }}
+    </p>
+    {% include "partials/vertical-spacer.html" with space="3" %}
+{% endblock %}

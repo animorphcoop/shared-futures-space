@@ -52,7 +52,7 @@ from userauth.forms import (
 )
 from userauth.models import Block, CustomUser, Organisation, UserAvatar, UserPair
 from userauth.tasks import send_after
-from userauth.util import get_userpair, slug_to_user, user_to_slug
+from userauth.util import get_userpair, slug_to_user, user_to_slug, get_system_user
 
 
 # redirecting to the profile url using the request data
@@ -283,7 +283,47 @@ class UserChatsMixin:
 
 
 class UserChatView(UserChatsMixin, ChatView):
+    template_name = "account/user_chat.html"
     form_class: Type[ChatForm] = ChatForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request = self.request
+
+        user_path = kwargs["user_path"]
+        other_user = slug_to_user(user_path)
+
+        [user1_uuid, user2_uuid] = sorted([request.user.uuid, other_user.uuid])
+        user1 = CustomUser.objects.get(uuid=user1_uuid)
+        user2 = CustomUser.objects.get(uuid=user2_uuid)
+        userpair = get_userpair(user1, user2)
+        members = [user1, user2]
+        chat = userpair.chat
+
+        message_list = (
+            Message.objects.all().filter(chat=userpair.chat).order_by("timestamp")
+        )
+
+        pagination_data = self.paginate_messages(request, message_list)
+
+        context.update(
+            {
+                "chat_ref": chat,
+                "members": members,
+                "other_user": other_user,
+                "system_user": get_system_user(),
+                "page_obj": pagination_data["page_obj"],
+                "page_number": pagination_data["page_number"],
+                "messages_displayed_count": pagination_data["messages_displayed_count"],
+                "messages_left_count": pagination_data["messages_left_count"],
+                "direct": True,
+                "message_post_url": reverse("user_chat", args=[user_path]),
+                "unique_id": user_path,
+                "chat_open": not userpair.blocked,
+            }
+        )
+
+        return context
 
 
 class UserAllChatsView(UserChatsMixin, TemplateView):

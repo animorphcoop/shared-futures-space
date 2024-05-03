@@ -1,4 +1,6 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union, Type
+
+from django.urls import reverse
 
 from area.models import Area
 from core.utils.tags_declusterer import tag_cluster_to_list
@@ -7,7 +9,7 @@ from django.db import models
 from django.templatetags.static import static
 from django.utils import timezone
 from django.utils.text import slugify
-from messaging.models import Chat
+from messaging.models import Chat, new_chat
 from messaging.util import send_system_message
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
@@ -15,14 +17,7 @@ from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase
 
 from apps.core.utils.slugifier import generate_random_string
-
-
-def new_chat() -> (
-    int
-):  # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
-    c = Chat()
-    c.save()
-    return c.id
+from poll.models import BasePoll
 
 
 # STAGES
@@ -555,3 +550,66 @@ class River(ClusterableModel):
         print(self)
         self.current_stage = self.Stage.FINISHED
         self.save()
+
+    def get_chat(self, stage: str, topic: str) -> Chat:
+        if stage == "envision":
+            return self.envision_stage.general_chat
+        elif stage == "plan":
+            if topic == "general":
+                return self.plan_stage.general_chat
+            elif topic == "money":
+                return self.plan_stage.money_chat
+            elif topic == "place":
+                return self.plan_stage.place_chat
+            elif topic == "time":
+                return self.plan_stage.time_chat
+        elif stage == "act":
+            if topic == "general":
+                return self.act_stage.general_chat
+            elif topic == "money":
+                return self.act_stage.money_chat
+            elif topic == "place":
+                return self.act_stage.place_chat
+            elif topic == "time":
+                return self.act_stage.time_chat
+        elif stage == "reflect":
+            return self.reflect_stage.general_chat
+
+    def get_poll(self, stage: str, topic: str) -> Type[BasePoll]:
+        if stage == "envision":
+            return self.envision_stage.general_poll
+        elif stage == "plan":
+            if topic == "general":
+                return self.plan_stage.general_poll
+            elif topic == "money":
+                return self.plan_stage.money_poll
+            elif topic == "place":
+                return self.plan_stage.place_poll
+            elif topic == "time":
+                return self.plan_stage.time_poll
+        elif stage == "act":
+            if topic == "general":
+                return self.act_stage.general_poll
+            elif topic == "money":
+                return self.act_stage.money_poll
+            elif topic == "place":
+                return self.act_stage.place_poll
+            elif topic == "time":
+                return self.act_stage.time_poll
+        elif stage == "reflect":
+            return self.reflect_stage.general_poll
+
+    def get_stage(
+        self, stage: str
+    ) -> Union[EnvisionStage, PlanStage, ActStage, ReflectStage]:
+        if stage == "envision":
+            return self.envision_stage
+        elif stage == "plan":
+            return self.plan_stage
+        elif stage == "act":
+            return self.act_stage
+        elif stage == "reflect":
+            return self.reflect_stage
+
+    def get_absolute_url(self):
+        return reverse("view_river", kwargs={"slug": self.slug})

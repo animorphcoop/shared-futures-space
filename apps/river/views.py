@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Type
 from action.models import Action
 from action.util import send_offer
 from area.models import PostCode
+from core.forms import SharedFuturesWizardView
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -13,7 +14,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import QueryDict
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic.base import ContextMixin, TemplateView
@@ -21,11 +22,12 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from formtools.wizard.views import SessionWizardView
 from messaging.forms import ChatForm
+from messaging.models import Message, Chat
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
 from poll.models import SingleChoicePoll
 from resources.models import CaseStudy, HowTo
-from userauth.util import get_userpair
+from userauth.util import get_userpair, get_system_user
 
 from .forms import (
     CreateRiverFormStep1,
@@ -276,10 +278,84 @@ class ManageRiverView(TemplateView):
 
 
 class RiverChatView(ChatView):
+    template_name = "river_chat.html"
     form_class: Type[ChatForm] = ChatForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request = self.request
 
-class RiverChatMessageListView(ChatView):
+        river = River.objects.get(slug=kwargs["slug"])
+        chat = river.get_chat(kwargs["stage"], kwargs["topic"])
+        message_list = Message.objects.all().filter(chat=chat).order_by("timestamp")
+        members = list(
+            map(lambda x: x.user, RiverMembership.objects.filter(river=river))
+        )
+
+        pagination_data = self.paginate_messages(request, message_list)
+
+        chat_poll = river.get_poll(kwargs["stage"], kwargs["topic"])
+        stage_ref = river.get_stage(kwargs["stage"])
+
+        is_member = (
+            request.user.is_authenticated
+            and river.rivermembership_set.filter(user=request.user).exists()
+        )
+
+        if is_member:
+            context["poll_ref"] = chat_poll
+
+        context.update(
+            {
+                "chat_ref": chat,
+                "members": members,
+                "river": river,
+                "slug": kwargs["slug"],
+                "stage": kwargs["stage"],
+                "topic": kwargs["topic"],
+                "page_obj": pagination_data["page_obj"],
+                "system_user": get_system_user(),
+                "message_count": message_list.count(),
+                "page_number": pagination_data["page_number"],
+                "messages_displayed_count": pagination_data["messages_displayed_count"],
+                "messages_left_count": pagination_data["messages_left_count"],
+                "direct": False,
+                "message_post_url": reverse(
+                    "river_chat",
+                    args=[kwargs["slug"], kwargs["stage"], kwargs["topic"]],
+                ),
+                "unique_id": kwargs["stage"] + "-" + kwargs["topic"],
+                "chat_open": chat_poll is None
+                or not chat_poll.closed
+                or (chat_poll.closed and not chat_poll.passed),
+                "stage_ref": stage_ref,
+                # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
+                "poll_possible": True
+                if kwargs["stage"] == "envision"
+                else (
+                    False
+                    if kwargs["stage"] == "reflect"
+                    else (kwargs["topic"] != "general")
+                    or (
+                        kwargs["topic"] == "general"
+                        and stage_ref.money_poll
+                        and stage_ref.money_poll.passed
+                        and stage_ref.place_poll
+                        and stage_ref.place_poll.passed
+                        and stage_ref.time_poll
+                        and stage_ref.time_poll.passed
+                    )
+                ),
+                "starters": RiverMembership.objects.filter(
+                    river=river, starter=True
+                ).values_list("user", flat=True),
+            }
+        )
+
+        return context
+
+
+class RiverChatMessageListView(RiverChatView):
     pass
 
 
@@ -429,7 +505,7 @@ class ReflectView(StageContextMixin, TemplateView):
     template_name = "reflect_view.html"
 
 
-class RiverStartWizardView(SessionWizardView):
+class RiverStartWizardView(SharedFuturesWizardView):
     """A multistep form view for creating a river"""
 
     template_name = "start_river_wizard.html"
@@ -448,64 +524,6 @@ class RiverStartWizardView(SessionWizardView):
         if str(step) == "1" and self.request.user.is_authenticated:
             kwargs["current_user"] = self.request.user
         return kwargs
-
-    def get(self, request, *args, **kwargs):
-        """Support discard and restoring on get
-
-        discard:
-            if you add "?discard" to url it will clear storage
-            and send you to dashboard
-
-        restoring saved data:
-            by default if you reload the form with a GET it'll
-            reset the storage, we want to continue where we
-            left off, so we treat it as a goto step
-
-        to *not* reset storage if we just get the page again"""
-        if "discard" in self.request.GET:
-            self.storage.reset()
-            return HttpResponseRedirect(reverse_lazy("dashboard"))
-
-        return self.render_goto_step(self.steps.first)
-
-    def render_goto_step(self, goto_step, **kwargs):
-        """Save data when jumping to another step, e.g. previous step
-
-        By default, jumping to a step does _not_ save the data for the page you are on.
-        We override it to do so as suggested by the docs:
-
-        See https://django-formtools.readthedocs.io/en/latest/wizard.html#formtools.wizard.views.WizardView.render_goto_step
-
-        Inspired by https://stackoverflow.com/a/65099307
-
-        Importantly, it does *not* validate the data when jumping to a step as we
-        want to save the data regardless, e.g. when jumping back to the first page, we want to
-        still save what was entered on the second page.
-
-        (validation *does* happen when you do next/submit)
-        """
-        if self.steps.current != goto_step:
-            """Only save data if we are actually moving steps
-
-            They are the same if we resubmit the "go to step" form
-            e.g. pressing refresh in the browser
-
-            We need to avoid overwriting the storage in that scenario
-            """
-            form = self.get_form(
-                data=self.request.POST,
-                files=self.request.FILES,
-            )
-
-            self.storage.set_step_data(
-                self.storage.current_step, self.process_step(form)
-            )
-            self.storage.set_step_files(
-                self.storage.current_step,
-                self.process_step_files(form),
-            )
-
-        return super().render_goto_step(goto_step, **kwargs)
 
     def done(self, form_list, **kwargs):
         """Merge data from all the forms and save/initialize the river
@@ -538,4 +556,4 @@ class RiverStartWizardView(SessionWizardView):
             user=self.request.user, river=river, starter=True
         )
 
-        return HttpResponseRedirect(reverse_lazy("view_river", args=[river.slug]))
+        return redirect(river)

@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
 from map.markers import case_study_marker, river_marker
+from remix.models import RemixIdea
 from resources.models import CaseStudy, HowTo
 from river.models import River
 
@@ -23,6 +24,11 @@ class MapView(TemplateView):
         markers = []
         for river in rivers:
             marker = river_marker(river)
+            if marker:
+                markers.append(marker)
+
+        for idea in RemixIdea.objects.exclude(location=None):
+            marker = idea.marker
             if marker:
                 markers.append(marker)
 

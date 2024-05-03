@@ -73,7 +73,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     # path('chat_path/<str:uuid>/', chat_view, name='user_chat_path'),
     path(
         "chat/<str:user_path>/",
-        login_required(UserChatView.as_view(template_name="account/user_chat.html")),
+        login_required(UserChatView.as_view()),
         name="user_chat",
     ),
     # path('chat/<str:user_path>/', login_required(message_list), name='user_chat'),

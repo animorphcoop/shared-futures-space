@@ -29,6 +29,16 @@ export interface RemixTransform {
   onRemove: (selected: Object3D[]) => void
 }
 
+/**
+ * Handles the transformations in the three.js scene:
+ * - moving
+ * - rotating
+ * - scaling
+ * - removing
+ *
+ * Responsible for listening for the pointer events, and making the appropriate
+ * transformations.
+ */
 export function useTransform({
   scope,
   objects,

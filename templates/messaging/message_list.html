@@ -9,7 +9,7 @@
         {% if message.sender == system_user %}
             {% include 'messaging/system_message_snippet.html' %}
         {% else %}
-            {% include 'messaging/user_message_snippet.html' %}
+            {% include 'messaging/user_message_snippet.html' with remix_images_for_idea=remix_images_for_idea %}
         {% endif %}
     {% endfor %}
 </div>

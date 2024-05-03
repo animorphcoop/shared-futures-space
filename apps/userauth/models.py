@@ -7,7 +7,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from messaging.models import Chat
+from messaging.models import Chat, new_chat
 
 
 class Organisation(models.Model):
@@ -83,14 +83,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.email}"
-
-
-def new_chat() -> (
-    int
-):  # required because a plain Chat.objects.create or a lambda can't be serialised for migrations :(
-    c = Chat()
-    c.save()
-    return c.id
 
 
 class UserPair(models.Model):

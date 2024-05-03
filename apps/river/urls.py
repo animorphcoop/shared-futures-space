@@ -64,7 +64,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     ),
     path(
         "view/<str:slug>/chat/<str:stage>/<str:topic>/",
-        RiverChatView.as_view(template_name="river_chat.html"),
+        RiverChatView.as_view(),
         name="river_chat",
     ),
     path(

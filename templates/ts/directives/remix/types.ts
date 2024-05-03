@@ -4,11 +4,14 @@ import { Object3D } from "three"
 
 export interface RemixScope {
   loadingCount: number
+  background: string // background image URL
+  scene?: object // starting scene
   modelInfos: ModelInfo[]
   mode: RemixMode
   importScene: (scene: RemixScene) => void
   exportScene: () => RemixScene
-  createSnapshot: () => void
+  exportSnapshot: () => Promise<Blob>
+  exportAll: () => Promise<{ scene: RemixScene; snapshot: Blob }>
   build: {
     action: RemixBuildAction
     objectCount: number
