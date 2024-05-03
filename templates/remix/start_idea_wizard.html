@@ -53,13 +53,23 @@
                     </button>
                 {% endif %}
 
-                <button class="button button-on-white"
-                        hx-post
-                        hx-vars="wizard_save:true"
-                        hx-encoding="multipart/form-data"
-                        hx-select="#start-idea-wizard"
-                        hx-target="#start-idea-wizard"
-                        hx-swap="outerHTML">HTMX save</button>
+                {% comment %}
+                    Special htmx submission when you change a file input.
+
+                    This works with StartIdeaImagesStep to dynamically add
+                    image input fields as needed.
+
+                    I'm not super proud of it, but it works...
+
+                    Feels a bit convoluted to me.
+                {% endcomment %}
+                <div hx-post
+                     hx-vals='{"wizard_save":true}'
+                     hx-encoding="multipart/form-data"
+                     hx-select="#start-idea-wizard"
+                     hx-target="#start-idea-wizard"
+                     hx-swap="outerHTML"
+                     hx-trigger="change from:input[type='file']"></div>
 
                 <a href="?discard"
                    class="button button-on-white">Discard</a>

@@ -1,6 +1,7 @@
 from os.path import basename
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.core.files.base import ContentFile
 
@@ -19,7 +20,8 @@ class HelpStep(forms.Form):
 class StartIdeaLocationStep(forms.ModelForm):
     location = LocationField()
 
-    def __init__(self, *args, current_user=None, **kwargs):
+    def __init__(self, *args, **kwargs):
+        current_user = kwargs.pop("current_user", None)
         super().__init__(*args, **kwargs)
         self.fields["location"].widget.current_user = current_user
 
@@ -50,8 +52,17 @@ class StartIdeaImagesStep(forms.Form):
         super().__init__(*args, **kwargs)
         field_count = min([len(self.files) + 1, self.max_count])
         for i in range(field_count):
-            field_name = self.add_prefix(f"image_{i}")
+            field_name = f"image_{i}"
             self.fields[field_name] = forms.ImageField(required=False, label="")
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # TODO: validate there is at least one image
+        # For some reason when it's called on the final submit it gets
+        # called with no images or files :/ Not sure why...
+        # if len([image for image in cleaned_data.values() if image]) == 0:
+        #     raise ValidationError("Must provide at least one image")
+        return cleaned_data
 
 
 class CreateRemixForm(forms.ModelForm):
