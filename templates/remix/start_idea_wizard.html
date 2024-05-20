@@ -35,7 +35,9 @@
                 {% else %}
                     {% render_field field class="input-text" %}
                 {% endif %}
-                {% include "partials/vertical-spacer.html" with space="9" %}
+                {% if field.field.widget.input_type != 'file' and not forloop.last %}
+                    {% include "partials/vertical-spacer.html" with space="9" %}
+                {% endif %}
             {% endfor %}
 
             {% if wizard.steps.current == "0" %}
@@ -43,7 +45,24 @@
                 <p>Loreum ipsum, etc...</p>
             {% endif %}
 
-            <div class="flex justify-center gap-2">
+            {% if wizard.form.errors %}
+                <div class="text-body bg-red-light p-4 px-6 mb-6">
+                    <div>
+                        {% for field, errors in wizard.form.errors.items %}
+                            <div>
+                                {{ field }}:
+
+                                {% for error in errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+
+            <div class="flex justify-center gap-2 mt-9">
                 {% if wizard.steps.prev %}
                     <button name="wizard_goto_step"
                             type="submit"

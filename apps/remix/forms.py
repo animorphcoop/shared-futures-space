@@ -19,7 +19,7 @@ class HelpStep(forms.Form):
 
 
 class StartIdeaLocationStep(forms.ModelForm):
-    location = LocationField()
+    location = LocationField(marker_type="idea")
 
     def __init__(self, *args, **kwargs):
         current_user = kwargs.pop("current_user", None)

@@ -43,9 +43,12 @@ class LocationInput(MultiWidget):
 
     template_name = "river/widgets/location.html"
 
-    def __init__(self, attrs=None, enable_precision=False, enable_zoom=False):
+    def __init__(
+        self, attrs=None, enable_precision=False, enable_zoom=False, marker_type="river"
+    ):
         self.enable_precision = enable_precision
         self.enable_zoom = enable_zoom
+        self.marker_type = marker_type
         self.current_user = None
 
         super().__init__(
@@ -64,6 +67,7 @@ class LocationInput(MultiWidget):
         context = super().get_context(name, value, attrs)
         context["widget"]["enable_precision"] = self.enable_precision
         context["widget"]["enable_zoom"] = self.enable_zoom
+        context["widget"]["marker_type"] = self.marker_type
         if self.current_user:
             context["widget"]["current_user"] = self.current_user
         return context
