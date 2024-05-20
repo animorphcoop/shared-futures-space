@@ -14,7 +14,7 @@
                     <img src="{{ remix.snapshot.url }}" class="w-full">
                 {% endif %}
                 <div class="absolute bottom-2 right-2">
-                    {% include "remix/partials/create_remix_button.html" with idea_id=object.id remix_id=remix.id %}
+                    {% include "remix/partials/create_remix_button.html" with remix_id=remix.id %}
                 </div>
             </div>
         {% endfor %}

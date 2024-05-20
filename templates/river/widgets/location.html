@@ -23,6 +23,7 @@
 
 <div data-area-center="{{ widget.current_user.post_code.area.location }}"
      data-area-zoom="{{ widget.current_user.post_code.area.zoom }}"
+     data-marker-type="{{ widget.marker_type }}"
      data-point="{{ widget.subwidgets.0.value }}"
      data-exact="{{ widget.subwidgets.1.value.0 }}"
      data-zoom="{{ widget.subwidgets.2.value }}"
@@ -51,7 +52,7 @@
         marker = coords ? {
             coordinates: coords,
             approximate: exact !== 'True',
-            type: 'river'
+            type: $el.dataset.markerType
         } : null
      ">
 

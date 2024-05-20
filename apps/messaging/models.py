@@ -51,6 +51,9 @@ class Message(models.Model):
     context_poll: models.ForeignKey = models.ForeignKey(
         "poll.BasePoll", null=True, on_delete=models.SET_NULL
     )
+    context_remix: models.ForeignKey = models.ForeignKey(
+        "remix.Remix", null=True, on_delete=models.SET_NULL
+    )
 
     @property
     def text_with_links(self) -> str:

@@ -25,11 +25,10 @@ from django.views.generic.edit import ModelFormMixin
 from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
 
 from core.forms import SharedFuturesWizardView
-from core.utils.images import crop_image, ensure_image_field_crop
-from dashboard.forms import AreaForm
+from core.utils.images import ensure_image_field_crop
 from map.markers import idea_marker
 from messaging.models import Message
-from messaging.views import ChatView, ChatUpdateCheck
+from messaging.views import ChatView
 from remix.forms import (
     StartIdeaLocationStep,
     StartIdeaTitleAndDescriptionStep,
@@ -218,7 +217,7 @@ class CreateRemixView(View):
             remix = form.save()
             return redirect(remix)
         # failure is not an option!
-        raise ValidationError("could not create remix!")
+        raise ValidationError(form.errors)
 
 
 class UpdateRemixView(ModelFormMixin, View):
@@ -230,6 +229,14 @@ class UpdateRemixView(ModelFormMixin, View):
         form = self.get_form()
         if form.is_valid():
             remix = form.save()
+
+            # Alo need to post a message to the chat
+            Message.objects.create(
+                chat=remix.idea.chat,
+                sender=remix.user,
+                context_remix=remix,
+            )
+
             return redirect(remix.idea)  # we go back to the idea
         # failure is not an option!
-        raise ValidationError("could not update remix!")
+        raise ValidationError(form.errors)

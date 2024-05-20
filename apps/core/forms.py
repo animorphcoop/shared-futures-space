@@ -18,12 +18,14 @@ class LocationField(MultiValueField):
         self,
         enable_precision=False,
         enable_zoom=False,
+        marker_type="river",
     ):
         super().__init__(
             require_all_fields=False,
             widget=LocationInput(
                 enable_precision=enable_precision,
                 enable_zoom=enable_zoom,
+                marker_type=marker_type,
             ),
             fields=[
                 # co-ordinates

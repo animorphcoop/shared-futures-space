@@ -14,6 +14,15 @@
                     {{ message.text_with_links|safe }}
                 </span>
 
+                {% if message.context_remix %}
+                    <div class="relative">
+                        <img src="{{ message.context_remix.snapshot.url }}" alt="none" class="pt-1.5">
+                        <div class="absolute bottom-2 right-2">
+                            {% include "remix/partials/create_remix_button.html" with remix_id=message.context_remix.id %}
+                        </div>
+                    </div>
+                {% endif %}
+
                 {% if message.image %}
                     <div class="relative">
                         <img src="{{ message.image.url }}" alt="none" class="pt-1.5">

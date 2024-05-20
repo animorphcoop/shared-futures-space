@@ -4,9 +4,10 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.core.files.base import ContentFile
+from django.forms import ModelChoiceField
 
 from core.forms import LocationField
-from core.utils.images import ensure_image_field_crop
+from core.utils.images import ensure_image_field_crop, copy_image_field
 from messaging.models import Message
 from remix.models import RemixIdea, Remix, RemixBackgroundImage
 
@@ -18,7 +19,7 @@ class HelpStep(forms.Form):
 
 
 class StartIdeaLocationStep(forms.ModelForm):
-    location = LocationField()
+    location = LocationField(marker_type="idea")
 
     def __init__(self, *args, **kwargs):
         current_user = kwargs.pop("current_user", None)
@@ -66,6 +67,9 @@ class StartIdeaImagesStep(forms.Form):
 
 
 class CreateRemixForm(forms.ModelForm):
+    # override this to set required=False
+    idea = ModelChoiceField(queryset=RemixIdea.objects, required=False)
+
     # Sources of remix background images are:
 
     # 1. an idea initial background image
@@ -96,8 +100,11 @@ class CreateRemixForm(forms.ModelForm):
         if message := self.cleaned_data.get("message", None):
             remix.background_image = self.copy_background_image_from_message(message)
         if source_remix := self.cleaned_data.get("remix", None):
+            remix.from_remix = source_remix
             remix.scene = source_remix.scene
             remix.background_image = source_remix.background_image
+            if not remix.idea_id:
+                remix.idea = source_remix.idea
 
         if commit:
             remix.save()
@@ -112,15 +119,11 @@ class CreateRemixForm(forms.ModelForm):
             # we can reuse it \o/
             return background_image
 
-        # We have to copy the image
-        # This copies it in memory, good enough for now...
-        copied_image = ContentFile(message.image.file.read())
-        copied_image.name = basename(message.image.name)
-
         background_image = idea.background_images.create(
-            image=copied_image,
+            image=copy_image_field(message.image),
             from_message=message,
         )
+        # messages images might not be the right aspect ratio
         ensure_image_field_crop(background_image.image, 16 / 9)
 
         return background_image
@@ -131,6 +134,7 @@ class CreateRemixForm(forms.ModelForm):
             "idea",
             "background_image",
             "message",
+            "remix",
         )
 
 

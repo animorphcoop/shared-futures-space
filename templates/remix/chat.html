@@ -3,7 +3,7 @@
 {% block content %}
     <div>
         <div id="messages-{{ unique_id }}"
-             class="mx-4.5 max-h-[50vh] overflow-y-auto selected"
+             class="mx-4.5 overflow-y-auto selected"
              x-setup-message-refresh="[`{{ message_count_url }}`, `{{ message_list_url }}`, `messages-{{ unique_id }}`]"
         >
             {% include 'messaging/message_list.html' with remix_images_for_idea=remix_images_for_idea %}
