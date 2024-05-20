@@ -4,8 +4,8 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 
 
-REMIX_MODEL_DIR = f"{settings.MEDIA_URL}remix/models"
-REMIX_MODEL_PNG_DIR = f"{REMIX_MODEL_DIR}/png"
+REMIX_MODEL_URL = f"{settings.MEDIA_URL}remix/models/"
+REMIX_MODEL_PREVIEW_URL = f"{REMIX_MODEL_URL}/png/"
 
 
 def list_three_models():
@@ -19,8 +19,8 @@ def list_three_models():
                 models.append(
                     {
                         "name": name,
-                        "previewUrl": f"{REMIX_MODEL_PNG_DIR}/{name}.png",
-                        "modelUrl": f"{REMIX_MODEL_DIR}/{filename}",
+                        "previewUrl": f"{REMIX_MODEL_PREVIEW_URL}{name}.png",
+                        "modelUrl": f"{REMIX_MODEL_URL}{filename}",
                     }
                 )
     return models
