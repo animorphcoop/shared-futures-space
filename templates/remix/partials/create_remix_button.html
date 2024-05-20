@@ -1,7 +1,9 @@
 <form action="{% url 'create_remix' %}"
       method="post">
     {% csrf_token %}
-    <input type="hidden" name="idea" value="{{ idea_id }}">
+    {% if idea_id %}
+        <input type="hidden" name="idea" value="{{ idea_id }}">
+    {% endif %}
     {% if message_id %}
         <input type="hidden" name="message" value="{{ message_id }}">
     {% endif %}

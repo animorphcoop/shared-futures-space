@@ -59,6 +59,7 @@ class Remix(models.Model):
     )
     scene = models.JSONField(null=True)
     snapshot = models.ImageField(upload_to="remix/snapshots/", blank=True)
+    from_remix = models.ForeignKey("remix.Remix", null=True, on_delete=models.SET_NULL)
 
     def get_absolute_url(self):
         return reverse("remix", kwargs={"uuid": self.uuid})
