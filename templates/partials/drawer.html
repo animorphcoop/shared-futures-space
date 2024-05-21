@@ -1,9 +1,12 @@
 {% load static %}
+{% load custom_filters %}
 
-<div x-data="{selected: $screen.isDesktop ? 1 : null}" class="sticky top-0 bg-white">
+<div data-desktop-open="{{ desktop_open|default_if_none:True|to_json }}"
+     data-mobile-open="{{ mobile_open|default_if_none:False|to_json }}"
+     x-data="{ selected: $screen.isDesktop ? JSON.parse($el.dataset.desktopOpen) : JSON.parse($el.dataset.mobileOpen) }">
     <div class="bg-[linear-gradient(180deg,_#EEF3F4_0%,_#E5F1F8_1%,_#e5f1f800_15.62%)] rounded-t-xl">
         {% if not locked %}
-        <button class="w-full py-4.5 px-4.5" type="button" @click="selected !== 1 ? selected = 1 : selected = null">
+        <button class="w-full py-4.5 px-4.5" type="button" @click="selected = !selected">
             {% else %}
             <button class="w-full py-4.5 px-4.5" type="button">
             {% endif %}
@@ -30,7 +33,7 @@
     <div class="px-4 relative overflow-hidden transition-all max-h-0 duration-700"
         id="{{ id }}"
         x-ref={{ reference }}
-        x-bind:style="selected == 1 ? 'max-height: ' + $refs.{{ reference }}.scrollHeight + 'px' : ''">
+        :style="selected ? 'max-height: ' + $refs.{{ reference }}.scrollHeight + 'px' : ''">
 
         {% block drawer_content %}
         {% endblock %}
