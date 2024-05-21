@@ -5,6 +5,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from map.markers import river_marker
+from remix.models import RemixIdea
 from river.models import River
 
 
@@ -27,6 +28,12 @@ def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
             marker = river_marker(river)
             if marker:
                 markers.append(marker)
+
+        for idea in RemixIdea.objects.exclude(location=None):
+            marker = idea.marker
+            if marker:
+                markers.append(marker)
+
         context = {"markers": markers}
         return render(request, "landing/landing.html", context)
 
