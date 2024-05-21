@@ -82,6 +82,43 @@ button.flickity-page-dot:focus {
     box-shadow: none;
 }
 
+button.flickity-prev-next-button {
+    top: unset;
+    right: unset;
+    @apply bg-white bottom-0.5 absolute
+}
+
+button.flickity-prev-next-button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+button.flickity-prev-next-button svg {
+    display: none;
+}
+
+button.flickity-prev-next-button.previous {
+    @apply left-2
+}
+
+button.flickity-prev-next-button.next {
+    @apply left-[3.6rem]
+}
+
+button.flickity-prev-next-button:before {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button.flickity-prev-next-button.next:before {
+    content: url(../icons/arrow-right.svg)
+}
+
+button.flickity-prev-next-button.previous:before {
+    content: url(../icons/arrow-left.svg)
+}
+
 /* clears the ‘X’ from Internet Explorer */
 input[type=search]::-ms-clear {
     display: none;

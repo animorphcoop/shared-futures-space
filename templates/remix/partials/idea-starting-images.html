@@ -1,9 +1,10 @@
 {% extends "partials/drawer.html" %}
+{% load static %}
 {% load custom_filters %}
 
 {% block drawer_content %}
     {% include "partials/vertical-spacer.html" with space="3" %}
-    <div class="-mx-4.5" data-flickity="{}">
+    <div class="-mx-4.5 relative" data-flickity>
         {% for background_image in initial_background_images %}
             <div class="flex items-center justify-center overflow-hidden w-full">
                 <div class="w-full h-full relative">
