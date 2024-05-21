@@ -41,6 +41,12 @@
                 </button>
                 <button x-show="build.objectCount > 0"
                         class="button button-on-colour"
+                        :class="build.action === 'scale' && 'button-important'"
+                        @click="build.action = 'scale'">
+                    Scale
+                </button>
+                <button x-show="build.objectCount > 0"
+                        class="button button-on-colour"
                         :class="build.action === 'remove' && 'button-important'"
                         @click="build.action = 'remove'">
                     Remove
