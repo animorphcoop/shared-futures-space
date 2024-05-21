@@ -15,6 +15,15 @@
             {% include 'partials/button.html' with url=view_url icon='arrow-right' style='mini' extra_classes="z-10" %}
         </div>
 
+        {% include "partials/vertical-spacer.html" with space="6" %}
+
+        {% if idea.image_url %}
+            <div class="flex items-center justify-center overflow-hidden h-[262px] w-full rounded-[10px_10px_0_0]">
+                <img class="object-cover w-full h-full"
+                     src="{{ idea.image_url }}">
+            </div>
+        {% endif %}
+
         {% include "partials/vertical-spacer.html" with space="4.5" %}
 
         <p class="text-body sm:order-3">{{ idea.description|truncatewords:25 }}</p>

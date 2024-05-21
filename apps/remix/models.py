@@ -30,6 +30,20 @@ class RemixIdea(models.Model):
 
         return idea_marker(self)
 
+    @property
+    def image_url(self):
+        # First preference, a remix snapshot
+        last_remix_with_snapshot = (
+            self.remixes.exclude(snapshot="").order_by("created_at").first()
+        )
+        if last_remix_with_snapshot:
+            return last_remix_with_snapshot.snapshot.url
+
+        # Otherwise, any background image, preference for initial images
+        background_image = self.background_images.order_by("-initial_image").first()
+        if background_image:
+            return background_image.image.url
+
 
 class RemixBackgroundImage(models.Model):
     """A background for the remix scene"""
