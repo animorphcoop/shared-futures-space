@@ -145,7 +145,7 @@ Alpine.directive(
           map.addSource("markers", {
             type: "geojson",
             data: {
-              type: "FeatureCollection",
+              type: "FeatureCollectmion",
               features: [],
             },
           })
@@ -162,6 +162,9 @@ Alpine.directive(
               // 'icon-size': ['interpolate', ['linear'], ['zoom'], 15, 1, 22, 10],
               // This means markers do not fade in
               "icon-allow-overlap": true,
+            },
+            paint: {
+              "icon-opacity": ["get", "opacity"],
             },
           })
 
@@ -210,8 +213,17 @@ Alpine.directive(
       optionsLater(async (value) => {
         const options = value as MapOptions
         current.options = options
-        const { home, center, zoom, markers, types, cursor, padding, autofit } =
-          options
+        const {
+          home,
+          center,
+          zoom,
+          markers,
+          selectedMarker,
+          types,
+          cursor,
+          padding,
+          autofit,
+        } = options
 
         function getMarkers(): MapMarker[] {
           if (!markers) return []
@@ -229,12 +241,7 @@ Alpine.directive(
         let mapCentre = center ?? home?.center ?? markers?.[0].coordinates
 
         // Only move if it actually changed
-        if (
-          mapCentre &&
-          (!current.mapCentre ||
-            mapCentre[0] !== current.mapCentre[0] ||
-            mapCentre[1] !== current.mapCentre[1])
-        ) {
+        if (mapCentre && !coordinatesEqual(mapCentre, current.mapCentre)) {
           current.mapCentre = mapCentre
           const currentZoom = map.getZoom()
           map.flyTo({
@@ -247,7 +254,7 @@ Alpine.directive(
               zoom ?? (DEFAULT_ZOOM > currentZoom ? DEFAULT_ZOOM : currentZoom),
           })
         }
-        drawMarkers(map, getMarkers(), { padding, autofit })
+        drawMarkers(map, getMarkers(), selectedMarker, { padding, autofit })
       })
     })
 
@@ -262,6 +269,7 @@ Alpine.directive(
     function drawMarkers(
       map: maplibregl.Map,
       markers: MapMarker[],
+      selectedMarker?: MapMarker,
       options: { padding?: Padding; autofit?: boolean } = {},
     ) {
       const source = map.getSource("markers") as GeoJSONSource | undefined
@@ -274,6 +282,8 @@ Alpine.directive(
           properties: {
             type: marker.type,
             icon: getMarkerIcon(marker),
+            opacity:
+              selectedMarker && !markerEqual(selectedMarker, marker) ? 0.5 : 1,
             marker: JSON.stringify(marker),
           },
           geometry: {
@@ -304,4 +314,19 @@ function getBounds(markers: MapMarker[]): maplibregl.LngLatBounds {
     bounds.extend(marker.coordinates)
   }
   return bounds
+}
+
+function markerEqual(a?: MapMarker, b?: MapMarker): boolean {
+  if (!a || !b) return false
+  return (
+    a.name === b.name &&
+    a.type === b.type &&
+    a.approximate === b.approximate &&
+    coordinatesEqual(a.coordinates, b.coordinates)
+  )
+}
+
+function coordinatesEqual(a?: MapCoordinates, b?: MapCoordinates): boolean {
+  if (!a || !b) return false
+  return a[0] === b[0] && a[1] === b[1]
 }

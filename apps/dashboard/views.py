@@ -15,6 +15,8 @@ from django.http import (
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
+
+from remix.models import RemixIdea
 from resources.models import Resource, SavedResource
 from river.models import River, RiverMembership
 from task.models import Task
@@ -113,6 +115,8 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         except RiverMembership.DoesNotExist:
             pass
 
+    ideas = RemixIdea.objects.filter(user=request.user)
+
     tasks = Task.objects.filter(
         responsible=request.user,
         done=False,
@@ -132,6 +136,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
 
     context = {
         "rivers": rivers,
+        "ideas": ideas,
         "tasks": tasks,
         "resources": resources,
         "user": request.user,

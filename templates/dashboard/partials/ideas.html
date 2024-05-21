@@ -1,0 +1,23 @@
+{% extends "partials/drawer.html" %}
+{% load static %}
+
+{% block drawer_content %}
+    {% for idea in ideas %}
+        {% url 'remix_idea' idea.uuid as the_url %}
+        <div class="px-3 pb-0 bg-gradient-to-b from-blue-light via-white rounded-t-xl">
+            {% include "partials/vertical-spacer.html" with space="3" %}
+            <a href="{{ the_url }}" class="flex gap-4 justify-between">
+                <h3 class="text-title text-black/55">
+                    {{ idea.title }}
+                </h3>
+                <div class="shrink-0 w-[18px] h-[18px]">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 1L7.59 2.41L13.17 8H1V10H13.17L7.59 15.59L9 17L17 9L9 1Z" fill="#9759FF"/>
+                    </svg>
+                </div>
+            </a>
+            {% include "partials/vertical-spacer.html" with space="2" %}
+        </div>
+    {% endfor %}
+{% endblock %}

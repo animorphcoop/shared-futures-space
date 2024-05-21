@@ -28,6 +28,7 @@
         <div class="col-span-2">
             {% if request.user.post_code.area.name != 'Other' %}
                 {% include "dashboard/partials/rivers.html" with title="Your rivers" reference="rivers" %}
+                {% include "dashboard/partials/ideas.html" with title="Your remix ideas" reference="ideas" %}
             {% else %}
                 <section class="bg-sky">
                     <div class="flex flex-col gap-6 items-center py-9 px-4.5 text-center">

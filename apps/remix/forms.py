@@ -99,12 +99,18 @@ class CreateRemixForm(forms.ModelForm):
 
         if message := self.cleaned_data.get("message", None):
             remix.background_image = self.copy_background_image_from_message(message)
+
         if source_remix := self.cleaned_data.get("remix", None):
             remix.from_remix = source_remix
             remix.scene = source_remix.scene
             remix.background_image = source_remix.background_image
             if not remix.idea_id:
                 remix.idea = source_remix.idea
+
+        if not remix.idea_id and (
+            background_image := self.cleaned_data.get("background_image", None)
+        ):
+            remix.idea = background_image.idea
 
         if commit:
             remix.save()

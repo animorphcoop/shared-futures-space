@@ -1,16 +1,17 @@
 {% extends "partials/drawer.html" %}
+{% load static %}
 {% load custom_filters %}
 
 {% block drawer_content %}
     {% include "partials/vertical-spacer.html" with space="3" %}
     <div class="-mx-4.5 relative" data-flickity>
-        {% for remix in remixes %}
+        {% for background_image in initial_background_images %}
             <div class="flex items-center justify-center overflow-hidden w-full">
                 <div class="w-full h-full relative">
                     <img class="object-cover w-full h-full"
-                         src="{{ remix.snapshot.url }}">
+                         src="{{ background_image.image.url }}">
                     <div class="absolute bottom-2 right-2">
-                        {% include "remix/partials/create_remix_button.html" with remix_id=remix.id %}
+                        {% include "remix/partials/create_remix_button.html" with background_image_id=background_image.id  %}
                     </div>
                 </div>
             </div>

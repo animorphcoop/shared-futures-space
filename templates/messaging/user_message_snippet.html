@@ -15,8 +15,8 @@
                 </span>
 
                 {% if message.context_remix %}
-                    <div class="relative">
-                        <img src="{{ message.context_remix.snapshot.url }}" alt="none" class="pt-1.5">
+                    <div class="relative my-1.5">
+                        <img src="{{ message.context_remix.snapshot.url }}" alt="none" class="w-full">
                         <div class="absolute bottom-2 right-2">
                             {% include "remix/partials/create_remix_button.html" with remix_id=message.context_remix.id %}
                         </div>
@@ -24,8 +24,8 @@
                 {% endif %}
 
                 {% if message.image %}
-                    <div class="relative">
-                        <img src="{{ message.image.url }}" alt="none" class="pt-1.5">
+                    <div class="relative my-1.5">
+                        <img src="{{ message.image.url }}" alt="none" class="w-full">
                         {% if remix_images_for_idea %}
                             <div class="absolute bottom-2 right-2">
                                 {% include "remix/partials/create_remix_button.html" with idea_id=remix_images_for_idea message_id=message.id %}
@@ -33,6 +33,7 @@
                         {% endif %}
                     </div>
                 {% endif %}
+
                 {% if message.file %}
                     <div class="text-right mr-2">
                     <button class="">
@@ -81,9 +82,26 @@
                     {% endif %}
                 </span>
 
-                {% if message.image %}
-                    <img src="{{ message.image.url }}" alt="no image">
+                {% if message.context_remix %}
+                    <div class="relative my-1.5">
+                        <img src="{{ message.context_remix.snapshot.url }}" alt="none" class="w-full">
+                        <div class="absolute bottom-2 right-2">
+                            {% include "remix/partials/create_remix_button.html" with remix_id=message.context_remix.id %}
+                        </div>
+                    </div>
                 {% endif %}
+
+                {% if message.image %}
+                    <div class="relative my-1.5">
+                        <img src="{{ message.image.url }}" alt="none" class="w-full">
+                        {% if remix_images_for_idea %}
+                            <div class="absolute bottom-2 right-2">
+                                {% include "remix/partials/create_remix_button.html" with idea_id=remix_images_for_idea message_id=message.id %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
                 {% if message.file %}
                     <div class="ml-2">
                         <button>

@@ -15,6 +15,7 @@
                 },
                 close () {
                     this.isOpen = false
+                    this.selectedMarker = null
                 },
                 openFilter () {
                     this.isOpen = false
@@ -53,6 +54,7 @@
     <div x-map="{
                     home: {{ home|to_json }},
                     markers: {{ markers|to_json }},
+                    selectedMarker: selectedMarker,
                     types: filterTypes,
                     padding: isOpen ? ($screen.isDesktop ? { left: 360 } : { bottom: cardHeight }) : null,
                     autofit: {{ autofit|to_json }},
@@ -64,3 +66,4 @@
          @click-filter="openFilter()"
          class="absolute w-full h-full z-10">
     </div>
+</div>
