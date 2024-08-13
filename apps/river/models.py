@@ -1,12 +1,11 @@
-from typing import Any, Dict, List, Union, Type
-
-from django.urls import reverse
+from typing import Any, Dict, List, Type, Union
 
 from area.models import Area
 from core.utils.tags_declusterer import tag_cluster_to_list
 from django.contrib.gis.db.models import PointField
 from django.db import models
 from django.templatetags.static import static
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 from messaging.models import Chat, new_chat
@@ -14,11 +13,10 @@ from messaging.util import send_system_message
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
+from poll.models import BasePoll
 from taggit.models import TaggedItemBase
 
 from apps.core.utils.slugifier import generate_random_string
-from poll.models import BasePoll
-
 
 # STAGES
 # stages are defined before projects because projects reference stages

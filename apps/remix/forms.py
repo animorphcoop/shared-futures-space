@@ -1,21 +1,13 @@
-from os.path import basename
-
-from django import forms
-from django.core.exceptions import ValidationError
-from django.core.files import File
-from django.core.files.base import ContentFile
-from django.forms import ModelChoiceField
-
 from core.forms import LocationField
-from core.utils.images import ensure_image_field_crop, copy_image_field
+from core.utils.images import copy_image_field, ensure_image_field_crop
+from django import forms
+from django.forms import ModelChoiceField
 from messaging.models import Message
-from remix.models import RemixIdea, Remix, RemixBackgroundImage
+from remix.models import Remix, RemixBackgroundImage, RemixIdea
 
 
 class HelpStep(forms.Form):
     """Just a step to show the help info"""
-
-    pass
 
 
 class StartIdeaLocationStep(forms.ModelForm):
