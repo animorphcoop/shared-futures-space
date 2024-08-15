@@ -90,7 +90,6 @@ Alpine.directive(
                 if (markers && markers.length > 0) {
                     initialOptions.center = markers?.[0].coordinates ?? DEFAULT_CENTER
                 } else {
-                    console.log("default")
                     initialOptions.center = DEFAULT_CENTER
                 }
 

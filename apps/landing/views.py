@@ -1,6 +1,6 @@
 from typing import Union
 
-from area.models import PostCode
+from area.models import PostCode, Area
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -35,6 +35,17 @@ def landing(request: HttpRequest) -> Union[HttpResponseRedirect, HttpResponse]:
                 markers.append(marker)
 
         context = {"markers": markers}
+
+        # Adding the first available area to the map. If the user is not logged in and
+        # an area with a valid location exists, setting the 'home' context with its coordinates.
+        # this is detected by Alpine directive in map.ts
+        area = Area.objects.exclude(location=None).first()
+        if area:
+            context["home"] = {
+                "center": area.location.coords,
+                "zoom": area.zoom,
+            }
+
         return render(request, "landing/landing.html", context)
 
 
