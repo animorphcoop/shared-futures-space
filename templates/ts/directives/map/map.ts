@@ -11,6 +11,7 @@ import {MAPTILER_STYLE_URL} from "../../settings.ts"
 import {
     FilterControl,
     HomeControl,
+    IdeaCreateControl
 } from "@/templates/ts/directives/map/controls.ts"
 import {
     CurrentOptions,
@@ -114,7 +115,12 @@ Alpine.directive(
                 map.addControl(new FilterControl(), "top-left")
             }
 
+            if (current.options.ideaCreate){
+               map.addControl(new IdeaCreateControl("/remix/create/idea"), "top-left")
+            }
+
             if (current.options.home) {
+
                 map.addControl(new HomeControl(current, DEFAULT_ZOOM), "top-left")
             }
 

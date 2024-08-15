@@ -100,10 +100,6 @@
                     <a href="{% url 'remix_map' %}">Remix</a>
                 </li>
 
-                <li class="p-4 pb-5 {% active_link 'text-purple' 'start_remix_idea' %}">
-                    <a href="{% url 'start_remix_idea' %}">Start Remix</a>
-                </li>
-
                 {% if user.is_authenticated %}
                     <li class="p-4 pb-5 {% active_link 'text-purple' 'account_all_chats' 'user_chat' %}">
                         <a href="{% url 'account_all_chats' %}">Messages</a>

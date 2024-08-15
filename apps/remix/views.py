@@ -45,6 +45,7 @@ class RemixMapView(TemplateView):
                     "center": area.location.coords,
                     "zoom": area.zoom,
                 }
+
         else:
             area = Area.objects.exclude(location=None).first()
             if area:
