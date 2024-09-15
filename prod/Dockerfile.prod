@@ -29,7 +29,7 @@ USER $user
 RUN mkdir $project
 
 # Install requirements in venv
-COPY requirements.txt $project/
+COPY prod/requirements.txt $project/
 ENV VIRTUAL_ENV=$home/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
@@ -38,8 +38,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install -r $project/requirements.txt
 
 # Copy over the code onto the container
-COPY . $project/
+COPY .. $project/
 
 WORKDIR $project
 RUN mkdir -p static media logs
-

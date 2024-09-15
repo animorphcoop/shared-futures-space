@@ -1,20 +1,20 @@
 services:
   app:
     build:
-      context: .
-      dockerfile: Dockerfile.prod
+      context: ..
+      dockerfile: prod/Dockerfile.prod
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
     volumes:
-      - .:/home/app/sfs
+      - ..:/home/app/sfs
     command: >
       sh -c "mkdir -p /home/app/sfs/logs &&
              python3 manage.py wait_for_db &&
              python3 manage.py makemigrations --no-input &&
              python3 manage.py migrate --no-input &&
              python3 manage.py collectstatic --noinput &&
-             uwsgi --ini uwsgi.ini"
+             uwsgi --ini prod/uwsgi.ini"
     ports:
       - "9000:9000"
     env_file:
@@ -47,8 +47,8 @@ services:
   celery:
     restart: always
     build:
-      context: .
-      dockerfile: Dockerfile.prod
+      context: ..
+      dockerfile: prod/Dockerfile.prod
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
@@ -56,7 +56,7 @@ services:
     env_file:
       - .env.prod
     volumes:
-      - .:/home/app/sfs
+      - ..:/home/app/sfs
     depends_on:
       - db_pg
       - redis
