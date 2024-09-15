@@ -1,0 +1,45 @@
+# Dockerfile.prod
+FROM python:3.9
+ENV PYTHONUNBUFFERED 1
+
+# Install necessary dependencies
+RUN apt-get update \
+    && apt-get install -y ca-certificates curl gnupg binutils libproj-dev gdal-bin geos-bin \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+
+# App user variables
+ARG user=app
+ARG group=docker
+ARG home=/home/$user
+ARG project=$home/sfs
+
+# Import from docker-compose - receive the current host user and their main group IDs
+ARG USERID
+ARG GROUPID
+
+# Create group and user with home directory
+RUN addgroup --gid $GROUPID $group
+RUN adduser -u $USERID --ingroup $group --home $home --disabled-password $user
+
+# Switch to new user
+USER $user
+
+# Create directory
+RUN mkdir $project
+
+# Install requirements in venv
+COPY requirements.txt $project/
+ENV VIRTUAL_ENV=$home/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Install requirements
+RUN pip install -r $project/requirements.txt
+
+# Copy over the code onto the container
+COPY . $project/
+
+WORKDIR $project
+RUN mkdir -p static media logs
+

@@ -22,6 +22,7 @@ ansible/envs/*.envrc
 
 # Environments
 .env
+.env.prod
 .venv
 env/
 venv/
