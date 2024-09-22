@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: .
+      context: ..
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
@@ -47,7 +47,7 @@ services:
   celery:
     restart: always
     build:
-      context: .
+      context: ..
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID

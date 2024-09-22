@@ -18,8 +18,9 @@ and Docker Compose to setup a development environment.
 
 First, we need to setup some environment variables:
 
-1. Run `cp .env.example .env`
-1. Edit `.env` with your settings and password
+1. Run `cp .env.example dev/.env`
+2. Enter `dev` directory as this will be the default directory
+3. Edit `.env` with your settings and password
 
 Continue with Docker section below.
 
@@ -160,10 +161,10 @@ Fill a development database with demo content:
 docker compose exec app python3 manage.py loaddevdata autoupload/avatars.json
 
 # load all data: avatars, areas, resources, organisations, users
-docker compose exec app python3 manage.py loaddevdata autoupload/devdata.json
+docker compose exec app python3 manage.py loaddevdata dev/autoupload/devdata.json
 ```
 
-Have a look at `devdata/devdata.json` for some user accounts you can log in as.
+Have a look at `dev/autoupload/devdata.json` for some user accounts you can log in as.
 
 ## Deployment
 

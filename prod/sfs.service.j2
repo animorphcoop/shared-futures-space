@@ -1,0 +1,14 @@
+[Unit]
+Description=Shared Futures Space
+After=network.target
+
+[Service]
+User={{ production_user }}
+Group={{ production_user }}
+WorkingDirectory={{ project_dir }}
+ExecStart=/usr/bin/docker compose {{ project_dir }}/docker-compose.prod.yml up -d
+ExecStop=/usr/bin/docker compose {{ project_dir }}/docker-compose.prod.yml down
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

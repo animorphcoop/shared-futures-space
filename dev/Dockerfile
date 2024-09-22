@@ -28,7 +28,7 @@ USER $user
 RUN mkdir $project
 
 # install requirements in venv
-COPY requirements.txt $project/
+COPY ../prod/requirements.txt $project/
 ENV VIRTUAL_ENV=$home/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
@@ -41,7 +41,7 @@ COPY requirements_dev.txt $project/
 RUN pip install -r $project/requirements_dev.txt
 
 # copy over the code onto the container
-COPY . $project/
+COPY .. $project/
 
 # come back as root to clean up
 USER root
