@@ -1,0 +1,279 @@
+---
+- name: Setup Shared Futures on Debian 12
+  hosts: local
+  become: yes
+  vars_files:
+    - vault.yml
+  vars:
+    production_user: production
+    project_dir: /home/production/sites/shared-futures-space
+    env_file_path: /home/production/sites/shared-futures-space/prod/.env.prod
+    docker_gpg_key_url: https://download.docker.com/linux/debian/gpg
+    docker_repo_url: https://download.docker.com/linux/debian
+
+  tasks:
+    - name: Create production user
+      user:
+        name: "{{ production_user }}"
+        shell: /bin/bash
+        groups: sudo
+        append: yes
+        create_home: yes
+
+    - name: Set password for production user
+      user:
+        name: "{{ production_user }}"
+        password: "{{ production_password | password_hash('sha512') }}"
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install necessary packages for Docker
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+        state: present
+
+    - name: Create directory for Docker GPG key
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker GPG key
+      ansible.builtin.get_url:
+        url: "{{ docker_gpg_key_url }}"
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+
+    - name: Add Docker repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] {{ docker_repo_url }} {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Update apt cache after adding Docker repository
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install Docker packages
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+
+    - name: Add production user to docker group
+      user:
+        name: "{{ production_user }}"
+        groups: docker
+        append: yes
+
+    - name: Refresh group membership
+      ansible.builtin.shell: newgrp docker
+      become: no
+
+    - name: Install Caddy dependencies
+      ansible.builtin.apt:
+        name:
+          - debian-keyring
+          - debian-archive-keyring
+          - apt-transport-https
+          - curl
+        state: present
+        update_cache: yes
+
+    - name: Add Caddy GPG key
+      ansible.builtin.shell: |
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+      args:
+        creates: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+      register: add_caddy_gpg_key_result
+      failed_when: add_caddy_gpg_key_result.rc != 0
+
+    - name: Debug Add Caddy GPG key result
+      ansible.builtin.debug:
+        var: add_caddy_gpg_key_result
+
+    - name: Add Caddy GPG key to APT keyring
+      ansible.builtin.shell: |
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABA1F9B8875A6661
+      register: add_caddy_gpg_key_to_apt_result
+      failed_when: add_caddy_gpg_key_to_apt_result.rc != 0
+
+    - name: Debug Add Caddy GPG key to APT keyring result
+      ansible.builtin.debug:
+        var: add_caddy_gpg_key_to_apt_result
+
+    - name: Add Caddy APT repository
+      ansible.builtin.shell: |
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+      register: add_caddy_repo_result
+      failed_when: add_caddy_repo_result.rc != 0
+
+    - name: Debug Add Caddy repository result
+      ansible.builtin.debug:
+        var: add_caddy_repo_result
+
+    - name: Update apt cache after adding Caddy repository
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install Caddy
+      ansible.builtin.apt:
+        name: caddy
+        state: present
+
+    - name: Create project directory
+      file:
+        path: "{{ project_dir }}"
+        state: directory
+        owner: "{{ production_user }}"
+        group: "{{ production_user }}"
+        mode: '0755'
+
+    - name: Add directory to Git safe directories
+      ansible.builtin.shell: |
+        git config --global --add safe.directory "{{ project_dir }}"
+      become: no
+
+    - name: Clone the repository
+      ansible.builtin.git:
+        repo: https://github.com/animorphcoop/shared-futures-space.git
+        dest: "{{ project_dir }}"
+        version: production
+        accept_hostkey: yes
+        force: yes
+
+    - name: Install nvm
+      become_user: "{{ production_user }}"
+      shell: |
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+      args:
+        executable: /bin/bash
+
+    - name: Source nvm script
+      become_user: "{{ production_user }}"
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+      args:
+        executable: /bin/bash
+
+    - name: Install Node.js via nvm
+      become_user: "{{ production_user }}"
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm install 18
+      args:
+        executable: /bin/bash
+
+    - name: Ensure project directory ownership
+      ansible.builtin.file:
+        path: "{{ project_dir }}"
+        owner: "{{ production_user }}"
+        group: "{{ production_user }}"
+        recurse: yes
+
+    - name: Install frontend dependencies
+      become_user: "{{ production_user }}"
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        npm install
+      args:
+        chdir: "{{ project_dir }}"
+        executable: /bin/bash
+
+    - name: Build frontend assets
+      become_user: "{{ production_user }}"
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        npm run build
+      args:
+        chdir: "{{ project_dir }}"
+        executable: /bin/bash
+
+    - name: Copy the example environment file
+      copy:
+        src: "{{ project_dir }}/.env.example"
+        dest: "{{ env_file_path }}"
+        owner: "{{ production_user }}"
+        group: "{{ production_user }}"
+        mode: '0644'
+
+    - name: Set environment variables from vault
+      lineinfile:
+        path: "{{ env_file_path }}"
+        regexp: "^{{ item.key }}=.*"
+        line: "{{ item.key }}={{ item.value }}"
+      with_dict: "{{ env_vars }}"
+
+    - name: Copy and template Caddyfile from prod directory
+      template:
+        src: "{{ project_dir }}/prod/Caddyfile.j2"
+        dest: /etc/caddy/Caddyfile
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Format Caddyfile
+      command: caddy fmt --overwrite /etc/caddy/Caddyfile
+
+    - name: Stop and disable default Caddy service
+      systemd:
+        name: caddy
+        state: stopped
+        enabled: no
+
+    - name: Enable and start Caddy service
+      systemd:
+        name: caddy
+        state: started
+        enabled: yes
+
+    - name: Get user ID and group ID
+      become_user: "{{ production_user }}"
+      shell: |
+        echo "USER_ID=$(id -u)"
+        echo "GROUP_ID=$(id -g)"
+      register: user_info
+      changed_when: false
+
+    - name: Set user ID and group ID as facts
+      set_fact:
+        user_id: "{{ user_info.stdout_lines[0].split('=')[1] }}"
+        group_id: "{{ user_info.stdout_lines[1].split('=')[1] }}"
+
+    - name: Build and run Docker containers
+      become_user: "{{ production_user }}"
+      command: docker compose -f docker-compose.prod.yaml up -d --build
+      args:
+        chdir: "{{ project_dir }}/prod"
+      environment:
+        USER_ID: "{{ user_id }}"
+        GROUP_ID: "{{ group_id }}"
+
+    - name: Copy and template Systemd service file for Docker from prod directory
+      template:
+        src: "{{ project_dir }}/prod/sfs.service.j2"
+        dest: /etc/systemd/system/sfs.service
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload Systemd, enable, and start the services
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      with_items:
+        - sfs

@@ -1,7 +1,7 @@
 from os.path import basename
-from typing import Optional
-from PIL import Image
+
 from django.core.files.base import ContentFile
+from PIL import Image
 
 
 def ensure_image_field_crop(image_field, target_aspect_ratio: float):

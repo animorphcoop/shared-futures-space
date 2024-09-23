@@ -45,9 +45,6 @@ export default defineConfig({
 
                    .. and vite_asset reads from there.
 
-                   It *might* be that it's just fine loading them all
-                   like this though :)
-
                  */
                 globSync('templates/**/*.ts').map(filename =>
                     [filename.replace(/\.ts$/, ''), filename]

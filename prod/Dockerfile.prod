@@ -1,51 +1,44 @@
+# Dockerfile.prod
 FROM python:3.9
 ENV PYTHONUNBUFFERED 1
 
-# install node
+# Install necessary dependencies
 RUN apt-get update \
     && apt-get install -y ca-certificates curl gnupg binutils libproj-dev gdal-bin geos-bin \
     && mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 
-# app user variables
+# App user variables
 ARG user=app
 ARG group=docker
 ARG home=/home/$user
 ARG project=$home/sfs
 
-# import from docker-compose - receive the current host user and their main group IDs
+# Import from docker-compose - receive the current host user and their main group IDs
 ARG USERID
 ARG GROUPID
 
-# create group and user with home directory
+# Create group and user with home directory
 RUN addgroup --gid $GROUPID $group
 RUN adduser -u $USERID --ingroup $group --home $home --disabled-password $user
 
-# switch to new user
+# Switch to new user
 USER $user
 
-# create directory
+# Create directory
 RUN mkdir $project
 
-# install requirements in venv
-COPY requirements.txt $project/
+# Install requirements in venv
+COPY prod/requirements.txt $project/
 ENV VIRTUAL_ENV=$home/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# install requirements
+# Install requirements
 RUN pip install -r $project/requirements.txt
 
-# install dev requirements
-COPY requirements_dev.txt $project/
-RUN pip install -r $project/requirements_dev.txt
+# Copy over the code onto the container
+COPY .. $project/
 
-# copy over the code onto the container
-COPY . $project/
-
-# come back as root to clean up
-USER root
-
-# all future commands should run as the user in river directory
-USER $user
 WORKDIR $project
+RUN mkdir -p static media logs

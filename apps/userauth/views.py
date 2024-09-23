@@ -52,7 +52,7 @@ from userauth.forms import (
 )
 from userauth.models import Block, CustomUser, Organisation, UserAvatar, UserPair
 from userauth.tasks import send_after
-from userauth.util import get_userpair, slug_to_user, user_to_slug, get_system_user
+from userauth.util import get_system_user, get_userpair, slug_to_user, user_to_slug
 
 
 # redirecting to the profile url using the request data

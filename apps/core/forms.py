@@ -1,11 +1,10 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
-from formtools.wizard.views import SessionWizardView
-
 from core.widgets import LocationInput, PrecisionRadioSelect
 from django import forms
 from django.contrib.gis.forms import PointField
 from django.forms import MultiValueField
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from formtools.wizard.views import SessionWizardView
 
 
 class LocationField(MultiValueField):

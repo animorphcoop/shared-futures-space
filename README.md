@@ -16,23 +16,23 @@ and Docker Compose to setup a development environment.
 
 ### Environment
 
-First, we need to setup some environment variables:
+First, we need to setup the environment variables:
 
-1. Run `cp .env.example .env`
-1. Edit `.env` with your settings and password
+1. Run `cp .env.example dev/.env`
+2. Edit `dev/.env` with your settings and keys
 
 Continue with Docker section below.
 
 ### Docker
 
-This will start the stack in dev mode, though without frontend assets.
+This will start the codebase in dev mode, though without frontend assets.
 After this, continue in the section below to setup styles and JavaScript.
 
 Linux & MINGW64 on Windows:
 
 ```sh
 # build containers
-USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker compose up --build
+USER_ID=$(id -u) GROUP_ID=$(id -g $whoami) docker compose -f dev/docker-compose.yaml up --build
 ```
 
 macOS:
@@ -40,13 +40,13 @@ macOS:
 ```sh
 # Mac has obfuscated groups for Docker, so we use user ID
 # for Dockerfile group instead of group ID
-USER_ID=$(id -u) GROUP_ID=$(id -u) docker compose up --build
+USER_ID=$(id -u) GROUP_ID=$(id -u) docker compose -f dev/docker-compose.yaml up --build
 ```
 
 Windows (running Linux containers):
 
 ```sh
-USER_ID=$(1000) GROUP_ID=$(1000) docker compose up --build
+USER_ID=$(1000) GROUP_ID=$(1000) docker compose -f dev/docker-compose.yaml up --build
 ```
 
 ### TypeScript
@@ -67,8 +67,9 @@ npm run dev
 
 (or `make watch` will also run the same thing)
 
-This will start a server that’s only serving static files. To see the app
-locally go to http://127.0.0.1:9000
+This will start a server that’s only serving static files. 
+
+Now your development instance (given you have started docker containers) is up and running! To see the app locally go to **http://127.0.0.1:9000**
 
 #### Building assets for production
 
@@ -97,115 +98,63 @@ The built files will be served as normal django static assets.
 Enter shell:
 
 ```sh
-docker compose exec app sh
+docker compose -f dev/docker-compose.yaml exec app sh
 ```
 
 Run Django-related administrative commands:
 
 ```sh
-docker compose exec app django-admin startapp healerapp
+docker compose exec -f dev/docker-compose.yaml app django-admin startapp healerapp
 # OR
-docker compose exec app python3 manage.py startapp healerapp
+docker compose exec -f dev/docker-compose.yaml app python3 manage.py startapp healerapp
 ```
 
 Create superuser:
 
 ```sh
-docker compose exec app python3 manage.py createsuperuser
+docker compose -f dev/docker-compose.yaml exec app python3 manage.py createsuperuser
 ```
 
 Collect static:
 
 ```sh
-docker compose exec app python3 manage.py collectstatic
+docker compose -f dev/docker-compose.yaml exec app python3 manage.py collectstatic
 ```
 
 Migrations:
 
 ```sh
-docker compose exec app python3 manage.py makemigrations && docker compose exec app python3 manage.py migrate
+docker compose -f dev/docker-compose.yaml exec app python3 manage.py makemigrations && docker compose  -f dev/docker-compose.yaml exec app python3 manage.py migrate
 ```
 
 Running Tests:
 
 ```sh
 # all tests
-docker compose exec app pytest tests
+docker compose -f dev/docker-compose.yaml exec app pytest tests
 
 # a specific one
-docker compose exec app pytest tests/test_account.py
+docker compose -f dev/docker-compose.yaml exec app pytest tests/test_account.py
 # add `-s` flag to display output
-docker compose exec app pytest -s tests/test_account.py
+docker compose -f dev/docker-compose.yaml exec app pytest -s tests/test_account.py
 ```
 
 Python black code formatting:
 
 ```sh
-docker compose exec -it app make format
-docker compose run --rm app make format
+docker compose -f dev/docker-compose.yaml exec -it app make format
+docker compose -f dev/docker-compose.yaml run --rm app make format
 ```
 
 Python code linting:
 
 ```sh
-docker compose exec -it app make lint
+docker compose -f dev/docker-compose.yaml exec -it app make lint
 ```
-
-## Development data
-
-Fill a development database with demo content:
-
-```sh
-# load avatar data
-docker compose exec app python3 manage.py loaddevdata autoupload/avatars.json
-
-# load all data: avatars, areas, resources, organisations, users
-docker compose exec app python3 manage.py loaddevdata autoupload/devdata.json
-```
-
-Have a look at `devdata/devdata.json` for some user accounts you can log in as.
 
 ## Deployment
 
-Deploy your own instance of Shared Futures in 7 simple steps!
-
-We use [Ansible](https://docs.ansible.com/ansible/latest/) to provision
-production machines. To setup:
-
-1. Get a Debian 11 (bullseye) machine and its IP address.
-
-2. Get a domain name and configure its DNS with the machine’s IP address.
-
-3. Install ansible:
-
-```sh
-cd ansible/
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-4. Run `cp envs/example.envrc envs/production.envrc` while inside the `ansible/` directory.
-
-5. Edit `envs/production.envrc` with IP, domain name, and other settings.
-
-6. Verify acquiring SSH access has worked:
-
-```sh
-source envs/production.envrc
-ansible all -m ping
-ansible-inventory --list
-```
-
-7. Run the ansible playbook with:
-
-```sh
-ansible-playbook playbooks/base.yaml --verbose
-ansible-playbook playbooks/production.yaml --verbose
-```
-
-You should now be able to access your Shared Future Space instance at your
-domain name!
+Find all the relevant information in `prod/DEPLOYMENT.md`
 
 ## Resources and notes
 

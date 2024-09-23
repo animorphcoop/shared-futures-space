@@ -1,0 +1,13 @@
+{{ env_vars.DOMAIN_NAME }}:443 {
+    route {
+        file_server /static/* {
+            root {{ project_dir }}
+        }
+        file_server /media/* {
+            root {{ project_dir }}
+        }
+        reverse_proxy 127.0.0.1:9000
+    }
+
+    tls {{ env_vars.EMAIL_HOST_USER }}
+}

@@ -14,20 +14,19 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import QueryDict
-from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic.base import ContextMixin, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
-from formtools.wizard.views import SessionWizardView
 from messaging.forms import ChatForm
-from messaging.models import Message, Chat
+from messaging.models import Message
 from messaging.util import send_system_message
 from messaging.views import ChatUpdateCheck, ChatView
 from poll.models import SingleChoicePoll
 from resources.models import CaseStudy, HowTo
-from userauth.util import get_userpair, get_system_user
+from userauth.util import get_system_user, get_userpair
 
 from .forms import (
     CreateRiverFormStep1,

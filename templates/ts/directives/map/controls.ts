@@ -1,6 +1,7 @@
 import { Map, IControl } from "maplibre-gl"
 import filterSVG from "@/templates/ts/directives/map/filter.svg"
 import homeSVG from "@/templates/ts/directives/map/home.svg"
+import addSVG from "@/templates/ts/directives/map/add.svg"
 import { CurrentOptions } from "@/templates/ts/directives/map/types.ts"
 
 export class FilterControl implements IControl {
@@ -75,3 +76,44 @@ export class HomeControl implements IControl {
         this.el?.remove()
     }
 }
+
+
+export class IdeaCreateControl implements IControl {
+    el?: HTMLDivElement;
+    redirectUrl: string;
+
+    constructor(redirectUrl: string) {
+        this.redirectUrl = redirectUrl;
+    }
+
+
+    onAdd(map: Map) {
+        const div = document.createElement('div')
+        console.log(map)
+        div.classList.add('maplibregl-ctrl')
+
+        const button = document.createElement('button')
+        button.classList.add('button', 'button-on-colour')
+
+        button.addEventListener('click', event => {
+            event.stopPropagation()
+            event.preventDefault()
+            window.location.href = this.redirectUrl;
+        })
+
+        const icon = document.createElement('img')
+        icon.src = addSVG
+
+        button.appendChild(icon)
+        div.appendChild(button)
+
+        this.el = div
+        return this.el
+    }
+
+    onRemove() {
+        this.el?.remove()
+    }
+}
+
+

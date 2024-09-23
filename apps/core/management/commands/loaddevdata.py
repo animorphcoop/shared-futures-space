@@ -12,7 +12,7 @@ from userauth.models import CustomUser, Organisation, UserAvatar
 from wagtail.images.models import Image
 from wagtail.rich_text import RichText
 
-DATA_DIR = "autoupload/"
+DATA_DIR = "dev/autoupload/"
 
 
 def add_resources(resource_data):

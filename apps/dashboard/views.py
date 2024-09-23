@@ -15,7 +15,6 @@ from django.http import (
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
-
 from remix.models import RemixIdea
 from resources.models import Resource, SavedResource
 from river.models import River, RiverMembership

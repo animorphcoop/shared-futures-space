@@ -1,46 +1,34 @@
 import os
-from os.path import isdir, splitext
-
-
-from PIL import Image
-
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
-from django.core.files.storage import default_storage, FileSystemStorage
-from django import forms
-from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse
-from django.views import View
-from django.views.generic import (
-    TemplateView,
-    FormView,
-    CreateView,
-    DetailView,
-    UpdateView,
-)
-from django.views.generic.edit import ModelFormMixin
-from formtools.wizard.views import SessionWizardView, NamedUrlSessionWizardView
 
 from core.forms import SharedFuturesWizardView
 from core.utils.images import ensure_image_field_crop
+from django.core.exceptions import ValidationError
+from django.core.files.storage import FileSystemStorage
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django.views import View
+from django.views.generic import DetailView, TemplateView
+from django.views.generic.edit import ModelFormMixin
 from map.markers import idea_marker
 from messaging.models import Message
 from messaging.views import ChatView
 from remix.forms import (
+    CreateRemixForm,
+    HelpStep,
+    StartIdeaImagesStep,
     StartIdeaLocationStep,
     StartIdeaTitleAndDescriptionStep,
-    StartIdeaImagesStep,
-    CreateRemixForm,
     UpdateRemixForm,
-    HelpStep,
 )
-from remix.models import RemixIdea, RemixBackgroundImage, Remix
+from remix.models import Remix, RemixBackgroundImage, RemixIdea
+from area.models import Area
+
 from remix.three_models import list_three_models
-from sfs import settings
 from userauth.util import get_system_user
+
+from sfs import settings
 
 
 class RemixMapView(TemplateView):
@@ -57,6 +45,15 @@ class RemixMapView(TemplateView):
                     "center": area.location.coords,
                     "zoom": area.zoom,
                 }
+
+        else:
+            area = Area.objects.exclude(location=None).first()
+            if area:
+                context["home"] = {
+                    "center": area.location.coords,
+                    "zoom": area.zoom,
+                }
+
 
         ideas = RemixIdea.objects.all()
 

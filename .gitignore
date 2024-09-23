@@ -21,7 +21,8 @@ ansible/envs/*.envrc
 !ansible/envs/example.envrc
 
 # Environments
-.env
+dev/.env
+prod/.env.prod
 .venv
 env/
 venv/

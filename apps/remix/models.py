@@ -1,13 +1,9 @@
 from uuid import uuid4
 
-from django.utils import timezone
 from django.contrib.gis.db.models import PointField
 from django.db import models
-from django.db.models.fields import UUIDField, CharField
-from django.db.models.fields.files import ImageField
-from django.db.models.fields.related import ForeignKey
 from django.urls import reverse
-
+from django.utils import timezone
 from messaging.models import Chat, new_chat
 
 

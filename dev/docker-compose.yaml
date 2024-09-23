@@ -1,14 +1,13 @@
-version: '3'
-
 services:
   app:
     build:
-      context: .
+      context: ..
+      dockerfile: dev/Dockerfile
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
     volumes:
-      - .:/home/app/sfs
+      - ..:/home/app/sfs
     command: >
         sh -c "python3 manage.py wait_for_db &&
              python3 manage.py makemigrations --no-input &&
@@ -49,7 +48,8 @@ services:
   celery:
     restart: always
     build:
-      context: .
+      context: ..
+      dockerfile: dev/Dockerfile
       args:
         USERID: $USER_ID
         GROUPID: $GROUP_ID
@@ -57,7 +57,7 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/home/app/sfs
+      - ..:/home/app/sfs
     depends_on:
       - db_pg
       - redis

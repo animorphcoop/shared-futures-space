@@ -1,0 +1,66 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: prod/Dockerfile.prod
+      args:
+        USERID: $USER_ID
+        GROUPID: $GROUP_ID
+    volumes:
+      - ..:/home/app/sfs
+    command: >
+      sh -c "mkdir -p /home/app/sfs/logs &&
+             python3 manage.py wait_for_db &&
+             python3 manage.py makemigrations --no-input &&
+             python3 manage.py migrate --no-input &&
+             python3 manage.py collectstatic --noinput &&
+             uwsgi --ini prod/uwsgi.ini"
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env.prod
+    depends_on:
+      - db_pg
+
+  db_pg:
+    image: postgis/postgis:12-3.4-alpine
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env.prod
+
+  redis-overcommit:
+    build: https://github.com/bkuhl/redis-overcommit-on-host.git
+    restart: 'no'
+    privileged: true
+    volumes:
+      - /proc/sys/vm:/mnt/vm
+
+  redis:
+    image: redis:6.2.6-alpine
+    depends_on:
+      - redis-overcommit
+
+  celery:
+    restart: always
+    build:
+      context: ..
+      dockerfile: prod/Dockerfile.prod
+      args:
+        USERID: $USER_ID
+        GROUPID: $GROUP_ID
+    command: bash -c "celery -A sfs worker -B -l info"
+    env_file:
+      - .env.prod
+    volumes:
+      - ..:/home/app/sfs
+    depends_on:
+      - db_pg
+      - redis
+      - app
+
+volumes:
+  dbdata:

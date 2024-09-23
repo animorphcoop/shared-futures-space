@@ -28,6 +28,7 @@ export interface MapOptions {
   padding?: Padding
   autofit?: boolean
   filterControl?: boolean
+  ideaCreate?: boolean
   // Zooming on scroll can be annoying on more
   // content-like pages
   disableScrollZoom?: boolean

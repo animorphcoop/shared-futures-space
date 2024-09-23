@@ -1,5 +1,4 @@
 from django.template.loader import render_to_string
-
 from remix.models import RemixIdea
 from resources.models import CaseStudy, HowTo
 from river.models import River
