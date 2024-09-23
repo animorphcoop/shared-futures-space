@@ -1,14 +1,19 @@
 [Unit]
 Description=Shared Futures Space
-After=network.target
+After=network.target docker.service
+Requires=docker.service
 
 [Service]
+Type=simple
+RemainAfterExit=yes
 User={{ production_user }}
 Group={{ production_user }}
-WorkingDirectory={{ project_dir }}
-ExecStart=/usr/bin/docker compose {{ project_dir }}/docker-compose.prod.yml up -d
-ExecStop=/usr/bin/docker compose {{ project_dir }}/docker-compose.prod.yml down
-Restart=always
+WorkingDirectory={{ project_dir }}/prod
+ExecStart=/usr/bin/docker compose -f {{ project_dir }}/prod/docker-compose.prod.yaml up -d
+ExecStop=/usr/bin/docker compose -f {{ project_dir }}/prod/docker-compose.prod.yaml down
+TimeoutStartSec=0
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

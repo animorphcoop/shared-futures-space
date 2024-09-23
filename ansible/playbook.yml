@@ -8,6 +8,8 @@
     production_user: production
     project_dir: /home/production/sites/shared-futures-space
     env_file_path: /home/production/sites/shared-futures-space/prod/.env.prod
+    docker_gpg_key_url: https://download.docker.com/linux/debian/gpg
+    docker_repo_url: https://download.docker.com/linux/debian
 
   tasks:
     - name: Create production user
@@ -41,25 +43,15 @@
         mode: '0755'
 
     - name: Add Docker GPG key
-      ansible.builtin.shell: |
-        curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-        chmod a+r /etc/apt/keyrings/docker.asc
-      register: add_gpg_key_result
-      failed_when: add_gpg_key_result.rc != 0
-
-    - name: Debug Add Docker GPG key result
-      ansible.builtin.debug:
-        var: add_gpg_key_result
+      ansible.builtin.get_url:
+        url: "{{ docker_gpg_key_url }}"
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
 
     - name: Add Docker repository
-      ansible.builtin.shell: |
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-      register: add_repo_result
-      failed_when: add_repo_result.rc != 0
-
-    - name: Debug Add Docker repository result
-      ansible.builtin.debug:
-        var: add_repo_result
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] {{ docker_repo_url }} {{ ansible_distribution_release }} stable"
+        state: present
 
     - name: Update apt cache after adding Docker repository
       ansible.builtin.apt:
@@ -80,7 +72,6 @@
         name: "{{ production_user }}"
         groups: docker
         append: yes
-
 
     - name: Refresh group membership
       ansible.builtin.shell: newgrp docker
@@ -107,6 +98,16 @@
     - name: Debug Add Caddy GPG key result
       ansible.builtin.debug:
         var: add_caddy_gpg_key_result
+
+    - name: Add Caddy GPG key to APT keyring
+      ansible.builtin.shell: |
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABA1F9B8875A6661
+      register: add_caddy_gpg_key_to_apt_result
+      failed_when: add_caddy_gpg_key_to_apt_result.rc != 0
+
+    - name: Debug Add Caddy GPG key to APT keyring result
+      ansible.builtin.debug:
+        var: add_caddy_gpg_key_to_apt_result
 
     - name: Add Caddy APT repository
       ansible.builtin.shell: |
@@ -268,14 +269,6 @@
         group: root
         mode: '0644'
 
-    - name: Copy and template Systemd service file for uWSGI from prod directory
-      template:
-        src: "{{ project_dir }}/prod/uwsgi.service.j2"
-        dest: /etc/systemd/system/uwsgi.service
-        owner: root
-        group: root
-        mode: '0644'
-
     - name: Reload Systemd, enable, and start the services
       systemd:
         name: "{{ item }}"
@@ -284,4 +277,3 @@
         daemon_reload: yes
       with_items:
         - sfs
-        - uwsgi
