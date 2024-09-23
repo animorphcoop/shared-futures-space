@@ -136,6 +136,11 @@
         group: "{{ production_user }}"
         mode: '0755'
 
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
     - name: Add directory to Git safe directories
       ansible.builtin.shell: |
         git config --global --add safe.directory "{{ project_dir }}"
