@@ -145,7 +145,7 @@
       ansible.builtin.git:
         repo: https://github.com/animorphcoop/shared-futures-space.git
         dest: "{{ project_dir }}"
-        version: rewire-deployment-docker
+        version: production
         accept_hostkey: yes
         force: yes
 
