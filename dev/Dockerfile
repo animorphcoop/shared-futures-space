@@ -37,15 +37,10 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install -r $project/requirements.txt
 
 # install dev requirements
-COPY requirements_dev.txt $project/
+COPY dev/requirements_dev.txt $project/
 RUN pip install -r $project/requirements_dev.txt
 
 # copy over the code onto the container
 COPY .. $project/
 
-# come back as root to clean up
-USER root
-
-# all future commands should run as the user in river directory
-USER $user
 WORKDIR $project

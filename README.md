@@ -67,8 +67,9 @@ npm run dev
 
 (or `make watch` will also run the same thing)
 
-This will start a server that’s only serving static files. To see the app
-locally go to http://127.0.0.1:9000
+This will start a server that’s only serving static files. 
+
+Now your development instance (given you have started docker containers) is up and running! To see the app locally go to **http://127.0.0.1:9000**
 
 #### Building assets for production
 
