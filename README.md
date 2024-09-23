@@ -152,6 +152,7 @@ Python code linting:
 docker compose -f dev/docker-compose.yaml exec -it app make lint
 ```
 
+
 ## Deployment
 
 Find all the relevant information in `prod/DEPLOYMENT.md`
