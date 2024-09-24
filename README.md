@@ -152,10 +152,56 @@ Python code linting:
 docker compose -f dev/docker-compose.yaml exec -it app make lint
 ```
 
+## Development data
+
+Fill a development database with relevant content as needed, you can load 
+
+# load all data: areas, avatars, resources, organisations, users
+```sh
+docker compose -f dev/docker-compose.yaml exec app python3 manage.py load_devdata dev/autoupload/dev_data.json
+```
+
+Or only Avatar icons
+```sh
+docker compose -f dev/docker-compose.yaml exec app python3 manage.py load_avatars dev/autoupload/avatars.json
+```
+
+Or Areas
+```sh
+docker compose -f dev/docker-compose.yaml exec app python3 manage.py load_areas dev/autoupload/areas.json
+```
+
+Or Resources
+```sh
+docker compose -f dev/docker-compose.yaml exec app python3 manage.py load_resources dev/autoupload/resources.json
+```
+
+
+Have a look at `devdata/devdata.json` for some user accounts you can log in as.
+
 
 ## Deployment
 
 Find all the relevant information in `prod/DEPLOYMENT.md`
+
+Afterwards, you might choose to add avatars for the users to choose from:
+
+```sh
+docker compose -f prod/docker-compose.prod.yaml exec app python3 manage.py load_avatars dev/autoupload/avatars.json
+```
+
+As well as your pre-defined areas:
+
+```sh
+docker compose -f prod/docker-compose.prod.yaml exec app python3 manage.py load_areas dev/autoupload/areas.json
+```
+
+And well pre-defined resources:
+
+```sh
+docker compose -f prod/docker-compose.prod.yaml exec app python3 manage.py load_areas dev/autoupload/areas.json
+```
+
 
 ## Resources and notes
 
