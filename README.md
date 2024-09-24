@@ -199,7 +199,7 @@ docker compose -f prod/docker-compose.prod.yaml exec app python3 manage.py load_
 And well pre-defined resources:
 
 ```sh
-docker compose -f prod/docker-compose.prod.yaml exec app python3 manage.py load_areas dev/autoupload/areas.json
+docker compose -f prod/docker-compose.prod.yaml exec app python3 manage.py load_resources dev/autoupload/resources.json
 ```
 
 
