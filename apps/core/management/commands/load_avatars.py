@@ -1,9 +1,11 @@
 import json
-from django.core.management.base import BaseCommand
+
 from django.core.files.images import ImageFile
+from django.core.management.base import BaseCommand
 from userauth.models import UserAvatar
 
 DATA_DIR = "dev/autoupload/"
+
 
 def add_avatars(avatars_data):
     for avatar_data in avatars_data:
@@ -19,6 +21,7 @@ def add_avatars(avatars_data):
                 + "\nerror given: "
                 + repr(e)
             )
+
 
 class Command(BaseCommand):
     help = "import avatar data"

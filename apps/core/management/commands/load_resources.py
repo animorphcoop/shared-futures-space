@@ -11,6 +11,7 @@ from wagtail.rich_text import RichText
 
 DATA_DIR = "dev/autoupload/"
 
+
 def add_resources(resource_data):
     for new_howto_data in resource_data["How To"]:
         try:
@@ -85,6 +86,7 @@ def add_resources(resource_data):
                 tag, created = Tag.objects.get_or_create(name=tag_name)
                 new_casestudy.tags.add(tag)
             new_casestudy.save()
+
 
 class Command(BaseCommand):
     help = "import resource data"

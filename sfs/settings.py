@@ -331,20 +331,20 @@ GEO_WIDGET_ZOOM = 14
 if not DEBUG:
     # Logging configuration
     LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'file': {
-                'level': 'INFO',  # Set to 'ERROR' for less verbose logging
-                'class': 'logging.FileHandler',
-                'filename': '/home/app/sfs/logs/django.log',
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "file": {
+                "level": "INFO",  # Set to 'ERROR' for less verbose logging
+                "class": "logging.FileHandler",
+                "filename": "/home/app/sfs/logs/django.log",
             },
         },
-        'loggers': {
-            'django': {
-                'handlers': ['file'],
-                'level': 'INFO',  # Set to 'ERROR' for less verbose logging
-                'propagate': True,
+        "loggers": {
+            "django": {
+                "handlers": ["file"],
+                "level": "INFO",  # Set to 'ERROR' for less verbose logging
+                "propagate": True,
             },
         },
     }

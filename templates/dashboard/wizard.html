@@ -7,119 +7,120 @@
 
 {% block content %}
 
-    <div class="flex flex-col h-screen">
+  <div class="flex flex-col h-screen">
 
-        {% block title %}{% include "partials/title.html" with title="Wizard" %}{% endblock %}
+    {% block title %}{% include "partials/title.html" with title="Wizard" %}{% endblock %}
 
-        {% if show_finish %}
-        <div class="p-4 mx-auto sm:w-[32rem] sm:mx-auto">
-            <p class="text-sm text-black/75">
-                Area added! Add more areas below or skip to the bottom to complete the wizard.
-            </p>
-        </div>
-        <div class="p-4 mx-auto sm:w-[32rem] sm:mx-auto">
-            <div class="text-title text-black/55 pb-4">Areas</div>
-            <table class="table-auto w-full">
-                <thead>
-                    <tr class="border border-black-500">
-                        <th class="text-sm text-black/75">Area name</th>
-                        <th class="text-sm text-black/75">Post Codes</th>
-                        <th class="text-sm text-black/75">Image</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for area in area_list %}
-                    {% if area.name != "Other" %}
-                    <tr class="border border-black-500 text-center">
-                        <td class="text-sm text-black/75">{{ area.name }}</td>
-                        <td class="text-sm text-black/75">
-                            {{ area.postcode_set.all|join:", " }}
-                        </td>
-                        <td class="text-sm text-black/75">
-                            {% if area.image %}
-                                <img src="{{ area.image.url }}" alt="area" width="100" class="mx-auto">
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% endif %}
-
-        <form class="sm:w-[32rem] sm:mx-auto" enctype="multipart/form-data" method="POST" action="{% url 'wizard' %}" x-init="setupObserversWizard()">
-            {% csrf_token %}
-
-            {% include "partials/vertical-spacer.html" with space="4" %}
-
-            <h1 class="text-title text-black/55 p-4">Add area</h1>
-
-            {% if form.non_field_errors %}
-                <div class="text-large text-center bg-red-light p-4 px-6 mx-4">
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% include "partials/vertical-spacer.html" with space="9" %}
+    {% if show_finish %}
+      <div class="p-4 mx-auto sm:w-[32rem] sm:mx-auto">
+        <p class="text-body">
+          Area added! Add more areas below or skip to the bottom to complete the wizard.
+        </p>
+      </div>
+      <div class="p-4 mx-auto sm:w-[32rem] sm:mx-auto">
+        <div class="text-title text-black/55 pb-4">Areas</div>
+        <table class="table-auto w-full">
+          <thead>
+          <tr class="border border-black-500">
+            <th class="text-sm text-black/75">Area name</th>
+            <th class="text-sm text-black/75">Post Codes</th>
+            <th class="text-sm text-black/75">Image</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for area in area_list %}
+            {% if area.name != "Other" %}
+              <tr class="border border-black-500 text-center">
+                <td class="text-sm text-black/75">{{ area.name }}</td>
+                <td class="text-sm text-black/75">
+                  {{ area.postcode_set.all|join:", " }}
+                </td>
+                <td class="text-sm text-black/75">
+                  {% if area.image %}
+                    <img src="{{ area.image.url }}" alt="area" width="100" class="mx-auto">
+                  {% endif %}
+                </td>
+              </tr>
             {% endif %}
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
 
-            <div class="px-4 pb-9">
-                {% include "partials/input-label.html" with for="text-input" label="Area name" %}
-                {% include "partials/input-text.html" with field=form.name id="text-input" name="text-input" type="text" %}
-            </div>
+    <form class="sm:w-[32rem] sm:mx-auto" enctype="multipart/form-data" method="POST" action="{% url 'wizard' %}"
+          x-init="setupObserversWizard()">
+      {% csrf_token %}
 
-            <div class="px-4 pb-9">
-                {% include "partials/input-label.html" with for="text-input" label="Post Codes" %}
-                {% include "partials/input-text.html" with field=form.post_code id="text-input" name="text-input" type="text" %}
-                <p class="text-sm text-black/75">
-                    Comma separated list of the post codes of the area.
-                </p>
-            </div>
+      {% include "partials/vertical-spacer.html" with space="4" %}
 
-            <div class="px-4 pb-9">
-                {% include "partials/input-label.html" with for="id_image" label="Upload an image" %}
-                <div class="text-meta text-black/30">
-                    {% include "partials/input-file.html" with field=form.image %}
-                </div>
-            </div>
+      <h1 class="text-title text-black/55 p-4">Add area</h1>
 
-            <div class="px-4 pb-9">
-                {% include "partials/input-label.html" with for="id_location" label="Location" %}
-                {% render_field form.location %}
-            </div>
-
-            <div class="px-4 pb-9">
-                {% include "partials/input-submit.html" with button="Add area" id="submit-button" type="submit" %}
-            </div>
-        </form>
-
-        {% if show_finish %}
-        <div class="sm:w-[32rem] sm:mx-auto p-4">
-            <div class="text-title text-black/55 pb-2">Finish?</div>
-            <p>
-                Once you're happy with the areas you have added, click the "Finish" button
-                to complete this Wizard.
-            </p>
-            {% include "partials/vertical-spacer.html" with space="3" %}
-            <button
-                id="finish-button"
-                class="button button-on-white"
-                hx-post="/dashboard/wizard/complete/"
-                hx-trigger="click"
-            >
-                Finish
-            </button>
+      {% if form.non_field_errors %}
+        <div class="text-large text-center bg-red-light p-4 px-6 mx-4">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
         </div>
-        {% endif %}
+        {% include "partials/vertical-spacer.html" with space="9" %}
+      {% endif %}
 
-        {% block scripts %}
-            {% vite_asset 'templates/userauth/account/ts/wizard.ts' %}
-        {% endblock %}
-    </div>
+      <div class="px-4 pb-9">
+        {% include "partials/input-label.html" with for="text-input" label="Area name" %}
+        {% include "partials/input-text.html" with field=form.name id="text-input" name="text-input" type="text" %}
+      </div>
+
+      <div class="px-4 pb-9">
+        {% include "partials/input-label.html" with for="text-input" label="Post Codes" %}
+        {% include "partials/input-text.html" with field=form.post_code id="text-input" name="text-input" type="text" %}
+        <p class="text-sm text-black/75">
+          Comma separated list of the post codes of the area.
+        </p>
+      </div>
+
+      <div class="px-4 pb-9">
+        {% include "partials/input-label.html" with for="id_image" label="Upload an image" %}
+        <div class="text-meta text-black/30">
+          {% include "partials/input-file.html" with field=form.image %}
+        </div>
+      </div>
+
+      <div class="px-4 pb-9">
+        {% include "partials/input-label.html" with for="id_location" label="Location" %}
+        {% render_field form.location %}
+      </div>
+
+      <div class="px-4 pb-9">
+        {% include "partials/input-submit.html" with button="Add area" id="submit-button" type="submit" %}
+      </div>
+    </form>
+
+    {% if show_finish %}
+      <div class="sm:w-[32rem] sm:mx-auto p-4">
+        <div class="text-title text-black/55 pb-2">Finish?</div>
+                <p class="text-body">
+          Once you're happy with the areas you have added, click the "Finish" button
+          to complete this Wizard.
+        </p>
+        {% include "partials/vertical-spacer.html" with space="3" %}
+        <button
+          id="finish-button"
+          class="button button-on-white"
+          hx-post="/dashboard/wizard/complete/"
+          hx-trigger="click"
+        >
+          Finish
+        </button>
+      </div>
+    {% endif %}
+
+    {% block scripts %}
+      {% vite_asset 'templates/userauth/account/ts/wizard.ts' %}
+    {% endblock %}
+  </div>
 
 {% endblock %}
-<button 
+<button
 >
-    Click Me!
+  Click Me!
 </button>

@@ -185,6 +185,17 @@ def wizard(request):
             for pc in post_code_list.split(","):
                 PostCode.objects.create(code=pc.strip(), area=area)
             show_finish = True
+        else:
+            # re-render the form with errors
+            return render(
+                request,
+                "dashboard/wizard.html",
+                {
+                    "form": form,
+                    "show_finish": show_finish,
+                    "area_list": area_list,
+                },
+            )
     else:
         form = AreaForm()
     return render(

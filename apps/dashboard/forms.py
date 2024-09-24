@@ -45,6 +45,11 @@ class AreaForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        location = cleaned_data.get("location")
+
+        if not location:
+            print("heheh")
+            raise forms.ValidationError("Location is required.")
         # the "location" field gives us a dict with the multiple values
         # which we can include directly in our cleaned data here
         cleaned_data.update(cleaned_data.pop("location", {}))

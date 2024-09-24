@@ -1,6 +1,6 @@
 from typing import Union
 
-from area.models import PostCode, Area
+from area.models import Area, PostCode
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse

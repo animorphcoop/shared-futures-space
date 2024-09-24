@@ -1,5 +1,6 @@
 import os
 
+from area.models import Area
 from core.forms import SharedFuturesWizardView
 from core.utils.images import ensure_image_field_crop
 from django.core.exceptions import ValidationError
@@ -23,8 +24,6 @@ from remix.forms import (
     UpdateRemixForm,
 )
 from remix.models import Remix, RemixBackgroundImage, RemixIdea
-from area.models import Area
-
 from remix.three_models import list_three_models
 from userauth.util import get_system_user
 
@@ -53,7 +52,6 @@ class RemixMapView(TemplateView):
                     "center": area.location.coords,
                     "zoom": area.zoom,
                 }
-
 
         ideas = RemixIdea.objects.all()
 

@@ -1,9 +1,11 @@
 import json
-from django.core.management.base import BaseCommand
-from django.contrib.gis.geos import Point
+
 from area.models import Area, PostCode
+from django.contrib.gis.geos import Point
+from django.core.management.base import BaseCommand
 
 DATA_DIR = "dev/autoupload/"
+
 
 def add_areas(areas_data):
     for area_name in areas_data:
@@ -28,6 +30,7 @@ def add_areas(areas_data):
                 + "\nerror given: "
                 + repr(e)
             )
+
 
 class Command(BaseCommand):
     help = "import area data"
