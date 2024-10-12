@@ -17,99 +17,6 @@ from taggit.models import Tag
 
 DATA_DIR = "dev/autoupload/"
 
-def get_or_create_tag(tag_name):
-    """Get or create a Tag, ensuring uniqueness and handling duplicates gracefully."""
-
-
-    tag, created = Tag.objects.get_or_create(name=tag_name)
-    return tag
-
-def add_resources(resource_data):
-    for new_howto_data in resource_data["How To"]:
-        try:
-            # Ensure mandatory fields are not None
-            if any(key not in new_howto_data or new_howto_data[key] is None for key in ["title", "summary", "link"]):
-                raise ValueError(f"Missing mandatory field for How To: {new_howto_data}")
-
-            # Check if HowTo already exists
-            try:
-                new_howto = HowTo.objects.get(title=new_howto_data["title"])
-                is_new = False
-            except HowTo.DoesNotExist:
-                is_new = True
-                new_howto = HowTo(
-                    title=new_howto_data["title"],
-                    summary=new_howto_data["summary"],
-                    link=new_howto_data["link"],
-                    location=new_howto_data.get("location", None),
-                    location_exact=new_howto_data.get("location_exact", True),
-                )
-
-            new_howto.save()
-
-            # Handle tags
-            new_howto.tags.clear()  # Clear existing tags
-            for tag_name in new_howto_data.get("tags", []):  # Ensure 'tags' is an empty list if missing
-                tag = get_or_create_tag(tag_name)
-                new_howto.tags.add(tag)
-
-            new_howto.save()
-
-        except Exception as e:
-            print(
-                f"Error loading How To '{new_howto_data.get('title', 'Unknown')}': {e}"
-            )
-
-    for new_casestudy_data in resource_data["Case Study"]:
-        try:
-            # Ensure mandatory fields are not None
-            if any(key not in new_casestudy_data or new_casestudy_data[key] is None for key in
-                   ["title", "summary", "link", "body"]):
-                raise ValueError(f"Missing mandatory field for case study: {new_casestudy_data}")
-
-            # Check if case study already exists
-            try:
-                new_casestudy = CaseStudy.objects.get(title=new_casestudy_data["title"])
-                is_new = False
-            except CaseStudy.DoesNotExist:
-                is_new = True
-                new_casestudy = CaseStudy(
-                    title=new_casestudy_data["title"],
-                    summary=new_casestudy_data["summary"],
-                    link=new_casestudy_data["link"],
-                    location=new_casestudy_data.get("location", None),
-                    location_exact=new_casestudy_data.get("location_exact", True),
-                )
-
-            # Handle image
-            if new_casestudy_data["image"]:
-                with open(os.path.join(DATA_DIR, new_casestudy_data["image"]), "rb") as f:
-                    img = Image.objects.get_or_create(
-                        file=ImageFile(BytesIO(f.read()), name=new_casestudy_data["image"])
-                    )[0]
-                new_casestudy.case_study_image = img
-            elif is_new:
-                new_casestudy.case_study_image = None
-
-            if new_casestudy_data["body"]:
-                new_casestudy.body = [("body_text", {"content": RichText(new_casestudy_data["body"])})]
-
-            new_casestudy.save()
-
-            # Handle tags
-            new_casestudy.tags.clear()  # Clear existing tags
-            for tag_name in new_casestudy_data.get("tags", []):  # Ensure 'tags' is an empty list if missing
-                tag = get_or_create_tag(tag_name)
-                new_casestudy.tags.add(tag)
-
-            new_casestudy.save()
-
-        except Exception as e:
-            print(
-                f"Error loading case study '{new_casestudy_data.get('title', 'Unknown')}': {e}"
-            )
-
-
 def add_organisations(data):
     for org_data in data:
         try:
@@ -224,6 +131,5 @@ class Command(BaseCommand):
             # else continue with the rest
             exit(0)
         add_areas(data["Areas"])
-        add_resources(data["Resources"])
         add_organisations(data["Organisations"])
         add_users(data["Users"])
