@@ -40,7 +40,7 @@ class SavedResource(models.Model):
 
 
 # do not create Resources! this model is just to inherit specific kinds of resources from
-# you can however query Resource.objects, and django will automatically search for anything that inherits from this model. that's pretty neat!
+# you can however query Resource.objects, and django will automatically search for anything that inherits from this model.
 class Resource(ClusterableModel):
     uuid: models.UUIDField = models.UUIDField(default=uuid4, editable=False)
     published_on: models.DateTimeField = models.DateTimeField(auto_now_add=True)

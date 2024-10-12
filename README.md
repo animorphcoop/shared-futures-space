@@ -69,7 +69,7 @@ npm run dev
 
 This will start a server that’s only serving static files. 
 
-Now your development instance (given you have started docker containers) is up and running! To see the app locally go to **http://127.0.0.1:9000**
+Now your development instance (given you have started docker containers) is up and running! To see the app locally go to **http://127.0.0.1:9000** or **http://localhost:9000/** (0.0.0.0 is not going to render styles)
 
 #### Building assets for production
 
@@ -174,6 +174,12 @@ docker compose -f dev/docker-compose.yaml exec app python3 manage.py load_areas 
 Or Resources
 ```sh
 docker compose -f dev/docker-compose.yaml exec app python3 manage.py load_resources dev/autoupload/resources.json
+```
+
+You can remove resources with the following command
+```sh
+docker compose -f dev/docker-compose.yaml exec app python3 manage.py clear_resources
+
 ```
 
 

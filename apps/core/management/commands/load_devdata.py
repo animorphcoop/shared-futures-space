@@ -1,5 +1,6 @@
 import json
 from io import BytesIO
+import os
 
 from allauth.account.admin import EmailAddress
 from area.models import Area, PostCode
@@ -11,81 +12,102 @@ from resources.models import CaseStudy, HowTo
 from userauth.models import CustomUser, Organisation, UserAvatar
 from wagtail.images.models import Image
 from wagtail.rich_text import RichText
+from django.contrib.contenttypes.models import ContentType
+from taggit.models import Tag
 
 DATA_DIR = "dev/autoupload/"
 
+def get_or_create_tag(tag_name):
+    """Get or create a Tag, ensuring uniqueness and handling duplicates gracefully."""
+
+
+    tag, created = Tag.objects.get_or_create(name=tag_name)
+    return tag
 
 def add_resources(resource_data):
     for new_howto_data in resource_data["How To"]:
         try:
-            new_howto = HowTo.objects.get_or_create(
-                title=new_howto_data["title"],
-                summary=new_howto_data["summary"],
-                link=new_howto_data["link"],
-                location=new_howto_data.get("location", None),
-                location_exact=new_howto_data.get("location_exact", True),
-            )[0]
-            for tag in new_howto_data["tags"]:
-                new_howto.tags.add(tag)
+            # Ensure mandatory fields are not None
+            if any(key not in new_howto_data or new_howto_data[key] is None for key in ["title", "summary", "link"]):
+                raise ValueError(f"Missing mandatory field for How To: {new_howto_data}")
+
+            # Check if HowTo already exists
+            try:
+                new_howto = HowTo.objects.get(title=new_howto_data["title"])
+                is_new = False
+            except HowTo.DoesNotExist:
+                is_new = True
+                new_howto = HowTo(
+                    title=new_howto_data["title"],
+                    summary=new_howto_data["summary"],
+                    link=new_howto_data["link"],
+                    location=new_howto_data.get("location", None),
+                    location_exact=new_howto_data.get("location_exact", True),
+                )
+
             new_howto.save()
+
+            # Handle tags
+            new_howto.tags.clear()  # Clear existing tags
+            for tag_name in new_howto_data.get("tags", []):  # Ensure 'tags' is an empty list if missing
+                tag = get_or_create_tag(tag_name)
+                new_howto.tags.add(tag)
+
+            new_howto.save()
+
         except Exception as e:
             print(
-                "could not add howto with definition: "
-                + str(new_howto_data)
-                + "\nerror given: "
-                + repr(e)
+                f"Error loading How To '{new_howto_data.get('title', 'Unknown')}': {e}"
             )
+
     for new_casestudy_data in resource_data["Case Study"]:
-        if new_casestudy_data["image"] != "":
+        try:
+            # Ensure mandatory fields are not None
+            if any(key not in new_casestudy_data or new_casestudy_data[key] is None for key in
+                   ["title", "summary", "link", "body"]):
+                raise ValueError(f"Missing mandatory field for case study: {new_casestudy_data}")
+
+            # Check if case study already exists
             try:
-                with open(DATA_DIR + new_casestudy_data["image"], "rb") as f:
-                    pimg = PillowImage.open(DATA_DIR + new_casestudy_data["image"])
-                    img = Image.objects.get_or_create(
-                        file=ImageFile(
-                            BytesIO(f.read()), name=new_casestudy_data["image"]
-                        ),
-                        width=pimg.width,
-                        height=pimg.height,
-                    )[0]
-                    new_casestudy = CaseStudy.objects.get_or_create(
-                        title=new_casestudy_data["title"],
-                        summary=new_casestudy_data["summary"],
-                        case_study_image=img,
-                        link=new_casestudy_data["link"],
-                        location=new_casestudy_data.get("location", None),
-                        location_exact=new_casestudy_data.get("location_exact", True),
-                    )[0]
-                    new_casestudy.body.append(
-                        ("body_text", {"content": RichText(new_casestudy_data["body"])})
-                    )
-
-                    for tag in new_casestudy_data["tags"]:
-                        new_casestudy.tags.add(tag)
-                    new_casestudy.save()
-
-            except Exception as e:
-                print(
-                    "could not load case study image: "
-                    + str(new_casestudy_data["title"])
-                    + "\nerror given: "
-                    + repr(e)
+                new_casestudy = CaseStudy.objects.get(title=new_casestudy_data["title"])
+                is_new = False
+            except CaseStudy.DoesNotExist:
+                is_new = True
+                new_casestudy = CaseStudy(
+                    title=new_casestudy_data["title"],
+                    summary=new_casestudy_data["summary"],
+                    link=new_casestudy_data["link"],
+                    location=new_casestudy_data.get("location", None),
+                    location_exact=new_casestudy_data.get("location_exact", True),
                 )
-        else:
-            print(str(new_casestudy_data["title"]) + " has no image")
-            new_casestudy = CaseStudy.objects.get_or_create(
-                title=new_casestudy_data["title"],
-                summary=new_casestudy_data["summary"],
-                link=new_casestudy_data["link"],
-                location=new_casestudy_data.get("location", None),
-                location_exact=new_casestudy_data.get("location_exact", True),
-            )[0]
-            new_casestudy.body.append(
-                ("body_text", {"content": RichText(new_casestudy_data["body"])})
-            )
 
-            for tag in new_casestudy_data["tags"]:
-                new_casestudy.tags.add(tag)
+            # Handle image
+            if new_casestudy_data["image"]:
+                with open(os.path.join(DATA_DIR, new_casestudy_data["image"]), "rb") as f:
+                    img = Image.objects.get_or_create(
+                        file=ImageFile(BytesIO(f.read()), name=new_casestudy_data["image"])
+                    )[0]
+                new_casestudy.case_study_image = img
+            elif is_new:
+                new_casestudy.case_study_image = None
+
+            if new_casestudy_data["body"]:
+                new_casestudy.body = [("body_text", {"content": RichText(new_casestudy_data["body"])})]
+
             new_casestudy.save()
+
+            # Handle tags
+            new_casestudy.tags.clear()  # Clear existing tags
+            for tag_name in new_casestudy_data.get("tags", []):  # Ensure 'tags' is an empty list if missing
+                tag = get_or_create_tag(tag_name)
+                new_casestudy.tags.add(tag)
+
+            new_casestudy.save()
+
+        except Exception as e:
+            print(
+                f"Error loading case study '{new_casestudy_data.get('title', 'Unknown')}': {e}"
+            )
 
 
 def add_organisations(data):
