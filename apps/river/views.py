@@ -329,20 +329,19 @@ class RiverChatView(ChatView):
                 or (chat_poll.closed and not chat_poll.passed),
                 "stage_ref": stage_ref,
                 # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
-                "poll_possible": True
-                if kwargs["stage"] == "envision"
-                else (
-                    False
-                    if kwargs["stage"] == "reflect"
-                    else (kwargs["topic"] != "general")
+                "poll_possible": (
+                    True if kwargs["stage"] == "envision" and (chat_poll is None or not chat_poll.passed)
+                    else False if kwargs["stage"] == "reflect"
+                    else
+                    kwargs["topic"] != "general"
                     or (
-                        kwargs["topic"] == "general"
-                        and stage_ref.money_poll
-                        and stage_ref.money_poll.passed
-                        and stage_ref.place_poll
-                        and stage_ref.place_poll.passed
-                        and stage_ref.time_poll
-                        and stage_ref.time_poll.passed
+                            kwargs["topic"] == "general"
+                            and stage_ref.money_poll
+                            and stage_ref.money_poll.passed
+                            and stage_ref.place_poll
+                            and stage_ref.place_poll.passed
+                            and stage_ref.time_poll
+                            and stage_ref.time_poll.passed
                     )
                 ),
                 "starters": RiverMembership.objects.filter(

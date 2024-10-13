@@ -71,9 +71,8 @@
         </div>
     </div>
 </div>
-
       {% if river.current_stage == stage and request.user.id in starters and poll_possible and members|length > 2 %}
-        {% if poll_ref == None and not poll_ref.passed %}
+        {% if poll_ref == None or not poll_ref.passed %}
           <button id="poll-create-button-{{ stage }}-{{ topic }}"
                   hx-get="{% url 'create_river_poll' river.slug stage topic %}"
                   hx-target="#poll-creation-{{ stage }}-{{ topic }}"
