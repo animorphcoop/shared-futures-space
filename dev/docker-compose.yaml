@@ -4,8 +4,8 @@ services:
       context: ..
       dockerfile: dev/Dockerfile
       args:
-        USERID: $USER_ID
-        GROUPID: $GROUP_ID
+        USERID: ${USER_ID:-1000}
+        GROUPID: ${GROUP_ID:-1000}
     volumes:
       - ..:/home/app/sfs
     command: >
