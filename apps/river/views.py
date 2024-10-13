@@ -49,15 +49,15 @@ class RiverView(DetailView):
         if request.POST["action"] == "leave":
             membership = RiverMembership.objects.get(user=request.user, river=river)
             if (
-                not membership.starter
+                    not membership.starter
             ):  # reject starter's attempting to leave, this is not supported by the interface - you should rescind ownership first, because you won't be allowed to if you're the last starter left.
                 membership.delete()
                 # if to notify for each, need to know the current river stage and post to general
 
         if request.POST["action"] == "join":
             if (
-                len(RiverMembership.objects.filter(user=request.user, river=river)) == 0
-                and request.user.post_code.area == river.area
+                    len(RiverMembership.objects.filter(user=request.user, river=river)) == 0
+                    and request.user.post_code.area == river.area
             ):
                 RiverMembership.objects.create(
                     user=request.user, river=river, starter=False
@@ -107,11 +107,11 @@ class RiverView(DetailView):
         context["envision_locked"] = False
         context["plan_locked"] = context["object"].current_stage == River.Stage.ENVISION
         context["act_locked"] = (
-            context["object"].current_stage == River.Stage.ENVISION
-            or context["object"].current_stage == River.Stage.PLAN
+                context["object"].current_stage == River.Stage.ENVISION
+                or context["object"].current_stage == River.Stage.PLAN
         )
         context["reflect_locked"] = (
-            context["object"].current_stage != River.Stage.REFLECT
+                context["object"].current_stage != River.Stage.REFLECT
         )
         return context
 
@@ -125,7 +125,7 @@ class EditRiverView(UpdateView):
         return login_required(super().get)(*args, **kwargs)
 
     def post(
-        self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]
+            self, request: WSGIRequest, slug: str, **kwargs: Dict[str, Any]
     ) -> HttpResponse:
         # changing the river image - same code appears not to upload using put method
         river = River.objects.get(slug=slug)
@@ -162,11 +162,11 @@ class EditRiverView(UpdateView):
 
     # was able to pass the byte stream of image via put but impractical comparing to post so updating here only text and description
     def put(
-        self,
-        request: WSGIRequest,
-        slug: str,
-        *args: tuple[str, ...],
-        **kwargs: dict[str, Any]
+            self,
+            request: WSGIRequest,
+            slug: str,
+            *args: tuple[str, ...],
+            **kwargs: dict[str, Any]
     ) -> HttpResponse:
         data = QueryDict(request.body).dict()
 
@@ -228,7 +228,7 @@ class ManageRiverView(TemplateView):
         membership = RiverMembership.objects.get(id=request.POST["membership"])
         # security checks
         if RiverMembership.objects.get(
-            user=request.user, river=river
+                user=request.user, river=river
         ).starter == True and membership.river == River.objects.get(
             slug=slug
         ):  # since the form takes any uid
@@ -297,8 +297,8 @@ class RiverChatView(ChatView):
         stage_ref = river.get_stage(kwargs["stage"])
 
         is_member = (
-            request.user.is_authenticated
-            and river.rivermembership_set.filter(user=request.user).exists()
+                request.user.is_authenticated
+                and river.rivermembership_set.filter(user=request.user).exists()
         )
 
         if is_member:
@@ -325,24 +325,24 @@ class RiverChatView(ChatView):
                 ),
                 "unique_id": kwargs["stage"] + "-" + kwargs["topic"],
                 "chat_open": chat_poll is None
-                or not chat_poll.closed
-                or (chat_poll.closed and not chat_poll.passed),
+                             or not chat_poll.closed
+                             or (chat_poll.closed and not chat_poll.passed),
                 "stage_ref": stage_ref,
                 # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
                 "poll_possible": (
-                    True if kwargs["stage"] == "envision" and (chat_poll is None or not chat_poll.passed)
-                    else False if kwargs["stage"] == "reflect"
-                    else
-                    kwargs["topic"] != "general"
-                    or (
-                            kwargs["topic"] == "general"
-                            and stage_ref.money_poll
-                            and stage_ref.money_poll.passed
-                            and stage_ref.place_poll
-                            and stage_ref.place_poll.passed
-                            and stage_ref.time_poll
-                            and stage_ref.time_poll.passed
-                    )
+                        (kwargs["stage"] == "envision" or (chat_poll is None or not chat_poll.passed))
+                        or (
+                                kwargs["stage"] != "reflect"
+                                and (kwargs["topic"] != "general"
+                                     or (kwargs["topic"] == "general"
+                                         and stage_ref.money_poll
+                                         and stage_ref.money_poll.passed
+                                         and stage_ref.place_poll
+                                         and stage_ref.place_poll.passed
+                                         and stage_ref.time_poll
+                                         and stage_ref.time_poll.passed)
+                                     )
+                        )
                 ),
                 "starters": RiverMembership.objects.filter(
                     river=river, starter=True
@@ -365,7 +365,7 @@ class CreateRiverPollView(TemplateView):
     template_name = "create_river_poll.html"
 
     def post(
-        self, request: WSGIRequest, slug: str, stage: str, topic: str
+            self, request: WSGIRequest, slug: str, stage: str, topic: str
     ) -> HttpResponse:
         river = River.objects.get(slug=slug)
         if river.current_stage == stage:
@@ -470,7 +470,7 @@ class CreateRiverPollView(TemplateView):
 
 class StageContextMixin(ContextMixin):
     def get_context_data(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
+            self, *args: List[Any], **kwargs: Dict[str, Any]
     ) -> Dict[str, Any]:
         context = super().get_context_data(*args, **kwargs)
         river = get_object_or_404(River, slug=self.kwargs["slug"])
@@ -481,8 +481,8 @@ class StageContextMixin(ContextMixin):
         ).values_list("user", flat=True)
 
         context["is_member"] = (
-            self.request.user.is_authenticated
-            and river.rivermembership_set.filter(user=self.request.user).exists()
+                self.request.user.is_authenticated
+                and river.rivermembership_set.filter(user=self.request.user).exists()
         )
         return context
 

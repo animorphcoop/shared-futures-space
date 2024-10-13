@@ -1,162 +1,162 @@
 {% block content %}
 
-    {% with li_class="rounded-[15px_15px_0px_0px] text-center py-2 desktop:py-0 flex flex-grow items-center justify-center tab-shadow cursor-pointer text-header" %}
-        <div x-data="{ openTab: 'one' }">
-            <ul class="flex justify-between">
-                <li @click="openTab = 'one'; setCurrentlyActiveTabAct($data);" class="{{ li_class }}"
-                    :class="openTab == 'one' ? '' : 'tab-shadow'">
-                    General
-                </li>
-                <li @click="openTab = 'two'; setCurrentlyActiveTabAct($data);" class="{{ li_class }}"
-                    :class="openTab == 'two' ? '' : 'tab-shadow'">
-                    Money
-                </li>
-                <li @click="openTab = 'three'; setCurrentlyActiveTabAct($data);" class="{{ li_class }}"
-                    :class="openTab == 'three' ? '' : 'tab-shadow'">
-                    Place
-                </li>
-                <li @click="openTab = 'four'; setCurrentlyActiveTabAct($data);" class="{{ li_class }}"
-                    :class="openTab == 'four' ? '' : 'tab-shadow'">
-                    Time
-                </li>
-            </ul>
+  {% with li_class="rounded-[15px_15px_0px_0px] text-center py-2 desktop:py-0 flex flex-grow items-center justify-center tab-shadow cursor-pointer text-header" %}
+    <div x-data="{ openTab: 'one' }">
+      <ul class="flex justify-between">
+        <li @click="openTab = 'one'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
+            :class="openTab == 'one' ? 'tab-shadow-selected' : 'tab-shadow'">
+          General
+        </li>
+        <li @click="openTab = 'two'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
+            :class="openTab == 'two' ? 'tab-shadow-selected' : 'tab-shadow'">
+          Money
+        </li>
+        <li @click="openTab = 'three'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
+            :class="openTab == 'three' ? 'tab-shadow-selected' : 'tab-shadow'">
+          Place
+        </li>
+        <li @click="openTab = 'four'; setCurrentlyActiveTab($data);" class="{{ li_class }}"
+            :class="openTab == 'four' ? 'tab-shadow-selected' : 'tab-shadow'">
+          Time
+        </li>
+      </ul>
 
-            <div class="overflow-auto bg-white">
+      <div class="overflow-auto bg-white">
 
-                {# GENERAL TAB #}
+        {# GENERAL TAB #}
 
-                <div x-show="openTab === 'one'">
-                    <div id="event-act-general"
-                            @chatstatusupdate="setActChatOpen('one', $event.detail)"
-                    >
-                        {% if is_member %}
-                            <div hx-get="{% url 'river_task_list' river.slug 'act' 'general' %}"
-                                 hx-trigger="load"
-                                 hx-target="this"
-                                 hx-swap="outerHTML">
-                            </div>
-                        {% endif %}
+        <div x-show="openTab === 'one'">
+          <div id="event-act-general"
+               @chatstatusupdate="setActChatOpen('one', $event.detail)"
+          >
+            {% if is_member %}
+              <div hx-get="{% url 'river_task_list' river.slug 'act' 'general' %}"
+                   hx-trigger="load"
+                   hx-target="this"
+                   hx-swap="outerHTML">
+              </div>
+            {% endif %}
 
-                        <div id="act-chat-general" hx-get="{% url 'river_chat' river.slug 'act' 'general' %}"
-                             hx-trigger="load"
-                             hx-target="this">
-                        </div>
-                    </div>
-                </div>
-
-
-                {# MONEY TAB #}
-
-                <div x-show="openTab === 'two'">
-                    <div id="event-act-money"
-                            @chatstatusupdate="setActChatOpen('two', $event.detail)"
-                    >
-                        {% if is_member %}
-                            <div hx-get="{% url 'river_task_list' river.slug 'act' 'money' %}"
-                                 hx-trigger="load"
-                                 hx-target="this"
-                                 hx-swap="outerHTML">
-                            </div>
-                        {% endif %}
-
-                        <div id="act-chat-money" hx-get="{% url 'river_chat' river.slug 'act' 'money' %}"
-                             hx-trigger="load"
-                             hx-target="this">
-                        </div>
-                    </div>
-                </div>
-
-
-                {# PLACE TAB #}
-
-                <div x-show="openTab === 'three'">
-                    <div id="event-act-place"
-                            @chatstatusupdate="setActChatOpen('three', $event.detail)"
-                    >
-                        {% if is_member %}
-                            <div hx-get="{% url 'river_task_list' river.slug 'act' 'place' %}"
-                                 hx-trigger="load"
-                                 hx-target="this"
-                                 hx-swap="outerHTML">
-                            </div>
-                        {% endif %}
-
-                        <div id="act-chat-place" hx-get="{% url 'river_chat' river.slug 'act' 'place' %}"
-                             hx-trigger="load"
-                             hx-target="this">
-                        </div>
-                    </div>
-                </div>
-
-
-                {# TIME TAB #}
-                <div x-show="openTab === 'four'">
-                    <div id="event-act-time"
-                            @chatstatusupdate="setActChatOpen('four', $event.detail)"
-                    >
-                        {% if is_member %}
-                            <div hx-get="{% url 'river_task_list' river.slug 'act' 'time' %}"
-                                 hx-trigger="load"
-                                 hx-target="this"
-                                 hx-swap="outerHTML">
-                            </div>
-                        {% endif %}
-
-                        <div id="act-chat-time" hx-get="{% url 'river_chat' river.slug 'act' 'time' %}"
-                             hx-trigger="load"
-                             hx-target="this">
-                        </div>
-                    </div>
-                </div>
-
+            <div id="act-chat-general" hx-get="{% url 'river_chat' river.slug 'act' 'general' %}"
+                 hx-trigger="load"
+                 hx-target="this">
             </div>
-
+          </div>
         </div>
-    {% endwith %}
 
-    <script>
+
+        {# MONEY TAB #}
+
+        <div x-show="openTab === 'two'">
+          <div id="event-act-money"
+               @chatstatusupdate="setActChatOpen('two', $event.detail)"
+          >
+            {% if is_member %}
+              <div hx-get="{% url 'river_task_list' river.slug 'act' 'money' %}"
+                   hx-trigger="load"
+                   hx-target="this"
+                   hx-swap="outerHTML">
+              </div>
+            {% endif %}
+
+            <div id="act-chat-money" hx-get="{% url 'river_chat' river.slug 'act' 'money' %}"
+                 hx-trigger="load"
+                 hx-target="this">
+            </div>
+          </div>
+        </div>
+
+
+        {# PLACE TAB #}
+
+        <div x-show="openTab === 'three'">
+          <div id="event-act-place"
+               @chatstatusupdate="setActChatOpen('three', $event.detail)"
+          >
+            {% if is_member %}
+              <div hx-get="{% url 'river_task_list' river.slug 'act' 'place' %}"
+                   hx-trigger="load"
+                   hx-target="this"
+                   hx-swap="outerHTML">
+              </div>
+            {% endif %}
+
+            <div id="act-chat-place" hx-get="{% url 'river_chat' river.slug 'act' 'place' %}"
+                 hx-trigger="load"
+                 hx-target="this">
+            </div>
+          </div>
+        </div>
+
+
+        {# TIME TAB #}
+        <div x-show="openTab === 'four'">
+          <div id="event-act-time"
+               @chatstatusupdate="setActChatOpen('four', $event.detail)"
+          >
+            {% if is_member %}
+              <div hx-get="{% url 'river_task_list' river.slug 'act' 'time' %}"
+                   hx-trigger="load"
+                   hx-target="this"
+                   hx-swap="outerHTML">
+              </div>
+            {% endif %}
+
+            <div id="act-chat-time" hx-get="{% url 'river_chat' river.slug 'act' 'time' %}"
+                 hx-trigger="load"
+                 hx-target="this">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  {% endwith %}
+
+  <script>
 
     /* Everything that's called from Alpine needs to have unique name */
 
-        {% comment %}starting value, tab one opens automatically{% endcomment %}
-        let currentlyActiveTabAct = 'one'
+    {% comment %}starting value, tab one opens automatically{% endcomment %}
+    let currentlyActiveTabAct = "one"
 
-        let currentlyActiveChatsAct = {
-            'one': false,
-            'two': false,
-            'three': false,
-            'four': false,
-        }
+    let currentlyActiveChatsAct = {
+      "one": false,
+      "two": false,
+      "three": false,
+      "four": false
+    }
 
-        // eventData comes from river_chat.html, received with @chatstatusupdate
-        function setActChatOpen(chatId, eventData){
+    // eventData comes from river_chat.html, received with @chatstatusupdate
+    function setActChatOpen(chatId, eventData) {
 
 
-            let chatOpen = eventData.chatOpen
+      let chatOpen = eventData.chatOpen
 
-            if (chatId === 'one') {
-                //console.log('general')
-                currentlyActiveChatsAct['one'] = chatOpen
-            } else if (chatId === 'two') {
-                //console.log('money')
-                currentlyActiveChatsAct['two'] = chatOpen
-            } else if (chatId === 'three') {
-                //console.log('place')
-                currentlyActiveChatsAct['three'] = chatOpen
-            } else if (chatId === 'four') {
-                //console.log('time')
-                currentlyActiveChatsAct['four'] = chatOpen
-            }
+      if (chatId === "one") {
+        //console.log('general')
+        currentlyActiveChatsAct["one"] = chatOpen
+      } else if (chatId === "two") {
+        //console.log('money')
+        currentlyActiveChatsAct["two"] = chatOpen
+      } else if (chatId === "three") {
+        //console.log('place')
+        currentlyActiveChatsAct["three"] = chatOpen
+      } else if (chatId === "four") {
+        //console.log('time')
+        currentlyActiveChatsAct["four"] = chatOpen
+      }
 
-            //console.log(`just set chat status to ${eventData.chatOpen}`)
-        }
+      //console.log(`just set chat status to ${eventData.chatOpen}`)
+    }
 
-        function setCurrentlyActiveTabAct({openTab}) {
-            //console.log('called tab change')
-            //console.log(openTab)
-            currentlyActiveTabAct = openTab
-        }
+    function setCurrentlyActiveTabAct({ openTab }) {
+      //console.log('called tab change')
+      //console.log(openTab)
+      currentlyActiveTabAct = openTab
+    }
 
-    </script>
+  </script>
 
 {% endblock %}
