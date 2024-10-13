@@ -1,4 +1,4 @@
-# Shared Futures Space
+# Shared Futures App
 
 A project management platform where your community collaborates and gets stuff
 done.

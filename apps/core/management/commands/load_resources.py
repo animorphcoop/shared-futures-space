@@ -4,13 +4,12 @@ import os
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from django.contrib.gis.geos import Point
-from resources.models import CaseStudy, HowTo, CustomTag
+from PIL import Image as PillowImage
+from resources.models import CaseStudy, HowTo, CustomTag, ResourceTag
 from wagtail.images.models import Image
 from wagtail.rich_text import RichText
-from django.db import IntegrityError
 
 DATA_DIR = "dev/autoupload/"
-
 
 class Command(BaseCommand):
     help = 'Adds HowTo and CaseStudy entries from the database'
@@ -24,17 +23,6 @@ class Command(BaseCommand):
             resource_data = json.load(file)
             self.add_resources(resource_data)
 
-    def get_or_create_custom_tag(self, tag_name):
-        """Get or create a CustomTag, handling any integrity errors."""
-        tag_name_lower = tag_name.lower()
-        try:
-            tag, created = CustomTag.objects.get_or_create(name__iexact=tag_name_lower, defaults={"name": tag_name})
-            if created:
-                self.stdout.write(self.style.SUCCESS(f"Tag created: {tag_name}"))
-        except IntegrityError:
-            tag = CustomTag.objects.get(name__iexact=tag_name_lower)
-            self.stdout.write(self.style.WARNING(f"Tag fetched due to IntegrityError: {tag_name}"))
-        return tag
 
     def add_resources(self, resource_data):
         resources = resource_data.get("Resources", {})
@@ -51,7 +39,9 @@ class Command(BaseCommand):
                 # Check if HowTo already exists
                 try:
                     new_howto = HowTo.objects.get(title=new_howto_data["title"])
+                    is_new = False
                 except HowTo.DoesNotExist:
+                    is_new = True
                     new_howto = HowTo(
                         title=new_howto_data["title"],
                         summary=new_howto_data["summary"],
@@ -60,20 +50,19 @@ class Command(BaseCommand):
                     )
 
                 # Handle location
-                if location_data := new_howto_data.get('location'):  # Check if location key exists
+                if location_data := new_howto_data.get('location'):  # Check if location key exists and is not None
                     lat = float(location_data["lat"])
                     lng = float(location_data["lng"])
                     new_howto.location = Point(lng, lat)
 
-                new_howto.save()
-
                 # Handle tags
-                new_howto.tags.clear()  # Clear existing tags
-                for tag_name in new_howto_data.get("tags", []):  # Ensure 'tags' is a list even if missing
-                    tag = self.get_or_create_custom_tag(tag_name)
-                    new_howto.tags.add(tag)
+
+                for tag_name in new_howto_data.get("tags", []):  # Ensure 'tags' is an empty list if missing
+                    #self.stdout.write(self.style.NOTICE(f"HowTo tag '{tag_name}'."))
+                    new_howto.tags.add(tag_name)
 
                 new_howto.save()
+
 
             except Exception as e:
                 self.stdout.write(
@@ -90,7 +79,9 @@ class Command(BaseCommand):
                 # Check if case study already exists
                 try:
                     new_casestudy = CaseStudy.objects.get(title=new_casestudy_data["title"])
+                    is_new = False
                 except CaseStudy.DoesNotExist:
+                    is_new = True
                     new_casestudy = CaseStudy(
                         title=new_casestudy_data["title"],
                         summary=new_casestudy_data["summary"],
@@ -99,7 +90,7 @@ class Command(BaseCommand):
                     )
 
                 # Handle image
-                if (image_name := new_casestudy_data.get("image")):  # Check if image key exists
+                if (image_name := new_casestudy_data.get("image")):  # Check if image key exists and is not None
                     image_path = os.path.join(DATA_DIR, image_name)
                     if os.path.exists(image_path):  # Check if the image file exists
                         with open(image_path, "rb") as f:
@@ -107,19 +98,17 @@ class Command(BaseCommand):
                                 file=ImageFile(BytesIO(f.read()), name=image_name)
                             )[0]
                         new_casestudy.case_study_image = img
-                    else:
+                    elif is_new:
                         new_casestudy.case_study_image = None
 
                 if new_casestudy_data.get("body"):  # Check if body key exists
                     new_casestudy.body = [("body_text", {"content": RichText(new_casestudy_data["body"])})]
 
-                new_casestudy.save()
 
                 # Handle tags
-                new_casestudy.tags.clear()  # Clear existing tags
-                for tag_name in new_casestudy_data.get("tags", []):  # Ensure 'tags' is a list even if missing
-                    tag = self.get_or_create_custom_tag(tag_name)
-                    new_casestudy.tags.add(tag)
+                for tag_name in new_casestudy_data.get("tags", []):  # Ensure 'tags' is an empty list if missing
+                    #self.stdout.write(self.style.NOTICE(f"Tag passed is '{tag_name}'."))
+                    new_casestudy.tags.add(tag_name)
 
                 new_casestudy.save()
 

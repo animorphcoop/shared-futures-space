@@ -28,9 +28,10 @@ class CustomTag(TaggitTag):
         verbose_name_plural = "Tags"
 
     def save(self, *args, **kwargs):
-        if CustomTag.objects.filter(name__iexact=self.name).exists():
-            raise ValidationError("Tag with this name already exists.")
+        if not self.pk and CustomTag.objects.filter(name__iexact=self.name).exists():
+            return CustomTag.objects.get(name__iexact=self.name)
         super().save(*args, **kwargs)
+
 
 class ResourceTag(TaggedItemBase):
     content_object = ParentalKey(
