@@ -181,12 +181,6 @@ You can remove resources with the following command
 docker compose -f dev/docker-compose.yaml exec app python3 manage.py clear_resources
 ```
 
-If there are issues with changing resources through Wagtail, clearing duplicate tags might be needed
-```sh
-docker compose -f dev/docker-compose.yaml exec app python3 manage.py remove_duplicate_resource_tags
-````
-
-
 
 Have a look at `devdata/devdata.json` for some user accounts you can log in as.
 

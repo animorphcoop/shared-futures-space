@@ -32,22 +32,6 @@ def add_organisations(data):
             )
 
 
-def add_avatars(avatars_data):
-    for avatar_data in avatars_data:
-        try:
-            with open(DATA_DIR + avatar_data["avatar"], "rb") as f:
-                new_avatar = UserAvatar.objects.create()
-                new_avatar.avatar = ImageFile(f)
-                new_avatar.save()
-        except Exception as e:
-            print(
-                "could not add avatar with definition: "
-                + str(avatar_data)
-                + "\nerror given: "
-                + repr(e)
-            )
-
-
 def add_users(users_data):
     for user_data in users_data:
         try:
@@ -125,11 +109,6 @@ class Command(BaseCommand):
             print("could not read from file: " + options["datafile"])
             exit()
 
-        add_avatars(data["User Avatars"])
-        if options["datafile"] == "autoupload/avatars.json":
-            # if datafile is avatars only, exit with success,
-            # else continue with the rest
-            exit(0)
         add_areas(data["Areas"])
         add_organisations(data["Organisations"])
         add_users(data["Users"])

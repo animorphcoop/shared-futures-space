@@ -5,11 +5,12 @@ from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from django.contrib.gis.geos import Point
 from PIL import Image as PillowImage
-from resources.models import CaseStudy, HowTo, CustomTag, ResourceTag
+from resources.models import CaseStudy, HowTo, CustomTag
 from wagtail.images.models import Image
 from wagtail.rich_text import RichText
 
 DATA_DIR = "dev/autoupload/"
+
 
 class Command(BaseCommand):
     help = 'Adds HowTo and CaseStudy entries from the database'
@@ -23,11 +24,13 @@ class Command(BaseCommand):
             resource_data = json.load(file)
             self.add_resources(resource_data)
 
-
     def add_resources(self, resource_data):
         resources = resource_data.get("Resources", {})
         how_to_resources = resources.get("How To", [])
         case_study_resources = resources.get("Case Study", [])
+
+        added_how_tos = 0
+        added_case_studies = 0
 
         for new_howto_data in how_to_resources:
             try:
@@ -56,13 +59,13 @@ class Command(BaseCommand):
                     new_howto.location = Point(lng, lat)
 
                 # Handle tags
-
                 for tag_name in new_howto_data.get("tags", []):  # Ensure 'tags' is an empty list if missing
-                    #self.stdout.write(self.style.NOTICE(f"HowTo tag '{tag_name}'."))
                     new_howto.tags.add(tag_name)
 
                 new_howto.save()
 
+                if is_new:
+                    added_how_tos += 1
 
             except Exception as e:
                 self.stdout.write(
@@ -104,15 +107,19 @@ class Command(BaseCommand):
                 if new_casestudy_data.get("body"):  # Check if body key exists
                     new_casestudy.body = [("body_text", {"content": RichText(new_casestudy_data["body"])})]
 
-
                 # Handle tags
                 for tag_name in new_casestudy_data.get("tags", []):  # Ensure 'tags' is an empty list if missing
-                    #self.stdout.write(self.style.NOTICE(f"Tag passed is '{tag_name}'."))
                     new_casestudy.tags.add(tag_name)
 
                 new_casestudy.save()
+
+                if is_new:
+                    added_case_studies += 1
 
             except Exception as e:
                 self.stdout.write(
                     self.style.ERROR(f"Error loading case study '{new_casestudy_data.get('title', 'Unknown')}': {e}")
                 )
+
+        self.stdout.write(
+            self.style.SUCCESS(f"Added {added_how_tos} HowTo(s) and {added_case_studies} CaseStudy(ies) successfully."))
