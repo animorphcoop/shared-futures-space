@@ -329,23 +329,24 @@ class RiverChatView(ChatView):
                              or (chat_poll.closed and not chat_poll.passed),
                 "stage_ref": stage_ref,
                 # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
-                "poll_possible": True
-                #TODO -  and (chat_poll is None or not chat_poll.passed)) on `envision` enables to rerun the poll but in plan hides envision, we need both
-                if kwargs["stage"] == "envision" and (not chat_poll.passed)
-                else (
-                    False
-                    if kwargs["stage"] == "reflect"
-                    else (kwargs["topic"] != "general")
-                    or (
-                        kwargs["topic"] == "general"
-                        and stage_ref.money_poll
-                        and stage_ref.money_poll.passed
-                        and stage_ref.place_poll
-                        and stage_ref.place_poll.passed
-                        and stage_ref.time_poll
-                        and stage_ref.time_poll.passed
-                    )
+                "poll_possible": (
+                        (kwargs["stage"] in ["envision"]
+                         and (chat_poll is None or not chat_poll.passed))
+                        or (kwargs["topic"] != "general"
+                            or (kwargs["topic"] == "general"
+                                and stage_ref is not None  # Check if stage_ref is not None
+                                and hasattr(stage_ref, 'money_poll')  # Check if money_poll attribute exists
+                                and stage_ref.money_poll is not None  # Check if money_poll is not None
+                                and stage_ref.money_poll.passed
+                                and hasattr(stage_ref, 'place_poll')
+                                and stage_ref.place_poll is not None
+                                and stage_ref.place_poll.passed
+                                and hasattr(stage_ref, 'time_poll')
+                                and stage_ref.time_poll is not None
+                                and stage_ref.time_poll.passed)
+                            )
                 ),
+
                 "starters": RiverMembership.objects.filter(
                     river=river, starter=True
                 ).values_list("user", flat=True),
