@@ -137,6 +137,17 @@ class BasePoll(models.Model):
                         ):
                             river.start_reflect()
                             river.save()
+                    elif (
+                            topic != "general"
+                            and river.act_stage.money_poll
+                            and river.act_stage.money_poll.passed
+                            and river.act_stage.place_poll
+                            and river.act_stage.place_poll.passed
+                            and river.act_stage.time_poll
+                            and river.act_stage.time_poll.passed
+                    ):
+                            river.make_act_general_poll()
+
         elif hasattr(self, "multiplechoicepoll"):
             from river.models import ReflectStage, River
 

@@ -465,7 +465,7 @@ class CreateRiverPollView(TemplateView):
             "plan": "Describe the plan for " + topic,
             "act": "Describe what happened with " + topic,
         }[stage]
-        ctx["default"] = {"envision": ctx["river"].description, "plan": "", "act": ""}[
+        ctx["default"] = {"envision": ctx["river"].description, "plan": "", "act": f"Are all {ctx['topic']}-related actions done?"}[
             stage
         ]
         return ctx
