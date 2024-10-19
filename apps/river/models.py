@@ -478,7 +478,7 @@ class River(ClusterableModel):
                         )
                     )
                 ),
-                expires=timezone.now() + timezone.timedelta(days=7),
+                expires=timezone.now() + timezone.timedelta(days=30),
                 river=self,
             )
             send_system_message(
