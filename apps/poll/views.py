@@ -55,7 +55,6 @@ class PollView(TemplateView):
             poll.check_closed()
             if poll.check_closed() and "slug" in request.POST:
                 # adding 'just_finished' so frontend can refresh, did not want to tamper with request payload
-                # print(self.get_context_data(uuid=uuid, request=request, just_finished='true'))
                 return self.render_to_response(
                     self.get_context_data(
                         uuid=uuid, request=request, just_finished="true"
@@ -180,10 +179,8 @@ class PollCreateView(CreateView):
 
 
 def poll_edit(request: WSGIRequest) -> HttpResponse:
-    print("editing")
     # update description of the (old) poll, return new description for htmx
     old_poll = BasePoll.objects.get(uuid=request.POST["poll-uuid"])
-    print(old_poll)
     if old_poll.closed:
         raise PermissionDenied("poll is closed")
 
@@ -194,8 +191,6 @@ def poll_edit(request: WSGIRequest) -> HttpResponse:
         raise PermissionDenied(
             "User is not authorised to edit the poll - non-riverstarter"
         )
-
-    print(f"new description {request.POST['new-description']}")
 
     river, stage, topic = old_poll.get_poll_context(old_poll)
     send_system_message(stage.get_chat(topic), "poll_edited", context_poll=old_poll)

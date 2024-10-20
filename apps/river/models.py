@@ -485,7 +485,6 @@ class River(ClusterableModel):
             self.reflect_stage.save()
 
     def finish(self) -> None:
-        print(self)
         self.current_stage = self.Stage.FINISHED
         self.save()
 

@@ -145,7 +145,6 @@ def resource_saved(request: HttpRequest, res_id: Optional[int]) -> HttpResponse:
         )
         saved_instance.delete()
     except SavedResource.DoesNotExist:
-        print("no saved match")
         SavedResource.objects.create(
             saved_resource=current_resource, saved_by=current_user
         )

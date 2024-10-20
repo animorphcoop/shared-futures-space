@@ -47,9 +47,19 @@ jobs:
     - name: Verify that redis is up
       run: redis-cli ping
 
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Copy requirements files
+      run: |
+        mkdir ${GITHUB_WORKSPACE}/sfs
+        cp prod/requirements.txt ${GITHUB_WORKSPACE}/sfs/
+        cp dev/requirements_dev.txt ${GITHUB_WORKSPACE}/sfs/
+
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
+        cd sfs
         pip install -r requirements.txt
         pip install -r requirements_dev.txt
 
