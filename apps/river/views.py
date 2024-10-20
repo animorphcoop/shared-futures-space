@@ -330,10 +330,12 @@ class RiverChatView(ChatView):
                 "stage_ref": stage_ref,
                 # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
                 "poll_possible": (
-                        (chat_poll is None and kwargs["stage"] in ["envision"] or kwargs["stage"] in ["plan"])
-                        or (chat_poll is not None and not chat_poll.passed)
-                        or (kwargs["topic"] != "general" and chat_poll is None) or (
-                                    chat_poll is not None and not chat_poll.passed)
+                        # For "envision" or "plan" stage with no chat poll running
+                        (chat_poll is None and kwargs["stage"] in ["envision", "plan"])
+                        # Or if there is a chat poll that's closed and not passed
+                        or (chat_poll is not None and chat_poll.closed and not chat_poll.passed)
+                        # Or for non-general topics with no existing chat poll
+                        or (kwargs["topic"] != "general" and chat_poll is None)
                         or (kwargs["topic"] == "general"
                             and stage_ref is not None  # Check if stage_ref is not None
                             and hasattr(stage_ref, 'money_poll')  # Check if money_poll attribute exists

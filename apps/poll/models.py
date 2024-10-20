@@ -148,15 +148,10 @@ class BasePoll(models.Model):
                     ):
                             river.make_act_general_poll()
                 else:
-                    print("failed")
-                    print(f"current stage is {river.current_stage}")
-
                     river, stage, topic = self.get_poll_context(self)
                     send_system_message(stage.get_chat(topic), "poll_not_passed", context_poll=self)
-
                     self.passed = False
                     self.save()
-                    print(f"poll {self} should have failed successfully")
 
         elif hasattr(self, "multiplechoicepoll"):
             from river.models import ReflectStage, River
