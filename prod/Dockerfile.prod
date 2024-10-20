@@ -1,5 +1,5 @@
-# Dockerfile.prod
-FROM python:3.9
+# Dockerfile production
+FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 
 # Install necessary dependencies

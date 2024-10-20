@@ -1,4 +1,5 @@
-FROM python:3.9
+# Dockerfile development
+FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 
 # install node
