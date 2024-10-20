@@ -1,2 +1,7 @@
-<p>the poll for this chat was edited. the previous version was:</p>
-<div id="poll-wrapper"><div hx-get="{% url 'poll_view' message.context_poll.uuid %}" hx-target="closest #poll-wrapper" hx-trigger="load"></div></div>
+<p>The poll for this chat was edited. The previous version was:</p>
+{% include "partials/vertical-spacer.html" with space="3" %}
+
+<div id="poll-wrapper">
+  <div hx-get="{% url 'poll_view' message.context_poll.uuid %}" hx-target="closest #poll-wrapper"
+       hx-trigger="load"></div>
+</div>

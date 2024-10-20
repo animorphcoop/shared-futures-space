@@ -331,7 +331,7 @@ class RiverChatView(ChatView):
                 # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
                 "poll_possible": (
                         (kwargs["stage"] in ["envision"]
-                         and (chat_poll is None or not chat_poll.passed))
+                         and (chat_poll is None or not chat_poll.passed) and chat_poll.closed)
                         or (kwargs["topic"] != "general"
                             or (kwargs["topic"] == "general"
                                 and stage_ref is not None  # Check if stage_ref is not None
