@@ -39,7 +39,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v1
       with:
-        python-version: 3.9
+        python-version: 3.10
 
     - name: Install packages
       run: sudo apt-get install -y redis-tools redis-server binutils libproj-dev gdal-bin
@@ -52,7 +52,7 @@ jobs:
 
     - name: Copy requirements files
       run: |
-        mkdir ${GITHUB_WORKSPACE}/sfs
+        mkdir -p ${GITHUB_WORKSPACE}/sfs/
         cp prod/requirements.txt ${GITHUB_WORKSPACE}/sfs/
         cp dev/requirements_dev.txt ${GITHUB_WORKSPACE}/sfs/
 
