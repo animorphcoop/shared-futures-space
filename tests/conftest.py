@@ -128,12 +128,13 @@ def create_test_task(db, test_user, test_river):
 
 @pytest.fixture(scope="function")
 def test_how_to_resource(db):
-    return HowTo.objects.create(
+    how_to = HowTo.objects.create(
         title="howtitle",
         summary="not much to say, do it yourself",
         link="https://animorph.coop/",
-        tags=["how to", "urban garden", "leisure"],
     )
+    how_to.tags.add("how to", "urban garden", "leisure")  # Use `add` method to assign tags
+    return how_to
 
 
 @pytest.fixture(scope="function")
