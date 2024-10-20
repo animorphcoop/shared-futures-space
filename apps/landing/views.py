@@ -58,5 +58,4 @@ def handle_404(request: HttpRequest, exception: Exception = None) -> HttpRespons
 
 
 def handle_500(request: HttpRequest) -> HttpResponse:
-    print("500 error handled with redirect")
-    return HttpResponseRedirect(reverse("resources"))
+    return render(request, "500.html", status=500)

@@ -138,18 +138,20 @@ class BasePoll(models.Model):
                             river.start_reflect()
                             river.save()
                     elif (
-                            topic != "general"
-                            and river.act_stage.money_poll
-                            and river.act_stage.money_poll.passed
-                            and river.act_stage.place_poll
-                            and river.act_stage.place_poll.passed
-                            and river.act_stage.time_poll
-                            and river.act_stage.time_poll.passed
+                        topic != "general"
+                        and river.act_stage.money_poll
+                        and river.act_stage.money_poll.passed
+                        and river.act_stage.place_poll
+                        and river.act_stage.place_poll.passed
+                        and river.act_stage.time_poll
+                        and river.act_stage.time_poll.passed
                     ):
-                            river.make_act_general_poll()
+                        river.make_act_general_poll()
                 else:
                     river, stage, topic = self.get_poll_context(self)
-                    send_system_message(stage.get_chat(topic), "poll_not_passed", context_poll=self)
+                    send_system_message(
+                        stage.get_chat(topic), "poll_not_passed", context_poll=self
+                    )
                     self.passed = False
                     self.save()
 

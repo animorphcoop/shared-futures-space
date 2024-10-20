@@ -364,7 +364,6 @@ class River(ClusterableModel):
 
             self.save()
 
-
     def make_plan_general_poll(self) -> None:
         from poll.models import SingleChoicePoll
 
@@ -378,9 +377,7 @@ class River(ClusterableModel):
         ps.save()
 
     def start_act(self) -> None:
-
         if self.current_stage == self.Stage.PLAN:
-
             self.current_stage = self.Stage.ACT
             self.act_stage = ActStage.objects.create()
 
@@ -428,7 +425,6 @@ class River(ClusterableModel):
 
             self.save()
 
-
     def make_act_general_poll(self) -> None:
         from poll.models import SingleChoicePoll
 
@@ -440,7 +436,6 @@ class River(ClusterableModel):
             river=self,
         )
         ps.save()
-
 
     def start_reflect(self) -> None:
         from itertools import chain

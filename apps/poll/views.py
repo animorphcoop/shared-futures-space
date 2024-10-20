@@ -187,10 +187,13 @@ def poll_edit(request: WSGIRequest) -> HttpResponse:
     if old_poll.closed:
         raise PermissionDenied("poll is closed")
 
-
-    river_membership = RiverMembership.objects.get(user=request.user, river=old_poll.river)
+    river_membership = RiverMembership.objects.get(
+        user=request.user, river=old_poll.river
+    )
     if not river_membership.starter:
-        raise PermissionDenied("User is not authorised to edit the poll - non-riverstarter")
+        raise PermissionDenied(
+            "User is not authorised to edit the poll - non-riverstarter"
+        )
 
     print(f"new description {request.POST['new-description']}")
 
