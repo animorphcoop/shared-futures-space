@@ -1,0 +1,10 @@
+<p>The poll below did not pass:</p>
+{% include "partials/vertical-spacer.html" with space="3" %}
+
+<div id="poll-wrapper">
+  <div hx-get="{% url 'poll_view' message.context_poll.uuid %}" hx-target="closest #poll-wrapper"
+       hx-trigger="load"></div>
+</div>
+{% include "partials/vertical-spacer.html" with space="3" %}
+<p>Adjust the proposal and try again!</p>
+

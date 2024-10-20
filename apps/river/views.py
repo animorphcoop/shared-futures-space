@@ -330,29 +330,30 @@ class RiverChatView(ChatView):
                 "stage_ref": stage_ref,
                 # TODO: Write in len(members) > 2  rather than handling in template with members|length>2
                 "poll_possible": (
-                        (kwargs["stage"] in ["envision"]
-                         and (chat_poll is None or not chat_poll.passed) and chat_poll.closed)
-                        or (kwargs["topic"] != "general"
-                            or (kwargs["topic"] == "general"
-                                and stage_ref is not None  # Check if stage_ref is not None
-                                and hasattr(stage_ref, 'money_poll')  # Check if money_poll attribute exists
-                                and stage_ref.money_poll is not None  # Check if money_poll is not None
-                                and stage_ref.money_poll.passed
-                                and hasattr(stage_ref, 'place_poll')
-                                and stage_ref.place_poll is not None
-                                and stage_ref.place_poll.passed
-                                and hasattr(stage_ref, 'time_poll')
-                                and stage_ref.time_poll is not None
-                                and stage_ref.time_poll.passed)
-                            )
+                        (chat_poll is None and kwargs["stage"] in ["envision"] or kwargs["stage"] in ["plan"])
+                        or (chat_poll is not None and not chat_poll.passed)
+                        or (kwargs["topic"] != "general" and chat_poll is None) or (
+                                    chat_poll is not None and not chat_poll.passed)
+                        or (kwargs["topic"] == "general"
+                            and stage_ref is not None  # Check if stage_ref is not None
+                            and hasattr(stage_ref, 'money_poll')  # Check if money_poll attribute exists
+                            and stage_ref.money_poll is not None  # Check if money_poll is not None
+                            and stage_ref.money_poll.passed
+                            and hasattr(stage_ref, 'place_poll')
+                            and stage_ref.place_poll is not None
+                            and stage_ref.place_poll.passed
+                            and hasattr(stage_ref, 'time_poll')
+                            and stage_ref.time_poll is not None
+                            and stage_ref.time_poll.passed)
+
                 ),
 
                 "starters": RiverMembership.objects.filter(
                     river=river, starter=True
                 ).values_list("user", flat=True),
             }
-        )
 
+        )
         return context
 
 
@@ -465,7 +466,8 @@ class CreateRiverPollView(TemplateView):
             "plan": "Describe the plan for " + topic,
             "act": "Describe what happened with " + topic,
         }[stage]
-        ctx["default"] = {"envision": ctx["river"].description, "plan": "", "act": f"Are all {ctx['topic']}-related actions done?"}[
+        ctx["default"] = \
+        {"envision": ctx["river"].description, "plan": "", "act": f"Are all {ctx['topic']}-related actions done?"}[
             stage
         ]
         return ctx

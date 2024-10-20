@@ -485,7 +485,7 @@ class River(ClusterableModel):
                 kind="salmon_wizard",
                 chat=self.reflect_stage.general_chat,
                 context_river=self,
-                text="Welcome to the reflect stage! I trust your visions have become realities. You can reflect together here on what went well and would could have gone better, to create a record for yourselves and others to learn from. You can also track which, if any, of the resources I offered on this river were helpful to you. Congratulations on making it to the end of the river!",
+                text="Welcome to the reflect stage! I trust your visions have become realities. You can reflect together here on what went well and would could have gone better, to create a record for yourselves and others to learn from. You can also track which, if any, of the resources I offered on this river were helpful to you. Congratulations on making it to the end of the river! This stage will close automatically after 30 days.",
             )
             self.reflect_stage.save()
 

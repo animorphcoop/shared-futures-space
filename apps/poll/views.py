@@ -110,6 +110,7 @@ class PollView(TemplateView):
         # river slug for htmx to run conditional check if the poll is closed so to trigger refreshing on the frontend
         river = poll.river
         ctx["slug"] = river.slug
+        ctx["river_stage"] = river.current_stage
         ctx["starters"] = RiverMembership.objects.filter(
             river=river, starter=True
         ).values_list(
@@ -203,7 +204,6 @@ def poll_edit(request: WSGIRequest) -> HttpResponse:
         created_by=old_poll.created_by,
         river=old_poll.river,
     )
-    print(new_poll)
     if topic == "general":
         stage.general_poll = new_poll
     elif topic == "money":
