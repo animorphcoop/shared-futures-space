@@ -412,8 +412,6 @@ docker compose -f prod/docker-compose.prod.yaml logs
 docker exec -it app tail -n 50 /home/app/sfs/logs/uwsgi.log
 ```
 
-docker exec -it app tail -n 50 /home/app/sfs/logs/uwsgi.log
-
 
 - To stop the platform (it will automatically start on boot, or use `start`)
 
