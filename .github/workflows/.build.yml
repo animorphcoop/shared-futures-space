@@ -63,6 +63,9 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements_dev.txt
 
+    - name: Create log directory with sudo
+      run: sudo mkdir -p /home/app/sfs/logs/
+
     - name: Run Tests
       env:
         POSTGRES_HOST: localhost
