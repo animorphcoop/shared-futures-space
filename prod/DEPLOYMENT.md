@@ -183,7 +183,6 @@ sudo apt update
 sudo apt install caddy
 ```
 
-#### 
 
 #### Step 4: Clone the Repository
 
@@ -398,11 +397,21 @@ sudo systemctl status sfs
 sudo journalctl -u sfs -n 50
 ```
 
-- To display Django-specific logs (last 50 lines):
+- More effective way to inspect Docker logs is to go to the root project directory and run:
+
+
+```
+docker compose -f prod/docker-compose.prod.yaml logs
+```
+
+
+
+- Probably the most important for monitoring the app logs is to display Django-specific logs (last 50 lines):
 
 ```sh
-docker exec -it prod-app-1 tail -n 50 /home/app/sfs/logs/uwsgi.log
+docker exec -it app tail -n 50 /home/app/sfs/logs/uwsgi.log
 ```
+
 
 - To stop the platform (it will automatically start on boot, or use `start`)
 
@@ -423,7 +432,7 @@ docker exec -t CONTAINER_NAME pg_dump -c -U DATABASE_USER -d DATABASE_NAME > FIL
 - Example of saving data (ensure the directory you want to save the backup into exists):
 
 ```
-docker exec -t prod-db_pg-1 pg_dump -c -U sfs_user -d sfs_db > ../backups/sfs-$(date --utc +%Y%m%d-%H%M%S).sql
+docker exec -t db_pg pg_dump -c -U sfs_user -d sfs_db > ../backups/sfs-$(date --utc +%Y%m%d-%H%M%S).sql
 ```
 
 - To import previously exported into the database, format (ensure the database shape matches):

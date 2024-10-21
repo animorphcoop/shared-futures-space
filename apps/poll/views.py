@@ -55,7 +55,6 @@ class PollView(TemplateView):
             poll.check_closed()
             if poll.check_closed() and "slug" in request.POST:
                 # adding 'just_finished' so frontend can refresh, did not want to tamper with request payload
-                # print(self.get_context_data(uuid=uuid, request=request, just_finished='true'))
                 return self.render_to_response(
                     self.get_context_data(
                         uuid=uuid, request=request, just_finished="true"
@@ -110,6 +109,7 @@ class PollView(TemplateView):
         # river slug for htmx to run conditional check if the poll is closed so to trigger refreshing on the frontend
         river = poll.river
         ctx["slug"] = river.slug
+        ctx["river_stage"] = river.current_stage
         ctx["starters"] = RiverMembership.objects.filter(
             river=river, starter=True
         ).values_list(
@@ -179,35 +179,40 @@ class PollCreateView(CreateView):
 
 
 def poll_edit(request: WSGIRequest) -> HttpResponse:
-    # update description of poll, return new description for htmx
-    poll = BasePoll.objects.get(uuid=request.POST["poll-uuid"])
-    if poll.closed:
+    # update description of the (old) poll, return new description for htmx
+    old_poll = BasePoll.objects.get(uuid=request.POST["poll-uuid"])
+    if old_poll.closed:
         raise PermissionDenied("poll is closed")
 
-    if RiverMembership.objects.get(user=request.user, river=poll.river).starter:
-        poll.closed = True
-        poll.save()
-        river, stage, topic = poll.get_poll_context(poll)
-        send_system_message(stage.get_chat(topic), "poll_edited", context_poll=poll)
-        new_poll = SingleChoicePoll.objects.create(
-            question=poll.question,
-            description=request.POST["new-description"],
-            options=poll.options,
-            expires=poll.expires,
-            created_by=poll.created_by,
-            river=poll.river,
+    river_membership = RiverMembership.objects.get(
+        user=request.user, river=old_poll.river
+    )
+    if not river_membership.starter:
+        raise PermissionDenied(
+            "User is not authorised to edit the poll - non-riverstarter"
         )
-        if topic == "general":
-            stage.general_poll = new_poll
-        elif topic == "money":
-            stage.money_poll = new_poll
-        elif topic == "place":
-            stage.place_poll = new_poll
-        elif topic == "time":
-            stage.time_poll = new_poll
-        stage.save()
-        return HttpResponseRedirect(reverse("poll_view", args=[new_poll.uuid]))
-    else:
-        # user isn't a river starter for the river the poll appears in
-        # the ui shouldn't permit this situation
-        raise PermissionDenied("non-riverstarter user trying to edit a poll")
+
+    river, stage, topic = old_poll.get_poll_context(old_poll)
+    send_system_message(stage.get_chat(topic), "poll_edited", context_poll=old_poll)
+    new_poll = SingleChoicePoll.objects.create(
+        question=old_poll.question,
+        description=request.POST["new-description"],
+        options=old_poll.options,
+        expires=old_poll.expires,
+        created_by=old_poll.created_by,
+        river=old_poll.river,
+    )
+    if topic == "general":
+        stage.general_poll = new_poll
+    elif topic == "money":
+        stage.money_poll = new_poll
+    elif topic == "place":
+        stage.place_poll = new_poll
+    elif topic == "time":
+        stage.time_poll = new_poll
+
+    old_poll.closed = True
+    old_poll.save()
+
+    stage.save()
+    return HttpResponseRedirect(reverse("poll_view", args=[new_poll.uuid]))

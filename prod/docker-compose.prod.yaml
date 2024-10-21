@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: app
     build:
       context: ..
       dockerfile: prod/Dockerfile.prod
@@ -23,6 +24,7 @@ services:
       - db_pg
 
   db_pg:
+    container_name: db_pg
     image: postgis/postgis:12-3.4-alpine
     volumes:
       - dbdata:/var/lib/postgresql/data
@@ -40,11 +42,13 @@ services:
       - /proc/sys/vm:/mnt/vm
 
   redis:
+    container_name: redis
     image: redis:6.2.6-alpine
     depends_on:
       - redis-overcommit
 
   celery:
+    container_name: celery
     restart: always
     build:
       context: ..

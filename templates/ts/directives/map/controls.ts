@@ -87,9 +87,9 @@ export class IdeaCreateControl implements IControl {
     }
 
 
-    onAdd(map: Map) {
+    onAdd() {
+
         const div = document.createElement('div')
-        console.log(map)
         div.classList.add('maplibregl-ctrl')
 
         const button = document.createElement('button')

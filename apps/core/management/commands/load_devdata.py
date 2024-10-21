@@ -1,21 +1,13 @@
 import json
-from io import BytesIO
-import os
 
 from allauth.account.admin import EmailAddress
 from area.models import Area, PostCode
 from django.contrib.gis.geos import Point
-from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
-from PIL import Image as PillowImage
-from resources.models import CaseStudy, HowTo
 from userauth.models import CustomUser, Organisation, UserAvatar
-from wagtail.images.models import Image
-from wagtail.rich_text import RichText
-from django.contrib.contenttypes.models import ContentType
-from taggit.models import Tag
 
 DATA_DIR = "dev/autoupload/"
+
 
 def add_organisations(data):
     for org_data in data:

@@ -1,5 +1,5 @@
-# Dockerfile.prod
-FROM python:3.9
+# Dockerfile production
+FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 
 # Install necessary dependencies
@@ -25,8 +25,8 @@ RUN adduser -u $USERID --ingroup $group --home $home --disabled-password $user
 # Switch to new user
 USER $user
 
-# Create directory
-RUN mkdir $project
+# Create directories
+RUN mkdir -p $project/logs
 
 # Install requirements in venv
 COPY prod/requirements.txt $project/

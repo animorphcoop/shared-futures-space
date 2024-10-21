@@ -1,4 +1,5 @@
-FROM python:3.9
+# Dockerfile development
+FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 
 # install node
@@ -24,8 +25,8 @@ RUN adduser -u $USERID --ingroup $group --home $home --disabled-password $user
 # switch to new user
 USER $user
 
-# create directory
-RUN mkdir $project
+# Create directories
+RUN mkdir -p $project/logs
 
 # install requirements in venv
 COPY ../prod/requirements.txt $project/

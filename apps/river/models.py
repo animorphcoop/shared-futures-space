@@ -377,48 +377,7 @@ class River(ClusterableModel):
         ps.save()
 
     def start_act(self) -> None:
-        from poll.models import SingleChoicePoll
-
         if self.current_stage == self.Stage.PLAN:
-            """
-            if (self.plan_stage.general_poll is None or not self.plan_stage.general_poll.closed or
-                    self.plan_stage.money_poll is None or not self.plan_stage.money_poll.closed or
-                    self.plan_stage.place_poll is None or not self.plan_stage.place_poll.closed or
-                    self.plan_stage.time_poll is None or not self.plan_stage.time_poll.closed):
-                # for testing purposes ONLY # # # # # # # # # # # # # # # # # # # # # # # # #
-
-                self.plan_stage.general_poll = SingleChoicePoll.objects.create(question='general question',
-                                                                               options=['1', 'b'],
-                                                                               expires=timezone.now() + timezone.timedelta(
-                                                                                   days=7),  #
-                                                                               river=self)
-                self.plan_stage.money_poll = SingleChoicePoll.objects.create(question='money question',
-                                                                             options=['1', 'b'],
-                                                                             expires=timezone.now() + timezone.timedelta(
-                                                                                 days=7),  #
-                                                                             river=self)
-                self.plan_stage.place_poll = SingleChoicePoll.objects.create(question='place question',
-                                                                             options=['1', 'b'],
-                                                                             expires=timezone.now() + timezone.timedelta(
-                                                                                 days=7),  #
-                                                                             river=self)
-                self.plan_stage.time_poll = SingleChoicePoll.objects.create(question='time question',
-                                                                            options=['1', 'b'],
-                                                                            expires=timezone.now() + timezone.timedelta(
-                                                                                days=7),  #
-                                                                            river=self)
-
-                self.plan_stage.general_poll.closed = True  #
-                self.plan_stage.general_poll.save()
-                self.plan_stage.money_poll.closed = True  #
-                self.plan_stage.money_poll.save()
-                self.plan_stage.place_poll.closed = True  #
-                self.plan_stage.place_poll.save()
-                self.plan_stage.time_poll.closed = True  #
-                self.plan_stage.time_poll.save()
-            """
-            # raise ValueError('plan stage is not finished!')
-
             self.current_stage = self.Stage.ACT
             self.act_stage = ActStage.objects.create()
 
@@ -441,8 +400,7 @@ class River(ClusterableModel):
                     kind="salmon_wizard",
                     chat=self.act_stage.general_chat,
                     context_river=self,
-                    # TODO: write/rewrite/confirm this message (https://op.animorph.coop/wp/840)
-                    text="There is no location set yet, if you are a river starter using the settings menu to set a location",
+                    text="There is no location set yet, if you are a river starter use the settings menu to set a location",
                 )
 
             send_system_message(
@@ -463,39 +421,21 @@ class River(ClusterableModel):
                 context_river=self,
                 text="Is everything running on time? Are you overcoming any delays? Share and discuss time-related updates here.",
             )
-
-            self.act_stage.general_poll = SingleChoicePoll.objects.create(
-                question="Are all your actions complete?",
-                options=["yes", "no"],
-                expires=timezone.now() + timezone.timedelta(days=7),
-                river=self,
-            )
-
-            # send_system_message(self.act_stage.general_chat, 'poll', context_poll=self.act_stage.general_poll)
-            self.act_stage.money_poll = SingleChoicePoll.objects.create(
-                question="Are all money-related actions done?",
-                options=["yes", "no"],
-                expires=timezone.now() + timezone.timedelta(days=7),
-                river=self,
-            )
-            # send_system_message(self.act_stage.money_chat, 'poll', context_poll=self.act_stage.money_poll)
-            self.act_stage.place_poll = SingleChoicePoll.objects.create(
-                question="Are all place-related actions done?",
-                options=["yes", "no"],
-                expires=timezone.now() + timezone.timedelta(days=7),
-                river=self,
-            )
-            # send_system_message(self.act_stage.place_chat, 'poll', context_poll=self.act_stage.place_poll)
-            self.act_stage.time_poll = SingleChoicePoll.objects.create(
-                question="Are all time-related actions done?",
-                options=["yes", "no"],
-                expires=timezone.now() + timezone.timedelta(days=7),
-                river=self,
-            )
-            # send_system_message(self.act_stage.time_chat, 'poll', context_poll=self.act_stage.time_poll)
             self.act_stage.save()
 
             self.save()
+
+    def make_act_general_poll(self) -> None:
+        from poll.models import SingleChoicePoll
+
+        ps = self.act_stage
+        ps.general_poll = SingleChoicePoll.objects.create(
+            question="Are all your actions complete?",
+            options=["yes", "no"],
+            expires=timezone.now() + timezone.timedelta(days=7),
+            river=self,
+        )
+        ps.save()
 
     def start_reflect(self) -> None:
         from itertools import chain
@@ -533,19 +473,18 @@ class River(ClusterableModel):
                         )
                     )
                 ),
-                expires=timezone.now() + timezone.timedelta(days=7),
+                expires=timezone.now() + timezone.timedelta(days=30),
                 river=self,
             )
             send_system_message(
                 kind="salmon_wizard",
                 chat=self.reflect_stage.general_chat,
                 context_river=self,
-                text="Welcome to the reflect stage! I trust your visions have become realities. You can reflect together here on what went well and would could have gone better, to create a record for yourselves and others to learn from. You can also track which, if any, of the resources I offered on this river were helpful to you. Congratulations on making it to the end of the river!",
+                text="Welcome to the reflect stage! I trust your visions have become realities. You can reflect together here on what went well and would could have gone better, to create a record for yourselves and others to learn from. You can also track which, if any, of the resources I offered on this river were helpful to you. Congratulations on making it to the end of the river! This stage will close automatically after 30 days.",
             )
             self.reflect_stage.save()
 
     def finish(self) -> None:
-        print(self)
         self.current_stage = self.Stage.FINISHED
         self.save()
 
