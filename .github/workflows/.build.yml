@@ -30,18 +30,6 @@ jobs:
       with:
         node-version: '16.x'
 
-    - name: Install Node.js Dependencies
-      run: npm install
-
-    - name: Build JavaScript with Vite
-      run: npm run build
-
-    - name: Verify Vite build output
-      run: ls -R sfs/vite-build
-
-    - name: Move Vite build output
-      run: mv sfs/vite-build static/vite-build
-
     - name: Setup Python
       uses: actions/setup-python@v1
       with:
@@ -52,6 +40,9 @@ jobs:
 
     - name: Verify that redis is up
       run: redis-cli ping
+
+    - name: Checkout code
+      uses: actions/checkout@v2
 
     - name: Copy requirements files
       run: |
@@ -65,15 +56,10 @@ jobs:
         cd sfs
         pip install -r requirements.txt
         pip install -r requirements_dev.txt
+        npm install && npm run build
 
     - name: Create log directory with sudo
       run: sudo mkdir -p /home/app/sfs/logs/
-
-    - name: Collect static files
-      run: python manage.py collectstatic --no-input
-
-    - name: Verify collected static files
-      run: ls -R /home/runner/work/shared-futures-space/shared-futures-space/static/
 
     - name: Run Tests
       env:
@@ -84,4 +70,5 @@ jobs:
         VITE_DEV_MODE: 0
       run: |
         python manage.py migrate --no-input
+        python manage.py collectstatic --no-input
         pytest tests
