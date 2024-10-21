@@ -88,7 +88,7 @@ class CustomAddDataView(TemplateView):
 
         form = CustomUserAddDataForm(request.POST)
         if not form.is_valid():
-            print("Missing fields? Request data: ", request.POST)
+            #print("Missing fields? Request data: ", request.POST)
             return HttpResponseRedirect(reverse("account_add_data"))
 
         form.full_clean()

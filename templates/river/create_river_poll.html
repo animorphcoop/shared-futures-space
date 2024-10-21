@@ -1,5 +1,5 @@
 {% load static %}
-{#  Modal blurred backerground overlay  #}
+{#  Modal blurred background overlay  #}
 <section id="river-poll"
          class="z-20 flex justify-center items-center flex-col h-full w-full fixed left-0 top-0 backdrop-blur">
     {#  White modal background  #}
@@ -46,15 +46,3 @@
         document.getElementById('river-poll').remove();
     }
 </script>
-
-
-{% comment %}
-<div id="river-poll-wrapper">
-  <h1>create poll for river</h1>
-  <form hx-post="{% url 'create_river_poll' slug stage topic %}" hx-target="closest #river-poll-wrapper">
-   {% csrf_token %}
-   <textarea name=description>{{river.description}}</textarea>
-   <button type=submit>create</button>
-  </form>
-</div>
-{% endcomment %}

@@ -40,6 +40,7 @@ def send_system_message(
             "salmon_envision_poll_available": "messaging/system_messages/salmon_envision_poll_available.html",
             "salmon_wizard": "messaging/system_messages/salmon_wizard.html",
             "poll_edited": "messaging/system_messages/poll_edited.html",
+            "poll_not_passed": "messaging/system_messages/poll_not_passed.html",
         }[kind],
         chat=chat,
         context_action=context_action,

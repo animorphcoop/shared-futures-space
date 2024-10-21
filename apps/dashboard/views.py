@@ -84,7 +84,7 @@ def get_weather(postcode: str) -> Tuple[str, str, Union[str, float]]:
         )
     # catch all for our yet unknown error to be found in the logs
     except Exception as e:
-        print("weather error")
+        # print("weather error")
         print(e)
         return (
             "[no data]",

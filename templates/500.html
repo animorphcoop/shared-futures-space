@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html class="no-js">
-    <head>
-        <meta charset="utf-8" />
-        <title>Internal server error</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-    </head>
-    <body>
-        <h1>Internal server error</h1>
+{% extends "base.html" %}
 
-        <h2>Sorry, there seems to be an error. Please try again soon.</h2>
-    </body>
-</html>
+{% block body_class %}template-500{% endblock %}
+
+{% block content %}
+    <div class="flex flex-col h-screen">
+        {% block title %}{% include "partials/title.html" with title="Something did not work" %}{% endblock %}
+        {% include "partials/vertical-spacer.html" with space="4" %}
+        <div class="p-4.5">
+            {% include "partials/salmon-of-knowledge.html" with text="Hmm, the request you made could not be fulfilled..." url="/" button="Go home and try again" %}
+        </div>
+        {% include "partials/footer-gradient.html" %}
+    </div>
+{% endblock %}
